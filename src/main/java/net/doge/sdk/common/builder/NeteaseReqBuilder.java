@@ -56,14 +56,12 @@ public class NeteaseReqBuilder {
         }
         if (method == Method.POST) headers.put("Content-Type", "application/x-www-form-urlencoded");
         if (url.contains("music.163.com")) headers.put("Referer", "https://music.163.com");
-        String anonymousToken = "bf8bfeabb1aa84f9c8c3906c04a04fb864322804c83f5d607e91a04eae463c9436bd1a17ec353cf780b396507a3f7464e8a60f4bbc019437993166e004087dd32d1490298caf655c2353e58daa0bc13cc7d5c198250968580b12c1b8817e3f5c807e650dd04abd3fb8130b7ae43fcc5b";
+        String anonymousToken = "1f5fa7b6a6a9f81a11886e5186fde7fbf61e685ebf8a0ea2caec48f1a15f2a764b7f5273fc3921d1865fd2a3083cb3937e7b74823f13808adf8ea1560b5215ac07fb84071dfb15a13324751bcc9aaf44c3061cd18d77b7a0";
         String body = "";
         switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
             case NeteaseReqOptConstants.WEAPI:
-                headers.put("X-Real-IP", "::1");
-                headers.put("X-Forwarded-For", "::1");
                 headers.put("Cookie", String.format(
-                        "NMTID=%s; __remember_me=true; _ntes_nuid=%s; MUSIC_A=%s",
+                        "os=iOS; __remember_me=true; _ntes_nuid=%s; NMTID=%s; MUSIC_A=%s; appver=8.10.90;",
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         anonymousToken
@@ -72,12 +70,10 @@ public class NeteaseReqBuilder {
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
             case NeteaseReqOptConstants.EAPI:
-                headers.put("X-Real-IP", "127:0:0:1");
-                headers.put("X-Forwarded-For", "127:0:0:1");
                 String requestId = System.currentTimeMillis() / 1000 + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
                 headers.put("Cookie", String.format(
-                        "osver=undefined; deviceId=undefined; appver=8.9.70; versioncode=140; mobilename=undefined; " +
-                                "buildver=1690071476; resolution=1920x1080; __csrf=; os=android; channel=undefined; requestId=%s; MUSIC_A=%s",
+                        "osver=; deviceId=; appver=8.9.70; versioncode=140; mobilename=; buildver=1690071476; resolution=1920x1080; " +
+                                "__csrf=; os=android; channel=; requestId=%s; MUSIC_A=%s",
                         requestId,
                         anonymousToken
                 ));

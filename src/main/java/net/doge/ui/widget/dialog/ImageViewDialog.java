@@ -252,6 +252,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         });
         pageTextField.setForeground(textColor);
         pageTextField.setCaretColor(textColor);
+        pageTextField.setSelectedTextColor(textColor);
         pageTextField.setSelectionColor(darkerTextAlphaColor);
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);

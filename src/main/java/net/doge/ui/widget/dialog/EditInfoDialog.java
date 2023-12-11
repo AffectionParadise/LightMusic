@@ -208,6 +208,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
                 component.setCaretColor(textColor);
+                component.setSelectedTextColor(textColor);
                 component.setSelectionColor(darkerTextAlphaColor);
                 component.setText((String) results[i]);
             } else if (components[i] instanceof CustomComboBox) {

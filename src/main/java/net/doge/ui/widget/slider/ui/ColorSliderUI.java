@@ -23,6 +23,11 @@ public class ColorSliderUI extends BasicSliderUI {
         this.d = d;
     }
 
+    @Override
+    protected Dimension getThumbSize() {
+        return new Dimension(12, 20);
+    }
+
     /**
      * 自定义把手
      *
@@ -35,7 +40,7 @@ public class ColorSliderUI extends BasicSliderUI {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
         g2d.setColor(d.makeColorFromRgb(d.r, d.g, d.b));
-        g2d.fillOval(thumbRect.x, thumbRect.y + 4, thumbRect.width, thumbRect.width);
+        g2d.fillOval(thumbRect.x, thumbRect.y + (thumbRect.height - thumbRect.width) / 2, thumbRect.width, thumbRect.width);
     }
 
     /**

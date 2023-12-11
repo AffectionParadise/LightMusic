@@ -1,5 +1,7 @@
 package net.doge.ui;
 
+import net.doge.util.system.LogUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
 
@@ -8,6 +10,17 @@ public class UIPreProcessor {
     private static void enableAntiAliasing() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
+    }
+
+    // 统一 Laf 为 Metal，避免界面元素混乱
+    private static void initLaf() {
+        if ("Metal".equals(UIManager.getLookAndFeel().getName())) return;
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                 UnsupportedLookAndFeelException e) {
+            LogUtil.error(e);
+        }
     }
 
     // 初始化 UI 管理器配置
@@ -19,6 +32,7 @@ public class UIPreProcessor {
 
     public static void process() {
         enableAntiAliasing();
+        initLaf();
         initUIManager();
     }
 }

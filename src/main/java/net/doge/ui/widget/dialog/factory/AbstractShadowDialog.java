@@ -41,7 +41,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         if (f.blurType != BlurConstants.OFF && f.player.loadedMusicResource()) {
             img = f.player.getMetaMusicInfo().getAlbumImage();
             if (img == null) img = ImageConstants.DEFAULT_IMG;
-            if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgColorBest(img));
+            if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
         } else {
             UIStyle style = f.currUIStyle;
             img = style.getImg();

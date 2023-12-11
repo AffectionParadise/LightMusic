@@ -98,8 +98,6 @@ public class MusicUrlReq {
 
         // 网易云(解锁付费音乐)
         if (source == NetMusicSource.NC) {
-            // 首选高音质接口
-//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
             // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
             String quality;
             switch (AudioQuality.quality) {
@@ -117,6 +115,8 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
+            // 首选高音质接口
+//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
 //            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
 //                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
 //                    .executeAsync()

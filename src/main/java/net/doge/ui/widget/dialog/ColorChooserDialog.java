@@ -302,21 +302,25 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         rLabel.setForeground(textColor);
         rTextField.setForeground(textColor);
         rTextField.setCaretColor(textColor);
+        rTextField.setSelectedTextColor(textColor);
         rTextField.setSelectionColor(darkerTextAlphaColor);
 
         gLabel.setForeground(textColor);
         gTextField.setForeground(textColor);
         gTextField.setCaretColor(textColor);
+        gTextField.setSelectedTextColor(textColor);
         gTextField.setSelectionColor(darkerTextAlphaColor);
 
         bLabel.setForeground(textColor);
         bTextField.setForeground(textColor);
         bTextField.setCaretColor(textColor);
+        bTextField.setSelectedTextColor(textColor);
         bTextField.setSelectionColor(darkerTextAlphaColor);
 
         hexLabel.setForeground(textColor);
         hexTextField.setForeground(textColor);
         hexTextField.setCaretColor(textColor);
+        hexTextField.setSelectedTextColor(textColor);
         hexTextField.setSelectionColor(darkerTextAlphaColor);
         SafeDocument doc = new SafeDocument(7);
         doc.addDocumentListener(this);

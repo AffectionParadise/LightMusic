@@ -20729,8 +20729,10 @@ public class MainFrame extends JFrame {
         if (StringUtil.isEmpty(StringUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
         // 添加空白充数
         Statement empty = new Statement(0, " ");
-        if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
-        else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
+        if (state == BAD_FORMAT) {
+            lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
+            lrcListModel.addElement(empty);
+        } else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
         if (ListUtil.notEmpty(statements)) {
             for (int i = 0, s = statements.size(); i < s; i++) {
                 lrcListModel.addElement(statements.get(i));
@@ -20747,6 +20749,7 @@ public class MainFrame extends JFrame {
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
         lrcList.setModel(lrcListModel);
+        lrcScrollAnimation = true;
         if (reload) seekLrc(player.getCurrTimeSeconds());
     }
 
@@ -21952,6 +21955,7 @@ public class MainFrame extends JFrame {
         }
         filterTextField.setForeground(filterTextField.isOccupied() ? textColor : darkerTextColor);
         filterTextField.setCaretColor(textColor);
+        filterTextField.setSelectedTextColor(textColor);
         filterTextField.setSelectionColor(darkerTextAlphaColor);
         // 在线音乐搜索栏透明
         focusListeners = searchTextField.getFocusListeners();
@@ -21963,12 +21967,14 @@ public class MainFrame extends JFrame {
         }
         searchTextField.setForeground(searchTextField.isOccupied() ? textColor : darkerTextColor);
         searchTextField.setCaretColor(textColor);
+        searchTextField.setSelectedTextColor(textColor);
         searchTextField.setSelectionColor(darkerTextAlphaColor);
         netMusicSourceComboBox.setUI(new ComboBoxUI(netMusicSourceComboBox, THIS));
         netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS));
         netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
         netMusicPageTextField.setForeground(textColor);
         netMusicPageTextField.setCaretColor(textColor);
+        netMusicPageTextField.setSelectedTextColor(textColor);
         netMusicPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
@@ -21983,10 +21989,12 @@ public class MainFrame extends JFrame {
         }
         netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netPlaylistSearchTextField.setCaretColor(textColor);
+        netPlaylistSearchTextField.setSelectedTextColor(textColor);
         netPlaylistSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netPlaylistSourceComboBox.setUI(new ComboBoxUI(netPlaylistSourceComboBox, THIS));
         netPlaylistPageTextField.setForeground(textColor);
         netPlaylistPageTextField.setCaretColor(textColor);
+        netPlaylistPageTextField.setSelectedTextColor(textColor);
         netPlaylistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netPlaylistPlayAllButton.setForeground(textColor);
         // 专辑搜索栏透明
@@ -21999,10 +22007,12 @@ public class MainFrame extends JFrame {
         }
         netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netAlbumSearchTextField.setCaretColor(textColor);
+        netAlbumSearchTextField.setSelectedTextColor(textColor);
         netAlbumSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netAlbumSourceComboBox.setUI(new ComboBoxUI(netAlbumSourceComboBox, THIS));
         netAlbumPageTextField.setForeground(textColor);
         netAlbumPageTextField.setCaretColor(textColor);
+        netAlbumPageTextField.setSelectedTextColor(textColor);
         netAlbumPageTextField.setSelectionColor(darkerTextAlphaColor);
         netAlbumPlayAllButton.setForeground(textColor);
         // 歌手搜索栏透明
@@ -22015,10 +22025,12 @@ public class MainFrame extends JFrame {
         }
         netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netArtistSearchTextField.setCaretColor(textColor);
+        netArtistSearchTextField.setSelectedTextColor(textColor);
         netArtistSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netArtistSourceComboBox.setUI(new ComboBoxUI(netArtistSourceComboBox, THIS));
         netArtistPageTextField.setForeground(textColor);
         netArtistPageTextField.setCaretColor(textColor);
+        netArtistPageTextField.setSelectedTextColor(textColor);
         netArtistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netArtistPlayAllButton.setForeground(textColor);
         // 电台搜索栏透明
@@ -22031,10 +22043,12 @@ public class MainFrame extends JFrame {
         }
         netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netRadioSearchTextField.setCaretColor(textColor);
+        netRadioSearchTextField.setSelectedTextColor(textColor);
         netRadioSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netRadioSourceComboBox.setUI(new ComboBoxUI(netRadioSourceComboBox, THIS));
         netRadioPageTextField.setForeground(textColor);
         netRadioPageTextField.setCaretColor(textColor);
+        netRadioPageTextField.setSelectedTextColor(textColor);
         netRadioPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRadioPlayAllButton.setForeground(textColor);
         // MV 搜索栏透明
@@ -22047,14 +22061,17 @@ public class MainFrame extends JFrame {
         }
         netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netMvSearchTextField.setCaretColor(textColor);
+        netMvSearchTextField.setSelectedTextColor(textColor);
         netMvSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netMvSourceComboBox.setUI(new ComboBoxUI(netMvSourceComboBox, THIS));
         netMvPageTextField.setForeground(textColor);
         netMvPageTextField.setCaretColor(textColor);
+        netMvPageTextField.setSelectedTextColor(textColor);
         netMvPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 榜单搜索栏透明
         netRankingPageTextField.setForeground(textColor);
         netRankingPageTextField.setCaretColor(textColor);
+        netRankingPageTextField.setSelectedTextColor(textColor);
         netRankingPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRankingPlayAllButton.setForeground(textColor);
         // 用户搜索栏透明
@@ -22067,11 +22084,13 @@ public class MainFrame extends JFrame {
         }
         netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : darkerTextColor);
         netUserSearchTextField.setCaretColor(textColor);
+        netUserSearchTextField.setSelectedTextColor(textColor);
         netUserSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netUserSourceComboBox.setUI(new ComboBoxUI(netUserSourceComboBox, THIS));
         netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS));
         netUserPageTextField.setForeground(textColor);
         netUserPageTextField.setCaretColor(textColor);
+        netUserPageTextField.setSelectedTextColor(textColor);
         netUserPageTextField.setSelectionColor(darkerTextAlphaColor);
         netUserPlayAllButton.setForeground(textColor);
         // 榜单栏
@@ -22080,16 +22099,19 @@ public class MainFrame extends JFrame {
         netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS));
         netCommentPageTextField.setForeground(textColor);
         netCommentPageTextField.setCaretColor(textColor);
+        netCommentPageTextField.setSelectedTextColor(textColor);
         netCommentPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 乐谱栏透明
         netSheetPageTextField.setForeground(textColor);
         netSheetPageTextField.setCaretColor(textColor);
+        netSheetPageTextField.setSelectedTextColor(textColor);
         netSheetPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 推荐页码文本框
         netRecommendSourceComboBox.setUI(new ComboBoxUI(netRecommendSourceComboBox, THIS));
         netRecommendSortTypeComboBox.setUI(new ComboBoxUI(netRecommendSortTypeComboBox, THIS));
         netRecommendPageTextField.setForeground(textColor);
         netRecommendPageTextField.setCaretColor(textColor);
+        netRecommendPageTextField.setSelectedTextColor(textColor);
         netRecommendPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, 240));
         netRecommendPlayAllButton.setForeground(textColor);
@@ -22097,6 +22119,7 @@ public class MainFrame extends JFrame {
         collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS));
         collectionPageTextField.setForeground(textColor);
         collectionPageTextField.setCaretColor(textColor);
+        collectionPageTextField.setSelectedTextColor(textColor);
         collectionPageTextField.setSelectionColor(darkerTextAlphaColor);
         collectionPlayAllButton.setForeground(textColor);
         // 推荐工具栏按钮透明
@@ -23096,7 +23119,7 @@ public class MainFrame extends JFrame {
             if (blurType != BlurConstants.OFF && loadedMusicResource) {
                 img = player.getMetaMusicInfo().getAlbumImage();
                 if (img == null) img = ImageConstants.DEFAULT_IMG;
-                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getAvgColorBest(img));
+                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
             } else img = currUIStyle.getImg();
 
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();

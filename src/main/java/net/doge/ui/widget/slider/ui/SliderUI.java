@@ -88,6 +88,12 @@ public class SliderUI extends BasicSliderUI {
 //        if (!bufferTimer.isRunning()) bufferTimer.start();
 //    }
 
+
+    @Override
+    protected Dimension getThumbSize() {
+        return new Dimension(12, 20);
+    }
+
     /**
      * 自定义把手
      *

@@ -20,6 +20,11 @@ public class VSliderUI extends BasicSliderUI {
         this.trackColor = trackColor;
     }
 
+    @Override
+    protected Dimension getThumbSize() {
+        return new Dimension(20, 16);
+    }
+
     /**
      * 自定义把手
      *

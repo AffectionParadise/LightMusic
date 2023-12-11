@@ -668,7 +668,7 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static Color getAvgColorBest(BufferedImage img) {
+    public static Color getBestAvgColor(BufferedImage img) {
         return getAvgColor(img, 1f, true);
     }
 

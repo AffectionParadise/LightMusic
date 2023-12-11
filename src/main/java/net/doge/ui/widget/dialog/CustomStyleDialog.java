@@ -134,6 +134,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     return;
                 }
             }
+            // 文件夹不存在就创建
+            File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
+            FileUtil.mkDir(dir);
             // 图片路径
             if (results[1] instanceof String) {
                 String str = (String) results[1];
@@ -149,9 +152,6 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 else {
                     File imgFile = new File(str);
                     if (imgFile.exists()) {
-                        // 文件夹不存在就创建
-                        File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
-                        FileUtil.mkDir(dir);
                         String newPath = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + FileUtil.getSuffix(imgFile);
                         FileUtil.copy(imgFile.getPath(), newPath);
                         // 设置新的路径
@@ -220,6 +220,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 CustomTextField component = (CustomTextField) components[i];
                 component.setForeground(textColor);
                 component.setCaretColor(textColor);
+                component.setSelectedTextColor(textColor);
                 component.setSelectionColor(darkerTextAlphaColor);
                 // 加载主题名称
                 component.setText((String) results[i]);

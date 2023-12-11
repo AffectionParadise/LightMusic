@@ -22,7 +22,7 @@ public class NeteaseCrypto {
     private final String PRESET_KEY = "0CoJUm6Qyw8W8jud";
     //    private final String LINUX_API_KEY = "rFgB&h#%2?^eDg:Q";
     private final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6sXqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44oncaTWz7OBGLbCiK45wIDAQAB";
-    private final String E_API_KEY = "e82ckenh8dichen8";
+    private final String EAPI_KEY = "e82ckenh8dichen8";
 
     public String weapi(String data) {
         byte[] secretKey = ArrayUtil.randomBytes(16);
@@ -53,7 +53,7 @@ public class NeteaseCrypto {
         String message = "nobody" + path + "use" + data + "md5forencrypt";
         String digest = CryptoUtil.md5(message);
         String dat = path + "-36cd479b6b5-" + data + "-36cd479b6b5-" + digest;
-        byte[] aesBytes = CryptoUtil.aesEncrypt(dat.getBytes(StandardCharsets.UTF_8), "ECB", E_API_KEY.getBytes(StandardCharsets.UTF_8), null);
+        byte[] aesBytes = CryptoUtil.aesEncrypt(dat.getBytes(StandardCharsets.UTF_8), "ECB", EAPI_KEY.getBytes(StandardCharsets.UTF_8), null);
         String params = CryptoUtil.bytesToHex(aesBytes).toUpperCase();
         return "params=" + params;
     }
