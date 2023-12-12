@@ -101,10 +101,7 @@ import net.doge.util.common.TimeUtil;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.FileUtil;
-import net.doge.util.system.KeyUtil;
-import net.doge.util.system.LogUtil;
-import net.doge.util.system.TerminateUtil;
+import net.doge.util.system.*;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
@@ -128,9 +125,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.*;
@@ -4234,7 +4228,7 @@ public class MainFrame extends JFrame {
 
     // 开始更新
     private void startUpdate(boolean mute, String keyMD5) {
-        TerminateUtil.updater(keyMD5);
+        TerminalUtil.updater(keyMD5);
         if (mute) System.exit(0);
         else exit();
     }
@@ -4366,17 +4360,7 @@ public class MainFrame extends JFrame {
         });
         settingMenuItem.addActionListener(e -> new SettingDialog(THIS).showDialog());
         donateMenuItem.addActionListener(e -> new DonateDialog(THIS).showDialog());
-        releaseMenuItem.addActionListener(e -> {
-            Desktop desktop = Desktop.getDesktop();
-            if (Desktop.isDesktopSupported() && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    URI uri = new URI(SoftInfo.WEBSITE);
-                    desktop.browse(uri);
-                } catch (IOException | URISyntaxException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-        });
+        releaseMenuItem.addActionListener(e -> DesktopUtil.browse(SoftInfo.WEBSITE));
         updateMenuItem.addActionListener(e -> checkUpdate(false));
         helpMenuItem.addActionListener(e -> new ConfirmDialog(THIS, HELP_MSG, OK).showDialog());
         aboutMenuItem.addActionListener(e -> new AboutDialog(THIS).showDialog());
@@ -7081,7 +7065,7 @@ public class MainFrame extends JFrame {
             MusicResource resource = musicList.getSelectedValue();
             if (resource instanceof AudioFile) {
                 File file = ((AudioFile) resource);
-                TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
+                DesktopUtil.explore(file.exists() ? file : file.getParentFile());
             }
         });
         // 右键菜单编辑歌曲信息
@@ -19244,9 +19228,8 @@ public class MainFrame extends JFrame {
         downloadLocateFileMenuItem.addActionListener(e -> {
             Task task = downloadList.getSelectedValue();
             File file = new File(task.getDest());
-            TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() :
-                    task.isMusic() ? new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath() :
-                            new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
+            DesktopUtil.explore(file.exists() ? file :
+                    task.isMusic() ? new File(SimplePath.DOWNLOAD_MUSIC_PATH) : new File(SimplePath.DOWNLOAD_MV_PATH));
         });
         // 编辑歌曲信息菜单项
         downloadEditInfoMenuItem.addActionListener(e -> {
@@ -19665,7 +19648,7 @@ public class MainFrame extends JFrame {
             MusicResource resource = playQueue.getSelectedValue();
             if (resource instanceof AudioFile) {
                 File file = ((AudioFile) resource);
-                TerminateUtil.explorer(file.exists() ? file.getAbsolutePath() : file.getParent());
+                DesktopUtil.explore(file.exists() ? file : file.getParentFile());
             }
         });
         // 编辑歌曲信息菜单项
@@ -19742,7 +19725,7 @@ public class MainFrame extends JFrame {
                 String filePath = file.getAbsolutePath();
                 lrcPath = filePath.substring(0, filePath.lastIndexOf('.')) + ".lrc";
             }
-            TerminateUtil.notepad(lrcPath);
+            DesktopUtil.edit(lrcPath);
         });
         // 下载歌词文件
         downloadLrcMenuItem.addActionListener(e -> downloadLrc(player.getMusicInfo()));
@@ -21457,7 +21440,6 @@ public class MainFrame extends JFrame {
     // 关闭频谱
     private void closeSpectrum() {
         spectrumTimer.stop();
-        spectrumPanel.setDrawSpectrum(false);
         spectrumPanel.setVisible(false);
     }
 

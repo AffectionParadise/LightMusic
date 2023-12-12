@@ -14,24 +14,22 @@ import java.io.InputStreamReader;
  * @Description 终端工具类
  * @Date 2020/12/15
  */
-public class TerminateUtil {
+public class TerminalUtil {
     /**
      * 执行命令(同步)
      *
      * @param command
-     * @return
      */
-    public static int exec(String command) {
+    public static void execSync(String command) {
         try {
             Process p = RuntimeUtil.exec(command);
             // 获取外部程序标准输出流
             GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getInputStream(), false));
             // 获取外部程序标准错误流
             GlobalExecutors.requestExecutor.execute(new OutputHandlerRunnable(p.getErrorStream(), true));
-            int code = p.waitFor();
-            return code;
+            p.waitFor();
         } catch (InterruptedException e) {
-            return -1;
+            LogUtil.error(e);
         }
     }
 
@@ -41,7 +39,7 @@ public class TerminateUtil {
      * @param command
      * @return
      */
-    public static void execAsync(String command) {
+    public static void exec(String command) {
         RuntimeUtil.exec(command);
     }
 
@@ -52,27 +50,7 @@ public class TerminateUtil {
      * @return
      */
     public static void updater(String keyMD5) {
-        execAsync(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
-    }
-
-    /**
-     * 调用文件资源管理器
-     *
-     * @param
-     * @return
-     */
-    public static void explorer(String path) {
-        execAsync(String.format("explorer /select, \"%s\"", path));
-    }
-
-    /**
-     * 调用记事本
-     *
-     * @param
-     * @return
-     */
-    public static void notepad(String path) {
-        execAsync(String.format("notepad \"%s\"", path));
+        exec(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
     }
 
     private static class OutputHandlerRunnable implements Runnable {

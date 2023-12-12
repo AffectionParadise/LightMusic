@@ -12,7 +12,7 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.util.common.StringUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.system.LogUtil;
-import net.doge.util.system.TerminateUtil;
+import net.doge.util.system.TerminalUtil;
 import net.doge.util.ui.ImageUtil;
 
 import java.awt.*;
@@ -247,6 +247,6 @@ public class MediaUtil {
      * @return
      */
     public static void convert(File source, File dest) {
-        TerminateUtil.exec(SimplePath.PLUGIN_PATH + String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
+        TerminalUtil.execSync(SimplePath.PLUGIN_PATH + String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
     }
 }

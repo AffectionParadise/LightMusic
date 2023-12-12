@@ -41,8 +41,8 @@
 //        eMap.put("320k", ".mp3");
 //        eMap.put("flac", ".flac");
 //        eMap.put("flac24bit", ".flac");
-//        hMap.put("dolby", ".flac");
-//        hMap.put("master", ".flac");
+//        eMap.put("dolby", ".flac");
+//        eMap.put("master", ".flac");
 //    }
 //
 //    private HttpRequest signRequest(String body) {

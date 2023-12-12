@@ -26,7 +26,6 @@ public class CustomComboPopup extends BasicComboPopup {
         this.f = f;
         this.scrollBarColor = f.currUIStyle.getScrollBarColor();
 
-        setDefaultLightWeightPopupEnabled(false);
         setLightWeightPopupEnabled(false);
 
         // 阴影边框
@@ -45,6 +44,7 @@ public class CustomComboPopup extends BasicComboPopup {
     protected JScrollPane createScroller() {
         CustomScrollPane sp = new CustomScrollPane(list);
         sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        sp.setHUI(new ScrollBarUI(scrollBarColor));
         sp.setVUI(new ScrollBarUI(scrollBarColor));
         return sp;
     }
