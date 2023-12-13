@@ -87,6 +87,7 @@ jdk8（**必须是最稳定的8版本**，连7、9、10、11或更高版本都�
 以下是为本项目提供了思路的开源项目，本人通过学习他们的源码，用自己的技术重构出一部分代码，为本项目添砖加瓦：
 - [Binaryify/NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 - [ecitlm/Kugou-api](https://github.com/ecitlm/Kugou-api)
+- [MakcRe/KuGouMusicApi](https://github.com/MakcRe/KuGouMusicApi)
 - [jsososo/QQMusicApi](https://github.com/jsososo/QQMusicApi)
 - [QiuYaohong/kuwoMusicApi](https://github.com/QiuYaohong/kuwoMusicApi)
 - [jsososo/MiguMusicApi](https://github.com/jsososo/MiguMusicApi)
