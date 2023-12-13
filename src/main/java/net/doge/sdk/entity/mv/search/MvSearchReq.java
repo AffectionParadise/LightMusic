@@ -12,8 +12,8 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -44,6 +44,7 @@ public class MvSearchReq {
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索 MV API (酷狗)
     private final String SEARCH_MV_KG_API = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
+    //    private final String SEARCH_MV_KG_API = "/v1/search/mv";
     // 关键词搜索 MV API (酷我)
     private final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
@@ -199,6 +200,52 @@ public class MvSearchReq {
 
                 r.add(mvInfo);
             }
+
+            // 新接口部分参数获取不到，暂时使用旧接口
+//            Map<String, Object> params = new TreeMap<>();
+//            params.put("platform", "AndroidFilter");
+//            params.put("keyword", keyword);
+//            params.put("page", page);
+//            params.put("pagesize", limit);
+//            params.put("category", 1);
+//            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_MV_KG_API);
+//            String mvInfoBody = SdkCommon.kgRequest(params, null, options)
+//                    .header("x-router", "complexsearch.kugou.com")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+//            JSONObject data = mvInfoJson.getJSONObject("data");
+//            t = data.getIntValue("total");
+//            JSONArray mvArray = data.getJSONArray("lists");
+//            for (int i = 0, len = mvArray.size(); i < len; i++) {
+//                JSONObject mvJson = mvArray.getJSONObject(i);
+//
+//                String mvId = mvJson.getString("MvHash");
+//                String mvName = mvJson.getString("MvName");
+//                String artistName = SdkUtil.parseArtist(mvJson);
+//                String creatorId = SdkUtil.parseArtistId(mvJson);
+//                Long playCount = mvJson.getLong("HistoryHeat");
+//                Double duration = mvJson.getDouble("Duration");
+//                String pubTime = mvJson.getString("PublishDate").split(" ")[0];
+//                String coverImgUrl = mvJson.getString("imgurl").replace("/{size}", "");
+//
+//                NetMvInfo mvInfo = new NetMvInfo();
+//                mvInfo.setSource(NetMusicSource.KG);
+//                mvInfo.setId(mvId);
+//                mvInfo.setName(mvName);
+//                mvInfo.setArtist(artistName);
+//                mvInfo.setCreatorId(creatorId);
+//                mvInfo.setPlayCount(playCount);
+//                mvInfo.setDuration(duration);
+//                mvInfo.setPubTime(pubTime);
+//                mvInfo.setCoverImgUrl(coverImgUrl);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+//                    mvInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                r.add(mvInfo);
+//            }
             return new CommonResult<>(r, t);
         };
 

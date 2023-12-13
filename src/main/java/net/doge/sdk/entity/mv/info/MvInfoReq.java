@@ -9,8 +9,8 @@ import net.doge.constant.system.Format;
 import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.TimeUtil;
 

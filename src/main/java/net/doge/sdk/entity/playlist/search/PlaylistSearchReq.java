@@ -10,8 +10,10 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -21,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -40,7 +43,8 @@ public class PlaylistSearchReq {
     // 关键词搜索歌单 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索歌单 API (酷狗)
-    private final String SEARCH_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v3/search/special?filter=0&keyword=%s&page=%s&pagesize=%s";
+//    private final String SEARCH_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v3/search/special?filter=0&keyword=%s&page=%s&pagesize=%s";
+    private final String SEARCH_PLAYLIST_KG_API = "/v1/search/special";
     // 关键词搜索歌单 API (酷我)
 //    private final String SEARCH_PLAYLIST_KW_API = "http://www.kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     private final String SEARCH_PLAYLIST_KW_API = "http://search.kuwo.cn/r.s?all=%s&pn=%s&rn=%s&rformat=json&encoding=utf8&ver=mbox&vipver=MUSIC_8.7.7.0_BCS37&plat=pc&devid=28156413&ft=playlist&pay=0&needliveshow=0";
@@ -109,22 +113,62 @@ public class PlaylistSearchReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KG_API, encodedKeyword, page, limit))
+//            String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KG_API, encodedKeyword, page, limit))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+//            JSONObject data = playlistInfoJson.getJSONObject("data");
+//            t = data.getIntValue("total");
+//            JSONArray playlistArray = data.getJSONArray("info");
+//            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+//                JSONObject playlistJson = playlistArray.getJSONObject(i);
+//
+//                String playlistId = playlistJson.getString("specialid");
+//                String playlistName = playlistJson.getString("specialname");
+//                String creator = playlistJson.getString("nickname");
+//                Long playCount = playlistJson.getLong("playcount");
+//                Integer trackCount = playlistJson.getIntValue("songcount");
+//                String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
+//
+//                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+//                playlistInfo.setSource(NetMusicSource.KG);
+//                playlistInfo.setId(playlistId);
+//                playlistInfo.setName(playlistName);
+//                playlistInfo.setCreator(creator);
+//                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                playlistInfo.setPlayCount(playCount);
+//                playlistInfo.setTrackCount(trackCount);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                    playlistInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//                r.add(playlistInfo);
+//            }
+
+            Map<String, Object> params = new TreeMap<>();
+            params.put("platform", "AndroidFilter");
+            params.put("keyword", keyword);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            params.put("category", 1);
+            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_PLAYLIST_KG_API);
+            String playlistInfoBody = SdkCommon.kgRequest(params, null, options)
+                    .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()
                     .body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
-            JSONArray playlistArray = data.getJSONArray("info");
+            JSONArray playlistArray = data.getJSONArray("lists");
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("specialid");
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
-                Long playCount = playlistJson.getLong("playcount");
-                Integer trackCount = playlistJson.getIntValue("songcount");
-                String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
+                Long playCount = playlistJson.getLong("total_play_count");
+                Integer trackCount = playlistJson.getIntValue("song_count");
+                String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                 playlistInfo.setSource(NetMusicSource.KG);

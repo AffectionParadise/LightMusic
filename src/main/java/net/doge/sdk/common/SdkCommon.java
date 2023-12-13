@@ -3,9 +3,11 @@ package net.doge.sdk.common;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
+import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.builder.MiguReqBuilder;
 import net.doge.sdk.common.builder.NeteaseReqBuilder;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.StringUtil;
 
@@ -34,6 +36,11 @@ public class SdkCommon {
     // 构造网易云音乐请求
     public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
         return NeteaseReqBuilder.buildRequest(method, url, data, options);
+    }
+
+    // 构造酷狗音乐请求
+    public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, String> options) {
+        return KugouReqBuilder.buildRequest(params, data, options);
     }
 
     // 构造酷我音乐请求

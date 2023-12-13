@@ -12,12 +12,15 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.entity.ranking.info.RankingInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -29,6 +32,7 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -47,12 +51,12 @@ public class HotMusicRecommendReq {
 
     // 曲风歌曲(最热) API
     private final String STYLE_HOT_SONG_API = "https://music.163.com/api/style-tag/home/song";
+    // 歌曲推荐 API (酷狗)
+    private final String CARD_SONG_KG_API = "/singlecardrec.service/v1/single_card_recommend";
     // 飙升榜 API (酷狗)
-    private final String UP_MUSIC_KG_API
-            = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=6666&page=%s&pagesize=%s";
+    private final String UP_MUSIC_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=6666&page=%s&pagesize=%s";
     // TOP500 API (酷狗)
-    private final String TOP500_KG_API
-            = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=8888&page=%s&pagesize=%s";
+    private final String TOP500_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=8888&page=%s&pagesize=%s";
     // 飙升榜 API (酷我)
 //    private final String UP_MUSIC_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=93&pn=%s&rn=%s&httpsStatus=1";
     // 热歌榜 API (酷我)
@@ -147,6 +151,66 @@ public class HotMusicRecommendReq {
         };
 
         // 酷狗
+        // 歌曲推荐
+        Callable<CommonResult<NetMusicInfo>> getCardSongKg = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[1])) {
+                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(CARD_SONG_KG_API);
+                Map<String, Object> params = new TreeMap<>();
+                params.put("card_id", s[1]);
+                params.put("fakem", "60f7ebf1f812edbac3c63a7310001701760f");
+                params.put("area_code", 1);
+                params.put("platform", "android");
+                long ct = System.currentTimeMillis() / 1000;
+                String dat = String.format("{\"appid\":1005,\"clientver\":12029,\"platform\":\"android\",\"clienttime\":%s," +
+                                "\"userid\":0,\"key\":\"%s\",\"fakem\":\"60f7ebf1f812edbac3c63a7310001701760f\"," +
+                                "\"area_code\":1,\"mid\":\"114514\",\"uuid\":\"15e772e1213bdd0718d0c1d10d64e06f\"," +
+                                "\"client_playlist\":[],\"u_info\":\"a0c35cd40af564444b5584c2754dedec\"}",
+                        ct, CryptoUtil.md5("1005OIlwieks28dk2k092lksi2UIkp12029" + ct));
+                String rankingInfoBody = SdkCommon.kgRequest(params, dat, options)
+                        .executeAsync()
+                        .body();
+                JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
+                JSONObject data = rankingInfoJson.getJSONObject("data");
+                JSONArray songArray = data.getJSONArray("song_list");
+                t = songArray.size();
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String hash = songJson.getString("hash");
+                    String songId = songJson.getString("album_audio_id");
+                    String name = songJson.getString("songname");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
+                    String albumName = songJson.getString("album_name");
+                    String albumId = songJson.getString("album_id");
+                    Double duration = songJson.getDouble("time_length");
+                    String mvId = songJson.getString("mv_hash");
+                    int qualityType = AudioQuality.UNKNOWN;
+                    if (songJson.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+                    else if (songJson.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+                    else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.KG);
+                    musicInfo.setHash(hash);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    musicInfo.setQualityType(qualityType);
+
+                    r.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
         // 飙升榜
         Callable<CommonResult<NetMusicInfo>> getUpMusicKg = () -> {
             List<NetMusicInfo> r = new LinkedList<>();
@@ -829,6 +893,7 @@ public class HotMusicRecommendReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusic));
             }
             if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCardSongKg));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getUpMusicKg));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getTop500Kg));
             }
@@ -863,6 +928,8 @@ public class HotMusicRecommendReq {
         } else {
             if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getStyleHotSong));
+            if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+                taskList.add(GlobalExecutors.requestExecutor.submit(getCardSongKg));
             if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
                 taskList.add(GlobalExecutors.requestExecutor.submit(getHotMusicHf));
             if (src == NetMusicSource.GG || src == NetMusicSource.ALL)

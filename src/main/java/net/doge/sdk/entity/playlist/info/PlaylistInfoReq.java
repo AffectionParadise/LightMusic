@@ -10,8 +10,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.*;
 import org.jsoup.Jsoup;
@@ -126,9 +126,9 @@ public class PlaylistInfoReq {
             HttpResponse resp = HttpRequest.get(String.format(PLAYLIST_DETAIL_KG_API, id,
                             CryptoUtil.md5("NVPh5oo715z5DIWAeQlhMDsWXXQV4hwtappid=1058clienttime=1586163242519clientver=20000dfid=-format=jsonpglobal_specialid="
                                     + id + "mid=1586163242519specialid=0srcappid=2919uuid=1586163242519NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt")))
+                    .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
+                    .header(Header.REFERER, "https://m3ws.kugou.com/share/index.php")
                     .header("mid", "1586163242519")
-                    .header("Referer", "https://m3ws.kugou.com/share/index.php")
-                    .header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
                     .header("dfid", "-")
                     .header("clienttime", "1586163242519")
                     .executeAsync();
@@ -437,9 +437,9 @@ public class PlaylistInfoReq {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KG_API, id,
                             CryptoUtil.md5("NVPh5oo715z5DIWAeQlhMDsWXXQV4hwtappid=1058clienttime=1586163242519clientver=20000dfid=-format=jsonpglobal_specialid="
                                     + id + "mid=1586163242519specialid=0srcappid=2919uuid=1586163242519NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt")))
+                    .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
+                    .header(Header.REFERER, "https://m3ws.kugou.com/share/index.php")
                     .header("mid", "1586163242519")
-                    .header("Referer", "https://m3ws.kugou.com/share/index.php")
-                    .header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
                     .header("dfid", "-")
                     .header("clienttime", "1586163242519")
                     .executeAsync()
@@ -453,7 +453,7 @@ public class PlaylistInfoReq {
             if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             playlistInfo.setDescription(description);
-            playlistInfo.setTag("");
+            if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(data));
             if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(data.getIntValue("songcount"));
         }
 

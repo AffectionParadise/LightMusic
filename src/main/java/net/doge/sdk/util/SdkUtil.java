@@ -22,7 +22,7 @@ public class SdkUtil {
      * @return
      */
     private static JSONArray getArtistArray(JSONObject json) {
-        String[] artistKeys = {"artists", "artist", "ar", "authors", "singers", "singer_list", "singerList", "singer", "singerinfo", "creator", "actors"};
+        String[] artistKeys = {"artists", "artist", "ar", "authors", "singers", "Singers", "singer_list", "singerList", "singer", "singerinfo", "creator", "actors"};
         JSONArray artistArray = null;
         for (String key : artistKeys) {
             if (!json.containsKey(key)) continue;
@@ -166,6 +166,7 @@ public class SdkUtil {
                 JSONObject tagJson = (JSONObject) obj;
                 String name = tagJson.getString("name");
                 if (StringUtil.isEmpty(name)) name = tagJson.getString("tagName");
+                if (StringUtil.isEmpty(name)) name = tagJson.getString("tagname");
                 if (StringUtil.notEmpty(name)) sj.add(name);
             }
         }

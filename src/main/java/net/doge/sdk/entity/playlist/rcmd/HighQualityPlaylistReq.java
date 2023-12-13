@@ -12,10 +12,13 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -43,11 +46,13 @@ public class HighQualityPlaylistReq {
         if (instance == null) instance = new HighQualityPlaylistReq();
         return instance;
     }
-    
+
     // 精品歌单 API
     private final String HIGH_QUALITY_PLAYLIST_API = "https://music.163.com/api/playlist/highquality/list";
     // 网友精选碟(最热/最新) API
     private final String PICKED_PLAYLIST_API = "https://music.163.com/weapi/playlist/list";
+    // Top 分类歌单 API (酷狗)
+    private final String TOP_PLAYLIST_KG_API = "/specialrec.service/special_recommend";
     // 推荐分类歌单(最热) API (酷狗)
     private final String CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=6&c=%s&p=%s";
     // 推荐分类歌单(热藏) API (酷狗)
@@ -55,8 +60,8 @@ public class HighQualityPlaylistReq {
     // 推荐分类歌单(飙升) API (酷狗)
     private final String UP_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=8&c=%s&p=%s";
     // 热门歌单 API (酷狗)
-    private final String HOT_PLAYLIST_KG_API
-            = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
+    private final String HOT_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4" +
+            "&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
     // 分类歌单 API (QQ)
     private final String CAT_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
@@ -226,6 +231,57 @@ public class HighQualityPlaylistReq {
         };
 
         // 酷狗
+        // Top 歌单
+        Callable<CommonResult<NetPlaylistInfo>> getTopPlaylistsKg = () -> {
+            List<NetPlaylistInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[2])) {
+                String cid = s[2].trim();
+                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
+                long ct = System.currentTimeMillis() / 1000;
+                String dat = String.format("{\"appid\":1005,\"mid\":\"114514\",\"clientver\":12029," +
+                                "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":0,\"module_id\":4,\"page\":1,\"pagesize\":30," +
+                                "\"key\":\"%s\",\"special_recommend\":{\"withtag\":1,\"withsong\":1,\"sort\":1,\"ugc\":1," +
+                                "\"is_selected\":0,\"withrecommend\":1,\"area_code\":1,\"categoryid\":\"%s\"}}",
+                        ct, CryptoUtil.md5("1005OIlwieks28dk2k092lksi2UIkp12029" + ct), StringUtil.isEmpty(cid) ? "0" : cid);
+                String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
+                        .executeAsync()
+                        .body();
+                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+                JSONObject data = playlistInfoJson.getJSONObject("data");
+                JSONArray playlistArray = data.getJSONArray("special_list");
+                if (JsonUtil.notEmpty(playlistArray)) {
+                    t = playlistArray.size();
+                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                        JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                        String playlistId = playlistJson.getString("specialid");
+                        String playlistName = playlistJson.getString("specialname");
+                        String creator = playlistJson.getString("nickname");
+                        Long playCount = playlistJson.getLong("play_count");
+                        Integer trackCount = playlistJson.getIntValue("songcount");
+                        String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
+
+                        NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                        playlistInfo.setSource(NetMusicSource.KG);
+                        playlistInfo.setId(playlistId);
+                        playlistInfo.setName(playlistName);
+                        playlistInfo.setCreator(creator);
+                        playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                        playlistInfo.setPlayCount(playCount);
+                        playlistInfo.setTrackCount(trackCount);
+                        GlobalExecutors.imageExecutor.execute(() -> {
+                            BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                            playlistInfo.setCoverImgThumb(coverImgThumb);
+                        });
+
+                        r.add(playlistInfo);
+                    }
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
         // 推荐歌单(最热)
         Callable<CommonResult<NetPlaylistInfo>> getTagPlaylistsKg = () -> {
             List<NetPlaylistInfo> r = new LinkedList<>();
@@ -935,6 +991,7 @@ public class HighQualityPlaylistReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewPickedPlaylists));
         }
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            taskList.add(GlobalExecutors.requestExecutor.submit(getTopPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotCollectedTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getUpTagPlaylistsKg));

@@ -1,4 +1,4 @@
-package net.doge.sdk.common.opt;
+package net.doge.sdk.common.opt.nc;
 
 /**
  * 网易云请求选项值

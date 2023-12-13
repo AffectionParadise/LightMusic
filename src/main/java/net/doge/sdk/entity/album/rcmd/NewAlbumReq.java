@@ -12,8 +12,10 @@ import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -59,6 +61,8 @@ public class NewAlbumReq {
     private final String LANG_DI_ALBUM_API = "https://music.163.com/weapi/vipmall/appalbum/album/style";
     // 曲风专辑 API
     private final String STYLE_ALBUM_API = "https://music.163.com/api/style-tag/home/album";
+    // 新碟上架 API (酷狗)
+    private final String NEW_ALBUM_KG_API = "/musicadservice/v1/mobile_newalbum_sp";
     // 新碟推荐 API (咪咕)
     private final String NEW_ALBUM_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23854016&pageNo=%s&pageSize=%s&type=2003";
     // 新专辑榜 API (咪咕)
@@ -392,6 +396,52 @@ public class NewAlbumReq {
             return new CommonResult<>(r, t);
         };
 
+        // 酷狗
+        Callable<CommonResult<NetAlbumInfo>> getNewAlbumsKg = () -> {
+            List<NetAlbumInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[3])) {
+                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
+                String dat = String.format("{\"apiver\":20,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", page, limit);
+                String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
+                        .executeAsync()
+                        .body();
+                JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+                JSONObject data = albumInfoJson.getJSONObject("data");
+                JSONArray albumArray = data.getJSONArray(s[3]);
+                t = albumArray.size();
+                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                    JSONObject albumJson = albumArray.getJSONObject(i);
+
+                    String albumId = albumJson.getString("albumid");
+                    String albumName = albumJson.getString("albumname");
+                    String artist = albumJson.getString("singername");
+                    String artistId = albumJson.getString("singerid");
+                    String publishTime = albumJson.getString("publishtime").split(" ")[0];
+                    Integer songNum = albumJson.getIntValue("songcount");
+                    String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
+
+                    NetAlbumInfo albumInfo = new NetAlbumInfo();
+                    albumInfo.setSource(NetMusicSource.KG);
+                    albumInfo.setId(albumId);
+                    albumInfo.setName(albumName);
+                    albumInfo.setArtist(artist);
+                    albumInfo.setArtistId(artistId);
+                    albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    albumInfo.setPublishTime(publishTime);
+                    albumInfo.setSongNum(songNum);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        albumInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(albumInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
+
         // QQ(程序分页)
         Callable<CommonResult<NetAlbumInfo>> getNewAlbumsQq = () -> {
             List<NetAlbumInfo> r = new LinkedList<>();
@@ -701,8 +751,8 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[5])) {
-                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[5], (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
+            if (StringUtil.notEmpty(s[6])) {
+                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[6], (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
@@ -788,8 +838,8 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[4])) {
-                String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[4], (page - 1) * limit))
+            if (StringUtil.notEmpty(s[5])) {
+                String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[5], (page - 1) * limit))
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(albumInfoBody);
@@ -879,30 +929,27 @@ public class NewAlbumReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewestDiAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getAllNewAlbums));
             }
-
+            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsKg));
+            }
             if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
             }
-
             if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsMg));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsRankingMg));
             }
-
             if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getIndexNewAlbumsQi));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQi));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getXDAlbumsQi));
             }
-
             if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getRecAlbumsDt));
             }
-
             if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getTopAlbumsDb));
             }
-
             if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getAlbumsLz));
             }
@@ -913,15 +960,15 @@ public class NewAlbumReq {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getLangDiAlbums));
                 taskList.add(GlobalExecutors.requestExecutor.submit(getStyleAlbums));
             }
-
+            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+                taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsKg));
+            }
             if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getNewAlbumsQq));
             }
-
             if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDt));
             }
-
             if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
                 taskList.add(GlobalExecutors.requestExecutor.submit(getCatAlbumsDb));
             }

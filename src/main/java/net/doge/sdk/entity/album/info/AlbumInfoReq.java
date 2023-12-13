@@ -11,8 +11,10 @@ import net.doge.model.entity.NetAlbumInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
@@ -44,8 +46,10 @@ public class AlbumInfoReq {
     private final String ALBUM_DETAIL_API = "https://music.163.com/weapi/v1/album/%s";
     // 专辑信息 API (酷狗)
     private final String ALBUM_DETAIL_KG_API = "http://mobilecdn.kugou.com/api/v3/album/info?version=9108&albumid=%s";
+    //    private final String ALBUM_DETAIL_KG_API = "/kmr/v2/albums";
     // 专辑歌曲 API (酷狗)
-    private final String ALBUM_SONGS_KG_API = "http://mobilecdn.kugou.com/api/v3/album/song?version=9108&albumid=%s&page=%s&pagesize=%s";
+//    private final String ALBUM_SONGS_KG_API = "http://mobilecdn.kugou.com/api/v3/album/song?version=9108&albumid=%s&page=%s&pagesize=%s";
+    private final String ALBUM_SONGS_KG_API = "/v1/album_audio/lite";
     // 专辑信息 API (QQ)
     private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json&inCharset=utf-8" +
             "&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page&albummid=%s&albumid=0";
@@ -526,29 +530,77 @@ public class AlbumInfoReq {
 
         // 酷狗 (接口分页)
         else if (source == NetMusicSource.KG) {
-            String albumInfoBody = HttpRequest.get(String.format(ALBUM_SONGS_KG_API, id, page, limit))
+//            String albumInfoBody = HttpRequest.get(String.format(ALBUM_SONGS_KG_API, id, page, limit))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+//            JSONObject data = albumInfoJson.getJSONObject("data");
+//            total = data.getIntValue("total");
+//            JSONArray songArray = data.getJSONArray("info");
+//            for (int i = 0, len = songArray.size(); i < len; i++) {
+//                JSONObject songJson = songArray.getJSONObject(i);
+//
+//                String hash = songJson.getString("hash");
+//                String songId = songJson.getString("album_audio_id");
+//                String[] s = songJson.getString("filename").split(" - ");
+//                String name = s[1];
+//                String artist = s[0];
+//                String albumName = songJson.getString("remark");
+//                String alId = songJson.getString("album_id");
+//                Double duration = songJson.getDouble("duration");
+//                String mvId = songJson.getString("mvhash");
+//                int qualityType = AudioQuality.UNKNOWN;
+//                if (songJson.getLong("sqfilesize") != 0) qualityType = AudioQuality.SQ;
+//                else if (songJson.getLong("320filesize") != 0) qualityType = AudioQuality.HQ;
+//                else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
+//
+//                NetMusicInfo musicInfo = new NetMusicInfo();
+//                musicInfo.setSource(NetMusicSource.KG);
+//                musicInfo.setHash(hash);
+//                musicInfo.setId(songId);
+//                musicInfo.setName(name);
+//                musicInfo.setArtist(artist);
+//                musicInfo.setAlbumName(albumName);
+//                musicInfo.setAlbumId(alId);
+//                musicInfo.setDuration(duration);
+//                musicInfo.setMvId(mvId);
+//                musicInfo.setQualityType(qualityType);
+//
+//                res.add(musicInfo);
+//            }
+
+            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(ALBUM_SONGS_KG_API);
+            String dat = String.format("{\"album_id\":\"%s\",\"is_buy\":\"\",\"page\":%s,\"pagesize\":%s}", id, page, limit);
+            String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
+                    .header("x-router", "openapi.kugou.com")
+                    .header("kg-tid", "255")
                     .executeAsync()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             total = data.getIntValue("total");
-            JSONArray songArray = data.getJSONArray("info");
+            JSONArray songArray = data.getJSONArray("songs");
             for (int i = 0, len = songArray.size(); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
+                JSONObject audioInfo = songJson.getJSONObject("audio_info");
+                JSONObject base = songJson.getJSONObject("base");
+                JSONObject album_info = songJson.getJSONObject("album_info");
 
-                String hash = songJson.getString("hash");
-                String songId = songJson.getString("album_audio_id");
-                String[] s = songJson.getString("filename").split(" - ");
-                String name = s[1];
-                String artist = s[0];
-                String albumName = songJson.getString("remark");
-                String alId = songJson.getString("album_id");
-                Double duration = songJson.getDouble("duration");
-                String mvId = songJson.getString("mvhash");
+                String hash = audioInfo.getString("hash");
+                String songId = base.getString("album_audio_id");
+                String name = base.getString("audio_name");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
+                String albumName = album_info.getString("album_name");
+                String albumId = base.getString("album_id");
+                Double duration = audioInfo.getDoubleValue("duration") / 1000;
+                JSONArray mvdata = songJson.getJSONArray("mvdata");
+                String mvId = JsonUtil.isEmpty(mvdata) ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
                 int qualityType = AudioQuality.UNKNOWN;
-                if (songJson.getLong("sqfilesize") != 0) qualityType = AudioQuality.SQ;
-                else if (songJson.getLong("320filesize") != 0) qualityType = AudioQuality.HQ;
-                else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
+                if (audioInfo.getLong("filesize_high") != 0) qualityType = AudioQuality.HR;
+                else if (audioInfo.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+                else if (audioInfo.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+                else if (audioInfo.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -556,8 +608,9 @@ public class AlbumInfoReq {
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
                 musicInfo.setAlbumName(albumName);
-                musicInfo.setAlbumId(alId);
+                musicInfo.setAlbumId(albumId);
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
                 musicInfo.setQualityType(qualityType);

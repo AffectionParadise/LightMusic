@@ -8,8 +8,10 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -39,11 +42,12 @@ public class AlbumSearchReq {
         if (instance == null) instance = new AlbumSearchReq();
         return instance;
     }
-    
+
     // 关键词搜索专辑 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索专辑 API (酷狗)
-    private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
+//    private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
+    private final String SEARCH_ALBUM_KG_API = "/v1/search/album";
     // 关键词搜索专辑 API (酷我)
     private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
@@ -120,23 +124,65 @@ public class AlbumSearchReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_KG_API, encodedKeyword, page, limit))
+//            String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_KG_API, encodedKeyword, page, limit))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+//            JSONObject data = albumInfoJson.getJSONObject("data");
+//            t = data.getIntValue("total");
+//            JSONArray albumArray = data.getJSONArray("info");
+//            for (int i = 0, len = albumArray.size(); i < len; i++) {
+//                JSONObject albumJson = albumArray.getJSONObject(i);
+//
+//                String albumId = albumJson.getString("albumid");
+//                String albumName = albumJson.getString("albumname");
+//                String artist = albumJson.getString("singername");
+//                String artistId = albumJson.getString("singerid");
+//                String publishTime = albumJson.getString("publishtime").replace(" 00:00:00", "");
+//                Integer songNum = albumJson.getIntValue("songcount");
+//                String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
+//
+//                NetAlbumInfo albumInfo = new NetAlbumInfo();
+//                albumInfo.setSource(NetMusicSource.KG);
+//                albumInfo.setId(albumId);
+//                albumInfo.setName(albumName);
+//                albumInfo.setArtist(artist);
+//                albumInfo.setArtistId(artistId);
+//                albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                albumInfo.setPublishTime(publishTime);
+//                albumInfo.setSongNum(songNum);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                    albumInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//                r.add(albumInfo);
+//            }
+
+            Map<String, Object> params = new TreeMap<>();
+            params.put("platform", "AndroidFilter");
+            params.put("keyword", keyword);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            params.put("category", 1);
+            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
+            String albumInfoBody = SdkCommon.kgRequest(params, null, options)
+                    .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()
                     .body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
-            JSONArray albumArray = data.getJSONArray("info");
+            JSONArray albumArray = data.getJSONArray("lists");
             for (int i = 0, len = albumArray.size(); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
                 String albumId = albumJson.getString("albumid");
                 String albumName = albumJson.getString("albumname");
-                String artist = albumJson.getString("singername");
-                String artistId = albumJson.getString("singerid");
-                String publishTime = albumJson.getString("publishtime").replace(" 00:00:00", "");
+                String artist = SdkUtil.parseArtist(albumJson);
+                String artistId = SdkUtil.parseArtistId(albumJson);
+                String publishTime = albumJson.getString("publish_time");
                 Integer songNum = albumJson.getIntValue("songcount");
-                String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
+                String coverImgThumbUrl = albumJson.getString("img");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.KG);

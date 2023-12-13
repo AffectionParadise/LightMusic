@@ -9,10 +9,13 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import org.jsoup.Jsoup;
@@ -39,7 +42,7 @@ public class RecommendPlaylistReq {
         if (instance == null) instance = new RecommendPlaylistReq();
         return instance;
     }
-    
+
     // 推荐歌单 API
     private final String RECOMMEND_PLAYLIST_API = "https://music.163.com/weapi/personalized/playlist";
     // 发现歌单 API
@@ -52,6 +55,8 @@ public class RecommendPlaylistReq {
     private final String RECOMMEND_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=5&c=%s&p=%s";
     // 推荐分类歌单(最新) API (酷狗)
     private final String NEW_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
+    // Top 分类歌单 API (酷狗)
+    private final String TOP_PLAYLIST_KG_API = "/specialrec.service/special_recommend";
     // 推荐歌单 API (QQ)
 //    private final String RECOMMEND_PLAYLIST_QQ_API
 //            = SdkCommon.PREFIX_QQ + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
@@ -326,6 +331,50 @@ public class RecommendPlaylistReq {
 
                     r.add(playlistInfo);
                 }
+            }
+            return new CommonResult<>(r, t);
+        };
+        // Top 歌单
+        Callable<CommonResult<NetPlaylistInfo>> getTopPlaylistsKg = () -> {
+            List<NetPlaylistInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
+            long ct = System.currentTimeMillis() / 1000;
+            String dat = String.format("{\"appid\":1005,\"mid\":\"114514\",\"clientver\":12029," +
+                            "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":0,\"module_id\":4,\"page\":1,\"pagesize\":30," +
+                            "\"key\":\"%s\",\"special_recommend\":{\"withtag\":1,\"withsong\":1,\"sort\":1,\"ugc\":1," +
+                            "\"is_selected\":0,\"withrecommend\":1,\"area_code\":1,\"categoryid\":\"0\"}}",
+                    ct, CryptoUtil.md5("1005OIlwieks28dk2k092lksi2UIkp12029" + ct));
+            String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
+                    .executeAsync()
+                    .body();
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+            JSONObject data = playlistInfoJson.getJSONObject("data");
+            JSONArray playlistArray = data.getJSONArray("special_list");
+            t = playlistArray.size();
+            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+                String playlistId = playlistJson.getString("specialid");
+                String playlistName = playlistJson.getString("specialname");
+                String creator = playlistJson.getString("nickname");
+                Long playCount = StringUtil.parseNumber(playlistJson.getString("play_count"));
+                String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
+
+                NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+                playlistInfo.setSource(NetMusicSource.KG);
+                playlistInfo.setId(playlistId);
+                playlistInfo.setName(playlistName);
+                playlistInfo.setCreator(creator);
+                playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                playlistInfo.setPlayCount(playCount);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                    playlistInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                r.add(playlistInfo);
             }
             return new CommonResult<>(r, t);
         };
@@ -927,6 +976,7 @@ public class RecommendPlaylistReq {
         }
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendPlaylistsKg));
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getTopPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getNewTagPlaylistsKg));
         }

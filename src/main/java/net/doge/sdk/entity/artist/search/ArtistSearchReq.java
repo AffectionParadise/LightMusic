@@ -8,8 +8,10 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
@@ -24,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -39,9 +42,11 @@ public class ArtistSearchReq {
         if (instance == null) instance = new ArtistSearchReq();
         return instance;
     }
-    
+
     // 关键词搜索歌手 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
+    // 关键词搜索歌手 API (酷狗)
+    private final String SEARCH_ARTIST_KG_API = "/v1/search/author";
     // 关键词搜索歌手 API (酷我)
     private final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
@@ -104,6 +109,53 @@ public class ArtistSearchReq {
                         r.add(artistInfo);
                     }
                 }
+            }
+            return new CommonResult<>(r, t);
+        };
+
+        // 酷狗
+        Callable<CommonResult<NetArtistInfo>> searchArtistsKg = () -> {
+            List<NetArtistInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            Map<String, Object> params = new TreeMap<>();
+            params.put("platform", "AndroidFilter");
+            params.put("keyword", keyword);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            params.put("category", 1);
+            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_ARTIST_KG_API);
+            String artistInfoBody = SdkCommon.kgRequest(params, null, options)
+                    .header("x-router", "complexsearch.kugou.com")
+                    .executeAsync()
+                    .body();
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+            JSONObject data = artistInfoJson.getJSONObject("data");
+            t = data.getIntValue("total");
+            JSONArray artistArray = data.getJSONArray("lists");
+            for (int i = 0, len = artistArray.size(); i < len; i++) {
+                JSONObject artistJson = artistArray.getJSONObject(i);
+
+                String artistId = artistJson.getString("AuthorId");
+                String artistName = artistJson.getString("AuthorName");
+                Integer songNum = artistJson.getIntValue("AudioCount");
+                Integer albumNum = artistJson.getIntValue("AlbumCount");
+                Integer mvNum = artistJson.getIntValue("VideoCount");
+                String coverImgThumbUrl = artistJson.getString("Avatar");
+
+                NetArtistInfo artistInfo = new NetArtistInfo();
+                artistInfo.setSource(NetMusicSource.KG);
+                artistInfo.setId(artistId);
+                artistInfo.setName(artistName);
+                artistInfo.setSongNum(songNum);
+                artistInfo.setAlbumNum(albumNum);
+                artistInfo.setMvNum(mvNum);
+                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                    artistInfo.setCoverImgThumb(coverImgThumb);
+                });
+                r.add(artistInfo);
             }
             return new CommonResult<>(r, t);
         };
@@ -193,7 +245,7 @@ public class ArtistSearchReq {
             Integer t = 0;
 
             String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_MG_API, encodedKeyword, page, limit))
-                    .header(Header.REFERER,"https://m.music.migu.cn/")
+                    .header(Header.REFERER, "https://m.music.migu.cn/")
                     .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -374,6 +426,8 @@ public class ArtistSearchReq {
 
         if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchArtists));
+        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsKg));
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchArtistsQq));
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL)

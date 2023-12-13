@@ -152,12 +152,10 @@ public class CryptoUtil {
     public static byte[] compress(byte[] data) {
         Deflater deflater = new Deflater();
         deflater.setInput(data);
-
         // 压缩数据
         deflater.finish();
         byte[] compressedBytes = new byte[data.length];
         int compressedLength = deflater.deflate(compressedBytes);
-
         // 拷贝有效数据
         return Arrays.copyOf(compressedBytes, compressedLength);
     }
@@ -171,22 +169,17 @@ public class CryptoUtil {
     public static byte[] decompress(byte[] data) {
         Inflater inflater = new Inflater();
         inflater.setInput(data);
-
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-
-        try {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             while (!inflater.finished()) {
                 int count = inflater.inflate(buffer);
                 outputStream.write(buffer, 0, count);
             }
-
             inflater.end();
-            outputStream.close();
+            return outputStream.toByteArray();
         } catch (Exception e) {
             LogUtil.error(e);
+            return null;
         }
-
-        return outputStream.toByteArray();
     }
 }
