@@ -238,7 +238,7 @@ public class HighQualityPlaylistReq {
 
             if (StringUtil.notEmpty(s[2])) {
                 String cid = s[2].trim();
-                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
                 long ct = System.currentTimeMillis() / 1000;
                 String dat = String.format("{\"appid\":1005,\"mid\":\"114514\",\"clientver\":12029," +
                                 "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":0,\"module_id\":4,\"page\":1,\"pagesize\":30," +

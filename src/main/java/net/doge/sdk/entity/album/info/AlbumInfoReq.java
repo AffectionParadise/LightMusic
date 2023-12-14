@@ -569,7 +569,7 @@ public class AlbumInfoReq {
 //                res.add(musicInfo);
 //            }
 
-            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(ALBUM_SONGS_KG_API);
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ALBUM_SONGS_KG_API);
             String dat = String.format("{\"album_id\":\"%s\",\"is_buy\":\"\",\"page\":%s,\"pagesize\":%s}", id, page, limit);
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .header("x-router", "openapi.kugou.com")

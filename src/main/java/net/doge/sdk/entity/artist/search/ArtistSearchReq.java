@@ -124,7 +124,7 @@ public class ArtistSearchReq {
             params.put("page", page);
             params.put("pagesize", limit);
             params.put("category", 1);
-            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_ARTIST_KG_API);
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_ARTIST_KG_API);
             String artistInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()

@@ -164,7 +164,7 @@ public class AlbumSearchReq {
             params.put("page", page);
             params.put("pagesize", limit);
             params.put("category", 1);
-            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
             String albumInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()

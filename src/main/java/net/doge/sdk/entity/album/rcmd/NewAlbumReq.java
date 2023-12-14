@@ -402,7 +402,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[3])) {
-                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
                 String dat = String.format("{\"apiver\":20,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", page, limit);
                 String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                         .executeAsync()

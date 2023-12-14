@@ -13710,9 +13710,10 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索 MV 并显示 MV 列表
                         CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
-                                netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage = 1);
+                                netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage = 1, mvCursor = "");
                         List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
+                        mvCursor = result.cursor;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
@@ -13769,11 +13770,11 @@ public class MainFrame extends JFrame {
                                 : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
                                 : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
                                 : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
-                                : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, cursor)
-                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage);
+                                : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, mvCursor)
+                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage, mvCursor);
                         List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
-                        cursor = result.cursor;
+                        mvCursor = result.cursor;
                         netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 更新数量显示
                         netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
@@ -15958,10 +15959,10 @@ public class MainFrame extends JFrame {
                     clearRequestForMv();
                     // 获取用户视频
                     CommonResult<NetMvInfo> result = MusicServerUtil.getUserVideos(currMvUserInfo = userInfo,
-                            netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage = 1, limit, cursor = "");
+                            netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage = 1, limit, mvCursor = "");
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
-                    cursor = result.cursor;
+                    mvCursor = result.cursor;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
                     netMvTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
@@ -16216,7 +16217,8 @@ public class MainFrame extends JFrame {
     }
 
     // cursor 用于请求下一页数据
-    private String cursor;
+    private String commentCursor;
+    private String mvCursor;
 
     // 获取评论
     private void getComments(NetResource resource, boolean first) {
@@ -16225,10 +16227,10 @@ public class MainFrame extends JFrame {
                 // 获取评论并显示评论列表
                 CommonResult<NetCommentInfo> result = MusicServerUtil.getComments(
                         currCommentResource = resource, (String) netCommentTypeComboBox.getSelectedItem(),
-                        commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? cursor = "" : cursor);
+                        commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? commentCursor = "" : commentCursor);
                 List<NetCommentInfo> commentInfos = result.data;
                 Integer total = result.total;
-                cursor = result.cursor;
+                commentCursor = result.cursor;
                 netCommentMaxPage = Math.max(total % commentLimit == 0 ? total / commentLimit : total / commentLimit + 1, 1);
                 // 更新标题和数量显示
                 String s = null;

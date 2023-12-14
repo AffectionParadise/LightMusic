@@ -28,6 +28,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MvSearchReq {
     private static MvSearchReq instance;
@@ -39,7 +40,7 @@ public class MvSearchReq {
         if (instance == null) instance = new MvSearchReq();
         return instance;
     }
-    
+
     // 关键词搜索 MV / 视频 API
     private final String CLOUD_SEARCH_API = "https://interface.music.163.com/eapi/cloudsearch/pc";
     // 关键词搜索 MV API (酷狗)
@@ -51,14 +52,16 @@ public class MvSearchReq {
     private final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)
     private final String SEARCH_MV_BI_API = "https://api.bilibili.com/x/web-interface/search/type?search_type=video&keyword=%s&page=%s";
+    // 关键词搜索 MV API (音悦台)
+    private final String SEARCH_MV_YY_API = "https://search-api.yinyuetai.com/search/get_search_result.json";
 
     /**
      * 根据关键词获取 MV
      */
-    public CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page) {
+    public CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page, String cursor) {
         AtomicInteger total = new AtomicInteger();
         List<NetMvInfo> res = new LinkedList<>();
-//        Set<NetMvInfo> set = Collections.synchronizedSet(new HashSet<>());
+        AtomicReference<String> atomicCursor = new AtomicReference<>();
 
         // 先对关键词编码，避免特殊符号的干扰
         String encodedKeyword = StringUtil.urlEncodeAll(keyword);
@@ -208,7 +211,7 @@ public class MvSearchReq {
 //            params.put("page", page);
 //            params.put("pagesize", limit);
 //            params.put("category", 1);
-//            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_MV_KG_API);
+//            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MV_KG_API);
 //            String mvInfoBody = SdkCommon.kgRequest(params, null, options)
 //                    .header("x-router", "complexsearch.kugou.com")
 //                    .executeAsync()
@@ -428,6 +431,55 @@ public class MvSearchReq {
             return new CommonResult<>(r, t);
         };
 
+        // 音悦台
+        Callable<CommonResult<NetMvInfo>> searchMvsYy = () -> {
+            List<NetMvInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String mvInfoBody = HttpRequest.post(SEARCH_MV_YY_API)
+                    .body(String.format("{\"searchType\":\"MV\",\"key\":\"%s\",\"sinceId\":\"%s\",\"size\":%s," +
+                                    "\"requestTagRows\":[{\"key\":\"sortType\",\"chosenTags\":[\"COMPREHENSIVE\"]}," +
+                                    "{\"key\":\"source\",\"chosenTags\":[\"-1\"]},{\"key\":\"duration\",\"chosenTags\":[\"-1\"]}]}",
+                            keyword, cursor, limit))
+                    .executeAsync()
+                    .body();
+            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+            JSONArray mvArray = mvInfoJson.getJSONArray("data");
+            t = page * limit + 1;
+            for (int i = 0, len = mvArray.size(); i < len; i++) {
+                JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject fullClip = mvJson.getJSONObject("fullClip");
+
+                String mvId = mvJson.getString("id");
+                if (i == len - 1) atomicCursor.set(mvId);
+                String mvName = mvJson.getString("title");
+                String artistName = SdkUtil.parseArtist(mvJson);
+                String creatorId = SdkUtil.parseArtistId(mvJson);
+                Long playCount = mvJson.getLong("playNum");
+                Double duration = fullClip.getDouble("duration");
+                String pubTime = TimeUtil.msToDate(mvJson.getLong("publishDate") * 1000);
+                String coverImgUrl = mvJson.getString("headImg");
+
+                NetMvInfo mvInfo = new NetMvInfo();
+                mvInfo.setSource(NetMusicSource.YY);
+                mvInfo.setId(mvId);
+                mvInfo.setName(mvName);
+                mvInfo.setArtist(artistName);
+                mvInfo.setCreatorId(creatorId);
+                mvInfo.setPlayCount(playCount);
+                mvInfo.setDuration(duration);
+                mvInfo.setPubTime(pubTime);
+                mvInfo.setCoverImgUrl(coverImgUrl);
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                    mvInfo.setCoverImgThumb(coverImgThumb);
+                });
+
+                r.add(mvInfo);
+            }
+            return new CommonResult<>(r, t);
+        };
+
         List<Future<CommonResult<NetMvInfo>>> taskList = new LinkedList<>();
 
         if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
@@ -444,6 +496,8 @@ public class MvSearchReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsHk));
         if (src == NetMusicSource.BI || src == NetMusicSource.ALL)
             taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsBi));
+        if (src == NetMusicSource.YY || src == NetMusicSource.ALL)
+            taskList.add(GlobalExecutors.requestExecutor.submit(searchMvsYy));
 
         List<List<NetMvInfo>> rl = new LinkedList<>();
         taskList.forEach(task -> {
@@ -459,6 +513,6 @@ public class MvSearchReq {
         });
         res.addAll(ListUtil.joinAll(rl));
 
-        return new CommonResult<>(res, total.get());
+        return new CommonResult<>(res, total.get(), atomicCursor.get());
     }
 }

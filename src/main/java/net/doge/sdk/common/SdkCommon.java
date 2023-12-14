@@ -39,7 +39,7 @@ public class SdkCommon {
     }
 
     // 构造酷狗音乐请求
-    public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, String> options) {
+    public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
         return KugouReqBuilder.buildRequest(params, data, options);
     }
 

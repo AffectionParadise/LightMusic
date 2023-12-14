@@ -341,7 +341,7 @@ public class MusicSearchReq {
             params.put("page", page);
             params.put("pagesize", limit);
             params.put("category", 1);
-            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_KG_API);
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_KG_API);
             String musicInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()
@@ -438,7 +438,7 @@ public class MusicSearchReq {
             params.put("page", page);
             params.put("pagesize", limit);
             params.put("category", 1);
-            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_BY_LYRIC_KG_API);
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_BY_LYRIC_KG_API);
             String musicInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
                     .executeAsync()

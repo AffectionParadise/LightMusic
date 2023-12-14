@@ -90,6 +90,8 @@ public class CommentReq {
     private final String VIDEO_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
     // 音频评论 API (哔哩哔哩)
     private final String SONG_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
+    // MV 评论 API (音悦台)
+    private final String MV_COMMENTS_YY_API = "https://comment-api.yinyuetai.com/comment/comment/list.json?scene=MV&sceneId=%s&level=first&sinceId=%s&size=%s";
     // 评论 API (李志)
     private final String COMMENTS_LZ_API = "https://www.lizhinb.com/wp-admin/admin-ajax.php";
 
@@ -1222,6 +1224,41 @@ public class CommentReq {
                     }
                 }
             }
+        }
+
+        // 音悦台
+        else if (source == NetMusicSource.YY) {
+            // 加密参数未知
+//            String url = String.format(MV_COMMENTS_YY_API, id, cursor, limit);
+//            String commentInfoBody = HttpRequest.get(url)
+//                    .header("Pp","e1540bdab81a8381849260958e345aa07be16041")
+//                    .header("St","1702559399")
+//                    .header("Wua","YYT/1.0.0 (WEB;web;11;zh-CN;DIgkB8jN1YCXWiwssvucj)")
+//                    .header("Vi","1.0.0;11;101")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
+//            JSONArray commentArray = commentInfoJson.getJSONArray("data");
+//            total = page * limit + 1;
+//            for (int i = 0, len = commentArray.size(); i < len; i++) {
+//                JSONObject commentJson = commentArray.getJSONObject(i);
+//
+//                String userId = commentJson.getString("userId");
+//                String username = commentJson.getString("nickname");
+//                String content = commentJson.getString("content");
+//                String time = TimeUtil.msToPhrase(commentJson.getLong("createTime") * 1000);
+//                Integer likedCount = commentJson.getIntValue("favorites");
+//
+//                NetCommentInfo commentInfo = new NetCommentInfo();
+//                commentInfo.setSource(NetMusicSource.YY);
+//                commentInfo.setUserId(userId);
+//                commentInfo.setUsername(username);
+//                commentInfo.setContent(content);
+//                commentInfo.setTime(time);
+//                commentInfo.setLikedCount(likedCount);
+//
+//                res.add(commentInfo);
+//            }
         }
 
         // 李志

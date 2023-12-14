@@ -233,8 +233,8 @@ public class MusicServerUtil {
     /**
      * 根据关键词获取 MV
      */
-    public static CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page) {
-        return MvSearchReq.getInstance().searchMvs(src, keyword, limit, page);
+    public static CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page, String cursor) {
+        return MvSearchReq.getInstance().searchMvs(src, keyword, limit, page, cursor);
     }
 
     /**

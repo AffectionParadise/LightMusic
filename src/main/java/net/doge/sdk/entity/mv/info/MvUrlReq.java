@@ -40,9 +40,8 @@ public class MvUrlReq {
     // Mlog 链接 API
 //    private final String MLOG_URL_API = SdkCommon.PREFIX + "/mlog/url?id=%s";
     // MV 视频链接获取 API (酷狗)
-//    private final String MV_URL_KG_API = "https://gateway.kugou.com/v2/interface/index?appid=1014&clienttime=%s&clientver=20000&cmd=123&dfid=-" +
-//            "&ext=mp4&hash=%s&ismp3=0&key=kugoumvcloud&mid=%s&pid=6&srcappid=2919&ssl=1&uuid=%s";
     private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php?cmd=100&hash=%s&ismp3=1&ext=mp4";
+    //    private final String MV_URL_KG_API = "/v2/interface/index";
     // MV 视频链接获取 API (酷我)
     private final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
@@ -55,6 +54,8 @@ public class MvUrlReq {
     private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
     // MV 视频链接获取 API (哔哩哔哩)
     private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl?bvid=%s&cid=%s&qn=%s";
+    // MV 视频链接获取 API (哔哩哔哩)
+    private final String MV_URL_YY_API = "https://video-api.yinyuetai.com/video/get?id=%s";
     // 视频链接获取 API (发姐)
     private final String VIDEO_URL_FA_API = "https://www.chatcyf.com/topics/%s/";
     // 视频链接获取 API (李志)
@@ -65,7 +66,7 @@ public class MvUrlReq {
      */
     public String fetchMvUrl(NetMvInfo mvInfo) {
         int source = mvInfo.getSource();
-        String mvId = mvInfo.getId();
+        String id = mvInfo.getId();
         String bvId = mvInfo.getBvid();
         boolean isVideo = mvInfo.isVideo();
         boolean isMlog = mvInfo.isMlog();
@@ -92,16 +93,16 @@ public class MvUrlReq {
                 // Mlog 需要先获取视频 id，并转为视频类型
                 if (isMlog) {
                     Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-                    String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", mvId), options)
+                    String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                             .executeAsync()
                             .body();
-                    mvId = JSONObject.parseObject(body).getString("data");
-                    mvInfo.setId(mvId);
+                    id = JSONObject.parseObject(body).getString("data");
+                    mvInfo.setId(id);
                     mvInfo.setType(MvInfoType.VIDEO);
                 }
 
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-                String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", mvId, quality), options)
+                String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", id, quality), options)
                         .executeAsync()
                         .body();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -110,7 +111,7 @@ public class MvUrlReq {
                 if (StringUtil.notEmpty(url)) return url;
             }
 //            else if (isMlog) {
-//                String mvBody = HttpRequest.get(String.format(MLOG_URL_API, mvId))
+//                String mvBody = HttpRequest.get(String.format(MLOG_URL_API, id))
 //                        .executeAsync()
 //                        .body();
 //                JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -133,7 +134,7 @@ public class MvUrlReq {
 //            }
             else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-                String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", mvId, quality), options)
+                String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", id, quality), options)
                         .executeAsync()
                         .body();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -145,14 +146,7 @@ public class MvUrlReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-//            long ct = System.currentTimeMillis();
-//            String mvBody = HttpRequest.get(buildKgUrl(String.format(MV_URL_KG_API, ct, mvId, ct, ct)))
-//                    .header("x-router", "trackermv.kugou.com")
-//                    .executeAsync()
-//                    .body();
-//            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
-//            return data.getJSONObject(mvId.toLowerCase()).getString("downurl");
-            String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, mvId))
+            String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, id))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
@@ -166,16 +160,33 @@ public class MvUrlReq {
                 mvJson = VideoQuality.quality <= VideoQuality.SD ? data.getJSONObject("sd") : null;
             if (JsonUtil.isEmpty(mvJson)) mvJson = data.getJSONObject("le");
             return mvJson.getString("downurl");
+
+            // 部分参数缺失，继续使用旧接口
+//            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey(MV_URL_KG_API);
+//            Map<String, Object> params = new TreeMap<>();
+//            params.put("backupdomain", 1);
+//            params.put("cmd", 123);
+//            params.put("ext", "mp4");
+//            params.put("ismp3", 0);
+//            params.put("hash", id);
+//            params.put("pid", 1);
+//            params.put("type", 1);
+//            String mvBody = SdkCommon.kgRequest(params, null, options)
+//                    .header("x-router", "trackermv.kugou.com")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data").getJSONObject(id.toLowerCase());
+//            return data.getString("downurl");
         }
 
         // QQ
         else if (source == NetMusicSource.QQ) {
             String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
-                            "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", mvId))
+                            "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", id))
                     .executeAsync()
                     .body();
-            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(mvId);
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(id);
             JSONArray mp4Array = data.getJSONArray("mp4");
             String quality;
             String[] qs = {"50", "40", "30", "20", "10"};
@@ -207,7 +218,7 @@ public class MvUrlReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            String mvBody = SdkCommon.kwRequest(String.format(MV_URL_KW_API, mvId))
+            String mvBody = SdkCommon.kwRequest(String.format(MV_URL_KW_API, id))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
@@ -221,7 +232,7 @@ public class MvUrlReq {
 
         // 千千
         else if (source == NetMusicSource.QI) {
-            String mvBody = SdkCommon.qiRequest(String.format(MV_URL_QI_API, mvId, System.currentTimeMillis()))
+            String mvBody = SdkCommon.qiRequest(String.format(MV_URL_QI_API, id, System.currentTimeMillis()))
                     .executeAsync()
                     .body();
             JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");
@@ -254,7 +265,7 @@ public class MvUrlReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String mvBody = HttpRequest.get(String.format(MV_URL_FS_API, mvId))
+            String mvBody = HttpRequest.get(String.format(MV_URL_FS_API, id))
                     .executeAsync()
                     .body();
             JSONArray urlArray = JSONObject.parseObject(mvBody).getJSONArray("data");
@@ -282,7 +293,7 @@ public class MvUrlReq {
 
         // 好看
         else if (source == NetMusicSource.HK) {
-            String mvBody = HttpRequest.get(String.format(MV_URL_HK_API, mvId))
+            String mvBody = HttpRequest.get(String.format(MV_URL_HK_API, id))
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
@@ -314,12 +325,12 @@ public class MvUrlReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             // 先通过 bvid 获取 cid
-            if (StringUtil.isEmpty(mvId)) {
+            if (StringUtil.isEmpty(id)) {
                 String cidBody = HttpRequest.get(String.format(VIDEO_CID_BI_API, bvId))
                         .cookie(SdkCommon.BI_COOKIE)
                         .executeAsync()
                         .body();
-                mvInfo.setId(mvId = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
+                mvInfo.setId(id = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
             }
 
             String quality;
@@ -338,7 +349,7 @@ public class MvUrlReq {
                     quality = "16";
                     break;
             }
-            String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, mvId, quality))
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, id, quality))
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
                     .body();
@@ -347,9 +358,25 @@ public class MvUrlReq {
             return urlArray.getJSONObject(0).getString("url");
         }
 
+        // 音悦台
+        else if (source == NetMusicSource.YY) {
+            String mvBody = HttpRequest.get(String.format(MV_URL_YY_API, id))
+                    .executeAsync()
+                    .body();
+            JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
+            JSONArray urlArray = data.getJSONObject("fullClip").getJSONArray("urls");
+            for (int i = 0, s = urlArray.size(); i < s; i++) {
+                JSONObject urlJson = urlArray.getJSONObject(i);
+                int streamType = urlJson.getIntValue("streamType");
+                if (VideoQuality.quality <= VideoQuality.FHD && streamType <= 1
+                        || VideoQuality.quality > VideoQuality.FHD && streamType > 1)
+                    return urlJson.getString("url");
+            }
+        }
+
         // 发姐
         else if (source == NetMusicSource.FA) {
-            String mvBody = HttpRequest.get(String.format(VIDEO_URL_FA_API, mvId))
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_FA_API, id))
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(mvBody);
@@ -360,7 +387,7 @@ public class MvUrlReq {
 
         // 李志
         else if (source == NetMusicSource.LZ) {
-            String mvBody = HttpRequest.get(String.format(VIDEO_URL_LZ_API, mvId))
+            String mvBody = HttpRequest.get(String.format(VIDEO_URL_LZ_API, id))
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(mvBody);

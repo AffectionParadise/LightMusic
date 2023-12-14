@@ -195,7 +195,7 @@ public class MusicInfoReq {
 //            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
 
             // 部分信息缺失，继续使用旧接口
-//            Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API);
+//            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API);
 //            String dat = String.format("{\"appid\":1005,\"area_code\":1,\"behavior\":\"play\",\"clientver\":12029,\"need_hash_offset\":1,\"relate\":1," +
 //                    "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}", hash);
 //            String songBody = SdkCommon.kgRequest(null, dat, options)

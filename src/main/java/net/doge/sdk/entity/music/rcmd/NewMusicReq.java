@@ -50,8 +50,9 @@ public class NewMusicReq {
     private final String STYLE_NEW_SONG_API = "https://music.163.com/api/style-tag/home/song";
     // 新歌速递 API
     private final String FAST_NEW_SONG_API = "https://music.163.com/weapi/v1/discovery/new/songs";
-    // 推荐新歌(华语) API (酷狗)
+    // 新歌速递 API (酷狗)
     private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
+    //    private final String RECOMMEND_NEW_SONG_KG_API = "/musicadservice/container/v1/newsong_publish";
     // 新歌榜 API (酷我)
 //    private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)

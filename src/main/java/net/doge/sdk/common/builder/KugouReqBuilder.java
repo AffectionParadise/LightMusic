@@ -21,15 +21,14 @@ public class KugouReqBuilder {
     private static final String mid = "114514";
     private static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
 
-    public static HttpRequest buildRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, String> options) {
-        String url = options.getOrDefault(KugouReqOptEnum.URL, "");
+    public static HttpRequest buildRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
+        String url = (String) options.getOrDefault(KugouReqOptEnum.URL, "");
         if (!url.startsWith("http")) url = "https://gateway.kugou.com" + url;
-        Method method = Method.valueOf(options.get(KugouReqOptEnum.METHOD));
+        Method method = (Method) options.get(KugouReqOptEnum.METHOD);
 
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
-//        params.put("key", CryptoUtil.md5(pidversec + appid + mid + userid));
         params.put("dfid", "-");
         params.put("mid", mid);
         params.put("uuid", "-");
@@ -39,7 +38,11 @@ public class KugouReqBuilder {
         params.put("userid", userid);
         params.put("clienttime", ct);
 
-        String crypto = options.get(KugouReqOptEnum.CRYPTO);
+        // 带加密 key
+        if ((Boolean) options.getOrDefault(KugouReqOptEnum.ENCRYPT_KEY, false))
+            params.put("key", CryptoUtil.md5(params.get("hash") + pidversec + appid + mid + userid));
+
+        String crypto = (String) options.get(KugouReqOptEnum.CRYPTO);
         switch (crypto) {
             case KugouReqOptConstants.ANDROID:
                 params.put("signature", signAndroid(params, data));
@@ -74,7 +77,7 @@ public class KugouReqBuilder {
     // 安卓签名
     private static String signAndroid(Map<String, Object> params, String data) {
 //        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
-        String sign = signParams(params);
-        return CryptoUtil.md5(androidSignKey + sign + (StringUtil.notEmpty(data) ? data : "") + androidSignKey);
+        String content = signParams(params);
+        return CryptoUtil.md5(androidSignKey + content + (StringUtil.notEmpty(data) ? data : "") + androidSignKey);
     }
 }

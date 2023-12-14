@@ -9,5 +9,7 @@ public enum KugouReqOptEnum {
     // 请求方式
     METHOD,
     // 加密类型
-    CRYPTO
+    CRYPTO,
+    // 是否带加密 key
+    ENCRYPT_KEY
 }

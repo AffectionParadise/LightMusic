@@ -157,7 +157,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[1])) {
-                Map<KugouReqOptEnum, String> options = KugouReqOptsBuilder.androidPost(CARD_SONG_KG_API);
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(CARD_SONG_KG_API);
                 Map<String, Object> params = new TreeMap<>();
                 params.put("card_id", s[1]);
                 params.put("fakem", "60f7ebf1f812edbac3c63a7310001701760f");
