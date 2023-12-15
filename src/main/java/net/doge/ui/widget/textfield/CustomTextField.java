@@ -113,11 +113,10 @@ public class CustomTextField extends JTextField {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
             for (int j = 0, l = metrics.length; j < l; j++) {
-                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
-                    stringWidth += metrics[j].stringWidth(str);
-                    i += chars.length - 1;
-                    break;
-                }
+                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
+                stringWidth += metrics[j].stringWidth(str);
+                i += chars.length - 1;
+                break;
             }
         }
 
@@ -127,16 +126,15 @@ public class CustomTextField extends JTextField {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
             for (int j = 0, l = metrics.length; j < l; j++) {
-                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
-                    // 只画普通字体显示不出来的文字
-                    if (j != 0) {
-                        g2d.setFont(Fonts.TYPES.get(j));
-                        g2d.drawString(str, (w - stringWidth) / 2 + widthDrawn, (h - stringHeight) / 2 + 16);
-                    }
-                    widthDrawn += metrics[j].stringWidth(str);
-                    i += chars.length - 1;
-                    break;
+                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
+                // 只画普通字体显示不出来的文字
+                if (j != 0) {
+                    g2d.setFont(Fonts.TYPES.get(j));
+                    g2d.drawString(str, (w - stringWidth) / 2 + widthDrawn, (h - stringHeight) / 2 + 16);
                 }
+                widthDrawn += metrics[j].stringWidth(str);
+                i += chars.length - 1;
+                break;
             }
         }
     }

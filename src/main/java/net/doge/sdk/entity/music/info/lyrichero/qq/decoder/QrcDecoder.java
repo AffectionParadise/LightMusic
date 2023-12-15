@@ -1,6 +1,6 @@
-package net.doge.sdk.entity.music.info.lyrichero.decoder;
+package net.doge.sdk.entity.music.info.lyrichero.qq.decoder;
 
-import net.doge.sdk.entity.music.info.lyrichero.helper.QrcDecodeHelper;
+import net.doge.sdk.entity.music.info.lyrichero.qq.helper.QrcDecodeHelper;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
 

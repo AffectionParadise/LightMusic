@@ -1,20 +1,24 @@
-package net.doge.sdk.entity.music.info.trackhero;
-
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import com.alibaba.fastjson2.JSONObject;
-
-public class KwTrackHero {
-    private static KwTrackHero instance;
-
-    private KwTrackHero() {
-    }
-
-    public static KwTrackHero getInstance() {
-        if (instance == null) instance = new KwTrackHero();
-        return instance;
-    }
+//package net.doge.sdk.entity.music.info.trackhero;
+//
+//import cn.hutool.http.Header;
+//import cn.hutool.http.HttpRequest;
+//import cn.hutool.http.HttpResponse;
+//import net.doge.util.common.CryptoUtil;
+//import net.doge.util.common.RegexUtil;
+//
+//import java.nio.charset.StandardCharsets;
+//import java.util.Arrays;
+//
+//public class KwTrackHero {
+//    private static KwTrackHero instance;
+//
+//    private KwTrackHero() {
+//    }
+//
+//    public static KwTrackHero getInstance() {
+//        if (instance == null) instance = new KwTrackHero();
+//        return instance;
+//    }
 //    private final String SECRET_KEY = "ylzsxkwm";
 //    private final int DES_MODE_DECRYPT = 1;
 //    private final int[] arrayE = {
@@ -135,15 +139,14 @@ public class KwTrackHero {
 //            8, 7, 11, 0, 4, 13, 2, 11,}
 //    };
 //
-
-    /**
-     * 获取酷我音乐歌曲链接
-     *
-     * @param mid     歌曲 id
-     * @param quality 品质(128k 320k flac)
-     * @return
-     */
-    public String getTrackUrl(String mid, String quality) {
+//    /**
+//     * 获取酷我音乐歌曲链接
+//     *
+//     * @param mid     歌曲 id
+//     * @param quality 品质(128k 320k flac)
+//     * @return
+//     */
+//    public String getTrackUrl(String mid, String quality) {
 //        String params = "";
 //        switch (quality) {
 //            case "128k":
@@ -165,32 +168,7 @@ public class KwTrackHero {
 //                .executeAsync();
 //        String trackUrl = RegexUtil.getGroup1("url=(.*?)\r\n", resp.body());
 //        return trackUrl;
-        String params = mid + "?isMv=0&format=%s&br=%s&level=";
-        switch (quality) {
-            case "128k":
-                params = String.format(params, "mp3", "128kmp3");
-                break;
-            case "320k":
-                params = String.format(params, "mp3", "320kmp3");
-                break;
-            case "flac":
-                params = String.format(params, "flac", "2000kflac");
-                break;
-        }
-        String url = "https://bd-api.kuwo.cn/api/service/music/downloadInfo/" + params;
-        HttpResponse resp = HttpRequest.get(url)
-                .header(Header.USER_AGENT, "okhttp/3.10.0")
-                .header("channel", "qq")
-                .header("plat", "ar")
-                .header("net", "wifi")
-                .header("ver", "3.1.2")
-                .header("uid", "")
-                .header("devId", "0")
-                .executeAsync();
-        JSONObject urlJson = JSONObject.parseObject(resp.body()).getJSONObject("data");
-        String trackUrl = urlJson.getString("url");
-        return trackUrl;
-    }
+//    }
 //
 //    private String base64Encrypt(String msg) {
 //        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
@@ -288,4 +266,4 @@ public class KwTrackHero {
 //        }
 //        return l2;
 //    }
-}
+//}

@@ -11,15 +11,15 @@
 //import java.util.Map;
 //import java.util.TreeMap;
 //
-//public class KgTrackHero {
-//    private static KgTrackHero instance;
+//public class KgTrackHeroV2 {
+//    private static KgTrackHeroV2 instance;
 //
-//    private KgTrackHero() {
+//    private KgTrackHeroV2() {
 //        initMap();
 //    }
 //
-//    public static KgTrackHero getInstance() {
-//        if (instance == null) instance = new KgTrackHero();
+//    public static KgTrackHeroV2 getInstance() {
+//        if (instance == null) instance = new KgTrackHeroV2();
 //        return instance;
 //    }
 //

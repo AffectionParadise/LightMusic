@@ -109,11 +109,10 @@ public class DialogButton extends JButton implements MouseListener {
 //            char[] chars = Character.toChars(codePoint);
 //            String str = new String(chars);
 //            for (int j = 0, l = metrics.length; j < l; j++) {
-//                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
+//                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
 //                    stringWidth += metrics[j].stringWidth(str);
 //                    i += chars.length - 1;
 //                    break;
-//                }
 //            }
 //        }
 //
@@ -123,7 +122,7 @@ public class DialogButton extends JButton implements MouseListener {
 //            char[] chars = Character.toChars(codePoint);
 //            String str = new String(chars);
 //            for (int j = 0, l = metrics.length; j < l; j++) {
-//                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
+//                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
 //                    // 只画显示不出的文字
 //                    if (j == 0) continue;
 //                    g2d.setFont(Fonts.TYPES.get(j));
@@ -131,7 +130,6 @@ public class DialogButton extends JButton implements MouseListener {
 //                    widthDrawn += metrics[j].stringWidth(str);
 //                    i += chars.length - 1;
 //                    break;
-//                }
 //            }
 //        }
     }

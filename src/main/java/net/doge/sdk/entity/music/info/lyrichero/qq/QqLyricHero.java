@@ -1,10 +1,10 @@
-package net.doge.sdk.entity.music.info.lyrichero;
+package net.doge.sdk.entity.music.info.lyrichero.qq;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.entity.music.info.lyrichero.decoder.QrcDecoder;
+import net.doge.sdk.entity.music.info.lyrichero.qq.decoder.QrcDecoder;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -110,6 +110,7 @@ public class QqLyricHero {
         }
     }
 
+    // 从 qrc 的 xml 格式中解析歌词
     private String parseQrcXml(String xmlStr) {
         Document doc = Jsoup.parse(xmlStr);
         String lyric = doc.select("Lyric_1").attr("LyricContent");

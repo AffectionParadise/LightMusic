@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.trackhero;
+package net.doge.sdk.entity.music.info.trackhero.qq;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;

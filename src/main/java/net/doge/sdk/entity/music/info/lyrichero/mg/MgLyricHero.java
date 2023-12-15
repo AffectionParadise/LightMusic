@@ -1,9 +1,9 @@
-package net.doge.sdk.entity.music.info.lyrichero;
+package net.doge.sdk.entity.music.info.lyrichero.mg;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.model.entity.NetMusicInfo;
-import net.doge.sdk.entity.music.info.lyrichero.decoder.MrcDecoder;
+import net.doge.sdk.entity.music.info.lyrichero.mg.decoder.MrcDecoder;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;

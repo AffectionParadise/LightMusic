@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyrichero;
+package net.doge.sdk.entity.music.info.lyrichero.kg;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;

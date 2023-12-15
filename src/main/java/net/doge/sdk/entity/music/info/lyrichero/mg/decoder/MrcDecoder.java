@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyrichero.decoder;
+package net.doge.sdk.entity.music.info.lyrichero.mg.decoder;
 
 import net.doge.util.common.StringUtil;
 

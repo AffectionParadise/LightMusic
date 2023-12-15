@@ -11,15 +11,15 @@
 //import java.text.SimpleDateFormat;
 //import java.util.*;
 //
-//public class KgTrackHero2 {
-//    private static KgTrackHero2 instance;
+//public class KgTrackHero {
+//    private static KgTrackHero instance;
 //
-//    private KgTrackHero2() {
+//    private KgTrackHero() {
 //        initMap();
 //    }
 //
-//    public static KgTrackHero2 getInstance() {
-//        if (instance == null) instance = new KgTrackHero2();
+//    public static KgTrackHero getInstance() {
+//        if (instance == null) instance = new KgTrackHero();
 //        return instance;
 //    }
 //

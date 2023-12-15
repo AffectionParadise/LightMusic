@@ -304,14 +304,13 @@ public class StringUtil {
                 continue;
             }
             for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
-                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
-                    // 中文
-                    if (j == 0) sb.append(chars[0]);
-                    else
-                        sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES.get(j).getFontName(), str));
-                    i += chars.length - 1;
-                    break;
-                }
+                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
+                // 中文
+                if (j == 0) sb.append(chars[0]);
+                else
+                    sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES.get(j).getFontName(), str));
+                i += chars.length - 1;
+                break;
             }
         }
         sb.append("</div></html>");
@@ -355,19 +354,18 @@ public class StringUtil {
             String str = new String(chars);
 
             for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
-                if (Fonts.TYPES.get(j).canDisplay(codePoint)) {
-                    if (chars[0] != '\n') {
-                        int tw = label.getFontMetrics(Fonts.TYPES.get(j)).stringWidth(str);
-                        sw += tw;
-                        if (sw >= thresholdWidth) {
-                            sb.append('\n');
-                            sw = tw;
-                        }
-                    } else sw = 0;
-                    sb.append(str);
-                    i += chars.length - 1;
-                    break;
-                }
+                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
+                if (chars[0] != '\n') {
+                    int tw = label.getFontMetrics(Fonts.TYPES.get(j)).stringWidth(str);
+                    sw += tw;
+                    if (sw >= thresholdWidth) {
+                        sb.append('\n');
+                        sw = tw;
+                    }
+                } else sw = 0;
+                sb.append(str);
+                i += chars.length - 1;
+                break;
             }
         }
         return sb.toString();

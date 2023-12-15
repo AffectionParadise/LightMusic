@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyrichero;
+package net.doge.sdk.entity.music.info.lyrichero.nc;
 
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;

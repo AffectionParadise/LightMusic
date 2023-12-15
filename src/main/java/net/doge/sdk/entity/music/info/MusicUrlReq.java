@@ -11,8 +11,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.entity.music.info.trackhero.KwTrackHero;
-import net.doge.sdk.entity.music.info.trackhero.QqTrackHero;
+import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV2;
+import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHero;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
@@ -216,7 +216,7 @@ public class MusicUrlReq {
                     quality = "128k";
                     break;
             }
-            return KwTrackHero.getInstance().getTrackUrl(id, quality);
+            return KwTrackHeroV2.getInstance().getTrackUrl(id, quality);
         }
 
         // 咪咕

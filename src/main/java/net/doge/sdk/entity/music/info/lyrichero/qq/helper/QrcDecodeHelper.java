@@ -1,4 +1,4 @@
-package net.doge.sdk.entity.music.info.lyrichero.helper;
+package net.doge.sdk.entity.music.info.lyrichero.qq.helper;
 
 public class QrcDecodeHelper {
     private static QrcDecodeHelper instance;

@@ -195,18 +195,17 @@ public class StringTwoColor {
 
                 for (int j = 0, l = metricsBig.length; j < l; j++) {
                     Font font = Fonts.TYPES_BIG.get(j);
-                    if (font.canDisplay(codePoint)) {
-                        Font nf = font.deriveFont(fontSize);
-                        g1.setFont(nf);
-                        g2.setFont(nf);
-                        g1.drawString(str, widthDrawn, dy);
-                        g2.drawString(str, widthDrawn, dy);
-                        int strWidth = metricsBig[j].stringWidth(str);
+                    if (!font.canDisplay(codePoint)) continue;
+                    Font nf = font.deriveFont(fontSize);
+                    g1.setFont(nf);
+                    g2.setFont(nf);
+                    g1.drawString(str, widthDrawn, dy);
+                    g2.drawString(str, widthDrawn, dy);
+                    int strWidth = metricsBig[j].stringWidth(str);
 //                        blockList.add(new CharBlock(widthDrawn, strWidth));
-                        widthDrawn += strWidth;
-                        i += chars.length - 1;
-                        break;
-                    }
+                    widthDrawn += strWidth;
+                    i += chars.length - 1;
+                    break;
                 }
             }
         } else {
@@ -218,7 +217,7 @@ public class StringTwoColor {
 
                 for (int j = 0, l = metricsHuge.length; j < l; j++) {
                     Font font = Fonts.TYPES_HUGE.get(j);
-                    if (font.canDisplay(codePoint)) {
+                    if (!font.canDisplay(codePoint)) continue;
 //                        Shape shape = font.createGlyphVector(metricsHuge[j].getFontRenderContext(), str).getOutline();
 //                        // 文字阴影
 //                        g1.setColor(shadowColor);
@@ -239,19 +238,18 @@ public class StringTwoColor {
 //                        g2.setColor(borderColor);
 //                        g1.draw(shape);
 //                        g2.draw(shape);
-                        Font nf = font.deriveFont(fontSize);
-                        g1.setFont(nf);
-                        g2.setFont(nf);
-                        g1.drawString(str, widthDrawn, dy);
-                        g2.drawString(str, widthDrawn, dy);
-                        int strWidth = metricsHuge[j].stringWidth(str);
+                    Font nf = font.deriveFont(fontSize);
+                    g1.setFont(nf);
+                    g2.setFont(nf);
+                    g1.drawString(str, widthDrawn, dy);
+                    g2.drawString(str, widthDrawn, dy);
+                    int strWidth = metricsHuge[j].stringWidth(str);
 //                        blockList.add(new CharBlock(widthDrawn, strWidth));
-                        widthDrawn += strWidth;
+                    widthDrawn += strWidth;
 //                        g1.translate(widthDrawn, 0);
 //                        g2.translate(widthDrawn, 0);
-                        i += chars.length - 1;
-                        break;
-                    }
+                    i += chars.length - 1;
+                    break;
                 }
             }
 
