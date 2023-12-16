@@ -90,12 +90,11 @@ public class KwLyricHero {
             if (s1List.isEmpty()) sb.append(l);
             else {
                 List<String> s2List = RegexUtil.findAllGroup1("<\\d+,(-?\\d+)>", l);
-                int size = s1List.size();
                 // 行时间
                 String lineTimeStr = RegexUtil.getGroup0(lineTimeExp, l);
                 sb.append(lineTimeStr);
                 String[] sp = ArrayUtil.removeFirstEmpty(l.replaceFirst(lineTimeExp, "").split("<\\d+,-?\\d+>", -1));
-                for (int k = 0; k < size; k++) {
+                for (int k = 0, s = s1List.size(); k < s; k++) {
                     int n1 = Integer.parseInt(s1List.get(k));
                     int n2 = Integer.parseInt(s2List.get(k));
                     int wordStartTime = Math.abs((n1 + n2) / (offset * 2));
@@ -116,35 +115,29 @@ public class KwLyricHero {
         String[] sp = lrcStr.split("\n");
         sb = new StringBuilder();
         boolean hasTrans = false;
-        for (int j = 0; j < sp.length; j++) {
-            String sentence = sp[j];
-            String nextSentence = j + 1 < sp.length ? sp[j + 1] : null;
+        int s = sp.length;
+        for (int j = 0; j < s; j++) {
+            String sentence = sp[j], nextSentence = j + 1 < s ? sp[j + 1] : null;
             // 歌词中带有翻译时，最后一句是翻译直接跳过
             if (hasTrans && StringUtil.isEmpty(nextSentence)) break;
             String time = RegexUtil.getGroup0(lineTimeExp, sentence);
             if (StringUtil.isEmpty(time)) {
-                sb.append(sentence);
-                sb.append("\n");
+                sb.append(sentence).append("\n");
                 continue;
             }
             String nextTime = null;
             if (StringUtil.notEmpty(nextSentence)) nextTime = RegexUtil.getGroup0(lineTimeExp, nextSentence);
             // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
-            if (!time.equals(nextTime)) {
-                sb.append(time);
-                String lineLyric = sentence.replaceAll(lineTimeExp, "");
-                sb.append(lineLyric);
-                sb.append("\n");
-            } else hasTrans = true;
+            if (!time.equals(nextTime)) sb.append(sentence).append("\n");
+            else hasTrans = true;
         }
         musicInfo.setLrc(sb.toString());
 
         sb = new StringBuilder();
         hasTrans = false;
         String lastTime = null;
-        for (i = 0; i < sp.length; i++) {
-            String sentence = sp[i];
-            String nextSentence = i + 1 < sp.length ? sp[i + 1] : null;
+        for (i = 0; i < s; i++) {
+            String sentence = sp[i], nextSentence = i + 1 < s ? sp[i + 1] : null;
             String time = RegexUtil.getGroup0(lineTimeExp, sentence);
             if (StringUtil.isEmpty(time)) continue;
             String nextTime = null;
@@ -152,8 +145,7 @@ public class KwLyricHero {
             // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
             if (hasTrans && nextTime == null || time.equals(nextTime)) {
                 sb.append(lastTime);
-                String lineLyric = sentence.replaceAll(lineTimeExp, "");
-                sb.append(lineLyric);
+                sb.append(sentence.replaceFirst(lineTimeExp, ""));
                 sb.append("\n");
                 hasTrans = true;
             }

@@ -35,12 +35,12 @@ public class SdkCommon {
 
     // 构造网易云音乐请求
     public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
-        return NeteaseReqBuilder.buildRequest(method, url, data, options);
+        return NeteaseReqBuilder.getInstance().buildRequest(method, url, data, options);
     }
 
     // 构造酷狗音乐请求
     public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
-        return KugouReqBuilder.buildRequest(params, data, options);
+        return KugouReqBuilder.getInstance().buildRequest(params, data, options);
     }
 
     // 构造酷我音乐请求
@@ -54,7 +54,7 @@ public class SdkCommon {
 
     // 构造咪咕音乐搜索请求
     public static HttpRequest mgSearchRequest(String type, String keyword, int page, int limit) {
-        return MiguReqBuilder.buildSearchRequest(type, keyword, page, limit);
+        return MiguReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
     }
 
 //    /**

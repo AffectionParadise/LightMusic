@@ -7,7 +7,17 @@ import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.StringUtil;
 
 public class MiguReqBuilder {
-    public static HttpRequest buildSearchRequest(String type, String keyword, int page, int limit) {
+    private static MiguReqBuilder instance;
+
+    private MiguReqBuilder() {
+    }
+
+    public static MiguReqBuilder getInstance() {
+        if (instance == null) instance = new MiguReqBuilder();
+        return instance;
+    }
+
+    public HttpRequest buildSearchRequest(String type, String keyword, int page, int limit) {
         String deviceId = "963B7AA0D21511ED807EE5846EC87D20";
         String signatureMD5 = "6cdc72a439cef99a3418d2a78aa28c73";
         String time = String.valueOf(System.currentTimeMillis());

@@ -14,7 +14,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class NeteaseReqBuilder {
-    private static final String[] MOBILE_USER_AGENTS = {
+    private static NeteaseReqBuilder instance;
+
+    private NeteaseReqBuilder() {
+    }
+
+    public static NeteaseReqBuilder getInstance() {
+        if (instance == null) instance = new NeteaseReqBuilder();
+        return instance;
+    }
+
+    private final String[] MOBILE_USER_AGENTS = {
             // iOS 13.5.1 14.0 beta with safari
             "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1",
             "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.",
@@ -28,7 +38,7 @@ public class NeteaseReqBuilder {
             "Mozilla/5.0 (Linux; Android 10; YAL-AL00 Build/HUAWEIYAL-AL00; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/78.0.3904.62 XWEB/2581 MMWEBSDK/200801 Mobile Safari/537.36 MMWEBID/3027 MicroMessenger/7.0.18.1740(0x27001235) Process/toolsmp WeChat/arm64 NetType/WIFI Language/zh_CN ABI/arm64",
             "Mozilla/5.0 (Linux; U; Android 8.1.0; zh-cn; BKK-AL10 Build/HONORBKK-AL10) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.126 MQQBrowser/10.6 Mobile Safari/537.36"
     };
-    private static final String[] PC_USER_AGENTS = {
+    private final String[] PC_USER_AGENTS = {
             // macOS 10.15.6  Firefox / Chrome / Safari
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:80.0) Gecko/20100101 Firefox/80.0",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.30 Safari/537.36",
@@ -40,7 +50,7 @@ public class NeteaseReqBuilder {
             // Linux 就算了
     };
 
-    public static HttpRequest buildRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
+    public HttpRequest buildRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
         Map<String, String> headers = new HashMap<>();
         String device = options.getOrDefault(NeteaseReqOptEnum.UA, NeteaseReqOptConstants.BOTH);
         switch (device) {

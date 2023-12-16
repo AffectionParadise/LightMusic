@@ -12,7 +12,6 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV2;
-import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHero;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.CryptoUtil;
@@ -96,7 +95,7 @@ public class MusicUrlReq {
 //        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
-        // 网易云(解锁付费音乐)
+        // 网易云
         if (source == NetMusicSource.NC) {
             // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
             String quality;
@@ -137,7 +136,6 @@ public class MusicUrlReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            // 酷狗接口请求需要带上 cookie ！
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
                     .cookie(SdkCommon.COOKIE)
                     .executeAsync()
@@ -163,38 +161,38 @@ public class MusicUrlReq {
 //            return new KgTracker().getTrackUrl(hash, quality);
         }
 
-        // QQ(解锁付费音乐)
+        // QQ
         else if (source == NetMusicSource.QQ) {
-//            String playUrlBody = HttpRequest.get(SdkCommon.QQ_MAIN_API + "?format=json&data=" +
-//                            StringUtil.urlEncode(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
-//                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
-//                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
-//                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", id, id, id)))
-//                    .executeAsync()
-//                    .body();
-//            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
-//            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
-//            String sip = data.getJSONArray("sip").getString(0);
-//            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
-//            return StringUtil.isEmpty(url) ? "" : sip + url;
-            String quality;
-            switch (AudioQuality.quality) {
-                case AudioQuality.HI_RES:
-                case AudioQuality.LOSSLESS:
-                    quality = "sq";
-                    break;
-                case AudioQuality.SUPER:
-                case AudioQuality.HIGH:
-                    quality = "hq";
-                    break;
-                default:
-                    quality = "mp3";
-                    break;
-            }
-            return QqTrackHero.getInstance().getTrackUrl(id, quality);
+            String playUrlBody = HttpRequest.get(SdkCommon.QQ_MAIN_API + "?format=json&data=" +
+                            StringUtil.urlEncodeAll(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
+                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
+                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
+                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", id, id, id)))
+                    .executeAsync()
+                    .body();
+            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
+            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
+            String sip = data.getJSONArray("sip").getString(0);
+            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
+            return StringUtil.isEmpty(url) ? "" : sip + url;
+//            String quality;
+//            switch (AudioQuality.quality) {
+//                case AudioQuality.HI_RES:
+//                case AudioQuality.LOSSLESS:
+//                    quality = "sq";
+//                    break;
+//                case AudioQuality.SUPER:
+//                case AudioQuality.HIGH:
+//                    quality = "hq";
+//                    break;
+//                default:
+//                    quality = "mp3";
+//                    break;
+//            }
+//            return QqTrackHero.getInstance().getTrackUrl(id, quality);
         }
 
-        // 酷我(解锁付费音乐)
+        // 酷我
         else if (source == NetMusicSource.KW) {
 //            HttpResponse resp = HttpRequest.get(String.format(SONG_URL_KW_API, id)).executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {

@@ -2,7 +2,8 @@
 //
 //import cn.hutool.http.HttpRequest;
 //import com.alibaba.fastjson2.JSONObject;
-//import net.doge.sdk.entity.music.info.trackhero.helper.QSignHelper;
+//import net.doge.sdk.entity.music.info.trackhero.qq.helper.QSignHelper;
+//import net.doge.util.common.JsonUtil;
 //
 //import java.util.HashMap;
 //import java.util.Map;
@@ -20,7 +21,7 @@
 //    }
 //
 //    private final String guid = "114514";
-//    private final String uin = "10086";
+//    private final String uin = "0";
 //    // 从 Cookie 中/客户端的请求体中(comm.authst)获取
 //    private final String qqmusic_key = "";
 //    // QQ 号
@@ -73,7 +74,9 @@
 //                hMap.get(quality) + mediaMid + eMap.get(quality), guid, mid, uin, loginuin, qqmusic_key);
 //        String urlBody = signRequest(reqBody).executeAsync().body();
 //        JSONObject urlJson = JSONObject.parseObject(urlBody);
-//        String trackPath = urlJson.getJSONObject("req_0").getJSONObject("data").getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
+//        JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
+//        if (JsonUtil.isEmpty(data)) return "";
+//        String trackPath = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
 //        String trackUrl = "http://ws.stream.qqmusic.qq.com/" + trackPath;
 //        return trackUrl;
 //    }
