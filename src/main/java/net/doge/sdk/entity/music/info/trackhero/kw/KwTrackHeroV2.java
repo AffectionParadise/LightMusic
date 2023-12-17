@@ -41,9 +41,8 @@ public class KwTrackHeroV2 {
      * @return
      */
     public String getTrackUrl(String mid, String quality) {
-        String params = String.format(mid + "?isMv=0&format=%s&br=%s&level=", formatMap.get(quality), brMap.get(quality));
-        String url = "https://bd-api.kuwo.cn/api/service/music/downloadInfo/" + params;
-        HttpResponse resp = HttpRequest.get(url)
+        HttpResponse resp = HttpRequest.get(String.format("https://bd-api.kuwo.cn/api/service/music/downloadInfo/%s?isMv=0&format=%s&br=%s&level=",
+                        mid, formatMap.get(quality), brMap.get(quality)))
                 .header(Header.USER_AGENT, "okhttp/3.10.0")
                 .header("channel", "qq")
                 .header("plat", "ar")

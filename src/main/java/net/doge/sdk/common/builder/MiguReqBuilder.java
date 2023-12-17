@@ -44,11 +44,11 @@ public class MiguReqBuilder {
         }
         String url = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=1&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0";
         return HttpRequest.get(String.format(url, StringUtil.urlEncodeAll(json), StringUtil.urlEncodeAll(keyword), page, limit))
+                .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                 .header("uiVersion", "A_music_3.6.1")
                 .header("deviceId", deviceId)
                 .header("timestamp", time)
                 .header("sign", sign)
-                .header("channel", "0146921")
-                .header(Header.USER_AGENT, SdkCommon.USER_AGENT);
+                .header("channel", "0146921");
     }
 }

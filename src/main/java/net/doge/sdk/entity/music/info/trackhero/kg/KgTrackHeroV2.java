@@ -35,7 +35,7 @@
 //        qualityMap.put("128k", "128");
 //        qualityMap.put("320k", "320");
 //        qualityMap.put("flac", "flac");
-//        qualityMap.put("flac24bit", "high");
+//        qualityMap.put("hires", "high");
 //        qualityMap.put("master", "viper_atmos");
 //    }
 //
@@ -50,7 +50,7 @@
 //     *                ancient：手机端魔法音乐 尤克里里
 //     *                dj：手机端魔法音乐 DJ
 //     *                surnay：手机端魔法音乐 唢呐
-//     *                128k 320k flac flac24bit
+//     *                128k 320k flac hires
 //     *                master：蝰蛇全景声
 //     *                )
 //     * @return

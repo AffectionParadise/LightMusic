@@ -39,17 +39,17 @@
 ////        qualityHashMap.put("128k", "128hash");
 ////        qualityHashMap.put("320k", "320hash");
 ////        qualityHashMap.put("flac", "sqhash");
-////        qualityHashMap.put("flac24bit", "highhash");
+////        qualityHashMap.put("hires", "highhash");
 //        qualityHashMap.put("128k", "hash_128");
 //        qualityHashMap.put("320k", "hash_320");
 //        qualityHashMap.put("flac", "hash_flac");
-//        qualityHashMap.put("flac24bit", "hash_high");
+//        qualityHashMap.put("hires", "hash_high");
 //        qualityHashMap.put("master", "hash_128");
 //
 //        qualityMap.put("128k", "128");
 //        qualityMap.put("320k", "320");
 //        qualityMap.put("flac", "flac");
-//        qualityMap.put("flac24bit", "high");
+//        qualityMap.put("hires", "high");
 //        qualityMap.put("master", "viper_atmos");
 //    }
 //
@@ -57,7 +57,7 @@
 //     * 获取酷狗歌曲 url
 //     *
 //     * @param hash    歌曲 Hash
-//     * @param quality 音质(128k 320k flac flac24bit)
+//     * @param quality 音质(128k 320k flac hires)
 //     * @return
 //     */
 //    public String getTrackUrl(String hash, String quality) {

@@ -45,6 +45,7 @@ public class PlaylistInfoReq {
     private final String BATCH_SONGS_DETAIL_API = "https://music.163.com/api/v3/song/detail";
     // 歌单信息 API (酷狗)
     private final String PLAYLIST_DETAIL_KG_API = "https://mobiles.kugou.com/api/v5/special/info_v2?appid=1058&specialid=0&global_specialid=%s&format=jsonp&srcappid=2919&clientver=20000&clienttime=1586163242519&mid=1586163242519&uuid=1586163242519&dfid=-&signature=%s";
+    // 歌单歌曲 API (酷狗)
     private final String PLAYLIST_SONGS_KG_API = "https://mobiles.kugou.com/api/v5/special/song_v2?appid=1058&global_specialid=%s&specialid=0&plat=0&version=8000&page=%s&pagesize=%s&srcappid=2919&clientver=20000&clienttime=1586163263991&mid=1586163263991&uuid=1586163263991&dfid=-&signature=%s";
     //    private final String PLAYLIST_DETAIL_KG_API = "https://m.kugou.com/plist/list/%s?json=true&page=%s";
     // 歌单信息 API (QQ)
