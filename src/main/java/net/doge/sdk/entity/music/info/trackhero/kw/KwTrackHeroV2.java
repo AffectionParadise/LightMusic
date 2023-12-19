@@ -2,7 +2,6 @@ package net.doge.sdk.entity.music.info.trackhero.kw;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONObject;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class KwTrackHeroV2 {
      * @return
      */
     public String getTrackUrl(String mid, String quality) {
-        HttpResponse resp = HttpRequest.get(String.format("https://bd-api.kuwo.cn/api/service/music/downloadInfo/%s?isMv=0&format=%s&br=%s&level=",
+        String urlBody = HttpRequest.get(String.format("https://bd-api.kuwo.cn/api/service/music/downloadInfo/%s?isMv=0&format=%s&br=%s&level=",
                         mid, formatMap.get(quality), brMap.get(quality)))
                 .header(Header.USER_AGENT, "okhttp/3.10.0")
                 .header("channel", "qq")
@@ -50,8 +49,9 @@ public class KwTrackHeroV2 {
                 .header("ver", "3.1.2")
                 .header("uid", "")
                 .header("devId", "0")
-                .executeAsync();
-        JSONObject urlJson = JSONObject.parseObject(resp.body()).getJSONObject("data");
+                .executeAsync()
+                .body();
+        JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");
         String trackUrl = urlJson.getString("url");
         return trackUrl;
     }

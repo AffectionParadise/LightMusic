@@ -2381,6 +2381,8 @@ public class MainFrame extends JFrame {
     // 迷你窗口坐标
     public int miniX;
     public int miniY;
+    // 速率对话框
+    private RateDialog rateDialog;
     // 图片预览对话框
     private ImageViewDialog imageViewDialog;
     // 是否仅显示自定义主题
@@ -2444,7 +2446,8 @@ public class MainFrame extends JFrame {
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                if (windowState == WindowState.MAXIMIZED) desktopLyricDialog.setVisible(showDesktopLyric);
+                if (windowState == WindowState.MAXIMIZED && (rateDialog == null || !rateDialog.isShowing()))
+                    desktopLyricDialog.setVisible(showDesktopLyric);
             }
         });
         // 窗口圆角
@@ -20242,8 +20245,8 @@ public class MainFrame extends JFrame {
         rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
         rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + 10, rateIcon.getIconHeight() + 10));
         rateButton.addActionListener(e -> {
-            RateDialog rd = new RateDialog(THIS, null, rateButton);
-            rd.showDialog();
+            if (rateDialog == null) rateDialog = new RateDialog(THIS, null, rateButton);
+            rateDialog.showDialog();
         });
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);

@@ -641,12 +641,15 @@ public class ImageUtil {
         if (img == null) return null;
         double ln = lightness(img);
         float bn, param = BlurConstants.DARKER_FACTOR[BlurConstants.darkerFactorIndex];
-        if (ln > 0.5) bn = param;
-        else if (ln > 0.4) bn = param + 0.05f;
-        else if (ln > 0.3) bn = param + 0.1f;
-        else if (ln > 0.2) bn = param + 0.15f;
-        else if (ln > 0.1) bn = param + 0.2f;
-        else bn = param + 0.25f;
+//        System.out.println(ln);
+        if (ln > 0.8) bn = param - 0.1f;
+        else if (ln > 0.5) bn = param;
+        else if (ln > 0.4) bn = param + 0.1f;
+        else if (ln > 0.3) bn = param + 0.15f;
+        else if (ln > 0.2) bn = param + 0.2f;
+        else if (ln > 0.1) bn = param + 0.25f;
+        else if (ln > 0.05) bn = param + 0.3f;
+        else bn = param + 0.6f;
         // 自适应亮度
         contrastFilter.setBrightness(bn);
         return contrastFilter.filter(img, null);
