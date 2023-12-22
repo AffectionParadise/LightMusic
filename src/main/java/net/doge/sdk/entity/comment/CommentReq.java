@@ -45,6 +45,7 @@ public class CommentReq {
 
     // 评论 API
     private final String COMMENTS_API = "https://music.163.com/api/v2/resource/comments";
+    //    private final String COMMENTS_API = "https://music.163.com/weapi/comment/resource/comments/get";
     // 评论 API (酷狗)
     private final String COMMENTS_KG_API
             = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
@@ -124,11 +125,15 @@ public class CommentReq {
 
         if (resource instanceof NetMusicInfo) {
             NetMusicInfo musicInfo = (NetMusicInfo) resource;
+            source = musicInfo.getSource();
             // 网易云需要先判断是普通歌曲还是电台节目，酷狗歌曲获取评论需要 hash
             boolean hasProgramId = musicInfo.hasProgramId();
             boolean hasHash = musicInfo.hasHash();
-            id = hasProgramId ? musicInfo.getProgramId() : hasHash ? musicInfo.getHash() : musicInfo.getId();
-            source = musicInfo.getSource();
+            id = hasProgramId ? musicInfo.getProgramId()
+                    : hasHash ? musicInfo.getHash()
+                    // 李志源歌曲获取专辑评论
+                    : source == NetMusicSource.LZ ? musicInfo.getAlbumId()
+                    : musicInfo.getId();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{hasProgramId ? "A_DJ_1_" : "R_SO_4_", "1", "15", "1"};
 
@@ -143,14 +148,14 @@ public class CommentReq {
             }
         } else if (resource instanceof NetPlaylistInfo) {
             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
             source = playlistInfo.getSource();
+            id = playlistInfo.getId();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{"A_PL_0_", "3", "8", "2"};
         } else if (resource instanceof NetAlbumInfo) {
             NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-            id = albumInfo.getId();
             source = albumInfo.getSource();
+            id = albumInfo.getId();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{"R_AL_3_", "2", "", ""};
 
@@ -163,8 +168,8 @@ public class CommentReq {
             }
         } else if (resource instanceof NetRadioInfo) {
             NetRadioInfo radioInfo = (NetRadioInfo) resource;
-            id = radioInfo.getId();
             source = radioInfo.getSource();
+            id = radioInfo.getId();
             isRadio = true;
             isBook = radioInfo.isBook();
             isGame = radioInfo.isGame();
@@ -194,8 +199,8 @@ public class CommentReq {
             typeStr = new String[]{isVideo || isMlog ? "R_VI_62_" : "R_MV_5_", "5", "7"};
         } else if (resource instanceof NetRankingInfo) {
             NetRankingInfo rankingInfo = (NetRankingInfo) resource;
-            id = rankingInfo.getId();
             source = rankingInfo.getSource();
+            id = rankingInfo.getId();
             // 网易 QQ 酷我 猫耳
             typeStr = new String[]{"A_PL_0_", "4", "2", ""};
         }
@@ -219,6 +224,23 @@ public class CommentReq {
                                     threadId, page, limit, cur, sortType), options)
                     .executeAsync()
                     .body();
+//            String threadId = typeStr[0] + id;
+//            int sortType = hotOnly ? 2 : 3;
+//            String cur = "";
+//            switch (sortType) {
+//                case 2:
+//                    cur = "" + (page - 1) * limit;
+//                    break;
+//                case 3:
+//                    cur = StringUtil.isEmpty(cursor) ? "-1" : cursor;
+//                    break;
+//            }
+//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+//            String commentInfoBody = SdkCommon.ncRequest(Method.POST, COMMENTS_API,
+//                            String.format("{\"threadId\":\"%s\",\"rid\":\"%s\",\"offset\":%s,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":%s,\"orderType\":%s}",
+//                                    threadId, threadId, (page - 1) * limit, page, limit, cur, sortType), options)
+//                    .executeAsync()
+//                    .body();
             JSONObject data = JSONObject.parseObject(commentInfoBody).getJSONObject("data");
             total = data.getIntValue("totalCount");
             // 按时间排序时才需要 cursor ！
@@ -1263,9 +1285,10 @@ public class CommentReq {
 
         // 李志
         else if (source == NetMusicSource.LZ) {
-            boolean isAlbum = resource instanceof NetAlbumInfo;
+            // 专辑和歌曲使用同一参数
+            boolean isVideo = resource instanceof NetMvInfo;
             // 获取 post-id
-            String albumInfoBody = HttpRequest.get(String.format(isAlbum ? ALBUM_DETAIL_LZ_API : VIDEO_DETAIL_LZ_API, id))
+            String albumInfoBody = HttpRequest.get(String.format(isVideo ? VIDEO_DETAIL_LZ_API : ALBUM_DETAIL_LZ_API, id))
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);

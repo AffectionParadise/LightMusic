@@ -12,6 +12,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.ranking.info.RankingInfoReq;
@@ -28,6 +30,7 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -53,8 +56,10 @@ public class NewMusicReq {
     // 新歌速递 API (酷狗)
     private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
     //    private final String RECOMMEND_NEW_SONG_KG_API = "/musicadservice/container/v1/newsong_publish";
+    // 每日推荐歌曲 API (酷狗)
+    private final String EVERYDAY_SONG_KG_API = "/everyday_song_recommend";
     // 新歌榜 API (酷我)
-//    private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
+    //    private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
     private final String RECOMMEND_NEW_SONG_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23853978&pageNo=%s&pageSize=%s";
     // 推荐新歌 API (千千)
@@ -242,6 +247,58 @@ public class NewMusicReq {
         };
 
         // 酷狗
+        // 每日推荐歌曲
+        Callable<CommonResult<NetMusicInfo>> getEverydaySongKg = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(EVERYDAY_SONG_KG_API);
+            Map<String, Object> params = new TreeMap<>();
+            params.put("platform", "android");
+            params.put("userid", "0");
+            String musicInfoBody = SdkCommon.kgRequest(params, null, options)
+                    .header("x-router", "everydayrec.service.kugou.com")
+                    .executeAsync()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject data = musicInfoJson.getJSONObject("data");
+            t = data.getIntValue("song_list_size");
+            JSONArray songArray = data.getJSONArray("song_list");
+            for (int i = 0, len = songArray.size(); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
+
+                String hash = songJson.getString("hash");
+                String songId = songJson.getString("album_audio_id");
+                String name = songJson.getString("songname");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
+                String albumName = songJson.getString("album_name");
+                String albumId = songJson.getString("album_id");
+                Double duration = songJson.getDouble("time_length");
+                String mvId = songJson.getString("mv_hash");
+                int qualityType = AudioQuality.UNKNOWN;
+                if (songJson.getLong("filesize_other") != 0) qualityType = AudioQuality.HR;
+                else if (songJson.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+                else if (songJson.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+                else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setHash(hash);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
+
+                r.add(musicInfo);
+            }
+            return new CommonResult<>(r, t);
+        };
         // 华语新歌(接口分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongKg = () -> {
             List<NetMusicInfo> r = new LinkedList<>();
@@ -818,6 +875,7 @@ public class NewMusicReq {
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleNewSong));
         }
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getEverydaySongKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKg));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {

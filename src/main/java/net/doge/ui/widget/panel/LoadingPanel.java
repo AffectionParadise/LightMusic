@@ -93,14 +93,14 @@ public class LoadingPanel extends JComponent implements MouseListener {
         animation.start();
     }
 
-    public void interrupt() {
-        if (animation == null) return;
-        animation.interrupt();
-        animation = null;
-
-        removeMouseListener(this);
-        setVisible(false);
-    }
+//    public void interrupt() {
+//        if (animation == null) return;
+//        animation.interrupt();
+//        animation = null;
+//
+//        removeMouseListener(this);
+//        setVisible(false);
+//    }
 
     @Override
     public void paintComponent(Graphics g) {

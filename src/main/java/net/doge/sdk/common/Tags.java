@@ -22,7 +22,7 @@ public class Tags {
             NetMusicSource.KW, NetMusicSource.MG, NetMusicSource.QI, NetMusicSource.ME, NetMusicSource.ME, NetMusicSource.FS};
 
     public static Map<String, String[]> hotSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] hotSongMap = {NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.HF, NetMusicSource.GG};
+    public static int[] hotSongMap = {NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG, NetMusicSource.HF, NetMusicSource.GG};
 
     public static Map<String, String[]> newSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static int[] newSongMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ,
