@@ -12,13 +12,13 @@ import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -62,6 +62,8 @@ public class HighQualityPlaylistReq {
     // 热门歌单 API (酷狗)
     private final String HOT_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4" +
             "&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
+    // 编辑精选歌单 API (酷狗)
+    private final String IP_PLAYLIST_KG_API = "/ocean/v6/pubsongs/list_info_for_ip";
     // 分类歌单 API (QQ)
     private final String CAT_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
@@ -239,12 +241,12 @@ public class HighQualityPlaylistReq {
             if (StringUtil.notEmpty(s[2])) {
                 String cid = s[2].trim();
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
-                long ct = System.currentTimeMillis() / 1000;
-                String dat = String.format("{\"appid\":1005,\"mid\":\"114514\",\"clientver\":12029," +
-                                "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":0,\"module_id\":4,\"page\":1,\"pagesize\":30," +
+                String ct = String.valueOf(System.currentTimeMillis() / 1000);
+                String dat = String.format("{\"appid\":%s,\"mid\":\"%s\",\"clientver\":%s," +
+                                "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":%s,\"module_id\":4,\"page\":1,\"pagesize\":30," +
                                 "\"key\":\"%s\",\"special_recommend\":{\"withtag\":1,\"withsong\":1,\"sort\":1,\"ugc\":1," +
                                 "\"is_selected\":0,\"withrecommend\":1,\"area_code\":1,\"categoryid\":\"%s\"}}",
-                        ct, CryptoUtil.md5("1005OIlwieks28dk2k092lksi2UIkp12029" + ct), StringUtil.isEmpty(cid) ? "0" : cid);
+                        KugouReqBuilder.appid, KugouReqBuilder.mid, KugouReqBuilder.clientver, ct, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct), StringUtil.isEmpty(cid) ? "0" : cid);
                 String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
                         .executeAsync()
                         .body();
@@ -435,6 +437,55 @@ public class HighQualityPlaylistReq {
             }
             return new CommonResult<>(r, t);
         };
+        // 编辑精选歌单
+        // 该歌单数据的 id 与 specialid 不同，暂不考虑
+//        Callable<CommonResult<NetPlaylistInfo>> getIpPlaylistsKg = () -> {
+//            List<NetPlaylistInfo> r = new LinkedList<>();
+//            Integer t = 0;
+//
+//            if (StringUtil.notEmpty(s[3])) {
+//                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_PLAYLIST_KG_API);
+//                Map<String, Object> params = new TreeMap<>();
+//                params.put("ip", s[3]);
+//                params.put("page", page);
+//                params.put("pagesize", limit);
+//                String playlistInfoBody = SdkCommon.kgRequest(params, null, options)
+//                        .executeAsync()
+//                        .body();
+//                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+//                JSONObject data = playlistInfoJson.getJSONObject("data");
+//                JSONArray playlistArray = data.getJSONArray("info");
+//                t = page * limit + 1;
+//                for (int i = 0, len = playlistArray.size(); i < len; i++) {
+//                    JSONObject playlistJson = playlistArray.getJSONObject(i);
+//
+//                    String playlistId = playlistJson.getString("list_create_listid");
+//                    String playlistName = playlistJson.getString("name");
+//                    String creator = playlistJson.getString("list_create_username");
+//                    String creatorId = playlistJson.getString("list_create_userid");
+//                    Long playCount = playlistJson.getLong("heat");
+//                    Integer trackCount = playlistJson.getIntValue("count");
+//                    String coverImgThumbUrl = playlistJson.getString("pic").replace("/{size}", "");
+//
+//                    NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+//                    playlistInfo.setSource(NetMusicSource.KG);
+//                    playlistInfo.setId(playlistId);
+//                    playlistInfo.setName(playlistName);
+//                    playlistInfo.setCreator(creator);
+//                    playlistInfo.setCreatorId(creatorId);
+//                    playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                    playlistInfo.setPlayCount(playCount);
+//                    playlistInfo.setTrackCount(trackCount);
+//                    GlobalExecutors.imageExecutor.execute(() -> {
+//                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                        playlistInfo.setCoverImgThumb(coverImgThumb);
+//                    });
+//
+//                    r.add(playlistInfo);
+//                }
+//            }
+//            return new CommonResult<>(r, t);
+//        };
 
         // QQ
         // 分类推荐歌单(接口分页)
@@ -442,8 +493,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[3])) {
-                String cat = s[3];
+            if (StringUtil.notEmpty(s[4])) {
+                String cat = s[4];
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
@@ -618,8 +669,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[4])) {
-                String[] sp = s[4].split(" ");
+            if (StringUtil.notEmpty(s[5])) {
+                String[] sp = s[5].split(" ");
                 // 根据 digest 信息请求不同的分类歌单接口
                 if ("43".equals(sp[1])) {
                     HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API_2, sp[0])).executeAsync();
@@ -775,8 +826,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[5])) {
-                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[5], page))
+            if (StringUtil.notEmpty(s[6])) {
+                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[6], page))
                         .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -817,8 +868,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[6].trim(), System.currentTimeMillis()))
+            if (StringUtil.notEmpty(s[7])) {
+                String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[7].trim(), System.currentTimeMillis()))
                         .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -856,8 +907,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[7])) {
-                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, s[7].trim(), page, limit))
+            if (StringUtil.notEmpty(s[8])) {
+                String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, s[8].trim(), page, limit))
                         .executeAsync()
                         .body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -896,8 +947,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[8])) {
-                String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[8].trim(), page, limit))
+            if (StringUtil.notEmpty(s[9])) {
+                String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[9].trim(), page, limit))
                         .executeAsync()
                         .body();
                 JSONArray playlistArray = JSONArray.parseArray(playlistInfoBody);
@@ -939,8 +990,8 @@ public class HighQualityPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[9])) {
-                String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[9].trim(), page))
+            if (StringUtil.notEmpty(s[10])) {
+                String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[10].trim(), page))
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(playlistInfoBody);
@@ -996,6 +1047,7 @@ public class HighQualityPlaylistReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotCollectedTagPlaylistsKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getUpTagPlaylistsKg));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getHotPlaylistsKg));
+//            taskList.add(GlobalExecutors.requestExecutor.submit(getIpPlaylistsKg));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatPlaylistsQq));

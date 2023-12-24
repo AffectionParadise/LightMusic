@@ -7,8 +7,11 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -37,6 +40,8 @@ public class HotPlaylistTagReq {
     private final String PICKED_PLAYLIST_TAG_API = "https://music.163.com/weapi/playlist/catalogue";
     // 歌单标签 API (酷狗)
     private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
+    // 编辑精选标签 API (酷狗)
+    private final String IP_TAG_KG_API = "/v1/zone/index";
     // 歌单标签 API (QQ)
     private final String PLAYLIST_TAG_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8" +
@@ -63,10 +68,10 @@ public class HotPlaylistTagReq {
      * @return
      */
     public void initHotPlaylistTag() {
-        // 网易云精品歌单 网易云网友精选碟 酷狗 QQ 酷我 咪咕 千千 猫耳 猫耳探索 5sing
-        Tags.hotPlaylistTag.put("默认", new String[]{"全部", "全部", " ", "10000000", "", "", " ", " ", "", " "});
+        // 网易云精品歌单 网易云网友精选碟 酷狗 酷狗 QQ 酷我 咪咕 千千 猫耳 猫耳探索 5sing
+        Tags.hotPlaylistTag.put("默认", new String[]{"全部", "全部", " ", "", "10000000", "", "", " ", " ", "", " "});
 
-        final int c = 10;
+        final int c = 11;
         // 网易云
         // 精品歌单标签
         Runnable initHighQualityPlaylistTag = () -> {
@@ -124,6 +129,24 @@ public class HotPlaylistTagReq {
                 }
             }
         };
+        // 编辑精选标签
+        Runnable initIpTagKg = () -> {
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
+            String tagBody = SdkCommon.kgRequest(null, null, options)
+                    .header("x-router", "yuekucategory.kugou.com")
+                    .executeAsync()
+                    .body();
+            JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
+            for (int i = 0, len = tags.size(); i < len; i++) {
+                JSONObject tag = tags.getJSONObject(i);
+
+                String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
+                String name = tag.getString("name");
+
+                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
+                Tags.hotPlaylistTag.get(name)[3] = id;
+            }
+        };
 
         // QQ
         Runnable initHotPlaylistTagQq = () -> {
@@ -141,7 +164,7 @@ public class HotPlaylistTagReq {
                     String id = tagJson.getString("id");
 
                     if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                    Tags.hotPlaylistTag.get(name)[3] = id;
+                    Tags.hotPlaylistTag.get(name)[4] = id;
                 }
             }
         };
@@ -162,7 +185,7 @@ public class HotPlaylistTagReq {
                     String id = String.format("%s %s", tagJson.getString("id"), tagJson.getString("digest"));
 
                     if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                    Tags.hotPlaylistTag.get(name)[4] = id;
+                    Tags.hotPlaylistTag.get(name)[5] = id;
                 }
             }
         };
@@ -183,7 +206,7 @@ public class HotPlaylistTagReq {
                     String id = tagJsonArray.getString(1);
 
                     if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                    Tags.hotPlaylistTag.get(name)[5] = id;
+                    Tags.hotPlaylistTag.get(name)[6] = id;
                 }
             }
         };
@@ -204,7 +227,7 @@ public class HotPlaylistTagReq {
                     String id = tagJson.getString("id");
 
                     if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                    Tags.hotPlaylistTag.get(name)[6] = id;
+                    Tags.hotPlaylistTag.get(name)[7] = id;
                 }
             }
         };
@@ -226,7 +249,7 @@ public class HotPlaylistTagReq {
                     String id = tagJsonArray.getString(0);
 
                     if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                    Tags.hotPlaylistTag.get(name)[7] = id;
+                    Tags.hotPlaylistTag.get(name)[8] = id;
                 }
             }
         };
@@ -245,7 +268,7 @@ public class HotPlaylistTagReq {
                 String name = t.getElementsByTag("a").text().trim();
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[8] = id;
+                Tags.hotPlaylistTag.get(name)[9] = id;
             }
         };
 
@@ -263,7 +286,7 @@ public class HotPlaylistTagReq {
                 String id = tag.text();
 
                 if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[9] = id;
+                Tags.hotPlaylistTag.get(name)[10] = id;
             }
         };
 
@@ -272,6 +295,7 @@ public class HotPlaylistTagReq {
         taskList.add(GlobalExecutors.requestExecutor.submit(initHighQualityPlaylistTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initPickedPlaylistTag));
         taskList.add(GlobalExecutors.requestExecutor.submit(initHotPlaylistTagKg));
+        taskList.add(GlobalExecutors.requestExecutor.submit(initIpTagKg));
         taskList.add(GlobalExecutors.requestExecutor.submit(initHotPlaylistTagQq));
         taskList.add(GlobalExecutors.requestExecutor.submit(initHotPlaylistTagKw));
         taskList.add(GlobalExecutors.requestExecutor.submit(initHotPlaylistTagMg));

@@ -9,6 +9,8 @@ import net.doge.model.entity.NetArtistInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
@@ -34,7 +36,7 @@ public class ArtistListReq {
         if (instance == null) instance = new ArtistListReq();
         return instance;
     }
-    
+
     // 歌手榜 API
     private final String ARTIST_RANKING_LIST_API = "https://music.163.com/weapi/toplist/artist";
     // 热门歌手 API
@@ -47,6 +49,8 @@ public class ArtistListReq {
     private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
     // 飙升歌手推荐 API (酷狗)
     private final String UP_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=2&page=%s&pagesize=%s";
+    // 编辑精选歌手 API (酷狗)
+    private final String IP_ARTIST_KG_API = "/openapi/v1/ip/author_list";
     // 歌手推荐 API (酷我)
     private final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)
@@ -323,15 +327,52 @@ public class ArtistListReq {
             }
             return new CommonResult<>(r, t);
         };
+        // 编辑精选歌手
+        Callable<CommonResult<NetArtistInfo>> getIpArtistKg = () -> {
+            List<NetArtistInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[4])) {
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ARTIST_KG_API);
+                String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
+                String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
+                        .executeAsync()
+                        .body();
+                JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+                t = artistInfoJson.getIntValue("total");
+                JSONArray artistArray = artistInfoJson.getJSONArray("data");
+                for (int i = 0, len = artistArray.size(); i < len; i++) {
+                    JSONObject artistJson = artistArray.getJSONObject(i);
+                    JSONObject base = artistJson.getJSONObject("base");
+
+                    String artistId = base.getString("author_id");
+                    String artistName = base.getString("author_name");
+                    String coverImgThumbUrl = base.getString("avatar").replace("{size}", "240");
+
+                    NetArtistInfo artistInfo = new NetArtistInfo();
+                    artistInfo.setSource(NetMusicSource.KG);
+                    artistInfo.setId(artistId);
+                    artistInfo.setName(artistName);
+                    artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                        artistInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(artistInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
 
         // QQ (每页固定 80 条)
         Callable<CommonResult<NetArtistInfo>> getArtistRankingQq = () -> {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[4])) {
+            if (StringUtil.notEmpty(s[5])) {
                 final int lim = 80, p = (page - 1) / 4 + 1;
-                String[] sp = s[4].split(" ");
+                String[] sp = s[5].split(" ");
                 String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                                 "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
@@ -370,8 +411,8 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[5])) {
-                HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[5], page, limit)).executeAsync();
+            if (StringUtil.notEmpty(s[6])) {
+                HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[6], page, limit)).executeAsync();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();
                     JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -412,8 +453,8 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
                         .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
                         .executeAsync();
@@ -564,9 +605,9 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[7])) {
+            if (StringUtil.notEmpty(s[8])) {
                 // 分割时保留空串
-                String[] sp = s[7].split(" ", -1);
+                String[] sp = s[8].split(" ", -1);
                 String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
                         .executeAsync()
                         .body();
@@ -603,8 +644,8 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[8])) {
-                String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[8].trim(), page, limit))
+            if (StringUtil.notEmpty(s[9])) {
+                String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[9].trim(), page, limit))
                         .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -639,8 +680,8 @@ public class ArtistListReq {
             List<NetArtistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[8])) {
-                String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[8].trim(), page, limit))
+            if (StringUtil.notEmpty(s[9])) {
+                String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[9].trim(), page, limit))
                         .executeAsync()
                         .body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -682,31 +723,26 @@ public class ArtistListReq {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtist));
             if (!dt) taskList.add(GlobalExecutors.requestExecutor.submit(getStyleArtist));
         }
-
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getHotArtistKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getUpArtistKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getIpArtistKg));
         }
-
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingQq));
         }
-
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingKw));
             taskList.add(GlobalExecutors.requestExecutor.submit(getAllArtistsKw));
         }
-
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg));
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getArtistRankingMg2));
         }
-
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getRecArtistsQi));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatArtistsQi));
         }
-
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatCVsMe));
             taskList.add(GlobalExecutors.requestExecutor.submit(getCatOrganizationsMe));

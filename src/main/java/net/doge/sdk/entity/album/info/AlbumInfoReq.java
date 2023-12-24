@@ -593,7 +593,7 @@ public class AlbumInfoReq {
                 String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = album_info.getString("album_name");
                 String albumId = base.getString("album_id");
-                Double duration = audioInfo.getDoubleValue("duration") / 1000;
+                Double duration = audioInfo.getDouble("duration") / 1000;
                 JSONArray mvdata = songJson.getJSONArray("mvdata");
                 String mvId = JsonUtil.isEmpty(mvdata) ? songJson.getString("mvhash") : mvdata.getJSONObject(0).getString("hash");
                 int qualityType = AudioQuality.UNKNOWN;

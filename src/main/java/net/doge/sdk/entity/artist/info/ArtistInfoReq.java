@@ -12,12 +12,12 @@ import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -698,10 +698,10 @@ public class ArtistInfoReq {
 //            }
 
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ARTIST_SONGS_KG_API);
-            long ct = System.currentTimeMillis() / 1000;
-            String dat = String.format("{\"appid\":1005,\"clientver\":12029,\"mid\":\"114514\",\"clienttime\":%s," +
+            String ct = String.valueOf(System.currentTimeMillis() / 1000);
+            String dat = String.format("{\"appid\":%s,\"clientver\":%s,\"mid\":\"%s\",\"clienttime\":%s," +
                             "\"key\":\"%s\",\"author_id\":\"%s\",\"page\":%s,\"pagesize\":%s,\"sort\":1,\"area_code\":\"all\"}",
-                    ct, CryptoUtil.md5("1005OIlwieks28dk2k092lksi2UIkp12029" + ct), id, page, limit);
+                    KugouReqBuilder.appid, KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.signParamsKey(ct), id, page, limit);
             String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .header("x-router", "kmr.service.kugou.com")
                     .executeAsync()
@@ -719,7 +719,7 @@ public class ArtistInfoReq {
                 String artistId = id;
                 String albumName = songJson.getString("album_name");
                 String albumId = songJson.getString("album_id");
-                Double duration = songJson.getDoubleValue("timelength") / 1000;
+                Double duration = songJson.getDouble("timelength") / 1000;
                 String mvId = songJson.getString("video_hash");
                 int qualityType = AudioQuality.UNKNOWN;
                 if (songJson.getLong("filesize_high") != 0) qualityType = AudioQuality.HR;

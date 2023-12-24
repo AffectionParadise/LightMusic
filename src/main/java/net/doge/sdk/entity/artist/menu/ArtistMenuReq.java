@@ -8,6 +8,7 @@ import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.*;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
@@ -521,7 +522,7 @@ public class ArtistMenuReq {
                 String mvName = mvJson.getString("video_name");
                 String artistName = mvJson.getString("author_name");
                 String coverImgUrl = mvJson.getString("hdpic").replace("/{size}", "");
-                Double Duration = mvJson.getDoubleValue("timelength") / 1000;
+                Double Duration = mvJson.getDouble("timelength") / 1000;
                 Long playCount = mvJson.getLong("history_heat");
 
                 NetMvInfo mvInfo = new NetMvInfo();
@@ -699,10 +700,12 @@ public class ArtistMenuReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String artistInfoBody = HttpRequest.post(SIMILAR_ARTIST_KG_API)
-                    .body("{\"clientver\":\"9108\",\"mid\":\"286974383886022203545511837994020015101\"," +
-                            "\"clienttime\":\"1545746019\",\"key\":\"4c8b684568f03eeef985ae271561bcd8\"," +
-                            "\"appid\":\"1005\",\"data\":[{\"author_id\":" + id + "}]}")
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SIMILAR_ARTIST_KG_API);
+            String ct = String.valueOf(System.currentTimeMillis() / 1000);
+            String dat = String.format("{\"clientver\":\"%s\",\"mid\":\"%s\",\"clienttime\":\"%s\",\"key\":\"%s\"," +
+                            "\"appid\":\"%s\",\"data\":[{\"author_id\":\"%s\"}]}",
+                    KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.signParamsKey(ct), KugouReqBuilder.appid, id);
+            String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

@@ -779,7 +779,7 @@ public class MusicSearchReq {
                         String artistId = SdkUtil.parseArtistId(songJson);
                         String albumName = songJson.getString("album");
                         String albumId = songJson.getString("albumId");
-                        double duration = songJson.getDoubleValue("duration");
+                        double duration = songJson.getDouble("duration");
                         String mvId = songJson.getString("mvId");
                         int qualityType = AudioQuality.UNKNOWN;
                         JSONArray audioFormats = songJson.getJSONArray("audioFormats");

@@ -55,4 +55,8 @@ public class KwTrackHeroV2 {
         String trackUrl = urlJson.getString("url");
         return trackUrl;
     }
+
+//    public static void main(String[] args) {
+//        System.out.println(getInstance().getTrackUrl("228908", "flac"));
+//    }
 }

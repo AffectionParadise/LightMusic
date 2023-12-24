@@ -1,4 +1,4 @@
-//package net.doge.sdk.entity.music.info.trackhero;
+//package net.doge.sdk.entity.music.info.trackhero.kw;
 //
 //import cn.hutool.http.Header;
 //import cn.hutool.http.HttpRequest;
@@ -19,6 +19,7 @@
 //        if (instance == null) instance = new KwTrackHero();
 //        return instance;
 //    }
+//
 //    private final String SECRET_KEY = "ylzsxkwm";
 //    private final int DES_MODE_DECRYPT = 1;
 //    private final int[] arrayE = {
@@ -168,6 +169,10 @@
 //                .executeAsync();
 //        String trackUrl = RegexUtil.getGroup1("url=(.*?)\r\n", resp.body());
 //        return trackUrl;
+//    }
+//
+//    public static void main(String[] args) {
+//        System.out.println(getInstance().getTrackUrl("228908", "320k"));
 //    }
 //
 //    private String base64Encrypt(String msg) {

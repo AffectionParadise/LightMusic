@@ -18,23 +18,24 @@ public class Tags {
     public static int[] recPlaylistMap = {NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.ME, NetMusicSource.FS};
 
     public static Map<String, String[]> hotPlaylistTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] hotPlaylistMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ,
+    public static int[] hotPlaylistMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG, NetMusicSource.QQ,
             NetMusicSource.KW, NetMusicSource.MG, NetMusicSource.QI, NetMusicSource.ME, NetMusicSource.ME, NetMusicSource.FS};
 
     public static Map<String, String[]> hotSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] hotSongMap = {NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG, NetMusicSource.HF, NetMusicSource.GG};
+    public static int[] hotSongMap = {NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG, NetMusicSource.KG,
+            NetMusicSource.KG, NetMusicSource.HF, NetMusicSource.GG};
 
     public static Map<String, String[]> newSongTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static int[] newSongMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ,
             NetMusicSource.HF, NetMusicSource.GG, NetMusicSource.FS};
 
     public static Map<String, String[]> newAlbumTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] newAlbumMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.NC,
+    public static int[] newAlbumMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG,
             NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.DB, NetMusicSource.DT};
 
     public static Map<String, String[]> artistTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] artistMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ,
-            NetMusicSource.KW, NetMusicSource.KW, NetMusicSource.QI, NetMusicSource.ME};
+    public static int[] artistMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG,
+            NetMusicSource.QQ, NetMusicSource.KW, NetMusicSource.KW, NetMusicSource.QI, NetMusicSource.ME};
 
     public static Map<String, String[]> radioTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static int[] radioMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.XM, NetMusicSource.XM, NetMusicSource.XM,
@@ -44,6 +45,6 @@ public class Tags {
     public static int[] programMap = {NetMusicSource.ME, NetMusicSource.ME};
 
     public static Map<String, String[]> mvTag = Collections.synchronizedMap(new LinkedHashMap<>());
-    public static int[] mvMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.QQ,
+    public static int[] mvMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG, NetMusicSource.QQ, NetMusicSource.QQ,
             NetMusicSource.QQ, NetMusicSource.KW, NetMusicSource.HK, NetMusicSource.BI, NetMusicSource.FA, NetMusicSource.LZ};
 }

@@ -54,10 +54,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         fontTimer = new Timer(10, e -> {
             // 高亮行字体增大
             highlightFont = highlightFont.deriveFont(highlightFont.getSize() + 1f);
-
             // 经过行字体减小
             shrinkFont = shrinkFont.deriveFont(shrinkFont.getSize() - 1f);
-
             if (highlightFont.getSize() == Fonts.NORMAL_BIG.getSize()) fontTimer.stop();
         });
     }

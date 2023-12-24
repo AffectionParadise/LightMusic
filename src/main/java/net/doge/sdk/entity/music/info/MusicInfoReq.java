@@ -183,7 +183,7 @@ public class MusicInfoReq {
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             // 时长是毫秒，转为秒
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDoubleValue("timelength") / 1000);
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
             if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
@@ -200,8 +200,9 @@ public class MusicInfoReq {
 
             // 部分信息缺失，继续使用旧接口
 //            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API);
-//            String dat = String.format("{\"appid\":1005,\"area_code\":1,\"behavior\":\"play\",\"clientver\":12029,\"need_hash_offset\":1,\"relate\":1," +
-//                    "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}", hash);
+//            String dat = String.format("{\"appid\":%s,\"area_code\":1,\"behavior\":\"play\",\"clientver\":%s,\"need_hash_offset\":1,\"relate\":1," +
+//                            "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}",
+//                    KugouReqBuilder.appid, KugouReqBuilder.clientver, hash);
 //            String songBody = SdkCommon.kgRequest(null, dat, options)
 //                    .header(Header.CONTENT_TYPE, "application/json")
 //                    .header("x-router", "media.store.kugou.com")
@@ -210,7 +211,7 @@ public class MusicInfoReq {
 //            JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 //            JSONObject info = data.getJSONObject("info");
 //            // 时长是毫秒，转为秒
-//            if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDoubleValue("timelength") / 1000);
+//            if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDouble("timelength") / 1000);
 //            if (!musicInfo.hasArtist()) musicInfo.setArtist(info.getString("singername"));
 ////            if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
 //            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("albumname"));

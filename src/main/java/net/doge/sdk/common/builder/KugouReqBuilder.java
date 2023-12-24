@@ -23,13 +23,13 @@ public class KugouReqBuilder {
         return instance;
     }
 
-    private final String appid = "1005";
+    public static final String appid = "1005";
     private final String apiver = "20";
-    private final String clientver = "12029";
+    public static final String clientver = "12029";
     private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
-    private final String userid = "0";
-    private final String mid = "114514";
-    private final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
+    public static final String userid = "0";
+    public static final String mid = "114514";
+    private static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
 
     public HttpRequest buildRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
         String url = (String) options.getOrDefault(KugouReqOptEnum.URL, "");
@@ -89,5 +89,10 @@ public class KugouReqBuilder {
 //        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
         String content = signParams(params);
         return CryptoUtil.md5(androidSignKey + content + (StringUtil.notEmpty(data) ? data : "") + androidSignKey);
+    }
+
+    // 请求参数签名
+    public static String signParamsKey(String data) {
+        return CryptoUtil.md5(appid + androidSignKey + clientver + data);
     }
 }

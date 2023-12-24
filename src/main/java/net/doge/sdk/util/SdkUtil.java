@@ -44,6 +44,8 @@ public class SdkUtil {
 
         // 获取艺术家名称 key
         JSONObject first = artistArray.getJSONObject(0);
+        // 酷狗部分接口套了一层 base
+        if (first.containsKey("base")) first = first.getJSONObject("base");
         String[] nameKeys = {"name", "singer_name", "author_name", "singername", "userName"};
         String nameKey = null;
         for (String key : nameKeys) {
@@ -54,7 +56,9 @@ public class SdkUtil {
 
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = artistArray.size(); i < len; i++) {
-            String name = artistArray.getJSONObject(i).getString(nameKey);
+            JSONObject obj = artistArray.getJSONObject(i);
+            if (obj.containsKey("base")) obj = obj.getJSONObject("base");
+            String name = obj.getString(nameKey);
             sj.add(name);
         }
         return sj.toString();
@@ -72,6 +76,8 @@ public class SdkUtil {
 
         // 获取艺术家 id
         JSONObject first = artistArray.getJSONObject(0);
+        // 酷狗部分接口套了一层 base
+        if (first.containsKey("base")) first = first.getJSONObject("base");
         String[] idKeys = {"singermid", "singer_mid", "mid", "singerid", "artistCode", "artistId", "author_id", "userId", "id"};
         for (String key : idKeys) {
             if (!first.containsKey(key)) continue;

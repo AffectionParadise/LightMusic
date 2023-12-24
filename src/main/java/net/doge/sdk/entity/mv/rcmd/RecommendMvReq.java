@@ -12,6 +12,8 @@ import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
@@ -56,6 +58,8 @@ public class RecommendMvReq {
     private final String EXCLUSIVE_MV_API = "https://interface.music.163.com/api/mv/exclusive/rcmd";
     // 推荐 MV API (酷狗)
     private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
+    // 编辑精选 MV API (酷狗)
+    private final String IP_MV_KG_API = "/openapi/v1/ip/videos";
     // 最新 MV API (QQ)
     private final String NEW_MV_QQ_API = "https://c.y.qq.com/mv/fcgi-bin/getmv_by_tag?cmd=shoubo&format=json&lan=%s";
     // 推荐 MV API (酷我)
@@ -308,6 +312,7 @@ public class RecommendMvReq {
         };
 
         // 酷狗(接口分页)
+        // 推荐 MV
         Callable<CommonResult<NetMvInfo>> getRecommendMvKg = () -> {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
@@ -352,6 +357,53 @@ public class RecommendMvReq {
             }
             return new CommonResult<>(r, t);
         };
+        // 编辑精选 MV
+        Callable<CommonResult<NetMvInfo>> getIpMvKg = () -> {
+            List<NetMvInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[3])) {
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_MV_KG_API);
+                String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[3], page, limit);
+                String mvInfoBody = SdkCommon.kgRequest(null, dat, options)
+                        .executeAsync()
+                        .body();
+                JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+                t = mvInfoJson.getIntValue("total");
+                JSONArray mvArray = mvInfoJson.getJSONArray("data");
+                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                    JSONObject mvJson = mvArray.getJSONObject(i);
+                    JSONObject base = mvJson.getJSONObject("base");
+                    JSONObject h264 = mvJson.getJSONObject("h264");
+                    JSONObject extra = mvJson.getJSONObject("extra");
+
+                    String mvId = h264.getString("sd_hash");
+                    String mvName = base.getString("mv_name");
+                    String artistName = base.getString("singer");
+                    Long playCount = extra.getLong("hit");
+                    Double duration = base.getDouble("duration") / 1000;
+                    String pubTime = base.getString("publish_time").split(" ")[0];
+                    String coverImgUrl = base.getString("hdpic").replace("/{size}", "");
+
+                    NetMvInfo mvInfo = new NetMvInfo();
+                    mvInfo.setSource(NetMusicSource.KG);
+                    mvInfo.setId(mvId);
+                    mvInfo.setName(mvName);
+                    mvInfo.setArtist(artistName);
+                    mvInfo.setPlayCount(playCount);
+                    mvInfo.setDuration(duration);
+                    mvInfo.setPubTime(pubTime);
+                    mvInfo.setCoverImgUrl(coverImgUrl);
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                        mvInfo.setCoverImgThumb(coverImgThumb);
+                    });
+
+                    r.add(mvInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
 
         // QQ
         // 推荐 MV (接口分页)
@@ -359,11 +411,11 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
                                 "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
-                                "\"order\":1}}}", s[3], s[4], (page - 1) * limit, limit))
+                                "\"order\":1}}}", s[4], s[5], (page - 1) * limit, limit))
                         .executeAsync()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -407,8 +459,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[5])) {
-                String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[5]))
+            if (StringUtil.notEmpty(s[6])) {
+                String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[6]))
                         .executeAsync()
                         .body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -450,8 +502,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[6], page, limit)).executeAsync();
+            if (StringUtil.notEmpty(s[7])) {
+                HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[7], page, limit)).executeAsync();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String mvInfoBody = resp.body();
                     JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -761,8 +813,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[7])) {
-                String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[7], limit))
+            if (StringUtil.notEmpty(s[8])) {
+                String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[8], limit))
                         .cookie(SdkCommon.HK_COOKIE)
                         .executeAsync()
                         .body();
@@ -855,8 +907,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[8])) {
-                String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[8]))
+            if (StringUtil.notEmpty(s[9])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[9]))
                         .cookie(SdkCommon.BI_COOKIE)
                         .executeAsync()
                         .body();
@@ -902,8 +954,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[8])) {
-                String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[8], page, limit))
+            if (StringUtil.notEmpty(s[9])) {
+                String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[9], page, limit))
                         .cookie(SdkCommon.BI_COOKIE)
                         .executeAsync()
                         .body();
@@ -953,7 +1005,7 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String[] sp = s[9].split(" ", -1);
+            String[] sp = s[10].split(" ", -1);
             if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
                 String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, page, sp[0]))
                         .setFollowRedirects(true)
@@ -1006,7 +1058,7 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String[] sp = s[9].split(" ", -1);
+            String[] sp = s[10].split(" ", -1);
             if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {
                 String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, page, sp[1]))
                         .setFollowRedirects(true)
@@ -1060,8 +1112,8 @@ public class RecommendMvReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[10])) {
-                String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[10]))
+            if (StringUtil.notEmpty(s[11])) {
+                String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[11]))
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(mvInfoBody);
@@ -1113,6 +1165,7 @@ public class RecommendMvReq {
         }
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getIpMvKg));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendMvQq));
