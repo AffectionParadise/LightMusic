@@ -173,7 +173,6 @@ public class MainFrame extends JFrame {
     private final String BAD_FORMAT_LRC_MSG = I18n.getText("badFormatLrcMsg");
     private final Statement BAD_FORMAT_LRC_STMT = new Statement(BAD_FORMAT_LRC_MSG);
     private final String LOADING_MSG = I18n.getText("loadingMsg");
-    private final Statement LOADING_STMT = new Statement(LOADING_MSG);
     private final String LOAD_FAILED = I18n.getText("loadFailed");
     private final String ASK_DISPOSE_MSG = I18n.getText("askDisposeMsg");
     private final String REMEMBER_CHOICE_MSG = I18n.getText("rememberChoiceMsg");

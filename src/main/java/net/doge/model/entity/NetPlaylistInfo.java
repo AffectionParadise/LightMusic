@@ -139,8 +139,4 @@ public class NetPlaylistInfo implements NetResource {
         return name
                 + (StringUtil.isEmpty(creator) ? "" : " - " + creator);
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }

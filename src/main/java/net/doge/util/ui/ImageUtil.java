@@ -642,7 +642,7 @@ public class ImageUtil {
         double ln = lightness(img);
         float bn, param = BlurConstants.DARKER_FACTOR[BlurConstants.darkerFactorIndex];
 //        System.out.println(ln);
-        if (ln > 0.8) bn = param - 0.1f;
+        if (ln > 0.8) bn = param - 0.05f;
         else if (ln > 0.5) bn = param;
         else if (ln > 0.4) bn = param + 0.1f;
         else if (ln > 0.3) bn = param + 0.15f;

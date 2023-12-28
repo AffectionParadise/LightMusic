@@ -1012,12 +1012,15 @@ public class RecommendMvReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(mvInfoBody);
-                Elements as = doc.select(".pagination ul li a");
+                Elements as = doc.select(".pagination ul li");
                 if (as.isEmpty()) t = limit;
                 else {
-                    String ts = as.get(as.size() - 2).text();
-                    if (StringUtil.isNumber(ts)) t = Integer.parseInt(ts) * limit;
-                    else t = Integer.parseInt(as.get(as.size() - 3).text()) * limit;
+                    for (int i = as.size() - 1; i >= 0; i--) {
+                        String ts = as.get(i).text();
+                        if (!StringUtil.isNumber(ts)) continue;
+                        t = Integer.parseInt(ts) * limit;
+                        break;
+                    }
                 }
                 Elements mvArray = doc.select(".post.list");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -1065,12 +1068,15 @@ public class RecommendMvReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(mvInfoBody);
-                Elements as = doc.select(".pagination ul li a");
+                Elements as = doc.select(".pagination ul li");
                 if (as.isEmpty()) t = limit;
                 else {
-                    String ts = as.get(as.size() - 2).text();
-                    if (StringUtil.isNumber(ts)) t = Integer.parseInt(ts) * limit;
-                    else t = Integer.parseInt(as.get(as.size() - 3).text()) * limit;
+                    for (int i = as.size() - 1; i >= 0; i--) {
+                        String ts = as.get(i).text();
+                        if (!StringUtil.isNumber(ts)) continue;
+                        t = Integer.parseInt(ts) * limit;
+                        break;
+                    }
                 }
                 Elements mvArray = doc.select(".post.list");
                 for (int i = 0, len = mvArray.size(); i < len; i++) {

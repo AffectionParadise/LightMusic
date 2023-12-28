@@ -148,8 +148,7 @@ public class NetMvInfo implements NetResource, Downloadable {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString()
-                + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

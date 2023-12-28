@@ -105,15 +105,10 @@ public class NetRankingInfo implements NetResource {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString()
-                + (playCount == null ? "" : "\n\n" + StringUtil.formatNumber(playCount));
+        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {
         return name;
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }

@@ -71,7 +71,7 @@ public class NeteaseReqBuilder {
         switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
             case NeteaseReqOptConstants.WEAPI:
                 headers.put("Cookie", String.format(
-                        "os=iOS; __remember_me=true; _ntes_nuid=%s; NMTID=%s; MUSIC_A=%s; appver=8.10.90;",
+                        "os=iOS; __remember_me=true; _ntes_nuid=%s; NMTID=%s; MUSIC_A=%s; appver=8.20.21;",
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
                         anonymousToken
@@ -82,8 +82,8 @@ public class NeteaseReqBuilder {
             case NeteaseReqOptConstants.EAPI:
                 String requestId = System.currentTimeMillis() / 1000 + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
                 headers.put("Cookie", String.format(
-                        "osver=; deviceId=; appver=8.9.70; versioncode=140; mobilename=; buildver=1690071476; resolution=1920x1080; " +
-                                "__csrf=; os=android; channel=; requestId=%s; MUSIC_A=%s",
+                        "osver=17,1,2; deviceId=; appver=8.20.21; versioncode=140; mobilename=; buildver=1690071476; resolution=1920x1080; " +
+                                "__csrf=; os=ios; channel=; requestId=%s; MUSIC_A=%s",
                         requestId,
                         anonymousToken
                 ));

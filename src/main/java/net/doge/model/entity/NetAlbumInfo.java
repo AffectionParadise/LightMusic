@@ -127,8 +127,4 @@ public class NetAlbumInfo implements NetResource {
         return name
                 + (StringUtil.isEmpty(artist) ? "" : " - " + artist);
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }

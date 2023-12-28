@@ -165,8 +165,4 @@ public class NetRadioInfo implements NetResource {
         return name
                 + (StringUtil.isEmpty(dj) ? "" : " - " + dj);
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }

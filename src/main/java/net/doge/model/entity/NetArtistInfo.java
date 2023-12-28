@@ -191,8 +191,4 @@ public class NetArtistInfo implements NetResource {
     public String toSimpleString() {
         return name;
     }
-
-//    public String toString() {
-//        return name + " - " + id;
-//    }
 }
