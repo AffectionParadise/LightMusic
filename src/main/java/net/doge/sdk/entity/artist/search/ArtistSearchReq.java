@@ -135,6 +135,8 @@ public class ArtistSearchReq {
             JSONArray artistArray = data.getJSONArray("lists");
             for (int i = 0, len = artistArray.size(); i < len; i++) {
                 JSONObject artistJson = artistArray.getJSONObject(i);
+                // 部分搜索结果包含空 json
+                if (JsonUtil.isEmpty(artistJson)) continue;
 
                 String artistId = artistJson.getString("AuthorId");
                 String artistName = artistJson.getString("AuthorName");

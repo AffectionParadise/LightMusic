@@ -65,8 +65,8 @@ public abstract class AbstractMiniDialog extends JDialog {
             else if (f.blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, dw, dh);
         }
         if (f.gsOn) {
-            // 处理成 100 * 100 大小
-            img = ImageUtil.width(img, 100);
+            // 缩小
+            img = ImageUtil.width(img, 256);
             // 高斯模糊
             img = ImageUtil.gaussianBlur(img);
         }
