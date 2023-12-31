@@ -20908,7 +20908,10 @@ public class MainFrame extends JFrame {
         double tempRatio = 0;
         if (nextLrc > 0) {
             if (stc.isByWord()) {
-                tempRatio = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+                double r = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+                // 部分情况返回 NAN 值，直接跳过
+                if (r != r) return;
+                tempRatio = r;
             } else {
                 Statement ls = statements.get(nextLrc - 1), ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
                 tempRatio = (t - ls.getTime() + lrcOffset) /

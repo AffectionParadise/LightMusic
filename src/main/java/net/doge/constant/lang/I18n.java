@@ -622,6 +622,7 @@ public class I18n {
         LANG_MAP.put("yy", new String[]{"小悦", "YY"});
         LANG_MAP.put("fa", new String[]{"发姐", "FA"});
         LANG_MAP.put("lz", new String[]{"李志", "LZ"});
+        LANG_MAP.put("gh", new String[]{"小果", "GH"});
         LANG_MAP.put("all", new String[]{"全部", "All"});
 
         LANG_MAP.put("off", new String[]{"关闭", "Off"});

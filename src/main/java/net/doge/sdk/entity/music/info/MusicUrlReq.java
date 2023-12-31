@@ -423,6 +423,35 @@ public class MusicUrlReq {
             return StringUtil.urlEncodeBlank(urlJson.getString("audio"));
         }
 
+        // 果核
+        else if (source == NetMusicSource.GH) {
+            String quality;
+            switch (AudioQuality.quality) {
+                case AudioQuality.HI_RES:
+                case AudioQuality.LOSSLESS:
+                    quality = "flac";
+                    break;
+                case AudioQuality.SUPER:
+                case AudioQuality.HIGH:
+                    quality = "320";
+                    break;
+                default:
+                    quality = "128";
+                    break;
+            }
+            String urlBody = HttpRequest.post(SdkCommon.GH_MAIN_API)
+                    .cookie(SdkCommon.GH_COOKIE)
+                    .form("action", "gh_music_ajax")
+                    .form("type", "getMusicUrl")
+                    .form("music_type", "qq")
+                    .form("music_size", quality)
+                    .form("songid", id)
+                    .executeAsync()
+                    .body();
+            JSONObject urlJson = JSONObject.parseObject(urlBody);
+            return urlJson.getString("url");
+        }
+
         return "";
     }
 

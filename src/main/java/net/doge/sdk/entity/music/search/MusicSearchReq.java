@@ -1099,6 +1099,49 @@ public class MusicSearchReq {
             return new CommonResult<>(r, t);
         };
 
+        // 果核(暂时用于换源)
+        Callable<CommonResult<NetMusicInfo>> searchMusicGh = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            String musicInfoBody = HttpRequest.post(SdkCommon.GH_MAIN_API)
+                    .cookie(SdkCommon.GH_COOKIE)
+                    .form("action", "gh_music_ajax")
+                    .form("type", "search")
+                    .form("music_type", "qq")
+                    .form("search_word", keyword)
+                    .executeAsync()
+                    .body();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONArray songArray = musicInfoJson.getJSONArray("data");
+            if (JsonUtil.notEmpty(songArray)) {
+                t = limit;
+                for (int i = 0, len = songArray.size(); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String songId = songJson.getString("songid");
+                    String name = songJson.getString("songname");
+                    String artist = songJson.getString("singer");
+                    String albumName = songJson.getString("albumname");
+                    int qualityType = AudioQuality.UNKNOWN;
+                    if (songJson.getIntValue("sizeflac") == 1) qualityType = AudioQuality.SQ;
+                    else if (songJson.getIntValue("size320") == 1) qualityType = AudioQuality.HQ;
+                    else if (songJson.getIntValue("size128") == 1) qualityType = AudioQuality.LQ;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.GH);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setQualityType(qualityType);
+
+                    r.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
+
         List<Future<CommonResult<NetMusicInfo>>> taskList = new LinkedList<>();
 
         switch (type) {
@@ -1144,6 +1187,8 @@ public class MusicSearchReq {
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGg));
                 if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
                     taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicFs));
+                if (src == NetMusicSource.GH || src == NetMusicSource.ALL)
+                    taskList.add(GlobalExecutors.requestExecutor.submit(searchMusicGh));
         }
 
         List<List<NetMusicInfo>> rl = new LinkedList<>();
