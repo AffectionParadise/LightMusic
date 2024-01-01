@@ -136,7 +136,7 @@ public class ArtistListReq {
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONArray("artists");
             t = artistArray.size();
-            for (int i = 0, len = artistArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
                 JSONObject artistJson = artistArray.getJSONObject(i);
 
                 String artistId = artistJson.getString("id");
@@ -176,7 +176,7 @@ public class ArtistListReq {
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
                 JSONArray artistArray = artistInfoJson.getJSONArray("artists");
                 t = artistArray.size();
-                for (int i = 0, len = artistArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
                     JSONObject artistJson = artistArray.getJSONObject(i);
 
                     String artistId = artistJson.getString("id");

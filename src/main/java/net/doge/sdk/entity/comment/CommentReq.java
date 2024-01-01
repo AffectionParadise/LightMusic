@@ -696,7 +696,7 @@ public class CommentReq {
                 ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
-            else total = comments.size();
+            else total = limit;
             for (int i = 0, len = comments.size(); i < len; i++) {
                 Element comment = comments.get(i);
 
@@ -765,7 +765,7 @@ public class CommentReq {
                 ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total = Integer.parseInt(ts) * limit;
-            else total = comments.size();
+            else total = limit;
             for (int i = 0, len = comments.size(); i < len; i++) {
                 Element comment = comments.get(i);
 

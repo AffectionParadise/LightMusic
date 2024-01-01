@@ -414,7 +414,7 @@ public class NewAlbumReq {
                 JSONObject data = albumInfoJson.getJSONObject("data");
                 JSONArray albumArray = data.getJSONArray(s[3]);
                 t = albumArray.size();
-                for (int i = 0, len = albumArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumid");
@@ -635,7 +635,7 @@ public class NewAlbumReq {
             JSONObject xdData = dataArray.getJSONObject(2);
             albumArray.addAll(xdData.getJSONArray("result"));
             t = albumArray.size();
-            for (int i = 0, len = albumArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
                 String albumId = albumJson.getString("albumAssetCode");

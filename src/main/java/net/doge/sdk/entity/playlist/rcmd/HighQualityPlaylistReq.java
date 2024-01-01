@@ -255,7 +255,7 @@ public class HighQualityPlaylistReq {
                 JSONArray playlistArray = data.getJSONArray("special_list");
                 if (JsonUtil.notEmpty(playlistArray)) {
                     t = playlistArray.size();
-                    for (int i = 0, len = playlistArray.size(); i < len; i++) {
+                    for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                         JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                         String playlistId = playlistJson.getString("specialid");
@@ -948,7 +948,7 @@ public class HighQualityPlaylistReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[9])) {
-                String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[9].trim(), page, limit))
+                String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[9].trim()))
                         .executeAsync()
                         .body();
                 JSONArray playlistArray = JSONArray.parseArray(playlistInfoBody);

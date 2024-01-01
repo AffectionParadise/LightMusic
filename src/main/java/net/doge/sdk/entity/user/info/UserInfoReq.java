@@ -497,7 +497,7 @@ public class UserInfoReq {
                 ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
-            else total.set(songs.size());
+            else total.set(limit);
             for (int i = 0, len = songs.size(); i < len; i++) {
                 Element song = songs.get(i);
 
@@ -535,7 +535,7 @@ public class UserInfoReq {
                 ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
             boolean hasTs = StringUtil.notEmpty(ts);
             if (hasTs) total.set(Integer.parseInt(ts) * limit);
-            else total.set(songs.size());
+            else total.set(limit);
             for (int i = 0, len = songs.size(); i < len; i++) {
                 Element song = songs.get(i);
 

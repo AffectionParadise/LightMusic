@@ -252,7 +252,7 @@ public class NewRadioReq {
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
             t = radioArray.size();
-            for (int i = 0, len = radioArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
                 String radioId = radioJson.getString("id");

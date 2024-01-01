@@ -262,9 +262,9 @@ public class NewMusicReq {
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
-            t = data.getIntValue("song_list_size");
             JSONArray songArray = data.getJSONArray("song_list");
-            for (int i = 0, len = songArray.size(); i < len; i++) {
+            t = songArray.size();
+            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String hash = songJson.getString("hash");

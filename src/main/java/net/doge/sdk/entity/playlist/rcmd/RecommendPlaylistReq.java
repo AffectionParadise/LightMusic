@@ -353,7 +353,7 @@ public class RecommendPlaylistReq {
             JSONObject data = playlistInfoJson.getJSONObject("data");
             JSONArray playlistArray = data.getJSONArray("special_list");
             t = playlistArray.size();
-            for (int i = 0, len = playlistArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("specialid");

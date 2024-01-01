@@ -117,7 +117,7 @@ public class RecommendMvReq {
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
-                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     JSONObject mv = mvJson.getJSONObject("mv");
 
@@ -203,7 +203,7 @@ public class RecommendMvReq {
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
-                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                     JSONObject mvJson = mvArray.getJSONObject(i);
                     String mvId = mvJson.getString("id");
                     String mvName = mvJson.getString("name").trim();
@@ -283,7 +283,7 @@ public class RecommendMvReq {
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
             t = mvArray.size();
-            for (int i = 0, len = mvArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 String mvId = mvJson.getString("id");
                 String mvName = mvJson.getString("name").trim();
@@ -734,7 +734,7 @@ public class RecommendMvReq {
             JSONObject data = mvInfoJson.getJSONObject("data");
             JSONArray mvArray = data.getJSONArray("apiData");
             t = mvArray.size();
-            for (int i = 0, len = mvArray.size(); i < len; i++) {
+            for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String mvId = mvJson.getString("id");
@@ -1125,7 +1125,7 @@ public class RecommendMvReq {
                 Document doc = Jsoup.parse(mvInfoBody);
                 Elements mvArray = doc.select(".tile-content");
                 t = mvArray.size();
-                for (int i = 0, len = mvArray.size(); i < len; i++) {
+                for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
                     Element mv = mvArray.get(i);
                     Elements a = mv.select(".tile-link.ajax-link");
                     Elements hl = mv.select(".tile-headline");
