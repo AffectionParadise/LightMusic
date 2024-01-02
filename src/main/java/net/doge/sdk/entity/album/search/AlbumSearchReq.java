@@ -68,7 +68,7 @@ public class AlbumSearchReq {
     /**
      * 根据关键词获取专辑
      */
-    public CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) {
+    public CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetAlbumInfo> res = new LinkedList<>();
 

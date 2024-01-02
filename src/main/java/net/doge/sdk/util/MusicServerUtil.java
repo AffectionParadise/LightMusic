@@ -184,8 +184,8 @@ public class MusicServerUtil {
     /**
      * 根据关键词获取歌曲
      */
-    public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) {
-        return MusicSearchReq.getInstance().searchMusic(src, type, subType, keyword, limit, page);
+    public static CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int page, int limit) {
+        return MusicSearchReq.getInstance().searchMusic(src, type, subType, keyword, page, limit);
     }
 
     /**
@@ -205,36 +205,36 @@ public class MusicServerUtil {
     /**
      * 根据关键词获取歌单
      */
-    public static CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) {
-        return PlaylistSearchReq.getInstance().searchPlaylists(src, keyword, limit, page);
+    public static CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int page, int limit) {
+        return PlaylistSearchReq.getInstance().searchPlaylists(src, keyword, page, limit);
     }
 
     /**
      * 根据关键词获取专辑
      */
-    public static CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int limit, int page) {
-        return AlbumSearchReq.getInstance().searchAlbums(src, keyword, limit, page);
+    public static CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int page, int limit) {
+        return AlbumSearchReq.getInstance().searchAlbums(src, keyword, page, limit);
     }
 
     /**
      * 根据关键词获取歌手
      */
-    public static CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) {
-        return ArtistSearchReq.getInstance().searchArtists(src, keyword, limit, page);
+    public static CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int page, int limit) {
+        return ArtistSearchReq.getInstance().searchArtists(src, keyword, page, limit);
     }
 
     /**
      * 根据关键词获取电台
      */
-    public static CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) {
-        return RadioSearchReq.getInstance().searchRadios(src, keyword, limit, page);
+    public static CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int page, int limit) {
+        return RadioSearchReq.getInstance().searchRadios(src, keyword, page, limit);
     }
 
     /**
      * 根据关键词获取 MV
      */
-    public static CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page, String cursor) {
-        return MvSearchReq.getInstance().searchMvs(src, keyword, limit, page, cursor);
+    public static CommonResult<NetMvInfo> searchMvs(int src, String keyword, int page, int limit, String cursor) {
+        return MvSearchReq.getInstance().searchMvs(src, keyword, page, limit, cursor);
     }
 
     /**
@@ -247,15 +247,15 @@ public class MusicServerUtil {
     /**
      * 根据关键词获取用户
      */
-    public static CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) {
-        return UserSearchReq.getInstance().searchUsers(src, keyword, limit, page);
+    public static CommonResult<NetUserInfo> searchUsers(int src, String keyword, int page, int limit) {
+        return UserSearchReq.getInstance().searchUsers(src, keyword, page, limit);
     }
 
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public static CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int limit, int page, String cursor) {
-        return CommentReq.getInstance().getComments(resource, type, limit, page, cursor);
+    public static CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit, String cursor) {
+        return CommentReq.getInstance().getComments(resource, type, page, limit, cursor);
     }
 
     /**
@@ -303,71 +303,71 @@ public class MusicServerUtil {
     /**
      * 获取推荐歌单
      */
-    public static CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int limit, int page) {
-        return RecommendPlaylistReq.getInstance().getRecommendPlaylists(src, tag, limit, page);
+    public static CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int page, int limit) {
+        return RecommendPlaylistReq.getInstance().getRecommendPlaylists(src, tag, page, limit);
     }
 
     /**
      * 获取精品歌单 + 网友精选碟，分页
      */
-    public static CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int limit, int page) {
-        return HighQualityPlaylistReq.getInstance().getHighQualityPlaylists(src, tag, limit, page);
+    public static CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int page, int limit) {
+        return HighQualityPlaylistReq.getInstance().getHighQualityPlaylists(src, tag, page, limit);
     }
 
     /**
      * 获取歌手排行
      */
-    public static CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int limit, int page) {
-        return ArtistListReq.getInstance().getArtistLists(src, tag, limit, page);
+    public static CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int page, int limit) {
+        return ArtistListReq.getInstance().getArtistLists(src, tag, page, limit);
     }
 
     /**
      * 获取新晋电台
      */
-    public static CommonResult<NetRadioInfo> getNewRadios(int src, int limit, int page) {
-        return NewRadioReq.getInstance().getNewRadios(src, limit, page);
+    public static CommonResult<NetRadioInfo> getNewRadios(int src, int page, int limit) {
+        return NewRadioReq.getInstance().getNewRadios(src, page, limit);
     }
 
     /**
      * 获取个性电台 + 今日优选 + 热门电台 + 热门电台榜
      */
-    public static CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int limit, int page) {
-        return HotRadioReq.getInstance().getHotRadios(src, tag, limit, page);
+    public static CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int page, int limit) {
+        return HotRadioReq.getInstance().getHotRadios(src, tag, page, limit);
     }
 
     /**
      * 获取推荐节目
      */
-    public static CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int limit, int page) {
-        return RecommendProgramReq.getInstance().getRecommendPrograms(src, tag, limit, page);
+    public static CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int page, int limit) {
+        return RecommendProgramReq.getInstance().getRecommendPrograms(src, tag, page, limit);
     }
 
     /**
      * 获取飙升歌曲
      */
-    public static CommonResult<NetMusicInfo> getHotMusicRecommend(int src, String tag, int limit, int page) {
-        return HotMusicRecommendReq.getInstance().getHotMusicRecommend(src, tag, limit, page);
+    public static CommonResult<NetMusicInfo> getHotMusicRecommend(int src, String tag, int page, int limit) {
+        return HotMusicRecommendReq.getInstance().getHotMusicRecommend(src, tag, page, limit);
     }
 
     /**
      * 获取推荐歌曲 + 新歌速递
      */
-    public static CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int limit, int page) {
-        return NewMusicReq.getInstance().getNewMusic(src, tag, limit, page);
+    public static CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int page, int limit) {
+        return NewMusicReq.getInstance().getNewMusic(src, tag, page, limit);
     }
 
     /**
      * 获取新碟上架
      */
-    public static CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int limit, int page) {
-        return NewAlbumReq.getInstance().getNewAlbums(src, tag, limit, page);
+    public static CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int page, int limit) {
+        return NewAlbumReq.getInstance().getNewAlbums(src, tag, page, limit);
     }
 
     /**
      * 获取 MV 排行 + 最新 MV + 推荐 MV
      */
-    public static CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int limit, int page) {
-        return RecommendMvReq.getInstance().getRecommendMvs(src, tag, limit, page);
+    public static CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int page, int limit) {
+        return RecommendMvReq.getInstance().getRecommendMvs(src, tag, page, limit);
     }
 
     /**
@@ -401,8 +401,8 @@ public class MusicServerUtil {
     /**
      * 根据专辑 id 获取专辑
      */
-    public static CommonResult<NetAlbumInfo> getAlbumInfo(String id, int source) {
-        return AlbumInfoReq.getInstance().getAlbumInfo(id, source);
+    public static CommonResult<NetAlbumInfo> getAlbumInfo(int source, String id) {
+        return AlbumInfoReq.getInstance().getAlbumInfo(source, id);
     }
 
     /**
@@ -422,8 +422,8 @@ public class MusicServerUtil {
     /**
      * 根据歌手 id 获取歌手
      */
-    public static CommonResult<NetArtistInfo> getArtistInfo(String id, int source) {
-        return ArtistInfoReq.getInstance().getArtistInfo(id, source);
+    public static CommonResult<NetArtistInfo> getArtistInfo(int source, String id) {
+        return ArtistInfoReq.getInstance().getArtistInfo(source, id);
     }
 
     /**
@@ -443,8 +443,8 @@ public class MusicServerUtil {
     /**
      * 根据电台 id 获取电台
      */
-    public static CommonResult<NetRadioInfo> getRadioInfo(String id, int source) {
-        return RadioInfoReq.getInstance().getRadioInfo(id, source);
+    public static CommonResult<NetRadioInfo> getRadioInfo(int source, String id) {
+        return RadioInfoReq.getInstance().getRadioInfo(source, id);
     }
 
     /**
@@ -506,57 +506,57 @@ public class MusicServerUtil {
     /**
      * 根据歌单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int limit, int page) {
-        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int page, int limit) {
+        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
     }
 
     /**
      * 根据专辑 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int limit, int page) {
-        return AlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int page, int limit) {
+        return AlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
     }
 
     /**
      * 根据歌手 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
-        return ArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
+        return ArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
     }
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
      */
-    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
-        return ArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, limit, page);
+    public static CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
+        return ArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
     }
 
     /**
      * 根据歌手 id 获取里面 MV 的粗略信息，分页，返回 NetMvInfo
      */
-    public static CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
-        return ArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, limit, page);
+    public static CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
+        return ArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
     }
 
     /**
      * 根据电台 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int limit, int page) {
-        return RadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, sortType, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int page, int limit) {
+        return RadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, sortType, page, limit);
     }
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int limit, int page) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(rankingId, source, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int page, int limit) {
+        return RankingInfoReq.getInstance().getMusicInfoInRanking(rankingId, source, page, limit);
     }
 
     /**
      * 根据用户 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int limit, int page) {
-        return UserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, limit, page);
+    public static CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int page, int limit) {
+        return UserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, page, limit);
     }
 
     /**
@@ -573,8 +573,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserPlaylists(commentInfo, limit, page);
+    public static CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserPlaylists(commentInfo, page, limit);
     }
 
     /**
@@ -582,8 +582,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserAlbums(commentInfo, limit, page);
+    public static CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserAlbums(commentInfo, page, limit);
     }
 
     /**
@@ -591,8 +591,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserPlaylists(userInfo, limit, page);
+    public static CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserPlaylists(userInfo, page, limit);
     }
 
     /**
@@ -600,8 +600,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserAlbums(userInfo, limit, page);
+    public static CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserAlbums(userInfo, page, limit);
     }
 
     /**
@@ -609,8 +609,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserRadios(userInfo, limit, page);
+    public static CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserRadios(userInfo, page, limit);
     }
 
     /**
@@ -645,8 +645,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetMvInfo> getRelatedMvs(NetMusicInfo musicInfo, int limit, int page) {
-        return MvMenuReq.getInstance().getRelatedMvs(musicInfo, limit, page);
+    public static CommonResult<NetMvInfo> getRelatedMvs(NetMusicInfo musicInfo, int page, int limit) {
+        return MvMenuReq.getInstance().getRelatedMvs(musicInfo, page, limit);
     }
 
     /**
@@ -681,8 +681,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo artistInfo, int page) {
-        return ArtistMenuReq.getInstance().getSimilarArtists(artistInfo, page);
+    public static CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo artistInfo) {
+        return ArtistMenuReq.getInstance().getSimilarArtists(artistInfo);
     }
 
     /**
@@ -690,8 +690,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int limit, int page) {
-        return PlaylistMenuReq.getInstance().getPlaylistSubscribers(playlistInfo, limit, page);
+    public static CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int page, int limit) {
+        return PlaylistMenuReq.getInstance().getPlaylistSubscribers(playlistInfo, page, limit);
     }
 
     /**
@@ -699,8 +699,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int limit, int page) {
-        return ArtistMenuReq.getInstance().getArtistFans(artistInfo, limit, page);
+    public static CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int page, int limit) {
+        return ArtistMenuReq.getInstance().getArtistFans(artistInfo, page, limit);
     }
 
     /**
@@ -726,8 +726,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int limit, int page) {
-        return RadioMenuReq.getInstance().getRadioSubscribers(radioInfo, limit, page);
+    public static CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int page, int limit) {
+        return RadioMenuReq.getInstance().getRadioSubscribers(radioInfo, page, limit);
     }
 
     /**
@@ -762,8 +762,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getUserInfo(String id, int source) {
-        return UserInfoReq.getInstance().getUserInfo(id, source);
+    public static CommonResult<NetUserInfo> getUserInfo(int source, String id) {
+        return UserInfoReq.getInstance().getUserInfo(source, id);
     }
 
     /**
@@ -771,8 +771,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getUserFollows(NetUserInfo userInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserFollows(userInfo, limit, page);
+    public static CommonResult<NetUserInfo> getUserFollows(NetUserInfo userInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
     }
 
     /**
@@ -780,8 +780,8 @@ public class MusicServerUtil {
      *
      * @return
      */
-    public static CommonResult<NetUserInfo> getUserFans(NetUserInfo userInfo, int limit, int page) {
-        return UserMenuReq.getInstance().getUserFans(userInfo, limit, page);
+    public static CommonResult<NetUserInfo> getUserFans(NetUserInfo userInfo, int page, int limit) {
+        return UserMenuReq.getInstance().getUserFans(userInfo, page, limit);
     }
 
     /**

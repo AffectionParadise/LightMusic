@@ -86,7 +86,7 @@ public class RecommendPlaylistReq {
     /**
      * 获取推荐歌单
      */
-    public CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int limit, int page) {
+    public CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> res = new LinkedList<>();
 

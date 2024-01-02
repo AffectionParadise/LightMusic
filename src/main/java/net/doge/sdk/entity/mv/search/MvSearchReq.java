@@ -58,7 +58,7 @@ public class MvSearchReq {
     /**
      * 根据关键词获取 MV
      */
-    public CommonResult<NetMvInfo> searchMvs(int src, String keyword, int limit, int page, String cursor) {
+    public CommonResult<NetMvInfo> searchMvs(int src, String keyword, int page, int limit, String cursor) {
         AtomicInteger total = new AtomicInteger();
         List<NetMvInfo> res = new LinkedList<>();
         AtomicReference<String> atomicCursor = new AtomicReference<>();

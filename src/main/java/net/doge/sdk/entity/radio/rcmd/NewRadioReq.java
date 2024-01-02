@@ -55,7 +55,7 @@ public class NewRadioReq {
     /**
      * 获取新晋电台
      */
-    public CommonResult<NetRadioInfo> getNewRadios(int src, int limit, int page) {
+    public CommonResult<NetRadioInfo> getNewRadios(int src, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> res = new LinkedList<>();
 

@@ -395,7 +395,7 @@ public class UserInfoReq {
     /**
      * 根据用户 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
         boolean isAll = recordType == 1;
@@ -875,7 +875,7 @@ public class UserInfoReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getUserInfo(String id, int source) {
+    public CommonResult<NetUserInfo> getUserInfo(int source, String id) {
         List<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 

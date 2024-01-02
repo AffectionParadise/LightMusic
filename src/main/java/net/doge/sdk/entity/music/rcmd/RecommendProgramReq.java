@@ -60,7 +60,7 @@ public class RecommendProgramReq {
     /**
      * 获取推荐节目
      */
-    public CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int limit, int page) {
+    public CommonResult<NetMusicInfo> getRecommendPrograms(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
 

@@ -62,7 +62,7 @@ public class UserSearchReq {
     /**
      * 根据关键词获取用户
      */
-    public CommonResult<NetUserInfo> searchUsers(int src, String keyword, int limit, int page) {
+    public CommonResult<NetUserInfo> searchUsers(int src, String keyword, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetUserInfo> res = new LinkedList<>();
 

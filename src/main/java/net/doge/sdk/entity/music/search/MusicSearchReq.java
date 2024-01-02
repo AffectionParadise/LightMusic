@@ -78,7 +78,7 @@ public class MusicSearchReq {
     /**
      * 根据关键词获取歌曲
      */
-    public CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int limit, int page) {
+    public CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int page, int limit) {
         AtomicReference<Integer> total = new AtomicReference<>(0);
         List<NetMusicInfo> res = new LinkedList<>();
 

@@ -103,7 +103,7 @@ public class ArtistMenuReq {
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
      */
-    public CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
+    public CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int total = 0;
         List<NetAlbumInfo> res = new LinkedList<>();
 
@@ -384,7 +384,7 @@ public class ArtistMenuReq {
     /**
      * 根据歌手 id 获取里面 MV 的粗略信息，分页，返回 NetMvInfo
      */
-    public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
+    public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int total = 0;
         List<NetMvInfo> res = new LinkedList<>();
 
@@ -655,7 +655,7 @@ public class ArtistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo netArtistInfo, int page) {
+    public CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo netArtistInfo) {
         int source = netArtistInfo.getSource();
         String id = netArtistInfo.getId();
 
@@ -769,7 +769,7 @@ public class ArtistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         String id = artistInfo.getId();
 

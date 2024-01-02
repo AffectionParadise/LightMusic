@@ -462,7 +462,7 @@ public class MusicUrlReq {
      * @return
      */
     public void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 10, 1);
+        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 1, 10);
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
         MusicInfoReq musicInfoReq = MusicInfoReq.getInstance();

@@ -91,7 +91,7 @@ public class HotMusicRecommendReq {
     /**
      * 获取飙升歌曲
      */
-    public CommonResult<NetMusicInfo> getHotMusicRecommend(int src, String tag, int limit, int page) {
+    public CommonResult<NetMusicInfo> getHotMusicRecommend(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
 
@@ -101,9 +101,9 @@ public class HotMusicRecommendReq {
         // 网易云(榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页)
         PlaylistInfoReq playlistInfoReq = PlaylistInfoReq.getInstance();
         // 飙升榜
-        Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NC, limit, page);
+        Callable<CommonResult<NetMusicInfo>> getUpMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NC, page, limit);
         // 热歌榜
-        Callable<CommonResult<NetMusicInfo>> getHotMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NC, limit, page);
+        Callable<CommonResult<NetMusicInfo>> getHotMusic = () -> playlistInfoReq.getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NC, page, limit);
         // 曲风歌曲(最热)
         Callable<CommonResult<NetMusicInfo>> getStyleHotSong = () -> {
             List<NetMusicInfo> r = new LinkedList<>();
@@ -382,7 +382,7 @@ public class HotMusicRecommendReq {
         };
         // 飙升榜
         Callable<CommonResult<NetMusicInfo>> getUpMusicKg = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(6666), NetMusicSource.KG, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(6666), NetMusicSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -432,7 +432,7 @@ public class HotMusicRecommendReq {
         };
         // TOP500
         Callable<CommonResult<NetMusicInfo>> getTop500Kg = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(8888), NetMusicSource.KG, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(8888), NetMusicSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -584,7 +584,7 @@ public class HotMusicRecommendReq {
         // 酷我
         // 飙升榜
         Callable<CommonResult<NetMusicInfo>> getUpMusicKw = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(93), NetMusicSource.KW, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(93), NetMusicSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -632,7 +632,7 @@ public class HotMusicRecommendReq {
         };
         // 热歌榜
         Callable<CommonResult<NetMusicInfo>> getHotMusicKw = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(16), NetMusicSource.KW, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(16), NetMusicSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -676,7 +676,7 @@ public class HotMusicRecommendReq {
         // 咪咕
         // 尖叫热歌榜
         Callable<CommonResult<NetMusicInfo>> getHotMusicMg = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(27186466), NetMusicSource.MG, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(27186466), NetMusicSource.MG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;

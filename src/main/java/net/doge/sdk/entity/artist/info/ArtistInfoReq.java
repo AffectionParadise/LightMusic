@@ -105,7 +105,7 @@ public class ArtistInfoReq {
     /**
      * 根据歌手 id 获取歌手
      */
-    public CommonResult<NetArtistInfo> getArtistInfo(String id, int source) {
+    public CommonResult<NetArtistInfo> getArtistInfo(int source, String id) {
         List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
@@ -600,7 +600,7 @@ public class ArtistInfoReq {
     /**
      * 根据歌手 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int total = 0;
         List<NetMusicInfo> res = new LinkedList<>();
 

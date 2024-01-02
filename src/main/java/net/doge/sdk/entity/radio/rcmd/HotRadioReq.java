@@ -83,7 +83,7 @@ public class HotRadioReq {
     /**
      * 获取个性电台 + 今日优选 + 热门电台 + 热门电台榜
      */
-    public CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int limit, int page) {
+    public CommonResult<NetRadioInfo> getHotRadios(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> res = new LinkedList<>();
 

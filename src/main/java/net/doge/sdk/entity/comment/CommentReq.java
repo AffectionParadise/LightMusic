@@ -112,7 +112,7 @@ public class CommentReq {
     /**
      * 获取 歌曲 / 歌单 / 专辑 / MV 评论
      */
-    public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int limit, int page, String cursor) {
+    public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit, String cursor) {
         int total = 0;
         List<NetCommentInfo> res = new LinkedList<>();
 

@@ -59,7 +59,7 @@ public class RadioSearchReq {
     /**
      * 根据关键词获取电台
      */
-    public CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int limit, int page) {
+    public CommonResult<NetRadioInfo> searchRadios(int src, String keyword, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetRadioInfo> res = new LinkedList<>();
 

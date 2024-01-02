@@ -56,7 +56,7 @@ public class PlaylistSearchReq {
     /**
      * 根据关键词获取歌单
      */
-    public CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int limit, int page) {
+    public CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> res = new LinkedList<>();
 

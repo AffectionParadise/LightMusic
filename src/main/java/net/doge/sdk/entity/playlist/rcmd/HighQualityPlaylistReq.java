@@ -91,7 +91,7 @@ public class HighQualityPlaylistReq {
     /**
      * 获取精品歌单 + 网友精选碟，分页
      */
-    public CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int limit, int page) {
+    public CommonResult<NetPlaylistInfo> getHighQualityPlaylists(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetPlaylistInfo> res = new LinkedList<>();
 

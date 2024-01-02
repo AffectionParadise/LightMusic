@@ -95,7 +95,7 @@ public class PlaylistMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int page, int limit) {
         int source = playlistInfo.getSource();
         String id = playlistInfo.getId();
 

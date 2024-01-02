@@ -5193,7 +5193,7 @@ public class MainFrame extends JFrame {
                         // 这是歌单里的歌
                         if (resource instanceof NetPlaylistInfo) {
                             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5213,7 +5213,7 @@ public class MainFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (resource instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5233,7 +5233,7 @@ public class MainFrame extends JFrame {
                         // 这是歌手里的歌
                         else if (resource instanceof NetArtistInfo) {
                             NetArtistInfo artistInfo = (NetArtistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5253,7 +5253,7 @@ public class MainFrame extends JFrame {
                         // 这是电台里的歌
                         else if (resource instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), limit, netMusicInCollectionCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5274,7 +5274,7 @@ public class MainFrame extends JFrame {
                         else if (resource instanceof NetRankingInfo) {
                             NetRankingInfo RankingInfo = (NetRankingInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                    RankingInfo.getId(), RankingInfo.getSource(), limit, netMusicInCollectionCurrPage);
+                                    RankingInfo.getId(), RankingInfo.getSource(), netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5295,7 +5295,7 @@ public class MainFrame extends JFrame {
                         else if (resource instanceof NetUserInfo) {
                             NetUserInfo userInfo = (NetUserInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage);
+                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInCollectionCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5559,7 +5559,7 @@ public class MainFrame extends JFrame {
                     // 得到歌单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5647,7 +5647,7 @@ public class MainFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5738,7 +5738,7 @@ public class MainFrame extends JFrame {
                     // 得到歌手的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5831,7 +5831,7 @@ public class MainFrame extends JFrame {
                         try {
                             collectionRecordTypeComboBox.setModel(collectionSortTypeComboBoxModel);
 
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), limit, netMusicInCollectionCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -5921,7 +5921,7 @@ public class MainFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                    rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInCollectionCurrPage = 1);
+                                    rankingInfo.getId(), rankingInfo.getSource(), netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -6032,7 +6032,7 @@ public class MainFrame extends JFrame {
                                 collectionRecordTypeComboBox.setModel(collectionSortTypeComboBoxModel);
 
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInCollectionCurrPage = 1);
+                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7291,7 +7291,7 @@ public class MainFrame extends JFrame {
 
                         // 搜索歌曲并显示在在线歌曲列表
                         CommonResult<NetMusicInfo> result = MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
-                                netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage = 1);
+                                netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7348,7 +7348,7 @@ public class MainFrame extends JFrame {
                         // 搜索歌曲并显示在在线歌曲列表
                         CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtil.getSimilarSongs(currMusicMusicInfo)
                                 : MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
-                                (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, limit, netMusicCurrPage);
+                                (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7804,7 +7804,7 @@ public class MainFrame extends JFrame {
                         clearRequestForUser();
                         // 获取作者
                         currAuthorMusicInfo = musicInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(musicInfo.getArtistId(), musicInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(musicInfo.getSource(), musicInfo.getArtistId());
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -7853,7 +7853,7 @@ public class MainFrame extends JFrame {
                         clearRequestForArtist();
                         // 获取歌手
                         currArtistMusicInfo = musicInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(musicInfo.getArtistId(), musicInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(musicInfo.getSource(), musicInfo.getArtistId());
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -7930,7 +7930,7 @@ public class MainFrame extends JFrame {
                         clearRequestForRadio();
                         // 获取歌曲电台
                         currRadioMusicInfo = musicInfo;
-                        CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(musicInfo.getAlbumId(), musicInfo.getSource());
+                        CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(musicInfo.getSource(), musicInfo.getAlbumId());
                         List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -7980,7 +7980,7 @@ public class MainFrame extends JFrame {
                         clearRequestForAlbum();
                         // 查看歌曲专辑
                         currAlbumMusicInfo = musicInfo;
-                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(musicInfo.getAlbumId(), musicInfo.getSource());
+                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(musicInfo.getSource(), musicInfo.getAlbumId());
                         List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -8125,7 +8125,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForMv();
                     // 获取相关 MV
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = musicInfo, limit, netMvCurrPage = 1);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = musicInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9330,7 +9330,7 @@ public class MainFrame extends JFrame {
                         netPlaylistCurrPage = 1;
                         CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
                                 MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
+                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
                         List<NetPlaylistInfo> playlistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9387,10 +9387,10 @@ public class MainFrame extends JFrame {
                         // 搜索歌单并显示歌单列表
                         CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
                                 : playlistRequest ? MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo)
-                                : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, limit, netPlaylistCurrPage)
-                                : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, limit, netPlaylistCurrPage)
+                                : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, netPlaylistCurrPage, limit)
+                                : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, netPlaylistCurrPage, limit)
                                 : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, limit, netPlaylistCurrPage);
+                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
                         List<NetPlaylistInfo> playlistInfos = result.data;
                         Integer total = result.total;
                         netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9440,7 +9440,7 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInPlaylistCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInPlaylistCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9757,7 +9757,7 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到歌单的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInPlaylistCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInPlaylistCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -9870,7 +9870,7 @@ public class MainFrame extends JFrame {
                 playlistInfo = (NetPlaylistInfo) collectionList.getSelectedValue();
             else playlistInfo = (NetPlaylistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, playlistInfo.hasTrackCount() ? playlistInfo.getTrackCount() : 10000, 1);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, 1, playlistInfo.hasTrackCount() ? playlistInfo.getTrackCount() : 10000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -10018,7 +10018,7 @@ public class MainFrame extends JFrame {
                     clearRequestForUser();
                     // 获取歌单创建者
                     currUserPlaylistInfo = playlistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(playlistInfo.getCreatorId(), playlistInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(playlistInfo.getSource(), playlistInfo.getCreatorId());
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -10086,7 +10086,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取歌单收藏者
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = playlistInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = playlistInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10328,7 +10328,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索专辑并显示专辑列表
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.searchAlbums(
-                                netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage = 1);
+                                netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage = 1, limit);
                         List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10383,12 +10383,12 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索专辑并显示专辑列表
-                        CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, limit, netAlbumCurrPage)
+                        CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, netAlbumCurrPage, limit)
                                 : albumRequest ? MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo)
-                                : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, limit, netAlbumCurrPage)
-                                : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, limit, netAlbumCurrPage)
-                                : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getAlbumId(), currAlbumMusicInfo.getSource())
-                                : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, limit, netAlbumCurrPage);
+                                : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, netAlbumCurrPage, limit)
+                                : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, netAlbumCurrPage, limit)
+                                : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getSource(), currAlbumMusicInfo.getAlbumId())
+                                : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage, limit);
                         List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10438,7 +10438,7 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInAlbumCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInAlbumCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10750,7 +10750,7 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到专辑的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInAlbumCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInAlbumCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -10865,7 +10865,7 @@ public class MainFrame extends JFrame {
                 albumInfo = (NetAlbumInfo) collectionList.getSelectedValue();
             else albumInfo = (NetAlbumInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, albumInfo.hasSongNum() ? albumInfo.getSongNum() : 10000, 1);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, 1, albumInfo.hasSongNum() ? albumInfo.getSongNum() : 10000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -10947,7 +10947,7 @@ public class MainFrame extends JFrame {
                         clearRequestForUser();
                         // 获取歌手/作者
                         currAuthorAlbumInfo = albumInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(albumInfo.getArtistId(), albumInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(albumInfo.getSource(), albumInfo.getArtistId());
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -10996,7 +10996,7 @@ public class MainFrame extends JFrame {
                         clearRequestForArtist();
                         // 搜索专辑歌手
                         currArtistAlbumInfo = albumInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(albumInfo.getArtistId(), albumInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(albumInfo.getSource(), albumInfo.getArtistId());
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -11348,7 +11348,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索歌手并显示歌手列表
                         CommonResult<NetArtistInfo> result = MusicServerUtil.searchArtists(
-                                netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage = 1);
+                                netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage = 1, limit);
                         List<NetArtistInfo> artistInfos = result.data;
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11405,14 +11405,14 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo, netArtistCurrPage)
+                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo)
                                 : buddyRequest ? MusicServerUtil.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
                                 : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
                                 : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
-                                : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getArtistId(), currArtistMusicInfo.getSource())
-                                : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getArtistId(), currArtistAlbumInfo.getSource())
-                                : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getCreatorId(), currArtistMvInfo.getSource())
-                                : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, limit, netArtistCurrPage);
+                                : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getSource(), currArtistMusicInfo.getArtistId())
+                                : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getSource(), currArtistAlbumInfo.getArtistId())
+                                : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getSource(), currArtistMvInfo.getCreatorId())
+                                : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage, limit);
                         List<NetArtistInfo> artistInfos = result.data;
                         Integer total = result.total;
                         netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11462,7 +11462,7 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetArtistInfo artistInfo = netArtistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInArtistCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInArtistCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11778,7 +11778,7 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到歌手的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInArtistCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInArtistCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -11894,7 +11894,7 @@ public class MainFrame extends JFrame {
             else artistInfo = (NetArtistInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, artistInfo.hasSongNum() ? artistInfo.getSongNum() : 10000, 1);
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, 1, artistInfo.hasSongNum() ? artistInfo.getSongNum() : 10000);
                     List<NetMusicInfo> musicInfos = result.data;
                     if (musicInfos.isEmpty()) {
                         new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -11967,7 +11967,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = artistInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = artistInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12037,7 +12037,7 @@ public class MainFrame extends JFrame {
                     if (!artistInfo.hasMvNum()) MusicServerUtil.fillArtistInfo(artistInfo);
                     clearRequestForMv();
                     // 搜索歌手 MV 并显示 MV 列表
-                    CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = artistInfo, limit, netMvCurrPage = 1);
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = artistInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12103,7 +12103,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForArtist();
                     // 搜索相似歌手
-                    CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = artistInfo, netArtistCurrPage = 1);
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = artistInfo);
                     List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12172,7 +12172,7 @@ public class MainFrame extends JFrame {
                     clearRequestForUser();
                     // 获取歌手粉丝
                     currUserArtistInfo = artistInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(artistInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(artistInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12596,7 +12596,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索电台并显示电台列表
                         CommonResult<NetRadioInfo> result = MusicServerUtil.searchRadios(
-                                netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage = 1);
+                                netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage = 1, limit);
                         List<NetRadioInfo> radioInfos = result.data;
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12651,12 +12651,12 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索电台并显示电台列表
-                        CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, limit, netRadioCurrPage)
+                        CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, netRadioCurrPage, limit)
                                 : artistRequest ? MusicServerUtil.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
                                 : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
-                                : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getAlbumId(), currRadioMusicInfo.getSource())
+                                : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getSource(), currRadioMusicInfo.getAlbumId())
                                 : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
-                                : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, limit, netRadioCurrPage);
+                                : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage, limit);
                         List<NetRadioInfo> radioInfos = result.data;
                         Integer total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -12706,7 +12706,7 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         NetRadioInfo radioInfo = netRadioList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), limit, netMusicInRadioCurrPage);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netMusicInRadioCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13034,7 +13034,7 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到电台的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), limit, netMusicInRadioCurrPage = 1);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netMusicInRadioCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13152,7 +13152,7 @@ public class MainFrame extends JFrame {
             else radioInfo = (NetRadioInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                        radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), radioInfo.hasTrackCount() ? radioInfo.getTrackCount() : 10000, 1);
+                        radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), 1, radioInfo.hasTrackCount() ? radioInfo.getTrackCount() : 10000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -13233,7 +13233,7 @@ public class MainFrame extends JFrame {
                     clearRequestForUser();
                     // 获取电台主播
                     currUserRadioInfo = radioInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(radioInfo.getDjId(), radioInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(radioInfo.getSource(), radioInfo.getDjId());
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -13301,7 +13301,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取电台订阅者
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = radioInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = radioInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -13712,7 +13712,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索 MV 并显示 MV 列表
                         CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
-                                netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage = 1, mvCursor = "");
+                                netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, netMvCurrPage = 1, limit, mvCursor = "");
                         List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
                         mvCursor = result.cursor;
@@ -13768,12 +13768,12 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索 MV 并显示 MV 列表
-                        CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, limit, netMvCurrPage)
-                                : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, limit, netMvCurrPage)
+                        CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, netMvCurrPage, limit)
+                                : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, netMvCurrPage, limit)
                                 : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
                                 : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
                                 : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, mvCursor)
-                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, limit, netMvCurrPage, mvCursor);
+                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, netMvCurrPage, limit, mvCursor);
                         List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
                         mvCursor = result.cursor;
@@ -14220,7 +14220,7 @@ public class MainFrame extends JFrame {
                         clearRequestForArtist();
                         // 查看歌手
                         currArtistMvInfo = mvInfo;
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(mvInfo.getCreatorId(), mvInfo.getSource());
+                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistInfo(mvInfo.getSource(), mvInfo.getCreatorId());
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
@@ -14267,7 +14267,7 @@ public class MainFrame extends JFrame {
                         clearRequestForUser();
                         // 获取 MV 发布者
                         currUserMvInfo = mvInfo;
-                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(mvInfo.getCreatorId(), mvInfo.getSource());
+                        CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(mvInfo.getSource(), mvInfo.getCreatorId());
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
@@ -14472,7 +14472,7 @@ public class MainFrame extends JFrame {
                     try {
                         NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInRankingCurrPage);
+                                rankingInfo.getId(), rankingInfo.getSource(), netMusicInRankingCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -14778,7 +14778,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 得到榜单的音乐信息
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                rankingInfo.getId(), rankingInfo.getSource(), limit, netMusicInRankingCurrPage = 1);
+                                rankingInfo.getId(), rankingInfo.getSource(), netMusicInRankingCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -14888,7 +14888,7 @@ public class MainFrame extends JFrame {
             else rankingInfo = (NetRankingInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                        rankingInfo.getId(), rankingInfo.getSource(), 1000, 1);
+                        rankingInfo.getId(), rankingInfo.getSource(), 1, 1000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -15102,7 +15102,7 @@ public class MainFrame extends JFrame {
                     try {
                         // 搜索用户并显示用户列表
                         CommonResult<NetUserInfo> result = MusicServerUtil.searchUsers(
-                                netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage = 1);
+                                netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage = 1, limit);
                         List<NetUserInfo> userInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15161,18 +15161,18 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 搜索用户并显示用户列表
-                        CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, limit, netUserCurrPage)
-                                : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, limit, netUserCurrPage)
-                                : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, limit, netUserCurrPage)
-                                : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, limit, netUserCurrPage)
-                                : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, limit, netUserCurrPage)
-                                : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getCreatorId(), currUserPlaylistInfo.getSource())
-                                : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getCreatorId(), currUserMvInfo.getSource())
-                                : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getDjId(), currUserRadioInfo.getSource())
-                                : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getUserId(), currUserCommentInfo.getSource())
-                                : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getArtistId(), currAuthorMusicInfo.getSource())
-                                : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getArtistId(), currAuthorAlbumInfo.getSource())
-                                : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, limit, netUserCurrPage);
+                        CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, netUserCurrPage, limit)
+                                : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, netUserCurrPage, limit)
+                                : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, netUserCurrPage, limit)
+                                : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, netUserCurrPage, limit)
+                                : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, netUserCurrPage, limit)
+                                : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getSource(), currUserPlaylistInfo.getCreatorId())
+                                : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getSource(), currUserMvInfo.getCreatorId())
+                                : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getSource(), currUserRadioInfo.getDjId())
+                                : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getSource(), currUserCommentInfo.getUserId())
+                                : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getSource(), currAuthorMusicInfo.getArtistId())
+                                : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getSource(), currAuthorAlbumInfo.getArtistId())
+                                : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage, limit);
                         List<NetUserInfo> userInfos = result.data;
                         Integer total = result.total;
                         netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15223,7 +15223,7 @@ public class MainFrame extends JFrame {
                 try {
                     NetUserInfo userInfo = netUserList.getSelectedValue();
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                            netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage);
+                            netUserRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInUserCurrPage, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
                     netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15577,7 +15577,7 @@ public class MainFrame extends JFrame {
 
                         // 得到用户的音乐信息
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                                netUserRecordTypeComboBox.getSelectedIndex(), userInfo, limit, netMusicInUserCurrPage = 1);
+                                netUserRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInUserCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15694,7 +15694,7 @@ public class MainFrame extends JFrame {
             else userInfo = (NetUserInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
                 CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                        netUserRecordTypeComboBox.getSelectedIndex(), userInfo, 10000, 1);
+                        netUserRecordTypeComboBox.getSelectedIndex(), userInfo, 1, 10000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -15762,7 +15762,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = userInfo, limit, netPlaylistCurrPage = 1);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = userInfo, netPlaylistCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15828,7 +15828,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索歌手专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = userInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = userInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -15893,7 +15893,7 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 搜索用户电台
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = userInfo, limit, netRadioCurrPage = 1);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = userInfo, netRadioCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16028,7 +16028,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取用户关注
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = userInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = userInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16095,7 +16095,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForUser();
                     // 获取用户粉丝
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFans(currFanUserUserInfo = userInfo, limit, netUserCurrPage = 1);
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserFans(currFanUserUserInfo = userInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16229,7 +16229,7 @@ public class MainFrame extends JFrame {
                 // 获取评论并显示评论列表
                 CommonResult<NetCommentInfo> result = MusicServerUtil.getComments(
                         currCommentResource = resource, (String) netCommentTypeComboBox.getSelectedItem(),
-                        commentLimit, first ? netCommentCurrPage = 1 : netCommentCurrPage, first ? commentCursor = "" : commentCursor);
+                        first ? netCommentCurrPage = 1 : netCommentCurrPage, commentLimit, first ? commentCursor = "" : commentCursor);
                 List<NetCommentInfo> commentInfos = result.data;
                 Integer total = result.total;
                 commentCursor = result.cursor;
@@ -16565,7 +16565,7 @@ public class MainFrame extends JFrame {
                     clearRequestForUser();
                     // 获取评论用户
                     currUserCommentInfo = commentInfo;
-                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(commentInfo.getUserId(), commentInfo.getSource());
+                    CommonResult<NetUserInfo> result = MusicServerUtil.getUserInfo(commentInfo.getSource(), commentInfo.getUserId());
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
@@ -16631,7 +16631,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForPlaylist();
                     // 搜索用户歌单
-                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = commentInfo, limit, netPlaylistCurrPage = 1);
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = commentInfo, netPlaylistCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -16697,7 +16697,7 @@ public class MainFrame extends JFrame {
                 try {
                     clearRequestForAlbum();
                     // 搜索用户专辑并显示专辑列表
-                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = commentInfo, limit, netAlbumCurrPage = 1);
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = commentInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17048,7 +17048,7 @@ public class MainFrame extends JFrame {
                         // 这是歌单里的歌
                         if (resource instanceof NetPlaylistInfo) {
                             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInRecommendCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInRecommendCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17075,7 +17075,7 @@ public class MainFrame extends JFrame {
                         // 这是专辑里的歌
                         else if (resource instanceof NetAlbumInfo) {
                             NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInRecommendCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInRecommendCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17102,7 +17102,7 @@ public class MainFrame extends JFrame {
                         // 这是歌手里的歌
                         else if (resource instanceof NetArtistInfo) {
                             NetArtistInfo artistInfo = (NetArtistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInRecommendCurrPage);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInRecommendCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17130,7 +17130,7 @@ public class MainFrame extends JFrame {
                         else if (resource instanceof NetRadioInfo) {
                             NetRadioInfo radioInfo = (NetRadioInfo) resource;
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), limit, netMusicInRecommendCurrPage);
+                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), netMusicInRecommendCurrPage, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             Integer total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17173,7 +17173,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetPlaylistInfo> playlistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17222,7 +17222,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetPlaylistInfo> playlistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17271,7 +17271,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17310,7 +17310,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17349,7 +17349,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetAlbumInfo> albumInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17399,7 +17399,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetArtistInfo> artistInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17449,7 +17449,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
-                                netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage, limit);
                         List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17499,7 +17499,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17549,7 +17549,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17588,7 +17588,7 @@ public class MainFrame extends JFrame {
                     // 搜索歌曲并显示在在线歌曲列表
                     try {
                         CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage);
+                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
                         List<NetMvInfo> mvInfos = result.data;
                         int total = result.total;
                         netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17793,7 +17793,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17857,7 +17857,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17921,7 +17921,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -17975,7 +17975,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18029,7 +18029,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18092,7 +18092,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18147,7 +18147,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
-                    CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), limit, netRecommendCurrPage = 1);
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18210,7 +18210,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18273,7 +18273,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18327,7 +18327,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
-                            netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), limit, netRecommendCurrPage = 1);
+                            netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18631,7 +18631,7 @@ public class MainFrame extends JFrame {
                     // 得到歌单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, limit, netMusicInRecommendCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18722,7 +18722,7 @@ public class MainFrame extends JFrame {
                     // 得到专辑的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, limit, netMusicInRecommendCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18816,7 +18816,7 @@ public class MainFrame extends JFrame {
                     // 得到歌手的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, limit, netMusicInRecommendCurrPage = 1);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -18911,7 +18911,7 @@ public class MainFrame extends JFrame {
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), limit, netMusicInRecommendCurrPage = 1);
+                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
@@ -19853,7 +19853,7 @@ public class MainFrame extends JFrame {
             public void componentResized(ComponentEvent e) {
                 int ph = lrcScrollPane.getHeight() / 2 + 20;
                 lrcList.setBorder(BorderFactory.createEmptyBorder(ph, 0, ph, 0));
-                if (nextLrc < 0) return;
+                if (nextLrc == NextLrc.BAD_FORMAT) return;
                 currScrollVal = vs.getValue();
                 lrcScrollAnimation = true;
             }

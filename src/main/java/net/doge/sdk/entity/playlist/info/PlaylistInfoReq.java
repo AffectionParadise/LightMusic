@@ -604,17 +604,17 @@ public class PlaylistInfoReq {
         }
     }
 
-    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String id, int source, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(String id, int source, int page, int limit) {
         NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
         playlistInfo.setSource(source);
         playlistInfo.setId(id);
-        return getMusicInfoInPlaylist(playlistInfo, limit, page);
+        return getMusicInfoInPlaylist(playlistInfo, page, limit);
     }
 
     /**
      * 根据歌单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
 

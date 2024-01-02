@@ -131,13 +131,13 @@ public class RankingInfoReq {
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInRanking(String id, int source, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInRanking(String id, int source, int page, int limit) {
         int total = 0;
         List<NetMusicInfo> res = new LinkedList<>();
 
         // 网易云(榜单就是歌单，接口分页)
         if (source == NetMusicSource.NC) {
-            return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(id, source, limit, page);
+            return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(id, source, page, limit);
         }
 
         // 酷狗

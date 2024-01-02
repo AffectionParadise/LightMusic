@@ -59,7 +59,7 @@ public class RadioMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int page, int limit) {
         int source = radioInfo.getSource();
         String id = radioInfo.getId();
 

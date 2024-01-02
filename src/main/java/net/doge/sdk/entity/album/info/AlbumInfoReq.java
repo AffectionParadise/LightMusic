@@ -89,7 +89,7 @@ public class AlbumInfoReq {
     /**
      * 根据专辑 id 获取专辑
      */
-    public CommonResult<NetAlbumInfo> getAlbumInfo(String id, int source) {
+    public CommonResult<NetAlbumInfo> getAlbumInfo(int source, String id) {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
@@ -478,7 +478,7 @@ public class AlbumInfoReq {
     /**
      * 根据专辑 id 获取里面歌曲的粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int page, int limit) {
         int total = 0;
         List<NetMusicInfo> res = new LinkedList<>();
 

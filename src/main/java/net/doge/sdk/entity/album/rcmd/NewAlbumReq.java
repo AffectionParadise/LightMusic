@@ -96,7 +96,7 @@ public class NewAlbumReq {
     /**
      * 获取新碟上架
      */
-    public CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int limit, int page) {
+    public CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetAlbumInfo> res = new LinkedList<>();
 

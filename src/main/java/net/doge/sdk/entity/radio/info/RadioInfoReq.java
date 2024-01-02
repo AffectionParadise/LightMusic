@@ -80,7 +80,7 @@ public class RadioInfoReq {
     /**
      * 根据电台 id 获取电台
      */
-    public CommonResult<NetRadioInfo> getRadioInfo(String id, int source) {
+    public CommonResult<NetRadioInfo> getRadioInfo(int source, String id) {
         List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
@@ -366,7 +366,7 @@ public class RadioInfoReq {
     /**
      * 根据电台 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int limit, int page) {
+    public CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
 

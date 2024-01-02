@@ -95,7 +95,7 @@ public class RecommendMvReq {
     /**
      * 获取 MV 排行 + 最新 MV + 推荐 MV
      */
-    public CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int limit, int page) {
+    public CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMvInfo> res = new LinkedList<>();
 

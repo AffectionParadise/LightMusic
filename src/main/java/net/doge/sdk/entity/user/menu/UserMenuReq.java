@@ -120,7 +120,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int limit, int page) {
+    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
         String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
         String name = commentInfo.getUsername();
@@ -130,7 +130,7 @@ public class UserMenuReq {
         userInfo.setId(id);
         userInfo.setName(name);
 
-        return getUserPlaylists(userInfo, limit, page);
+        return getUserPlaylists(userInfo, page, limit);
     }
 
     /**
@@ -138,7 +138,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int limit, int page) {
+    public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
         String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
 
@@ -146,7 +146,7 @@ public class UserMenuReq {
         userInfo.setSource(source);
         userInfo.setId(id);
 
-        return getUserAlbums(userInfo, limit, page);
+        return getUserAlbums(userInfo, page, limit);
     }
 
     /**
@@ -154,7 +154,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int limit, int page) {
+    public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         String id = userInfo.getId();
 
@@ -421,7 +421,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int limit, int page) {
+    public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         String id = userInfo.getId();
 
@@ -553,7 +553,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int limit, int page) {
+    public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         String id = userInfo.getId();
 
@@ -1101,7 +1101,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getUserFollows(NetUserInfo netUserInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getUserFollows(NetUserInfo netUserInfo, int page, int limit) {
         int source = netUserInfo.getSource();
         String id = netUserInfo.getId();
 
@@ -1446,7 +1446,7 @@ public class UserMenuReq {
      *
      * @return
      */
-    public CommonResult<NetUserInfo> getUserFans(NetUserInfo netUserInfo, int limit, int page) {
+    public CommonResult<NetUserInfo> getUserFans(NetUserInfo netUserInfo, int page, int limit) {
         int source = netUserInfo.getSource();
         String id = netUserInfo.getId();
 

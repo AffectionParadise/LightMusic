@@ -57,7 +57,7 @@ public class MvMenuReq {
      *
      * @return
      */
-    public CommonResult<NetMvInfo> getRelatedMvs(NetMusicInfo netMusicInfo, int limit, int page) {
+    public CommonResult<NetMvInfo> getRelatedMvs(NetMusicInfo netMusicInfo, int page, int limit) {
         int source = netMusicInfo.getSource();
         String id = netMusicInfo.getId();
 

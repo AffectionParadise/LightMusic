@@ -64,7 +64,7 @@ public class ArtistSearchReq {
     /**
      * 根据关键词获取歌手
      */
-    public CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int limit, int page) {
+    public CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetArtistInfo> res = new LinkedList<>();
 

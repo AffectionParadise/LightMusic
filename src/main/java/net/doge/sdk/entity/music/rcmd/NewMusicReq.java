@@ -86,7 +86,7 @@ public class NewMusicReq {
     /**
      * 获取推荐歌曲 + 新歌速递
      */
-    public CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int limit, int page) {
+    public CommonResult<NetMusicInfo> getNewMusic(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetMusicInfo> res = new LinkedList<>();
 
@@ -402,7 +402,7 @@ public class NewMusicReq {
 
         // 酷我(接口分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongKw = () -> {
-            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(16), NetMusicSource.KW, limit, page);
+            return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(16), NetMusicSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;

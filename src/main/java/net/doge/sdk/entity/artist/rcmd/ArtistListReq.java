@@ -75,7 +75,7 @@ public class ArtistListReq {
     /**
      * 获取歌手排行
      */
-    public CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int limit, int page) {
+    public CommonResult<NetArtistInfo> getArtistLists(int src, String tag, int page, int limit) {
         AtomicInteger total = new AtomicInteger();
         List<NetArtistInfo> res = new LinkedList<>();
 //        Set<NetArtistInfo> set = Collections.synchronizedSet(new HashSet<>());
