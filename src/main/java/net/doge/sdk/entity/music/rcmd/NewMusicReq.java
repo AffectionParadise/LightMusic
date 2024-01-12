@@ -58,6 +58,8 @@ public class NewMusicReq {
     //    private final String RECOMMEND_NEW_SONG_KG_API = "/musicadservice/container/v1/newsong_publish";
     // 每日推荐歌曲 API (酷狗)
     private final String EVERYDAY_SONG_KG_API = "/everyday_song_recommend";
+    // 风格歌曲 API (酷狗)
+    private final String STYLE_SONG_KG_API = "/everydayrec.service/everyday_style_recommend";
     // 新歌榜 API (酷我)
     //    private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
@@ -348,16 +350,68 @@ public class NewMusicReq {
             }
             return new CommonResult<>(r, t);
         };
+        // 风格歌曲
+        Callable<CommonResult<NetMusicInfo>> getStyleSongKg = () -> {
+            List<NetMusicInfo> r = new LinkedList<>();
+            Integer t = 0;
+
+            if (StringUtil.notEmpty(s[3])) {
+                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_SONG_KG_API);
+                Map<String, Object> params = new TreeMap<>();
+                params.put("tagids", s[3]);
+                String musicInfoBody = SdkCommon.kgRequest(params, "{}", options)
+                        .executeAsync()
+                        .body();
+                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+                JSONObject data = musicInfoJson.getJSONObject("data");
+                JSONArray songArray = data.getJSONArray("song_list");
+                t = songArray.size();
+                for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+                    JSONObject songJson = songArray.getJSONObject(i);
+
+                    String hash = songJson.getString("hash");
+                    String songId = songJson.getString("album_audio_id");
+                    String name = songJson.getString("songname");
+                    String artist = SdkUtil.parseArtist(songJson);
+                    String artistId = SdkUtil.parseArtistId(songJson);
+                    String albumName = songJson.getString("album_name");
+                    String albumId = songJson.getString("album_id");
+                    Double duration = songJson.getDouble("time_length");
+                    String mvId = songJson.getString("mv_hash");
+                    int qualityType = AudioQuality.UNKNOWN;
+                    if (songJson.getLong("filesize_other") != 0) qualityType = AudioQuality.HR;
+                    else if (songJson.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+                    else if (songJson.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+                    else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
+
+                    NetMusicInfo musicInfo = new NetMusicInfo();
+                    musicInfo.setSource(NetMusicSource.KG);
+                    musicInfo.setHash(hash);
+                    musicInfo.setId(songId);
+                    musicInfo.setName(name);
+                    musicInfo.setArtist(artist);
+                    musicInfo.setArtistId(artistId);
+                    musicInfo.setAlbumName(albumName);
+                    musicInfo.setAlbumId(albumId);
+                    musicInfo.setDuration(duration);
+                    musicInfo.setMvId(mvId);
+                    musicInfo.setQualityType(qualityType);
+
+                    r.add(musicInfo);
+                }
+            }
+            return new CommonResult<>(r, t);
+        };
 
         // QQ(程序分页)
         Callable<CommonResult<NetMusicInfo>> getRecommendNewSongQq = () -> {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[3])) {
+            if (StringUtil.notEmpty(s[4])) {
                 String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +
-                                "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", s[3]))
+                                "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", s[4]))
                         .executeAsync()
                         .body();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -534,8 +588,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[4])) {
-                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, s[4], page))
+            if (StringUtil.notEmpty(s[5])) {
+                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, s[5], page))
                         .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                         .cookie(SdkCommon.HF_COOKIE)
                         .executeAsync()
@@ -578,8 +632,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[5])) {
-                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_GG_API, s[5], page))
+            if (StringUtil.notEmpty(s[6])) {
+                String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_GG_API, s[6], page))
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(musicInfoBody);
@@ -616,8 +670,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(LATEST_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -652,8 +706,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -688,8 +742,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -724,8 +778,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(LATEST_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -760,8 +814,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -796,8 +850,8 @@ public class NewMusicReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            if (StringUtil.notEmpty(s[6])) {
-                String[] sp = s[6].split(" ", -1);
+            if (StringUtil.notEmpty(s[7])) {
+                String[] sp = s[7].split(" ", -1);
                 String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                         .executeAsync()
                         .body();
@@ -877,6 +931,7 @@ public class NewMusicReq {
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             if (dt) taskList.add(GlobalExecutors.requestExecutor.submit(getEverydaySongKg));
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongKg));
+            taskList.add(GlobalExecutors.requestExecutor.submit(getStyleSongKg));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             taskList.add(GlobalExecutors.requestExecutor.submit(getRecommendNewSongQq));
