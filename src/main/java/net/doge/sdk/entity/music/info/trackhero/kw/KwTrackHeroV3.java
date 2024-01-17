@@ -1,6 +1,5 @@
 package net.doge.sdk.entity.music.info.trackhero.kw;
 
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.common.JsonUtil;
@@ -38,7 +37,6 @@ public class KwTrackHeroV3 {
     public String getTrackUrl(String mid, String quality) {
         String urlBody = HttpRequest.get(String.format("https://mobi.kuwo.cn/mobi.s?f=web&source=kwplayer_ar_1.1.9_oppo_118980_320.apk" +
                         "&type=convert_url_with_sign&rid=%s&br=%s", mid, brMap.get(quality)))
-                .header(Header.REFERER, "https://www.kuwo.cn/search/list?key=")
                 .executeAsync()
                 .body();
         JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");

@@ -2,6 +2,7 @@ package net.doge.sdk.entity.music.info;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
+import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.NetMusicSource;
@@ -11,6 +12,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
@@ -25,6 +28,7 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MusicUrlReq {
     private static MusicUrlReq instance;
@@ -115,15 +119,17 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
-            // 首选高音质接口
-//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
-//            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
-//                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
-//                    .executeAsync()
-//                    .body();
             String songBody = HttpRequest.get(String.format(SONG_URL_API, id, quality))
                     .executeAsync()
                     .body();
+            // csm 接口返回有时为空，使用官方接口
+            if (StringUtil.isEmpty(songBody)) {
+                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
+                songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
+                                String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
+                        .executeAsync()
+                        .body();
+            }
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
             if (JsonUtil.notEmpty(data)) {
                 JSONObject urlJson = data.getJSONObject(0);
