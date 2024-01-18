@@ -144,7 +144,7 @@ public class MusicUrlReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
-                    .cookie(SdkCommon.COOKIE)
+                    .cookie(SdkCommon.KG_COOKIE)
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
