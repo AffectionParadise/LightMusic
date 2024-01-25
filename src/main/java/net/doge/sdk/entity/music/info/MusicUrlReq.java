@@ -14,6 +14,7 @@ import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.entity.music.info.trackhero.kg.KgTrackHeroV2;
 import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
@@ -63,7 +64,7 @@ public class MusicUrlReq {
     private final String SONG_URL_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
 
     // 歌曲信息 API (酷狗)
-    private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
+//    private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
     // 歌曲信息 API (音乐磁场)
     private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
@@ -97,7 +98,7 @@ public class MusicUrlReq {
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-//        String hash = musicInfo.getHash();
+        String hash = musicInfo.getHash();
         int source = musicInfo.getSource();
 
         // 网易云
@@ -143,29 +144,29 @@ public class MusicUrlReq {
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
-                    .cookie(SdkCommon.KG_COOKIE)
-                    .executeAsync()
-                    .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
-//            String quality;
-//            switch (AudioQuality.quality) {
-//                case AudioQuality.HI_RES:
-//                    quality = "flac24bit";
-//                    break;
-//                case AudioQuality.LOSSLESS:
-//                    quality = "flac";
-//                    break;
-//                case AudioQuality.SUPER:
-//                case AudioQuality.HIGH:
-//                    quality = "320k";
-//                    break;
-//                default:
-//                    quality = "128k";
-//                    break;
-//            }
-//            return new KgTracker().getTrackUrl(hash, quality);
+//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
+//                    .cookie(SdkCommon.KG_COOKIE)
+//                    .executeAsync()
+//                    .body();
+//            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+//            if (data.getIntValue("is_free_part") == 0) return data.getString("play_url");
+            String quality;
+            switch (AudioQuality.quality) {
+                case AudioQuality.HI_RES:
+                    quality = "hires";
+                    break;
+                case AudioQuality.LOSSLESS:
+                    quality = "flac";
+                    break;
+                case AudioQuality.SUPER:
+                case AudioQuality.HIGH:
+                    quality = "320k";
+                    break;
+                default:
+                    quality = "128k";
+                    break;
+            }
+            return KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
         }
 
         // QQ
