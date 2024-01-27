@@ -185,7 +185,23 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            if (JsonUtil.isEmpty(data)) {
+            if (JsonUtil.notEmpty(data)) {
+                // 时长是毫秒，转为秒
+                if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
+                if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
+                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
+                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
+                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
+                if (!musicInfo.hasAlbumImage()) {
+                    GlobalExecutors.imageExecutor.execute(() -> {
+                        BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("img"));
+                        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
+                        ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                        musicInfo.callback();
+                    });
+                }
+//                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
+            } else {
                 // 歌曲信息接口有时返回为空，直接用 V2 版本接口，不过由于部分信息不完整，作为备选
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API_V2);
                 String dat = String.format("{\"appid\":%s,\"area_code\":1,\"behavior\":\"play\",\"clientver\":%s,\"need_hash_offset\":1,\"relate\":1," +
@@ -201,7 +217,7 @@ public class MusicInfoReq {
                 // 时长是毫秒，转为秒
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDouble("duration") / 1000);
                 if (!musicInfo.hasArtist()) musicInfo.setArtist(songData.getString("singername"));
-//            if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
+//                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
                 if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(songData.getString("albumname"));
                 if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songData.getString("recommend_album_id"));
                 if (!musicInfo.hasAlbumImage()) {
@@ -212,23 +228,7 @@ public class MusicInfoReq {
                         musicInfo.callback();
                     });
                 }
-                return;
             }
-            // 时长是毫秒，转为秒
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("timelength") / 1000);
-            if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
-            if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
-            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album_name"));
-            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("album_id"));
-            if (!musicInfo.hasAlbumImage()) {
-                GlobalExecutors.imageExecutor.execute(() -> {
-                    BufferedImage albumImage = SdkUtil.getImageFromUrl(data.getString("img"));
-                    FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
-                    ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-                    musicInfo.callback();
-                });
-            }
-//            if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
         }
 
         // QQ
