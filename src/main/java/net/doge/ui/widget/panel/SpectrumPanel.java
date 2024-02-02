@@ -19,7 +19,6 @@ public class SpectrumPanel extends JPanel {
 
     public SpectrumPanel(MainFrame f) {
         this.f = f;
-        drawSpectrum = false;
 
         setOpaque(false);
 

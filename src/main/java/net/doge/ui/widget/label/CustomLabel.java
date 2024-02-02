@@ -1,12 +1,15 @@
 package net.doge.ui.widget.label;
 
+import lombok.Setter;
 import net.doge.constant.ui.Fonts;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CustomLabel extends JLabel {
+    @Setter
     private boolean drawBg;
+    @Setter
     private Color bgColor;
     protected float alpha = 1f;
     private float destAlpha = 1f;
@@ -42,10 +45,6 @@ public class CustomLabel extends JLabel {
         });
     }
 
-    public void setDrawBg(boolean drawBg) {
-        this.drawBg = drawBg;
-    }
-
     public void setAlpha(float alpha) {
         this.destAlpha = alpha;
         if (alphaTimer.isRunning()) return;
@@ -54,10 +53,6 @@ public class CustomLabel extends JLabel {
 
     public void setBluntAlpha(float alpha) {
         this.alpha = alpha;
-    }
-
-    public void setBgColor(Color bgColor) {
-        this.bgColor = bgColor;
     }
 
     @Override

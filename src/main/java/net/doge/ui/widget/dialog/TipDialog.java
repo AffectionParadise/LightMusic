@@ -25,7 +25,7 @@ public class TipDialog extends AbstractShadowDialog {
     private String message = "";
     private CustomLabel messageLabel = new CustomLabel(message);
 
-    private Timer showtimer;
+    private Timer showTimer;
     private Timer closeTimer;
 
     public TipDialog(MainFrame f, int ms) {
@@ -96,14 +96,14 @@ public class TipDialog extends AbstractShadowDialog {
     }
 
     private void initTimer() {
-        showtimer = new Timer(2, e -> {
+        showTimer = new Timer(2, e -> {
             // 渐隐效果
             float opacity = getOpacity();
             if (closing) opacity = Math.max(0, opacity - 0.02f);
             else opacity = Math.min(1, opacity + 0.02f);
             setOpacity(opacity);
             if (closing && opacity <= 0 || !closing && opacity >= 1) {
-                showtimer.stop();
+                showTimer.stop();
                 if (closing) {
                     f.currDialogs.remove(THIS);
                     dispose();
@@ -129,11 +129,11 @@ public class TipDialog extends AbstractShadowDialog {
         setOpacity(0);
         setVisible(true);
         closing = false;
-        showtimer.start();
+        showTimer.start();
     }
 
     public void close() {
         closing = true;
-        showtimer.start();
+        showTimer.start();
     }
 }

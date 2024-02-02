@@ -88,9 +88,9 @@ public class CustomButton extends JButton {
             if (w / h >= 2) {
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2d.setColor(getForeground());
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+                g2d.fillRoundRect(0, 0, w, h, 10, 10);
             } else {
-                g2d.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+                g2d.drawImage(img, 0, 0, w, h, this);
             }
 
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));

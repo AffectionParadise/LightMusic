@@ -73,7 +73,8 @@ public class VSliderUI extends BasicSliderUI {
     protected TrackListener createTrackListener(JSlider s) {
         return new TrackListener() {
             private void update(MouseEvent e) {
-                s.setValue((int) (s.getMinimum() + (double) (trackRect.height - e.getY() + trackRect.y) / trackRect.height * (s.getMaximum() - s.getMinimum())));
+                int min = s.getMinimum(), max = s.getMaximum();
+                s.setValue((int) (min + (double) (trackRect.height - e.getY() + trackRect.y) / trackRect.height * (max - min)));
             }
 
             @Override

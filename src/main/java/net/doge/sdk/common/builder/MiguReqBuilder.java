@@ -42,7 +42,7 @@ public class MiguReqBuilder {
                 json = "{\"song\":0,\"album\":0,\"singer\":1,\"tagSong\":0,\"mvSong\":0,\"bestShow\":0,\"songlist\":0,\"lyricSong\":0}";
                 break;
         }
-        String url = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=1&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0";
+        String url = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=0&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0&sid=USS";
         return HttpRequest.get(String.format(url, StringUtil.urlEncodeAll(json), StringUtil.urlEncodeAll(keyword), page, limit))
                 .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                 .header("uiVersion", "A_music_3.6.1")

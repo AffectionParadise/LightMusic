@@ -1,7 +1,9 @@
 package net.doge.ui.widget.panel;
 
+import lombok.Getter;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
+import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -25,6 +27,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
     protected int alphaLevel = 254;
     protected int rampDelay;
     protected float shield;
+    @Getter
     protected String text;
     protected int barsCount;
     protected float fps;
@@ -70,10 +73,6 @@ public class LoadingPanel extends JComponent implements MouseListener {
     public void setText(String text) {
         repaint();
         this.text = text;
-    }
-
-    public String getText() {
-        return text;
     }
 
     public void start() {
@@ -127,7 +126,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
             }
         }
 
-        if (text != null && text.length() > 0) {
+        if (StringUtil.notEmpty(text)) {
             FontRenderContext context = g2.getFontRenderContext();
 //                TextLayout layout = new TextLayout(text, getFont(), context);
             // 自定义字体
