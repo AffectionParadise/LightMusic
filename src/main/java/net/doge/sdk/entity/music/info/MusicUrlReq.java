@@ -43,8 +43,8 @@ public class MusicUrlReq {
     }
 
     // 歌曲 URL 获取 API
-//    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
-    private final String SONG_URL_API = "https://csm.sayqz.com/api/?type=apiSongUrlV1&id=%s&level=%s";
+    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    private final String SONG_URL_CSM_API = "https://api.tunefree.fun/ncm/song/?id=%s&level=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
@@ -120,7 +120,7 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
-            String songBody = HttpRequest.get(String.format(SONG_URL_API, id, quality))
+            String songBody = HttpRequest.get(String.format(SONG_URL_CSM_API, id, quality))
                     .executeAsync()
                     .body();
             // csm 接口返回有时为空，使用官方接口

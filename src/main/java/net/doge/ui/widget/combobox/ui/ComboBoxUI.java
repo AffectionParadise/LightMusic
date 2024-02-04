@@ -1,5 +1,6 @@
 package net.doge.ui.widget.combobox.ui;
 
+import lombok.Getter;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
@@ -23,7 +24,9 @@ import java.awt.event.MouseEvent;
  */
 public class ComboBoxUI extends BasicComboBoxUI {
     private CustomComboBox comboBox;
+    @Getter
     private CustomComboPopup popup;
+    @Getter
     private CustomButton arrowButton;
     private MainFrame f;
     private Color textColor;
@@ -117,14 +120,6 @@ public class ComboBoxUI extends BasicComboBoxUI {
                 comboBox.hidePopup();
             }
         });
-        return popup;
-    }
-
-    public CustomButton getArrowButton() {
-        return arrowButton;
-    }
-
-    public CustomComboPopup getPopup() {
         return popup;
     }
 }

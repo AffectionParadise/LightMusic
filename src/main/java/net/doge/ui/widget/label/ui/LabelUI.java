@@ -1,5 +1,7 @@
 package net.doge.ui.widget.label.ui;
 
+import lombok.Setter;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
@@ -11,14 +13,11 @@ import java.awt.*;
  */
 public class LabelUI extends BasicLabelUI {
     private float alpha;
+    @Setter
     private boolean drawBg;
 
     public LabelUI(float alpha) {
         this.alpha = alpha;
-    }
-
-    public void setDrawBg(boolean drawBg) {
-        this.drawBg = drawBg;
     }
 
     @Override
@@ -33,12 +32,5 @@ public class LabelUI extends BasicLabelUI {
         }
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         super.paint(g, c);
-    }
-
-    @Override
-    protected void paintEnabledText(JLabel l, Graphics g, String s, int textX, int textY) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        super.paintEnabledText(l, g, s, textX, textY);
     }
 }
