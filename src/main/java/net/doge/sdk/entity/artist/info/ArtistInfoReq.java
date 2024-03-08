@@ -67,7 +67,7 @@ public class ArtistInfoReq {
 //    private final String ARTIST_SONGS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=%s&page=%s&pagesize=%s";
     private final String ARTIST_SONGS_KG_API = "http://kmr.service.kugou.com/container/v2/audio_group/author";
     // 歌手歌曲 API (酷我)
-    private final String ARTIST_SONGS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_SONGS_KW_API = "https://kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手歌曲 API (咪咕)
     private final String ARTIST_SONGS_MG_API = "http://music.migu.cn/v3/music/artist/%s/song?page=%s";
     // 歌手歌曲 API (千千)
@@ -793,7 +793,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id))
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id))
                     .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

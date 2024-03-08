@@ -51,10 +51,10 @@ public class RankingSearchReq {
     private final String GET_RANKING_QQ_API_2
             = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
     // 获取榜单 API (酷我)
-    private final String GET_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/bang/bangMenu?&httpsStatus=1";
+    private final String GET_RANKING_KW_API = "https://kuwo.cn/api/www/bang/bang/bangMenu?&httpsStatus=1";
     private final String GET_RANKING_KW_API_2 = "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2";
     // 获取推荐榜单 API (酷我)
-//    private final String GET_REC_RANKING_KW_API = "http://www.kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
+//    private final String GET_REC_RANKING_KW_API = "https://kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
     // 获取榜单 API (咪咕)
     private final String GET_RANKING_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/rank-list";
     // 获取榜单 API (千千)
@@ -301,7 +301,7 @@ public class RankingSearchReq {
 //            Integer t = 0;
 //
 //            HttpResponse resp = kwRequest(GET_REC_RANKING_KW_API)
-//                    .header(Header.REFERER, "http://www.kuwo.cn/rankList")
+//                    .header(Header.REFERER, "https://kuwo.cn/rankList")
 //                    .executeAsync();
 //            if (resp.getStatus() == HttpStatus.HTTP_OK) {
 //                String rankingInfoBody = resp.body();

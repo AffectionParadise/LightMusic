@@ -47,7 +47,7 @@ public class MvSearchReq {
     private final String SEARCH_MV_KG_API = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
     //    private final String SEARCH_MV_KG_API = "/v1/search/mv";
     // 关键词搜索 MV API (酷我)
-    private final String SEARCH_MV_KW_API = "http://www.kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String SEARCH_MV_KW_API = "https://kuwo.cn/api/www/search/searchMvBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索 MV API (好看)
     private final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
     // 关键词搜索 MV API (哔哩哔哩)

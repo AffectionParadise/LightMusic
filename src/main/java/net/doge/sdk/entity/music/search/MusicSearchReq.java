@@ -54,7 +54,7 @@ public class MusicSearchReq {
 //    private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "http://mobileservice.kugou.com/api/v3/lyric/search?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "/v1/search/lyric";
     // 关键词搜索歌曲 API (酷我)
-//    private final String SEARCH_MUSIC_KW_API = "http://www.kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
+//    private final String SEARCH_MUSIC_KW_API = "https://kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
     private final String SEARCH_MUSIC_KW_API = "https://search.kuwo.cn/r.s?client=kt&all=%s&pn=%s&rn=%s&uid=794762570" +
             "&ver=kwplayer_ar_9.2.2.1&vipver=1&show_copyright_off=1&newver=1&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&vermerge=1&mobi=1&issubtitle=1";
     // 关键词搜索歌曲 API (咪咕)

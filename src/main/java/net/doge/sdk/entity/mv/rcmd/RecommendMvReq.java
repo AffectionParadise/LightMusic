@@ -63,7 +63,7 @@ public class RecommendMvReq {
     // 最新 MV API (QQ)
     private final String NEW_MV_QQ_API = "https://c.y.qq.com/mv/fcgi-bin/getmv_by_tag?cmd=shoubo&format=json&lan=%s";
     // 推荐 MV API (酷我)
-    private final String RECOMMEND_MV_KW_API = "http://www.kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String RECOMMEND_MV_KW_API = "https://kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 推荐 MV API (千千)
     private final String RECOMMEND_MV_QI_API = "https://music.91q.com/v1/video/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
     // 推荐 MV API (5sing)

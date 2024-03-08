@@ -33,7 +33,7 @@ public class RankingInfoReq {
     // 榜单信息 API (酷狗)
     private final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
     // 榜单信息 API (酷我)
-//    private final String RANKING_DETAIL_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
+//    private final String RANKING_DETAIL_KW_API = "https://kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
     private final String RANKING_DETAIL_KW_API = "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&id=%s&pn=%s&rn=%s&type=bang&data=content&show_copyright_off=0&pcmp4=1&isbang=1";
     // 榜单信息 API (咪咕)
     private final String RANKING_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=%s";

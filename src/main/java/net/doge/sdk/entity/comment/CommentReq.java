@@ -52,9 +52,9 @@ public class CommentReq {
     // 评论 API (QQ)
     private final String COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
     // 热门评论 API (酷我)
-    private final String HOT_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    private final String HOT_COMMENTS_KW_API = "https://kuwo.cn/comment?digest=%s&sid=%s&&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
     // 最新评论 API (酷我)
-    private final String NEW_COMMENTS_KW_API = "http://www.kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    private final String NEW_COMMENTS_KW_API = "https://kuwo.cn/comment?digest=%s&sid=%s&&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
     // 热门评论 API (咪咕)
     private final String HOT_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listTopComments?targetId=%s&pageNo=%s&pageSize=%s";
     // 最新评论 API (咪咕)
@@ -433,16 +433,16 @@ public class CommentReq {
             String ref = "";
             switch (Integer.parseInt(typeStr[2])) {
                 case 15:
-                    ref = "http://www.kuwo.cn/play_detail/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/play_detail/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 7:
-                    ref = "http://www.kuwo.cn/mvplay/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/mvplay/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 8:
-                    ref = "http://www.kuwo.cn/playlist_detail/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/playlist_detail/" + StringUtil.urlEncodeAll(id);
                     break;
                 case 2:
-                    ref = "http://www.kuwo.cn/rankList/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/rankList/" + StringUtil.urlEncodeAll(id);
                     break;
             }
             String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;

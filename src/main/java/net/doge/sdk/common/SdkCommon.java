@@ -54,10 +54,10 @@ public class SdkCommon {
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
         return HttpRequest.get(url)
-                .cookie("Hm_Iuvt_cdb524f42f0cer9b268e4v7y735ewrq2324=RAkH3ZakBN2QdDaZdn27iTjiBWpEdXjY")
-                .header("Secret", "d195980c76f6b686a4c26ecab69b4773bacaaee52e49a0db825fa548c011093605948496")
-                .header(Header.HOST, "www.kuwo.cn")
-                .header(Header.REFERER, "https://www.kuwo.cn/");
+                .cookie("Hm_Iuvt_cdb524f42f23cer9b268564v7y735ewrq2324=r5HStAcGZyjcyJ8SxNASHTmH2SfGEZrB")
+                .header("secret", "5165c3f165660b6c845ccaf232f0897e7081b0847faef14f3bd31ddec3dc17ce035d85a3")
+                .header(Header.HOST, "kuwo.cn")
+                .header(Header.REFERER, "https://kuwo.cn/");
     }
 
     // 构造咪咕音乐搜索请求

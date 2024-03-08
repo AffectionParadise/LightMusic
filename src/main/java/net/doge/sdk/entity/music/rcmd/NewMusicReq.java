@@ -61,7 +61,7 @@ public class NewMusicReq {
     // 风格歌曲 API (酷狗)
     private final String STYLE_SONG_KG_API = "/everydayrec.service/everyday_style_recommend";
     // 新歌榜 API (酷我)
-    //    private final String NEW_SONG_KW_API = "http://www.kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
+    //    private final String NEW_SONG_KW_API = "https://kuwo.cn/api/www/bang/bang/musicList?bangId=16&pn=%s&rn=%s&httpsStatus=1";
     // 推荐新歌 API (咪咕)
     private final String RECOMMEND_NEW_SONG_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23853978&pageNo=%s&pageSize=%s";
     // 推荐新歌 API (千千)

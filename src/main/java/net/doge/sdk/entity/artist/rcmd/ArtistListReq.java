@@ -52,9 +52,9 @@ public class ArtistListReq {
     // 编辑精选歌手 API (酷狗)
     private final String IP_ARTIST_KG_API = "/openapi/v1/ip/author_list";
     // 歌手推荐 API (酷我)
-    private final String ARTIST_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
     // 全部歌手 API (酷我)
-    private final String ALL_ARTISTS_LIST_KW_API = "http://www.kuwo.cn/api/www/artist/artistInfo?category=%s&prefix=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ALL_ARTISTS_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo?category=%s&prefix=%s&pn=%s&rn=%s&httpsStatus=1";
     // 来电新声榜 API (咪咕)
     private final String ARTIST_LIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=22425062";
     // 来电唱作榜 API (咪咕)
@@ -456,7 +456,7 @@ public class ArtistListReq {
             if (StringUtil.notEmpty(s[7])) {
                 String[] sp = s[7].split(" ", -1);
                 HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
-                        .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "http://www.kuwo.cn/singers" : "")
+                        .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "https://kuwo.cn/singers" : "")
                         .executeAsync();
                 if (resp.getStatus() == HttpStatus.HTTP_OK) {
                     String artistInfoBody = resp.body();

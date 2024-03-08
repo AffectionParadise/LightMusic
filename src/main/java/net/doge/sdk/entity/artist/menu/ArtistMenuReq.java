@@ -46,7 +46,7 @@ public class ArtistMenuReq {
     private final String ARTIST_ALBUMS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/album?singerid=%s&page=%s&pagesize=%s";
     //    private final String ARTIST_ALBUMS_KG_API = "/kmr/v1/author/albums";
     // 歌手专辑 API (酷我)
-    private final String ARTIST_ALBUMS_KW_API = "http://www.kuwo.cn/api/www/artist/artistAlbum?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_ALBUMS_KW_API = "https://kuwo.cn/api/www/artist/artistAlbum?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手专辑 API (咪咕)
     private final String ARTIST_ALBUMS_MG_API = "http://music.migu.cn/v3/music/artist/%s/album?page=%s";
     // 歌手专辑 API (千千)
@@ -62,7 +62,7 @@ public class ArtistMenuReq {
     // 歌手 MV API (QQ)
     private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
     // 歌手 MV API (酷我)
-    private final String ARTIST_MVS_KW_API = "http://www.kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_MVS_KW_API = "https://kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
 
     // 相似歌手 API
     private final String SIMILAR_ARTIST_API = "https://music.163.com/weapi/discovery/simiArtist";
@@ -266,7 +266,7 @@ public class ArtistMenuReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/album")
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/album")
                     .executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
@@ -581,7 +581,7 @@ public class ArtistMenuReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "http://www.kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/mv")
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/mv")
                     .executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();

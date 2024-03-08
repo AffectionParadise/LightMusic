@@ -68,7 +68,7 @@ public class HighQualityPlaylistReq {
     private final String CAT_PLAYLIST_QQ_API
             = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
     // 热门歌单 API (酷我)
-    private final String HOT_PLAYLIST_KW_API = "https://www.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
+    private final String HOT_PLAYLIST_KW_API = "https://kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
     // 默认歌单(热门) API (酷我)
     private final String DEFAULT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot";
     // 分类歌单 API (酷我)

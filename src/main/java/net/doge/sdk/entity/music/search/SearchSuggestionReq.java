@@ -37,7 +37,7 @@ public class SearchSuggestionReq {
     private final String SEARCH_SUGGESTION_QQ_API = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
             "&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
     // 搜索建议 API (酷我)
-    private final String SEARCH_SUGGESTION_KW_API = "http://www.kuwo.cn/api/www/search/searchKey?key=%s&httpsStatus=1";
+    private final String SEARCH_SUGGESTION_KW_API = "https://kuwo.cn/api/www/search/searchKey?key=%s&httpsStatus=1";
     // 搜索建议 API (千千)
     private final String SEARCH_SUGGESTION_QI_API = "https://music.91q.com/v1/search/sug?appid=16073360&timestamp=%s&type=&word=%s";
 

@@ -33,7 +33,7 @@ public class MvInfoReq {
     // MV 信息 API (酷狗)
     private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
     // MV 信息 API (酷我)
-    private final String MV_DETAIL_KW_API = "http://www.kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
+    private final String MV_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
 
     /**
      * 根据 MV id 预加载 MV 信息

@@ -49,7 +49,7 @@ public class AlbumSearchReq {
 //    private final String SEARCH_ALBUM_KG_API = "http://msearch.kugou.com/api/v3/search/album?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_ALBUM_KG_API = "/v1/search/album";
     // 关键词搜索专辑 API (酷我)
-    private final String SEARCH_ALBUM_KW_API = "http://www.kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String SEARCH_ALBUM_KW_API = "https://kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索专辑 API (咪咕)
     private final String SEARCH_ALBUM_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=4&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索专辑 API (千千)

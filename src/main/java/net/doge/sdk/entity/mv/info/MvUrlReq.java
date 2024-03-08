@@ -43,7 +43,7 @@ public class MvUrlReq {
     private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php?cmd=100&hash=%s&ismp3=1&ext=mp4";
     //    private final String MV_URL_KG_API = "/v2/interface/index";
     // MV 视频链接获取 API (酷我)
-    private final String MV_URL_KW_API = "http://www.kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
+    private final String MV_URL_KW_API = "https://kuwo.cn/api/v1/www/music/playUrl?mid=%s&type=mv&httpsStatus=1";
     // MV 视频链接获取 API (千千)
     private final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
     // MV 视频链接获取 API (5sing)

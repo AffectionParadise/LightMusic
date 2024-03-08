@@ -48,7 +48,7 @@ public class ArtistSearchReq {
     // 关键词搜索歌手 API (酷狗)
     private final String SEARCH_ARTIST_KG_API = "/v1/search/author";
     // 关键词搜索歌手 API (酷我)
-    private final String SEARCH_ARTIST_KW_API = "http://www.kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String SEARCH_ARTIST_KW_API = "https://kuwo.cn/api/www/search/searchArtistBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     // 关键词搜索歌手 API (咪咕)
     private final String SEARCH_ARTIST_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=1&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌手 API (千千)
