@@ -44,7 +44,6 @@ public class MusicUrlReq {
 
     // 歌曲 URL 获取 API
     private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
-    private final String SONG_URL_CSM_API = "https://api.tunefree.fun/ncm/song/?id=%s&level=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
@@ -120,17 +119,11 @@ public class MusicUrlReq {
                     quality = "standard";
                     break;
             }
-            String songBody = HttpRequest.get(String.format(SONG_URL_CSM_API, id, quality))
+            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
+            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
+                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
                     .executeAsync()
                     .body();
-            // csm 接口返回有时为空，使用官方接口
-            if (StringUtil.isEmpty(songBody)) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
-                songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
-                                String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
-                        .executeAsync()
-                        .body();
-            }
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
             if (JsonUtil.notEmpty(data)) {
                 JSONObject urlJson = data.getJSONObject(0);

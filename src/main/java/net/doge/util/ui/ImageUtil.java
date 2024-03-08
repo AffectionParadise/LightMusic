@@ -403,9 +403,9 @@ public class ImageUtil {
      * @param arc
      * @return
      */
-    public static BufferedImage setRadius(BufferedImage img, double arc) {
+    public static BufferedImage radius(BufferedImage img, double arc) {
         if (img == null) return null;
-        return setRadius(img, (int) (img.getWidth() * arc));
+        return radius(img, (int) (img.getWidth() * arc));
     }
 
     /**
@@ -415,7 +415,7 @@ public class ImageUtil {
      * @param radius
      * @return
      */
-    public static BufferedImage setRadius(BufferedImage img, int radius) {
+    public static BufferedImage radius(BufferedImage img, int radius) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
         BufferedImage outputImg = createTransparentImage(w, h);

@@ -5538,12 +5538,12 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     playlistInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5627,12 +5627,12 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     albumInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5717,12 +5717,12 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     artistInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5808,12 +5808,12 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     radioInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5900,12 +5900,12 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
                                 if (rankingInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     rankingInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -5991,24 +5991,24 @@ public class MainFrame extends JFrame {
                                     collectionItemDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
                                 if (userInfo.hasAvatar()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     userInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
                                 }
                                 if (userInfo.hasBgImg()) {
                                     collectionItemDescriptionLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     userInfo.setInvokeLater2(() -> {
                                         collectionItemDescriptionLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -9735,12 +9735,12 @@ public class MainFrame extends JFrame {
                                 playlistDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                             if (playlistInfo.hasCoverImg()) {
                                 playlistCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 playlistInfo.setInvokeLater(() -> {
                                     playlistCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netPlaylistList.repaint();
                                 });
@@ -10729,12 +10729,12 @@ public class MainFrame extends JFrame {
                                 albumDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                             if (albumInfo.hasCoverImg()) {
                                 albumCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 albumInfo.setInvokeLater(() -> {
                                     albumCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netAlbumList.repaint();
                                 });
@@ -11756,12 +11756,12 @@ public class MainFrame extends JFrame {
                                 artistDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                             if (artistInfo.hasCoverImg()) {
                                 artistCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 artistInfo.setInvokeLater(() -> {
                                     artistCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netArtistList.repaint();
                                 });
@@ -13012,12 +13012,12 @@ public class MainFrame extends JFrame {
                                 radioDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                             if (radioInfo.hasCoverImg()) {
                                 radioCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 radioInfo.setInvokeLater(() -> {
                                     radioCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netRadioList.repaint();
                                 });
@@ -14756,12 +14756,12 @@ public class MainFrame extends JFrame {
                                 rankingDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
                             if (rankingInfo.hasCoverImg()) {
                                 rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 rankingInfo.setInvokeLater(() -> {
                                     rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netRankingList.repaint();
                                 });
@@ -15536,24 +15536,24 @@ public class MainFrame extends JFrame {
                                 userDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
                             if (userInfo.hasAvatar()) {
                                 userCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 userInfo.setInvokeLater(() -> {
                                     userCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netUserList.repaint();
                                 });
                             }
                             if (userInfo.hasBgImg()) {
                                 userDescriptionLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
                                 userInfo.setInvokeLater2(() -> {
                                     userDescriptionLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getBgImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                     netUserList.repaint();
                                 });
@@ -18610,12 +18610,12 @@ public class MainFrame extends JFrame {
                                     recommendItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     playlistInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18702,12 +18702,12 @@ public class MainFrame extends JFrame {
                                     recommendItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     albumInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18795,12 +18795,12 @@ public class MainFrame extends JFrame {
                                     recommendItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     artistInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -18889,12 +18889,12 @@ public class MainFrame extends JFrame {
                                     recommendItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
                                     radioInfo.setInvokeLater(() -> {
                                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.setRadius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         itemRecommendList.repaint();
                                     });
@@ -20052,7 +20052,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setIconTextGap(10);
         changePaneButton.setPreferredSize(new Dimension(280, 66));
         changePaneButton.setText(NO_LRC_MSG);
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
             // 歌词页面切到列表
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
@@ -20562,7 +20562,7 @@ public class MainFrame extends JFrame {
 
         // 卸载专辑图片
         albumImageLabel.setIcon(null);
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.setText(NO_LRC_MSG);
         if (miniDialog != null) {
             miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
@@ -20595,9 +20595,9 @@ public class MainFrame extends JFrame {
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
         BufferedImage img = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
-        albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.setRadius(img, LARGE_ARC))));
+        albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.radius(img, LARGE_ARC))));
         // 切换面板专辑图片
-        changePaneButton.setIcon(new ImageIcon(ImageUtil.setRadius(ImageUtil.width(img, changePaneImageWidth), TINY_ARC)));
+        changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(img, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 背景模糊
         if (blurType != BlurConstants.OFF) doBlur();

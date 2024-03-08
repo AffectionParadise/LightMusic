@@ -104,7 +104,7 @@ public class SdkUtil {
     public static BufferedImage extractProfile(String imgUrl) {
         BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.PROFILE_WIDTH);
         if (img == null) img = ImageUtil.width(ImageConstants.DEFAULT_IMG, ImageConstants.PROFILE_WIDTH);
-        return ImageUtil.setRadius(img, 0.1);
+        return ImageUtil.radius(img, 0.1);
     }
 
     /**
@@ -119,7 +119,7 @@ public class SdkUtil {
         // 控制封面高度不超过阈值
         if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
             img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
-        return ImageUtil.setRadius(img, 0.1);
+        return ImageUtil.radius(img, 0.1);
     }
 
     /**
@@ -134,7 +134,7 @@ public class SdkUtil {
         // 控制 MV 封面高度不超过阈值
         if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
             img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
-        return ImageUtil.setRadius(img, 0.1);
+        return ImageUtil.radius(img, 0.1);
     }
 
     /**

@@ -83,7 +83,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         }
         if (f.darkerOn) img = ImageUtil.darker(img);
         // 设置圆角
-        img = ImageUtil.setRadius(img, 10);
+        img = ImageUtil.radius(img, 10);
         globalPanel.setBackgroundImage(img);
         repaint();
     }
