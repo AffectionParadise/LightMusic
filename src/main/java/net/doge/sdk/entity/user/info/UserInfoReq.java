@@ -45,7 +45,7 @@ public class UserInfoReq {
         if (instance == null) instance = new UserInfoReq();
         return instance;
     }
-    
+
     // 用户信息 API
     private final String USER_DETAIL_API = "https://music.163.com/weapi/v1/user/detail/%s";
     // 用户歌曲 API
@@ -223,7 +223,7 @@ public class UserInfoReq {
                 GlobalExecutors.imageExecutor.execute(() -> userInfo.setAvatar(SdkUtil.getImageFromUrl(avatarUrl)));
 
                 String bgUrl = RegexUtil.getGroup1("background-image: url\\([\"'](.*?)[\"']\\)", userInfoBody);
-                String bgImgUrl = (bgUrl.startsWith("//static") ? "https:" : "https://www.missevan.com") + bgUrl;
+                String bgImgUrl = bgUrl.startsWith("http") ? bgUrl : "https:" + bgUrl;
                 if (!userInfo.hasBgImgUrl()) userInfo.setBgImgUrl(bgImgUrl);
                 GlobalExecutors.imageExecutor.execute(() -> userInfo.setBgImg(SdkUtil.getImageFromUrl(bgImgUrl)));
             };

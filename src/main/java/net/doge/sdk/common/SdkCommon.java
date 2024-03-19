@@ -3,7 +3,6 @@ package net.doge.sdk.common;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
-import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.builder.MiguReqBuilder;
 import net.doge.sdk.common.builder.NeteaseReqBuilder;
@@ -37,9 +36,9 @@ public class SdkCommon {
     public static final String FA_RADIO_API = "https://www.chatcyf.com/radio/";
     public static final String GH_MAIN_API = "https://music.ghxi.com/wp-admin/admin-ajax.php";
 
-    static {
-        refreshGhAuth();
-    }
+//    static {
+//        refreshGhAuth();
+//    }
 
     // 构造网易云音乐请求
     public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
@@ -92,17 +91,17 @@ public class SdkCommon {
     }
 
     // 刷新果核认证
-    public static void refreshGhAuth() {
-        // 获取验证码
-        String codeBody = HttpRequest.get("https://ghxcx.lovestu.com/api/index/today_secret").executeAsync().body();
-        JSONObject codeJson = JSONObject.parseObject(codeBody);
-        String code = codeJson.getString("data");
-        // 认证
-        HttpRequest.post(GH_MAIN_API)
-                .cookie(GH_COOKIE)
-                .form("action", "gh_music_ajax")
-                .form("type", "postAuth")
-                .form("code", code)
-                .executeAsync();
-    }
+//    public static void refreshGhAuth() {
+//        // 获取验证码
+//        String codeBody = HttpRequest.get("https://ghxcx.lovestu.com/api/index/today_secret").executeAsync().body();
+//        JSONObject codeJson = JSONObject.parseObject(codeBody);
+//        String code = codeJson.getString("data");
+//        // 认证
+//        HttpRequest.post(GH_MAIN_API)
+//                .cookie(GH_COOKIE)
+//                .form("action", "gh_music_ajax")
+//                .form("type", "postAuth")
+//                .form("code", code)
+//                .executeAsync();
+//    }
 }
