@@ -12,6 +12,7 @@ import net.doge.model.entity.NetAlbumInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
+import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
@@ -406,7 +407,7 @@ public class NewAlbumReq {
 
             if (StringUtil.notEmpty(s[3])) {
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
-                String dat = String.format("{\"apiver\":20,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", page, limit);
+                String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KugouReqBuilder.apiver, page, limit);
                 String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                         .executeAsync()
                         .body();
