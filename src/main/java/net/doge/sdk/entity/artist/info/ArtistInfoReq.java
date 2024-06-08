@@ -65,7 +65,7 @@ public class ArtistInfoReq {
     private final String ARTIST_SONGS_API = "https://music.163.com/api/v1/artist/songs";
     // 歌手歌曲 API (酷狗)
 //    private final String ARTIST_SONGS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/song?singerid=%s&page=%s&pagesize=%s";
-    private final String ARTIST_SONGS_KG_API = "http://kmr.service.kugou.com/container/v2/audio_group/author";
+    private final String ARTIST_SONGS_KG_API = "https://openapi.kugou.com/kmr/v1/audio_group/author";
     // 歌手歌曲 API (酷我)
     private final String ARTIST_SONGS_KW_API = "https://kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
     // 歌手歌曲 API (咪咕)
@@ -703,7 +703,8 @@ public class ArtistInfoReq {
                             "\"key\":\"%s\",\"author_id\":\"%s\",\"page\":%s,\"pagesize\":%s,\"sort\":1,\"area_code\":\"all\"}",
                     KugouReqBuilder.appid, KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.signParamsKey(ct), id, page, limit);
             String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
-                    .header("x-router", "kmr.service.kugou.com")
+                    .header("x-router", "openapi.kugou.com")
+                    .header("kg-tid", "220")
                     .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
