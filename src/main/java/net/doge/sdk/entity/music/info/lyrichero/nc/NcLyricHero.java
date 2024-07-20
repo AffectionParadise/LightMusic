@@ -86,7 +86,7 @@ public class NcLyricHero {
             }
         }
         // lrc 歌词
-        else if (JsonUtil.notEmpty(lrc)) {
+        if (!musicInfo.hasLrc() && JsonUtil.notEmpty(lrc)) {
             // 网易云歌词中包含部分 json 数据需要解析
             String lyric = lrc.getString("lyric");
             if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
