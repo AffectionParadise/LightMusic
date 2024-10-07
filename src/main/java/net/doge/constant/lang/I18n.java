@@ -540,6 +540,7 @@ public class I18n {
         LANG_MAP.put("autoUpdate", new String[]{"启动时自动检查更新", "Check for updates on startup"});
         LANG_MAP.put("videoOnly", new String[]{"播放视频时隐藏主界面", "Hide main frame while playing video"});
         LANG_MAP.put("lang", new String[]{"界面语言（重启程序后生效）：", "UI language(Take effect after restart app): "});
+        LANG_MAP.put("font", new String[]{"界面字体（重启程序后生效）：", "UI font(Take effect after restart app): "});
         LANG_MAP.put("closeOption", new String[]{"关闭主界面时：", "Closing option: "});
         LANG_MAP.put("windowSize", new String[]{"窗口大小：", "Window size: "});
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});

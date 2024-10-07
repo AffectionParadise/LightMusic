@@ -38,6 +38,8 @@ public class ConfigConstants {
     public static final String AUTO_UPDATE = "autoUpdate";
     // 界面语言
     public static final String UI_LANGUAGE = "uiLanguage";
+    // 界面字体
+    public static final String UI_FONT = "uiFont";
     // 关闭窗口操作
     public static final String CLOSE_WINDOW_OPTION = "closeWindowOption";
     // 窗口大小

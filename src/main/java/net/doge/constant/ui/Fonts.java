@@ -1,5 +1,6 @@
 package net.doge.constant.ui;
 
+import net.doge.constant.config.ConfigConstants;
 import net.doge.util.lmdata.LMFontManager;
 
 import java.awt.*;
@@ -19,7 +20,11 @@ public class Fonts {
     private static final int BIG_SIZE = FONT_SIZE + 10;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
-    private static final String NORMAL_NAME = "normal";
+    public static int currFont = 0;
+    public static final String[] NAMES = {"鸿蒙", "小米"};
+    private static final String[] FONT_NAMES = {"HarmonyOS Sans", "MiSans"};
+
+    private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
 
     // 中英文
     public static final Font NORMAL_TINY = LMFontManager.getFont(NORMAL_NAME, TINY_SIZE);

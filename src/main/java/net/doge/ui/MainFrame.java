@@ -3783,6 +3783,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.AUTO_UPDATE, autoUpdate);
         // 存入界面语言
         config.put(ConfigConstants.UI_LANGUAGE, I18n.currLang);
+        // 存入界面字体
+        config.put(ConfigConstants.UI_FONT, Fonts.currFont);
         // 存入关闭窗口操作
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
         // 存入窗口大小

@@ -21,7 +21,7 @@
         <imageio-jpeg.version>3.10.1</imageio-jpeg.version>
         <fastjson2.version>2.0.43</fastjson2.version>
         <jsoup.version>1.16.2</jsoup.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.34</lombok.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <opencc4j.version>1.8.1</opencc4j.version>
         <moji4j.version>1.2.0</moji4j.version>

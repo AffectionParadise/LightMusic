@@ -9,10 +9,7 @@ import net.doge.constant.lang.I18n;
 import net.doge.constant.system.AudioQuality;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.system.VideoQuality;
-import net.doge.constant.ui.BlurConstants;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.LyricAlignment;
-import net.doge.constant.ui.SpectrumConstants;
+import net.doge.constant.ui.*;
 import net.doge.constant.window.CloseWindowOptions;
 import net.doge.constant.window.WindowSize;
 import net.doge.constant.window.WindowState;
@@ -92,6 +89,9 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel langPanel = new CustomPanel();
     private CustomLabel langLabel = new CustomLabel(I18n.getText("lang"));
     private CustomComboBox<String> langComboBox = new CustomComboBox<>();
+    private CustomPanel fontPanel = new CustomPanel();
+    private CustomLabel fontLabel = new CustomLabel(I18n.getText("font"));
+    private CustomComboBox<String> fontComboBox = new CustomComboBox<>();
     private CustomPanel closeOptionPanel = new CustomPanel();
     private CustomLabel closeOptionLabel = new CustomLabel(I18n.getText("closeOption"));
     private CustomComboBox<String> closeOptionComboBox = new CustomComboBox<>();
@@ -335,6 +335,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdatePanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
         langPanel.setLayout(fl);
+        fontPanel.setLayout(fl);
         closeOptionPanel.setLayout(fl);
         windowSizePanel.setLayout(fl);
         showTabTextPanel.setLayout(fl);
@@ -369,6 +370,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdatePanel.setMaximumSize(d);
         videoOnlyPanel.setMaximumSize(d);
         langPanel.setMaximumSize(d);
+        fontPanel.setMaximumSize(d);
         closeOptionPanel.setMaximumSize(d);
         windowSizePanel.setMaximumSize(d);
         showTabTextPanel.setMaximumSize(d);
@@ -423,6 +425,7 @@ public class SettingDialog extends AbstractTitledDialog {
         maxSearchHistoryCountLabel.setForeground(textColor);
         maxConcurrentTaskCountLabel.setForeground(textColor);
         langLabel.setForeground(textColor);
+        fontLabel.setForeground(textColor);
         closeOptionLabel.setForeground(textColor);
         windowSizeLabel.setForeground(textColor);
         audioQualityLabel.setForeground(textColor);
@@ -614,6 +617,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorComboBox.setUI(new ComboBoxUI(gsFactorComboBox, f));
         darkerFactorComboBox.setUI(new ComboBoxUI(darkerFactorComboBox, f));
         langComboBox.setUI(new ComboBoxUI(langComboBox, f));
+        fontComboBox.setUI(new ComboBoxUI(fontComboBox, f));
         closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f));
         windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f));
         audioQualityComboBox.setUI(new ComboBoxUI(audioQualityComboBox, f));
@@ -801,6 +805,10 @@ public class SettingDialog extends AbstractTitledDialog {
         langPanel.add(langLabel);
         langPanel.add(langComboBox);
 
+        for (String name : Fonts.NAMES) fontComboBox.addItem(name);
+        fontPanel.add(fontLabel);
+        fontPanel.add(fontComboBox);
+
         for (String name : CloseWindowOptions.NAMES) closeOptionComboBox.addItem(name);
         closeOptionPanel.add(closeOptionLabel);
         closeOptionPanel.add(closeOptionComboBox);
@@ -856,6 +864,8 @@ public class SettingDialog extends AbstractTitledDialog {
         generalContentBox.add(videoOnlyPanel);
         generalContentBox.add(Box.createVerticalStrut(vGap));
         generalContentBox.add(langPanel);
+        generalContentBox.add(Box.createVerticalStrut(vGap));
+        generalContentBox.add(fontPanel);
         generalContentBox.add(Box.createVerticalStrut(vGap));
         generalContentBox.add(closeOptionPanel);
         generalContentBox.add(Box.createVerticalStrut(vGap));
@@ -943,6 +953,7 @@ public class SettingDialog extends AbstractTitledDialog {
         maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
         maxConcurrentTaskCountTextField.setText(String.valueOf(((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize()));
         langComboBox.setSelectedIndex(I18n.currLang);
+        fontComboBox.setSelectedIndex(Fonts.currFont);
         closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
         windowSizeComboBox.setSelectedIndex(f.windowSize);
         audioQualityComboBox.setSelectedIndex(AudioQuality.quality);
@@ -1070,6 +1081,7 @@ public class SettingDialog extends AbstractTitledDialog {
         }
 
         I18n.currLang = langComboBox.getSelectedIndex();
+        Fonts.currFont = fontComboBox.getSelectedIndex();
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
         f.windowSize = windowSizeComboBox.getSelectedIndex();
         f.windowWidth = WindowSize.DIMENSIONS[f.windowSize][0];
