@@ -28,17 +28,11 @@ public class SdkCommon {
     public static final String HK_COOKIE = "BIDUPSID=BE696A0D51D343798228BD61F26D5647; PSTM=1658997928; BAIDUID=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; Hm_lvt_4aadd610dfd2f5972f1efee2653a2bc5=1659086001; BAIDUID_BFESS=41719925BFDA6FB8DAD817BC8CA07B28:SL=0:NR=10:FG=1; delPer=0; PSINO=1; BA_HECTOR=20ag2g0ha42galagaga7ko601hgorth16; ZFY=gy2NQKWk6ZhA6AuDxoMpPQs6Og5GSSS7oA7XUkOHKeg:C; PC_TAB_LOG=video_details_page; COMMON_LID=2c19ef6811cbc39c8bbfaafcfcaeba64; BDRCVFR[fb3VbsUruOn]=I67x6TjHwwYf0; hkpcSearch=%u7FDF%u8000%24%24%24hello; H_PS_PSSID=36561_36461_36979_36885_37267_37135_26350_37205; ariaDefaultTheme=undefined; RT=\"z=1&dm=baidu.com&si=fxuvi7wxq45&ss=l7egnei6&sl=17&tt=19ph&bcn=https%3A%2F%2Ffclog.baidu.com%2Flog%2Fweirwood%3Ftype%3Dperf&ld=1xs54&cl=1xt27&ul=1xt6x&hd=1xtb4\"";
     public static final String HF_COOKIE = "bbs_sid=8njuj0o2l21meohocgqj3s1lsk; c04498263b2624f231048f8aea520744=7715e2ac312b8351036f8633cd15e584";
     public static final String BI_COOKIE = "_uuid=9538DF8D-CA4D-28F5-C692-C5B4B312E44E14370infoc; buvid3=DF3C6017-C78A-23EC-7EE8-41090853ED2A14442infoc; b_nut=1695097614; home_feed_column=5; DedeUserID=381984701; DedeUserID__ckMd5=62c28371e08c50b3; CURRENT_FNVAL=4048; rpdid=|(um~Rkm|Jll0J'uYml|m~YJ); buvid_fp_plain=undefined; LIVE_BUVID=AUTO7816953009976873; buvid4=83DE81EC-A37B-1F1D-C096-DA73D7F3529D14442-023091912-wTMxKM%2BXYt%2BXSTf2UGduUA%3D%3D; hit-dyn-v2=1; enable_web_push=DISABLE; header_theme_version=CLOSE; FEED_LIVE_VERSION=V8; fingerprint=6dbfa8e3b4e9f3a86e469c16e7fc1f67; buvid_fp=6dbfa8e3b4e9f3a86e469c16e7fc1f67; browser_resolution=1920-967; SESSDATA=a3d3fad6%2C1739965348%2C5f35b%2A81CjCiSAZFqZeFEjmF3NhqbaYJ9Hh3mlf8g8Bo4TzTVmGNgw-yTwFq3eKlCw9OYESgEJYSVl9WM0l6YTFXM3paRW9RSF9tcGRvbGRpWDhkUmNHbzBLNnM5WnpDWjYwVzR3OG1QRTdWelRmWnpWUTJJTjVqWDhzbzBkaGRycUNQMS1JcEw2bUhhcGx3IIEC; bili_jct=a959bf174a665dd973733e8b41c52dbc";
-    //    public static final String GH_COOKIE = "PHPSESSID=nagj6ge7jgp4ugirnksctuqrvh";
     // 小丘
     public static final String QQ_MAIN_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     public static final String QQ_SEARCH_JSON = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
     // 发姐
     public static final String FA_RADIO_API = "https://www.chatcyf.com/radio/";
-    public static final String GH_MAIN_API = "https://music.ghxi.com/wp-admin/admin-ajax.php";
-
-//    static {
-//        refreshGhAuth();
-//    }
 
     // 构造网易云音乐请求
     public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
@@ -64,21 +58,6 @@ public class SdkCommon {
         return MiguReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
     }
 
-//    /**
-//     * 生成酷狗 url
-//     *
-//     * @return
-//     */
-//    public static String buildKgUrl(String s) {
-//        // 参数顺序按照 ASCII 码顺序
-//        String secret = "NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt";
-//        String params = s.substring(s.indexOf('?') + 1).replace("&", "");
-//        // 将参数解码
-//        params = StringUtil.urlDecode(params);
-//        String sign = CryptoUtil.hashMD5(secret + params + secret);
-//        return s + "&signature=" + sign;
-//    }
-
     // 构造千千音乐请求
     public static HttpRequest qiRequest(String url) {
         // 参数顺序按照 ASCII 码顺序
@@ -89,19 +68,4 @@ public class SdkCommon {
         String sign = CryptoUtil.md5(params + secret);
         return HttpRequest.get(url + "&sign=" + sign);
     }
-
-    // 刷新果核认证
-//    public static void refreshGhAuth() {
-//        // 获取验证码
-//        String codeBody = HttpRequest.get("https://ghxcx.lovestu.com/api/index/today_secret").executeAsync().body();
-//        JSONObject codeJson = JSONObject.parseObject(codeBody);
-//        String code = codeJson.getString("data");
-//        // 认证
-//        HttpRequest.post(GH_MAIN_API)
-//                .cookie(GH_COOKIE)
-//                .form("action", "gh_music_ajax")
-//                .form("type", "postAuth")
-//                .form("code", code)
-//                .executeAsync();
-//    }
 }

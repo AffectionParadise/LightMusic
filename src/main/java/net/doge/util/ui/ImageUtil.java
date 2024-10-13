@@ -656,6 +656,25 @@ public class ImageUtil {
     }
 
     /**
+     * 为 BufferedImage 添加遮罩
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage mask(BufferedImage img) {
+        if (img == null) return null;
+        int w = img.getWidth(), h = img.getHeight();
+        BufferedImage outputImg = createTransparentImage(w, h);
+        Graphics2D g = outputImg.createGraphics();
+        g.drawImage(img, 0, 0, null);
+        g.setColor(getBestAvgColor(img));
+        g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.95f));
+        g.fillRect(0, 0, w, h);
+        g.dispose();
+        return outputImg;
+    }
+
+    /**
      * 获取图片均值颜色
      *
      * @param img

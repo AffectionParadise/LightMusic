@@ -63,6 +63,7 @@ public abstract class AbstractShadowDialog extends JDialog {
                 // 迷幻纹理
             else if (f.blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, dw, dh);
         }
+        if (f.maskOn) img = ImageUtil.mask(img);
         if (f.gsOn) {
             // 缩小
             img = ImageUtil.width(img, 256);

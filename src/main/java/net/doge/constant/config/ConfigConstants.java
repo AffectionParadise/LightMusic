@@ -80,6 +80,8 @@ public class ConfigConstants {
     public static final String GS_ON = "gsOn";
     // 是否暗化
     public static final String DARKER_ON = "darkerOn";
+    // 是否朦胧遮罩
+    public static final String MASK_ON = "maskOn";
     // 是否律动
     public static final String GROOVE_ON = "grooveOn";
     // 模糊类型

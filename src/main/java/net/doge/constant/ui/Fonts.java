@@ -21,8 +21,8 @@ public class Fonts {
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
     public static int currFont = 0;
-    public static final String[] NAMES = {"鸿蒙", "小米"};
-    private static final String[] FONT_NAMES = {"HarmonyOS Sans", "MiSans"};
+    public static final String[] NAMES = {"鸿蒙", "小米", "OPPO"};
+    private static final String[] FONT_NAMES = {"HarmonyOS Sans", "MiSans", "OPPOSans"};
 
     private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
 
