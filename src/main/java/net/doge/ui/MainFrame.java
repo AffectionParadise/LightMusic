@@ -19287,10 +19287,12 @@ public class MainFrame extends JFrame {
                 if (task.isProcessing()) task.stop();
                 downloadListModel.removeElement(task);
                 if (!checked) continue;
+                // 删除歌词文件
+                if (task.isMusic()) {
+                    NetMusicInfo musicInfo = (NetMusicInfo) task.getResource();
+                    FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName());
+                }
                 FileUtil.delete(task.getDest());
-                // 顺便删除歌词文件
-                if (!task.isMusic()) continue;
-                FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + ((NetMusicInfo) task.getResource()).toSimpleLrcFileName());
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();

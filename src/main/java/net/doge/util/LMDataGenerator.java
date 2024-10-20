@@ -17,9 +17,9 @@ public class LMDataGenerator {
     private static String prefix;
 
     public static void main(String[] args) {
-        icon();
+//        icon();
 //        style();
-//        font();
+        font();
     }
 
     static void icon() {

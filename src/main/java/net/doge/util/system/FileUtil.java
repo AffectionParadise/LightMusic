@@ -84,7 +84,11 @@ public class FileUtil {
      * @param f 文件
      */
     public static void delete(File f) {
-        cn.hutool.core.io.FileUtil.del(f);
+        try {
+            cn.hutool.core.io.FileUtil.del(f);
+        } catch (Exception e) {
+            LogUtil.error(e);
+        }
     }
 
     /**
