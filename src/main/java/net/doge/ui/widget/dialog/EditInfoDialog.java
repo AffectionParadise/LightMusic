@@ -132,7 +132,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                         (String) results[11],
                         (BufferedImage) results[12]
                 );
-                MediaUtil.writeMP3Info(file.getAbsolutePath(), mediaInfo);
+                MediaUtil.writeAudioFileInfo(file.getAbsolutePath(), mediaInfo);
                 // 歌曲信息更改后重新填充
                 MediaUtil.fillAudioFileInfo(file);
             }

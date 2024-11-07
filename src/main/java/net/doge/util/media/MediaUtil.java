@@ -2,9 +2,7 @@ package net.doge.util.media;
 
 import com.mpatric.mp3agic.*;
 import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.MultimediaInfo;
-import net.doge.constant.system.Format;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -14,11 +12,18 @@ import net.doge.util.system.FileUtil;
 import net.doge.util.system.LogUtil;
 import net.doge.util.system.TerminalUtil;
 import net.doge.util.ui.ImageUtil;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.flac.FlacTag;
+import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
+import org.jaudiotagger.tag.reference.PictureTypes;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @Author Doge
@@ -26,6 +31,11 @@ import java.io.IOException;
  * @Date 2020/12/11
  */
 public class MediaUtil {
+
+    static {
+
+    }
+
     /**
      * 获取音频文件时长
      *
@@ -33,7 +43,7 @@ public class MediaUtil {
      */
     public static double getDuration(AudioFile file) {
         try {
-            if (file.getName().endsWith(Format.MP3)) {
+            if (file.isMp3()) {
                 Mp3File f = new Mp3File(file);
                 return (double) f.getLengthInMilliseconds() / 1000;
             } else {
@@ -41,18 +51,18 @@ public class MediaUtil {
                 MultimediaInfo info = encoder.getInfo(file);
                 return (double) info.getDuration() / 1000;
             }
-        } catch (IOException | EncoderException | UnsupportedTagException | InvalidDataException e) {
+        } catch (Exception e) {
             return 0;
         }
     }
 
     /**
-     * 为 MP3 写入信息(包含曲名、艺术家、专辑、封面图片)
+     * 为音频文件写入信息(包含曲名、艺术家、专辑、封面图片)
      *
      * @param sourcePath
      * @param musicInfo
      */
-    public static void writeMP3Info(String sourcePath, NetMusicInfo musicInfo) {
+    public static void writeAudioFileInfo(String sourcePath, NetMusicInfo musicInfo) {
         if (!musicInfo.hasAlbumImage()) musicInfo.setInvokeLater(() -> startWrite(sourcePath, musicInfo));
         else startWrite(sourcePath, musicInfo);
     }
@@ -65,34 +75,53 @@ public class MediaUtil {
 
         // 创建临时文件
         File destFile = new File(sourcePath);
-        File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-        FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-        try {
-            // 将 tag 设置进 MP3 并保存文件
-            Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
-            ID3v2 tag = mp3file.getId3v2Tag();
-            // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
-            if (tag == null) tag = new ID3v24Tag();
-            if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
-            if (StringUtil.notEmpty(name)) tag.setTitle(name);
-            if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
-            if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
-            mp3file.setId3v2Tag(tag);
-            mp3file.save(destFile.getAbsolutePath());
-            // 退出时将临时文件删除
-            tempFile.deleteOnExit();
-        } catch (Exception e) {
-            LogUtil.error(e);
+        // mp3
+        if (musicInfo.isMp3()) {
+            File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
+            FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
+            try {
+                // 将 tag 设置进 MP3 并保存文件
+                Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
+                ID3v2 tag = mp3file.getId3v2Tag();
+                // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
+                if (tag == null) tag = new ID3v24Tag();
+                if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
+                if (StringUtil.notEmpty(name)) tag.setTitle(name);
+                if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
+                if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
+                mp3file.setId3v2Tag(tag);
+                mp3file.save(destFile.getAbsolutePath());
+                // 退出时将临时文件删除
+                tempFile.deleteOnExit();
+            } catch (Exception e) {
+                LogUtil.error(e);
+            }
+        }
+        // flac
+        else if (musicInfo.isFlac()) {
+            try {
+                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
+                FlacTag tag = (FlacTag) af.getTag();
+                if (albumImg != null)
+                    tag.setField(tag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
+                if (StringUtil.notEmpty(name)) tag.setField(FieldKey.TITLE, name);
+                if (StringUtil.notEmpty(artist)) tag.setField(FieldKey.ARTIST, artist);
+                if (StringUtil.notEmpty(albumName)) tag.setField(FieldKey.ALBUM, albumName);
+                af.commit();
+            } catch (Exception e) {
+                LogUtil.error(e);
+            }
         }
     }
 
     /**
-     * 为 MP3 写入信息(通过 MediaInfo)
+     * 为音频文件写入信息(通过 MediaInfo)
      *
      * @param sourcePath
      * @param mediaInfo
      */
-    public static void writeMP3Info(String sourcePath, MediaInfo mediaInfo) {
+    public static void writeAudioFileInfo(String sourcePath, MediaInfo mediaInfo) {
         String title = mediaInfo.getTitle();
         String artist = mediaInfo.getArtist();
         String albumName = mediaInfo.getAlbum();

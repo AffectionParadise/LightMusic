@@ -3250,7 +3250,7 @@ public class MainFrame extends JFrame {
                     task.setInvokeLater(() -> {
                         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                         // 写入歌曲信息
-                        if (musicInfo.isMp3()) MediaUtil.writeMP3Info(dest, musicInfo);
+                        if (musicInfo.isMp3()) MediaUtil.writeAudioFileInfo(dest, musicInfo);
                         // 自动下载歌词
                         if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                             FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
@@ -22817,14 +22817,13 @@ public class MainFrame extends JFrame {
 
     // 下载歌曲(单首)
     private void singleDownload(NetMusicInfo musicInfo) {
-        String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
-
         // 创建下载任务，并加入队列
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
         task.setInvokeLater(() -> {
+            String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
+            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
             // 写入歌曲信息
-            if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
+            if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
             // 自动下载歌词
             if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                 FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
@@ -22844,14 +22843,13 @@ public class MainFrame extends JFrame {
             if (!(resource instanceof NetMusicInfo)) continue;
             NetMusicInfo musicInfo = (NetMusicInfo) resource;
 
-            String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
-
             // 创建下载任务，并加入队列
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
             task.setInvokeLater(() -> {
+                String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
+                String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                 // 写入歌曲信息
-                if (musicInfo.isMp3()) MediaUtil.writeMP3Info(destMusicPath, musicInfo);
+                if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                 // 自动下载歌词
                 if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                     FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);

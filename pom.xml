@@ -14,6 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <mp3agic.version>0.9.1</mp3agic.version>
+        <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <filters.version>2.0.235-1</filters.version>
@@ -34,6 +35,13 @@
             <groupId>com.mpatric</groupId>
             <artifactId>mp3agic</artifactId>
             <version>${mp3agic.version}</version>
+        </dependency>
+
+        <!-- jaudiotagger 读取和写入媒体信息 -->
+        <dependency>
+            <groupId>org</groupId>
+            <artifactId>jaudiotagger</artifactId>
+            <version>${jaudiotagger.version}</version>
         </dependency>
 
         <!-- jave 读取媒体文件时长 -->
