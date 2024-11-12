@@ -62,23 +62,25 @@ public class NcLyricHero {
                     } else {
                         // 行起始时间
                         String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
-                        int lineStart = Integer.parseInt(lineStartStr);
-                        String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
-                        sb.append(lrcTime);
+                        if (StringUtil.notEmpty(lineStartStr)) {
+                            int lineStart = Integer.parseInt(lineStartStr);
+                            String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                            sb.append(lrcTime);
 
-                        List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+,\\d+\\)", l);
-                        List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+),\\d+\\)", l);
-                        String[] sp = ArrayUtil.removeFirstEmpty(l.replaceFirst("\\[\\d+,\\d+\\]", "").split("\\(\\d+,\\d+,\\d+\\)", -1));
-                        for (int i = 0, s = wordStartList.size(); i < s; i++) {
-                            String wordStart = wordStartList.get(i);
-                            int wsi = Integer.parseInt(wordStart);
-                            sb.append("<")
-                                    .append(wsi - lineStart)
-                                    .append(",")
-                                    .append(wordDurationList.get(i))
-                                    .append(">")
-                                    .append(sp[i]);
-                        }
+                            List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+,\\d+\\)", l);
+                            List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+),\\d+\\)", l);
+                            String[] sp = ArrayUtil.removeFirstEmpty(l.replaceFirst("\\[\\d+,\\d+\\]", "").split("\\(\\d+,\\d+,\\d+\\)", -1));
+                            for (int i = 0, s = wordStartList.size(); i < s; i++) {
+                                String wordStart = wordStartList.get(i);
+                                int wsi = Integer.parseInt(wordStart);
+                                sb.append("<")
+                                        .append(wsi - lineStart)
+                                        .append(",")
+                                        .append(wordDurationList.get(i))
+                                        .append(">")
+                                        .append(sp[i]);
+                            }
+                        } else sb.append(l);
                     }
                     sb.append("\n");
                 }

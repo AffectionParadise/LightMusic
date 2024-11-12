@@ -1,6 +1,7 @@
 package net.doge.constant.config;
 
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.system.LMDataConstants;
 import net.doge.util.lmdata.LMDataUtil;
 
 /**
@@ -10,7 +11,7 @@ import net.doge.util.lmdata.LMDataUtil;
  */
 public class ConfigConstants {
     // 配置文件名称
-    public static final String CONFIG_FILE_NAME = "config.lm";
+    public static final String CONFIG_FILE_NAME = "config" + LMDataConstants.DATA_FILE_SUFFIX;
     // 配置文件数据
     public static final JSONObject CONFIG_DATA = LMDataUtil.read(CONFIG_FILE_NAME);
 

@@ -75,11 +75,11 @@ public class MediaUtil {
 
         // 创建临时文件
         File destFile = new File(sourcePath);
-        // mp3
-        if (musicInfo.isMp3()) {
-            File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-            FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-            try {
+        try {
+            // mp3
+            if (musicInfo.isMp3()) {
+                File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
+                FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
                 // 将 tag 设置进 MP3 并保存文件
                 Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
                 ID3v2 tag = mp3file.getId3v2Tag();
@@ -93,13 +93,9 @@ public class MediaUtil {
                 mp3file.save(destFile.getAbsolutePath());
                 // 退出时将临时文件删除
                 tempFile.deleteOnExit();
-            } catch (Exception e) {
-                LogUtil.error(e);
             }
-        }
-        // flac
-        else if (musicInfo.isFlac()) {
-            try {
+            // flac
+            else if (musicInfo.isFlac()) {
                 Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
                 org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
                 FlacTag tag = (FlacTag) af.getTag();
@@ -109,9 +105,9 @@ public class MediaUtil {
                 if (StringUtil.notEmpty(artist)) tag.setField(FieldKey.ARTIST, artist);
                 if (StringUtil.notEmpty(albumName)) tag.setField(FieldKey.ALBUM, albumName);
                 af.commit();
-            } catch (Exception e) {
-                LogUtil.error(e);
             }
+        } catch (Exception e) {
+            LogUtil.error(e);
         }
     }
 

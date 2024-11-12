@@ -3250,7 +3250,7 @@ public class MainFrame extends JFrame {
                     task.setInvokeLater(() -> {
                         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                         // 写入歌曲信息
-                        if (musicInfo.isMp3()) MediaUtil.writeAudioFileInfo(dest, musicInfo);
+                        if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(dest, musicInfo);
                         // 自动下载歌词
                         if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                             FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
