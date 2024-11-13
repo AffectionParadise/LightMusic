@@ -5,8 +5,8 @@ import net.doge.constant.lang.I18n;
 import net.doge.model.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.TipDialog;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
@@ -157,11 +157,11 @@ public class SliderUI extends BasicSliderUI {
                 if (!showDialog) return;
                 if (isTimeBar) {
                     boolean isMusic = mp == null;
-                    String dStr = isMusic ? player.getDurationString() : TimeUtil.format(mp.getMedia().getDuration().toSeconds());
+                    String dStr = isMusic ? player.getDurationString() : DurationUtil.format(mp.getMedia().getDuration().toSeconds());
                     double dSec = isMusic ? player.getDurationSeconds() : mp.getMedia().getDuration().toSeconds();
                     double cSec = (double) slider.getValue() / slider.getMaximum() * dSec;
                     String lrc = isMusic ? f.getTimeLrc(cSec) : "";
-                    dialog.setMessage(String.format("%s / %s", TimeUtil.format(cSec), dStr));
+                    dialog.setMessage(String.format("%s / %s", DurationUtil.format(cSec), dStr));
                     if (lrcDialog != null) {
                         lrcDialog.setMessage(StringUtil.textToHtml(lrc));
                         lrcDialog.updateSize();

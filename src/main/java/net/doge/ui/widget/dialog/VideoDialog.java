@@ -29,8 +29,8 @@ import net.doge.ui.widget.menu.ui.MenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.SliderUI;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -268,7 +268,7 @@ public class VideoDialog extends AbstractTitledDialog {
             if (!timeBar.getValueIsAdjusting())
                 timeBar.setValue((int) (currTimeSeconds / durationSeconds * TIME_BAR_MAX));
             if (resized) return;
-            durationLabel.setText(TimeUtil.format(durationSeconds));
+            durationLabel.setText(DurationUtil.format(durationSeconds));
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
             String t = durationLabel.getText().replaceAll("[1-9]", "0");
             FontMetrics m = durationLabel.getFontMetrics(globalFont);
@@ -362,7 +362,7 @@ public class VideoDialog extends AbstractTitledDialog {
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
             double t = (double) timeBar.getValue() / TIME_BAR_MAX * media.getDuration().toSeconds();
-            currTimeLabel.setText(TimeUtil.format(t));
+            currTimeLabel.setText(DurationUtil.format(t));
         });
         // 设置进度条最佳大小
         progressPanel.add(currTimeLabel);

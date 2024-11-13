@@ -12,8 +12,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.player.MusicPlayer;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
@@ -108,7 +108,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
                 StringUtil.shorten(musicInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
         String albumName = musicInfo.hasAlbumName() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
                 StringUtil.shorten(musicInfo.getAlbumName(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
-        String duration = StringUtil.textToHtml(musicInfo.hasDuration() ? TimeUtil.format(musicInfo.getDuration()) : "--:--");
+        String duration = StringUtil.textToHtml(musicInfo.hasDuration() ? DurationUtil.format(musicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

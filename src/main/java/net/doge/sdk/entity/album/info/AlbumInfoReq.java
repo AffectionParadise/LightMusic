@@ -16,10 +16,7 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -728,7 +725,7 @@ public class AlbumInfoReq {
                 aa.forEach(aElem -> sj.add(aElem.text()));
                 String artist = sj.toString();
                 String artistId = aa.isEmpty() ? "" : RegexUtil.getGroup1("/v3/music/artist/(\\d+)", aa.get(0).attr("href"));
-                Double duration = TimeUtil.toSeconds(sd.text());
+                Double duration = DurationUtil.toSeconds(sd.text());
                 // 歌曲对应的专辑可能不是本专辑
 //                String albumName = albumInfo.getName();
 //                String albumId = id;

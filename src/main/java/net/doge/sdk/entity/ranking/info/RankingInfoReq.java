@@ -12,9 +12,9 @@ import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -328,7 +328,7 @@ public class RankingInfoReq {
                 String artistId = songJson.getString("singerId");
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
-                Double duration = TimeUtil.toSeconds(songJson.getString("length"));
+                Double duration = DurationUtil.toSeconds(songJson.getString("length"));
                 int qualityType = AudioQuality.UNKNOWN;
                 JSONArray newRateFormats = songJson.getJSONArray("newRateFormats");
                 for (int k = newRateFormats.size() - 1; k >= 0; k--) {

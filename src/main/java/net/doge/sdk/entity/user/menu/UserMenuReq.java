@@ -15,10 +15,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -961,7 +958,7 @@ public class UserMenuReq {
                     String creatorId = userInfo.getId();
                     String coverImgUrl = mvJson.getString("poster");
                     Long playCount = mvJson.getLong("playcnt");
-                    Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                    Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                     String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
 
                     NetMvInfo mvInfo = new NetMvInfo();
@@ -1006,7 +1003,7 @@ public class UserMenuReq {
                     String creatorId = userInfo.getId();
                     String coverImgUrl = mvJson.getString("poster");
                     Long playCount = mvJson.getLong("playcnt");
-                    Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                    Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                     String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
 
                     NetMvInfo mvInfo = new NetMvInfo();
@@ -1070,7 +1067,7 @@ public class UserMenuReq {
                     String creatorId = mvJson.getString("mid");
                     String coverImgUrl = mvJson.getString("pic");
                     Long playCount = mvJson.getLong("play");
-                    Double duration = TimeUtil.toSeconds(mvJson.getString("length"));
+                    Double duration = DurationUtil.toSeconds(mvJson.getString("length"));
                     String pubTime = TimeUtil.msToDate(mvJson.getLong("created") * 1000);
 
                     NetMvInfo mvInfo = new NetMvInfo();

@@ -9,8 +9,8 @@ import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.*;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
@@ -393,7 +393,7 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
             String source = "<html></html>";
             String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
             String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
-            String duration = StringUtil.textToHtml(mvInfo.hasDuration() ? TimeUtil.format(mvInfo.getDuration()) : "--:--");
+            String duration = StringUtil.textToHtml(mvInfo.hasDuration() ? DurationUtil.format(mvInfo.getDuration()) : "--:--");
             String playCount = mvInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(mvInfo.getPlayCount())) : "";
             String pubTime = mvInfo.hasPubTime() ? StringUtil.textToHtml(mvInfo.getPubTime()) : "";
 

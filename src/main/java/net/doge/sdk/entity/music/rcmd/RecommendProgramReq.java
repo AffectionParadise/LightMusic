@@ -13,9 +13,9 @@ import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -301,7 +301,7 @@ public class RecommendProgramReq {
                     String name = box.select(".video-title").text();
                     String artist = a.text();
                     String artistId = a.attr("href").replaceFirst("/", "");
-                    Double duration = TimeUtil.chineseToSeconds(box.select("span.video-duration").get(1).text());
+                    Double duration = DurationUtil.chineseToSeconds(box.select("span.video-duration").get(1).text());
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);
@@ -334,7 +334,7 @@ public class RecommendProgramReq {
 
                     String id = box.attr("href").replaceFirst("/sound/", "");
                     String name = box.attr("title");
-                    Double duration = TimeUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
+                    Double duration = DurationUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);
@@ -365,7 +365,7 @@ public class RecommendProgramReq {
 
                     String id = box.attr("href").replaceFirst("/sound/", "");
                     String name = box.attr("title");
-                    Double duration = TimeUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
+                    Double duration = DurationUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.ME);

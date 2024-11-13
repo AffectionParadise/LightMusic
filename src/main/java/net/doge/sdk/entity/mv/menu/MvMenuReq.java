@@ -15,10 +15,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -326,7 +323,7 @@ public class MvMenuReq {
                 String creatorId = mvJson.getString("mthid");
                 String coverImgUrl = mvJson.getString("poster");
                 Long playCount = mvJson.getLong("playcnt");
-                Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                 String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
 
                 NetMvInfo mvInfo = new NetMvInfo();

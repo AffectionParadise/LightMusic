@@ -18,6 +18,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -743,7 +744,7 @@ public class RecommendMvReq {
 //                String creatorId = mvJson.getString("author_id");
                 Long playCount = StringUtil.parseNumber(mvJson.getString("fmplaycnt"));
                 String coverImgUrl = "https:" + mvJson.getString("poster");
-                Double duration = TimeUtil.toSeconds(mvJson.getString("time_length"));
+                Double duration = DurationUtil.toSeconds(mvJson.getString("time_length"));
                 String pubTime = TimeUtil.msToDate(mvJson.getLong("publish_time") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
@@ -831,7 +832,7 @@ public class RecommendMvReq {
                     String creatorId = mvJson.getString("third_id");
                     Long playCount = mvJson.getLong("playcnt");
                     String coverImgUrl = mvJson.getString("poster_pc");
-                    Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                    Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                     String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
 
                     NetMvInfo mvInfo = new NetMvInfo();
@@ -925,7 +926,7 @@ public class RecommendMvReq {
                     String creatorId = mvJson.getString("mid");
                     String coverImgUrl = mvJson.getString("pic");
                     Long playCount = mvJson.getLong("play");
-                    Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                    Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                     String pubTime = mvJson.getString("create").split(" ")[0];
 
                     NetMvInfo mvInfo = new NetMvInfo();

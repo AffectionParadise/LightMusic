@@ -20,10 +20,10 @@ import net.doge.sdk.entity.music.info.lyrichero.mg.MgLyricHero;
 import net.doge.sdk.entity.music.info.lyrichero.nc.NcLyricHero;
 import net.doge.sdk.entity.music.info.lyrichero.qq.QqLyricHero;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.system.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;
@@ -112,7 +112,7 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(DurationUtil.toSeconds(data.getString("length")));
         }
     }
 
@@ -295,7 +295,7 @@ public class MusicInfoReq {
             if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
             if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(data.getString("album"));
             if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(data.getString("albumId"));
-            if (!musicInfo.hasDuration()) musicInfo.setDuration(TimeUtil.toSeconds(data.getString("length")));
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(DurationUtil.toSeconds(data.getString("length")));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.execute(() -> {
                     JSONArray imgArray = data.getJSONArray("albumImgs");
@@ -682,7 +682,7 @@ public class MusicInfoReq {
             StringBuilder sb = new StringBuilder();
             for (Element d : ds) {
                 double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
-                sb.append(TimeUtil.formatToLrcTime(time));
+                sb.append(DurationUtil.formatToLrcTime(time));
                 sb.append(d.text());
                 sb.append("\n");
             }

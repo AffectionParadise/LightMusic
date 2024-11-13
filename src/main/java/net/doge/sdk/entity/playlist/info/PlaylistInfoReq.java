@@ -892,7 +892,7 @@ public class PlaylistInfoReq {
                 String artistId = SdkUtil.parseArtistId(songJson);
                 String albumName = songJson.getString("album");
                 String albumId = songJson.getString("albumId");
-                Double duration = TimeUtil.toSeconds(songJson.getString("length"));
+                Double duration = DurationUtil.toSeconds(songJson.getString("length"));
                 // 咪咕音乐没有 mv 时，该字段不存在！
                 String mvId = songJson.getString("mvId");
                 int qualityType = AudioQuality.UNKNOWN;

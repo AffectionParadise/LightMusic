@@ -20,8 +20,8 @@ import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.ui.MainFrame;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
 
 import java.awt.image.BufferedImage;
@@ -372,7 +372,7 @@ public class MusicPlayer {
 
     // 获取总时间字符串
     public String getDurationString() {
-        return TimeUtil.format(getDurationSeconds());
+        return DurationUtil.format(getDurationSeconds());
     }
 
     // 获取当前进度比例

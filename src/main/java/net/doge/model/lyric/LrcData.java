@@ -1,9 +1,9 @@
 package net.doge.model.lyric;
 
 import lombok.Data;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 import net.doge.util.system.FileUtil;
 
 import java.io.File;
@@ -73,7 +73,7 @@ public class LrcData {
                 String lineLrc = lineLrcStart < line.length() ? StringUtil.shortenBlank(line.substring(lineLrcStart).trim()) : "";
                 // 循环是为了处理歌词复用情况
                 timeStrList.forEach(timeStr -> {
-                    double time = TimeUtil.lrcTimeToSeconds(timeStr) - offset;
+                    double time = DurationUtil.lrcTimeToSeconds(timeStr) - offset;
                     statements.add(new Statement(time, lineLrc));
                 });
             }

@@ -8,10 +8,10 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ArrayUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class NcLyricHero {
                     if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
-                        if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));
+                        if (t != null) sb.append(DurationUtil.formatToLrcTime(t / 1000));
                         JSONArray cArray = obj.getJSONArray("c");
                         for (int i = 0, s = cArray.size(); i < s; i++)
                             sb.append(cArray.getJSONObject(i).getString("tx"));
@@ -64,7 +64,7 @@ public class NcLyricHero {
                         String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
                         if (StringUtil.notEmpty(lineStartStr)) {
                             int lineStart = Integer.parseInt(lineStartStr);
-                            String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                            String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
                             sb.append(lrcTime);
 
                             List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+,\\d+\\)", l);
@@ -99,7 +99,7 @@ public class NcLyricHero {
                     if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
-                        if (t != null) sb.append(TimeUtil.formatToLrcTime(t / 1000));
+                        if (t != null) sb.append(DurationUtil.formatToLrcTime(t / 1000));
                         JSONArray cArray = obj.getJSONArray("c");
                         for (int i = 0, s = cArray.size(); i < s; i++)
                             sb.append(cArray.getJSONObject(i).getString("tx"));

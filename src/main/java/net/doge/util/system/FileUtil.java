@@ -1,6 +1,7 @@
 package net.doge.util.system;
 
 import info.monitorenter.cpdetector.io.*;
+import net.doge.util.common.LogUtil;
 
 import java.io.File;
 import java.io.FileReader;

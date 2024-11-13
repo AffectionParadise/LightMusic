@@ -3,6 +3,7 @@ package net.doge.util.system;
 import cn.hutool.core.util.RuntimeUtil;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.meta.SoftInfo;
+import net.doge.util.common.LogUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;

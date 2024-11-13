@@ -1,6 +1,4 @@
-package net.doge.util.system;
-
-import net.doge.util.common.TimeUtil;
+package net.doge.util.common;
 
 /**
  * @Author Doge

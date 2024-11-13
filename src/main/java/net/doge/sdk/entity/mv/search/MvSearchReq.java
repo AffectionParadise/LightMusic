@@ -16,6 +16,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
@@ -362,7 +363,7 @@ public class MvSearchReq {
                 String artistName = mvJson.getString("author");
                 String creatorId = mvJson.getString("author_id");
                 Long playCount = StringUtil.parseNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
-                Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                 String pubTime = mvJson.getString("publishTimeText");
                 String coverImgUrl = mvJson.getString("cover_src");
 
@@ -407,7 +408,7 @@ public class MvSearchReq {
                 String artistName = mvJson.getString("author");
                 String creatorId = mvJson.getString("mid");
                 Long playCount = mvJson.getLong("play");
-                Double duration = TimeUtil.toSeconds(mvJson.getString("duration"));
+                Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                 String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
                 String coverImgUrl = "https:" + mvJson.getString("pic");
 

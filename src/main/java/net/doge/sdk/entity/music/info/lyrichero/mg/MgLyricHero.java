@@ -5,9 +5,9 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.entity.music.info.lyrichero.mg.decoder.MrcDecoder;
 import net.doge.util.collection.ArrayUtil;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
 
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class MgLyricHero {
                     // 行起始时间
                     String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
                     int lineStart = Integer.parseInt(lineStartStr);
-                    String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                    String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
                     sb.append(lrcTime);
 
                     List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+\\)", l);

@@ -122,7 +122,7 @@ public class KgLyricHero {
                 // 行起始时间
                 String lineStartStr = RegexUtil.getGroup1(lineTimeExp, l);
                 int lineStart = Integer.parseInt(lineStartStr);
-                String lrcTime = TimeUtil.formatToLrcTime((double) lineStart / 1000);
+                String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
                 sb.append(lrcTime);
                 sb.append(l.replaceFirst(lineTimeExp, "").replaceAll("<-?(\\d+),(\\d+),\\d+>", "<$1,$2>"));
             } else sb.append(l);

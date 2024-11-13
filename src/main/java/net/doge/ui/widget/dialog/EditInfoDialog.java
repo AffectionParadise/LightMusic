@@ -19,6 +19,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.widget.textfield.CustomTextField;
+import net.doge.util.common.DurationUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
@@ -165,7 +166,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
         String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
         String lastAccessTime = TimeUtil.msToDatetime(FileUtil.getAccessTime(file));
-        String duration = TimeUtil.format(file.getDuration());
+        String duration = DurationUtil.format(file.getDuration());
         String title = file.getSongName();
         String artist = file.getArtist();
         String album = file.getAlbum();

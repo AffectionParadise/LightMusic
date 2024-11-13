@@ -94,14 +94,14 @@ import net.doge.ui.widget.textfield.SafeDocument;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.*;
+import net.doge.util.system.DesktopUtil;
+import net.doge.util.system.FileUtil;
+import net.doge.util.system.KeyUtil;
+import net.doge.util.system.TerminalUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
@@ -266,7 +266,7 @@ public class MainFrame extends JFrame {
     private final String LOADING_MV_MSG = I18n.getText("loadingMvMsg");
     private final String COPY_SUCCESS_MSG = I18n.getText("copySuccessMsg");
 
-    private final String DEFAULT_TIME = TimeUtil.format(0);
+    private final String DEFAULT_TIME = DurationUtil.format(0);
     private final String PLAY_MENU_ITEM_TEXT = I18n.getText("playMenuItem");
     private final String NEXT_PLAY_MENU_ITEM_TEXT = I18n.getText("nextPlayMenuItem");
     private final String OPEN_MENU_ITEM_TEXT = I18n.getText("openMenuItem");
@@ -20051,7 +20051,7 @@ public class MainFrame extends JFrame {
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
             double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMetaMusicInfo().getDuration();
-            currTimeLabel.setText(TimeUtil.format(t));
+            currTimeLabel.setText(DurationUtil.format(t));
         });
 
         progressPanel.add(currTimeLabel);
