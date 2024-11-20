@@ -20,7 +20,7 @@ import java.awt.*;
  */
 @Data
 public class LrcListRenderer extends DefaultListCellRenderer {
-    private final Font defaultFont = Fonts.NORMAL.deriveFont(18f);
+    private final Font defaultFont = Fonts.NORMAL_V2;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
     // 走过的歌词颜色

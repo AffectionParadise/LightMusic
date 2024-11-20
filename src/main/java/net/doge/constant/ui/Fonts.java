@@ -14,21 +14,23 @@ import java.util.Locale;
  * @Date 2021/1/3
  */
 public class Fonts {
+    public static int currFont = 0;
+    public static final String[] NAMES = {"鸿蒙", "小米", "OPPO", "vivo"};
+    private static final String[] FONT_NAMES = {"HarmonyOS_Sans_SC", "MiSans", "OPPOSans", "vivoSans"};
+
+    private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
+
     private static final int FONT_SIZE = 17;
+    private static final int FONT_V2_SIZE = FONT_SIZE + 1;
     private static final int TINY_SIZE = FONT_SIZE - 2;
     private static final int MEDIUM_SIZE = FONT_SIZE + 3;
     private static final int BIG_SIZE = FONT_SIZE + 10;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
-    public static int currFont = 0;
-    public static final String[] NAMES = {"鸿蒙", "小米", "OPPO", "vivo"};
-    private static final String[] FONT_NAMES = {"HarmonyOS Sans", "MiSans", "OPPOSans", "vivoSans"};
-
-    private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
-
     // 中英文
     public static final Font NORMAL_TINY = LMFontManager.getFont(NORMAL_NAME, TINY_SIZE);
     public static final Font NORMAL = LMFontManager.getFont(NORMAL_NAME, FONT_SIZE);
+    public static final Font NORMAL_V2 = LMFontManager.getFont(NORMAL_NAME, FONT_V2_SIZE);
     public static final Font NORMAL_MEDIUM = LMFontManager.getFont(NORMAL_NAME, MEDIUM_SIZE);
     public static final Font NORMAL_BIG = LMFontManager.getFont(NORMAL_NAME, BIG_SIZE);
     public static final Font NORMAL_HUGE = LMFontManager.getFont(NORMAL_NAME, HUGE_SIZE);
