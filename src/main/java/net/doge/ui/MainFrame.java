@@ -23354,6 +23354,7 @@ public class MainFrame extends JFrame {
                 DialogButton b = null;
                 for (String keyword : hotSearch) {
                     b = new DialogButton(keyword);
+                    DialogButton finalB = b;
                     b.addActionListener(event -> {
                         searchTextField.requestFocus();
                         searchTextField.setText(keyword);
@@ -23361,6 +23362,8 @@ public class MainFrame extends JFrame {
                         searchButton.doClick();
                         netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                         netLeftBox.add(netMusicScrollPane);
+                        // 热搜词搜索后取消悬停状态
+                        finalB.setEntered(false);
                     });
                     b.setForeColor(currUIStyle.getTextColor());
                     netMusicHotSearchInnerPanel2.add(b);
