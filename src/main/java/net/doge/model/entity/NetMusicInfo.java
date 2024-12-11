@@ -163,11 +163,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public boolean isMp3() {
-        return Format.MP3.equals(format);
+        return Format.MP3.equalsIgnoreCase(format);
     }
 
     public boolean isFlac() {
-        return Format.FLAC.equals(format);
+        return Format.FLAC.equalsIgnoreCase(format);
     }
 
     // 歌词文件内容

@@ -350,6 +350,8 @@ public class ConfigConstants {
     public static final String TASK_URL = "url";
     // 任务文件路径
     public static final String TASK_DEST = "dest";
+    // 任务文件格式
+    public static final String TASK_FORMAT = "format";
     // 任务类型
     public static final String TASK_TYPE = "type";
     // 任务的音乐信息

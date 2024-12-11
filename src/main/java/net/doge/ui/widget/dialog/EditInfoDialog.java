@@ -124,15 +124,15 @@ public class EditInfoDialog extends AbstractTitledDialog {
                         results[i] = ((CustomTextField) components[i]).getText();
                     }
                 }
-                MediaInfo mediaInfo = new MediaInfo(
-                        (String) results[6],
-                        (String) results[7],
-                        (String) results[8],
-                        (String) results[9],
-                        (String) results[10],
-                        (String) results[11],
-                        (BufferedImage) results[12]
-                );
+                MediaInfo mediaInfo = new MediaInfo();
+                mediaInfo.setTitle((String) results[6]);
+                mediaInfo.setArtist((String) results[7]);
+                mediaInfo.setAlbum((String) results[8]);
+                mediaInfo.setGenre((String) results[9]);
+                mediaInfo.setComment((String) results[10]);
+                mediaInfo.setCopyright((String) results[11]);
+                mediaInfo.setAlbumImage((BufferedImage) results[12]);
+                mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file.getAbsolutePath(), mediaInfo);
                 // 歌曲信息更改后重新填充
                 MediaUtil.fillAudioFileInfo(file);

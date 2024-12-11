@@ -61,7 +61,11 @@ public class AudioFile extends File implements MusicResource {
     }
 
     public boolean isMp3() {
-        return Format.MP3.equals(format);
+        return Format.MP3.equalsIgnoreCase(format);
+    }
+
+    public boolean isFlac() {
+        return Format.FLAC.equalsIgnoreCase(format);
     }
 
     public String getFormat() {

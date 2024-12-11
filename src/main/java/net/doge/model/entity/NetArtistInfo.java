@@ -83,10 +83,6 @@ public class NetArtistInfo implements NetResource {
         return fromME() && !isOrganization;
     }
 
-    public boolean isOrganization() {
-        return isOrganization;
-    }
-
     public boolean hasCoverImgUrl() {
         return StringUtil.notEmpty(coverImgUrl);
     }

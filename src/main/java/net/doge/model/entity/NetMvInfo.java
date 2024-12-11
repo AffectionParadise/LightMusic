@@ -101,11 +101,11 @@ public class NetMvInfo implements NetResource, Downloadable {
     }
 
     public boolean isFlv() {
-        return Format.FLV.equals(format);
+        return Format.FLV.equalsIgnoreCase(format);
     }
 
     public boolean isMp4() {
-        return Format.MP4.equals(format);
+        return Format.MP4.equalsIgnoreCase(format);
     }
 
     public boolean isVideo() {

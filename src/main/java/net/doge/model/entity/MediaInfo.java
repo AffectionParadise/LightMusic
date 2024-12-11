@@ -1,7 +1,7 @@
 package net.doge.model.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.doge.constant.system.Format;
 
 import java.awt.image.BufferedImage;
 
@@ -11,7 +11,6 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/12
  */
 @Data
-@AllArgsConstructor
 public class MediaInfo {
     // 标题
     private String title;
@@ -27,4 +26,15 @@ public class MediaInfo {
     private String copyright;
     // 封面图片
     private BufferedImage albumImage;
+    // 格式
+    private String format;
+
+    // 判断是不是 mp3 文件
+    public boolean isMp3() {
+        return Format.MP3.equalsIgnoreCase(format);
+    }
+
+    public boolean isFlac() {
+        return Format.FLAC.equalsIgnoreCase(format);
+    }
 }

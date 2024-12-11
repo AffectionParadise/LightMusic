@@ -203,8 +203,8 @@ public class MusicPlayer {
                 }
             });
         }
-        // MP3 文件的其他信息
-        else if (metaMusicInfo.isMp3()) {
+        // MP3 / FLAC 文件的其他信息
+        else if (metaMusicInfo.isMp3() || metaMusicInfo.isFlac()) {
             String artist = source.getArtist();
             String albumName = source.getAlbum();
             // 歌曲名称

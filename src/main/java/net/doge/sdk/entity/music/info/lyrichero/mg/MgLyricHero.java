@@ -41,8 +41,7 @@ public class MgLyricHero {
             String[] lsp = mrcStr.split("\n");
             StringBuilder sb = new StringBuilder();
             for (String l : lsp) {
-                if (!RegexUtil.contains("\\[\\d+,\\d+\\]", l)) sb.append(l);
-                else {
+                if (RegexUtil.contains("\\[\\d+,\\d+\\]", l)) {
                     // 行起始时间
                     String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
                     int lineStart = Integer.parseInt(lineStartStr);
@@ -63,7 +62,7 @@ public class MgLyricHero {
                                 .append(">")
                                 .append(sp[i]);
                     }
-                }
+                } else sb.append(l);
                 sb.append("\n");
             }
             musicInfo.setLrc(sb.toString());

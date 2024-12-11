@@ -46,6 +46,10 @@ public class MetaMusicInfo {
 
     // 判断是不是 mp3 文件
     public boolean isMp3() {
-        return Format.MP3.equals(format);
+        return Format.MP3.equalsIgnoreCase(format);
+    }
+
+    public boolean isFlac() {
+        return Format.FLAC.equalsIgnoreCase(format);
     }
 }

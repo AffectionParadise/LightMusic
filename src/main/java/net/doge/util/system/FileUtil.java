@@ -36,7 +36,7 @@ public class FileUtil {
      * 获得文件后缀名
      */
     public static String getSuffix(File file) {
-        return cn.hutool.core.io.FileUtil.getSuffix(file).toLowerCase();
+        return cn.hutool.core.io.FileUtil.getSuffix(file);
     }
 
     /**
@@ -101,9 +101,7 @@ public class FileUtil {
      */
     public static boolean startsWithLeftBrace(File file) {
         try (FileReader fileReader = new FileReader(file)) {
-            int ch = fileReader.read();
-            fileReader.close();
-            return ch == '{';
+            return fileReader.read() == '{';
         } catch (IOException e) {
             return false;
         }
@@ -182,7 +180,7 @@ public class FileUtil {
         try {
             cn.hutool.core.io.FileUtil.clean(new File(dirPath));
         } catch (Exception e) {
-
+            LogUtil.error(e);
         }
     }
 

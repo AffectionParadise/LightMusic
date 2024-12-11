@@ -40,7 +40,7 @@ import net.doge.constant.window.CloseWindowOptions;
 import net.doge.constant.window.WindowSize;
 import net.doge.constant.window.WindowState;
 import net.doge.exception.IllegalMediaException;
-import net.doge.exception.NoPrivilegeException;
+import net.doge.exception.NoCopyrightException;
 import net.doge.model.entity.*;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.model.entity.base.NetResource;
@@ -3233,6 +3233,7 @@ public class MainFrame extends JFrame {
                 int type = jsonObject.getIntValue(ConfigConstants.TASK_TYPE);
                 String name = jsonObject.getString(ConfigConstants.TASK_NAME);
                 String dest = jsonObject.getString(ConfigConstants.TASK_DEST);
+                String format = jsonObject.getString(ConfigConstants.TASK_FORMAT);
                 int status = jsonObject.getIntValue(ConfigConstants.TASK_STATUS);
                 long finished = jsonObject.getLongValue(ConfigConstants.TASK_FINISHED);
                 long total = jsonObject.getLongValue(ConfigConstants.TASK_TOTAL);
@@ -3268,6 +3269,7 @@ public class MainFrame extends JFrame {
                 }
                 // 考虑到下载路径可能更换，沿用任务原来的路径
                 task.setDest(dest);
+                task.setFormat(format);
                 task.setName(name);
                 task.setStatus(status);
                 task.setFinished(finished);
@@ -3938,6 +3940,7 @@ public class MainFrame extends JFrame {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(ConfigConstants.TASK_URL, task.getUrl());
             jsonObject.put(ConfigConstants.TASK_DEST, task.getDest());
+            jsonObject.put(ConfigConstants.TASK_FORMAT, task.getFormat());
             jsonObject.put(ConfigConstants.TASK_TYPE, task.getType());
             jsonObject.put(ConfigConstants.TASK_NAME, task.getName());
             jsonObject.put(ConfigConstants.TASK_STATUS, task.getStatus());
@@ -19218,7 +19221,8 @@ public class MainFrame extends JFrame {
                         restartTaskMenuItem.setEnabled(false);
                         Task t = tasks.get(0);
                         downloadNextPlayMenuItem.setEnabled(t.isMusic());
-                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic() && ((NetMusicInfo) t.getResource()).isMp3());
+                        downloadEditInfoMenuItem.setEnabled(t.isFinished() && t.isMusic()
+                                && (t.isMp3() || t.isFlac()));
                         for (Task task : tasks) {
                             if (task.isProcessing()) cancelTaskMenuItem.setEnabled(true);
                             else restartTaskMenuItem.setEnabled(true);
@@ -21150,7 +21154,7 @@ public class MainFrame extends JFrame {
                 MusicServerUtil.fillMusicUrl(musicInfo);
                 String url = musicInfo.getUrl();
                 // 歌曲无版权
-                if (StringUtil.isEmpty(url)) throw new NoPrivilegeException("歌曲无版权");
+                if (StringUtil.isEmpty(url)) throw new NoCopyrightException("歌曲无版权");
                 // 酷狗的链接给的 wav，实际上是 mp3 格式，这种情况以 mp3 格式下载到本地再播放
                 // 另外 flac 格式文件先下载 flac 文件，转为 mp3 格式再播放
                 if (url.endsWith(Format.WAV) || musicInfo.isFlac()) {

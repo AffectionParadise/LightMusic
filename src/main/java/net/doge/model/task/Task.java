@@ -3,6 +3,7 @@ package net.doge.model.task;
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.model.NetMusicSource;
+import net.doge.constant.system.Format;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
@@ -37,6 +38,8 @@ public class Task {
     private String url;
     // 文件路径
     private String dest;
+    // 格式
+    private String format;
     // 名称
     private String name;
     // 状态
@@ -59,6 +62,7 @@ public class Task {
         this.name = type == TaskType.MUSIC ? ((NetMusicInfo) resource).toSimpleString() : ((NetMvInfo) resource).toSimpleString();
         this.dest = type == TaskType.MUSIC ? SimplePath.DOWNLOAD_MUSIC_PATH + ((NetMusicInfo) resource).toSimpleFileName()
                 : SimplePath.DOWNLOAD_MV_PATH + ((NetMvInfo) resource).toSimpleFileName();
+        this.format = type == TaskType.MUSIC ? ((NetMusicInfo) resource).getFormat() : ((NetMvInfo) resource).getFormat();
     }
 
     public void setPercent(double percent) {
@@ -150,6 +154,14 @@ public class Task {
 
     public boolean isInterrupted() {
         return status == TaskStatus.INTERRUPTED;
+    }
+
+    public boolean isMp3() {
+        return Format.MP3.equalsIgnoreCase(format);
+    }
+
+    public boolean isFlac() {
+        return Format.FLAC.equalsIgnoreCase(format);
     }
 
     public boolean isMusic() {

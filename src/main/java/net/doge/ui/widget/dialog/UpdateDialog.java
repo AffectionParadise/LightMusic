@@ -8,7 +8,7 @@ import net.doge.constant.meta.SoftInfo;
 import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.exception.InValidPackageFileException;
+import net.doge.exception.InvalidPackageFileException;
 import net.doge.sdk.system.listener.DownloadListener;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
@@ -150,13 +150,13 @@ public class UpdateDialog extends AbstractShadowDialog {
             // 校验更新包 MD5
             msgLabel.setText(VALIDATING_MSG);
             if (!keyMD5.equalsIgnoreCase(CryptoUtil.md5(packageFile)))
-                throw new InValidPackageFileException(VALIDATION_FAILED_MSG);
+                throw new InvalidPackageFileException(VALIDATION_FAILED_MSG);
             close(false);
         } catch (Exception e) {
             // 下载中断后删除软件包
             FileUtil.delete(packageFile);
             close(true);
-            new TipDialog(f, e instanceof InValidPackageFileException ? VALIDATION_FAILED_MSG : DOWNLOAD_FAILED_MSG).showDialog();
+            new TipDialog(f, e instanceof InvalidPackageFileException ? VALIDATION_FAILED_MSG : DOWNLOAD_FAILED_MSG).showDialog();
         }
     }
 
