@@ -67,9 +67,8 @@ public class ArrayUtil {
      */
     public static int indexOf(byte[] array, byte[] subArray) {
         int[] next = calculateNext(subArray);
-        int i = 0;
-        int j = 0;
-        while (i < array.length && j < subArray.length) {
+        int i = 0, j = 0, len = array.length, sLen = subArray.length;
+        while (i < len && j < sLen) {
             if (array[i] == subArray[j]) {
                 i++;
                 j++;
@@ -78,16 +77,15 @@ public class ArrayUtil {
                 else i++;
             }
         }
-        if (j == subArray.length) return i - j;
+        if (j == sLen) return i - j;
         return -1;
     }
 
-    private static int[] calculateNext(byte[] subArray) {
-        int[] next = new int[subArray.length];
-        int i = 1;
-        int j = 0;
-        while (i < subArray.length) {
-            if (subArray[i] == subArray[j]) {
+    private static int[] calculateNext(byte[] array) {
+        int i = 1, j = 0, len = array.length;
+        int[] next = new int[len];
+        while (i < len) {
+            if (array[i] == array[j]) {
                 next[i] = j + 1;
                 i++;
                 j++;

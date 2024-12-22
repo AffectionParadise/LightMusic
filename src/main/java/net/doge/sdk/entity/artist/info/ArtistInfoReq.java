@@ -49,7 +49,7 @@ public class ArtistInfoReq {
 //    private final String ARTIST_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/info?singerid=%s";
     private final String ARTIST_DETAIL_KG_API = "/kmr/v3/author";
     // 歌手信息 API (QQ)
-    private final String ARTIST_DETAIL_QQ_API = "https://y.qq.com/n/ryqq/singer/%s";
+//    private final String ARTIST_DETAIL_QQ_API = "https://y.qq.com/n/ryqq/singer/%s";
     // 歌手图片 API (QQ)
     private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
     // 歌手信息 API (酷我)
@@ -204,17 +204,55 @@ public class ArtistInfoReq {
 
             // QQ
             else if (source == NetMusicSource.QQ) {
-                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
+//                String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
+//                        .executeAsync()
+//                        .body();
+//                Document doc = Jsoup.parse(artistInfoBody);
+//
+//                Elements sn = doc.select(".data_statistic__number");
+//
+//                String name = doc.select("h1.data__name_txt").text();
+//                Integer songNum = !sn.isEmpty() ? Integer.parseInt(sn.get(0).text()) : 0;
+//                Integer albumNum = sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0;
+//                Integer mvNum = sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0;
+//                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
+//
+//                NetArtistInfo artistInfo = new NetArtistInfo();
+//                artistInfo.setSource(NetMusicSource.QQ);
+//                artistInfo.setId(id);
+//                artistInfo.setName(name);
+//                artistInfo.setSongNum(songNum);
+//                artistInfo.setAlbumNum(albumNum);
+//                artistInfo.setMvNum(mvNum);
+//                artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                    artistInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                res.add(artistInfo);
+
+                String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                        .body(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
+                                "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
+                                "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
+                                "\"songNumTag\":0,\"singerID\":0},\"module\":\"music.musichallAlbum.AlbumListServer\"}," +
+                                "\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"count\":1,\"start\":0,\"order\":1}," +
+                                "\"module\":\"MvService.MvInfoProServer\"},\"song\":{\"method\":\"GetSingerSongList\",\"param\":{\"singerMid\":\"%s\"," +
+                                "\"order\":1,\"begin\":0,\"num\":1},\"module\":\"musichall.song_list_server\"}}", id, id, id, id))
                         .executeAsync()
                         .body();
-                Document doc = Jsoup.parse(artistInfoBody);
+                JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+                JSONObject singerJson = artistInfoJson.getJSONObject("singer").getJSONObject("data").getJSONArray("singer_list").getJSONObject(0);
+                JSONObject basicInfo = singerJson.getJSONObject("basic_info");
+                JSONObject songJson = artistInfoJson.getJSONObject("song").getJSONObject("data");
+                JSONObject albumJson = artistInfoJson.getJSONObject("album").getJSONObject("data");
+                JSONObject mvJson = artistInfoJson.getJSONObject("mv").getJSONObject("data");
 
-                Elements sn = doc.select(".data_statistic__number");
-
-                String name = doc.select("h1.data__name_txt").text();
-                Integer songNum = !sn.isEmpty() ? Integer.parseInt(sn.get(0).text()) : 0;
-                Integer albumNum = sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0;
-                Integer mvNum = sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0;
+                String name = basicInfo.getString("name");
+                Integer songNum = songJson.getIntValue("totalNum");
+                Integer albumNum = albumJson.getIntValue("total");
+                Integer mvNum = mvJson.getIntValue("total");
                 String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
@@ -430,23 +468,53 @@ public class ArtistInfoReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
+//            String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_QQ_API, id))
+//                    .executeAsync()
+//                    .body();
+//            Document doc = Jsoup.parse(artistInfoBody);
+//
+//            Elements sn = doc.select(".data_statistic__number");
+//            Elements ps = doc.select("#popup_data_detail .popup_data_detail__cont p");
+//
+//            String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
+//            StringJoiner sj = new StringJoiner("\n");
+//            ps.forEach(p -> sj.add(p.text()));
+//            String description = sj.toString();
+//
+//            if (!artistInfo.hasSongNum()) artistInfo.setSongNum(!sn.isEmpty() ? Integer.parseInt(sn.get(0).text()) : 0);
+//            if (!artistInfo.hasAlbumNum())
+//                artistInfo.setAlbumNum(sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0);
+//            if (!artistInfo.hasMvNum()) artistInfo.setMvNum(sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0);
+//            if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
+//            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+//            artistInfo.setDescription(description);
+
+            String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
+                            "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
+                            "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
+                            "\"songNumTag\":0,\"singerID\":0},\"module\":\"music.musichallAlbum.AlbumListServer\"}," +
+                            "\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"count\":1,\"start\":0,\"order\":1}," +
+                            "\"module\":\"MvService.MvInfoProServer\"},\"song\":{\"method\":\"GetSingerSongList\",\"param\":{\"singerMid\":\"%s\"," +
+                            "\"order\":1,\"begin\":0,\"num\":1},\"module\":\"musichall.song_list_server\"}}", id, id, id, id))
                     .executeAsync()
                     .body();
-            Document doc = Jsoup.parse(artistInfoBody);
+            JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+            JSONObject singerJson = artistInfoJson.getJSONObject("singer").getJSONObject("data").getJSONArray("singer_list").getJSONObject(0);
+            JSONObject exInfo = singerJson.getJSONObject("ex_info");
+            JSONObject songJson = artistInfoJson.getJSONObject("song").getJSONObject("data");
+            JSONObject albumJson = artistInfoJson.getJSONObject("album").getJSONObject("data");
+            JSONObject mvJson = artistInfoJson.getJSONObject("mv").getJSONObject("data");
 
-            Elements sn = doc.select(".data_statistic__number");
-            Elements ps = doc.select("#popup_data_detail .popup_data_detail__cont p");
-
+            Integer songNum = songJson.getIntValue("totalNum");
+            Integer albumNum = albumJson.getIntValue("total");
+            Integer mvNum = mvJson.getIntValue("total");
+            String description = exInfo.getString("desc");
             String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
-            StringJoiner sj = new StringJoiner("\n");
-            ps.forEach(p -> sj.add(p.text()));
-            String description = sj.toString();
 
-            if (!artistInfo.hasSongNum()) artistInfo.setSongNum(!sn.isEmpty() ? Integer.parseInt(sn.get(0).text()) : 0);
-            if (!artistInfo.hasAlbumNum())
-                artistInfo.setSongNum(sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0);
-            if (!artistInfo.hasMvNum()) artistInfo.setSongNum(sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0);
+            if (!artistInfo.hasSongNum()) artistInfo.setSongNum(songNum);
+            if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(albumNum);
+            if (!artistInfo.hasMvNum()) artistInfo.setMvNum(mvNum);
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             artistInfo.setDescription(description);

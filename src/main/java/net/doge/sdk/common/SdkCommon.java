@@ -60,7 +60,7 @@ public class SdkCommon {
 
     // 构造千千音乐请求
     public static HttpRequest qiRequest(String url) {
-        // 参数顺序按照 ASCII 码顺序
+        // 参数顺序按照字典顺序
         String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
         String params = url.substring(url.indexOf('?') + 1);
         // 将参数解码
