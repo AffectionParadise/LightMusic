@@ -60,7 +60,7 @@ public class ArtistMenuReq {
 //    private final String ARTIST_MVS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/mv?&singerid=%s&page=%s&pagesize=%s";
     private final String ARTIST_MVS_KG_API = "https://openapicdn.kugou.com/kmr/v1/author/videos";
     // 歌手 MV API (QQ)
-    private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
+//    private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
     // 歌手 MV API (酷我)
     private final String ARTIST_MVS_KW_API = "https://kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
 
@@ -390,6 +390,7 @@ public class ArtistMenuReq {
 
         String id = artistInfo.getId();
         int source = artistInfo.getSource();
+        String name = artistInfo.getName();
 
         // 网易云
         if (source == NetMusicSource.NC) {
@@ -544,11 +545,46 @@ public class ArtistMenuReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, id, (page - 1) * limit, limit))
+//            String mvInfoBody = HttpRequest.get(String.format(ARTIST_MVS_QQ_API, id, (page - 1) * limit, limit))
+//                    .executeAsync()
+//                    .body();
+//            JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+//            JSONObject data = mvInfoJson.getJSONObject("data");
+//            total = data.getIntValue("total");
+//            JSONArray mvArray = data.getJSONArray("list");
+//            for (int i = 0, len = mvArray.size(); i < len; i++) {
+//                JSONObject mvJson = mvArray.getJSONObject(i);
+//
+//                String mvId = mvJson.getString("vid");
+//                String mvName = mvJson.getString("title").trim();
+//                String artistName = mvJson.getString("singer_name");
+//                String creatorId = mvJson.getString("singer_id");
+//                String coverImgUrl = mvJson.getString("pic");
+//                Long playCount = mvJson.getLong("listenCount");
+//
+//                NetMvInfo mvInfo = new NetMvInfo();
+//                mvInfo.setSource(NetMusicSource.QQ);
+//                mvInfo.setId(mvId);
+//                mvInfo.setName(mvName);
+//                mvInfo.setArtist(artistName);
+//                mvInfo.setCreatorId(creatorId);
+//                mvInfo.setCoverImgUrl(coverImgUrl);
+//                mvInfo.setPlayCount(playCount);
+//                GlobalExecutors.imageExecutor.execute(() -> {
+//                    BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+//                    mvInfo.setCoverImgThumb(coverImgThumb);
+//                });
+//
+//                res.add(mvInfo);
+//            }
+
+            String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                    .body(String.format("{\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"order\":1,\"start\":%s,\"count\":%s}," +
+                            "\"module\":\"MvService.MvInfoProServer\"}}", id, (page - 1) * limit, limit))
                     .executeAsync()
                     .body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
-            JSONObject data = mvInfoJson.getJSONObject("data");
+            JSONObject data = mvInfoJson.getJSONObject("mv").getJSONObject("data");
             total = data.getIntValue("total");
             JSONArray mvArray = data.getJSONArray("list");
             for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -556,10 +592,11 @@ public class ArtistMenuReq {
 
                 String mvId = mvJson.getString("vid");
                 String mvName = mvJson.getString("title").trim();
-                String artistName = mvJson.getString("singer_name");
-                String creatorId = mvJson.getString("singer_id");
-                String coverImgUrl = mvJson.getString("pic");
-                Long playCount = mvJson.getLong("listenCount");
+                String artistName = name;
+                String creatorId = id;
+                String coverImgUrl = mvJson.getString("picurl");
+                Double duration = mvJson.getDouble("duration");
+                Long playCount = mvJson.getLong("playcnt");
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetMusicSource.QQ);
@@ -568,6 +605,7 @@ public class ArtistMenuReq {
                 mvInfo.setArtist(artistName);
                 mvInfo.setCreatorId(creatorId);
                 mvInfo.setCoverImgUrl(coverImgUrl);
+                mvInfo.setDuration(duration);
                 mvInfo.setPlayCount(playCount);
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
