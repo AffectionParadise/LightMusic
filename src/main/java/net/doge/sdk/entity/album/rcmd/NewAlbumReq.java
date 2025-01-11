@@ -89,7 +89,7 @@ public class NewAlbumReq {
     // 分类专辑 API (豆瓣)
     private final String CAT_ALBUM_DB_API = "https://music.douban.com/tag/%s?start=%s&type=T";
     // 专辑 API (李志)
-    private final String ALBUM_LZ_API = "https://www.lizhinb.com/yy/";
+    private final String ALBUM_LZ_API = "https://www.lizhinb.com/gequ/";
 
     // 歌曲封面信息 API (QQ)
     private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";

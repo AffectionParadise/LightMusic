@@ -23,6 +23,10 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL_V2;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
+    // 字体大小动画数组
+    private Font[] fontAnimation;
+    private int hIndex;
+    private int sIndex;
     // 走过的歌词颜色
     private Color highlightColor;
     // 未走的歌词颜色
@@ -51,20 +55,27 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     };
 
     public LrcListRenderer() {
-        fontTimer = new Timer(10, e -> {
+        createFontAnimation();
+        fontTimer = new Timer(20, e -> {
             // 高亮行字体增大
-            highlightFont = highlightFont.deriveFont(highlightFont.getSize() + 1f);
+            highlightFont = fontAnimation[hIndex++];
             // 经过行字体减小
-            shrinkFont = shrinkFont.deriveFont(shrinkFont.getSize() - 1f);
-            if (highlightFont.getSize() == Fonts.NORMAL_BIG.getSize()) fontTimer.stop();
+            shrinkFont = fontAnimation[sIndex--];
+            if (sIndex == 0) fontTimer.stop();
         });
+    }
+
+    private void createFontAnimation() {
+        int hs = highlightFont.getSize(), ss = shrinkFont.getSize(), l = hs - ss + 1;
+        fontAnimation = new Font[l];
+        for (int i = 0; i < l; i++) fontAnimation[i] = shrinkFont.deriveFont((float) (ss++));
     }
 
     public void setRow(int row) {
         this.ratio = 0;
         this.row = row;
-        highlightFont = defaultFont;
-        shrinkFont = Fonts.NORMAL_BIG;
+        highlightFont = fontAnimation[hIndex = 0];
+        shrinkFont = fontAnimation[sIndex = fontAnimation.length - 1];
         if (!fontTimer.isRunning()) fontTimer.start();
     }
 
