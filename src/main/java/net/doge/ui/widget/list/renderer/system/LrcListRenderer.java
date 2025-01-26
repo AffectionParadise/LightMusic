@@ -56,12 +56,12 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
     public LrcListRenderer() {
         createFontAnimation();
-        fontTimer = new Timer(20, e -> {
+        fontTimer = new Timer(10, e -> {
             // 高亮行字体增大
             highlightFont = fontAnimation[hIndex++];
             // 经过行字体减小
             shrinkFont = fontAnimation[sIndex--];
-            if (sIndex == 0) fontTimer.stop();
+            if (sIndex < 0) fontTimer.stop();
         });
     }
 
