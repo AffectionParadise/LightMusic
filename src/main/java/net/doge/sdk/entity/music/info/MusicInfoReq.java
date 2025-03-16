@@ -202,32 +202,32 @@ public class MusicInfoReq {
 //                }
 ////                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
 //            } else {
-                // 歌曲信息接口有时返回为空，直接用 V2 版本接口，不过由于部分信息不完整，作为备选
-                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API_V2);
-                String dat = String.format("{\"appid\":%s,\"area_code\":1,\"behavior\":\"play\",\"clientver\":%s,\"need_hash_offset\":1,\"relate\":1," +
-                                "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}",
-                        KugouReqBuilder.appid, KugouReqBuilder.clientver, hash);
+            // 歌曲信息接口有时返回为空，直接用 V2 版本接口，不过由于部分信息不完整，作为备选
+            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API_V2);
+            String dat = String.format("{\"appid\":%s,\"area_code\":1,\"behavior\":\"play\",\"clientver\":%s,\"need_hash_offset\":1,\"relate\":1," +
+                            "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}",
+                    KugouReqBuilder.appid, KugouReqBuilder.clientver, hash);
             String songBody = SdkCommon.kgRequest(null, dat, options)
-                        .header(Header.CONTENT_TYPE, "application/json")
-                        .header("x-router", "media.store.kugou.com")
-                        .executeAsync()
-                        .body();
-                JSONObject songData = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
-                JSONObject info = songData.getJSONObject("info");
-                // 时长是毫秒，转为秒
-                if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDouble("duration") / 1000);
-                if (!musicInfo.hasArtist()) musicInfo.setArtist(songData.getString("singername"));
+                    .header(Header.CONTENT_TYPE, "application/json")
+                    .header("x-router", "media.store.kugou.com")
+                    .executeAsync()
+                    .body();
+            JSONObject songData = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
+            JSONObject info = songData.getJSONObject("info");
+            // 时长是毫秒，转为秒
+            if (!musicInfo.hasDuration()) musicInfo.setDuration(info.getDouble("duration") / 1000);
+            if (!musicInfo.hasArtist()) musicInfo.setArtist(songData.getString("singername"));
 //                if (!musicInfo.hasArtistId()) musicInfo.setArtistId(SdkUtil.parseArtistId(data));
-                if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(songData.getString("albumname"));
-                if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songData.getString("recommend_album_id"));
-                if (!musicInfo.hasAlbumImage()) {
-                    GlobalExecutors.imageExecutor.execute(() -> {
-                        BufferedImage albumImage = SdkUtil.getImageFromUrl(info.getString("image").replace("/{size}", ""));
-                        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
-                        ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
-                        musicInfo.callback();
-                    });
-                }
+            if (!musicInfo.hasAlbumName()) musicInfo.setAlbumName(songData.getString("albumname"));
+            if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(songData.getString("recommend_album_id"));
+            if (!musicInfo.hasAlbumImage()) {
+                GlobalExecutors.imageExecutor.execute(() -> {
+                    BufferedImage albumImage = SdkUtil.getImageFromUrl(info.getString("image").replace("/{size}", ""));
+                    FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
+                    ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
+                    musicInfo.callback();
+                });
+            }
 //            }
         }
 
