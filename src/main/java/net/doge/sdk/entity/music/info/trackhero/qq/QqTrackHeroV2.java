@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.music.info.trackhero.qq;
 
 import cn.hutool.http.HttpRequest;
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.entity.music.info.trackhero.qq.helper.QSignHelper;
 import net.doge.util.common.JsonUtil;
@@ -78,7 +79,9 @@ public class QqTrackHeroV2 {
         JSONObject urlJson = JSONObject.parseObject(urlBody);
         JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
         if (JsonUtil.isEmpty(data)) return "";
-        String sip = data.getJSONArray("sip").getString(0);
+        JSONArray sipArray = data.getJSONArray("sip");
+        if (JsonUtil.isEmpty(sipArray)) return "";
+        String sip = sipArray.getString(0);
         String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
         String trackUrl = sip + url;
         return StringUtil.isEmpty(url) ? "" : trackUrl;
