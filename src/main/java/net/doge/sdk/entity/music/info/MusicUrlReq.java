@@ -164,14 +164,14 @@ public class MusicUrlReq {
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-//            String playUrlBody = HttpRequest.get(SdkCommon.QQ_MAIN_API + "?format=json&data=" +
+//            String urlBody = HttpRequest.get(SdkCommon.QQ_MAIN_API + "?format=json&data=" +
 //                            StringUtil.urlEncodeAll(String.format("{\"req_0\":{\"module\":\"vkey.GetVkeyServer\",\"method\"" +
 //                                    ":\"CgiGetVkey\",\"param\":{\"filename\":[\"M500%s%s.mp3\"],\"guid\":\"10000\"" +
 //                                    ",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"0\",\"loginflag\":1,\"platform\":\"20\"}}" +
 //                                    ",\"loginUin\":\"0\",\"comm\":{\"uin\":\"0\",\"format\":\"json\",\"ct\":24,\"cv\":0}}", id, id, id)))
 //                    .executeAsync()
 //                    .body();
-//            JSONObject urlJson = JSONObject.parseObject(playUrlBody);
+//            JSONObject urlJson = JSONObject.parseObject(urlBody);
 //            JSONObject data = urlJson.getJSONObject("req_0").getJSONObject("data");
 //            String sip = data.getJSONArray("sip").getString(0);
 //            String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
@@ -478,7 +478,7 @@ public class MusicUrlReq {
                     || artistSimi == 0
                     || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;
-            double weight = nameSimi + artistSimi + albumSimi;
+            double weight = nameSimi * 2 + artistSimi + albumSimi * 2;
             candidates.add(new MusicCandidate(info, weight));
         }
         // 将所有候选的匹配按照相关度排序

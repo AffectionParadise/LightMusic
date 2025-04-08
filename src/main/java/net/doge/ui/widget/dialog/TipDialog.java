@@ -1,5 +1,6 @@
 package net.doge.ui.widget.dialog;
 
+import lombok.Setter;
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
@@ -19,6 +20,7 @@ public class TipDialog extends AbstractShadowDialog {
     private TipDialog THIS = this;
     private Font font = Fonts.NORMAL_MEDIUM;
     private Color themeColor;
+    @Setter
     private int ms;
     private boolean closing;
 
@@ -60,10 +62,6 @@ public class TipDialog extends AbstractShadowDialog {
         this.message = message;
         messageLabel.setText(message);
         repaint();
-    }
-
-    public void setMs(int ms) {
-        this.ms = ms;
     }
 
     public void updateSize() {

@@ -25,10 +25,12 @@ public class KugouReqBuilder {
 
     public static final String appid = "1005";
     public static final String apiver = "20";
-    public static final String clientver = "12029";
+    public static final String clientver = "12569";
     private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
     public static final String userid = "0";
-    public static final String mid = "114514";
+    public static final String dfid = "-";
+    public static final String mid = "336d5ebc5436534e61d16e63ddfca327";
+    public static final String uuid = "15e772e1213bdd0718d0c1d10d64e06f";
     public static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
 
     public HttpRequest buildRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
@@ -39,9 +41,9 @@ public class KugouReqBuilder {
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
-        params.put("dfid", "-");
+        params.put("dfid", dfid);
         params.put("mid", mid);
-        params.put("uuid", "-");
+        params.put("uuid", uuid);
         params.put("appid", appid);
         params.put("apiver", apiver);
         params.put("clientver", clientver);
@@ -60,7 +62,7 @@ public class KugouReqBuilder {
         }
         url += "?" + requestParams(params);
         return HttpUtil.createRequest(method, url)
-                .header("dfid", "-")
+                .header("dfid", dfid)
                 .header("mid", mid)
                 .header("clienttime", ct)
                 .body(data);
