@@ -24,6 +24,7 @@ public class NeteaseReqBuilder {
         return instance;
     }
 
+    private final String anonymousToken = "001E3EBFF2DB872F6150D523309EDF06ED115D4E2A80B5F5F11135C5F4D39CE67EA22F40C4D1F2FA5FC5FB94A3E6FA32FC365F4C2BF8BBB78F3B97981343B7F3658CEFC0C9CC823985D6272CAE8F0FF721BECF48401C0C07278EAA3C6F873CA9110D808859E780D1F139C3FD4326B2A80D89D5FA5497D30010F3C66F545854E1F3868B9EEC95BC0788EA236243FC5DDF8A99DDD0C5AA9907222EF4DE9896BA7D249C130F4AFCE873BF071F9C01D7DC6C45D234465D02FC2D63305CD1BEE9960A8E0AB575BDD8C0E5391E1AEF58B1780324792039C543B7DDD2A104CC3B083BFADDA0354462347DD5EC33522772234D7E9EB692856076B86AD0CE72822C5085B0A0C0ABBD9C9CFC9C1ED1FD6274C426BB127468F39808A0A9852EEA5B39DE4CD1D6E13E306671BCF7B7F1AF3D95DDC1D836532F878C7E1DAF4CFF74BB67CB8B7FFE2DCF9833145B518F413D17940CD346D240FF82F0388E8E1E34DEE13BC67954AD30D88A2E0B17A36783B89AA039833C83AE4F9CEC3C67E2ABBBD53611911E43D3E3648D490BE2CE79772C0AD0319883E4AF9E8C57F8425C098CDF3F9FDD2DBD10E6B2F6F70F9B7B70D1E373DE8A592768";
     private final String[] MOBILE_USER_AGENTS = {
             // iOS 13.5.1 14.0 beta with safari
             "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1",
@@ -65,28 +66,45 @@ public class NeteaseReqBuilder {
                 break;
         }
         if (method == Method.POST) headers.put("Content-Type", "application/x-www-form-urlencoded");
-        if (url.contains("music.163.com")) headers.put("Referer", "https://music.163.com");
-        String anonymousToken = "1f5fa7b6a6a9f81a11886e5186fde7fbf61e685ebf8a0ea2caec48f1a15f2a764b7f5273fc3921d1865fd2a3083cb3937e7b74823f13808adf8ea1560b5215ac07fb84071dfb15a13324751bcc9aaf44c3061cd18d77b7a0";
+
+        String _ntes_nuid = CryptoUtil.bytesToHex(ArrayUtil.randomBytes(32));
+        String _ntes_nnid = String.format("%s,%s", _ntes_nuid, System.currentTimeMillis());
+        String WNMCID = getWNMCID();
+        String WEVNSM = "1.0.0";
+        String NMTID = CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16));
+        String osver = "16.2";
+        String deviceId = "";
+        String os = "iPhone OS";
+        String channel = "distribution";
+        String appver = "9.0.90";
+        String csrfToken = "";
+
         String body = "";
         switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
             case NeteaseReqOptConstants.WEAPI:
-                headers.put("Cookie", String.format(
-                        "os=iOS; __remember_me=true; _ntes_nuid=%s; NMTID=%s; MUSIC_A=%s; appver=8.20.21;",
-                        CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
-                        CryptoUtil.bytesToHex(ArrayUtil.randomBytes(16)),
-                        anonymousToken
-                ));
+                headers.put("Referer", "https://music.163.com");
+                String cookie = String.format("__remember_me=true; ntes_kaola_ad=1; _ntes_nuid=%s; _ntes_nnid=%s; WNMCID=%s; WEVNSM=%s; NMTID=%s; osver=%s; deviceId=%s; " +
+                                "os=%s; channel=%s; appver=%s; MUSIC_A=%s;",
+                        _ntes_nuid, _ntes_nnid, WNMCID, WEVNSM, NMTID, osver, deviceId, os, channel, appver, anonymousToken);
+                headers.put("Cookie", cookie);
                 body = NeteaseCrypto.getInstance().weapi(data);
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
             case NeteaseReqOptConstants.EAPI:
-                String requestId = System.currentTimeMillis() / 1000 + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
-                headers.put("Cookie", String.format(
-                        "osver=17,1,2; deviceId=; appver=8.20.21; versioncode=140; mobilename=; buildver=1690071476; resolution=1920x1080; " +
-                                "__csrf=; os=ios; channel=; requestId=%s; MUSIC_A=%s",
-                        requestId,
-                        anonymousToken
-                ));
+                String requestId = System.currentTimeMillis() + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
+                headers.put("osver", osver);
+                headers.put("deviceId", deviceId);
+                headers.put("os", os);
+                headers.put("appver", appver);
+                headers.put("versioncode", "140");
+                headers.put("mobilename", "");
+                headers.put("buildver", String.valueOf(System.currentTimeMillis()).substring(0, 10));
+                headers.put("resolution", "1920x1080");
+                headers.put("__csrf", csrfToken);
+                headers.put("channel", channel);
+                headers.put("requestId", requestId);
+                headers.put("MUSIC_A", anonymousToken);
+                headers.put("Cookie", getCookie(headers));
                 body = NeteaseCrypto.getInstance().eapi(options.get(NeteaseReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
@@ -94,5 +112,21 @@ public class NeteaseReqBuilder {
         return HttpUtil.createRequest(method, url)
                 .headerMap(headers, true)
                 .body(body);
+    }
+
+    private String getWNMCID() {
+        String characters = "abcdefghijklmnopqrstuvwxyz";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0, len = characters.length(); i < 6; i++)
+            sb.append(characters.charAt((int) Math.floor(Math.random() * len)));
+        return String.format("%s.%s.01.0", sb, System.currentTimeMillis());
+    }
+
+    private String getCookie(Map<String, String> headers) {
+        StringBuilder sb = new StringBuilder();
+        for (Map.Entry<String, String> entry : headers.entrySet()) {
+            sb.append(entry.getKey()).append("=").append(StringUtil.urlEncodeAll(entry.getValue())).append("; ");
+        }
+        return sb.toString();
     }
 }
