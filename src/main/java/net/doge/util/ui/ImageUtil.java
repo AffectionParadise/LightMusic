@@ -47,7 +47,7 @@ public class ImageUtil {
         fbmFilter.setH(5);
         fbmFilter.setBasisType(FBMFilter.RIDGED);
 
-        shadowFilter.setRadius(10);
+        shadowFilter.setRadius(20);
         shadowFilter.setDistance(0);
         shadowFilter.setOpacity(0.65f);
 
@@ -577,6 +577,18 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage shadow(BufferedImage img) {
+        return shadow(img, Colors.SHADOW);
+    }
+
+    /**
+     * 图片添加阴影，带颜色
+     *
+     * @param img
+     * @param color
+     * @return
+     */
+    public static BufferedImage shadow(BufferedImage img, Color color) {
+        shadowFilter.setShadowColor(color.getRGB());
         return shadowFilter.filter(img, null);
     }
 

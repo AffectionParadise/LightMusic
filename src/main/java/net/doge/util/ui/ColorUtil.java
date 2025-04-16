@@ -554,7 +554,17 @@ public class ColorUtil {
      * @return
      */
     public static List<MMCQ.ThemeColor> getThemeColors(BufferedImage img) {
-        MMCQ mmcq = new MMCQ(img, 3);
+        return getThemeColors(img, 3);
+    }
+
+    /**
+     * 获取图像主色调 Palette
+     *
+     * @param img
+     * @return
+     */
+    public static List<MMCQ.ThemeColor> getThemeColors(BufferedImage img, int maxColor) {
+        MMCQ mmcq = new MMCQ(img, maxColor);
         return mmcq.quantize();
     }
 

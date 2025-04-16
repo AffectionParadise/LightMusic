@@ -29,6 +29,12 @@ public class StyleListRenderer extends DefaultListCellRenderer {
     private Color textColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel typeLabel = new CustomLabel();
+    private CustomLabel inUseLabel = new CustomLabel();
+
     private final String CUSTOM = I18n.getText("custom");
     private final String PRESET = I18n.getText("preset");
     private final String IN_USE = I18n.getText("inUse");
@@ -37,21 +43,36 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
     public StyleListRenderer(MainFrame f) {
         this.f = f;
+        init();
+    }
+
+    private void init() {
+        iconLabel.setIconTextGap(0);
+
+        float alpha = 0.5f;
+        typeLabel.setBluntAlpha(alpha);
+//        inUseLabel.setBluntAlpha(alpha);
+
+        int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(iconLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(typeLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(inUseLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+
+        outerPanel.setBluntDrawBg(true);
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         UIStyle style = (UIStyle) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel typeLabel = new CustomLabel();
-        CustomLabel inUseLabel = new CustomLabel();
-
         BufferedImage img = style.getImgThumb();
         if (img != null) iconLabel.setIcon(new ImageIcon(img));
-        iconLabel.setIconTextGap(0);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -64,25 +85,10 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         typeLabel.setFont(tinyFont);
         inUseLabel.setFont(tinyFont);
 
-        final float alpha = 0.5f;
-        typeLabel.setBluntAlpha(alpha);
-//        inUseLabel.setBluntAlpha(alpha);
-
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        final int sh = 10;
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(typeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(inUseLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String type = StringUtil.textToHtml(style.isCustom() ? CUSTOM : PRESET);
@@ -95,7 +101,6 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

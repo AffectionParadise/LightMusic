@@ -23,23 +23,26 @@ public class ComboBoxRenderer extends DefaultListCellRenderer {
     private Font customFont = Fonts.NORMAL;
     private Color textColor;
     private Color foreColor;
+    private CustomLabel label = new CustomLabel();
 
     public ComboBoxRenderer(MainFrame f) {
         textColor = f.currUIStyle.getTextColor();
         foreColor = f.currUIStyle.getForeColor();
+
+        init();
+    }
+
+    private void init() {
+        label.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        label.setFont(customFont);
+        label.setForeground(textColor);
+        label.setBgColor(foreColor);
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        CustomLabel label = new CustomLabel();
-
-        label.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
         label.setDrawBg(isSelected);
         label.setText((String) value);
-        label.setFont(customFont);
-        label.setForeground(textColor);
-        label.setBgColor(foreColor);
-
         return label;
     }
 }

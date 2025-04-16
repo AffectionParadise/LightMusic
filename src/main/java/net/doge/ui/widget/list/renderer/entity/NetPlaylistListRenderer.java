@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -23,7 +22,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -34,49 +32,33 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel creatorLabel = new CustomLabel();
+    private CustomLabel playCountLabel = new CustomLabel();
+    private CustomLabel trackCountLabel = new CustomLabel();
+
     private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playlistItem"), ImageConstants.MEDIUM_WIDTH));
+
+    public NetPlaylistListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         playlistIcon = ImageUtil.dye(playlistIcon, iconColor);
     }
 
-    @Override
-    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
-
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel creatorLabel = new CustomLabel();
-        CustomLabel playCountLabel = new CustomLabel();
-        CustomLabel trackCountLabel = new CustomLabel();
-
+    private void init() {
         iconLabel.setIconTextGap(0);
-        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
 
-        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        iconLabel.setForeground(textColor);
-        nameLabel.setForeground(textColor);
-        creatorLabel.setForeground(textColor);
-        playCountLabel.setForeground(textColor);
-        trackCountLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        creatorLabel.setFont(tinyFont);
-        playCountLabel.setFont(tinyFont);
-        trackCountLabel.setFont(tinyFont);
-
-        final float alpha = 0.5f;
+        float alpha = 0.5f;
         creatorLabel.setBluntAlpha(alpha);
         playCountLabel.setBluntAlpha(alpha);
         trackCountLabel.setBluntAlpha(alpha);
 
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
-
-        final int sh = 10;
+        int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -89,7 +71,33 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        outerPanel.setBluntDrawBg(true);
+    }
+
+    @Override
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
+
+        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
+
+        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+
+        iconLabel.setFont(customFont);
+        nameLabel.setFont(customFont);
+        creatorLabel.setFont(tinyFont);
+        playCountLabel.setFont(tinyFont);
+        trackCountLabel.setFont(tinyFont);
+
+        iconLabel.setForeground(textColor);
+        nameLabel.setForeground(textColor);
+        creatorLabel.setForeground(textColor);
+        playCountLabel.setForeground(textColor);
+        trackCountLabel.setForeground(textColor);
+
+        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
+        outerPanel.setLayout(layout);
+
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String creator = playlistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
@@ -105,7 +113,6 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

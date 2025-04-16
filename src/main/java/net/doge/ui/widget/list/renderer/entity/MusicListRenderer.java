@@ -38,6 +38,13 @@ public class MusicListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel artistLabel = new CustomLabel();
+    private CustomLabel albumNameLabel = new CustomLabel();
+    private CustomLabel durationLabel = new CustomLabel();
+
     private MusicPlayer player;
     private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicItem"), ImageConstants.SMALL_WIDTH));
     private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicMvItem"), ImageConstants.SMALL_WIDTH));
@@ -46,6 +53,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
 
     public MusicListRenderer(MusicPlayer player) {
         this.player = player;
+        init();
     }
 
     public void setIconColor(Color iconColor) {
@@ -54,6 +62,23 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         musicMvIcon = ImageUtil.dye(musicMvIcon, iconColor);
         programIcon = ImageUtil.dye(programIcon, iconColor);
         playingIcon = ImageUtil.dye(playingIcon, iconColor);
+    }
+
+    private void init() {
+        iconLabel.setIconTextGap(15);
+        iconLabel.setHorizontalTextPosition(LEFT);
+
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        outerPanel.setLayout(layout);
+
+        outerPanel.add(iconLabel);
+        outerPanel.add(nameLabel);
+        outerPanel.add(artistLabel);
+        outerPanel.add(albumNameLabel);
+        outerPanel.add(durationLabel);
+
+        outerPanel.setBluntDrawBg(true);
     }
 
     @Override
@@ -65,13 +90,6 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         boolean isFile = value instanceof AudioFile;
         if (isFile) file = (AudioFile) value;
         else musicInfo = (NetMusicInfo) value;
-
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel artistLabel = new CustomLabel();
-        CustomLabel albumNameLabel = new CustomLabel();
-        CustomLabel durationLabel = new CustomLabel();
 
         if (isFile) {
             // 播放中的文件图标不同
@@ -86,9 +104,6 @@ public class MusicListRenderer extends DefaultListCellRenderer {
             } else iconLabel.setIcon(playingIcon);
         }
 
-        iconLabel.setIconTextGap(15);
-        iconLabel.setHorizontalTextPosition(LEFT);
-
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
@@ -102,17 +117,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         albumNameLabel.setFont(customFont);
         durationLabel.setFont(customFont);
 
-        GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
-        outerPanel.setLayout(layout);
-
-        outerPanel.add(iconLabel);
-        outerPanel.add(nameLabel);
-        outerPanel.add(artistLabel);
-        outerPanel.add(albumNameLabel);
-        outerPanel.add(durationLabel);
-
-        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
@@ -142,7 +147,6 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         // 设置 list 元素宽度防止 outerPanel 设置最佳大小时不改变大小！
         list.setFixedCellWidth(lw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

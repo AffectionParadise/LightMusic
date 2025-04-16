@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -23,7 +22,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetUserListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -34,28 +32,58 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel avatarLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel genderLabel = new CustomLabel();
+    //    private CustomLabel birthdayLabel = new CustomLabel();
+//    private CustomLabel areaLabel = new CustomLabel();
+    private CustomLabel followLabel = new CustomLabel();
+    private CustomLabel fanLabel = new CustomLabel();
+    private CustomLabel playlistCountLabel = new CustomLabel();
+
     private static ImageIcon userIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.userItem"), ImageConstants.MEDIUM_WIDTH));
+
+    public NetUserListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         userIcon = ImageUtil.dye(userIcon, iconColor);
     }
 
+    private void init() {
+        avatarLabel.setIconTextGap(0);
+
+        float alpha = 0.5f;
+        genderLabel.setBluntAlpha(alpha);
+        followLabel.setBluntAlpha(alpha);
+        fanLabel.setBluntAlpha(alpha);
+        playlistCountLabel.setBluntAlpha(alpha);
+
+        int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(avatarLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(genderLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(followLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(fanLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(playlistCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetUserInfo userInfo = (NetUserInfo) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel avatarLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel genderLabel = new CustomLabel();
-//        CustomLabel birthdayLabel = new CustomLabel();
-//        CustomLabel areaLabel = new CustomLabel();
-        CustomLabel followLabel = new CustomLabel();
-        CustomLabel fanLabel = new CustomLabel();
-        CustomLabel playlistCountLabel = new CustomLabel();
-
-        avatarLabel.setIconTextGap(0);
         avatarLabel.setIcon(userInfo.hasAvatarThumb() ? new ImageIcon(userInfo.getAvatarThumb()) : userIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -77,31 +105,10 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         fanLabel.setFont(tinyFont);
         playlistCountLabel.setFont(tinyFont);
 
-        final float alpha = 0.5f;
-        genderLabel.setBluntAlpha(alpha);
-        followLabel.setBluntAlpha(alpha);
-        fanLabel.setBluntAlpha(alpha);
-        playlistCountLabel.setBluntAlpha(alpha);
-
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        final int sh = 10;
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(avatarLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(genderLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(followLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(fanLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(playlistCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String gender = userInfo.hasGender() ? StringUtil.textToHtml(userInfo.getGender()) : "";
@@ -123,7 +130,6 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

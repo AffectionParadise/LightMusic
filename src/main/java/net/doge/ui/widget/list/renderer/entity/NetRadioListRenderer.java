@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -23,7 +22,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetRadioListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -34,27 +32,57 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel dCustomLabel = new CustomLabel();
+    private CustomLabel categoryLabel = new CustomLabel();
+    private CustomLabel trackCountLabel = new CustomLabel();
+    private CustomLabel playCountLabel = new CustomLabel();
+//    private CustomLabel createTimeLabel = new CustomLabel();
+
     private static ImageIcon radioIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.radioItem"), ImageConstants.MEDIUM_WIDTH));
+
+    public NetRadioListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         radioIcon = ImageUtil.dye(radioIcon, iconColor);
     }
 
+    private void init() {
+        iconLabel.setIconTextGap(0);
+
+        float alpha = 0.5f;
+        dCustomLabel.setBluntAlpha(alpha);
+        categoryLabel.setBluntAlpha(alpha);
+        trackCountLabel.setBluntAlpha(alpha);
+        playCountLabel.setBluntAlpha(alpha);
+
+        int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(iconLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(dCustomLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(categoryLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(trackCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(playCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetRadioInfo radioInfo = (NetRadioInfo) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel dCustomLabel = new CustomLabel();
-        CustomLabel categoryLabel = new CustomLabel();
-        CustomLabel trackCountLabel = new CustomLabel();
-        CustomLabel playCountLabel = new CustomLabel();
-//        CustomLabel createTimeLabel = new CustomLabel();
-
-        iconLabel.setIconTextGap(0);
         iconLabel.setIcon(radioInfo.hasCoverImgThumb() ? new ImageIcon(radioInfo.getCoverImgThumb()) : radioIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -74,31 +102,10 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         playCountLabel.setFont(tinyFont);
 //        createTimeLabel.setFont(tinyFont);
 
-        final float alpha = 0.5f;
-        dCustomLabel.setBluntAlpha(alpha);
-        categoryLabel.setBluntAlpha(alpha);
-        trackCountLabel.setBluntAlpha(alpha);
-        playCountLabel.setBluntAlpha(alpha);
-
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        final int sh = 10;
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(dCustomLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(categoryLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(trackCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(playCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(radioInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String dj = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
@@ -118,7 +125,6 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

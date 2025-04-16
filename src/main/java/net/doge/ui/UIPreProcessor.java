@@ -10,6 +10,7 @@ public class UIPreProcessor {
     private static void enableAntiAliasing() {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
+        System.setProperty("sun.java2d.opengl", "true");
     }
 
     // 统一 Laf 为 Metal，避免界面元素混乱

@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.AudioQuality;
 import net.doge.constant.ui.Fonts;
@@ -27,7 +26,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetMusicListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -37,6 +35,14 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomPanel innerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel artistLabel = new CustomLabel();
+    private CustomLabel albumNameLabel = new CustomLabel();
+    private CustomLabel durationLabel = new CustomLabel();
+
     private MusicPlayer player;
     private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicItem"), ImageConstants.SMALL_WIDTH));
     private static ImageIcon musicMvIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicMvItem"), ImageConstants.SMALL_WIDTH));
@@ -45,6 +51,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
 
     public NetMusicListRenderer(MusicPlayer player) {
         this.player = player;
+        init();
     }
 
     public void setIconColor(Color iconColor) {
@@ -55,17 +62,26 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         playingIcon = ImageUtil.dye(playingIcon, iconColor);
     }
 
+    private void init() {
+        iconLabel.setIconTextGap(15);
+        iconLabel.setHorizontalTextPosition(LEFT);
+
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        innerPanel.setLayout(layout);
+
+        innerPanel.add(iconLabel);
+        innerPanel.add(nameLabel);
+        innerPanel.add(artistLabel);
+        innerPanel.add(albumNameLabel);
+        innerPanel.add(durationLabel);
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetMusicInfo musicInfo = (NetMusicInfo) value;
-
-        CustomPanel outerPanel = new CustomPanel();
-        CustomPanel innerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel artistLabel = new CustomLabel();
-        CustomLabel albumNameLabel = new CustomLabel();
-        CustomLabel durationLabel = new CustomLabel();
 
         // 播放中的文件图标不同
         if (!player.loadedNetMusic(musicInfo)) {
@@ -73,9 +89,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
             else iconLabel.setIcon(musicIcon);
         } else iconLabel.setIcon(playingIcon);
-
-        iconLabel.setIconTextGap(15);
-        iconLabel.setHorizontalTextPosition(LEFT);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -90,17 +103,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         albumNameLabel.setFont(customFont);
         durationLabel.setFont(customFont);
 
-        GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
-        innerPanel.setLayout(layout);
-
-        innerPanel.add(iconLabel);
-        innerPanel.add(nameLabel);
-        innerPanel.add(artistLabel);
-        innerPanel.add(albumNameLabel);
-        innerPanel.add(durationLabel);
-
-        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * layout.getHgap()) / innerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
         String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
@@ -135,7 +138,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + 20));
         }
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

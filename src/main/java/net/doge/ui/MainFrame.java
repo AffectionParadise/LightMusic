@@ -110,8 +110,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import javax.swing.Timer;
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -125,8 +125,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class MainFrame extends JFrame {
@@ -19867,6 +19867,31 @@ public class MainFrame extends JFrame {
         // 绑定数据 Model
         lrcList.setModel(lrcListModel);
 
+        // 歌词面板上下边缘渐隐效果
+        JViewport vp = lrcScrollPane.getViewport();
+        vp.addChangeListener(e -> {
+            int first = lrcList.getFirstVisibleIndex();
+            int last = lrcList.getLastVisibleIndex();
+            Rectangle fb = lrcList.getCellBounds(first, first);
+            if (fb != null) {
+                Rectangle vfb = SwingUtilities.convertRectangle(lrcList, fb, vp);
+                if (vfb.y > vfb.height) first -= vfb.y / vfb.height;
+            }
+            Rectangle lb = lrcList.getCellBounds(last, last);
+            if (lb != null) {
+                Rectangle vlb = SwingUtilities.convertRectangle(lrcList, lb, vp);
+                if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - vlb.height) / vlb.height;
+            }
+            LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
+            Map<Integer, Float> alphas = r.getAlphas();
+            alphas.clear();
+            int t = 4;
+            float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
+            for (int i = 0; i < t; i++) {
+                alphas.put(first + i, r.normalMinAlpha + i * step);
+                alphas.put(last - i, r.normalMinAlpha + i * step);
+            }
+        });
         // 歌词面板大小变化后调整歌词列表占位高度，对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override

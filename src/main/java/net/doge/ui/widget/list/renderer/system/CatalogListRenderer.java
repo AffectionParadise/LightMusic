@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -19,7 +18,6 @@ import java.io.File;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class CatalogListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -28,25 +26,33 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
     private Color textColor;
     private int hoverIndex = -1;
 
-    @Override
-    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        File file = (File) value;
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel nameLabel = new CustomLabel();
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel nameLabel = new CustomLabel();
+    public CatalogListRenderer() {
+        init();
+    }
 
-        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-        nameLabel.setForeground(textColor);
-
-        nameLabel.setFont(customFont);
-
+    private void init() {
         GridLayout layout = new GridLayout(1, 1);
         layout.setHgap(15);
         outerPanel.setLayout(layout);
 
         outerPanel.add(nameLabel);
 
-        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        outerPanel.setBluntDrawBg(true);
+    }
+
+    @Override
+    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+        File file = (File) value;
+
+        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+        nameLabel.setForeground(textColor);
+
+        nameLabel.setFont(customFont);
+
+        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(file.getAbsolutePath(), maxWidth));
 
         nameLabel.setText(name);
@@ -56,7 +62,6 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

@@ -36,7 +36,6 @@ public class StringTwoColor {
     private BufferedImage buffImg2;
     private ImageIcon imgIcon;
 
-
     private FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
     private FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
 
@@ -208,6 +207,8 @@ public class StringTwoColor {
                     break;
                 }
             }
+            // 文字阴影
+            buffImg1 = ImageUtil.shadow(buffImg1, c1);
         } else {
             int widthDrawn = shadowHOffset;
             for (int i = 0, len = plainLyric.length(); i < len; i++) {
@@ -254,7 +255,7 @@ public class StringTwoColor {
             }
 
             // 文字阴影
-            buffImg1 = ImageUtil.shadow(buffImg1);
+            buffImg1 = ImageUtil.shadow(buffImg1, c1);
             buffImg2 = ImageUtil.shadow(buffImg2);
         }
 

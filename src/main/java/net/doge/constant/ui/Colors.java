@@ -9,6 +9,7 @@ import java.awt.*;
  */
 public class Colors {
     public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
+    public static final Color SHADOW = new Color(-16777216);
     public static final Color BLACK = new Color(0, 0, 0);
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(230, 230, 230);

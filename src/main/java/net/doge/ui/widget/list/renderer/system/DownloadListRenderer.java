@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.constant.ui.Fonts;
@@ -28,7 +27,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class DownloadListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -38,28 +36,49 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel(taskIcon);
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel typeLabel = new CustomLabel();
+    private CustomLabel sizeLabel = new CustomLabel();
+    private CustomSlider progressSlider = new CustomSlider();
+    private CustomLabel percentLabel = new CustomLabel();
+    private CustomLabel statusLabel = new CustomLabel();
+
     private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.taskItem"), ImageConstants.SMALL_WIDTH));
+
+    public DownloadListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         taskIcon = ImageUtil.dye(taskIcon, iconColor);
     }
 
+    private void init() {
+        progressSlider.setMinimum(0);
+        progressSlider.setMaximum(100);
+
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        outerPanel.setLayout(layout);
+
+        outerPanel.add(iconLabel);
+        outerPanel.add(nameLabel);
+        outerPanel.add(typeLabel);
+        outerPanel.add(sizeLabel);
+        outerPanel.add(progressSlider);
+        outerPanel.add(percentLabel);
+        outerPanel.add(statusLabel);
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Task task = (Task) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel(taskIcon);
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel typeLabel = new CustomLabel();
-        CustomLabel sizeLabel = new CustomLabel();
-        CustomSlider progressSlider = new CustomSlider();
-        CustomLabel percentLabel = new CustomLabel();
-        CustomLabel statusLabel = new CustomLabel();
-
-        progressSlider.setMinimum(0);
-        progressSlider.setMaximum(100);
         progressSlider.setUI(new MuteSliderUI(progressSlider, textColor));
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -77,19 +96,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         percentLabel.setFont(customFont);
         statusLabel.setFont(customFont);
 
-        GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
-        outerPanel.setLayout(layout);
-
-        outerPanel.add(iconLabel);
-        outerPanel.add(nameLabel);
-        outerPanel.add(typeLabel);
-        outerPanel.add(sizeLabel);
-        outerPanel.add(progressSlider);
-        outerPanel.add(percentLabel);
-        outerPanel.add(statusLabel);
-
-        final int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * layout.getHgap()) / outerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String type = StringUtil.textToHtml(TaskType.NAMES[task.getType()]);
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
@@ -112,7 +119,6 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || index == hoverIndex);
 
         return outerPanel;

@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -23,7 +22,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetRankingListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -34,25 +32,52 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel playCountLabel = new CustomLabel();
+    private CustomLabel updateFreLabel = new CustomLabel();
+    private CustomLabel updateTimeLabel = new CustomLabel();
+
     private ImageIcon rankingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankingItem"), ImageConstants.MEDIUM_WIDTH));
+
+    public NetRankingListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         rankingIcon = ImageUtil.dye(rankingIcon, iconColor);
     }
 
+    private void init() {
+        iconLabel.setIconTextGap(0);
+
+        float alpha = 0.5f;
+        playCountLabel.setBluntAlpha(alpha);
+        updateFreLabel.setBluntAlpha(alpha);
+        updateTimeLabel.setBluntAlpha(alpha);
+
+        int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(iconLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(playCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(updateFreLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(updateTimeLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetRankingInfo rankingInfo = (NetRankingInfo) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel playCountLabel = new CustomLabel();
-        CustomLabel updateFreLabel = new CustomLabel();
-        CustomLabel updateTimeLabel = new CustomLabel();
-
-        iconLabel.setIconTextGap(0);
         iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -68,28 +93,10 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         updateFreLabel.setFont(tinyFont);
         updateTimeLabel.setFont(tinyFont);
 
-        final float alpha = 0.5f;
-        playCountLabel.setBluntAlpha(alpha);
-        updateFreLabel.setBluntAlpha(alpha);
-        updateTimeLabel.setBluntAlpha(alpha);
-
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        final int sh = 10;
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(playCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(updateFreLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(updateTimeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String playCount = rankingInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(rankingInfo.getPlayCount())) : "";
@@ -104,7 +111,6 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

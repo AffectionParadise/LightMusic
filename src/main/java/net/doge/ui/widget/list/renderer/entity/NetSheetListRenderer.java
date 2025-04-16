@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
@@ -23,7 +22,6 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class NetSheetListRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
@@ -34,28 +32,64 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
     private Color iconColor;
     private int hoverIndex = -1;
 
+    private CustomPanel outerPanel = new CustomPanel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel nameLabel = new CustomLabel();
+    private CustomLabel difficultyLabel = new CustomLabel();
+    private CustomLabel musicKeyLabel = new CustomLabel();
+    private CustomLabel playVersionLabel = new CustomLabel();
+    private CustomLabel chordNameLabel = new CustomLabel();
+    private CustomLabel bpmLabel = new CustomLabel();
+    private CustomLabel pageSizeLabel = new CustomLabel();
+
     private static ImageIcon sheetIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.sheetItem"), ImageConstants.MEDIUM_WIDTH));
+
+    public NetSheetListRenderer() {
+        init();
+    }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         sheetIcon = ImageUtil.dye(sheetIcon, iconColor);
     }
 
+    private void init() {
+        iconLabel.setIconTextGap(0);
+
+        float alpha = 0.5f;
+        difficultyLabel.setBluntAlpha(alpha);
+        musicKeyLabel.setBluntAlpha(alpha);
+        playVersionLabel.setBluntAlpha(alpha);
+        chordNameLabel.setBluntAlpha(alpha);
+        bpmLabel.setBluntAlpha(alpha);
+        pageSizeLabel.setBluntAlpha(alpha);
+
+        int sh = 10;
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(iconLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(nameLabel);
+        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(difficultyLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(musicKeyLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(playVersionLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(chordNameLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(bpmLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(pageSizeLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+
+        outerPanel.setBluntDrawBg(true);
+    }
+
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetSheetInfo sheetInfo = (NetSheetInfo) value;
 
-        CustomPanel outerPanel = new CustomPanel();
-        CustomLabel iconLabel = new CustomLabel();
-        CustomLabel nameLabel = new CustomLabel();
-        CustomLabel difficultyLabel = new CustomLabel();
-        CustomLabel musicKeyLabel = new CustomLabel();
-        CustomLabel playVersionLabel = new CustomLabel();
-        CustomLabel chordNameLabel = new CustomLabel();
-        CustomLabel bpmLabel = new CustomLabel();
-        CustomLabel pageSizeLabel = new CustomLabel();
-
-        iconLabel.setIconTextGap(0);
         iconLabel.setIcon(sheetInfo.hasCoverImg() ? new ImageIcon(sheetInfo.getCoverImg()) : sheetIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
@@ -77,37 +111,10 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         bpmLabel.setFont(tinyFont);
         pageSizeLabel.setFont(tinyFont);
 
-        final float alpha = 0.5f;
-        difficultyLabel.setBluntAlpha(alpha);
-        musicKeyLabel.setBluntAlpha(alpha);
-        playVersionLabel.setBluntAlpha(alpha);
-        chordNameLabel.setBluntAlpha(alpha);
-        bpmLabel.setBluntAlpha(alpha);
-        pageSizeLabel.setBluntAlpha(alpha);
-
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        final int sh = 10;
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(difficultyLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(musicKeyLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(playVersionLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(chordNameLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(bpmLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(pageSizeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        final int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
         String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String difficulty = sheetInfo.hasDifficulty() ? StringUtil.textToHtml(sheetInfo.getDifficulty() + "难度") : "";
@@ -128,7 +135,6 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
         list.setFixedCellWidth(pw);
 
-        outerPanel.setBluntDrawBg(true);
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;

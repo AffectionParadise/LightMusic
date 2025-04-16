@@ -122,7 +122,7 @@ public class DesktopLyricDialog extends JDialog {
     private void updateSize() {
         FontMetrics metrics = tempLabel.getFontMetrics(font);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 50));
+        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 100));
     }
 
     // 更新位置
