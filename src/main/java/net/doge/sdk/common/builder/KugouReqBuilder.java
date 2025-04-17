@@ -28,7 +28,7 @@ public class KugouReqBuilder {
     public static final String clientver = "12569";
     private final String pidversec = "57ae12eb6890223e355ccfcb74edf70d";
     public static final String userid = "0";
-    public static final String dfid = "-";
+    public static final String dfid = "3dgv8g1yhbs23Z41B912HPMu";
     public static final String mid = "336d5ebc5436534e61d16e63ddfca327";
     public static final String uuid = "15e772e1213bdd0718d0c1d10d64e06f";
     public static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";

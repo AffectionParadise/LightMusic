@@ -340,7 +340,9 @@ public class MusicSearchReq {
             params.put("keyword", keyword);
             params.put("page", page);
             params.put("pagesize", limit);
-            params.put("category", 1);
+            params.put("albumhide", 0);
+            params.put("iscorrection", 1);
+            params.put("nocollect", 0);
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_KG_API);
             String musicInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
