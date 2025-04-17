@@ -19885,7 +19885,7 @@ public class MainFrame extends JFrame {
             LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
             Map<Integer, Float> alphas = r.getAlphas();
             alphas.clear();
-            int t = 4;
+            int t = 3;
             float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
             for (int i = 0; i < t; i++) {
                 alphas.put(first + i, r.normalMinAlpha + i * step);
@@ -20772,10 +20772,7 @@ public class MainFrame extends JFrame {
             lrcListModel.addElement(empty);
         } else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
         if (ListUtil.notEmpty(statements)) {
-            for (int i = 0, s = statements.size(); i < s; i++) {
-                lrcListModel.addElement(statements.get(i));
-                if (i != s - 1) lrcListModel.addElement(empty);
-            }
+            for (int i = 0, s = statements.size(); i < s; i++) lrcListModel.addElement(statements.get(i));
         }
         // 标记为无歌词 / 不支持滚动
         nextLrc = state == BAD_FORMAT ? NextLrc.BAD_FORMAT : state == NO_LRC ? NextLrc.NOT_EXISTS : 0;
@@ -20907,7 +20904,7 @@ public class MainFrame extends JFrame {
                 // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
                 boolean wrapped = false;
                 while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() - lrcOffset) {
-                    row = nextLrc * 2;
+                    row = nextLrc;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
                         currScrollVal = lrcScrollPane.getVValue();
                         if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
@@ -23109,7 +23106,7 @@ public class MainFrame extends JFrame {
             if (t < statements.get(i).getTime() - lrcOffset) nextLrc = i;
             else if (i == size - 1) nextLrc = size;
             else continue;
-            row = (nextLrc - 1) * 2;
+            row = nextLrc - 1;
             if (!lrcScrollAnimation) {
                 currScrollVal = lrcScrollPane.getVValue();
                 lrcScrollAnimation = true;
