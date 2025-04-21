@@ -37,11 +37,11 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private CustomPanel outerPanel = new CustomPanel();
-    private CustomLabel iconLabel = new CustomLabel(taskIcon);
+    private CustomLabel iconLabel = new CustomLabel();
     private CustomLabel nameLabel = new CustomLabel();
     private CustomLabel typeLabel = new CustomLabel();
     private CustomLabel sizeLabel = new CustomLabel();
-    private CustomSlider progressSlider = new CustomSlider();
+    //    private CustomSlider progressSlider = new CustomSlider();
     private CustomLabel percentLabel = new CustomLabel();
     private CustomLabel statusLabel = new CustomLabel();
 
@@ -54,12 +54,11 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
         taskIcon = ImageUtil.dye(taskIcon, iconColor);
+
+        iconLabel.setIcon(taskIcon);
     }
 
     private void init() {
-        progressSlider.setMinimum(0);
-        progressSlider.setMaximum(100);
-
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
         outerPanel.setLayout(layout);
@@ -68,7 +67,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(nameLabel);
         outerPanel.add(typeLabel);
         outerPanel.add(sizeLabel);
-        outerPanel.add(progressSlider);
+//        outerPanel.add(progressSlider);
         outerPanel.add(percentLabel);
         outerPanel.add(statusLabel);
 
@@ -79,7 +78,12 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Task task = (Task) value;
 
+        outerPanel.remove(4);
+        CustomSlider progressSlider = new CustomSlider();
+        progressSlider.setMinimum(0);
+        progressSlider.setMaximum(100);
         progressSlider.setUI(new MuteSliderUI(progressSlider, textColor));
+        outerPanel.add(progressSlider, 4);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);

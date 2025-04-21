@@ -1,5 +1,6 @@
 package net.doge.ui.widget.dialog;
 
+import lombok.Getter;
 import net.doge.constant.lang.I18n;
 import net.doge.constant.ui.Colors;
 import net.doge.model.color.HSL;
@@ -82,6 +83,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     private final Color[] preColors = new Color[]{Color.RED, Color.ORANGE, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.PINK, Color.MAGENTA,
             Colors.BRICK_RED, Colors.DEEP_ORANGE, Colors.GOLD3, Colors.SPRING_GREEN, Colors.SKY, Colors.DEEP_BLUE, Colors.PINK3, Colors.ORCHID_3,
             Colors.DEEP_RED, Colors.BROWN, Colors.CARTON, Colors.TEA, Colors.CYAN_4, Colors.DODGER, Colors.PINK4, Colors.ORCHID_4};
+    @Getter
     private boolean confirmed;
     private boolean updating;
     public int r;
@@ -97,6 +99,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     public int max2;
     public int max3;
     private Color source;
+    @Getter
     private Color result;
 
     // 父窗口是否是模态
@@ -140,14 +143,6 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
         f.currDialogs.add(this);
         setVisible(true);
-    }
-
-    public boolean isConfirmed() {
-        return confirmed;
-    }
-
-    public Color getResult() {
-        return result;
     }
 
     private void initView() {

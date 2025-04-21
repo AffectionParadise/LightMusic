@@ -20765,12 +20765,9 @@ public class MainFrame extends JFrame {
         }
         lrcStr = lrcData == null ? "" : lrcData.getLrcStr();
         if (StringUtil.isEmpty(StringUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
-        // 添加空白充数
-        Statement empty = new Statement(0, " ");
-        if (state == BAD_FORMAT) {
-            lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
-            lrcListModel.addElement(empty);
-        } else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
+
+        if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
+        else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
         if (ListUtil.notEmpty(statements)) {
             for (int i = 0, s = statements.size(); i < s; i++) lrcListModel.addElement(statements.get(i));
         }
