@@ -35,8 +35,7 @@ public class KwTrackHeroV3 {
      * @return
      */
     public String getTrackUrl(String mid, String quality) {
-        String urlBody = HttpRequest.get(String.format("https://mobi.kuwo.cn/mobi.s?f=web&source=kwplayer_ar_5.1.0.0_B_jiakong_vh.apk" +
-                        "&type=convert_url_with_sign&rid=%s&br=%s", mid, brMap.get(quality)))
+        String urlBody = HttpRequest.get(String.format("https://mobi.kuwo.cn/mobi.s?f=web&source=jiakong&type=convert_url_with_sign&rid=%s&br=%s", mid, brMap.get(quality)))
                 .executeAsync()
                 .body();
         JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");
