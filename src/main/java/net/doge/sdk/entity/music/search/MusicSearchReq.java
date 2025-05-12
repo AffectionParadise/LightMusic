@@ -48,8 +48,8 @@ public class MusicSearchReq {
     private final String SEARCH_VOICE_API = "https://music.163.com/api/search/voice/get";
     // 关键词搜索歌曲 API (酷狗)
 //    private final String SEARCH_MUSIC_KG_API = "http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword=%s&page=%s&pagesize=%s&showtype=1";
-//    private final String SEARCH_MUSIC_KG_API = "https://songsearch.kugou.com/song_search_v2?keyword=%s&page=%s&pagesize=%s&userid=0&clientver=&platform=WebFilter&filter=2&iscorrection=1&privilege_filter=0";
-    private final String SEARCH_MUSIC_KG_API = "/v2/search/song";
+    private final String SEARCH_MUSIC_KG_API = "https://songsearch.kugou.com/song_search_v2?keyword=%s&page=%s&pagesize=%s&userid=0&clientver=&platform=WebFilter&filter=2&iscorrection=1&privilege_filter=0";
+    //    private final String SEARCH_MUSIC_KG_API = "/v2/search/song";
     // 关键词搜索歌曲 API (搜歌词) (酷狗)
 //    private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "http://mobileservice.kugou.com/api/v3/lyric/search?keyword=%s&page=%s&pagesize=%s";
     private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "/v1/search/lyric";
@@ -296,56 +296,7 @@ public class MusicSearchReq {
 //                r.add(musicInfo);
 //            }
 
-//            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
-//                    .executeAsync()
-//                    .body();
-//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-//            JSONObject data = musicInfoJson.getJSONObject("data");
-//            t = data.getIntValue("total");
-//            JSONArray songArray = data.getJSONArray("lists");
-//            for (int i = 0, len = songArray.size(); i < len; i++) {
-//                JSONObject songJson = songArray.getJSONObject(i);
-//
-//                String hash = songJson.getString("FileHash");
-//                String songId = songJson.getString("ID");
-//                String songName = songJson.getString("SongName");
-//                String artist = songJson.getString("SingerName");
-//                String albumName = songJson.getString("AlbumName");
-//                String albumId = songJson.getString("AlbumID");
-//                Double duration = songJson.getDouble("Duration");
-//                String mvId = songJson.getString("MvHash");
-//                int qualityType = AudioQuality.UNKNOWN;
-//                if (songJson.getLong("ResFileSize") != 0) qualityType = AudioQuality.HR;
-//                else if (songJson.getLong("SQFileSize") != 0) qualityType = AudioQuality.SQ;
-//                else if (songJson.getLong("HQFileSize") != 0) qualityType = AudioQuality.HQ;
-//                else if (songJson.getLong("FileSize") != 0) qualityType = AudioQuality.LQ;
-//
-//                NetMusicInfo musicInfo = new NetMusicInfo();
-//                musicInfo.setSource(NetMusicSource.KG);
-//                musicInfo.setHash(hash);
-//                musicInfo.setId(songId);
-//                musicInfo.setName(songName);
-//                musicInfo.setArtist(artist);
-//                musicInfo.setAlbumName(albumName);
-//                musicInfo.setAlbumId(albumId);
-//                musicInfo.setDuration(duration);
-//                musicInfo.setMvId(mvId);
-//                musicInfo.setQualityType(qualityType);
-//
-//                r.add(musicInfo);
-//            }
-
-            Map<String, Object> params = new TreeMap<>();
-            params.put("platform", "AndroidFilter");
-            params.put("keyword", keyword);
-            params.put("page", page);
-            params.put("pagesize", limit);
-            params.put("albumhide", 0);
-            params.put("iscorrection", 1);
-            params.put("nocollect", 0);
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_KG_API);
-            String musicInfoBody = SdkCommon.kgRequest(params, null, options)
-                    .header("x-router", "complexsearch.kugou.com")
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
                     .executeAsync()
                     .body();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -385,6 +336,57 @@ public class MusicSearchReq {
 
                 r.add(musicInfo);
             }
+
+//            Map<String, Object> params = new TreeMap<>();
+//            params.put("platform", "AndroidFilter");
+//            params.put("keyword", keyword);
+//            params.put("page", page);
+//            params.put("pagesize", limit);
+//            params.put("albumhide", 0);
+//            params.put("iscorrection", 1);
+//            params.put("nocollect", 0);
+//            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_KG_API);
+//            String musicInfoBody = SdkCommon.kgRequest(params, null, options)
+//                    .header("x-router", "complexsearch.kugou.com")
+//                    .executeAsync()
+//                    .body();
+//            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//            JSONObject data = musicInfoJson.getJSONObject("data");
+//            t = data.getIntValue("total");
+//            JSONArray songArray = data.getJSONArray("lists");
+//            for (int i = 0, len = songArray.size(); i < len; i++) {
+//                JSONObject songJson = songArray.getJSONObject(i);
+//
+//                String hash = songJson.getString("FileHash");
+//                String songId = songJson.getString("ID");
+//                String songName = songJson.getString("SongName");
+//                String artist = SdkUtil.parseArtist(songJson);
+//                String artistId = SdkUtil.parseArtistId(songJson);
+//                String albumName = songJson.getString("AlbumName");
+//                String albumId = songJson.getString("AlbumID");
+//                Double duration = songJson.getDouble("Duration");
+//                String mvId = songJson.getString("MvHash");
+//                int qualityType = AudioQuality.UNKNOWN;
+//                if (songJson.getLong("ResFileSize") != 0) qualityType = AudioQuality.HR;
+//                else if (songJson.getLong("SQFileSize") != 0) qualityType = AudioQuality.SQ;
+//                else if (songJson.getLong("HQFileSize") != 0) qualityType = AudioQuality.HQ;
+//                else if (songJson.getLong("FileSize") != 0) qualityType = AudioQuality.LQ;
+//
+//                NetMusicInfo musicInfo = new NetMusicInfo();
+//                musicInfo.setSource(NetMusicSource.KG);
+//                musicInfo.setHash(hash);
+//                musicInfo.setId(songId);
+//                musicInfo.setName(songName);
+//                musicInfo.setArtist(artist);
+//                musicInfo.setArtistId(artistId);
+//                musicInfo.setAlbumName(albumName);
+//                musicInfo.setAlbumId(albumId);
+//                musicInfo.setDuration(duration);
+//                musicInfo.setMvId(mvId);
+//                musicInfo.setQualityType(qualityType);
+//
+//                r.add(musicInfo);
+//            }
 
             return new CommonResult<>(r, t);
         };

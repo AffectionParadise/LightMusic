@@ -48,7 +48,7 @@ public class CommentReq {
     // 评论 API (酷狗)
 //    private final String COMMENTS_KG_API = "https://mcomment.kugou.com/index.php?r=commentsv2/getCommentWithLike&code=fc4be23b4e972707f36b8a828a93ba8a&extdata=%s&p=%s&pagesize=%s";
 //    private final String AUDIO_INFO_KG_API = "/v3/album_audio/audio";
-    private final String HOT_COMMENTS_KG_API = "http://m.comment.service.kugou.com/v1/weightlist";
+    private final String HOT_COMMENTS_KG_API = "http://m.comment.service.kugou.com/r/v1/rank/topliked";
     private final String NEW_COMMENTS_KG_API = "http://m.comment.service.kugou.com/r/v1/rank/newest";
     // 评论 API (QQ)
     private final String COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
