@@ -526,7 +526,7 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(body);
-            Elements ap = doc.select("#aplayer2");
+            Elements ap = doc.select("#aplayer1");
             String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 

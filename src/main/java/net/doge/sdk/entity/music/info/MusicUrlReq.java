@@ -2,7 +2,6 @@ package net.doge.sdk.entity.music.info;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.model.NetMusicSource;
@@ -12,8 +11,6 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.music.info.trackhero.kg.KgTrackHeroV2;
 import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHeroV2;
@@ -29,7 +26,6 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class MusicUrlReq {
     private static MusicUrlReq instance;
@@ -43,7 +39,8 @@ public class MusicUrlReq {
     }
 
     // 歌曲 URL 获取 API
-    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+//    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    private final String SONG_URL_API = "https://music-api.gdstudio.xyz/api.php?types=url&source=netease&id=%s&br=%s";
     // 歌曲 URL 获取 API (酷我)
 //    private final String SONG_URL_KW_API = "https://antiserver.kuwo.cn/anti.s?type=convert_url3&rid=%s&format=mp3";
     // 歌曲 URL 获取 API (咪咕)
@@ -102,37 +99,62 @@ public class MusicUrlReq {
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
+//            // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, jysky => 沉浸环绕声, jymaster => 超清母带
+//            String quality;
+//            switch (AudioQuality.quality) {
+//                case AudioQuality.HI_RES:
+//                    quality = "hires";
+//                    break;
+//                case AudioQuality.LOSSLESS:
+//                    quality = "lossless";
+//                    break;
+//                case AudioQuality.SUPER:
+//                case AudioQuality.HIGH:
+//                    quality = "exhigh";
+//                    break;
+//                default:
+//                    quality = "standard";
+//                    break;
+//            }
+//            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
+//            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
+//                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
+//                    .executeAsync()
+//                    .body();
+//            JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
+//            if (JsonUtil.notEmpty(data)) {
+//                JSONObject urlJson = data.getJSONObject(0);
+//                // 排除试听部分，直接换源
+//                if (JsonUtil.isEmpty(urlJson.getJSONObject("freeTrialInfo"))) {
+//                    String url = urlJson.getString("url");
+//                    if (StringUtil.notEmpty(url)) return url;
+//                }
+//            }
+
+            // 128、192、320、740、999（默认）
             String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.HI_RES:
-                    quality = "hires";
+                    quality = "999";
                     break;
                 case AudioQuality.LOSSLESS:
-                    quality = "lossless";
+                    quality = "740";
                     break;
                 case AudioQuality.SUPER:
+                    quality = "320";
+                    break;
                 case AudioQuality.HIGH:
-                    quality = "exhigh";
+                    quality = "192";
                     break;
                 default:
-                    quality = "standard";
+                    quality = "128";
                     break;
             }
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
-            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
-                            String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, quality), options)
+            String songBody = HttpRequest.get(String.format(SONG_URL_API, id, quality))
                     .executeAsync()
                     .body();
-            JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
-            if (JsonUtil.notEmpty(data)) {
-                JSONObject urlJson = data.getJSONObject(0);
-                // 排除试听部分，直接换源
-                if (JsonUtil.isEmpty(urlJson.getJSONObject("freeTrialInfo"))) {
-                    String url = urlJson.getString("url");
-                    if (StringUtil.notEmpty(url)) return url;
-                }
-            }
+            JSONObject urlJson = JSONObject.parseObject(songBody);
+            return urlJson.getString("url");
         }
 
         // 酷狗
@@ -395,7 +417,7 @@ public class MusicUrlReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(body);
-            Elements ap = doc.select("#aplayer2");
+            Elements ap = doc.select("#aplayer1");
             String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
