@@ -42,6 +42,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
     private CustomLabel artistLabel = new CustomLabel();
     private CustomLabel albumNameLabel = new CustomLabel();
     private CustomLabel durationLabel = new CustomLabel();
+    private CustomLabel lrcMatchLabel = new CustomLabel();
 
     private MusicPlayer player;
     private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicItem"), ImageConstants.SMALL_WIDTH));
@@ -130,12 +131,16 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
 
         if (musicInfo.hasLrcMatch()) {
             String lrcMatch = StringUtil.textToHtml(StringUtil.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
-            CustomLabel lrcMatchLabel = new CustomLabel(lrcMatch);
+            lrcMatchLabel.setText(lrcMatch);
             lrcMatchLabel.setForeground(textColor);
             lrcMatchLabel.setFont(customFont);
             Dimension p = lrcMatchLabel.getPreferredSize();
             outerPanel.add(lrcMatchLabel, BorderLayout.SOUTH);
             outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + 20));
+        } else {
+            // 移除多余的歌词显示
+            outerPanel.remove(lrcMatchLabel);
+            outerPanel.setPreferredSize(null);
         }
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
