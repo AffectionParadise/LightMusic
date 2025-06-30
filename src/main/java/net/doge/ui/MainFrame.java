@@ -712,6 +712,8 @@ public class MainFrame extends JFrame {
     public int windowSize;
     public int forwardOrBackwardTime;
     public int videoForwardOrBackwardTime;
+    // 是否显示已播放时间
+    private boolean timeElapsedMode;
     // 播放视频时是否关闭主界面
     public boolean videoOnly;
     // 显示侧边栏文字
@@ -3009,6 +3011,8 @@ public class MainFrame extends JFrame {
         windowHeight = WindowSize.DIMENSIONS[windowSize][1];
         x = y = 0x3f3f3f3f;
         setSize(windowWidth, windowHeight);
+        // 载入是否显示已播放时间
+        timeElapsedMode = config.getBooleanValue(ConfigConstants.TIME_ELAPSED_MODE, true);
         // 载入播放视频是否关闭主界面
         videoOnly = config.getBooleanValue(ConfigConstants.VIDEO_ONLY, true);
         // 是否显示侧边栏文字
@@ -3796,6 +3800,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.CLOSE_WINDOW_OPTION, currCloseWindowOption);
         // 存入窗口大小
         config.put(ConfigConstants.WINDOW_SIZE, windowSize);
+        // 存入是否显示已播放时间
+        config.put(ConfigConstants.TIME_ELAPSED_MODE, timeElapsedMode);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入是否显示侧边栏文字
@@ -20065,6 +20071,20 @@ public class MainFrame extends JFrame {
 
     // 初始化进度条
     private void initTimeBar() {
+        // 当前播放时间
+        currTimeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        currTimeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                timeElapsedMode = !timeElapsedMode;
+                if (!player.loadedMusicResource()) return;
+                // 更新当前播放时间
+                int val = timeBar.getValue();
+                double t = (double) (timeElapsedMode ? val : TIME_BAR_MAX - val) / TIME_BAR_MAX * player.getDurationSeconds();
+                currTimeLabel.setText(DurationUtil.format(t));
+            }
+        });
+
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(0);
         // 释放时间条，播放器响应
@@ -20072,14 +20092,15 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (player.isEmpty()) return;
-                double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMetaMusicInfo().getDuration();
+                double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getDurationSeconds();
                 player.seek(t);
                 seekLrc(t);
             }
         });
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
-            double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getMetaMusicInfo().getDuration();
+            int val = timeBar.getValue();
+            double t = (double) (timeElapsedMode ? val : TIME_BAR_MAX - val) / TIME_BAR_MAX * player.getDurationSeconds();
             currTimeLabel.setText(DurationUtil.format(t));
         });
 
@@ -20526,6 +20547,7 @@ public class MainFrame extends JFrame {
         updateTitle(LOAD_TRACK);
         // 重置当前播放时间
         timeBar.setValue(0);
+        if (!timeElapsedMode) currTimeLabel.setText(player.getDurationString());
         // 重置总时间
         durationLabel.setText(player.getDurationString());
         // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！

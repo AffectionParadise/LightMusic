@@ -45,6 +45,8 @@ public class ConfigConstants {
     public static final String CLOSE_WINDOW_OPTION = "closeWindowOption";
     // 窗口大小
     public static final String WINDOW_SIZE = "windowSize";
+    // 是否显示已播放时间
+    public static final String TIME_ELAPSED_MODE = "timeElapsedMode";
     // 播放视频是否关闭主界面
     public static final String VIDEO_ONLY = "videoOnly";
     // 是否显示侧边栏文字
