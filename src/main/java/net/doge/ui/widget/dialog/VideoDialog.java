@@ -268,6 +268,7 @@ public class VideoDialog extends AbstractTitledDialog {
             if (!timeBar.getValueIsAdjusting())
                 timeBar.setValue((int) (currTimeSeconds / durationSeconds * TIME_BAR_MAX));
             if (resized) return;
+            if (!f.videoTimeElapsedMode) currTimeLabel.setText(DurationUtil.format(durationSeconds));
             durationLabel.setText(DurationUtil.format(durationSeconds));
             // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
             String t = durationLabel.getText().replaceAll("[1-9]", "0");
@@ -347,6 +348,20 @@ public class VideoDialog extends AbstractTitledDialog {
 
         currTimeLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
+
+        // 当前播放时间
+        currTimeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        currTimeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                f.videoTimeElapsedMode = !f.videoTimeElapsedMode;
+                // 更新当前播放时间
+                int val = timeBar.getValue();
+                double t = (double) (f.videoTimeElapsedMode ? val : TIME_BAR_MAX - val) / TIME_BAR_MAX * media.getDuration().toSeconds();
+                currTimeLabel.setText(DurationUtil.format(t));
+            }
+        });
+
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
@@ -361,7 +376,8 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         // 改变时间条的值，当前时间标签的值随之改变
         timeBar.addChangeListener(e -> {
-            double t = (double) timeBar.getValue() / TIME_BAR_MAX * media.getDuration().toSeconds();
+            int val = timeBar.getValue();
+            double t = (double) (f.videoTimeElapsedMode ? val : TIME_BAR_MAX - val) / TIME_BAR_MAX * media.getDuration().toSeconds();
             currTimeLabel.setText(DurationUtil.format(t));
         });
         // 设置进度条最佳大小

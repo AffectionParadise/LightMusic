@@ -714,6 +714,7 @@ public class MainFrame extends JFrame {
     public int videoForwardOrBackwardTime;
     // 是否显示已播放时间
     private boolean timeElapsedMode;
+    public boolean videoTimeElapsedMode;
     // 播放视频时是否关闭主界面
     public boolean videoOnly;
     // 显示侧边栏文字
@@ -3013,6 +3014,7 @@ public class MainFrame extends JFrame {
         setSize(windowWidth, windowHeight);
         // 载入是否显示已播放时间
         timeElapsedMode = config.getBooleanValue(ConfigConstants.TIME_ELAPSED_MODE, true);
+        videoTimeElapsedMode = config.getBooleanValue(ConfigConstants.VIDEO_TIME_ELAPSED_MODE, true);
         // 载入播放视频是否关闭主界面
         videoOnly = config.getBooleanValue(ConfigConstants.VIDEO_ONLY, true);
         // 是否显示侧边栏文字
@@ -3802,6 +3804,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.WINDOW_SIZE, windowSize);
         // 存入是否显示已播放时间
         config.put(ConfigConstants.TIME_ELAPSED_MODE, timeElapsedMode);
+        config.put(ConfigConstants.VIDEO_TIME_ELAPSED_MODE, videoTimeElapsedMode);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入是否显示侧边栏文字
@@ -20547,9 +20550,10 @@ public class MainFrame extends JFrame {
         updateTitle(LOAD_TRACK);
         // 重置当前播放时间
         timeBar.setValue(0);
-        if (!timeElapsedMode) currTimeLabel.setText(player.getDurationString());
+        String durationString = player.getDurationString();
+        if (!timeElapsedMode) currTimeLabel.setText(durationString);
         // 重置总时间
-        durationLabel.setText(player.getDurationString());
+        durationLabel.setText(durationString);
         // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
         String t = durationLabel.getText().replaceAll("[1-9]", "0");
         FontMetrics m = durationLabel.getFontMetrics(globalFont);
