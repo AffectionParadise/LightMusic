@@ -281,7 +281,6 @@ public class VideoDialog extends AbstractTitledDialog {
             mp.pause();
             playOrPauseButton.setIcon(ImageUtil.dye(playIcon, f.currUIStyle.getIconColor()));
             timeBar.setValue(0);
-            currTimeLabel.setText(DEFAULT_TIME);
         });
         mp.setOnError(() -> {
             MediaException.Type type = mp.getError().getType();
