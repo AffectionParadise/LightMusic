@@ -62,6 +62,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
             // 局右
             BorderFactory.createEmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
     };
+    private final int[] PADDINGS = {SPACE, 0, SPACE};
 
     public LrcListRenderer() {
         createFontAnimation();
@@ -129,7 +130,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == row - 1 ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtml(StringUtil.wrapLineByWidth(plainLyric, maxWidth)));
+            label.setText(StringUtil.textToHtmlNoWrap(StringUtil.wrapLineByWidth(plainLyric, maxWidth - PADDINGS[LyricAlignment.lrcAlignmentIndex])));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }

@@ -272,7 +272,17 @@ public class StringUtil {
      * @return
      */
     public static String textToHtmlWithSpace(String text) {
-        return textToHtml(text, true);
+        return textToHtml(text, true, false);
+    }
+
+    /**
+     * 将无法显示的字符通过 HTML 换种字体显示
+     *
+     * @param text
+     * @return
+     */
+    public static String textToHtmlNoWrap(String text) {
+        return textToHtml(text, false, true);
     }
 
     /**
@@ -282,7 +292,7 @@ public class StringUtil {
      * @return
      */
     public static String textToHtml(String text) {
-        return textToHtml(text, false);
+        return textToHtml(text, false, false);
     }
 
     /**
@@ -291,10 +301,10 @@ public class StringUtil {
      * @param text
      * @return
      */
-    public static String textToHtml(String text, boolean withSpace) {
+    public static String textToHtml(String text, boolean withSpace, boolean noWrap) {
         if (text == null || text.startsWith("<html>") || text.trim().isEmpty()) return text;
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("<html><div style=\"font-family:%s\">", Fonts.NORMAL.getFontName(Locale.ENGLISH)));
+        sb.append(String.format("<html><div style=\"%sfont-family:%s\">", noWrap ? "white-space:nowrap;" : "", Fonts.NORMAL.getFontName(Locale.ENGLISH)));
         for (int i = 0, len = text.length(); i < len; i++) {
             int codePoint = text.codePointAt(i);
             char[] chars = Character.toChars(codePoint);

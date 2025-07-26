@@ -8234,6 +8234,7 @@ public class MainFrame extends JFrame {
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
+//        netMusicSearchSuggestionInnerPanel1.setVisible(false);
         netMusicSearchSuggestionInnerPanel1.add(netMusicSearchSuggestionLabel);
         netMusicSearchSuggestionInnerPanel1.add(netMusicRefreshSearchSuggestionButton);
         netMusicSearchSuggestionInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -8241,12 +8242,25 @@ public class MainFrame extends JFrame {
         netMusicSearchSuggestionInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMusicSearchSuggestionInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netMusicSearchSuggestionInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+//        netMusicSearchSuggestionInnerPanel2.addContainerListener(new ContainerAdapter() {
+//            @Override
+//            public void componentAdded(ContainerEvent e) {
+//                netMusicSearchSuggestionInnerPanel1.setVisible(true);
+//            }
+//
+//            @Override
+//            public void componentRemoved(ContainerEvent e) {
+//                if (netMusicSearchSuggestionInnerPanel2.getComponentCount() == 0) netMusicSearchSuggestionInnerPanel1.setVisible(false);
+//            }
+//        });
         Dimension d = new Dimension(Integer.MAX_VALUE, 500);
         netMusicSearchSuggestionInnerPanel2.setMaximumSize(d);
         netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
+        netMusicSearchSuggestionPanel.setVisible(false);
         netMusicSearchSuggestionPanel.setLayout(new BoxLayout(netMusicSearchSuggestionPanel, BoxLayout.Y_AXIS));
         netMusicSearchSuggestionPanel.add(netMusicSearchSuggestionInnerPanel1);
         netMusicSearchSuggestionPanel.add(netMusicSearchSuggestionInnerPanel2);
+
         // 热搜面板
         // 刷新热门搜索按钮
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.execute(() -> updateHotSearch()));
@@ -8254,6 +8268,7 @@ public class MainFrame extends JFrame {
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
+//        netMusicHotSearchInnerPanel1.setVisible(false);
         netMusicHotSearchInnerPanel1.add(netMusicHotSearchLabel);
         netMusicHotSearchInnerPanel1.add(netMusicRefreshHotSearchButton);
         netMusicHotSearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -8261,12 +8276,25 @@ public class MainFrame extends JFrame {
         netMusicHotSearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
         netMusicHotSearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
         netMusicHotSearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+//        netMusicHotSearchInnerPanel2.addContainerListener(new ContainerAdapter() {
+//            @Override
+//            public void componentAdded(ContainerEvent e) {
+//                netMusicHotSearchInnerPanel1.setVisible(true);
+//            }
+//
+//            @Override
+//            public void componentRemoved(ContainerEvent e) {
+//                if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) netMusicHotSearchInnerPanel1.setVisible(false);
+//            }
+//        });
         d = new Dimension(Integer.MAX_VALUE, 500);
         netMusicHotSearchInnerPanel2.setMaximumSize(d);
         netMusicHotSearchInnerPanel2.setPreferredSize(d);
+        netMusicHotSearchPanel.setVisible(false);
         netMusicHotSearchPanel.setLayout(new BoxLayout(netMusicHotSearchPanel, BoxLayout.Y_AXIS));
         netMusicHotSearchPanel.add(netMusicHotSearchInnerPanel1);
         netMusicHotSearchPanel.add(netMusicHotSearchInnerPanel2);
+
         // 搜索历史面板
         // 清空搜索历史按钮
         netMusicClearHistorySearchButton.addActionListener(e -> netMusicHistorySearchInnerPanel2.removeAll());
@@ -8300,6 +8328,8 @@ public class MainFrame extends JFrame {
 
         // 关键词面板
         netMusicKeywordsPanel.setLayout(new BoxLayout(netMusicKeywordsPanel, BoxLayout.Y_AXIS));
+        netMusicKeywordsPanel.add(netMusicSearchSuggestionPanel);
+        netMusicKeywordsPanel.add(netMusicHotSearchPanel);
         netMusicKeywordsPanel.add(netMusicHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
@@ -23339,11 +23369,11 @@ public class MainFrame extends JFrame {
                 if (!suggestions.isEmpty()) {
                     if (!netMusicSearchSuggestionPanel.isShowing()) {
                         // 显示 “搜索建议” 面板
-                        netMusicKeywordsPanel.add(netMusicSearchSuggestionPanel, 0);
+                        netMusicSearchSuggestionPanel.setVisible(true);
                     }
                 } else {
                     // 没有结果时隐藏 “搜索建议” 面板
-                    netMusicKeywordsPanel.remove(netMusicSearchSuggestionPanel);
+                    netMusicSearchSuggestionPanel.setVisible(false);
                 }
                 netMusicSearchSuggestionInnerPanel2.removeAll();
                 DialogButton b = null;
@@ -23397,7 +23427,7 @@ public class MainFrame extends JFrame {
                 Set<String> hotSearch = MusicServerUtil.getHotSearch();
                 // 显示 “热门搜索” 面板
                 if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
-                    netMusicKeywordsPanel.add(netMusicHotSearchPanel, 0);
+                    netMusicHotSearchPanel.setVisible(true);
                 }
                 netMusicHotSearchInnerPanel2.removeAll();
                 DialogButton b = null;
