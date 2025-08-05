@@ -35,6 +35,11 @@ public class CustomPanel extends JPanel {
         });
     }
 
+    // 组件滑入滑出替换
+//    public void slideFromTop(com) {
+//
+//    }
+
     public void setDrawBg(boolean drawBg) {
         if (this.drawBg == drawBg) return;
         this.drawBg = drawBg;
