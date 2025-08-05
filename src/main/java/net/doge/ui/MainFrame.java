@@ -20153,16 +20153,26 @@ public class MainFrame extends JFrame {
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
+            // 动画状态无响应
+            if (globalPanel.isSlideAnimating()) return;
             // 歌词页面切到列表
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
                 // 清空评论数据
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
                 if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
                 hideDetailButton.setVisible(false);
-                globalPanel.remove(infoAndLrcBox);
-                globalPanel.remove(netCommentBox);
-                globalPanel.remove(netSheetBox);
-                globalPanel.add(tabbedPane, BorderLayout.CENTER);
+                // 滑入动画之后处理
+                globalPanel.setOnAfterSlide(() -> {
+                    globalPanel.remove(infoAndLrcBox);
+                    globalPanel.remove(netCommentBox);
+                    globalPanel.remove(netSheetBox);
+                    globalPanel.add(tabbedPane, BorderLayout.CENTER);
+                    globalPanel.repaint();
+                });
+                // 播放组件放置的滑入动画
+                globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
+                globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
+                globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
                 // 防止事件不起作用
                 globalPanel.requestFocus();
                 changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
@@ -20176,17 +20186,24 @@ public class MainFrame extends JFrame {
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
                 if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
                 hideDetailButton.setVisible(true);
-                globalPanel.remove(tabbedPane);
-                globalPanel.remove(netCommentBox);
-                globalPanel.remove(netSheetBox);
-                // 防止事件不起作用
-                globalPanel.requestFocus();
-                globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+                // 滑入动画之后处理
+                globalPanel.setOnAfterSlide(() -> {
+                    globalPanel.remove(tabbedPane);
+                    globalPanel.remove(netCommentBox);
+                    globalPanel.remove(netSheetBox);
+                    // 防止事件不起作用
+                    globalPanel.requestFocus();
+                    globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+                    globalPanel.repaint();
+                });
+                // 播放组件放置的滑入动画
+                globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
+                globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
+                globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
                 changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
                 currPane = MusicPane.LYRIC;
                 lastPane = -1;
             }
-            globalPanel.repaint();
         });
         // MV
         mvButton.setToolTipText(MV_TIP);
