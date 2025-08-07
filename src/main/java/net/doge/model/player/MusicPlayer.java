@@ -203,8 +203,8 @@ public class MusicPlayer {
                 }
             });
         }
-        // MP3 / FLAC 文件的其他信息
-        else if (metaMusicInfo.isMp3() || metaMusicInfo.isFlac()) {
+        // 本地文件的元信息
+        else {
             String artist = source.getArtist();
             String albumName = source.getAlbum();
             // 歌曲名称
@@ -223,14 +223,14 @@ public class MusicPlayer {
                 f.showAlbumImage();
             });
         }
-        // 其他类型的文件信息
-        else {
-            metaMusicInfo.setName(source.getPrefix());
-            metaMusicInfo.setArtist("未知");
-            metaMusicInfo.setAlbumName("未知");
-            metaMusicInfo.setAlbumImage(ImageConstants.DEFAULT_IMG);
-            f.showAlbumImage();
-        }
+//        // 其他类型的文件信息
+//        else {
+//            metaMusicInfo.setName(source.getPrefix());
+//            metaMusicInfo.setArtist("未知");
+//            metaMusicInfo.setAlbumName("未知");
+//            metaMusicInfo.setAlbumImage(ImageConstants.DEFAULT_IMG);
+//            f.showAlbumImage();
+//        }
     }
 
     // 释放 MediaPlayer 对象

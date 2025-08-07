@@ -64,6 +64,10 @@ public class AudioFile extends File implements MusicResource {
         return Format.MP3.equalsIgnoreCase(format);
     }
 
+    public boolean isM4a() {
+        return Format.M4A.equalsIgnoreCase(format);
+    }
+
     public boolean isFlac() {
         return Format.FLAC.equalsIgnoreCase(format);
     }

@@ -3257,7 +3257,7 @@ public class MainFrame extends JFrame {
                     task.setInvokeLater(() -> {
                         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                         // 写入歌曲信息
-                        if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(dest, musicInfo);
+                        MediaUtil.writeAudioFileInfo(dest, musicInfo);
                         // 自动下载歌词
                         if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                             FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
@@ -22919,7 +22919,7 @@ public class MainFrame extends JFrame {
             String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
             String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
             // 写入歌曲信息
-            if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
+            MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
             // 自动下载歌词
             if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                 FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
@@ -22945,7 +22945,7 @@ public class MainFrame extends JFrame {
                 String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
                 String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                 // 写入歌曲信息
-                if (musicInfo.isMp3() || musicInfo.isFlac()) MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
+                MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                 // 自动下载歌词
                 if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                     FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
