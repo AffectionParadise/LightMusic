@@ -1,6 +1,7 @@
 package net.doge.model.lyric;
 
 import lombok.Data;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.util.common.DurationUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -48,7 +49,7 @@ public class LrcData {
 
     // 初始化歌词数据
     private void initData(String lrcStr, boolean badFormat) {
-        this.lrcStr = lrcStr.replaceAll("<\\d+,\\d+>", "");
+        this.lrcStr = lrcStr.replaceAll(LyricPattern.PAIR, "");
         String[] lrcArray = lrcStr.split("\r?\n");
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {

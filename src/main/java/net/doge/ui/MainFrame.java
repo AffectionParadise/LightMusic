@@ -19908,29 +19908,7 @@ public class MainFrame extends JFrame {
 
         // 歌词面板上下边缘渐隐效果
         JViewport vp = lrcScrollPane.getViewport();
-        vp.addChangeListener(e -> {
-            int first = lrcList.getFirstVisibleIndex();
-            int last = lrcList.getLastVisibleIndex();
-            Rectangle fb = lrcList.getCellBounds(first, first);
-            if (fb != null) {
-                Rectangle vfb = SwingUtilities.convertRectangle(lrcList, fb, vp);
-                if (vfb.y > vfb.height) first -= vfb.y / vfb.height;
-            }
-            Rectangle lb = lrcList.getCellBounds(last, last);
-            if (lb != null) {
-                Rectangle vlb = SwingUtilities.convertRectangle(lrcList, lb, vp);
-                if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - vlb.height) / vlb.height;
-            }
-            LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
-            Map<Integer, Float> alphas = r.getAlphas();
-            alphas.clear();
-            int t = 3;
-            float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
-            for (int i = 0; i < t; i++) {
-                alphas.put(first + i, r.normalMinAlpha + i * step);
-                alphas.put(last - i, r.normalMinAlpha + i * step);
-            }
-        });
+        vp.addChangeListener(e -> updateLrcListViewFading());
         // 歌词面板大小变化后调整歌词列表占位高度，对齐高亮歌词
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
@@ -20031,6 +20009,32 @@ public class MainFrame extends JFrame {
         lrcAndSpecBox.add(spectrumPanel);
         infoAndLrcBox.add(lrcAndSpecBox);
 //        globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+    }
+
+    // 更新歌词面板上下边缘渐隐效果
+    private void updateLrcListViewFading() {
+        int first = lrcList.getFirstVisibleIndex();
+        int last = lrcList.getLastVisibleIndex();
+        JViewport vp = lrcScrollPane.getViewport();
+        Rectangle fb = lrcList.getCellBounds(first, first);
+        if (fb != null) {
+            Rectangle vfb = SwingUtilities.convertRectangle(lrcList, fb, vp);
+            if (vfb.y > vfb.height) first -= vfb.y / vfb.height;
+        }
+        Rectangle lb = lrcList.getCellBounds(last, last);
+        if (lb != null) {
+            Rectangle vlb = SwingUtilities.convertRectangle(lrcList, lb, vp);
+            if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - vlb.height) / vlb.height;
+        }
+        LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
+        Map<Integer, Float> alphas = r.getAlphas();
+        alphas.clear();
+        int t = 3;
+        float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
+        for (int i = 0; i < t; i++) {
+            alphas.put(first + i, r.normalMinAlpha + i * step);
+            alphas.put(last - i, r.normalMinAlpha + i * step);
+        }
     }
 
     // 初始化动画 Timer
@@ -20195,6 +20199,8 @@ public class MainFrame extends JFrame {
                     globalPanel.requestFocus();
                     globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
                     globalPanel.repaint();
+                    updateLrcListViewFading();
+                    lrcScrollAnimation = true;
                 });
                 // 播放组件放置的滑入动画
                 globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);

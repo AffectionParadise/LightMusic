@@ -1,6 +1,7 @@
 package net.doge.model.entity;
 
 import lombok.Data;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.AudioQuality;
 import net.doge.constant.system.Format;
@@ -176,7 +177,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     // 歌词文件内容
     public String getLrcFileText() {
-        return hasLrc() ? lrc.replaceAll("<\\d+,\\d+>", "") : lrc;
+        return hasLrc() ? lrc.replaceAll(LyricPattern.PAIR, "") : lrc;
     }
 
     @Override

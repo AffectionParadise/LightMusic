@@ -4,6 +4,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.*;
@@ -124,7 +125,7 @@ public class KgLyricHero {
                 int lineStart = Integer.parseInt(lineStartStr);
                 String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
                 sb.append(lrcTime);
-                sb.append(l.replaceFirst(lineTimeExp, "").replaceAll("<-?(\\d+),(\\d+),\\d+>", "<$1,$2>"));
+                sb.append(l.replaceFirst(lineTimeExp, "").replaceAll("<-?(\\d+),(\\d+),\\d+>", LyricPattern.PAIR_REP));
             } else sb.append(l);
             sb.append("\n");
         }

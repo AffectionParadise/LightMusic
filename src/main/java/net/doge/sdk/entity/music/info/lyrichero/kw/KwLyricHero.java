@@ -1,6 +1,7 @@
 package net.doge.sdk.entity.music.info.lyrichero.kw;
 
 import cn.hutool.http.HttpRequest;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
@@ -99,12 +100,8 @@ public class KwLyricHero {
                     int n2 = Integer.parseInt(s2List.get(k));
                     int wordStartTime = Math.abs((n1 + n2) / (offset * 2));
                     int wordDuration = Math.abs((n1 - n2) / (offset2 * 2));
-                    sb.append("<")
-                            .append(wordStartTime)
-                            .append(",")
-                            .append(wordDuration)
-                            .append(">")
-                            .append(sp[k]);
+                    sb.append(String.format(LyricPattern.PAIR_FMT, wordStartTime, wordDuration));
+                    sb.append(sp[k]);
                 }
             }
             sb.append("\n");
@@ -152,7 +149,7 @@ public class KwLyricHero {
             lastTime = time;
         }
         // 去除翻译中无用的逐字时间轴
-        musicInfo.setTrans(sb.toString().replaceAll("<\\d+,\\d+>", ""));
+        musicInfo.setTrans(sb.toString().replaceAll("<\\d+,-?\\d+>", ""));
 
 //            String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
 //                    .executeAsync()

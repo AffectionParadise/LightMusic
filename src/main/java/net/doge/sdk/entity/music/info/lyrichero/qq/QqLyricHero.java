@@ -3,6 +3,7 @@ package net.doge.sdk.entity.music.info.lyrichero.qq;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.music.info.lyrichero.qq.decoder.QrcDecoder;
@@ -148,12 +149,8 @@ public class QqLyricHero {
                 for (int i = 0, s = wordStartList.size(); i < s; i++) {
                     String wordStart = wordStartList.get(i);
                     int wsi = Integer.parseInt(wordStart);
-                    sb.append("<")
-                            .append(wsi - lineStart)
-                            .append(",")
-                            .append(wordDurationList.get(i))
-                            .append(">")
-                            .append(sp[i]);
+                    sb.append(String.format(LyricPattern.PAIR_FMT, wsi - lineStart, wordDurationList.get(i)));
+                    sb.append(sp[i]);
                 }
             } else sb.append(l);
             sb.append("\n");

@@ -1,6 +1,7 @@
 package net.doge.ui.widget.lyric;
 
 import lombok.Data;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.lyric.Statement;
 import net.doge.util.collection.ArrayUtil;
@@ -93,7 +94,7 @@ public class StringTwoColor {
         this.lyric = stmt.getLyric();
         this.plainLyric = stmt.getPlainLyric();
 
-        if (RegexUtil.contains("<\\d+,\\d+>", lyric)) isByWord = true;
+        if (RegexUtil.contains(LyricPattern.PAIR, lyric)) isByWord = true;
 
         this.c1 = c1;
         this.c2 = c2;
@@ -116,9 +117,9 @@ public class StringTwoColor {
 //        Color shadowColor = Colors.BLACK;
 
         if (isByWord) {
-            List<String> startList = RegexUtil.findAllGroup1("<(\\d+),\\d+>", lyric);
+            List<String> startList = RegexUtil.findAllGroup1(LyricPattern.START, lyric);
             for (String startStr : startList) wordStartList.add(Integer.parseInt(startStr));
-            List<String> durationList = RegexUtil.findAllGroup1("<\\d+,(\\d+)>", lyric);
+            List<String> durationList = RegexUtil.findAllGroup1(LyricPattern.DURATION, lyric);
             for (String durationStr : durationList) wordDurationList.add(Integer.parseInt(durationStr));
             initWordWidthList(lyric);
         }
@@ -267,7 +268,7 @@ public class StringTwoColor {
     }
 
     private void initWordWidthList(String lyric) {
-        String[] sp = ArrayUtil.removeFirstEmpty(lyric.split("<\\d+,\\d+>", -1));
+        String[] sp = ArrayUtil.removeFirstEmpty(lyric.split(LyricPattern.PAIR, -1));
         for (String partStr : sp) {
             // 计算每段的宽度
             int w = 0;

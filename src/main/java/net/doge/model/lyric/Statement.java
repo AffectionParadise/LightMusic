@@ -1,6 +1,7 @@
 package net.doge.model.lyric;
 
 import lombok.Data;
+import net.doge.constant.lyric.LyricPattern;
 import net.doge.util.common.StringUtil;
 
 /**
@@ -30,7 +31,7 @@ public class Statement {
 
     public void setLyric(String lyric) {
         this.lyric = lyric;
-        plainLyric = lyric.replaceAll("<\\d+,\\d+>", "");
+        plainLyric = lyric.replaceAll(LyricPattern.PAIR, "");
     }
 
     public boolean hasEndTime() {
