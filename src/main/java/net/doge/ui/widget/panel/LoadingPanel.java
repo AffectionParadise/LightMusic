@@ -112,7 +112,7 @@ public class LoadingPanel extends JComponent implements MouseListener {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHints(hints);
 
-        g2.setColor(ImageUtil.getAvgColor(f.globalPanel.getBackgroundImage(), shield, false));
+        g2.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg(), shield, false));
         g2.fillRect(0, 0, width, height);
 
         for (int i = 0; i < ticker.length; i++) {

@@ -282,7 +282,7 @@ public class I18n {
         LANG_MAP.put("gs", new String[]{"高斯模糊", "Gaussian blur"});
         LANG_MAP.put("darker", new String[]{"暗角滤镜", "Darker mode"});
         LANG_MAP.put("mask", new String[]{"朦胧遮罩", "Mask"});
-        LANG_MAP.put("groove", new String[]{"节奏律动", "Groove"});
+        LANG_MAP.put("groove", new String[]{"旋转律动", "Groove"});
         LANG_MAP.put("blurOff", new String[]{"跟随主题", "Follow theme"});
         LANG_MAP.put("cvBlur", new String[]{"歌曲封面", "Track cover"});
         LANG_MAP.put("mcBlur", new String[]{"纯主色调", "Solid color"});

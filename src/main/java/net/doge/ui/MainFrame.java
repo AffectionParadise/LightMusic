@@ -3067,6 +3067,7 @@ public class MainFrame extends JFrame {
         maskOn = config.getBooleanValue(ConfigConstants.MASK_ON, false);
         // 载入是否律动
         grooveOn = config.getBooleanValue(ConfigConstants.GROOVE_ON, false);
+        globalPanel.setGrooveOn(grooveOn);
         // 载入模糊类型
         blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
@@ -20037,6 +20038,8 @@ public class MainFrame extends JFrame {
         }
     }
 
+    private int lrcTimerFrame;
+
     // 初始化动画 Timer
     private void initTimer() {
         final int specPiece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
@@ -20045,17 +20048,18 @@ public class MainFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
-                double avg = 0;
+//                double avg = 0;
                 for (int i = 0, len = SpectrumConstants.barNum; i < len; i++) {
                     if (specs[i] < specsOrigin[i])
                         specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
                         specs[i] -= Math.min(specsGap[i] / specPiece, specs[i] - specsOrigin[i]);
-                    avg += specs[i];
+//                    avg += specs[i];
                 }
-                avg /= SpectrumConstants.barNum;
-                if (grooveOn) globalPanel.setScale(1 + 0.5f * (float) (avg / SpectrumConstants.barMaxHeight));
-                else lrcAndSpecBox.repaint();
+//                avg /= SpectrumConstants.barNum;
+//                if (grooveOn) globalPanel.setScale(1 + 0.5f * (float) (avg / SpectrumConstants.barMaxHeight));
+//                else lrcAndSpecBox.repaint();
+                lrcAndSpecBox.repaint();
             });
         });
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
@@ -20072,8 +20076,13 @@ public class MainFrame extends JFrame {
                     renderer.setRatio(0);
                     desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
                 }
-                if (spectrumTimer.isRunning()) return;
-                lrcAndSpecBox.repaint();
+                if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
+
+                // 律动动画，由于过多 timer 会导致卡顿，所以尽量在同一 timer 处理
+                if (grooveOn && !globalPanelTimer.isRunning() && ++lrcTimerFrame % 5 == 0) {
+                    double angle = globalPanel.getAngle();
+                    globalPanel.setAngle((angle + 1) % 360);
+                }
             });
             if (lrcScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
@@ -20095,6 +20104,7 @@ public class MainFrame extends JFrame {
         });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
+                globalPanel.setFading(true);
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);
                 if (opacity >= 1) globalPanelTimer.stop();
@@ -20405,7 +20415,7 @@ public class MainFrame extends JFrame {
             maskMenuItem.setIcon(maskOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
         grooveMenuItem.addActionListener(e -> {
-            grooveOn = !grooveOn;
+            globalPanel.setGrooveOn(grooveOn = !grooveOn);
             doBlur();
             grooveMenuItem.setIcon(grooveOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         });
@@ -23276,9 +23286,11 @@ public class MainFrame extends JFrame {
             if (darkerOn) img = ImageUtil.darker(img);
             // 设置圆角
 //                img = ImageUtils.setRadius(img, WIN_ARC);
-            globalPanel.setBackgroundImage(img);
+            globalPanel.setBgImg(img);
             updateUpperComp();
-            if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
+            globalPanel.setOnImgScaledReady(() -> {
+                if (!globalPanelTimer.isRunning()) globalPanelTimer.start();
+            });
         });
     }
 
