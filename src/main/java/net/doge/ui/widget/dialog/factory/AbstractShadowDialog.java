@@ -85,12 +85,12 @@ public abstract class AbstractShadowDialog extends JDialog {
         if (f.darkerOn) img = ImageUtil.darker(img);
         // 设置圆角
         img = ImageUtil.radius(img, 10);
-        globalPanel.setBackgroundImage(img);
+        globalPanel.setBgImg(img);
         repaint();
     }
 
     protected class DialogPanel extends JPanel {
-        private BufferedImage backgroundImage;
+        private BufferedImage bgImg;
 
         public DialogPanel() {
             initBorder();
@@ -106,17 +106,17 @@ public abstract class AbstractShadowDialog extends JDialog {
             setBorder(null);
         }
 
-        public void setBackgroundImage(BufferedImage backgroundImage) {
-            this.backgroundImage = backgroundImage;
+        public void setBgImg(BufferedImage bgImg) {
+            this.bgImg = bgImg;
         }
 
         protected void paintComponent(Graphics g) {
             Graphics2D g2d = (Graphics2D) g;
             // 避免锯齿
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            if (backgroundImage != null) {
+            if (bgImg != null) {
 //            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
-                g2d.drawImage(backgroundImage, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
+                g2d.drawImage(bgImg, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
             }
 
             // 画边框阴影

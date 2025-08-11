@@ -3060,7 +3060,7 @@ public class MainFrame extends JFrame {
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
         // 载入是否高斯模糊
-        gsOn = config.getBooleanValue(ConfigConstants.GS_ON, false);
+        gsOn = config.getBooleanValue(ConfigConstants.GS_ON, true);
         // 载入是否暗化
         darkerOn = config.getBooleanValue(ConfigConstants.DARKER_ON, true);
         // 载入是否朦胧遮罩
@@ -3069,7 +3069,7 @@ public class MainFrame extends JFrame {
         grooveOn = config.getBooleanValue(ConfigConstants.GROOVE_ON, false);
         globalPanel.setGrooveOn(grooveOn);
         // 载入模糊类型
-        blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.OFF);
+        blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.CV);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
                 : blurType == BlurConstants.MC ? mcBlurIcon
                 : blurType == BlurConstants.LG ? lgBlurIcon
@@ -20104,7 +20104,6 @@ public class MainFrame extends JFrame {
         });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
-                globalPanel.setFading(true);
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);
                 if (opacity >= 1) globalPanelTimer.stop();
