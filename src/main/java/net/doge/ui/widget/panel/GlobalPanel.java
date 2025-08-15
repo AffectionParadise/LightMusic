@@ -135,12 +135,12 @@ public class GlobalPanel extends JPanel {
 
         int pw = getWidth(), ph = getHeight();
 //        int w = (int) (pw * scale), h = (int) (ph * scale), x = (pw - w) / 2, y = (ph - h) / 2;
-        // opacity < 1 时绘制底图，避免不必要的操作占用 CPU！
         Graphics2D g2d = (Graphics2D) g;
 
         // 律动动画
         if (grooveOn) {
             if (lImgScaled != null) {
+                // opacity < 1 时绘制底图，避免不必要的操作占用 CPU！
                 if (opacity < 1) {
                     paintRotatedImg(g2d, lImgScaled);
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));

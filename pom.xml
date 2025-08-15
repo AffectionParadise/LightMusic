@@ -13,6 +13,7 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
+        <!--        <jfx.version>17.0.16</jfx.version>-->
         <mp3agic.version>0.9.1</mp3agic.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
@@ -30,6 +31,37 @@
     </properties>
 
     <dependencies>
+        <!-- jdk 9 及以上需要引入 javafx 依赖 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-fxml</artifactId>-->
+        <!--            <version>${jfx.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-controls</artifactId>-->
+        <!--            <version>${jfx.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-media</artifactId>-->
+        <!--            <version>${jfx.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-swing</artifactId>-->
+        <!--            <version>${jfx.version}</version>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.openjfx</groupId>-->
+        <!--            <artifactId>javafx-graphics</artifactId>-->
+        <!--            <version>${jfx.version}</version>-->
+        <!--        </dependency>-->
+
         <!-- 为 MP3 写入信息 -->
         <dependency>
             <groupId>com.mpatric</groupId>
