@@ -45,6 +45,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //    private CustomPanel outerPanel = new CustomPanel();
 //    private CustomLabel lyricLabel = new CustomLabel();
 
+    public final int edgeCellNum = 3;
     private final float highlightAlpha = 1f;
     public final float normalMaxAlpha = 0.4f;
     public final float normalMinAlpha = 0.05f;
@@ -53,7 +54,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private Map<Integer, Float> alphas = new HashMap<>();
 
     private final int SPACE = 90;
-    private final int SPACE_UD = 15;
+    private final int SPACE_UD = 25;
     private final Border[] BORDERS = {
             // 居左
             BorderFactory.createEmptyBorder(SPACE_UD, SPACE, SPACE_UD, 0),

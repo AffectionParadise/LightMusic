@@ -20030,10 +20030,10 @@ public class MainFrame extends JFrame {
         LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
         Map<Integer, Float> alphas = r.getAlphas();
         alphas.clear();
-        int t = 3;
+        int t = r.edgeCellNum;
         float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
         for (int i = 0; i < t; i++) {
-            alphas.put(first + i, r.normalMinAlpha + i * step);
+            alphas.put(first + i, r.normalMinAlpha);
             alphas.put(last - i, r.normalMinAlpha + i * step);
         }
     }

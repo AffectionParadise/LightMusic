@@ -932,7 +932,7 @@ public class NewAlbumReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
-            Elements albums = doc.select(".wp-block-image.size-large");
+            Elements albums = doc.select(".wp-block-image");
             t = albums.size();
             for (int i = (page - 1) * limit, len = Math.min(page * limit, albums.size()); i < len; i++) {
                 Element album = albums.get(i);
