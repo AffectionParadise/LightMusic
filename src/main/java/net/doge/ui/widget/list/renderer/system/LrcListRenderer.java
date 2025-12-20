@@ -38,6 +38,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     // 比例
     private double ratio;
     private int row;
+    private int lRow;
 //    private int hoverIndex = -1;
 
     private boolean drawBg;
@@ -85,6 +86,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 
     public void setRow(int row) {
         this.ratio = 0;
+        lRow = this.row;
         this.row = row;
         highlightFont = fontAnimation[hIndex = 0];
         shrinkFont = fontAnimation[sIndex = fontAnimation.length - 1];
@@ -115,6 +117,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         label.setForeground(bgColor);
         label.setUI(labelUI);
         if (index == row) labelUI.setAlpha(highlightAlpha);
+        else if (index < row) labelUI.setAlpha(normalMinAlpha);
         else labelUI.setAlpha(alphas.getOrDefault(index, normalMaxAlpha));
 
         // 高亮的行的样式
@@ -130,7 +133,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         }
         // 其他行的样式
         else {
-            label.setFont(index == row - 1 ? shrinkFont : defaultFont);
+            label.setFont(index == lRow ? shrinkFont : defaultFont);
             label.setText(StringUtil.textToHtmlNoWrap(StringUtil.wrapLineByWidth(plainLyric, maxWidth - PADDINGS[LyricAlignment.lrcAlignmentIndex])));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);

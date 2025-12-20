@@ -20020,12 +20020,14 @@ public class MainFrame extends JFrame {
         Rectangle fb = lrcList.getCellBounds(first, first);
         if (fb != null) {
             Rectangle vfb = SwingUtilities.convertRectangle(lrcList, fb, vp);
-            if (vfb.y > vfb.height) first -= vfb.y / vfb.height;
+            // 向上取整 (a + b - 1) / b
+            if (vfb.y > vfb.height) first -= (vfb.y + vfb.height - 1) / vfb.height;
         }
         Rectangle lb = lrcList.getCellBounds(last, last);
         if (lb != null) {
             Rectangle vlb = SwingUtilities.convertRectangle(lrcList, lb, vp);
-            if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - vlb.height) / vlb.height;
+            // 向上取整 (a + b - 1) / b
+            if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - 1) / vlb.height;
         }
         LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
         Map<Integer, Float> alphas = r.getAlphas();
@@ -20033,7 +20035,7 @@ public class MainFrame extends JFrame {
         int t = r.edgeCellNum;
         float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
         for (int i = 0; i < t; i++) {
-            alphas.put(first + i, r.normalMinAlpha);
+            alphas.put(first + i, r.normalMinAlpha + i * step);
             alphas.put(last - i, r.normalMinAlpha + i * step);
         }
     }

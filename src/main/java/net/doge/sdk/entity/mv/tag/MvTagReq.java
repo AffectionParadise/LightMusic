@@ -41,7 +41,7 @@ public class MvTagReq {
     // 直播标签 API (发姐)
     private final String LIVE_TAG_FA_API = "https://www.chatcyf.com/teaparty/";
     // 视频标签 API (李志)
-    private final String VIDEO_TAG_LZ_API = "https://www.lizhinb.com/sp/";
+    private final String VIDEO_TAG_LZ_API = "https://www.lizhinb.com/ssp/";
 
     /**
      * 加载 MV 标签
