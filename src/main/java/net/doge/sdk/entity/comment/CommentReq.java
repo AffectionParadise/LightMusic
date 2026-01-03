@@ -255,7 +255,7 @@ public class CommentReq {
                 String userId = user.getString("userId");
                 String username = user.getString("nickname");
                 String profileUrl = user.getString("avatarUrl");
-                String content = commentJson.getString("content");
+                String content = StringUtil.trimStringWith(commentJson.getString("content"), '\n');
                 String time = TimeUtil.msToPhrase(commentJson.getLong("time"));
                 String location = commentJson.getJSONObject("ipLocation").getString("location");
                 Integer likedCount = commentJson.getIntValue("likedCount");

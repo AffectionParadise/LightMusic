@@ -2,6 +2,7 @@ package net.doge.ui.widget.lyric;
 
 import lombok.Data;
 import net.doge.constant.lyric.LyricPattern;
+import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
 import net.doge.model.lyric.Statement;
 import net.doge.util.collection.ArrayUtil;
@@ -31,6 +32,8 @@ public class StringTwoColor {
     private int shadowHOffset;
     // 是否逐字
     private boolean isByWord;
+    // 渐隐宽度
+    private int fadeWidth;
 
     private BufferedImage buffImg;
     private BufferedImage buffImg1;
@@ -40,39 +43,6 @@ public class StringTwoColor {
     private FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
     private FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
 
-//    private int dropOffset = 3;
-//    private List<CharBlock> blockList = new LinkedList<>();
-//
-//    @AllArgsConstructor
-//    @ToString
-//    private static class CharBlock {
-//        public int start;
-//        public int duration;
-//    }
-//
-//    private CharBlock findKeyCharBlock(double t) {
-//        int low = 0, high = blockList.size() - 1, mid;
-//        while (low < high) {
-//            mid = (low + high) / 2;
-//            CharBlock cb = blockList.get(mid);
-//            if (t < cb.start) high = mid - 1;
-//            else if (t > cb.start) low = mid + 1;
-//            else return cb;
-//        }
-//        CharBlock l = blockList.get(low);
-//        return t < l.start ? low - 1 < 0 ? new CharBlock(0, 0) : blockList.get(low - 1) : l;
-//    }
-
-    //    public static void main(String[] args) {
-//        blockList.add(new CharBlock(10, 20));
-//        blockList.add(new CharBlock(20, 20));
-//        blockList.add(new CharBlock(30, 20));
-//        System.out.println(findKeyCharBlock(19));
-//        System.out.println(findKeyCharBlock(20));
-//        System.out.println(findKeyCharBlock(25));
-//        System.out.println(findKeyCharBlock(30));
-//        System.out.println(findKeyCharBlock(35));
-//    }
     // 每个字(也有可能是一段)的宽度
     private List<Integer> wordWidthList = new LinkedList<>();
     // 每个字(也有可能是一段)相对当行的起始时间
@@ -112,10 +82,6 @@ public class StringTwoColor {
         for (int i = 0, len = metricsHuge.length; i < len; i++)
             metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i).deriveFont(fontSize));
 
-//        Color borderColor = ColorUtils.darker(ColorUtils.darker(c2));
-//        int shadowXOffset = 2, shadowYOffset = 2;
-//        Color shadowColor = Colors.BLACK;
-
         if (isByWord) {
             List<String> startList = RegexUtil.findAllGroup1(LyricPattern.START, lyric);
             for (String startStr : startList) wordStartList.add(Integer.parseInt(startStr));
@@ -149,8 +115,9 @@ public class StringTwoColor {
         // 桌面歌词阴影显示不完全解决
         width += 2 * shadowHOffset;
         height = metrics.getHeight();
-//        height += fontSize + dropOffset;
         height += fontSize;
+        // 渐隐宽度根据字体大小决定
+        fadeWidth = height / 2;
 
         // 部分字体显示不出来，留白
         width = Math.max(1, width);
@@ -158,8 +125,6 @@ public class StringTwoColor {
         // 构造一个具有指定尺寸及类型为预定义图像类型之一的 BufferedImage
         buffImg1 = ImageUtil.createTransparentImage(width, height);
         buffImg2 = ImageUtil.createTransparentImage(width, height);
-//        buffImg1 = new BufferedImage(width, height - dropOffset, BufferedImage.TYPE_4BYTE_ABGR);
-//        buffImg2 = new BufferedImage(width, height - dropOffset, BufferedImage.TYPE_4BYTE_ABGR);
 
         // 通过 BufferedImage 创建 Graphics2D 对象
         Graphics2D g1 = buffImg1.createGraphics();
@@ -171,19 +136,9 @@ public class StringTwoColor {
 
         int dy = height - (int) fontSize;
         if (!isDesktopLyric) dy += 5;
-//        int dy = height - (int) fontSize - dropOffset;
 
         g1.setColor(c1);
         g2.setColor(c2);
-
-//        // 设置颜色
-//        if (!isDesktopLyric) {
-//            g1.setColor(c1);
-//            g2.setColor(c2);
-//        } else {
-//            g1.translate(0, dy);
-//            g2.translate(0, dy);
-//        }
 
         // 画字符串
         if (!isDesktopLyric) {
@@ -246,10 +201,7 @@ public class StringTwoColor {
                     g1.drawString(str, widthDrawn, dy);
                     g2.drawString(str, widthDrawn, dy);
                     int strWidth = metricsHuge[j].stringWidth(str);
-//                        blockList.add(new CharBlock(widthDrawn, strWidth));
                     widthDrawn += strWidth;
-//                        g1.translate(widthDrawn, 0);
-//                        g2.translate(widthDrawn, 0);
                     i += chars.length - 1;
                     break;
                 }
@@ -257,7 +209,7 @@ public class StringTwoColor {
 
             // 文字阴影
             buffImg1 = ImageUtil.shadow(buffImg1, c1);
-            buffImg2 = ImageUtil.shadow(buffImg2);
+//            buffImg2 = ImageUtil.shadow(buffImg2, c2);
         }
 
         g1.dispose();
@@ -328,50 +280,59 @@ public class StringTwoColor {
         if (width == 0 || height == 0) return;
 
         int pw = width - 2 * shadowHOffset, t = (int) (shadowHOffset + pw * ratio + 0.5);
-//        CharBlock kcb = findKeyCharBlock(t);
-//        int dOff = dropOffset - (int) (((double) t - kcb.start) / kcb.duration * dropOffset);
-        if (width > widthThreshold || buffImg == null) {
-            buffImg = ImageUtil.createTransparentImage(width, height);
-            Graphics2D g2d = buffImg.createGraphics();
-//            g2d.drawImage(buffImg1, 0, 0, kcb.start, height - dropOffset, 0, 0, kcb.start, height - dropOffset, null);
-//            g2d.drawImage(buffImg1, kcb.start, dOff, t, dOff + height - dropOffset, kcb.start, 0, t, height - dropOffset, null);
-//            g2d.drawImage(buffImg2, t, dOff, kcb.start + kcb.duration, dOff + height - dropOffset, t, 0, kcb.start + kcb.duration, height - dropOffset, null);
-//            g2d.drawImage(buffImg2, kcb.start + kcb.duration, dropOffset, width, height, kcb.start + kcb.duration, 0, width, height - dropOffset, null);
-            // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
-            g2d.drawImage(buffImg1, shadowHOffset, 0, t, height, shadowHOffset, 0, t, height, null);
-//            g2d.drawImage(buffImg1, 0, 0, t, height - dropOffset, 0, 0, t, height - dropOffset, null);
-            // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
-            g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
-//            g2d.drawImage(buffImg2, t, 0, width, height - dropOffset, t, 0, width, height - dropOffset, null);
-            g2d.dispose();
-            cropImg();
-            makeIcon();
-        } else {
-            int o = (int) (shadowHOffset + pw * this.ratio + 0.5);
-            Graphics2D g2d = buffImg.createGraphics();
-            if (this.ratio < ratio) {
-                // 将 buffImg 的需要更新的部分用 buffImg1 的对应部分替换
-                clearRect(buffImg, o, 0, t - o, height);
-                g2d.drawImage(buffImg1, o, 0, t, height, o, 0, t, height, null);
-//                g2d.drawImage(buffImg1, o, 0, t, height - dropOffset, o, 0, t, height - dropOffset, null);
-            } else if (this.ratio > ratio) {
-                // 将 buffImg 的需要更新的部分用 buffImg2 的对应部分替换
-                clearRect(buffImg, t, 0, o - t, height);
-                g2d.drawImage(buffImg2, t, 0, o, height, t, 0, o, height, null);
-//                g2d.drawImage(buffImg2, t, 0, o, height - dropOffset, t, 0, o, height - dropOffset, null);
-            }
-            g2d.dispose();
-        }
+
+        // 虽然不断创建新的图像存在性能开销，但是单例清除图像时会闪烁
+        buffImg = ImageUtil.createTransparentImage(width, height);
+        Graphics2D g2d = buffImg.createGraphics();
+
+        // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+        g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
+
+        // 创建渐变覆盖层（使用白色到透明的渐变，然后使用 DST_OUT）
+        GradientPaint fadeOverlay = new GradientPaint(t, 0, Colors.TRANSPARENT, t + fadeWidth, 0, Colors.BLACK, false);
+        // 使用 DST_OUT：目标在源外（移除白色覆盖的部分）
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OUT));
+        g2d.setPaint(fadeOverlay);
+        g2d.fillRect(t, 0, fadeWidth, height);
+
+        // 背景覆盖前景的模式
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OVER, 0.9f));
+        // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
+        g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
+        g2d.dispose();
+        cropImg();
+        makeIcon();
+//        } else {
+//            int o = (int) (shadowHOffset + pw * this.ratio + 0.5);
+//            Graphics2D g2d = buffImg.createGraphics();
+//            if (this.ratio < ratio) {
+//                // 清除图像区域为透明
+//                clearRect(g2d, o, 0, t - o, height);
+//                // 将 buffImg 的需要更新的部分用 buffImg1 的对应部分替换
+//                g2d.drawImage(buffImg1, o, 0, t, height, o, 0, t, height, null);
+////                g2d.drawImage(buffImg1, o, 0, t, height - dropOffset, o, 0, t, height - dropOffset, null);
+//            } else if (this.ratio > ratio) {
+//                // 清除图像区域为透明
+//                clearRect(g2d, t, 0, o - t, height);
+//                // 将 buffImg 的需要更新的部分用 buffImg2 的对应部分替换
+//                g2d.drawImage(buffImg2, t, 0, o, height, t, 0, o, height, null);
+////                g2d.drawImage(buffImg2, t, 0, o, height - dropOffset, t, 0, o, height - dropOffset, null);
+//            }
+//            g2d.dispose();
+//        }
         this.ratio = ratio;
     }
 
-    // 清除图像区域为透明
-    private void clearRect(BufferedImage img, int x, int y, int width, int height) {
-        if (x < 0) return;
-        for (int i = x, w = x + width; i < w; i++)
-            for (int j = y, h = y + height; j < h; j++)
-                img.setRGB(i, j, 0);
-    }
+//    // 清除图像区域为透明
+//    private void clearRect(Graphics2D g2d, int x, int y, int w, int h) {
+
+    /// /        if (x < 0) return;
+//        Composite oc = g2d.getComposite();
+//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
+//        g2d.fillRect(x, y, w, h);
+//        g2d.setComposite(oc);
+//    }
 
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {

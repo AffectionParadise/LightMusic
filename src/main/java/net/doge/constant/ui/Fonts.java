@@ -20,11 +20,11 @@ public class Fonts {
 
     private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
 
-    private static final int FONT_SIZE = 17;
-    private static final int FONT_V2_SIZE = FONT_SIZE + 8;
-    private static final int TINY_SIZE = FONT_SIZE - 2;
-    private static final int MEDIUM_SIZE = FONT_SIZE + 3;
-    private static final int BIG_SIZE = FONT_SIZE + 17;
+    public static final int FONT_SIZE = 17;
+    public static final int FONT_V2_SIZE = FONT_SIZE + 8;
+    public static final int TINY_SIZE = FONT_SIZE - 2;
+    public static final int MEDIUM_SIZE = FONT_SIZE + 3;
+    public static final int BIG_SIZE = FONT_SIZE + 17;
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
     // 中英文

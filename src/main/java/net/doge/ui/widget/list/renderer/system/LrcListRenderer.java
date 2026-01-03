@@ -64,7 +64,6 @@ public class LrcListRenderer extends DefaultListCellRenderer {
             // 局右
             BorderFactory.createEmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
     };
-    private final int[] PADDINGS = {SPACE, 0, SPACE};
 
     public LrcListRenderer() {
         createFontAnimation();
@@ -134,7 +133,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         // 其他行的样式
         else {
             label.setFont(index == lRow ? shrinkFont : defaultFont);
-            label.setText(StringUtil.textToHtmlNoWrap(StringUtil.wrapLineByWidth(plainLyric, maxWidth - PADDINGS[LyricAlignment.lrcAlignmentIndex])));
+            // 对长歌词手动添加 <br> 换行，由于排版问题取消自动换行
+            label.setText(StringUtil.textToHtmlNoWrap(StringUtil.wrapLineByWidth(plainLyric, maxWidth, defaultFont.getSize())));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }

@@ -17,6 +17,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -346,6 +347,10 @@ public class StringUtil {
                 .replace("&apos;", "'");
     }
 
+    public static String wrapLineByWidth(String text, int thresholdWidth) {
+        return wrapLineByWidth(text, thresholdWidth, Fonts.FONT_SIZE);
+    }
+
     /**
      * 字符串宽度 thresholdWidth 加 <br/> 换行
      *
@@ -353,7 +358,7 @@ public class StringUtil {
      * @param thresholdWidth
      * @return
      */
-    public static String wrapLineByWidth(String text, int thresholdWidth) {
+    public static String wrapLineByWidth(String text, int thresholdWidth, int fontSize) {
         if (thresholdWidth < 0) return text;
         StringBuilder sb = new StringBuilder();
         int sw = 0;
@@ -364,9 +369,11 @@ public class StringUtil {
             String str = new String(chars);
 
             for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
-                if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
+                // 不同字体大小对应的字符宽度不同
+                Font font = Fonts.TYPES.get(j).deriveFont((float) fontSize);
+                if (!font.canDisplay(codePoint)) continue;
                 if (chars[0] != '\n') {
-                    int tw = label.getFontMetrics(Fonts.TYPES.get(j)).stringWidth(str);
+                    int tw = label.getFontMetrics(font).stringWidth(str);
                     sw += tw;
                     if (sw >= thresholdWidth) {
                         sb.append('\n');
