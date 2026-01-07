@@ -369,8 +369,9 @@ public class StringUtil {
             String str = new String(chars);
 
             for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
+                Font font = Fonts.TYPES.get(j);
                 // 不同字体大小对应的字符宽度不同
-                Font font = Fonts.TYPES.get(j).deriveFont((float) fontSize);
+                if (font.getSize() != fontSize) font = font.deriveFont((float) fontSize);
                 if (!font.canDisplay(codePoint)) continue;
                 if (chars[0] != '\n') {
                     int tw = label.getFontMetrics(font).stringWidth(str);
