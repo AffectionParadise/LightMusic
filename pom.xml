@@ -27,7 +27,7 @@
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <opencc4j.version>1.13.1</opencc4j.version>
         <moji4j.version>1.2.0</moji4j.version>
-        <hutool.version>5.8.39</hutool.version>
+        <hutool.version>5.8.43</hutool.version>
     </properties>
 
     <dependencies>

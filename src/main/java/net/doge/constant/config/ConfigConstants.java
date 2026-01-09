@@ -146,11 +146,11 @@ public class ConfigConstants {
     // 当前所有歌曲目录
     public static final String CATALOGS = "catalogs";
     // 当前播放列表
-    public static final String MUSIC_LIST = "musicList";
+//    public static final String MUSIC_LIST = "musicList";
     // 当前播放历史
     public static final String HISTORY = "history";
     // 当前收藏列表
-    public static final String COLLECTION = "collection";
+//    public static final String COLLECTION = "collection";
     // 当前歌单收藏列表
     public static final String PLAYLIST_COLLECTION = "playlistCollection";
     // 当前专辑收藏列表
@@ -171,6 +171,19 @@ public class ConfigConstants {
     public static final String PLAY_QUEUE = "playQueue";
     // 当前播放歌曲
     public static final String CURR_SONG = "currSong";
+
+    // 收藏夹
+    public static final String LOCAL_PLAYLISTS = "localPlaylists";
+    public static final String COLLECTION_PLAYLISTS = "collectionPlaylists";
+    // 收藏夹名称
+    public static final String LOCAL_PLAYLIST_NAME = "localPlaylistName";
+    public static final String COLLECTION_PLAYLIST_NAME = "collectionPlaylistName";
+    // 收藏夹是否默认
+    public static final String LOCAL_PLAYLIST_IS_DEFAULT = "localPlaylistIsDefault";
+    public static final String COLLECTION_PLAYLIST_IS_DEFAULT = "collectionPlaylistIsDefault";
+    // 收藏夹音乐列表
+    public static final String LOCAL_PLAYLIST_MUSIC_LIST = "localPlaylistMusicList";
+    public static final String COLLECTION_PLAYLIST_MUSIC_LIST = "collectionPlaylistMusicList";
 
     // 在线音乐来源
     public static final String NET_MUSIC_SOURCE = "source";

@@ -63,7 +63,8 @@ import net.doge.ui.widget.button.listener.ChangePaneButtonMouseListener;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.LocalPlaylistComboBoxUI;
+import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.*;
 import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
@@ -177,6 +178,7 @@ public class MainFrame extends JFrame {
     private final String ASK_DISPOSE_MSG = I18n.getText("askDisposeMsg");
     private final String REMEMBER_CHOICE_MSG = I18n.getText("rememberChoiceMsg");
     private final String[] EXIT_OPTIONS = {I18n.getText("exitOption1"), I18n.getText("exitOption2"), I18n.getText("exitOption3")};
+    private final String ASK_REMOVE_LOCAL_PLAYLIST_MSG = I18n.getText("askRemoveLocalPlaylistMsg");
     private final String ASK_REIMPORT_MSG = I18n.getText("askReimportMsg");
     private final String ASK_RETAIN_MUSIC_LIST_MSG = I18n.getText("askRetainMusicListMsg");
     private final String ASK_CLEAR_CACHE_MSG = I18n.getText("askClearCacheMsg");
@@ -289,7 +291,7 @@ public class MainFrame extends JFrame {
     private final String LOCATE_FILE_MENU_ITEM_TEXT = I18n.getText("locateFileMenuItem");
     private final String REMOVE_MENU_ITEM_TEXT = I18n.getText("removeMenuItem");
     private final String COLLECT_MENU_ITEM_TEXT = I18n.getText("collectMenuItem");
-    private final String CANCEL_COLLECTION_MENU_ITEM_TEXT = I18n.getText("cancelCollectionMenuItem");
+    private final String COLLECTED_MENU_ITEM_TEXT = I18n.getText("collectedMenuItem");
     private final String PLAY_MV_MENU_ITEM_TEXT = I18n.getText("playMvMenuItem");
     private final String DOWNLOAD_MENU_ITEM_TEXT = I18n.getText("downloadMenuItem");
     private final String COMMENT_MENU_ITEM_TEXT = I18n.getText("commentMenuItem");
@@ -661,6 +663,7 @@ public class MainFrame extends JFrame {
     private final String MENU_TIP = I18n.getText("menuTip");
     private final String GO_TO_PLAY_QUEUE_TIP = I18n.getText("goToPlayQueueTip");
     private final String DESKTOP_LRC_TIP = I18n.getText("desktopLrcTip");
+    private final String LOCAL_PLAYLIST_TIP = I18n.getText("localPlaylistTip");
     private final String ADD_TIP = I18n.getText("addTip");
     private final String REIMPORT_TIP = I18n.getText("reimportTip");
     private final String MANAGE_CATALOG_TIP = I18n.getText("manageCatalogTip");
@@ -798,7 +801,7 @@ public class MainFrame extends JFrame {
     private int netMusicInRecommendMaxPage;
     private int netMusicInCollectionMaxPage;
     // 当前个人音乐展示的标签
-    private int currPersonalMusicTab = -1;
+    public int currPersonalMusicTab = -1;
     // 当前推荐展示的标签
     private int currRecommendTab = -1;
     private int preRecommendTab;
@@ -1067,11 +1070,18 @@ public class MainFrame extends JFrame {
     // 列表为空提示标签
     private CustomLabel emptyHintLabel = new CustomLabel(I18n.getText("emptyHint"));
 
+    // 本地歌单
+    private List<LocalPlaylist> localPlaylists = ListUtil.of(new LocalPlaylist("我的歌曲", true));
+    // 收藏夹
+    public List<LocalPlaylist> collectionPlaylists = ListUtil.of(new LocalPlaylist("我的收藏", true));
+    private LocalPlaylist currLocalPlaylist = localPlaylists.get(0);
+    private LocalPlaylist currCollectionPlaylist = collectionPlaylists.get(0);
+
     // 个人音乐歌曲列表
     private CustomList<MusicResource> musicList = new CustomList<>();
     private CustomScrollPane musicScrollPane = new CustomScrollPane(musicList);
     // 本地音乐 ListModel
-    private DefaultListModel<MusicResource> musicListModel = new DefaultListModel<>();
+    private DefaultListModel<MusicResource> musicListModel = currLocalPlaylist.getMusicListModel();
     // 播放历史 ListModel
     public DefaultListModel<MusicResource> historyModel = new DefaultListModel<>();
 
@@ -1079,7 +1089,7 @@ public class MainFrame extends JFrame {
     public CustomList<NetResource> collectionList = new CustomList<>();
     private CustomScrollPane collectionScrollPane = new CustomScrollPane(collectionList);
     // 歌曲收藏 ListModel
-    private DefaultListModel<MusicResource> collectionModel = new DefaultListModel<>();
+    private DefaultListModel<MusicResource> collectionModel = currCollectionPlaylist.getMusicListModel();
     // 歌单收藏 ListModel
     private DefaultListModel<NetResource> playlistCollectionModel = new DefaultListModel<>();
     // 作为收藏歌单单独的 ListModel，切换
@@ -1187,6 +1197,15 @@ public class MainFrame extends JFrame {
 
     // 歌曲列表工具栏
     private CustomToolBar musicToolBar = new CustomToolBar();
+    // 本地歌单下拉框
+    public CustomComboBox<LocalPlaylist> localPlaylistComboBox = new CustomComboBox<>();
+    // 收藏夹按钮
+    private CustomButton localPlaylistToolButton = new CustomButton(folderIcon);
+    // 收藏夹按钮弹出菜单
+    private CustomPopupMenu localPlaylistPopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem createLocalPlaylistMenuItem = new CustomMenuItem(I18n.getText("createLocalPlaylist"));
+    private CustomMenuItem editLocalPlaylistMenuItem = new CustomMenuItem(I18n.getText("editLocalPlaylist"));
+    private CustomMenuItem removeLocalPlaylistMenuItem = new CustomMenuItem(I18n.getText("removeLocalPlaylist"));
     // 添加按钮
     private CustomButton addToolButton = new CustomButton(addIcon);
     // 添加按钮弹出菜单
@@ -3552,16 +3571,37 @@ public class MainFrame extends JFrame {
 
     // 载入本地音乐列表
     public void loadLocalMusicList(JSONObject config) {
-        JSONArray musicJsonArray = config.getJSONArray(ConfigConstants.MUSIC_LIST);
-        if (JsonUtil.notEmpty(musicJsonArray)) {
-            for (int i = 0, len = musicJsonArray.size(); i < len; i++) {
-                String filePath = musicJsonArray.getString(i);
-                AudioFile audioFile = new AudioFile(filePath);
-                globalExecutor.execute(() -> {
-                    MediaUtil.fillAudioFileInfo(audioFile);
-                    musicList.repaint();
-                });
-                musicListModel.addElement(audioFile);
+        JSONArray localPlaylistJsonArray = config.getJSONArray(ConfigConstants.LOCAL_PLAYLISTS);
+        if (JsonUtil.notEmpty(localPlaylistJsonArray)) {
+            for (int i = 0, len = localPlaylistJsonArray.size(); i < len; i++) {
+                JSONObject localPlaylistJson = localPlaylistJsonArray.getJSONObject(i);
+                LocalPlaylist playlist = new LocalPlaylist(localPlaylistJson.getString(ConfigConstants.LOCAL_PLAYLIST_NAME),
+                        localPlaylistJson.getBooleanValue(ConfigConstants.LOCAL_PLAYLIST_IS_DEFAULT, false));
+
+                DefaultListModel<MusicResource> listModel = playlist.getMusicListModel();
+                JSONArray musicJsonArray = localPlaylistJson.getJSONArray(ConfigConstants.LOCAL_PLAYLIST_MUSIC_LIST);
+                if (JsonUtil.notEmpty(musicJsonArray)) {
+                    for (int j = 0, l = musicJsonArray.size(); j < l; j++) {
+                        String filePath = musicJsonArray.getString(j);
+                        AudioFile audioFile = new AudioFile(filePath);
+                        globalExecutor.execute(() -> {
+                            MediaUtil.fillAudioFileInfo(audioFile);
+                            musicList.repaint();
+                        });
+                        listModel.addElement(audioFile);
+                    }
+                }
+
+                // 默认收藏夹
+                if (playlist.isDefault()) {
+                    for (int j = 0, l = listModel.size(); j < l; j++) musicListModel.addElement(listModel.get(j));
+                    continue;
+                } else {
+                    // 添加数据监听器
+                    listModel.addListDataListener(countListener);
+                }
+
+                localPlaylists.add(playlist);
             }
         }
     }
@@ -3569,35 +3609,56 @@ public class MainFrame extends JFrame {
     // 载入全部收藏列表
     public void loadCollectedMusicList(JSONObject config) {
         // 载入收藏歌曲列表
-        JSONArray collectionJsonArray = config.getJSONArray(ConfigConstants.COLLECTION);
-        if (JsonUtil.notEmpty(collectionJsonArray)) {
-            for (int i = 0, len = collectionJsonArray.size(); i < len; i++) {
-                String s = collectionJsonArray.getString(i);
-                // 判断是否为文件路径
-                if (!JsonUtil.isValidObject(s)) {
-                    AudioFile audioFile = new AudioFile(s);
-                    globalExecutor.execute(() -> {
-                        MediaUtil.fillAudioFileInfo(audioFile);
-                        musicList.repaint();
-                    });
-                    collectionModel.addElement(audioFile);
-                } else {
-                    JSONObject jsonObject = JSONObject.parseObject(s);
-                    NetMusicInfo musicInfo = new NetMusicInfo();
-                    musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
-                    musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
-                    musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
-                    musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
-                    musicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
-                    musicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
-                    musicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
-                    musicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
-                    musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
-                    musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
-                    musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
-                    musicInfo.setQualityType(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_QUALITY_TYPE, AudioQuality.UNKNOWN));
-                    collectionModel.addElement(musicInfo);
+        JSONArray collectionPlaylistJsonArray = config.getJSONArray(ConfigConstants.COLLECTION_PLAYLISTS);
+        if (JsonUtil.notEmpty(collectionPlaylistJsonArray)) {
+            for (int i = 0, len = collectionPlaylistJsonArray.size(); i < len; i++) {
+                JSONObject collectionPlaylistJson = collectionPlaylistJsonArray.getJSONObject(i);
+                LocalPlaylist playlist = new LocalPlaylist(collectionPlaylistJson.getString(ConfigConstants.COLLECTION_PLAYLIST_NAME),
+                        collectionPlaylistJson.getBooleanValue(ConfigConstants.COLLECTION_PLAYLIST_IS_DEFAULT, false));
+
+                DefaultListModel<MusicResource> listModel = playlist.getMusicListModel();
+                JSONArray collectionJsonArray = collectionPlaylistJson.getJSONArray(ConfigConstants.COLLECTION_PLAYLIST_MUSIC_LIST);
+                if (JsonUtil.notEmpty(collectionJsonArray)) {
+                    for (int j = 0, l = collectionJsonArray.size(); j < l; j++) {
+                        String s = collectionJsonArray.getString(j);
+                        // 判断是否为文件路径
+                        if (!JsonUtil.isValidObject(s)) {
+                            AudioFile audioFile = new AudioFile(s);
+                            globalExecutor.execute(() -> {
+                                MediaUtil.fillAudioFileInfo(audioFile);
+                                musicList.repaint();
+                            });
+                            listModel.addElement(audioFile);
+                        } else {
+                            JSONObject jsonObject = JSONObject.parseObject(s);
+                            NetMusicInfo musicInfo = new NetMusicInfo();
+                            musicInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_SOURCE));
+                            musicInfo.setHash(jsonObject.getString(ConfigConstants.NET_MUSIC_HASH));
+                            musicInfo.setId(jsonObject.getString(ConfigConstants.NET_MUSIC_ID));
+                            musicInfo.setProgramId(jsonObject.getString(ConfigConstants.NET_MUSIC_PROGRAM_ID));
+                            musicInfo.setName(jsonObject.getString(ConfigConstants.NET_MUSIC_NAME));
+                            musicInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST));
+                            musicInfo.setArtistId(jsonObject.getString(ConfigConstants.NET_MUSIC_ARTIST_ID));
+                            musicInfo.setAlbumName(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_NAME));
+                            musicInfo.setAlbumId(jsonObject.getString(ConfigConstants.NET_MUSIC_ALBUM_ID));
+                            musicInfo.setDuration(jsonObject.getDoubleValue(ConfigConstants.NET_MUSIC_DURATION));
+                            musicInfo.setMvId(jsonObject.getString(ConfigConstants.NET_MUSIC_MV_ID));
+                            musicInfo.setQualityType(jsonObject.getIntValue(ConfigConstants.NET_MUSIC_QUALITY_TYPE, AudioQuality.UNKNOWN));
+                            listModel.addElement(musicInfo);
+                        }
+                    }
                 }
+
+                // 默认收藏夹
+                if (playlist.isDefault()) {
+                    for (int j = 0, l = listModel.size(); j < l; j++) collectionModel.addElement(listModel.get(j));
+                    continue;
+                } else {
+                    // 添加数据监听器
+                    listModel.addListDataListener(countListener);
+                }
+
+                collectionPlaylists.add(playlist);
             }
         }
 
@@ -4077,42 +4138,64 @@ public class MainFrame extends JFrame {
 
     // 存入本地音乐列表
     public void putLocalMusicList(JSONObject config) {
-        JSONArray musicJsonArray = new JSONArray();
-        for (int i = 0, len = musicListModel.getSize(); i < len; i++) {
-            File file = (File) musicListModel.get(i);
-            musicJsonArray.add(file.getPath());
+        JSONArray localPlaylistJsonArray = new JSONArray();
+        for (LocalPlaylist playlist : localPlaylists) {
+            JSONObject localPlaylistJson = new JSONObject();
+            localPlaylistJson.put(ConfigConstants.LOCAL_PLAYLIST_NAME, playlist.getName());
+            localPlaylistJson.put(ConfigConstants.LOCAL_PLAYLIST_IS_DEFAULT, playlist.isDefault());
+
+            DefaultListModel<MusicResource> musicListModel = playlist.getMusicListModel();
+            JSONArray musicJsonArray = new JSONArray();
+            for (int i = 0, len = musicListModel.size(); i < len; i++) {
+                AudioFile audioFile = (AudioFile) musicListModel.get(i);
+                musicJsonArray.add(audioFile.getPath());
+            }
+            localPlaylistJson.put(ConfigConstants.LOCAL_PLAYLIST_MUSIC_LIST, musicJsonArray);
+
+            localPlaylistJsonArray.add(localPlaylistJson);
         }
-        config.put(ConfigConstants.MUSIC_LIST, musicJsonArray);
+        config.put(ConfigConstants.LOCAL_PLAYLISTS, localPlaylistJsonArray);
     }
 
     // 存入全部收藏列表
     public void putCollectedItemList(JSONObject config) {
         // 存入收藏歌曲列表
-        JSONArray collectionJsonArray = new JSONArray();
-        for (int i = 0, len = collectionModel.getSize(); i < len; i++) {
-            MusicResource resource = collectionModel.get(i);
-            if (resource instanceof AudioFile) {
-                AudioFile file = (AudioFile) resource;
-                collectionJsonArray.add(file.getPath());
-            } else if (resource instanceof NetMusicInfo) {
-                NetMusicInfo musicInfo = (NetMusicInfo) resource;
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
-                jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, musicInfo.getArtistId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, musicInfo.getAlbumName());
-                jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
-                jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
-                jsonObject.put(ConfigConstants.NET_MUSIC_QUALITY_TYPE, musicInfo.getQualityType());
-                collectionJsonArray.add(jsonObject);
+        JSONArray collectionPlaylistJsonArray = new JSONArray();
+        for (LocalPlaylist playlist : collectionPlaylists) {
+            JSONObject collectionPlaylistJson = new JSONObject();
+            collectionPlaylistJson.put(ConfigConstants.COLLECTION_PLAYLIST_NAME, playlist.getName());
+            collectionPlaylistJson.put(ConfigConstants.COLLECTION_PLAYLIST_IS_DEFAULT, playlist.isDefault());
+
+            DefaultListModel<MusicResource> collectionModel = playlist.getMusicListModel();
+            JSONArray collectionJsonArray = new JSONArray();
+            for (int i = 0, len = collectionModel.size(); i < len; i++) {
+                MusicResource resource = collectionModel.get(i);
+                if (resource instanceof AudioFile) {
+                    AudioFile file = (AudioFile) resource;
+                    collectionJsonArray.add(file.getPath());
+                } else if (resource instanceof NetMusicInfo) {
+                    NetMusicInfo musicInfo = (NetMusicInfo) resource;
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put(ConfigConstants.NET_MUSIC_SOURCE, musicInfo.getSource());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_HASH, musicInfo.getHash());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_ID, musicInfo.getId());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_PROGRAM_ID, musicInfo.getProgramId());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_NAME, musicInfo.getName());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST, musicInfo.getArtist());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_ARTIST_ID, musicInfo.getArtistId());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_NAME, musicInfo.getAlbumName());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_ALBUM_ID, musicInfo.getAlbumId());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_DURATION, musicInfo.getDuration());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_MV_ID, musicInfo.getMvId());
+                    jsonObject.put(ConfigConstants.NET_MUSIC_QUALITY_TYPE, musicInfo.getQualityType());
+                    collectionJsonArray.add(jsonObject);
+                }
             }
+            collectionPlaylistJson.put(ConfigConstants.COLLECTION_PLAYLIST_MUSIC_LIST, collectionJsonArray);
+
+            collectionPlaylistJsonArray.add(collectionPlaylistJson);
         }
-        config.put(ConfigConstants.COLLECTION, collectionJsonArray);
+        config.put(ConfigConstants.COLLECTION_PLAYLISTS, collectionPlaylistJsonArray);
 
         // 存入收藏歌单列表
         JSONArray playlistCollectionJsonArray = new JSONArray();
@@ -4365,7 +4448,7 @@ public class MainFrame extends JFrame {
         });
     }
 
-    // 初始主化菜单
+    // 初始化主菜单
     private void initMainMenu() {
         initOpenFile();
         initOpenDir();
@@ -5183,6 +5266,8 @@ public class MainFrame extends JFrame {
                     });
                 }
             }
+            localPlaylistComboBox.setVisible(selectedIndex == CollectionTabIndex.MUSIC);
+            localPlaylistToolButton.setVisible(selectedIndex == CollectionTabIndex.MUSIC);
             // 切换收藏标签页后筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
         });
@@ -6134,37 +6219,37 @@ public class MainFrame extends JFrame {
                         int selectedIndex = collectionTabbedPane.getSelectedIndex();
                         if (selectedIndex == CollectionTabIndex.PLAYLIST) {
                             netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netPlaylistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netPlaylistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ALBUM) {
                             netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netAlbumCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netAlbumPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ARTIST) {
                             netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netArtistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netArtistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RADIO) {
                             netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netRadioCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netRadioPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.MV) {
                             netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netMvCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RANKING) {
                             netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
                             netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netUserCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netUserPopupMenu.show(collectionList, e.getX(), e.getY());
                         }
@@ -6282,6 +6367,12 @@ public class MainFrame extends JFrame {
                 leftBox.remove(emptyHintPanel);
                 leftBox.add(musicScrollPane);
             }
+
+            ((DefaultComboBoxModel) localPlaylistComboBox.getModel()).removeAllElements();
+            for (LocalPlaylist localPlaylist : localPlaylists) localPlaylistComboBox.addItem(localPlaylist);
+
+            localPlaylistComboBox.setVisible(true);
+            localPlaylistToolButton.setVisible(true);
             addToolButton.setVisible(true);
             reimportToolButton.setVisible(true);
             sortToolButton.setVisible(true);
@@ -6305,6 +6396,8 @@ public class MainFrame extends JFrame {
                 leftBox.remove(emptyHintPanel);
                 leftBox.add(musicScrollPane);
             }
+            localPlaylistComboBox.setVisible(false);
+            localPlaylistToolButton.setVisible(false);
             addToolButton.setVisible(false);
             reimportToolButton.setVisible(false);
             sortToolButton.setVisible(false);
@@ -6362,6 +6455,11 @@ public class MainFrame extends JFrame {
             }
             leftBox.add(collectionTabbedPane);
 
+            ((DefaultComboBoxModel) localPlaylistComboBox.getModel()).removeAllElements();
+            for (LocalPlaylist localPlaylist : collectionPlaylists) localPlaylistComboBox.addItem(localPlaylist);
+
+            localPlaylistComboBox.setVisible(index == CollectionTabIndex.MUSIC);
+            localPlaylistToolButton.setVisible(index == CollectionTabIndex.MUSIC);
             addToolButton.setVisible(false);
             reimportToolButton.setVisible(false);
             sortToolButton.setVisible(false);
@@ -6405,6 +6503,7 @@ public class MainFrame extends JFrame {
     // 初始化本地音乐工具栏
     private void initMusicToolBar() {
         // 按钮悬浮和点击效果
+        localPlaylistToolButton.addMouseListener(new ButtonMouseListener(localPlaylistToolButton, THIS));
         addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
         reimportToolButton.addMouseListener(new ButtonMouseListener(reimportToolButton, THIS));
         manageCatalogToolButton.addMouseListener(new ButtonMouseListener(manageCatalogToolButton, THIS));
@@ -6418,6 +6517,81 @@ public class MainFrame extends JFrame {
         clearInputToolButton.addMouseListener(new ButtonMouseListener(clearInputToolButton, THIS));
         // 标签左间距
         countLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+
+        // 下拉框事件
+        localPlaylistComboBox.addItemListener(e -> {
+            // 避免事件被处理 2 次！
+            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) {
+                currLocalPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
+                // 禁用默认收藏夹的编辑/删除
+                editLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
+                removeLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
+                DefaultListModel<MusicResource> newModel = currLocalPlaylist.getMusicListModel();
+                if (musicList.getModel() == musicListModel) musicList.setModel(newModel);
+                musicListModel = newModel;
+                countLabel.setText(String.format(TOTAL_MSG, newModel.getSize()));
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                currCollectionPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
+                // 禁用默认收藏夹的编辑/删除
+                editLocalPlaylistMenuItem.setEnabled(!currCollectionPlaylist.isDefault());
+                removeLocalPlaylistMenuItem.setEnabled(!currCollectionPlaylist.isDefault());
+                DefaultListModel<MusicResource> newModel = currCollectionPlaylist.getMusicListModel();
+                if (musicList.getModel() == collectionModel) musicList.setModel(newModel);
+                collectionModel = newModel;
+                countLabel.setText(String.format(TOTAL_MSG, newModel.getSize()));
+            }
+        });
+
+        createLocalPlaylistMenuItem.addActionListener(e -> {
+            CreateLocalPlaylistDialog d = new CreateLocalPlaylistDialog(THIS);
+            d.showDialog();
+            if (!d.isConfirmed()) return;
+            String name = d.getResult();
+            LocalPlaylist playlist = new LocalPlaylist(name);
+            // 为新的 ListModel 添加监听器
+            DefaultListModel<MusicResource> newModel = playlist.getMusicListModel();
+            newModel.addListDataListener(countListener);
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) {
+                localPlaylists.add(playlist);
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                collectionPlaylists.add(playlist);
+            }
+            localPlaylistComboBox.addItem(playlist);
+        });
+        editLocalPlaylistMenuItem.addActionListener(e -> {
+            EditLocalPlaylistDialog d = new EditLocalPlaylistDialog(THIS, currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC ? currLocalPlaylist : currCollectionPlaylist);
+            d.showDialog();
+            localPlaylistComboBox.repaint();
+        });
+        removeLocalPlaylistMenuItem.addActionListener(e -> {
+            ConfirmDialog d = new ConfirmDialog(THIS, ASK_REMOVE_LOCAL_PLAYLIST_MSG, YES, NO);
+            d.showDialog();
+            int response = d.getResponse();
+            if (response == JOptionPane.YES_OPTION) {
+                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) {
+                    localPlaylistComboBox.removeItem(currLocalPlaylist);
+                    localPlaylists.remove(currLocalPlaylist);
+                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
+                    localPlaylistComboBox.removeItem(currCollectionPlaylist);
+                    collectionPlaylists.remove(currCollectionPlaylist);
+                }
+                localPlaylistComboBox.setSelectedIndex(0);
+            }
+        });
+        localPlaylistPopupMenu.add(createLocalPlaylistMenuItem);
+        localPlaylistPopupMenu.add(editLocalPlaylistMenuItem);
+        localPlaylistPopupMenu.add(removeLocalPlaylistMenuItem);
+        // 按钮绑定右键菜单
+        localPlaylistToolButton.setComponentPopupMenu(localPlaylistPopupMenu);
+        // 点击收藏夹按钮事件
+        localPlaylistToolButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.getButton() != MouseEvent.BUTTON1) return;
+                localPlaylistPopupMenu.show(localPlaylistToolButton, e.getX(), e.getY());
+            }
+        });
 
         addPopupMenu.add(addFileMenuItem);
         addPopupMenu.add(addDirMenuItem);
@@ -6817,6 +6991,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 帮助提示
+        localPlaylistToolButton.setToolTipText(LOCAL_PLAYLIST_TIP);
         addToolButton.setToolTipText(ADD_TIP);
         reimportToolButton.setToolTipText(REIMPORT_TIP);
         manageCatalogToolButton.setToolTipText(MANAGE_CATALOG_TIP);
@@ -6831,6 +7006,8 @@ public class MainFrame extends JFrame {
         // 清除输入按钮初始不可见
         clearInputToolButton.setVisible(false);
 
+        musicToolBar.add(localPlaylistComboBox);
+        musicToolBar.add(localPlaylistToolButton);
         musicToolBar.add(addToolButton);
         musicToolBar.add(reimportToolButton);
         musicToolBar.add(manageCatalogToolButton);
@@ -6849,52 +7026,102 @@ public class MainFrame extends JFrame {
         leftBox.add(musicToolBar);
     }
 
-    // 初始化个人音乐列表
-    private void initMusicList() {
-        ListDataListener countListener = new ListDataListener() {
-            @Override
-            public void intervalAdded(ListDataEvent e) {
-                DefaultListModel model = (DefaultListModel) e.getSource();
-                int size = model.getSize();
-                int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
-                        || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
+    public ListDataListener countListener = new ListDataListener() {
+        @Override
+        public void intervalAdded(ListDataEvent e) {
+            DefaultListModel model = (DefaultListModel) e.getSource();
+            int size = model.getSize();
+            int selectedIndex = collectionTabbedPane.getSelectedIndex();
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
+                    || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
+                countLabel.setText(String.format(TOTAL_MSG, size));
+                musicList.setModel(model);
+                leftBox.remove(emptyHintPanel);
+                leftBox.add(musicScrollPane);
+                leftBox.repaint();
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
+                    && (model == collectionModel || model == filterModel)) {
+                countLabel.setText(String.format(TOTAL_MSG, size));
+                musicList.setModel(model);
+                musicCollectionLeftBox.remove(emptyHintPanel);
+                musicCollectionLeftBox.add(musicScrollPane);
+                musicCollectionLeftBox.repaint();
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
+                if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
-                    musicList.setModel(model);
-                    leftBox.remove(emptyHintPanel);
-                    leftBox.add(musicScrollPane);
-                    leftBox.repaint();
-                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
-                        && (model == collectionModel || model == filterModel)) {
+                } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
-                    musicList.setModel(model);
-                    musicCollectionLeftBox.remove(emptyHintPanel);
-                    musicCollectionLeftBox.add(musicScrollPane);
-                    musicCollectionLeftBox.repaint();
-                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
-                    if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
-                        collectionList.setModel(model);
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    }
+                } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
+                    collectionList.setModel(model);
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                }
 
+                Box box = null;
+                if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
+                box.remove(emptyHintPanel);
+                box.add(collectionScrollPane);
+                box.repaint();
+            }
+        }
+
+        @Override
+        public void intervalRemoved(ListDataEvent e) {
+            DefaultListModel model = (DefaultListModel) e.getSource();
+            int size = model.getSize();
+            int selectedIndex = collectionTabbedPane.getSelectedIndex();
+            if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
+                    || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
+                countLabel.setText(String.format(TOTAL_MSG, size));
+                if (size == 0) {
+                    leftBox.add(emptyHintPanel);
+                    leftBox.remove(musicScrollPane);
+                    leftBox.repaint();
+                }
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
+                    && (model == collectionModel || model == filterModel)) {
+                countLabel.setText(String.format(TOTAL_MSG, size));
+                if (size == 0) {
+                    musicCollectionLeftBox.remove(musicScrollPane);
+                    musicCollectionLeftBox.add(emptyHintPanel);
+                    musicCollectionLeftBox.repaint();
+                }
+            } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
+                if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
+                    countLabel.setText(String.format(TOTAL_MSG, size));
+                }
+                if (size == 0) {
                     Box box = null;
                     if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
@@ -6903,70 +7130,21 @@ public class MainFrame extends JFrame {
                     else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
-                    box.remove(emptyHintPanel);
-                    box.add(collectionScrollPane);
+                    box.remove(collectionScrollPane);
+                    box.add(emptyHintPanel);
                     box.repaint();
                 }
             }
+        }
 
-            @Override
-            public void intervalRemoved(ListDataEvent e) {
-                DefaultListModel model = (DefaultListModel) e.getSource();
-                int size = model.getSize();
-                int selectedIndex = collectionTabbedPane.getSelectedIndex();
-                if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
-                        || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
-                    countLabel.setText(String.format(TOTAL_MSG, size));
-                    if (size == 0) {
-                        leftBox.add(emptyHintPanel);
-                        leftBox.remove(musicScrollPane);
-                        leftBox.repaint();
-                    }
-                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
-                        && (model == collectionModel || model == filterModel)) {
-                    countLabel.setText(String.format(TOTAL_MSG, size));
-                    if (size == 0) {
-                        musicCollectionLeftBox.remove(musicScrollPane);
-                        musicCollectionLeftBox.add(emptyHintPanel);
-                        musicCollectionLeftBox.repaint();
-                    }
-                } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
-                    if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
-                        countLabel.setText(String.format(TOTAL_MSG, size));
-                    }
-                    if (size == 0) {
-                        Box box = null;
-                        if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
-                        else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
-                        box.remove(collectionScrollPane);
-                        box.add(emptyHintPanel);
-                        box.repaint();
-                    }
-                }
-            }
+        @Override
+        public void contentsChanged(ListDataEvent e) {
 
-            @Override
-            public void contentsChanged(ListDataEvent e) {
+        }
+    };
 
-            }
-        };
+    // 初始化个人音乐列表
+    private void initMusicList() {
         musicListModel.addListDataListener(countListener);
         historyModel.addListDataListener(countListener);
         collectionModel.addListDataListener(countListener);
@@ -7043,7 +7221,7 @@ public class MainFrame extends JFrame {
                             playMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
                                 collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                                collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                                collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
                                 collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -7069,7 +7247,7 @@ public class MainFrame extends JFrame {
                             playMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
                                 collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                                collectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                                collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
                                 collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -7110,33 +7288,35 @@ public class MainFrame extends JFrame {
         removeMenuItem.addActionListener(e -> removeToolButton.doClick());
         // 右键菜单收藏/取消收藏
         collectMenuItem.addActionListener(e -> {
-            ListModel<MusicResource> model = musicList.getModel();
-            boolean needRefresh = model == collectionModel;
-            if (collectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List<MusicResource> values = musicList.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    MusicResource resource = values.get(i);
-                    if (hasBeenCollected(resource)) continue;
-                    collectionModel.add(0, resource);
-                    if (player.loadedMusicResource(resource))
-                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
-                }
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
-            } else {
-                List<MusicResource> values = musicList.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(resource -> {
-                    if (hasBeenCollected(resource)) {
-                        collectionModel.removeElement(resource);
-                        if (player.loadedMusicResource(resource))
-                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
-                    }
-                });
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
-            }
+//            ListModel<MusicResource> model = musicList.getModel();
+//            boolean needRefresh = model == collectionModel;
+//            if (collectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+//                List<MusicResource> values = musicList.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                for (int i = values.size() - 1; i >= 0; i--) {
+//                    MusicResource resource = values.get(i);
+//                    if (hasBeenCollected(resource)) continue;
+//                    collectionModel.add(0, resource);
+//                    if (player.loadedMusicResource(resource))
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                }
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
+//            } else {
+//                List<MusicResource> values = musicList.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                values.forEach(resource -> {
+//                    if (hasBeenCollected(resource)) {
+//                        collectionModel.removeElement(resource);
+//                        if (player.loadedMusicResource(resource))
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                    }
+//                });
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
+//            }
+            AddToFavoritesDialog d = new AddToFavoritesDialog(THIS, musicList.getSelectedValuesList());
+            d.showDialog();
         });
         // 右键菜单播放 MV
         playMvMenuItem.addActionListener(e -> playMv(MvCompSourceType.MUSIC_LIST));
@@ -7599,7 +7779,7 @@ public class MainFrame extends JFrame {
                         netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
                         if (hasBeenCollected(musicInfo)) {
                             netMusicCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netMusicCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netMusicCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -7618,33 +7798,38 @@ public class MainFrame extends JFrame {
         netMusicNextPlayMenuItem.addActionListener(e -> nextPlay(netMusicList));
         // 收藏在线音乐
         netMusicCollectMenuItem.addActionListener(e -> {
-            ListModel<MusicResource> model = musicList.getModel();
-            boolean needRefresh = model == collectionModel;
-            if (netMusicCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    NetMusicInfo musicInfo = values.get(i);
-                    if (hasBeenCollected(musicInfo)) continue;
-                    collectionModel.add(0, musicInfo);
-                    if (player.loadedMusicResource(musicInfo))
-                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
-                }
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
-            } else {
-                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(musicInfo -> {
-                    if (hasBeenCollected(musicInfo)) {
-                        collectionModel.removeElement(musicInfo);
-                        if (player.loadedMusicResource(musicInfo))
-                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
-                    }
-                });
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
-            }
+//            ListModel<MusicResource> model = musicList.getModel();
+//            boolean needRefresh = model == collectionModel;
+//            if (netMusicCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+//                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                for (int i = values.size() - 1; i >= 0; i--) {
+//                    NetMusicInfo musicInfo = values.get(i);
+//                    if (hasBeenCollected(musicInfo)) continue;
+//                    collectionModel.add(0, musicInfo);
+//                    if (player.loadedMusicResource(musicInfo))
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                }
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
+//            } else {
+//                List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                values.forEach(musicInfo -> {
+//                    if (hasBeenCollected(musicInfo)) {
+//                        collectionModel.removeElement(musicInfo);
+//                        if (player.loadedMusicResource(musicInfo))
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                    }
+//                });
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
+//            }
+            List<NetMusicInfo> values = netMusicList.getSelectedValuesList();
+            // 集合中元素类型向上转换
+            List<MusicResource> resources = new LinkedList<>(values);
+            AddToFavoritesDialog d = new AddToFavoritesDialog(THIS, resources);
+            d.showDialog();
         });
         // 播放在线音乐的 MV
         netMusicPlayMvMenuItem.addActionListener(e -> {
@@ -9898,7 +10083,7 @@ public class MainFrame extends JFrame {
                         if (!netPlaylistList.isSelectedIndex(index)) netPlaylistList.setSelectedIndex(index);
                         if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
                             netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netPlaylistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netPlaylistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -10893,7 +11078,7 @@ public class MainFrame extends JFrame {
                         if (!netAlbumList.isSelectedIndex(index)) netAlbumList.setSelectedIndex(index);
                         if (hasBeenCollected(netAlbumList.getSelectedValue())) {
                             netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netAlbumCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netAlbumCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netAlbumCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -11921,7 +12106,7 @@ public class MainFrame extends JFrame {
                         if (!netArtistList.isSelectedIndex(index)) netArtistList.setSelectedIndex(index);
                         if (hasBeenCollected(netArtistList.getSelectedValue())) {
                             netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netArtistCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netArtistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netArtistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -13179,7 +13364,7 @@ public class MainFrame extends JFrame {
                         if (!netRadioList.isSelectedIndex(index)) netRadioList.setSelectedIndex(index);
                         if (hasBeenCollected(netRadioList.getSelectedValue())) {
                             netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netRadioCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netRadioCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -14070,7 +14255,7 @@ public class MainFrame extends JFrame {
                         if (!netMvList.isSelectedIndex(index)) netMvList.setSelectedIndex(index);
                         if (hasBeenCollected(netMvList.getSelectedValue())) {
                             netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netMvCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netMvCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -14915,7 +15100,7 @@ public class MainFrame extends JFrame {
                         if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
                         if (hasBeenCollected(netRankingList.getSelectedValue())) {
                             netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netRankingCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -15721,7 +15906,7 @@ public class MainFrame extends JFrame {
                         if (!netUserList.isSelectedIndex(index)) netUserList.setSelectedIndex(index);
                         if (hasBeenCollected(netUserList.getSelectedValue())) {
                             netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                            netUserCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                            netUserCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
                             netUserCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -19063,7 +19248,7 @@ public class MainFrame extends JFrame {
                     else if (resource instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
                     if (hasBeenCollected(resource)) {
                         menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                        menuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                        menuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                     } else {
                         menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                         menuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -19576,7 +19761,7 @@ public class MainFrame extends JFrame {
                             playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                                playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                                playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -19602,7 +19787,7 @@ public class MainFrame extends JFrame {
                             playQueuePlayMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
-                                playQueueCollectMenuItem.setText(CANCEL_COLLECTION_MENU_ITEM_TEXT);
+                                playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
@@ -19628,33 +19813,35 @@ public class MainFrame extends JFrame {
         });
         // 收藏/取消收藏菜单项
         playQueueCollectMenuItem.addActionListener(e -> {
-            ListModel<MusicResource> model = musicList.getModel();
-            boolean needRefresh = model == collectionModel;
-            if (playQueueCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
-                List<MusicResource> values = playQueue.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                for (int i = values.size() - 1; i >= 0; i--) {
-                    MusicResource resource = values.get(i);
-                    if (hasBeenCollected(resource)) continue;
-                    collectionModel.add(0, resource);
-                    if (player.loadedMusicResource(resource))
-                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
-                }
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
-            } else {
-                List<MusicResource> values = playQueue.getSelectedValuesList();
-                if (needRefresh) musicList.setModel(emptyListModel);
-                values.forEach(resource -> {
-                    if (hasBeenCollected(resource)) {
-                        collectionModel.removeElement(resource);
-                        if (player.loadedMusicResource(resource))
-                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
-                    }
-                });
-                if (needRefresh) musicList.setModel(model);
-                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
-            }
+//            ListModel<MusicResource> model = musicList.getModel();
+//            boolean needRefresh = model == collectionModel;
+//            if (playQueueCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT)) {
+//                List<MusicResource> values = playQueue.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                for (int i = values.size() - 1; i >= 0; i--) {
+//                    MusicResource resource = values.get(i);
+//                    if (hasBeenCollected(resource)) continue;
+//                    collectionModel.add(0, resource);
+//                    if (player.loadedMusicResource(resource))
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                }
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
+//            } else {
+//                List<MusicResource> values = playQueue.getSelectedValuesList();
+//                if (needRefresh) musicList.setModel(emptyListModel);
+//                values.forEach(resource -> {
+//                    if (hasBeenCollected(resource)) {
+//                        collectionModel.removeElement(resource);
+//                        if (player.loadedMusicResource(resource))
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                    }
+//                });
+//                if (needRefresh) musicList.setModel(model);
+//                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
+//            }
+            AddToFavoritesDialog d = new AddToFavoritesDialog(THIS, playQueue.getSelectedValuesList());
+            d.showDialog();
         });
         // 下载菜单项
         playQueueDownloadMenuItem.addActionListener(e -> {
@@ -20235,16 +20422,25 @@ public class MainFrame extends JFrame {
         collectButton.addActionListener(e -> {
             MusicResource resource = player.getMusicInfo();
             if (resource == null) resource = player.getAudioFile();
-            if (!hasBeenCollected(resource)) {
-                collectionModel.add(0, resource);
+//            if (!hasBeenCollected(resource)) {
+//                collectionModel.add(0, resource);
+//                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                collectButton.setToolTipText(COLLECTED_TIP);
+//                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
+//            } else {
+//                collectionModel.removeElement(resource);
+//                collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                collectButton.setToolTipText(COLLECT_TIP);
+//                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
+//            }
+            AddToFavoritesDialog d = new AddToFavoritesDialog(THIS, resource);
+            d.showDialog();
+            if (hasBeenCollected(resource)) {
                 collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECTED_TIP);
-                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
             } else {
-                collectionModel.removeElement(resource);
                 collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECT_TIP);
-                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
             }
         });
         // 下载
@@ -21720,6 +21916,12 @@ public class MainFrame extends JFrame {
         helpMenuItem.setIcon(ImageUtil.dye(helpIcon, iconColor));
         aboutMenuItem.setIcon(ImageUtil.dye(aboutIcon, iconColor));
 
+        createLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
+        editLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
+        editLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(folderIcon, darkerIconColor));
+        removeLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
+        removeLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(folderIcon, darkerIconColor));
+
         addFileMenuItem.setIcon(ImageUtil.dye(fileIcon, iconColor));
         addDirMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
 
@@ -21948,6 +22150,7 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(mottoPopupMenu);
         updateMenuItemStyle(trayPopupMenu);
         updateMenuItemStyle(stylePopupMenu);
+        updateMenuItemStyle(localPlaylistPopupMenu);
         updateMenuItemStyle(addPopupMenu);
         updateMenuItemStyle(sortPopupMenu);
         updateMenuItemStyle(descriptionPanelPopupMenu);
@@ -22091,9 +22294,9 @@ public class MainFrame extends JFrame {
         searchTextField.setCaretColor(textColor);
         searchTextField.setSelectedTextColor(textColor);
         searchTextField.setSelectionColor(darkerTextAlphaColor);
-        netMusicSourceComboBox.setUI(new ComboBoxUI(netMusicSourceComboBox, THIS));
-        netMusicSearchTypeComboBox.setUI(new ComboBoxUI(netMusicSearchTypeComboBox, THIS));
-        netMusicSearchSubTypeComboBox.setUI(new ComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
+        netMusicSourceComboBox.setUI(new StringComboBoxUI(netMusicSourceComboBox, THIS));
+        netMusicSearchTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchTypeComboBox, THIS));
+        netMusicSearchSubTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
         netMusicPageTextField.setForeground(textColor);
         netMusicPageTextField.setCaretColor(textColor);
         netMusicPageTextField.setSelectedTextColor(textColor);
@@ -22113,7 +22316,7 @@ public class MainFrame extends JFrame {
         netPlaylistSearchTextField.setCaretColor(textColor);
         netPlaylistSearchTextField.setSelectedTextColor(textColor);
         netPlaylistSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netPlaylistSourceComboBox.setUI(new ComboBoxUI(netPlaylistSourceComboBox, THIS));
+        netPlaylistSourceComboBox.setUI(new StringComboBoxUI(netPlaylistSourceComboBox, THIS));
         netPlaylistPageTextField.setForeground(textColor);
         netPlaylistPageTextField.setCaretColor(textColor);
         netPlaylistPageTextField.setSelectedTextColor(textColor);
@@ -22131,7 +22334,7 @@ public class MainFrame extends JFrame {
         netAlbumSearchTextField.setCaretColor(textColor);
         netAlbumSearchTextField.setSelectedTextColor(textColor);
         netAlbumSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netAlbumSourceComboBox.setUI(new ComboBoxUI(netAlbumSourceComboBox, THIS));
+        netAlbumSourceComboBox.setUI(new StringComboBoxUI(netAlbumSourceComboBox, THIS));
         netAlbumPageTextField.setForeground(textColor);
         netAlbumPageTextField.setCaretColor(textColor);
         netAlbumPageTextField.setSelectedTextColor(textColor);
@@ -22149,7 +22352,7 @@ public class MainFrame extends JFrame {
         netArtistSearchTextField.setCaretColor(textColor);
         netArtistSearchTextField.setSelectedTextColor(textColor);
         netArtistSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netArtistSourceComboBox.setUI(new ComboBoxUI(netArtistSourceComboBox, THIS));
+        netArtistSourceComboBox.setUI(new StringComboBoxUI(netArtistSourceComboBox, THIS));
         netArtistPageTextField.setForeground(textColor);
         netArtistPageTextField.setCaretColor(textColor);
         netArtistPageTextField.setSelectedTextColor(textColor);
@@ -22167,7 +22370,7 @@ public class MainFrame extends JFrame {
         netRadioSearchTextField.setCaretColor(textColor);
         netRadioSearchTextField.setSelectedTextColor(textColor);
         netRadioSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netRadioSourceComboBox.setUI(new ComboBoxUI(netRadioSourceComboBox, THIS));
+        netRadioSourceComboBox.setUI(new StringComboBoxUI(netRadioSourceComboBox, THIS));
         netRadioPageTextField.setForeground(textColor);
         netRadioPageTextField.setCaretColor(textColor);
         netRadioPageTextField.setSelectedTextColor(textColor);
@@ -22185,7 +22388,7 @@ public class MainFrame extends JFrame {
         netMvSearchTextField.setCaretColor(textColor);
         netMvSearchTextField.setSelectedTextColor(textColor);
         netMvSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netMvSourceComboBox.setUI(new ComboBoxUI(netMvSourceComboBox, THIS));
+        netMvSourceComboBox.setUI(new StringComboBoxUI(netMvSourceComboBox, THIS));
         netMvPageTextField.setForeground(textColor);
         netMvPageTextField.setCaretColor(textColor);
         netMvPageTextField.setSelectedTextColor(textColor);
@@ -22208,17 +22411,17 @@ public class MainFrame extends JFrame {
         netUserSearchTextField.setCaretColor(textColor);
         netUserSearchTextField.setSelectedTextColor(textColor);
         netUserSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netUserSourceComboBox.setUI(new ComboBoxUI(netUserSourceComboBox, THIS));
-        netUserRecordTypeComboBox.setUI(new ComboBoxUI(netUserRecordTypeComboBox, THIS));
+        netUserSourceComboBox.setUI(new StringComboBoxUI(netUserSourceComboBox, THIS));
+        netUserRecordTypeComboBox.setUI(new StringComboBoxUI(netUserRecordTypeComboBox, THIS));
         netUserPageTextField.setForeground(textColor);
         netUserPageTextField.setCaretColor(textColor);
         netUserPageTextField.setSelectedTextColor(textColor);
         netUserPageTextField.setSelectionColor(darkerTextAlphaColor);
         netUserPlayAllButton.setForeground(textColor);
         // 榜单栏
-        netRankingSourceComboBox.setUI(new ComboBoxUI(netRankingSourceComboBox, THIS));
+        netRankingSourceComboBox.setUI(new StringComboBoxUI(netRankingSourceComboBox, THIS));
         // 评论栏透明
-        netCommentTypeComboBox.setUI(new ComboBoxUI(netCommentTypeComboBox, THIS));
+        netCommentTypeComboBox.setUI(new StringComboBoxUI(netCommentTypeComboBox, THIS));
         netCommentPageTextField.setForeground(textColor);
         netCommentPageTextField.setCaretColor(textColor);
         netCommentPageTextField.setSelectedTextColor(textColor);
@@ -22229,16 +22432,16 @@ public class MainFrame extends JFrame {
         netSheetPageTextField.setSelectedTextColor(textColor);
         netSheetPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 推荐页码文本框
-        netRecommendSourceComboBox.setUI(new ComboBoxUI(netRecommendSourceComboBox, THIS));
-        netRecommendSortTypeComboBox.setUI(new ComboBoxUI(netRecommendSortTypeComboBox, THIS));
+        netRecommendSourceComboBox.setUI(new StringComboBoxUI(netRecommendSourceComboBox, THIS));
+        netRecommendSortTypeComboBox.setUI(new StringComboBoxUI(netRecommendSortTypeComboBox, THIS));
         netRecommendPageTextField.setForeground(textColor);
         netRecommendPageTextField.setCaretColor(textColor);
         netRecommendPageTextField.setSelectedTextColor(textColor);
         netRecommendPageTextField.setSelectionColor(darkerTextAlphaColor);
-        netRecommendTagComboBox.setUI(new ComboBoxUI(netRecommendTagComboBox, THIS, 240));
+        netRecommendTagComboBox.setUI(new StringComboBoxUI(netRecommendTagComboBox, THIS, 240));
         netRecommendPlayAllButton.setForeground(textColor);
         // 收藏页码文本框
-        collectionRecordTypeComboBox.setUI(new ComboBoxUI(collectionRecordTypeComboBox, THIS));
+        collectionRecordTypeComboBox.setUI(new StringComboBoxUI(collectionRecordTypeComboBox, THIS));
         collectionPageTextField.setForeground(textColor);
         collectionPageTextField.setCaretColor(textColor);
         collectionPageTextField.setSelectedTextColor(textColor);
@@ -22259,10 +22462,13 @@ public class MainFrame extends JFrame {
         localMusicButton.setForeground(textColor);
         historyButton.setForeground(textColor);
         collectionButton.setForeground(textColor);
+        // 工具栏下拉框
+        localPlaylistComboBox.setUI(new LocalPlaylistComboBoxUI(localPlaylistComboBox, THIS, 170));
         // 工具栏按钮颜色
         localMusicButton.setIcon(ImageUtil.dye((ImageIcon) localMusicButton.getIcon(), iconColor));
         historyButton.setIcon(ImageUtil.dye((ImageIcon) historyButton.getIcon(), iconColor));
         collectionButton.setIcon(ImageUtil.dye((ImageIcon) collectionButton.getIcon(), iconColor));
+        localPlaylistToolButton.setIcon(ImageUtil.dye((ImageIcon) localPlaylistToolButton.getIcon(), iconColor));
         addToolButton.setIcon(ImageUtil.dye((ImageIcon) addToolButton.getIcon(), iconColor));
         reimportToolButton.setIcon(ImageUtil.dye((ImageIcon) reimportToolButton.getIcon(), iconColor));
         manageCatalogToolButton.setIcon(ImageUtil.dye((ImageIcon) manageCatalogToolButton.getIcon(), iconColor));
@@ -22318,7 +22524,7 @@ public class MainFrame extends JFrame {
         netArtistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistNextPageButton.getIcon(), iconColor));
         netArtistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistEndPageButton.getIcon(), iconColor));
         // 电台搜索栏按钮颜色
-        netRadioSortTypeComboBox.setUI(new ComboBoxUI(netRadioSortTypeComboBox, THIS));
+        netRadioSortTypeComboBox.setUI(new StringComboBoxUI(netRadioSortTypeComboBox, THIS));
         netRadioBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), iconColor));
         netRadioClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearInputButton.getIcon(), iconColor));
         netRadioSearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioSearchButton.getIcon(), iconColor));
@@ -22330,7 +22536,7 @@ public class MainFrame extends JFrame {
         netRadioNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioNextPageButton.getIcon(), iconColor));
         netRadioEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioEndPageButton.getIcon(), iconColor));
         // MV 搜索栏按钮颜色
-        netMvSortTypeComboBox.setUI(new ComboBoxUI(netMvSortTypeComboBox, THIS));
+        netMvSortTypeComboBox.setUI(new StringComboBoxUI(netMvSortTypeComboBox, THIS));
         netMvBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), iconColor));
         netMvClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netMvClearInputButton.getIcon(), iconColor));
         netMvSearchButton.setIcon(ImageUtil.dye((ImageIcon) netMvSearchButton.getIcon(), iconColor));
@@ -23142,18 +23348,21 @@ public class MainFrame extends JFrame {
     public boolean hasBeenCollected(Resource resource) {
         if (resource == null) return false;
         DefaultListModel model = null;
-        if (resource instanceof AudioFile || resource instanceof NetMusicInfo) model = collectionModel;
-        else if (resource instanceof NetPlaylistInfo) model = playlistCollectionModel;
+        // 歌曲从所有收藏夹中依次判断
+        if (resource instanceof AudioFile || resource instanceof NetMusicInfo) {
+            for (LocalPlaylist playlist : collectionPlaylists) {
+                DefaultListModel<MusicResource> musicListModel = playlist.getMusicListModel();
+                if (musicListModel.contains(resource)) return true;
+            }
+            return false;
+        } else if (resource instanceof NetPlaylistInfo) model = playlistCollectionModel;
         else if (resource instanceof NetAlbumInfo) model = albumCollectionModel;
         else if (resource instanceof NetArtistInfo) model = artistCollectionModel;
         else if (resource instanceof NetRadioInfo) model = radioCollectionModel;
         else if (resource instanceof NetMvInfo) model = mvCollectionModel;
         else if (resource instanceof NetRankingInfo) model = rankingCollectionModel;
         else if (resource instanceof NetUserInfo) model = userCollectionModel;
-        for (int i = 0, len = model.size(); i < len; i++) {
-            if (model.get(i).equals(resource)) return true;
-        }
-        return false;
+        return model.contains(resource);
     }
 
     // 更新收藏

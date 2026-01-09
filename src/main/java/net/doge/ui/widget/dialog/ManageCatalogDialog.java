@@ -204,7 +204,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         catalogList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                // 鼠标左键双击应用主题
+                // 鼠标左键双击打开资源管理器
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     locateButton.doClick();
                 }

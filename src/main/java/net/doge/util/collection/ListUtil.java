@@ -9,6 +9,19 @@ import java.util.*;
  */
 public class ListUtil {
     /**
+     * 创建带多个元素的 list
+     *
+     * @param elements
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> of(T... elements) {
+        List<T> list = new LinkedList<>();
+        Collections.addAll(list, elements);
+        return list;
+    }
+
+    /**
      * 判断 list 是否不为空
      *
      * @param list

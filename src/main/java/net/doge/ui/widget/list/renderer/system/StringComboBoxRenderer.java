@@ -18,14 +18,14 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ComboBoxRenderer extends DefaultListCellRenderer {
+public class StringComboBoxRenderer extends DefaultListCellRenderer {
     // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Color textColor;
-    private Color foreColor;
-    private CustomLabel label = new CustomLabel();
+    protected Font customFont = Fonts.NORMAL;
+    protected Color textColor;
+    protected Color foreColor;
+    protected CustomLabel label = new CustomLabel();
 
-    public ComboBoxRenderer(MainFrame f) {
+    public StringComboBoxRenderer(MainFrame f) {
         textColor = f.currUIStyle.getTextColor();
         foreColor = f.currUIStyle.getForeColor();
 

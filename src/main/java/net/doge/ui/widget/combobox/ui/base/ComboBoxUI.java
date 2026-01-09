@@ -1,4 +1,4 @@
-package net.doge.ui.widget.combobox.ui;
+package net.doge.ui.widget.combobox.ui.base;
 
 import lombok.Getter;
 import net.doge.ui.MainFrame;
@@ -6,7 +6,6 @@ import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.CustomComboPopup;
-import net.doge.ui.widget.list.renderer.system.ComboBoxRenderer;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
@@ -23,18 +22,18 @@ import java.awt.event.MouseEvent;
  * @Date 2020/12/13
  */
 public class ComboBoxUI extends BasicComboBoxUI {
-    private CustomComboBox comboBox;
+    protected CustomComboBox comboBox;
     @Getter
-    private CustomComboPopup popup;
+    protected CustomComboPopup popup;
     @Getter
-    private CustomButton arrowButton;
-    private MainFrame f;
-    private Color textColor;
-    private Color iconColor;
+    protected CustomButton arrowButton;
+    protected MainFrame f;
+    protected Color textColor;
+    protected Color iconColor;
 
-    private ImageIcon arrowIcon = LMIconManager.getIcon("toolbar.arrow");
+    protected ImageIcon arrowIcon = LMIconManager.getIcon("toolbar.arrow");
 
-    public ComboBoxUI(CustomComboBox comboBox, MainFrame f) {
+    public ComboBoxUI(CustomComboBox<?> comboBox, MainFrame f) {
         this.comboBox = comboBox;
         this.f = f;
 
@@ -43,15 +42,13 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
         arrowIcon = ImageUtil.dye(arrowIcon, iconColor);
 
-        // 下拉列表渲染
-        comboBox.setRenderer(new ComboBoxRenderer(f));
         final int width = 170;
         if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
 
         comboBox.setForeground(textColor);
     }
 
-    public ComboBoxUI(CustomComboBox comboBox, MainFrame f, int width) {
+    public ComboBoxUI(CustomComboBox<?> comboBox, MainFrame f, int width) {
         this(comboBox, f);
         comboBox.setPreferredSize(new Dimension(width, 30));
     }

@@ -39,6 +39,7 @@ public class I18n {
         LANG_MAP.put("exitOption1", new String[]{"隐藏到托盘", "Hide to tray"});
         LANG_MAP.put("exitOption2", new String[]{"退出程序", "Exit"});
         LANG_MAP.put("exitOption3", new String[]{"取消", "Cancel"});
+        LANG_MAP.put("askRemoveLocalPlaylistMsg", new String[]{"是否删除当前收藏夹？此操作不可逆！", "Do you want to delete the current favorites? This action cannot be undone!"});
         LANG_MAP.put("askReimportMsg", new String[]{"将重新从所有歌曲目录导入歌曲，是否继续？", "Tracks will be re-imported from all track catalogs, do you want to continue?"});
         LANG_MAP.put("askRetainMusicListMsg", new String[]{"歌曲列表已存在歌曲，您希望保留歌曲列表的歌曲吗？(选择“否”将清空原有的歌曲列表)", "The track list already has tracks, do you want to keep the tracks from the track list? (Select \"No\" to clear the original track list)"});
         LANG_MAP.put("askClearCacheMsg", new String[]{"当前缓存大小为 %s，确定要清空缓存吗？", "The current cache size is %s, are you sure you want to clear the cache?"});
@@ -117,7 +118,7 @@ public class I18n {
         LANG_MAP.put("locateFileMenuItem", new String[]{"打开文件所在位置", "Locate file"});
         LANG_MAP.put("removeMenuItem", new String[]{"从列表删除", "Remove from list"});
         LANG_MAP.put("collectMenuItem", new String[]{"收藏", "Collect"});
-        LANG_MAP.put("cancelCollectionMenuItem", new String[]{"取消收藏", "Cancel collection"});
+        LANG_MAP.put("collectedMenuItem", new String[]{"已收藏", "Collected"});
         LANG_MAP.put("playMvMenuItem", new String[]{"播放 MV", "Play MV"});
         LANG_MAP.put("downloadMenuItem", new String[]{"下载", "Download"});
         LANG_MAP.put("commentMenuItem", new String[]{"查看评论", "View comments"});
@@ -209,6 +210,7 @@ public class I18n {
         LANG_MAP.put("menuTip", new String[]{"主菜单", "Main menu"});
         LANG_MAP.put("goToPlayQueueTip", new String[]{"转到播放队列", "Go to playback queue"});
         LANG_MAP.put("desktopLrcTip", new String[]{"桌面歌词", "Desktop lyric"});
+        LANG_MAP.put("localPlaylistTip", new String[]{"收藏夹管理", "Manage favorites folders"});
         LANG_MAP.put("addTip", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("reimportTip", new String[]{"重新从歌曲目录导入歌曲", "Re-import tracks"});
         LANG_MAP.put("manageCatalogTip", new String[]{"管理歌曲目录", "Manage track catalogs"});
@@ -292,6 +294,11 @@ public class I18n {
         LANG_MAP.put("emptyHint", new String[]{"列表空空如也~", "Empty list"});
 
         LANG_MAP.put("playAll", new String[]{"播放全部", "Play all"});
+
+        LANG_MAP.put("createLocalPlaylist", new String[]{"新建收藏夹", "Create a new favorites folder"});
+        LANG_MAP.put("localPlaylistName", new String[]{"收藏夹名称：", "Favorites folder name:"});
+        LANG_MAP.put("editLocalPlaylist", new String[]{"编辑收藏夹", "Edit this favorites folder"});
+        LANG_MAP.put("removeLocalPlaylist", new String[]{"删除收藏夹", "Remove this favorites folder"});
 
         LANG_MAP.put("addFile", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("addDir", new String[]{"添加歌曲文件夹", "Add track folders"});
@@ -510,6 +517,10 @@ public class I18n {
         LANG_MAP.put("lstImg", new String[]{"最后一张", "Last"});
         LANG_MAP.put("imgLost", new String[]{"图片走丢了T_T", "Image lost :("});
 
+        LANG_MAP.put("addToFavoritesTitle", new String[]{"收藏歌曲", "Add to favorites"});
+        LANG_MAP.put("addToFavoritesTip", new String[]{"将 %s 添加到...", "Add %s to favorites"});
+        LANG_MAP.put("addMultiToFavoritesTip", new String[]{"将 %s 等 %s 首歌曲添加到...", "Add %s among %s songs to favorites"});
+
         LANG_MAP.put("manageCatalogTitle", new String[]{"管理歌曲目录", "Track catalogs"});
         LANG_MAP.put("askRemoveCatalogMsg", new String[]{"确定删除选中的目录？", "Sure to delete the selected catalogs?"});
         LANG_MAP.put("catalogExistsMsg", new String[]{"目录已存在，无法重复添加", "Catalog already added"});
@@ -519,6 +530,7 @@ public class I18n {
         LANG_MAP.put("dialogInvert", new String[]{"反选", "Invert"});
         LANG_MAP.put("dialogOpen", new String[]{"打开", "Open"});
         LANG_MAP.put("dialogApply", new String[]{"应用", "Apply"});
+        LANG_MAP.put("dialogNew", new String[]{"新建", "New"});
         LANG_MAP.put("dialogAdd", new String[]{"添加", "Add"});
         LANG_MAP.put("dialogEdit", new String[]{"编辑", "Edit"});
         LANG_MAP.put("dialogRemove", new String[]{"删除", "Remove"});

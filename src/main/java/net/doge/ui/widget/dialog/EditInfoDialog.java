@@ -12,7 +12,7 @@ import net.doge.model.entity.MediaInfo;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -137,8 +137,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 // 歌曲信息更改后重新填充
                 MediaUtil.fillAudioFileInfo(file);
             }
-            dispose();
-            f.currDialogs.remove(this);
+            close();
         });
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
@@ -215,7 +214,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             } else if (components[i] instanceof CustomComboBox) {
                 CustomComboBox component = (CustomComboBox) components[i];
                 // 下拉框 UI
-                component.setUI(new ComboBoxUI(component, f));
+                component.setUI(new StringComboBoxUI(component, f));
 
                 int finalI = i;
                 component.addItemListener(e -> {

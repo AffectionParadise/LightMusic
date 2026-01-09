@@ -17,7 +17,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -613,17 +613,17 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenTextField.addFocusListener(focusAdapter);
 
         // 下拉框 UI
-        lrcAlignmentComboBox.setUI(new ComboBoxUI(lrcAlignmentComboBox, f));
-        gsFactorComboBox.setUI(new ComboBoxUI(gsFactorComboBox, f));
-        darkerFactorComboBox.setUI(new ComboBoxUI(darkerFactorComboBox, f));
-        langComboBox.setUI(new ComboBoxUI(langComboBox, f));
-        fontComboBox.setUI(new ComboBoxUI(fontComboBox, f));
-        closeOptionComboBox.setUI(new ComboBoxUI(closeOptionComboBox, f));
-        windowSizeComboBox.setUI(new ComboBoxUI(windowSizeComboBox, f));
-        audioQualityComboBox.setUI(new ComboBoxUI(audioQualityComboBox, f));
-        videoQualityComboBox.setUI(new ComboBoxUI(videoQualityComboBox, f));
-        fobComboBox.setUI(new ComboBoxUI(fobComboBox, f));
-        balanceComboBox.setUI(new ComboBoxUI(balanceComboBox, f));
+        lrcAlignmentComboBox.setUI(new StringComboBoxUI(lrcAlignmentComboBox, f));
+        gsFactorComboBox.setUI(new StringComboBoxUI(gsFactorComboBox, f));
+        darkerFactorComboBox.setUI(new StringComboBoxUI(darkerFactorComboBox, f));
+        langComboBox.setUI(new StringComboBoxUI(langComboBox, f));
+        fontComboBox.setUI(new StringComboBoxUI(fontComboBox, f));
+        closeOptionComboBox.setUI(new StringComboBoxUI(closeOptionComboBox, f));
+        windowSizeComboBox.setUI(new StringComboBoxUI(windowSizeComboBox, f));
+        audioQualityComboBox.setUI(new StringComboBoxUI(audioQualityComboBox, f));
+        videoQualityComboBox.setUI(new StringComboBoxUI(videoQualityComboBox, f));
+        fobComboBox.setUI(new StringComboBoxUI(fobComboBox, f));
+        balanceComboBox.setUI(new StringComboBoxUI(balanceComboBox, f));
 
         DirectoryChooser dirChooser = new DirectoryChooser();
         dirChooser.setTitle(I18n.getText("chooseFolder"));

@@ -8,7 +8,7 @@ import net.doge.model.color.HSV;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -284,7 +284,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         reset.addActionListener(e -> updateColor(source));
 
         // 下拉框
-        modelComboBox.setUI(new ComboBoxUI(modelComboBox, f, 80));
+        modelComboBox.setUI(new StringComboBoxUI(modelComboBox, f, 80));
         modelComboBox.addItem("RGB");
         modelComboBox.addItem("HSV");
         modelComboBox.addItem("HSL");

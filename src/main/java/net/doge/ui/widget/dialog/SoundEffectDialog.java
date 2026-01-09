@@ -5,7 +5,7 @@ import net.doge.constant.player.EqualizerData;
 import net.doge.constant.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -133,7 +133,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
             fitData(newEd);
         });
         // 下拉框 UI
-        comboBox.setUI(new ComboBoxUI(comboBox, f, 220));
+        comboBox.setUI(new StringComboBoxUI(comboBox, f, 220));
 
         soundEffectPanel.add(soundEffectLabel);
         soundEffectPanel.add(comboBox);
