@@ -47,6 +47,10 @@ public class MusicPlayer {
     // 播放器
     private MediaPlayer mp;
 
+    // mp 错误计数
+    private int mpErrorCount;
+    private final int MAX_ERROR_COUNT = 5;
+
     // 频谱数据
     public double[] specs = new double[SpectrumConstants.NUM_BANDS];
     public double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
@@ -97,6 +101,8 @@ public class MusicPlayer {
             specsOrigin[i] = 0;
             specsGap[i] = specs[i];
         }
+
+        mpErrorCount = 0;
     }
 
     // 卸载当前文件
@@ -231,6 +237,16 @@ public class MusicPlayer {
 //            metaMusicInfo.setAlbumImage(ImageConstants.DEFAULT_IMG);
 //            f.showAlbumImage();
 //        }
+    }
+
+    // 错误计数
+    public void countsMpError() {
+        mpErrorCount++;
+    }
+
+    // 判断是否超出最大尝试次数
+    public boolean mpErrorExceeded() {
+        return mpErrorCount > MAX_ERROR_COUNT;
     }
 
     // 释放 MediaPlayer 对象

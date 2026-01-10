@@ -35,6 +35,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
     private final String MULTI_TIP_MSG = I18n.getText("addMultiToFavoritesTip");
 
     private CustomPanel centerPanel = new CustomPanel();
+    private CustomPanel bottomPanel = new CustomPanel();
 
     private CustomLabel tipLabel = new CustomLabel();
     private CustomList<ChoosableListItem<LocalPlaylist>> localPlaylistList = new CustomList<>();
@@ -81,6 +82,10 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         initView();
         // 初始化数据
         initLocalPlaylists();
+
+        bottomPanel.add(addButton);
+        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
         setUndecorated(true);
@@ -135,7 +140,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            localPlaylistList.getSelectionModel().setSelectionInterval(0, localPlaylistListModel.getSize() - 1);
+            localPlaylistList.getSelectionModel().setSelectionInterval(0, localPlaylistListModel.size() - 1);
         });
         // 取消全选事件
         nonSelectButton.addActionListener(e -> localPlaylistList.clearSelection());
@@ -169,8 +174,6 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         rightBox.add(allSelectButton);
         rightBox.add(Box.createRigidArea(area));
         rightBox.add(nonSelectButton);
-        rightBox.add(Box.createRigidArea(area));
-        rightBox.add(addButton);
         rightBox.add(Box.createVerticalGlue());
         // 添加列表和右部按钮整体
         LocalPlaylistListRenderer r = new LocalPlaylistListRenderer();

@@ -210,7 +210,7 @@ public class I18n {
         LANG_MAP.put("menuTip", new String[]{"主菜单", "Main menu"});
         LANG_MAP.put("goToPlayQueueTip", new String[]{"转到播放队列", "Go to playback queue"});
         LANG_MAP.put("desktopLrcTip", new String[]{"桌面歌词", "Desktop lyric"});
-        LANG_MAP.put("localPlaylistTip", new String[]{"收藏夹管理", "Manage favorites folders"});
+        LANG_MAP.put("localPlaylistTip", new String[]{"收藏夹管理", "Manage favorites"});
         LANG_MAP.put("addTip", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("reimportTip", new String[]{"重新从歌曲目录导入歌曲", "Re-import tracks"});
         LANG_MAP.put("manageCatalogTip", new String[]{"管理歌曲目录", "Manage track catalogs"});
@@ -295,10 +295,11 @@ public class I18n {
 
         LANG_MAP.put("playAll", new String[]{"播放全部", "Play all"});
 
-        LANG_MAP.put("createLocalPlaylist", new String[]{"新建收藏夹", "Create a new favorites folder"});
-        LANG_MAP.put("localPlaylistName", new String[]{"收藏夹名称：", "Favorites folder name:"});
-        LANG_MAP.put("editLocalPlaylist", new String[]{"编辑收藏夹", "Edit this favorites folder"});
-        LANG_MAP.put("removeLocalPlaylist", new String[]{"删除收藏夹", "Remove this favorites folder"});
+        LANG_MAP.put("createLocalPlaylist", new String[]{"新建收藏夹", "Create a new favorites"});
+        LANG_MAP.put("localPlaylistName", new String[]{"收藏夹名称：", "Favorites name:"});
+        LANG_MAP.put("editLocalPlaylist", new String[]{"编辑收藏夹", "Edit this favorites"});
+        LANG_MAP.put("removeLocalPlaylist", new String[]{"删除收藏夹", "Remove this favorites"});
+        LANG_MAP.put("localPlaylistNameNotNullMsg", new String[]{"收藏夹名称不能为空", "Favorites name can not be empty"});
 
         LANG_MAP.put("addFile", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("addDir", new String[]{"添加歌曲文件夹", "Add track folders"});
@@ -487,6 +488,7 @@ public class I18n {
         LANG_MAP.put("editInfoTitle", new String[]{"歌曲信息", "Track file info"});
         LANG_MAP.put("fileUsedMsg", new String[]{"文件正在被占用，无法修改", "File occupied"});
         LANG_MAP.put("fileName", new String[]{"文件名：", "File name: "});
+        LANG_MAP.put("filePath", new String[]{"文件路径：", "File path: "});
         LANG_MAP.put("fileSize", new String[]{"文件大小：", "File size: "});
         LANG_MAP.put("creationTime", new String[]{"创建时间：", "Creation time: "});
         LANG_MAP.put("modificationTime", new String[]{"修改时间：", "Modification time: "});

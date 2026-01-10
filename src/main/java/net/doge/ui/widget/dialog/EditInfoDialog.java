@@ -51,6 +51,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
     private final CustomLabel[] labels = {
             new CustomLabel(I18n.getText("fileName")),
+            new CustomLabel(I18n.getText("filePath")),
             new CustomLabel(I18n.getText("fileSize")),
             new CustomLabel(I18n.getText("creationTime")),
             new CustomLabel(I18n.getText("modificationTime")),
@@ -59,10 +60,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(I18n.getText("fileTitle")),
             new CustomLabel(I18n.getText("fileArtist")),
             new CustomLabel(I18n.getText("fileAlbum")),
+            new CustomLabel(I18n.getText("coverImg")),
             new CustomLabel(I18n.getText("genre")),
             new CustomLabel(I18n.getText("fileComment")),
-            new CustomLabel(I18n.getText("copyright")),
-            new CustomLabel(I18n.getText("coverImg"))
+            new CustomLabel(I18n.getText("copyright"))
     };
 
     private CustomComboBox<String> comboBox = new CustomComboBox<>();
@@ -74,13 +75,14 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(),
             new CustomLabel(),
             new CustomLabel(),
+            new CustomLabel(),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
+            new DialogButton(I18n.getText("browseImg")),
             comboBox,
             new CustomTextField(columns),
-            new CustomTextField(columns),
-            new DialogButton(I18n.getText("browseImg"))
+            new CustomTextField(columns)
     };
 
     private DialogButton okButton;
@@ -125,13 +127,13 @@ public class EditInfoDialog extends AbstractTitledDialog {
                     }
                 }
                 MediaInfo mediaInfo = new MediaInfo();
-                mediaInfo.setTitle((String) results[6]);
-                mediaInfo.setArtist((String) results[7]);
-                mediaInfo.setAlbum((String) results[8]);
-                mediaInfo.setGenre((String) results[9]);
-                mediaInfo.setComment((String) results[10]);
-                mediaInfo.setCopyright((String) results[11]);
-                mediaInfo.setAlbumImage((BufferedImage) results[12]);
+                mediaInfo.setTitle((String) results[7]);
+                mediaInfo.setArtist((String) results[8]);
+                mediaInfo.setAlbum((String) results[9]);
+                mediaInfo.setAlbumImage((BufferedImage) results[10]);
+                mediaInfo.setGenre((String) results[11]);
+                mediaInfo.setComment((String) results[12]);
+                mediaInfo.setCopyright((String) results[13]);
                 mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file.getAbsolutePath(), mediaInfo);
                 // 歌曲信息更改后重新填充
@@ -161,6 +163,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         // 获得传入的歌曲信息
         String fileName = StringUtil.wrapLineByWidth(file.getName(), 300);
+        String filePath = StringUtil.wrapLineByWidth(file.getParent(), 300);
         String fileSize = FileUtil.getUnitString(FileUtil.size(file));
         String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
         String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
@@ -169,24 +172,25 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String title = file.getSongName();
         String artist = file.getArtist();
         String album = file.getAlbum();
+        BufferedImage albumImage = MediaUtil.getAlbumImage(file);
         String genre = MediaUtil.getGenre(file);
         String comment = MediaUtil.getComment(file);
         String copyright = MediaUtil.getCopyright(file);
-        BufferedImage albumImage = MediaUtil.getAlbumImage(file);
 
         results[0] = fileName;
-        results[1] = fileSize;
-        results[2] = creationTime;
-        results[3] = lastModifiedTime;
-        results[4] = lastAccessTime;
-        results[5] = duration;
-        results[6] = title;
-        results[7] = artist;
-        results[8] = album;
-        results[9] = genre;
-        results[10] = comment;
-        results[11] = copyright;
-        results[12] = albumImage;
+        results[1] = filePath;
+        results[2] = fileSize;
+        results[3] = creationTime;
+        results[4] = lastModifiedTime;
+        results[5] = lastAccessTime;
+        results[6] = duration;
+        results[7] = title;
+        results[8] = artist;
+        results[9] = album;
+        results[10] = albumImage;
+        results[11] = genre;
+        results[12] = comment;
+        results[13] = copyright;
 
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 

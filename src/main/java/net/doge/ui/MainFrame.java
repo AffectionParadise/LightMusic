@@ -451,6 +451,14 @@ public class MainFrame extends JFrame {
     private ImageIcon originalIcon = LMIconManager.getIcon("control.original");
     // 歌词翻译图标
     private ImageIcon translationIcon = LMIconManager.getIcon("control.translation");
+    // 收藏夹图标
+    private ImageIcon localPlaylistIcon = LMIconManager.getIcon("toolbar.localPlaylist");
+    // 新建收藏夹图标
+    private ImageIcon createLocalPlaylistIcon = LMIconManager.getIcon("menu.createLocalPlaylist");
+    // 编辑收藏夹图标
+    private ImageIcon editLocalPlaylistIcon = LMIconManager.getIcon("menu.editLocalPlaylist");
+    // 删除收藏夹图标
+    private ImageIcon removeLocalPlaylistIcon = LMIconManager.getIcon("menu.removeLocalPlaylist");
     // 添加歌曲图标
     private ImageIcon addIcon = LMIconManager.getIcon("toolbar.add");
     // 重新导入图标
@@ -1200,7 +1208,7 @@ public class MainFrame extends JFrame {
     // 本地歌单下拉框
     public CustomComboBox<LocalPlaylist> localPlaylistComboBox = new CustomComboBox<>();
     // 收藏夹按钮
-    private CustomButton localPlaylistToolButton = new CustomButton(folderIcon);
+    private CustomButton localPlaylistToolButton = new CustomButton(localPlaylistIcon);
     // 收藏夹按钮弹出菜单
     private CustomPopupMenu localPlaylistPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem createLocalPlaylistMenuItem = new CustomMenuItem(I18n.getText("createLocalPlaylist"));
@@ -3974,7 +3982,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.CURR_SONG, currSong);
         // 存入当前历史列表
         JSONArray historyJsonArray = new JSONArray();
-        for (int i = 0, len = historyModel.getSize(); i < len; i++) {
+        for (int i = 0, len = historyModel.size(); i < len; i++) {
             MusicResource resource = historyModel.get(i);
             if (resource instanceof AudioFile) {
                 AudioFile file = (AudioFile) resource;
@@ -4004,7 +4012,7 @@ public class MainFrame extends JFrame {
 
         // 存入下载任务列表
         JSONArray tasksJsonArray = new JSONArray();
-        for (int i = 0, len = downloadListModel.getSize(); i < len; i++) {
+        for (int i = 0, len = downloadListModel.size(); i < len; i++) {
             Task task = downloadListModel.get(i);
             // 保存任务时，任务还在运行，先中断
             if (task.isProcessing()) task.stop();
@@ -4045,7 +4053,7 @@ public class MainFrame extends JFrame {
 
         // 存入播放队列
         JSONArray playQueueJsonArray = new JSONArray();
-        for (int i = 0, len = playQueueModel.getSize(); i < len; i++) {
+        for (int i = 0, len = playQueueModel.size(); i < len; i++) {
             MusicResource resource = playQueueModel.get(i);
             if (resource instanceof AudioFile) {
                 AudioFile file = (AudioFile) resource;
@@ -4199,7 +4207,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏歌单列表
         JSONArray playlistCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = playlistCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = playlistCollectionModel.size(); i < len; i++) {
             NetPlaylistInfo playlistInfo = (NetPlaylistInfo) playlistCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4217,7 +4225,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏专辑列表
         JSONArray albumCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = albumCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = albumCollectionModel.size(); i < len; i++) {
             NetAlbumInfo albumInfo = (NetAlbumInfo) albumCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4235,7 +4243,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏歌手列表
         JSONArray artistCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = artistCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = artistCollectionModel.size(); i < len; i++) {
             NetArtistInfo artistInfo = (NetArtistInfo) artistCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4254,7 +4262,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏电台列表
         JSONArray radioCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = radioCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = radioCollectionModel.size(); i < len; i++) {
             NetRadioInfo radioInfo = (NetRadioInfo) radioCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4274,7 +4282,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏 MV 列表
         JSONArray mvCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = mvCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = mvCollectionModel.size(); i < len; i++) {
             NetMvInfo mvInfo = (NetMvInfo) mvCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4295,7 +4303,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏榜单列表
         JSONArray rankingCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = rankingCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = rankingCollectionModel.size(); i < len; i++) {
             NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4313,7 +4321,7 @@ public class MainFrame extends JFrame {
 
         // 存入收藏用户列表
         JSONArray userCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = userCollectionModel.getSize(); i < len; i++) {
+        for (int i = 0, len = userCollectionModel.size(); i < len; i++) {
             NetUserInfo userInfo = (NetUserInfo) userCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
@@ -4538,7 +4546,7 @@ public class MainFrame extends JFrame {
                 if (!dir.exists()) return;
                 // 歌曲列表不为空时，询问是否保留原歌曲列表
                 ListModel model = musicList.getModel();
-                if (musicListModel.getSize() != 0) {
+                if (musicListModel.size() != 0) {
                     ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
                             ASK_RETAIN_MUSIC_LIST_MSG, YES, NO, CANCEL);
                     confirmDialog.showDialog();
@@ -6352,6 +6360,9 @@ public class MainFrame extends JFrame {
         emptyHintPanel.setPreferredSize(new Dimension(260, 1000));
     }
 
+    // 下拉框添加第一个元素时会产生选择事件，该变量决定是否屏蔽
+    private boolean localPlaylistComboBoxInvalidSelection;
+
     // 初始化个人音乐工具栏
     private void initPersonalMusicToolBar() {
         // 本地音乐事件
@@ -6368,8 +6379,11 @@ public class MainFrame extends JFrame {
                 leftBox.add(musicScrollPane);
             }
 
+            localPlaylistComboBoxInvalidSelection = true;
             ((DefaultComboBoxModel) localPlaylistComboBox.getModel()).removeAllElements();
             for (LocalPlaylist localPlaylist : localPlaylists) localPlaylistComboBox.addItem(localPlaylist);
+            localPlaylistComboBoxInvalidSelection = false;
+            localPlaylistComboBox.setSelectedItem(currLocalPlaylist);
 
             localPlaylistComboBox.setVisible(true);
             localPlaylistToolButton.setVisible(true);
@@ -6455,8 +6469,11 @@ public class MainFrame extends JFrame {
             }
             leftBox.add(collectionTabbedPane);
 
+            localPlaylistComboBoxInvalidSelection = true;
             ((DefaultComboBoxModel) localPlaylistComboBox.getModel()).removeAllElements();
             for (LocalPlaylist localPlaylist : collectionPlaylists) localPlaylistComboBox.addItem(localPlaylist);
+            localPlaylistComboBoxInvalidSelection = false;
+            localPlaylistComboBox.setSelectedItem(currCollectionPlaylist);
 
             localPlaylistComboBox.setVisible(index == CollectionTabIndex.MUSIC);
             localPlaylistToolButton.setVisible(index == CollectionTabIndex.MUSIC);
@@ -6521,25 +6538,50 @@ public class MainFrame extends JFrame {
         // 下拉框事件
         localPlaylistComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
-            if (e.getStateChange() != ItemEvent.SELECTED) return;
+            // 屏蔽下拉框因为添加第一个元素产生的选择事件
+            if (localPlaylistComboBoxInvalidSelection || e.getStateChange() != ItemEvent.SELECTED) return;
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) {
                 currLocalPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
                 // 禁用默认收藏夹的编辑/删除
                 editLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
                 removeLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
                 DefaultListModel<MusicResource> newModel = currLocalPlaylist.getMusicListModel();
-                if (musicList.getModel() == musicListModel) musicList.setModel(newModel);
                 musicListModel = newModel;
-                countLabel.setText(String.format(TOTAL_MSG, newModel.getSize()));
+                // 筛选框活跃状态时进行筛选
+                if (filterTextField.isOccupied()) filterPersonalMusic();
+                else {
+                    musicList.setModel(musicListModel);
+                    if (!musicListModel.isEmpty()) {
+                        leftBox.remove(emptyHintPanel);
+                        leftBox.add(musicScrollPane);
+                    } else {
+                        leftBox.remove(musicScrollPane);
+                        leftBox.add(emptyHintPanel);
+                    }
+                    leftBox.repaint();
+                    countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
+                }
             } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
                 currCollectionPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
                 // 禁用默认收藏夹的编辑/删除
                 editLocalPlaylistMenuItem.setEnabled(!currCollectionPlaylist.isDefault());
                 removeLocalPlaylistMenuItem.setEnabled(!currCollectionPlaylist.isDefault());
                 DefaultListModel<MusicResource> newModel = currCollectionPlaylist.getMusicListModel();
-                if (musicList.getModel() == collectionModel) musicList.setModel(newModel);
                 collectionModel = newModel;
-                countLabel.setText(String.format(TOTAL_MSG, newModel.getSize()));
+                // 筛选框活跃状态时进行筛选
+                if (filterTextField.isOccupied()) filterPersonalMusic();
+                else {
+                    musicList.setModel(collectionModel);
+                    if (!collectionModel.isEmpty()) {
+                        musicCollectionLeftBox.remove(emptyHintPanel);
+                        musicCollectionLeftBox.add(musicScrollPane);
+                    } else {
+                        musicCollectionLeftBox.remove(musicScrollPane);
+                        musicCollectionLeftBox.add(emptyHintPanel);
+                    }
+                    musicCollectionLeftBox.repaint();
+                    countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
+                }
             }
         });
 
@@ -6560,25 +6602,31 @@ public class MainFrame extends JFrame {
             localPlaylistComboBox.addItem(playlist);
         });
         editLocalPlaylistMenuItem.addActionListener(e -> {
-            EditLocalPlaylistDialog d = new EditLocalPlaylistDialog(THIS, currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC ? currLocalPlaylist : currCollectionPlaylist);
+            LocalPlaylist playlist = currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC ? currLocalPlaylist : currCollectionPlaylist;
+            if (playlist.isDefault()) return;
+            EditLocalPlaylistDialog d = new EditLocalPlaylistDialog(THIS, playlist);
             d.showDialog();
             localPlaylistComboBox.repaint();
         });
         removeLocalPlaylistMenuItem.addActionListener(e -> {
+            LocalPlaylist playlist = currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC ? currLocalPlaylist : currCollectionPlaylist;
+            if (playlist.isDefault()) return;
             ConfirmDialog d = new ConfirmDialog(THIS, ASK_REMOVE_LOCAL_PLAYLIST_MSG, YES, NO);
             d.showDialog();
             int response = d.getResponse();
             if (response == JOptionPane.YES_OPTION) {
                 if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) {
-                    localPlaylistComboBox.removeItem(currLocalPlaylist);
                     localPlaylists.remove(currLocalPlaylist);
                 } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
-                    localPlaylistComboBox.removeItem(currCollectionPlaylist);
                     collectionPlaylists.remove(currCollectionPlaylist);
                 }
+                localPlaylistComboBox.removeItem(playlist);
                 localPlaylistComboBox.setSelectedIndex(0);
             }
         });
+        // 禁用默认收藏夹的编辑/删除
+        editLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
+        removeLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
         localPlaylistPopupMenu.add(createLocalPlaylistMenuItem);
         localPlaylistPopupMenu.add(editLocalPlaylistMenuItem);
         localPlaylistPopupMenu.add(removeLocalPlaylistMenuItem);
@@ -6776,13 +6824,13 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
-            for (int i = 0; i < model.getSize(); i++) {
+            for (int i = 0; i < model.size(); i++) {
                 Resource elem = (Resource) model.get(i);
                 if (!set.contains(elem)) set.add(elem);
                 else model.remove(i--);
             }
             set.clear();
-            for (int i = 0; i < filterModel.getSize(); i++) {
+            for (int i = 0; i < filterModel.size(); i++) {
                 Resource elem = (Resource) filterModel.get(i);
                 if (!set.contains(elem)) set.add(elem);
                 else filterModel.remove(i--);
@@ -6952,7 +7000,7 @@ public class MainFrame extends JFrame {
             } else list = collectionList;
             int selectedIndex = list.getSelectedIndex();
             DefaultListModel model = (DefaultListModel) list.getModel();
-            if (selectedIndex != -1 && selectedIndex != model.getSize() - 1) {
+            if (selectedIndex != -1 && selectedIndex != model.size() - 1) {
                 Resource r1 = (Resource) model.get(selectedIndex);
                 Resource r2 = (Resource) model.get(selectedIndex + 1);
                 model.set(selectedIndex, r2);
@@ -7030,7 +7078,7 @@ public class MainFrame extends JFrame {
         @Override
         public void intervalAdded(ListDataEvent e) {
             DefaultListModel model = (DefaultListModel) e.getSource();
-            int size = model.getSize();
+            int size = model.size();
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
                     || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
@@ -7087,7 +7135,7 @@ public class MainFrame extends JFrame {
         @Override
         public void intervalRemoved(ListDataEvent e) {
             DefaultListModel model = (DefaultListModel) e.getSource();
-            int size = model.getSize();
+            int size = model.size();
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC && (model == musicListModel || model == filterModel)
                     || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
@@ -19363,7 +19411,7 @@ public class MainFrame extends JFrame {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
-                int size = downloadListModel.getSize();
+                int size = downloadListModel.size();
                 taskCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 1) {
                     downloadLeftBox.remove(emptyHintPanel);
@@ -19373,7 +19421,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void intervalRemoved(ListDataEvent e) {
-                int size = downloadListModel.getSize();
+                int size = downloadListModel.size();
                 taskCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 0) {
                     downloadLeftBox.remove(downloadListScrollPane);
@@ -19592,7 +19640,7 @@ public class MainFrame extends JFrame {
                 Set<Object> set = new HashSet<>();
                 // 解决删除元素带来的性能问题
                 playQueue.setModel(emptyListModel);
-                for (int i = 0; i < playQueueModel.getSize(); i++) {
+                for (int i = 0; i < playQueueModel.size(); i++) {
                     MusicResource resource = playQueueModel.get(i);
                     if (!set.contains(resource)) set.add(resource);
                     else playQueueModel.remove(i--);
@@ -19635,7 +19683,7 @@ public class MainFrame extends JFrame {
         });
         playQueueMoveDownToolButton.addActionListener(e -> {
             int selectedIndex = playQueue.getSelectedIndex();
-            if (selectedIndex != -1 && selectedIndex != playQueueModel.getSize() - 1) {
+            if (selectedIndex != -1 && selectedIndex != playQueueModel.size() - 1) {
                 MusicResource r1 = playQueueModel.get(selectedIndex);
                 MusicResource r2 = playQueueModel.get(selectedIndex + 1);
                 playQueueModel.set(selectedIndex, r2);
@@ -19671,7 +19719,7 @@ public class MainFrame extends JFrame {
         ListDataListener countListener = new ListDataListener() {
             @Override
             public void intervalAdded(ListDataEvent e) {
-                int size = playQueueModel.getSize();
+                int size = playQueueModel.size();
                 playQueueCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 1) {
                     playQueueLeftBox.remove(emptyHintPanel);
@@ -19681,7 +19729,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void intervalRemoved(ListDataEvent e) {
-                int size = playQueueModel.getSize();
+                int size = playQueueModel.size();
                 playQueueCountLabel.setText(String.format(TOTAL_MSG, size));
                 if (size == 0) {
                     playQueueLeftBox.remove(playQueueScrollPane);
@@ -21071,6 +21119,7 @@ public class MainFrame extends JFrame {
         if (reload) seekLrc(player.getCurrTimeSeconds());
     }
 
+    // mp 出错后重置
     private void resetMp() {
         player.disposeMp();
         player.initMp();
@@ -21117,8 +21166,15 @@ public class MainFrame extends JFrame {
             currTimeLabel.setPreferredSize(d);
             durationLabel.setPreferredSize(d);
         });
-
+        // 错误处理
         mp.setOnError(() -> {
+            // 错误计数，超出后加载失败
+            player.countsMpError();
+            if (player.mpErrorExceeded()) {
+                updateTitle(LOAD_TRACK_FAILED);
+                return;
+            }
+
             MediaException.Type type = mp.getError().getType();
             NetMusicInfo musicInfo = player.getMusicInfo();
 
@@ -21501,7 +21557,7 @@ public class MainFrame extends JFrame {
                 historyModel.removeElement(musicInfo == null ? file : musicInfo);
                 historyModel.add(0, musicInfo == null ? file : musicInfo);
                 // 超过最大记录条数，删除最后一条
-                int size = historyModel.getSize();
+                int size = historyModel.size();
                 if (size > maxHistoryCount) historyModel.remove(size - 1);
             }
             retry = 0;
@@ -21539,7 +21595,7 @@ public class MainFrame extends JFrame {
 
     // 播放上一曲
     private void playLast() {
-        int size = playQueueModel.getSize();
+        int size = playQueueModel.size();
         // 当前播放列表非空
         if (size == 0) return;
         // 选中上一曲
@@ -21550,7 +21606,7 @@ public class MainFrame extends JFrame {
 
     // 播放下一曲 / 顺序播放
     private void playNext() {
-        int size = playQueueModel.getSize();
+        int size = playQueueModel.size();
         // 当前播放列表非空
         if (size == 0) return;
         // 选中下一曲
@@ -21562,7 +21618,7 @@ public class MainFrame extends JFrame {
     // 生成随机播放序列
     private void generateShuffleList() {
         shuffleList.clear();
-        for (int i = 0, size = playQueueModel.getSize(); i < size; i++) shuffleList.add(i);
+        for (int i = 0, size = playQueueModel.size(); i < size; i++) shuffleList.add(i);
         Collections.shuffle(shuffleList);
         shuffleIndex = 0;
     }
@@ -21916,11 +21972,11 @@ public class MainFrame extends JFrame {
         helpMenuItem.setIcon(ImageUtil.dye(helpIcon, iconColor));
         aboutMenuItem.setIcon(ImageUtil.dye(aboutIcon, iconColor));
 
-        createLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
-        editLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
-        editLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(folderIcon, darkerIconColor));
-        removeLocalPlaylistMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));
-        removeLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(folderIcon, darkerIconColor));
+        createLocalPlaylistMenuItem.setIcon(ImageUtil.dye(createLocalPlaylistIcon, iconColor));
+        editLocalPlaylistMenuItem.setIcon(ImageUtil.dye(editLocalPlaylistIcon, iconColor));
+        editLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(editLocalPlaylistIcon, darkerIconColor));
+        removeLocalPlaylistMenuItem.setIcon(ImageUtil.dye(removeLocalPlaylistIcon, iconColor));
+        removeLocalPlaylistMenuItem.setDisabledIcon(ImageUtil.dye(removeLocalPlaylistIcon, darkerIconColor));
 
         addFileMenuItem.setIcon(ImageUtil.dye(fileIcon, iconColor));
         addDirMenuItem.setIcon(ImageUtil.dye(folderIcon, iconColor));

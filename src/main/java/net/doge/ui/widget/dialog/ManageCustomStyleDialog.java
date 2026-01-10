@@ -126,7 +126,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            styleList.getSelectionModel().setSelectionInterval(0, styleListModel.getSize() - 1);
+            styleList.getSelectionModel().setSelectionInterval(0, styleListModel.size() - 1);
         });
         // 取消全选事件
         nonSelectButton.addActionListener(e -> {

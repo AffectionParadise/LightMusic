@@ -103,7 +103,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            catalogList.getSelectionModel().setSelectionInterval(0, catalogListModel.getSize() - 1);
+            catalogList.getSelectionModel().setSelectionInterval(0, catalogListModel.size() - 1);
         });
         // 取消全选事件
         nonSelectButton.addActionListener(e -> catalogList.clearSelection());

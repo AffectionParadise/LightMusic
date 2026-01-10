@@ -13,6 +13,8 @@ import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * @Author Doge
@@ -20,6 +22,8 @@ import java.awt.*;
  * @Date 2020/12/15
  */
 public class EditLocalPlaylistDialog extends AbstractTitledDialog {
+    private final String NAME_NOT_NULL_MSG = I18n.getText("localPlaylistNameNotNullMsg");
+
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel buttonPanel = new CustomPanel();
 
@@ -44,7 +48,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(560, 200);
+        setSize(560, 180);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -53,7 +57,12 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
 
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         okButton.addActionListener(e -> {
-            playlist.setName(textField.getText());
+            String name = textField.getText();
+            if (name.trim().isEmpty()) {
+                new TipDialog(f, NAME_NOT_NULL_MSG, true).showDialog();
+                return;
+            }
+            playlist.setName(name);
             close();
         });
         cancelButton.addActionListener(e -> close());
@@ -89,6 +98,14 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
         textField.setSelectedTextColor(textColor);
         textField.setSelectionColor(darkerTextAlphaColor);
         textField.setText(playlist.getName());
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    okButton.doClick();
+                }
+            }
+        });
         panel.add(textField);
 
         panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
