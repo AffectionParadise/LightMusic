@@ -48,18 +48,21 @@ public class CustomScrollPane extends JScrollPane {
 
         horizontalScrollBar.setOpaque(false);
         horizontalScrollBar.setPreferredSize(new Dimension(0, thickness));
-        setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         verticalScrollBar.setOpaque(false);
         verticalScrollBar.setPreferredSize(new Dimension(thickness, 0));
-        // 滚动条不显示时也要占位
-        setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_ALWAYS);
 
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+        // 默认有黑边，不绘制边框
+        setBorder(BorderFactory.createEmptyBorder());
     }
 
     public boolean setVValue(int value) {
         if (value < getVMin() || value > getVMax()) return false;
+        // 修复某些情况滚动条不显示并且无法滚动
+        if (value == 0 && !verticalScrollBar.isShowing()) {
+            setVisible(false);
+            setVisible(true);
+        }
         verticalScrollBar.setValue(value);
         return true;
     }

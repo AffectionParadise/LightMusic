@@ -3,7 +3,6 @@ package net.doge.ui.widget.list;
 import javax.swing.*;
 
 public class CustomList<E> extends JList<E> {
-
     public CustomList() {
         setOpaque(false);
         // 横向滚动时自适应宽度

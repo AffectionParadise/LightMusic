@@ -6568,6 +6568,7 @@ public class MainFrame extends JFrame {
                     }
                     leftBox.repaint();
                     countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
+                    musicScrollPane.setVValue(0);
                 }
             } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
                 currCollectionPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
@@ -6589,6 +6590,7 @@ public class MainFrame extends JFrame {
                     }
                     musicCollectionLeftBox.repaint();
                     countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
+                    musicScrollPane.setVValue(0);
                 }
             }
         });

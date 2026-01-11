@@ -43,7 +43,6 @@ public class CustomComboPopup extends BasicComboPopup {
     @Override
     protected JScrollPane createScroller() {
         CustomScrollPane sp = new CustomScrollPane(list);
-        sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         sp.setHUI(new ScrollBarUI(scrollBarColor));
         sp.setVUI(new ScrollBarUI(scrollBarColor));
         return sp;

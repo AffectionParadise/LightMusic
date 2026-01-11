@@ -157,7 +157,6 @@ public class ConfirmDialog extends AbstractShadowDialog {
             size.height += top + bottom;
             setSize(size);
         } else {
-            messageScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
             pack();
         }
 
