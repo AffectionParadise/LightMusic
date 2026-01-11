@@ -60,7 +60,7 @@ public class KugouReqBuilder {
                 params.put("signature", signAndroid(params, data));
                 break;
         }
-        url += "?" + requestParams(params);
+        url += "?" + buildRequestParams(params);
         return HttpUtil.createRequest(method, url)
                 .header("dfid", dfid)
                 .header("mid", mid)
@@ -69,7 +69,7 @@ public class KugouReqBuilder {
     }
 
     // 构造请求参数
-    private String requestParams(Map<String, Object> params) {
+    private String buildRequestParams(Map<String, Object> params) {
         StringJoiner sj = new StringJoiner("&");
         for (String k : params.keySet()) {
             Object o = params.get(k);
@@ -80,7 +80,7 @@ public class KugouReqBuilder {
     }
 
     // 构造签名参数
-    private String signParams(Map<String, Object> params) {
+    private String buildSignParams(Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();
         for (String k : params.keySet()) sb.append(k).append("=").append(params.get(k));
         return sb.toString();
@@ -89,7 +89,7 @@ public class KugouReqBuilder {
     // 安卓签名
     private String signAndroid(Map<String, Object> params, String data) {
 //        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
-        String content = signParams(params);
+        String content = buildSignParams(params);
         return CryptoUtil.md5(androidSignKey + content + (StringUtil.notEmpty(data) ? data : "") + androidSignKey);
     }
 

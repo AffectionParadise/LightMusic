@@ -12,6 +12,8 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
+import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.entity.music.info.trackhero.kg.KgTrackHeroV2;
@@ -30,6 +32,7 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class MusicUrlReq {
     private static MusicUrlReq instance;
@@ -57,7 +60,7 @@ public class MusicUrlReq {
     // 歌曲 URL 获取 API (哔哩哔哩)
     private final String SONG_URL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/url?sid=%s";
     // 歌曲 URL 获取 API (5sing)
-    private final String SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl?songtype=%s&songid=%s";
+    private final String SONG_URL_FS_API = "http://service.5sing.kugou.com/song/getsongurl";
     // 歌曲 URL 获取 API (发姐)
     private final String SONG_URL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
     // 歌曲 URL 获取 API (李志)
@@ -375,7 +378,12 @@ public class MusicUrlReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String[] sp = id.split("_");
-            String songBody = HttpRequest.get(String.format(SONG_URL_FS_API, sp[0], sp[1]))
+            Map<String, Object> params = new TreeMap<>();
+            params.put("songtype", sp[0]);
+            params.put("songid", sp[1]);
+            params.put("version", "6.6.72");
+            Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(SONG_URL_FS_API);
+            String songBody = SdkCommon.fsRequest(params, null, options)
                     .executeAsync()
                     .body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

@@ -139,7 +139,7 @@ public class StringTwoColor {
         if (!isDesktopLyric) dy += 5;
 
         g1.setColor(c1);
-        g2.setColor(ColorUtil.deriveAlphaColor(c2, 0.5f));
+        g2.setColor(ColorUtil.deriveAlphaColor(c2, 0.45f));
 
         // 画字符串
         if (!isDesktopLyric) {
@@ -291,15 +291,15 @@ public class StringTwoColor {
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
 
-            // 创建渐变覆盖层（使用白色到透明的渐变，然后使用 DST_OUT）
+            // 创建渐变覆盖层（使用黑色到透明的渐变，然后使用 DST_OUT）
             GradientPaint fadeOverlay = new GradientPaint(t, 0, Colors.TRANSPARENT, t + fadeWidth, 0, Colors.BLACK, false);
-            // 使用 DST_OUT：目标在源外（移除白色覆盖的部分）
+            // 使用 DST_OUT：目标在源外（移除黑色覆盖的部分）
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OUT));
             g2d.setPaint(fadeOverlay);
             g2d.fillRect(t, 0, fadeWidth, height);
 
             // 背景覆盖前景的模式
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OVER, 0.9f));
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OVER));
         }
         // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
         g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);

@@ -35,6 +35,9 @@ public class ConfigConstants {
     public static final String COLLECTION_TAB_INDEX = "collectionTabIndex";
     // 推荐选项卡
     public static final String RECOMMEND_TAB_INDEX = "recommendTabIndex";
+    // 收藏夹选项
+    public static final String LOCAL_PLAYLIST_INDEX = "localPlaylistIndex";
+    public static final String COLLECTION_PLAYLIST_INDEX = "collectionPlaylistIndex";
     // 是否自动更新
     public static final String AUTO_UPDATE = "autoUpdate";
     // 界面语言

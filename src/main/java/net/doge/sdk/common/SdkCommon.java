@@ -1,15 +1,11 @@
 package net.doge.sdk.common;
 
-import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
-import net.doge.sdk.common.builder.KugouReqBuilder;
-import net.doge.sdk.common.builder.MiguReqBuilder;
-import net.doge.sdk.common.builder.NeteaseReqBuilder;
+import net.doge.sdk.common.builder.*;
+import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.StringUtil;
 
 import java.util.Map;
 
@@ -46,11 +42,7 @@ public class SdkCommon {
 
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
-        return HttpRequest.get(url)
-                .cookie("Hm_Iuvt_cdb524f42f23cer9b268564v7y735ewrq2324=w6nWhWQm4y2cTbFFcXi5Xxa3KtXKnjzS")
-                .header("Secret", "5470ccb31c2e253cf173fea957bd5e544d0b4f6e54f88190868a0817094e920000224d1a")
-                .header(Header.HOST, "kuwo.cn")
-                .header(Header.REFERER, "https://kuwo.cn/");
+        return KuwoReqBuilder.getInstance().buildRequest(url);
     }
 
     // 构造咪咕音乐搜索请求
@@ -60,12 +52,11 @@ public class SdkCommon {
 
     // 构造千千音乐请求
     public static HttpRequest qiRequest(String url) {
-        // 参数顺序按照字典顺序
-        String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
-        String params = url.substring(url.indexOf('?') + 1);
-        // 将参数解码
-        params = StringUtil.urlDecode(params);
-        String sign = CryptoUtil.md5(params + secret);
-        return HttpRequest.get(url + "&sign=" + sign);
+        return QianReqBuilder.getInstance().buildRequest(url);
+    }
+
+    // 构造 5sing 请求
+    public static HttpRequest fsRequest(Map<String, Object> params, String data, Map<FiveSingReqOptEnum, Object> options) {
+        return FiveSingReqBuilder.getInstance().buildRequest(params, data, options);
     }
 }

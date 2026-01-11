@@ -13,6 +13,8 @@ import net.doge.model.entity.*;
 import net.doge.model.entity.base.NetResource;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
+import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
@@ -73,9 +75,9 @@ public class CommentReq {
     // 评论 API (咕咕咕音乐)
     private final String COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
     // 评论 API (5sing)
-    private final String COMMENTS_FS_API = "http://service.5sing.kugou.com/%s/comments/list1?rootId=%s&page=%s&limit=%s";
+    private final String COMMENTS_FS_API = "http://service.5sing.kugou.com/%s/comments/list1";
     //  MV 评论 API (5sing)
-    private final String MV_COMMENTS_FS_API = "http://service.5sing.kugou.com/mv/CommentList?mvId=%s&page=%s";
+    private final String MV_COMMENTS_FS_API = "http://service.5sing.kugou.com/mv/CommentList";
     // 节目评论 API (猫耳)
     private final String COMMENTS_ME_API = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
     // 评论 API (好看)
@@ -892,15 +894,25 @@ public class CommentReq {
         else if (source == NetMusicSource.FS) {
             boolean isMv = resource instanceof NetMvInfo;
             String url = "";
+            Map<String, Object> params = new TreeMap<>();
             if (resource instanceof NetMusicInfo) {
                 String[] sp = id.split("_");
-                url = String.format(COMMENTS_FS_API, sp[0], sp[1], page, limit);
+                url = String.format(COMMENTS_FS_API, sp[0]);
+                params.put("rootId", sp[1]);
+                params.put("page", page);
+                params.put("limit", limit);
             } else if (resource instanceof NetPlaylistInfo) {
-                url = String.format(COMMENTS_FS_API, "dynamicSongList", id, page, limit);
+                url = String.format(COMMENTS_FS_API, "dynamicSongList");
+                params.put("rootId", id);
+                params.put("page", page);
+                params.put("limit", limit);
             } else if (isMv) {
-                url = String.format(MV_COMMENTS_FS_API, id, page);
+                url = MV_COMMENTS_FS_API;
+                params.put("mvId", id);
+                params.put("page", page);
             }
-            String commentInfoBody = HttpRequest.get(url)
+            Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(url);
+            String commentInfoBody = SdkCommon.fsRequest(params, null, options)
                     .executeAsync()
                     .body();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);

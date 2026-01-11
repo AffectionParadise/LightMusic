@@ -78,7 +78,7 @@ public class KgTrackHeroV2 {
         params.put("module", "collection");
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey("/v5/url");
         String respBody = SdkCommon.kgRequest(params, null, options)
-                .header("x-router", "tracker.kugou.com")
+                .header("x-router", "trackercdn.kugou.com")
                 .executeAsync()
                 .body();
         JSONObject urlJson = JSONObject.parseObject(respBody);

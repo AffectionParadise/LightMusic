@@ -3351,6 +3351,11 @@ public class MainFrame extends JFrame {
 
         // 载入收藏选项卡
         collectionTabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.COLLECTION_TAB_INDEX, CollectionTabIndex.MUSIC));
+        // 载入收藏夹选项
+        int localPlaylistIndex = config.getIntValue(ConfigConstants.LOCAL_PLAYLIST_INDEX, 0);
+        currLocalPlaylist = localPlaylists.get(localPlaylistIndex);
+        int collectionPlaylistIndex = config.getIntValue(ConfigConstants.COLLECTION_PLAYLIST_INDEX, 0);
+        currCollectionPlaylist = collectionPlaylists.get(collectionPlaylistIndex);
         // 载入个人音乐选项卡
         int personalMusicTab = config.getIntValue(ConfigConstants.PERSONAL_TAB_INDEX, PersonalMusicTabIndex.LOCAL_MUSIC);
         if (personalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC) localMusicButton.doClick();
@@ -3858,6 +3863,9 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.TAB_INDEX, tabbedPane.getSelectedIndex());
         // 存入个人音乐选项卡
         config.put(ConfigConstants.PERSONAL_TAB_INDEX, currPersonalMusicTab);
+        // 存入收藏夹选项
+        config.put(ConfigConstants.LOCAL_PLAYLIST_INDEX, ListUtil.indexOf(localPlaylists, currLocalPlaylist));
+        config.put(ConfigConstants.COLLECTION_PLAYLIST_INDEX, ListUtil.indexOf(collectionPlaylists, currCollectionPlaylist));
         // 存入收藏选项卡
         config.put(ConfigConstants.COLLECTION_TAB_INDEX, collectionTabbedPane.getSelectedIndex());
         // 存入推荐选项卡
@@ -23697,6 +23705,8 @@ public class MainFrame extends JFrame {
                     b.addComponentListener(new ComponentAdapter() {
                         @Override
                         public void componentMoved(ComponentEvent e) {
+                            // 关键词按钮被移除时，屏蔽调整面板大小事件
+                            if (!fb.isShowing()) return;
                             Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
                             Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
