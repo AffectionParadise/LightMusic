@@ -58,12 +58,12 @@ public class CustomScrollPane extends JScrollPane {
 
     public boolean setVValue(int value) {
         if (value < getVMin() || value > getVMax()) return false;
+        verticalScrollBar.setValue(value);
         // 修复某些情况滚动条不显示并且无法滚动
         if (value == 0 && !verticalScrollBar.isShowing()) {
             setVisible(false);
             setVisible(true);
         }
-        verticalScrollBar.setValue(value);
         return true;
     }
 

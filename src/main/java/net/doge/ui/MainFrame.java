@@ -12,7 +12,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
-import javafx.scene.media.AudioSpectrumListener;
 import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
@@ -921,6 +920,8 @@ public class MainFrame extends JFrame {
     public SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
     private List<CustomRadioButtonMenuItem> spectrumStyleButtonGroup = new LinkedList<>();
+    public boolean specGradient;
+    private CustomMenuItem spectrumGradientMenuItem = new CustomMenuItem(I18n.getText("specGradientMsg"));
     private final String SPEC_OPACITY_MSG = I18n.getText("specOpacityMsg");
     public float specOpacity;
     private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem();
@@ -3109,8 +3110,11 @@ public class MainFrame extends JFrame {
         // 载入歌词偏移
         lrcOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
         currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
+        // 载入频谱透明渐变
+        specGradient = config.getBooleanValue(ConfigConstants.SPEC_GRADIENT, true);
+        spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
         // 载入频谱透明度
-        specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.3f;
+        specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.6f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
         // 载入是否锁定桌面歌词
         desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
@@ -3931,6 +3935,8 @@ public class MainFrame extends JFrame {
 //        config.put(ConfigConstants.VERBATIM_TIMELINE, LyricType.verbatimTimeline);
         // 存入歌词偏移
         config.put(ConfigConstants.LYRIC_OFFSET, lrcOffset);
+        // 存入频谱透明渐变
+        config.put(ConfigConstants.SPEC_GRADIENT, specGradient);
         // 存入频谱透明度
         config.put(ConfigConstants.SPEC_OPACITY, specOpacity);
         // 存入是否显示桌面歌词
@@ -20215,6 +20221,12 @@ public class MainFrame extends JFrame {
             }
         });
         // 频谱右键菜单
+        spectrumGradientMenuItem.addActionListener(e -> {
+            specGradient = !specGradient;
+            spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+        });
+        spectrumPopupMenu.add(spectrumGradientMenuItem);
+        spectrumPopupMenu.addSeparator();
         spectrumOpacityMenuItem.setEnabled(false);
         spectrumPopupMenu.add(spectrumOpacityMenuItem);
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
@@ -20222,7 +20234,7 @@ public class MainFrame extends JFrame {
                 String text = mi.getText();
                 float so = specOpacity + Float.parseFloat(text.replaceFirst("%", "")) / 100;
                 specOpacity = Math.min(1, Math.max(0.1f, so));
-                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
+                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100 + 0.5)));
             });
             spectrumPopupMenu.add(mi);
         }
@@ -21206,32 +21218,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 频谱监听器
-        mp.setAudioSpectrumListener(new AudioSpectrumListener() {
-            @Override
-            public void spectrumDataUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
-                double[] specs = player.specs;
-                double[] specsOrigin = player.specsOrigin;
-                double[] specsGap = player.specsGap;
-                final int barNum = SpectrumConstants.barNum, nFactor = barNum - 30, numBands = SpectrumConstants.NUM_BANDS, maxHeight = SpectrumConstants.barMaxHeight;
-                double avg = 0;
-                for (int i = 0; i < numBands; i++) {
-                    int mult = i / barNum;
-                    int n = mult % 2 == 0 ? i - barNum * mult : barNum - (i - barNum * mult);
-                    int spectrum = n > nFactor ? 0 : (int) SpectrumUtil.handleMagnitude(magnitudes[n + 20]);
-                    avg += spectrum * 1.2;
-                }
-                avg = avg / numBands * 1.4 / barNum + 0.42;
-                for (int i = 0; i < barNum; i++) {
-                    double h = Math.min(maxHeight, SpectrumUtil.handleMagnitude(magnitudes[i]) * avg);
-                    specsOrigin[i] = h;
-                    specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
-                }
-//                for (int i = 0, num = specsOrigin.length; i < num; i++) {
-//                    specsOrigin[i] = SpectrumUtils.handleMagnitude(magnitudes[i]);
-//                    specsGap[i] = Math.abs(specsOrigin[i] - specs[i]);
-//                }
-            }
-        });
+        mp.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> SpectrumUtil.handleMagnitudes(magnitudes, player));
         // 播放器状态监听
         mp.statusProperty().addListener((observable, oldValue, newValue) -> {
             // 排除正在销毁的 mp 对象的事件调用
@@ -22154,6 +22141,7 @@ public class MainFrame extends JFrame {
         browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
+        if (specGradient) spectrumGradientMenuItem.setIcon(ImageUtil.dye(tickIcon, currUIStyle.getIconColor()));
         spectrumOpacityMenuItem.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));

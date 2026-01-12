@@ -260,6 +260,7 @@ public class I18n {
         LANG_MAP.put("copyArtist", new String[]{"复制艺术家", "Copy artist"});
         LANG_MAP.put("copyAlbum", new String[]{"复制专辑名", "Copy album"});
 
+        LANG_MAP.put("specGradientMsg", new String[]{"频谱透明渐变", "Spectrum transparent gradient"});
         LANG_MAP.put("specOpacityMsg", new String[]{"当前频谱透明度：%d%%", "Current spectrum view opacity: %d%%"});
 
         LANG_MAP.put("copy", new String[]{"复制这句歌词", "Copy lyric"});

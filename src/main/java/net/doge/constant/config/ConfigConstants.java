@@ -99,6 +99,8 @@ public class ConfigConstants {
 //    public static final String VERBATIM_TIMELINE = "verbatimTimeline";
     // 歌词偏移
     public static final String LYRIC_OFFSET = "lyricOffset";
+    // 频谱透明渐变
+    public static final String SPEC_GRADIENT = "spectrumGradient";
     // 频谱透明度
     public static final String SPEC_OPACITY = "spectrumOpacity";
     // 是否显示桌面歌词
