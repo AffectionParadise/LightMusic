@@ -56,10 +56,10 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        dCustomLabel.setBluntAlpha(alpha);
-        categoryLabel.setBluntAlpha(alpha);
-        trackCountLabel.setBluntAlpha(alpha);
-        playCountLabel.setBluntAlpha(alpha);
+        dCustomLabel.setInstantAlpha(alpha);
+        categoryLabel.setInstantAlpha(alpha);
+        trackCountLabel.setInstantAlpha(alpha);
+        playCountLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -76,7 +76,7 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

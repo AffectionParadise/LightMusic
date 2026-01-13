@@ -1,5 +1,6 @@
 package net.doge.ui.widget.dialog.factory;
 
+import net.doge.constant.ui.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
@@ -53,6 +54,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
             }
         });
 
+        titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(title);
         setTitle(StringUtil.removeHTMLLabel(title));
         titleLabel.setForeground(f.currUIStyle.getTextColor());

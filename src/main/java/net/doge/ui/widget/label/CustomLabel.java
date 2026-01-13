@@ -51,7 +51,7 @@ public class CustomLabel extends JLabel {
         alphaTimer.start();
     }
 
-    public void setBluntAlpha(float alpha) {
+    public void setInstantAlpha(float alpha) {
         this.alpha = alpha;
     }
 

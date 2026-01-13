@@ -9,7 +9,7 @@ public class CustomPanel extends JPanel {
     private boolean drawBg;
     // 是否无动画画背景
     @Setter
-    private boolean bluntDrawBg;
+    private boolean instantDrawBg;
     private Timer drawBgTimer;
     // 背景不透明度
     private float bgAlpha;
@@ -38,7 +38,7 @@ public class CustomPanel extends JPanel {
     public void setDrawBg(boolean drawBg) {
         if (this.drawBg == drawBg) return;
         this.drawBg = drawBg;
-        if (bluntDrawBg) {
+        if (instantDrawBg) {
             bgAlpha = destBgAlpha;
             repaint();
         } else {

@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Data
 public class LrcListRenderer extends DefaultListCellRenderer {
-    private final Font defaultFont = Fonts.NORMAL_V2;
+    private final Font defaultFont = Fonts.NORMAL_TITLE;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
     // 字体大小动画数组
@@ -150,8 +150,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        lyricLabel.setBorder(BORDERS[LyricAlignment.lrcAlignmentIndex]);
 //        lyricLabel.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
 //        lyricLabel.setForeground(bgColor);
-//        if (index == row) lyricLabel.setBluntAlpha(highlightAlpha);
-//        else lyricLabel.setBluntAlpha(alphas.getOrDefault(index, normalMaxAlpha));
+//        if (index == row) lyricLabel.setInstantAlpha(highlightAlpha);
+//        else lyricLabel.setInstantAlpha(alphas.getOrDefault(index, normalMaxAlpha));
 //
 //        int maxWidth = (list.getVisibleRect().width - 10 - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
 //        if (maxWidth <= 0) return outerPanel;

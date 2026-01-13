@@ -138,9 +138,9 @@ public class MainFrame extends JFrame {
     // 窗口宽高
     public int windowWidth;
     public int windowHeight;
-    private final String SONG_NAME_LABEL = I18n.getText("songName");
-    private final String ARTIST_LABEL = I18n.getText("artist");
-    private final String ALBUM_NAME_LABEL = I18n.getText("albumName");
+    //    private final String SONG_NAME_LABEL = I18n.getText("songName");
+//    private final String ARTIST_LABEL = I18n.getText("artist");
+//    private final String ALBUM_NAME_LABEL = I18n.getText("albumName");
     // 进度条最大值
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     // 默认音量
@@ -2728,9 +2728,11 @@ public class MainFrame extends JFrame {
 
     // 初始化标题栏
     private void initTitleBar() {
+        titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
         titleLabel.setIconTextGap(15);
+        titleLabel.setInstantAlpha(0.5f);
         titleLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.addMouseListener(new MouseAdapter() {
@@ -3287,9 +3289,10 @@ public class MainFrame extends JFrame {
                     task = new Task(downloadList, type, musicInfo);
 
                     task.setInvokeLater(() -> {
+                        String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
                         String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
                         // 写入歌曲信息
-                        MediaUtil.writeAudioFileInfo(dest, musicInfo);
+                        MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                         // 自动下载歌词
                         if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
                             FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
@@ -5571,6 +5574,9 @@ public class MainFrame extends JFrame {
 
         collectionPlayAllButton.setIconTextGap(5);
 
+        // 透明度
+        collectionCountLabel.setInstantAlpha(0.5f);
+
         // 收藏歌单/专辑/歌手/电台/榜单中歌曲的工具栏，暂时不放入
         musicCollectionToolBar.add(collectionBackwardButton);
         musicCollectionToolBar.add(Box.createHorizontalGlue());
@@ -6286,11 +6292,12 @@ public class MainFrame extends JFrame {
 
     // 初始化标签
     private void initLabel() {
+        MetaMusicInfo musicInfo = player.getMetaMusicInfo();
         // 导出专辑图片事件
-        saveAlbumImageMenuItem.addActionListener(e -> saveImg(player.getMetaMusicInfo().getAlbumImage()));
-        copySongNameMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(songNameLabel.getText().replaceFirst(SONG_NAME_LABEL, ""))));
-        copyArtistMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(artistLabel.getText().replaceFirst(ARTIST_LABEL, ""))));
-        copyAlbumMenuItem.addActionListener(e -> copyToClipboard(StringUtil.removeHTMLLabel(albumLabel.getText().replaceFirst(ALBUM_NAME_LABEL, ""))));
+        saveAlbumImageMenuItem.addActionListener(e -> saveImg(musicInfo.getAlbumImage()));
+        copySongNameMenuItem.addActionListener(e -> copyToClipboard(musicInfo.getName()));
+        copyArtistMenuItem.addActionListener(e -> copyToClipboard(musicInfo.getArtist()));
+        copyAlbumMenuItem.addActionListener(e -> copyToClipboard(musicInfo.getAlbumName()));
         leftInfoPopupMenu.add(saveAlbumImageMenuItem);
         leftInfoPopupMenu.add(copySongNameMenuItem);
         leftInfoPopupMenu.add(copyArtistMenuItem);
@@ -6303,7 +6310,11 @@ public class MainFrame extends JFrame {
             }
         });
 
-        final float alpha = 0.5f;
+        // 字体
+        songNameLabel.setFont(Fonts.NORMAL_TITLE);
+
+        // 透明度
+        float alpha = 0.5f;
         artistLabel.setAlpha(alpha);
         albumLabel.setAlpha(alpha);
         artistLabel.addMouseListener(new MouseAdapter() {
@@ -6510,6 +6521,11 @@ public class MainFrame extends JFrame {
         localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
         collectionButton.addMouseListener(new ButtonMouseListener(collectionButton, THIS));
+        // 按钮字体
+        Font font = Fonts.NORMAL_TITLE2;
+        localMusicButton.setFont(font);
+        historyButton.setFont(font);
+        collectionButton.setFont(font);
 
         // 按钮文字与图标的位置
         int gap = 15;
@@ -6548,6 +6564,8 @@ public class MainFrame extends JFrame {
         clearInputToolButton.addMouseListener(new ButtonMouseListener(clearInputToolButton, THIS));
         // 标签左间距
         countLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        // 透明度
+        countLabel.setInstantAlpha(0.5f);
 
         // 下拉框事件
         localPlaylistComboBox.addItemListener(e -> {
@@ -7759,6 +7777,9 @@ public class MainFrame extends JFrame {
         netMusicNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netMusicEndPageButton.setToolTipText(END_PAGE_TIP);
 
+        // 透明度
+        netMusicCountLabel.setInstantAlpha(0.5f);
+
         // 回到关键词面板起始不可用
         netMusicBackwardButton.setEnabled(false);
         // 清除输入按钮初始不可见
@@ -8484,6 +8505,9 @@ public class MainFrame extends JFrame {
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
+        Font font = Fonts.NORMAL_TITLE2;
+        netMusicSearchSuggestionLabel.setFont(font);
+
 //        netMusicSearchSuggestionInnerPanel1.setVisible(false);
         netMusicSearchSuggestionInnerPanel1.add(netMusicSearchSuggestionLabel);
         netMusicSearchSuggestionInnerPanel1.add(netMusicRefreshSearchSuggestionButton);
@@ -8518,6 +8542,8 @@ public class MainFrame extends JFrame {
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
         netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
+        netMusicHotSearchLabel.setFont(font);
+
 //        netMusicHotSearchInnerPanel1.setVisible(false);
         netMusicHotSearchInnerPanel1.add(netMusicHotSearchLabel);
         netMusicHotSearchInnerPanel1.add(netMusicRefreshHotSearchButton);
@@ -8551,6 +8577,8 @@ public class MainFrame extends JFrame {
         netMusicClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMusicClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMusicClearHistorySearchButton, THIS));
+
+        netMusicHistorySearchLabel.setFont(font);
 
         netMusicHistorySearchInnerPanel1.setVisible(false);
         netMusicHistorySearchInnerPanel1.add(netMusicHistorySearchLabel);
@@ -8607,8 +8635,8 @@ public class MainFrame extends JFrame {
         playlistTagLabel.setVerticalAlignment(SwingConstants.TOP);
         playlistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         artistTagLabel.setVerticalAlignment(SwingConstants.TOP);
-        albumDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         artistDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
+        albumDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         radioTagLabel.setVerticalAlignment(SwingConstants.TOP);
         radioDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         rankingDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -8635,7 +8663,7 @@ public class MainFrame extends JFrame {
         recommendItemCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         collectionItemCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
         collectionItemCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-
+        // 用户描述面板最下方可能有背景图
         userDescriptionLabel.setVerticalTextPosition(SwingConstants.TOP);
         userDescriptionLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         collectionItemDescriptionLabel.setVerticalTextPosition(SwingConstants.TOP);
@@ -8653,6 +8681,33 @@ public class MainFrame extends JFrame {
         collectionItemCoverAndNameLabel.setIconTextGap(gap);
         collectionItemDescriptionLabel.setIconTextGap(gap);
 
+        // 透明度
+        float alpha = 0.5f;
+        playlistTagLabel.setInstantAlpha(alpha);
+        playlistDescriptionLabel.setInstantAlpha(alpha);
+        artistTagLabel.setInstantAlpha(alpha);
+        artistDescriptionLabel.setInstantAlpha(alpha);
+        albumDescriptionLabel.setInstantAlpha(alpha);
+        radioTagLabel.setInstantAlpha(alpha);
+        radioDescriptionLabel.setInstantAlpha(alpha);
+        rankingDescriptionLabel.setInstantAlpha(alpha);
+        userTagLabel.setInstantAlpha(alpha);
+        userDescriptionLabel.setInstantAlpha(alpha);
+        recommendItemTagLabel.setInstantAlpha(alpha);
+        recommendItemDescriptionLabel.setInstantAlpha(alpha);
+        collectionItemTagLabel.setInstantAlpha(alpha);
+        collectionItemDescriptionLabel.setInstantAlpha(alpha);
+
+        // 字体
+        Font font = Fonts.NORMAL_TITLE2;
+        playlistCoverAndNameLabel.setFont(font);
+        albumCoverAndNameLabel.setFont(font);
+        artistCoverAndNameLabel.setFont(font);
+        radioCoverAndNameLabel.setFont(font);
+        rankingCoverAndNameLabel.setFont(font);
+        userCoverAndNameLabel.setFont(font);
+        recommendItemCoverAndNameLabel.setFont(font);
+        collectionItemCoverAndNameLabel.setFont(font);
         // 显示大图
 //        JScrollBar vs = playlistDescriptionScrollPane.getVerticalScrollBar();
 //        vs.addMouseListener(new MouseAdapter() {
@@ -9950,6 +10005,9 @@ public class MainFrame extends JFrame {
 
         netPlaylistPlayAllButton.setIconTextGap(5);
 
+        // 透明度
+        netPlaylistCountLabel.setInstantAlpha(0.5f);
+
         netPlaylistToolBar.add(netPlaylistBackwardButton);
         netPlaylistToolBar.add(netPlaylistIdCheckBox);
         netPlaylistToolBar.add(netPlaylistSearchTextField);
@@ -10473,6 +10531,8 @@ public class MainFrame extends JFrame {
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netPlaylistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
+        netPlaylistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netPlaylistHistorySearchInnerPanel1.setVisible(false);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistHistorySearchLabel);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistClearHistorySearchButton);
@@ -10947,6 +11007,9 @@ public class MainFrame extends JFrame {
         netAlbumEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netAlbumPlayAllButton.setIconTextGap(5);
+
+        // 透明度
+        netAlbumCountLabel.setInstantAlpha(0.5f);
 
         netAlbumToolBar.add(netAlbumBackwardButton);
         netAlbumToolBar.add(netAlbumSearchTextField);
@@ -11486,6 +11549,8 @@ public class MainFrame extends JFrame {
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netAlbumClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
+        netAlbumHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netAlbumHistorySearchInnerPanel1.setVisible(false);
         netAlbumHistorySearchInnerPanel1.add(netAlbumHistorySearchLabel);
         netAlbumHistorySearchInnerPanel1.add(netAlbumClearHistorySearchButton);
@@ -11971,6 +12036,9 @@ public class MainFrame extends JFrame {
         netArtistEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netArtistPlayAllButton.setIconTextGap(5);
+
+        // 透明度
+        netArtistCountLabel.setInstantAlpha(0.5f);
 
         netArtistToolBar.add(netArtistBackwardButton);
         netArtistToolBar.add(netArtistSearchTextField);
@@ -12735,6 +12803,8 @@ public class MainFrame extends JFrame {
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netArtistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
+        netArtistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netArtistHistorySearchInnerPanel1.setVisible(false);
         netArtistHistorySearchInnerPanel1.add(netArtistHistorySearchLabel);
         netArtistHistorySearchInnerPanel1.add(netArtistClearHistorySearchButton);
@@ -13216,6 +13286,9 @@ public class MainFrame extends JFrame {
         netRadioEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netRadioPlayAllButton.setIconTextGap(5);
+
+        // 透明度
+        netRadioCountLabel.setInstantAlpha(0.5f);
 
         netRadioToolBar.add(netRadioBackwardButton);
         netRadioToolBar.add(netRadioSearchTextField);
@@ -13893,6 +13966,8 @@ public class MainFrame extends JFrame {
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netRadioClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
+        netRadioHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netRadioHistorySearchInnerPanel1.setVisible(false);
         netRadioHistorySearchInnerPanel1.add(netRadioHistorySearchLabel);
         netRadioHistorySearchInnerPanel1.add(netRadioClearHistorySearchButton);
@@ -14215,6 +14290,8 @@ public class MainFrame extends JFrame {
         netMvGoButton.setToolTipText(GO_TIP);
         netMvNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netMvEndPageButton.setToolTipText(END_PAGE_TIP);
+        // 透明度
+        netMvCountLabel.setInstantAlpha(0.5f);
         // 回到关键词面板起始不可用
         netMvBackwardButton.setEnabled(false);
         // 清除输入按钮初始不可见
@@ -14663,6 +14740,8 @@ public class MainFrame extends JFrame {
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netMvClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
+        netMvHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netMvHistorySearchInnerPanel1.setVisible(false);
         netMvHistorySearchInnerPanel1.add(netMvHistorySearchLabel);
         netMvHistorySearchInnerPanel1.add(netMvClearHistorySearchButton);
@@ -14975,6 +15054,9 @@ public class MainFrame extends JFrame {
         netRankingEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netRankingPlayAllButton.setIconTextGap(5);
+
+        // 透明度
+        netRankingCountLabel.setInstantAlpha(0.5f);
 
         netRankingToolBar.add(netRankingBackwardButton);
         netRankingToolBar.add(Box.createHorizontalGlue());
@@ -15750,6 +15832,9 @@ public class MainFrame extends JFrame {
 
         netUserPlayAllButton.setIconTextGap(5);
 
+        // 透明度
+        netUserCountLabel.setInstantAlpha(0.5f);
+
         netUserToolBar.add(netUserBackwardButton);
         netUserToolBar.add(netUserSearchTextField);
         netUserToolBar.add(netUserClearInputButton);
@@ -16484,6 +16569,8 @@ public class MainFrame extends JFrame {
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
         netUserClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
+        netUserHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
+
         netUserHistorySearchInnerPanel1.setVisible(false);
         netUserHistorySearchInnerPanel1.add(netUserHistorySearchLabel);
         netUserHistorySearchInnerPanel1.add(netUserClearHistorySearchButton);
@@ -16766,6 +16853,9 @@ public class MainFrame extends JFrame {
         netCommentGoButton.setToolTipText(GO_TIP);
         netCommentNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netCommentEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        // 透明度
+        netCommentCountLabel.setInstantAlpha(0.5f);
 
         netCommentToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
         netCommentToolBar.add(netCommentBackwardButton);
@@ -17175,6 +17265,9 @@ public class MainFrame extends JFrame {
         netSheetGoButton.setToolTipText(GO_TIP);
         netSheetNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netSheetEndPageButton.setToolTipText(END_PAGE_TIP);
+
+        // 透明度
+        netSheetCountLabel.setInstantAlpha(0.5f);
 
         netSheetToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
         netSheetToolBar.add(netSheetBackwardButton);
@@ -18710,6 +18803,18 @@ public class MainFrame extends JFrame {
         netRecommendGoButton.addMouseListener(new ButtonMouseListener(netRecommendGoButton, THIS));
         netRecommendNextPageButton.addMouseListener(new ButtonMouseListener(netRecommendNextPageButton, THIS));
         netRecommendEndPageButton.addMouseListener(new ButtonMouseListener(netRecommendEndPageButton, THIS));
+        // 按钮字体
+        Font font = Fonts.NORMAL_TITLE2;
+        playlistRecommendButton.setFont(font);
+        highQualityPlaylistButton.setFont(font);
+        hotMusicButton.setFont(font);
+        newMusicButton.setFont(font);
+        newAlbumRecommendButton.setFont(font);
+        artistListRecommendButton.setFont(font);
+        newRadioRecommendButton.setFont(font);
+        hotRadioRecommendButton.setFont(font);
+        programRecommendButton.setFont(font);
+        mvRecommendButton.setFont(font);
         // 提示语
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -18721,6 +18826,9 @@ public class MainFrame extends JFrame {
         netRecommendEndPageButton.setToolTipText(END_PAGE_TIP);
 
         netRecommendPlayAllButton.setIconTextGap(5);
+
+        // 透明度
+        recommendCountLabel.setInstantAlpha(0.5f);
 
         // 按钮文字与图标的位置
         int gap = 15;
@@ -19410,6 +19518,9 @@ public class MainFrame extends JFrame {
         cancelAllTasksButton.setToolTipText(CANCEL_ALL_TASKS_TIP);
         removeAllTasksButton.setToolTipText(REMOVE_ALL_TASKS_TIP);
 
+        // 透明度
+        taskCountLabel.setInstantAlpha(0.5f);
+
         downloadToolBar.add(restartSelectedTasksButton);
         downloadToolBar.add(restartAllTasksButton);
         downloadToolBar.add(cancelSelectedTasksButton);
@@ -19717,6 +19828,9 @@ public class MainFrame extends JFrame {
         playQueueReverseToolButton.setToolTipText(REVERSE_TIP);
         playQueueMoveUpToolButton.setToolTipText(MOVE_UP_TIP);
         playQueueMoveDownToolButton.setToolTipText(MOVE_DOWN_TIP);
+
+        // 透明度
+        playQueueCountLabel.setInstantAlpha(0.5f);
 
         playQueueToolBar.add(playQueueRemoveToolButton);
         playQueueToolBar.add(playQueueClearToolButton);
@@ -20931,16 +21045,19 @@ public class MainFrame extends JFrame {
 
         MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         // 设置歌曲名称
-        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
+//        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
+        songNameLabel.setText(StringUtil.textToHtml(metaMusicInfo.getName()));
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
-        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
+//        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
+        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(metaMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
-        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
+//        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
+        albumLabel.setText(StringUtil.textToHtml(metaMusicInfo.getAlbumName()));
         albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);

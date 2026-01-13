@@ -29,7 +29,7 @@ public class Task {
     private static final String SEPARATOR = "   |   ";
 
     // 下载列表
-    private JList downloadList;
+    private JList<?> downloadList;
     // 下载类型
     private int type;
     // 资源信息
@@ -51,11 +51,11 @@ public class Task {
     // 总大小
     private long total;
     // 任务对应的 Future 对象
-    private Future future;
+    private Future<?> future;
     // 完成后调用
     private Runnable invokeLater;
 
-    public Task(JList downloadList, int type, Downloadable resource) {
+    public Task(JList<?> downloadList, int type, Downloadable resource) {
         this.downloadList = downloadList;
         this.type = type;
         this.resource = resource;

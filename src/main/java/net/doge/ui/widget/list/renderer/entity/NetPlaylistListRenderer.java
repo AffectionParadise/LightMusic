@@ -54,9 +54,9 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        creatorLabel.setBluntAlpha(alpha);
-        playCountLabel.setBluntAlpha(alpha);
-        trackCountLabel.setBluntAlpha(alpha);
+        creatorLabel.setInstantAlpha(alpha);
+        playCountLabel.setInstantAlpha(alpha);
+        trackCountLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -71,7 +71,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
 
         outerPanel.add(nameLabel);
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

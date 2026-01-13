@@ -54,9 +54,9 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        playCountLabel.setBluntAlpha(alpha);
-        updateFreLabel.setBluntAlpha(alpha);
-        updateTimeLabel.setBluntAlpha(alpha);
+        playCountLabel.setInstantAlpha(alpha);
+        updateFreLabel.setInstantAlpha(alpha);
+        updateTimeLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -71,7 +71,7 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         outerPanel.add(updateTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

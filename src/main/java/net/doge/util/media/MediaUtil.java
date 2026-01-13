@@ -69,11 +69,11 @@ public class MediaUtil {
      * @param musicInfo
      */
     public static void writeAudioFileInfo(String sourcePath, NetMusicInfo musicInfo) {
-        if (!musicInfo.hasAlbumImage()) musicInfo.setInvokeLater(() -> startWrite(sourcePath, musicInfo));
-        else startWrite(sourcePath, musicInfo);
+        if (!musicInfo.hasAlbumImage()) musicInfo.setInvokeLater(() -> doWrite(sourcePath, musicInfo));
+        else doWrite(sourcePath, musicInfo);
     }
 
-    private static void startWrite(String sourcePath, NetMusicInfo musicInfo) {
+    private static void doWrite(String sourcePath, NetMusicInfo musicInfo) {
         String name = musicInfo.getName();
         String artist = musicInfo.getArtist();
         String albumName = musicInfo.getAlbumName();
@@ -209,9 +209,9 @@ public class MediaUtil {
                     // 若没有 ID3v2 ，在 ID3v1 找
                 else if (f.hasId3v1Tag()) tag = f.getId3v1Tag();
                 if (tag == null) return;
-                String title = tag.getTitle();
-                String artist = tag.getArtist();
-                String album = tag.getAlbum();
+                String title = StringUtil.fixEncoding(tag.getTitle());
+                String artist = StringUtil.fixEncoding(tag.getArtist());
+                String album = StringUtil.fixEncoding(tag.getAlbum());
                 file.setSongName(title);
                 file.setArtist(artist);
                 file.setAlbum(album);
@@ -221,9 +221,9 @@ public class MediaUtil {
                 Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
                 org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
                 Tag tag = af.getTag();
-                String title = tag.getFirst(FieldKey.TITLE);
-                String artist = tag.getFirst(FieldKey.ARTIST);
-                String album = tag.getFirst(FieldKey.ALBUM);
+                String title = StringUtil.fixEncoding(tag.getFirst(FieldKey.TITLE));
+                String artist = StringUtil.fixEncoding(tag.getFirst(FieldKey.ARTIST));
+                String album = StringUtil.fixEncoding(tag.getFirst(FieldKey.ALBUM));
                 file.setSongName(title);
                 file.setArtist(artist);
                 file.setAlbum(album);
@@ -291,7 +291,7 @@ public class MediaUtil {
                 Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
                 org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
                 Tag tag = af.getTag();
-                genre = tag.getFirst(FieldKey.GENRE);
+                genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
             }
             return genre;
         } catch (Exception e) {
@@ -321,7 +321,7 @@ public class MediaUtil {
                 Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
                 org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
                 Tag tag = af.getTag();
-                comment = tag.getFirst(FieldKey.COMMENT);
+                comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));
             }
             return comment;
         } catch (Exception e) {

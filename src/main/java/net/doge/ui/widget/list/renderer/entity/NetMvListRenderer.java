@@ -56,10 +56,10 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        artistLabel.setBluntAlpha(alpha);
-        durationLabel.setBluntAlpha(alpha);
-        playCountLabel.setBluntAlpha(alpha);
-        pubTimeLabel.setBluntAlpha(alpha);
+        artistLabel.setInstantAlpha(alpha);
+        durationLabel.setInstantAlpha(alpha);
+        playCountLabel.setInstantAlpha(alpha);
+        pubTimeLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -76,7 +76,7 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pubTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

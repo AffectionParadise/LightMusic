@@ -51,6 +51,8 @@ public class MusicListRenderer extends DefaultListCellRenderer {
     private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.programItem"), ImageConstants.SMALL_WIDTH));
     private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playingItem"), ImageConstants.SMALL_WIDTH));
 
+    private final float alpha = 0.7f;
+
     public MusicListRenderer(MusicPlayer player) {
         this.player = player;
         init();
@@ -68,6 +70,9 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(15);
         iconLabel.setHorizontalTextPosition(LEFT);
 
+        artistLabel.setInstantAlpha(alpha);
+        albumNameLabel.setInstantAlpha(alpha);
+
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
         outerPanel.setLayout(layout);
@@ -78,7 +83,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         outerPanel.add(albumNameLabel);
         outerPanel.add(durationLabel);
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override
@@ -93,15 +98,24 @@ public class MusicListRenderer extends DefaultListCellRenderer {
 
         if (isFile) {
             // 播放中的文件图标不同
-            if (!player.loadedAudioFile(file)) iconLabel.setIcon(musicIcon);
-            else iconLabel.setIcon(playingIcon);
+            if (player.loadedAudioFile(file)) {
+                iconLabel.setIcon(playingIcon);
+                iconLabel.setInstantAlpha(1f);
+            } else {
+                iconLabel.setIcon(musicIcon);
+                iconLabel.setInstantAlpha(alpha);
+            }
         } else {
             // 播放中的文件图标不同
-            if (!player.loadedNetMusic(musicInfo)) {
+            if (player.loadedNetMusic(musicInfo)) {
+                iconLabel.setIcon(playingIcon);
+                iconLabel.setInstantAlpha(1f);
+            } else {
                 if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
                 else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
                 else iconLabel.setIcon(musicIcon);
-            } else iconLabel.setIcon(playingIcon);
+                iconLabel.setInstantAlpha(alpha);
+            }
         }
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);

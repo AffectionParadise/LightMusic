@@ -20,25 +20,30 @@ public class Fonts {
 
     private static final String NORMAL_NAME = FONT_NAMES[currFont = ConfigConstants.CONFIG_DATA.getIntValue(ConfigConstants.UI_FONT, currFont)];
 
+    // 字体大小
+    // 界面文字
     public static final int FONT_SIZE = 17;
-    public static final int FONT_V2_SIZE = FONT_SIZE + 8;
+    // 标题 / 歌词文字
+    public static final int TITLE_FONT_SIZE = FONT_SIZE + 8;
+    // 第二级别标题文字
+    public static final int TITLE2_FONT_SIZE = FONT_SIZE + 4;
+    // 小文字
     public static final int TINY_SIZE = FONT_SIZE - 2;
+    // 对话框文字
     public static final int MEDIUM_SIZE = FONT_SIZE + 3;
+    // 歌词高亮文字
     public static final int BIG_SIZE = FONT_SIZE + 17;
+    // 桌面歌词文字
     public static final int HUGE_SIZE = BIG_SIZE + 20;
 
     // 中英文
     public static final Font NORMAL_TINY = LMFontManager.getFont(NORMAL_NAME, TINY_SIZE);
     public static final Font NORMAL = LMFontManager.getFont(NORMAL_NAME, FONT_SIZE);
-    public static final Font NORMAL_V2 = LMFontManager.getFont(NORMAL_NAME, FONT_V2_SIZE);
+    public static final Font NORMAL_TITLE = LMFontManager.getFont(NORMAL_NAME, TITLE_FONT_SIZE);
+    public static final Font NORMAL_TITLE2 = LMFontManager.getFont(NORMAL_NAME, TITLE2_FONT_SIZE);
     public static final Font NORMAL_MEDIUM = LMFontManager.getFont(NORMAL_NAME, MEDIUM_SIZE);
     public static final Font NORMAL_BIG = LMFontManager.getFont(NORMAL_NAME, BIG_SIZE);
     public static final Font NORMAL_HUGE = LMFontManager.getFont(NORMAL_NAME, HUGE_SIZE);
-
-//    public static final Font NORMAL = new Font("微软雅黑", Font.PLAIN, FONT_SIZE);
-//    public static final Font NORMAL_MEDIUM = new Font("微软雅黑", Font.PLAIN, MEDIUM_SIZE);
-//    public static final Font NORMAL_BIG = new Font("微软雅黑", Font.PLAIN, BIG_SIZE);
-//    public static final Font NORMAL_HUGE = new Font("微软雅黑", Font.PLAIN, HUGE_SIZE);
 
     // emoji
     public static final Font EMOJI = new Font("Segoe UI Emoji", Font.BOLD, FONT_SIZE);

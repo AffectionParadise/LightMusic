@@ -47,6 +47,8 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 
     private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.taskItem"), ImageConstants.SMALL_WIDTH));
 
+    private final float alpha = 0.5f;
+
     public DownloadListRenderer() {
         init();
     }
@@ -63,6 +65,10 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         layout.setHgap(15);
         outerPanel.setLayout(layout);
 
+        iconLabel.setInstantAlpha(alpha);
+        typeLabel.setInstantAlpha(alpha);
+        sizeLabel.setInstantAlpha(alpha);
+
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
         outerPanel.add(typeLabel);
@@ -71,19 +77,22 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         outerPanel.add(percentLabel);
         outerPanel.add(statusLabel);
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         Task task = (Task) value;
 
-        outerPanel.remove(4);
+        int sliderIndex = 4;
+        if (outerPanel.getComponent(sliderIndex) instanceof CustomSlider) outerPanel.remove(sliderIndex);
+        // 多个任务同时进行时，需要使用不同的进度条，避免线程安全问题
         CustomSlider progressSlider = new CustomSlider();
         progressSlider.setMinimum(0);
         progressSlider.setMaximum(100);
-        progressSlider.setUI(new MuteSliderUI(progressSlider, textColor));
-        outerPanel.add(progressSlider, 4);
+        MuteSliderUI sliderUI = new MuteSliderUI(progressSlider, textColor);
+        progressSlider.setUI(sliderUI);
+        outerPanel.add(progressSlider, sliderIndex);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -92,6 +101,17 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         sizeLabel.setForeground(textColor);
         percentLabel.setForeground(textColor);
         statusLabel.setForeground(textColor);
+
+        // 已完成的任务透明显示
+        if (task.isFinished()) {
+            percentLabel.setInstantAlpha(alpha);
+            statusLabel.setInstantAlpha(alpha);
+            sliderUI.setRest(true);
+        } else {
+            percentLabel.setInstantAlpha(1f);
+            statusLabel.setInstantAlpha(1f);
+            sliderUI.setRest(false);
+        }
 
         iconLabel.setFont(customFont);
         nameLabel.setFont(customFont);

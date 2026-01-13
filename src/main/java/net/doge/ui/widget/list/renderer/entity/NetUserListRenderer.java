@@ -57,10 +57,10 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         avatarLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        genderLabel.setBluntAlpha(alpha);
-        followLabel.setBluntAlpha(alpha);
-        fanLabel.setBluntAlpha(alpha);
-        playlistCountLabel.setBluntAlpha(alpha);
+        genderLabel.setInstantAlpha(alpha);
+        followLabel.setInstantAlpha(alpha);
+        fanLabel.setInstantAlpha(alpha);
+        playlistCountLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -77,7 +77,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         outerPanel.add(playlistCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

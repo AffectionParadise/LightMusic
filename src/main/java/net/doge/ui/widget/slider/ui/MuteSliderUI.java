@@ -15,10 +15,18 @@ public class MuteSliderUI extends BasicSliderUI {
     private Color trackColor;
     private Color trackBgColor;
 
+    // 休息模式，只画一个透明的满条
+    private boolean rest;
+
     public MuteSliderUI(JSlider slider, Color trackColor) {
         super(slider);
         this.trackColor = trackColor;
         this.trackBgColor = ColorUtil.darker(trackColor);
+    }
+
+    public void setRest(boolean rest) {
+        this.rest = rest;
+        slider.repaint();
     }
 
     /**
@@ -41,14 +49,16 @@ public class MuteSliderUI extends BasicSliderUI {
         Graphics2D g2d = (Graphics2D) g;
         // 避免锯齿
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // 画未填充部分
         g2d.setColor(trackBgColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
         int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + 7, height = trackRect.height - 14, arc = 6;
-        g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
+        // 画未填充部分
+        if (!rest) {
+            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
+        }
         // 画已填充部分
         g2d.setColor(trackColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rest ? 0.5f : 1f));
         g2d.fillRoundRect(
                 trackRect.x,
                 thy,

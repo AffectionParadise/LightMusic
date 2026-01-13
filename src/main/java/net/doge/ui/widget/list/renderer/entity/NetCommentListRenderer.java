@@ -54,7 +54,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         label.setHorizontalAlignment(LEFT);
         label.setIconTextGap(15);
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

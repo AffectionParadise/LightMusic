@@ -57,12 +57,12 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        difficultyLabel.setBluntAlpha(alpha);
-        musicKeyLabel.setBluntAlpha(alpha);
-        playVersionLabel.setBluntAlpha(alpha);
-        chordNameLabel.setBluntAlpha(alpha);
-        bpmLabel.setBluntAlpha(alpha);
-        pageSizeLabel.setBluntAlpha(alpha);
+        difficultyLabel.setInstantAlpha(alpha);
+        musicKeyLabel.setInstantAlpha(alpha);
+        playVersionLabel.setInstantAlpha(alpha);
+        chordNameLabel.setInstantAlpha(alpha);
+        bpmLabel.setInstantAlpha(alpha);
+        pageSizeLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -83,7 +83,7 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         outerPanel.add(pageSizeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

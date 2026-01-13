@@ -54,9 +54,9 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        songNumLabel.setBluntAlpha(alpha);
-        albumNumLabel.setBluntAlpha(alpha);
-        mvNumLabel.setBluntAlpha(alpha);
+        songNumLabel.setInstantAlpha(alpha);
+        albumNumLabel.setInstantAlpha(alpha);
+        mvNumLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -71,7 +71,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(mvNumLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

@@ -50,8 +50,8 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(0);
 
         float alpha = 0.5f;
-        typeLabel.setBluntAlpha(alpha);
-//        inUseLabel.setBluntAlpha(alpha);
+        typeLabel.setInstantAlpha(alpha);
+//        inUseLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -64,7 +64,7 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         outerPanel.add(inUseLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
-        outerPanel.setBluntDrawBg(true);
+        outerPanel.setInstantDrawBg(true);
     }
 
     @Override

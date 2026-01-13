@@ -24,9 +24,9 @@ public class I18n {
 
         LANG_MAP.put("title", new String[]{"轻音", "LightMusic"});
 
-        LANG_MAP.put("songName", new String[]{"歌曲名：", "Title: "});
-        LANG_MAP.put("artist", new String[]{"艺术家：", "Artist: "});
-        LANG_MAP.put("albumName", new String[]{"专辑名：", "Album: "});
+//        LANG_MAP.put("songName", new String[]{"歌曲名：", "Title: "});
+//        LANG_MAP.put("artist", new String[]{"艺术家：", "Artist: "});
+//        LANG_MAP.put("albumName", new String[]{"专辑名：", "Album: "});
 
         LANG_MAP.put("paginationMsg", new String[]{"第 %s 页，共 %s 页", "Page %s of %s"});
         LANG_MAP.put("lrcLoadingMsg", new String[]{"加载歌词中......", "Loading lyric..."});

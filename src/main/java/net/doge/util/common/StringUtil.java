@@ -18,6 +18,7 @@ import org.jsoup.nodes.TextNode;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -482,5 +483,43 @@ public class StringUtil {
         StringBuilder sb = new StringBuilder(str);
         while (sb.length() < len) sb.append(padChar);
         return sb.toString();
+    }
+
+    /**
+     * 修复字符串正确编码后的结果
+     *
+     * @param s
+     * @return
+     */
+    public static String fixEncoding(String s) {
+        if (isEmpty(s) || isReadableText(s)) return s;
+        // 常见的编码尝试
+        String[] encodings = {"UTF-8", "GBK", "GB2312", "ISO-8859-1", "Windows-1252", "Big5", "Shift_JIS"};
+        for (String encoding : encodings) {
+            try {
+                // 尝试用不同编码重新解析
+                byte[] bytes = s.getBytes(StandardCharsets.ISO_8859_1);
+                String decoded = new String(bytes, encoding);
+                // 检查解码后的字符串是否包含可读字符
+                if (isReadableText(decoded)) return decoded;
+            } catch (Exception e) {
+                // 继续尝试下一个编码
+            }
+        }
+        return s;
+    }
+
+    // 判断是否为可读文本
+    private static boolean isReadableText(String text) {
+        if (isEmpty(text)) return false;
+        // 检查是否包含大量可读字符
+        int readableCount = 0;
+        for (int i = 0, l = text.length(); i < l; i++) {
+            char ch = text.charAt(i);
+            if (Character.isLetterOrDigit(ch) || Character.isWhitespace(ch) || CharUtil.isChineseCharacter(ch))
+                readableCount++;
+        }
+        // 如果超过 70% 的字符可读，认为是有效文本
+        return (double) readableCount / text.length() > 0.7;
     }
 }
