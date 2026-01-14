@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.common.JsonUtil;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class KwTrackHeroV3 {
@@ -12,6 +14,7 @@ public class KwTrackHeroV3 {
 
     private KwTrackHeroV3() {
         initMap();
+        initBlacklist();
     }
 
     public static KwTrackHeroV3 getInstance() {
@@ -20,12 +23,18 @@ public class KwTrackHeroV3 {
     }
 
     private Map<String, String> brMap = new HashMap<>();
+    // url 黑名单，为排除某些试听音频
+    private List<String> subStrBlacklist = new LinkedList<>();
 
     private void initMap() {
         brMap.put("128k", "128kmp3");
         brMap.put("320k", "320kmp3");
         brMap.put("flac", "2000kflac");
         brMap.put("flac24bit", "4000kflac");
+    }
+
+    private void initBlacklist() {
+        subStrBlacklist.add("/n2/73/84/3759149332.mp3");
     }
 
     /**
@@ -43,6 +52,9 @@ public class KwTrackHeroV3 {
         JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");
         if (JsonUtil.isEmpty(urlJson)) return "";
         String trackUrl = urlJson.getString("url");
+        // 排除黑名单音频 url
+        for (String subStr : subStrBlacklist)
+            if (trackUrl.contains(subStr)) return "";
         return trackUrl;
     }
 

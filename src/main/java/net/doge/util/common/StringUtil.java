@@ -481,6 +481,7 @@ public class StringUtil {
      */
     public static String padAfter(String str, int len, char padChar) {
         StringBuilder sb = new StringBuilder(str);
+        // hutool 自带的 padAfter 算法有问题
         while (sb.length() < len) sb.append(padChar);
         return sb.toString();
     }
