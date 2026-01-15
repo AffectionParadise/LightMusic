@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetRadioListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -54,6 +52,12 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        dCustomLabel.setFont(tinyFont);
+        categoryLabel.setFont(tinyFont);
+        trackCountLabel.setFont(tinyFont);
+        playCountLabel.setFont(tinyFont);
+//        createTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         dCustomLabel.setInstantAlpha(alpha);
@@ -93,14 +97,6 @@ public class NetRadioListRenderer extends DefaultListCellRenderer {
         trackCountLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
 //        createTimeLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        dCustomLabel.setFont(tinyFont);
-        categoryLabel.setFont(tinyFont);
-        trackCountLabel.setFont(tinyFont);
-        playCountLabel.setFont(tinyFont);
-//        createTimeLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.AudioQuality;
-import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.AudioFile;
@@ -30,8 +29,6 @@ import java.awt.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MusicListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -124,12 +121,6 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         artistLabel.setForeground(textColor);
         albumNameLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        artistLabel.setFont(customFont);
-        albumNameLabel.setFont(customFont);
-        durationLabel.setFont(customFont);
 
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]

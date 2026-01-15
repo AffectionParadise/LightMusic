@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetSheetListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -55,6 +53,13 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        difficultyLabel.setFont(tinyFont);
+        musicKeyLabel.setFont(tinyFont);
+        playVersionLabel.setFont(tinyFont);
+        chordNameLabel.setFont(tinyFont);
+        bpmLabel.setFont(tinyFont);
+        pageSizeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         difficultyLabel.setInstantAlpha(alpha);
@@ -101,15 +106,6 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         chordNameLabel.setForeground(textColor);
         bpmLabel.setForeground(textColor);
         pageSizeLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        difficultyLabel.setFont(tinyFont);
-        musicKeyLabel.setFont(tinyFont);
-        playVersionLabel.setFont(tinyFont);
-        chordNameLabel.setFont(tinyFont);
-        bpmLabel.setFont(tinyFont);
-        pageSizeLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

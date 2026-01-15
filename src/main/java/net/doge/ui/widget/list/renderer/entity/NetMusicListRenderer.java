@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.system.AudioQuality;
-import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetMusicInfo;
@@ -27,8 +26,6 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetMusicListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -107,12 +104,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         albumNameLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
 
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        artistLabel.setFont(customFont);
-        albumNameLabel.setFont(customFont);
-        durationLabel.setFont(customFont);
-
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
         String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
@@ -142,7 +133,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             String lrcMatch = StringUtil.textToHtml(StringUtil.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
             lrcMatchLabel.setText(lrcMatch);
             lrcMatchLabel.setForeground(textColor);
-            lrcMatchLabel.setFont(customFont);
             Dimension p = lrcMatchLabel.getPreferredSize();
             outerPanel.add(lrcMatchLabel, BorderLayout.SOUTH);
             outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + 20));

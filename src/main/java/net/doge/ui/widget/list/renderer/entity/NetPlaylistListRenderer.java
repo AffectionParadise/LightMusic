@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetPlaylistListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -52,6 +50,10 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        creatorLabel.setFont(tinyFont);
+        playCountLabel.setFont(tinyFont);
+        trackCountLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         creatorLabel.setInstantAlpha(alpha);
@@ -81,12 +83,6 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        creatorLabel.setFont(tinyFont);
-        playCountLabel.setFont(tinyFont);
-        trackCountLabel.setFont(tinyFont);
 
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);

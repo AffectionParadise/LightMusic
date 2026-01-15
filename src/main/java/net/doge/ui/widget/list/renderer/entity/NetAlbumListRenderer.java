@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetAlbumListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -52,6 +50,10 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        artistLabel.setFont(tinyFont);
+        songNumLabel.setFont(tinyFont);
+        publishTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         artistLabel.setInstantAlpha(alpha);
@@ -86,12 +88,6 @@ public class NetAlbumListRenderer extends DefaultListCellRenderer {
         artistLabel.setForeground(textColor);
         songNumLabel.setForeground(textColor);
         publishTimeLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        artistLabel.setFont(tinyFont);
-        songNumLabel.setFont(tinyFont);
-        publishTimeLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

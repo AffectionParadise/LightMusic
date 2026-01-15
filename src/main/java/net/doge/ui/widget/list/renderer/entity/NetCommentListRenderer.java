@@ -2,7 +2,6 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.model.entity.NetCommentInfo;
 import net.doge.ui.widget.label.CustomLabel;
@@ -23,8 +22,6 @@ import java.awt.image.BufferedImage;
 @Data
 @AllArgsConstructor
 public class NetCommentListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -32,7 +29,17 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     private int hoverIndex = -1;
 
     private CustomPanel outerPanel = new CustomPanel();
-    private CustomLabel label = new CustomLabel();
+    private CustomLabel iconLabel = new CustomLabel();
+    private CustomLabel textLabel = new CustomLabel();
+
+//    private CustomPanel outerPanel = new CustomPanel();
+//    private CustomPanel westPanel = new CustomPanel();
+//    private CustomLabel iconLabel = new CustomLabel();
+//    private CustomPanel centerPanel = new CustomPanel();
+//    private CustomLabel nameLabel = new CustomLabel();
+//    private CustomLabel timeLabel = new CustomLabel();
+//    private CustomLabel contentLabel = new CustomLabel();
+//    private CustomLabel likeLabel = new CustomLabel();
 
     private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.radius(ImageUtil.width(LMIconManager.getImage("list.profile"), ImageConstants.PROFILE_WIDTH), 0.1));
 
@@ -46,20 +53,24 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        outerPanel.setLayout(new GridLayout(1, 1));
-        outerPanel.add(label);
+        outerPanel.setLayout(new BorderLayout(10, 0));
+        outerPanel.add(iconLabel, BorderLayout.WEST);
+        outerPanel.add(textLabel, BorderLayout.CENTER);
 
         // 使图标靠上
-        label.setVerticalTextPosition(TOP);
-        label.setHorizontalAlignment(LEFT);
-        label.setIconTextGap(15);
+        iconLabel.setVerticalAlignment(TOP);
+        // 文字靠左上
+        textLabel.setHorizontalAlignment(LEFT);
+        textLabel.setVerticalAlignment(TOP);
+        textLabel.setIconTextGap(15);
+        textLabel.setInstantAlpha(0.8f);
 
         outerPanel.setInstantDrawBg(true);
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        label.setForeground(textColor);
+        textLabel.setForeground(textColor);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
 
@@ -69,17 +80,98 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 
         int lw = list.getVisibleRect().width - 10;
 
-        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
-        label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
-        label.setFont(customFont);
-        label.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
+        iconLabel.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
+        textLabel.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
 
-        Dimension ps = label.getPreferredSize();
-        outerPanel.setPreferredSize(new Dimension(ps.width, ps.height + 12));
+        // 缩进
+        outerPanel.setBorder(BorderFactory.createEmptyBorder(6, sub ? 120 : 45, 0, 0));
+
+        Dimension ips = iconLabel.getPreferredSize();
+        Dimension tps = textLabel.getPreferredSize();
+        outerPanel.setPreferredSize(new Dimension(lw, Math.max(ips.height, tps.height) + 12));
         list.setFixedCellWidth(lw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
         return outerPanel;
     }
+
+//    private void init() {
+//        outerPanel.setLayout(new BorderLayout());
+//        outerPanel.add(westPanel, BorderLayout.WEST);
+//        outerPanel.add(centerPanel, BorderLayout.CENTER);
+//
+//        westPanel.add(iconLabel);
+//
+//        // 字体
+//        nameLabel.setFont(customFont);
+//        timeLabel.setFont(customFont);
+//        contentLabel.setFont(customFont);
+//        likeLabel.setFont(customFont);
+//        // 对齐方式
+//        nameLabel.setHorizontalAlignment(LEFT);
+//        timeLabel.setHorizontalAlignment(LEFT);
+//        contentLabel.setHorizontalAlignment(LEFT);
+//        likeLabel.setHorizontalAlignment(LEFT);
+//
+//        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+//        Component vs = Box.createVerticalStrut(3);
+//        centerPanel.add(nameLabel);
+//        centerPanel.add(vs);
+//        centerPanel.add(timeLabel);
+//        centerPanel.add(vs);
+//        centerPanel.add(contentLabel);
+//        centerPanel.add(vs);
+//        centerPanel.add(likeLabel);
+//
+//        // 使图标靠上
+////        label.setVerticalTextPosition(TOP);
+////        label.setHorizontalAlignment(LEFT);
+////        label.setIconTextGap(15);
+//
+//        outerPanel.setInstantDrawBg(true);
+//    }
+//
+//    @Override
+//    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//        nameLabel.setForeground(textColor);
+//        timeLabel.setForeground(textColor);
+//        contentLabel.setForeground(textColor);
+//        likeLabel.setForeground(textColor);
+//
+//        outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+//
+//        NetCommentInfo commentInfo = (NetCommentInfo) value;
+//        boolean sub = commentInfo.isSub();
+//        BufferedImage profile = commentInfo.getProfile();
+//
+//        int lw = list.getVisibleRect().width - 10;
+//
+//        String name = StringUtil.textToHtml(commentInfo.getUsername());
+//        String time = commentInfo.getTime();
+//        String content = StringUtil.textToHtml(commentInfo.getContent());
+//        String likedCount = String.valueOf(commentInfo.getLikedCount());
+//
+////        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
+////        label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
+////        label.setFont(customFont);
+////        label.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
+//
+//        outerPanel.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
+//
+//        iconLabel.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
+//        nameLabel.setText(name);
+//        timeLabel.setText(time);
+//        contentLabel.setText(content);
+//        likeLabel.setText(likedCount);
+//
+//        centerPanel.revalidate();
+//        Dimension ps = centerPanel.getPreferredSize();
+//        outerPanel.setPreferredSize(new Dimension(ps.width, ps.height + 12));
+//        list.setFixedCellWidth(lw);
+//
+//        outerPanel.setDrawBg(isSelected || hoverIndex == index);
+//
+//        return outerPanel;
+//    }
 }

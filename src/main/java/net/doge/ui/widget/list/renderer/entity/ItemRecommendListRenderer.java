@@ -3,7 +3,6 @@ package net.doge.ui.widget.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.constant.ui.Fonts;
 import net.doge.model.entity.*;
 
 import javax.swing.*;
@@ -18,9 +17,6 @@ import java.awt.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ItemRecommendListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;

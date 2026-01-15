@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetRankingListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -52,6 +50,10 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        playCountLabel.setFont(tinyFont);
+        updateFreLabel.setFont(tinyFont);
+        updateTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         playCountLabel.setInstantAlpha(alpha);
@@ -86,12 +88,6 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         playCountLabel.setForeground(textColor);
         updateFreLabel.setForeground(textColor);
         updateTimeLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        playCountLabel.setFont(tinyFont);
-        updateFreLabel.setFont(tinyFont);
-        updateTimeLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

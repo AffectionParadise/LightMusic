@@ -24,9 +24,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetMvListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -54,6 +52,11 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         iconLabel.setIconTextGap(0);
+
+        artistLabel.setFont(tinyFont);
+        durationLabel.setFont(tinyFont);
+        playCountLabel.setFont(tinyFont);
+        pubTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         artistLabel.setInstantAlpha(alpha);
@@ -92,13 +95,6 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         durationLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
         pubTimeLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        artistLabel.setFont(tinyFont);
-        durationLabel.setFont(tinyFont);
-        playCountLabel.setFont(tinyFont);
-        pubTimeLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

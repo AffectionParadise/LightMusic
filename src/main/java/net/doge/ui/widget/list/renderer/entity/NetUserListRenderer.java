@@ -23,9 +23,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 public class NetUserListRenderer extends DefaultListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -55,6 +53,13 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         avatarLabel.setIconTextGap(0);
+
+        genderLabel.setFont(tinyFont);
+//        birthdayLabel.setFont(tinyFont);
+//        areaLabel.setFont(tinyFont);
+        followLabel.setFont(tinyFont);
+        fanLabel.setFont(tinyFont);
+        playlistCountLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
         genderLabel.setInstantAlpha(alpha);
@@ -95,15 +100,6 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         followLabel.setForeground(textColor);
         fanLabel.setForeground(textColor);
         playlistCountLabel.setForeground(textColor);
-
-        avatarLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        genderLabel.setFont(tinyFont);
-//        birthdayLabel.setFont(tinyFont);
-//        areaLabel.setFont(tinyFont);
-        followLabel.setFont(tinyFont);
-        fanLabel.setFont(tinyFont);
-        playlistCountLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
