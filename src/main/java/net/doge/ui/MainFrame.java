@@ -327,6 +327,8 @@ public class MainFrame extends JFrame {
     private ImageIcon exitIcon = LMIconManager.getIcon("menu.exit");
     // 主界面标题图标
     private ImageIcon titleIcon = LMIconManager.getIcon("title.title");
+    // 加载中图标
+    private ImageIcon loadingIcon = LMIconManager.getIcon("loading");
     // 隐藏歌曲详情图标
     private ImageIcon hideDetailIcon = LMIconManager.getIcon("title.hideDetail");
     // 分割线图标
@@ -23139,6 +23141,10 @@ public class MainFrame extends JFrame {
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
         setIconImage(titleImg);
         desktopLyricDialog.setIconImage(titleImg);
+
+        // 加载中图标
+        loading.setIcon(ImageUtil.dye(loadingIcon, iconColor));
+        loading.setForeColor(textColor);
 
         // 更新单选菜单项和标签按钮样式
         updateMenuItemIcon(sortPopupMenu);

@@ -1,5 +1,6 @@
 package net.doge.ui.widget.label;
 
+import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.ui.Fonts;
 
@@ -11,6 +12,7 @@ public class CustomLabel extends JLabel {
     private boolean drawBg;
     @Setter
     private Color bgColor;
+    @Getter
     protected float alpha = 1f;
     private float destAlpha = 1f;
     private Timer alphaTimer;

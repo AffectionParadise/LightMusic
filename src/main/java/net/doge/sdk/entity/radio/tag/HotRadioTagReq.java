@@ -9,6 +9,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.Tags;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -31,7 +32,7 @@ public class HotRadioTagReq {
         if (instance == null) instance = new HotRadioTagReq();
         return instance;
     }
-    
+
     // 分类热门电台标签 API
     private final String HOT_RADIO_TAG_API = "https://music.163.com/weapi/djradio/home/category/recommend";
     // 分类推荐电台标签 API
@@ -193,6 +194,7 @@ public class HotRadioTagReq {
             final String[] cats = {"integrity", "age", "tags"};
             for (int i = 0, len = cats.length; i < len; i++) {
                 JSONArray tagArray = tags.getJSONArray(cats[i]);
+                if (JsonUtil.isEmpty(tagArray)) continue;
                 for (int j = 0, s = tagArray.size(); j < s; j++) {
                     JSONObject tagJson = tagArray.getJSONObject(j);
 
