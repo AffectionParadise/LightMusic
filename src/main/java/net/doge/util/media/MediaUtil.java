@@ -1,11 +1,5 @@
 package net.doge.util.media;
 
-import com.mpatric.mp3agic.ID3v1;
-import com.mpatric.mp3agic.ID3v2;
-import com.mpatric.mp3agic.ID3v24Tag;
-import com.mpatric.mp3agic.Mp3File;
-import it.sauronsoftware.jave.Encoder;
-import it.sauronsoftware.jave.MultimediaInfo;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -17,6 +11,9 @@ import net.doge.util.system.TerminalUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
+import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPicture;
+import org.jaudiotagger.audio.generic.GenericAudioHeader;
+import org.jaudiotagger.audio.mp3.MP3AudioHeader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.datatype.Artwork;
@@ -25,7 +22,6 @@ import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.reference.PictureTypes;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.logging.Level;
@@ -37,6 +33,12 @@ import java.util.logging.Logger;
  * @Date 2020/12/11
  */
 public class MediaUtil {
+
+    static {
+        // 关闭 jaudiotagger 日志
+        Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+    }
+
     /**
      * 获取音频文件时长
      *
@@ -44,21 +46,23 @@ public class MediaUtil {
      */
     public static double getDuration(AudioFile file) {
         try {
-            if (file.isMp3()) {
-                Mp3File f = new Mp3File(file);
-                return (double) f.getLengthInMilliseconds() / 1000;
-            } else if (file.isFlac() || file.isM4a()) {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
-                AudioHeader ah = af.getAudioHeader();
-                return ah.getTrackLength();
-            } else {
-                Encoder encoder = new Encoder();
-                MultimediaInfo info = encoder.getInfo(file);
-                return (double) info.getDuration() / 1000;
-            }
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
+            AudioHeader audioHeader = af.getAudioHeader();
+            return getDuration(audioHeader);
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    // 从头信息获取音频文件时长
+    private static double getDuration(AudioHeader audioHeader) {
+        // 获取精确时长
+        if (audioHeader instanceof MP3AudioHeader) {
+            MP3AudioHeader mp3AudioHeader = (MP3AudioHeader) audioHeader;
+            return mp3AudioHeader.getPreciseTrackLength();
+        } else {
+            GenericAudioHeader genericAudioHeader = (GenericAudioHeader) audioHeader;
+            return genericAudioHeader.getPreciseLength();
         }
     }
 
@@ -82,43 +86,30 @@ public class MediaUtil {
         // 创建临时文件
         File destFile = new File(sourcePath);
         try {
-            // mp3
-            if (musicInfo.isMp3()) {
-                File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-                FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-                // 将 tag 设置进 MP3 并保存文件
-                Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
-                ID3v2 tag = mp3file.getId3v2Tag();
-                // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
-                if (tag == null) tag = new ID3v24Tag();
-                if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
-                if (StringUtil.notEmpty(name)) tag.setTitle(name);
-                if (StringUtil.notEmpty(artist)) tag.setArtist(artist);
-                if (StringUtil.notEmpty(albumName)) tag.setAlbum(albumName);
-                mp3file.setId3v2Tag(tag);
-                mp3file.save(destFile.getAbsolutePath());
-                // 退出时将临时文件删除
-                tempFile.deleteOnExit();
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
-                Tag tag = af.getTag();
-                if (albumImg != null) {
-                    if (musicInfo.isFlac()) {
-                        FlacTag flacTag = (FlacTag) tag;
-                        flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
-                    } else if (musicInfo.isM4a()) {
-                        Mp4Tag mp4Tag = (Mp4Tag) tag;
-                        mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
-                    }
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
+            Tag tag = af.getTagOrCreateAndSetDefault();
+
+            // 设置封面之前必须先清除原有的字段！
+            tag.deleteArtworkField();
+            if (albumImg != null) {
+                if (musicInfo.isMp3()) {
+                    MetadataBlockDataPicture picture = new MetadataBlockDataPicture(ImageUtil.toBytes(albumImg), PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "",
+                            albumImg.getWidth(), albumImg.getHeight(), 24, 0);
+                    Artwork artwork = Artwork.createArtworkFromMetadataBlockDataPicture(picture);
+                    tag.setField(artwork);
+                } else if (musicInfo.isFlac()) {
+                    FlacTag flacTag = (FlacTag) tag;
+                    flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
+                } else if (musicInfo.isM4a()) {
+                    Mp4Tag mp4Tag = (Mp4Tag) tag;
+                    mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
                 }
-                if (StringUtil.notEmpty(name)) tag.setField(FieldKey.TITLE, name);
-                if (StringUtil.notEmpty(artist)) tag.setField(FieldKey.ARTIST, artist);
-                if (StringUtil.notEmpty(albumName)) tag.setField(FieldKey.ALBUM, albumName);
-                af.commit();
             }
+            tag.setField(FieldKey.TITLE, name);
+            tag.setField(FieldKey.ARTIST, artist);
+            tag.setField(FieldKey.ALBUM, albumName);
+
+            af.commit();
         } catch (Exception e) {
             LogUtil.error(e);
         }
@@ -136,99 +127,65 @@ public class MediaUtil {
         String albumName = mediaInfo.getAlbum();
         String genre = mediaInfo.getGenre();
         String comment = mediaInfo.getComment();
-        String copyright = mediaInfo.getCopyright();
+        String recordLabel = mediaInfo.getRecordLabel();
         BufferedImage albumImg = mediaInfo.getAlbumImage();
 
         File destFile = new File(sourcePath);
         try {
-            // mp3
-            if (mediaInfo.isMp3()) {
-                // 创建临时文件
-                File tempFile = new File(SimplePath.CACHE_PATH + File.separator + "temp - " + destFile.getName());
-                FileUtil.copy(sourcePath, tempFile.getAbsolutePath());
-                // 将 tag 设置进 MP3 并保存文件
-                Mp3File mp3file = new Mp3File(tempFile.getAbsolutePath());
-                ID3v2 tag = mp3file.getId3v2Tag();
-                // 注意有些歌曲没有 ID3v2 标签，需要创建一个 ID3v24 标签设置进去！
-                if (tag == null) tag = new ID3v24Tag();
-                if (albumImg != null) tag.setAlbumImage(ImageUtil.toBytes(albumImg), "image/png");
-                tag.setTitle(title);
-                tag.setArtist(artist);
-                tag.setAlbum(albumName);
-                if (StringUtil.notEmpty(genre)) tag.setGenreDescription(genre);
-                tag.setComment(comment);
-                tag.setCopyright(copyright);
-                mp3file.setId3v2Tag(tag);
-                mp3file.save(destFile.getAbsolutePath());
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
-                Tag tag = af.getTag();
-                if (albumImg != null) {
-                    if (mediaInfo.isFlac()) {
-                        FlacTag flacTag = (FlacTag) tag;
-                        flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
-                    } else if (mediaInfo.isM4a()) {
-                        Mp4Tag mp4Tag = (Mp4Tag) tag;
-                        mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
-                    }
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
+            Tag tag = af.getTagOrCreateAndSetDefault();
+
+            // 设置封面之前必须先清除原有的字段！
+            tag.deleteArtworkField();
+            if (albumImg != null) {
+                if (mediaInfo.isMp3()) {
+                    MetadataBlockDataPicture picture = new MetadataBlockDataPicture(ImageUtil.toBytes(albumImg), PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "",
+                            albumImg.getWidth(), albumImg.getHeight(), 24, 0);
+                    Artwork artwork = Artwork.createArtworkFromMetadataBlockDataPicture(picture);
+                    tag.setField(artwork);
+                } else if (mediaInfo.isFlac()) {
+                    FlacTag flacTag = (FlacTag) tag;
+                    flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
+                } else if (mediaInfo.isM4a()) {
+                    Mp4Tag mp4Tag = (Mp4Tag) tag;
+                    mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
                 }
-                if (StringUtil.notEmpty(title)) tag.setField(FieldKey.TITLE, title);
-                if (StringUtil.notEmpty(artist)) tag.setField(FieldKey.ARTIST, artist);
-                if (StringUtil.notEmpty(albumName)) tag.setField(FieldKey.ALBUM, albumName);
-                if (StringUtil.notEmpty(genre)) tag.setField(FieldKey.GENRE, genre);
-                tag.setField(FieldKey.COMMENT, comment);
-                // flac m4a 无版权信息，跳过
-                af.commit();
             }
+            tag.setField(FieldKey.TITLE, title);
+            tag.setField(FieldKey.ARTIST, artist);
+            tag.setField(FieldKey.ALBUM, albumName);
+            tag.setField(FieldKey.GENRE, genre);
+            tag.setField(FieldKey.COMMENT, comment);
+            tag.setField(FieldKey.RECORD_LABEL, recordLabel);
+
+            af.commit();
         } catch (Exception e) {
             LogUtil.error(e);
         }
     }
 
     /**
-     * 补全 AudioFile 信息(曲名、艺术家、专辑、时长)
+     * 补全 AudioFile 信息(格式、曲名、艺术家、专辑、时长)
      *
      * @param file
      * @return
      */
     public static void fillAudioFileInfo(AudioFile file) {
-        // 歌曲信息完整时跳出
-//        if (file.isIntegrated()) return;
         try {
             file.setFormat(FileUtil.getSuffix(file).toLowerCase());
-            // mp3
-            if (file.isMp3()) {
-                Mp3File f = new Mp3File(file);
-                file.setDuration((double) f.getLengthInMilliseconds() / 1000);
-                ID3v1 tag = null;
-                // 先从 ID3v2 找信息
-                if (f.hasId3v2Tag()) tag = f.getId3v2Tag();
-                    // 若没有 ID3v2 ，在 ID3v1 找
-                else if (f.hasId3v1Tag()) tag = f.getId3v1Tag();
-                if (tag == null) return;
-                String title = StringUtil.fixEncoding(tag.getTitle());
-                String artist = StringUtil.fixEncoding(tag.getArtist());
-                String album = StringUtil.fixEncoding(tag.getAlbum());
-                file.setSongName(title);
-                file.setArtist(artist);
-                file.setAlbum(album);
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
-                Tag tag = af.getTag();
-                String title = StringUtil.fixEncoding(tag.getFirst(FieldKey.TITLE));
-                String artist = StringUtil.fixEncoding(tag.getFirst(FieldKey.ARTIST));
-                String album = StringUtil.fixEncoding(tag.getFirst(FieldKey.ALBUM));
-                file.setSongName(title);
-                file.setArtist(artist);
-                file.setAlbum(album);
-            }
-            file.setDuration(getDuration(file));
+
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
+            Tag tag = af.getTag();
+
+            String title = StringUtil.fixEncoding(tag.getFirst(FieldKey.TITLE));
+            String artist = StringUtil.fixEncoding(tag.getFirst(FieldKey.ARTIST));
+            String album = StringUtil.fixEncoding(tag.getFirst(FieldKey.ALBUM));
+
+            file.setSongName(title);
+            file.setArtist(artist);
+            file.setAlbum(album);
+            // 从头信息获取时长
+            file.setDuration(getDuration(af.getAudioHeader()));
         } catch (Exception e) {
 
         }
@@ -243,26 +200,10 @@ public class MediaUtil {
     public static BufferedImage getAlbumImage(AudioFile source) {
         try {
             BufferedImage albumImage = null;
-            // mp3
-            if (source.isMp3()) {
-                Mp3File f = new Mp3File(source);
-                if (f.hasId3v2Tag()) {
-                    ID3v2 id3v2Tag = f.getId3v2Tag();
-                    byte[] imageBytes = id3v2Tag.getAlbumImage();
-                    if (imageBytes != null) {
-                        Image img = Toolkit.getDefaultToolkit().createImage(imageBytes, 0, imageBytes.length);
-                        albumImage = ImageUtil.toBufferedImage(img);
-                    }
-                }
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
-                Tag tag = af.getTag();
-                Artwork artwork = tag.getFirstArtwork();
-                if (artwork != null) albumImage = artwork.getImage();
-            }
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
+            Tag tag = af.getTag();
+            Artwork artwork = tag.getFirstArtwork();
+            if (artwork != null) albumImage = artwork.getImage();
             return albumImage;
         } catch (Exception e) {
             return null;
@@ -270,84 +211,28 @@ public class MediaUtil {
     }
 
     /**
-     * 从文件获取流派描述信息，若没有，返回 null
+     * 获取额外的音频元信息
      *
      * @param source
      * @return
      */
-    public static String getGenre(AudioFile source) {
+    public static MediaInfo getExtraMediaInfo(AudioFile source) {
+        MediaInfo mediaInfo = new MediaInfo();
         try {
-            String genre = null;
-            // mp3
-            if (source.isMp3()) {
-                Mp3File f = new Mp3File(source);
-                // 先从 ID3v2 找信息
-                if (f.hasId3v2Tag()) genre = f.getId3v2Tag().getGenreDescription();
-                    // 若没有 ID3v2 ，在 ID3v1 找
-                else if (f.hasId3v1Tag()) genre = f.getId3v1Tag().getGenreDescription();
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
-                Tag tag = af.getTag();
-                genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
-            }
-            return genre;
-        } catch (Exception e) {
-            return null;
-        }
-    }
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
+            Tag tag = af.getTag();
 
-    /**
-     * 从文件获取注释信息，若没有，返回 null
-     *
-     * @param source
-     * @return
-     */
-    public static String getComment(AudioFile source) {
-        try {
-            String comment = null;
-            // mp3
-            if (source.isMp3()) {
-                Mp3File f = new Mp3File(source);
-                // 先从 ID3v2 找信息
-                if (f.hasId3v2Tag()) comment = f.getId3v2Tag().getComment();
-                    // 若没有 ID3v2 ，在 ID3v1 找
-                else if (f.hasId3v1Tag()) comment = f.getId3v1Tag().getComment();
-            }
-            // flac m4a
-            else {
-                Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
-                org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
-                Tag tag = af.getTag();
-                comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));
-            }
-            return comment;
-        } catch (Exception e) {
-            return null;
-        }
-    }
+            String genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
+            String comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));
+            String recordLabel = StringUtil.fixEncoding(tag.getFirst(FieldKey.RECORD_LABEL));
 
-    /**
-     * 从文件获取版权信息，若没有，返回 null
-     *
-     * @param source
-     * @return
-     */
-    public static String getCopyright(AudioFile source) {
-        try {
-            String copyright = null;
-            // mp3
-            if (source.isMp3()) {
-                Mp3File f = new Mp3File(source);
-                if (f.hasId3v2Tag()) copyright = f.getId3v2Tag().getCopyright();
-            }
-            // flac m4a 文件暂无版权字段
-            return copyright;
+            mediaInfo.setGenre(genre);
+            mediaInfo.setComment(comment);
+            mediaInfo.setRecordLabel(recordLabel);
         } catch (Exception e) {
-            return null;
+
         }
+        return mediaInfo;
     }
 
     /**

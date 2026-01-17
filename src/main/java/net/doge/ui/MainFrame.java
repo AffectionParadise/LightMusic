@@ -23999,7 +23999,6 @@ public class MainFrame extends JFrame {
                 loading.start();
                 loading.setText(LOADING_MSG);
                 runnable.run();
-                Thread.sleep(28);
             } catch (Exception ex) {
                 LogUtil.error(ex);
             } finally {

@@ -500,8 +500,8 @@ public class I18n {
         LANG_MAP.put("fileAlbum", new String[]{"专辑：", "Album: "});
         LANG_MAP.put("genre", new String[]{"流派：", "Genre: "});
         LANG_MAP.put("fileComment", new String[]{"注释：", "Comment: "});
-        LANG_MAP.put("copyright", new String[]{"版权：", "Copyright: "});
-        LANG_MAP.put("coverImg", new String[]{"封面图片：", "Cover Image: "});
+        LANG_MAP.put("recordLabel", new String[]{"厂牌：", "Record label: "});
+        LANG_MAP.put("coverImg", new String[]{"封面图片：", "Cover image: "});
         LANG_MAP.put("save", new String[]{"保存", "Save"});
 
         LANG_MAP.put("imageViewTitle", new String[]{"图片预览", "Image view"});

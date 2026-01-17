@@ -14,7 +14,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--        <jfx.version>17.0.16</jfx.version>-->
-        <mp3agic.version>0.9.1</mp3agic.version>
         <jaudiotagger.version>2.0.3</jaudiotagger.version>
         <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.21</thumbnailator.version>
@@ -62,13 +61,6 @@
         <!--            <version>${jfx.version}</version>-->
         <!--        </dependency>-->
 
-        <!-- 为 MP3 写入信息 -->
-        <dependency>
-            <groupId>com.mpatric</groupId>
-            <artifactId>mp3agic</artifactId>
-            <version>${mp3agic.version}</version>
-        </dependency>
-
         <!-- jaudiotagger 读取和写入媒体信息 -->
         <dependency>
             <groupId>org</groupId>
@@ -77,13 +69,13 @@
         </dependency>
 
         <!-- jave 读取媒体文件时长 -->
-        <dependency>
-            <groupId>jave</groupId>
-            <artifactId>jave</artifactId>
-            <version>1.0.2</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jave-1.0.2.jar</systemPath>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>jave</groupId>-->
+        <!--            <artifactId>jave</artifactId>-->
+        <!--            <version>1.0.2</version>-->
+        <!--            <scope>system</scope>-->
+        <!--            <systemPath>${project.basedir}/lib/jave-1.0.2.jar</systemPath>-->
+        <!--        </dependency>-->
 
         <!-- 图片主色调提取 -->
         <!--        <dependency>-->

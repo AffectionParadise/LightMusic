@@ -37,8 +37,10 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private StringTwoColor stc;
     // 比例
     private double ratio;
-    private int row;
-    private int lRow;
+    // 高亮行
+    private int row = -1;
+    // 上一个高亮行
+    private int lRow = -1;
 //    private int hoverIndex = -1;
 
     private boolean drawBg;
@@ -46,8 +48,11 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //    private CustomPanel outerPanel = new CustomPanel();
 //    private CustomLabel lyricLabel = new CustomLabel();
 
+    // 上下边缘元素数量
     public final int edgeCellNum = 3;
-    private final float highlightAlpha = 1f;
+    // 高亮最大透明度
+    private final float highlightMaxAlpha = 1f;
+    // 普通歌词最大最小透明度
     public final float normalMaxAlpha = 0.4f;
     public final float normalMinAlpha = 0.05f;
     private LabelUI labelUI = new LabelUI(normalMaxAlpha);
@@ -87,6 +92,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         this.ratio = 0;
         lRow = this.row;
         this.row = row;
+
         highlightFont = fontAnimation[hIndex = 0];
         shrinkFont = fontAnimation[sIndex = fontAnimation.length - 1];
         if (!fontTimer.isRunning()) fontTimer.start();
@@ -115,7 +121,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(labelUI);
-        if (index == row) labelUI.setAlpha(highlightAlpha);
+        if (index == row) labelUI.setAlpha(highlightMaxAlpha);
         else if (index < row) labelUI.setAlpha(normalMinAlpha);
         else labelUI.setAlpha(alphas.getOrDefault(index, normalMaxAlpha));
 

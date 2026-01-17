@@ -37,6 +37,9 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         label.setIconTextGap(20);
         add(label);
 
+        // 显示时屏蔽底层组件的响应
+        addMouseListener(this);
+
         // 显示和隐藏动画
         showTimer = new Timer(3, e -> {
             // 渐现渐隐效果
@@ -49,9 +52,10 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
                 label.setInstantAlpha(Math.min(1f, alpha + 0.028f));
             }
             repaint();
-            if (!closing && bgAlpha >= 1f) showTimer.stop();
+            if (!closing && bgAlpha >= 0.7f) showTimer.stop();
             else if (closing && bgAlpha <= 0) {
                 setVisible(false);
+                showTimer.stop();
 //                rotationTimer.stop();
             }
         });
@@ -66,8 +70,6 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
 
     public void start() {
         if (isShowing()) return;
-        // 显示时屏蔽底层组件的响应
-        addMouseListener(this);
 //        if (icon != null) icon.setAngle(0);
         label.setInstantAlpha(0);
         setVisible(true);

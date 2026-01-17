@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;
 
 public class UIPreProcessor {
+    // 虚拟机图形参数
     private static void initGraphicsConfig() {
         // 全局字体抗锯齿，必须在初始化 UIManager 之前调用！
         System.setProperty("awt.useSystemAAFontSettings", "on");
@@ -13,7 +14,7 @@ public class UIPreProcessor {
         // opengl 加速
         System.setProperty("sun.java2d.opengl", "true");
         // jdk 9 以上默认适配 dpi，会有图像绘制模糊问题，设置为关闭
-        System.setProperty("sun.java2d.uiScale", "1.0");
+//        System.setProperty("sun.java2d.uiScale", "1.0");
     }
 
     // 统一 LAF 为 Metal，避免界面元素混乱

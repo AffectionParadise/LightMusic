@@ -22,8 +22,8 @@ public class MediaInfo {
     private String genre;
     // 注释
     private String comment;
-    // 版权
-    private String copyright;
+    // 厂牌
+    private String recordLabel;
     // 封面图片
     private BufferedImage albumImage;
     // 格式

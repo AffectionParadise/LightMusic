@@ -1,6 +1,5 @@
 package net.doge.ui.widget.dialog;
 
-import com.mpatric.mp3agic.ID3v1Genres;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
@@ -11,8 +10,6 @@ import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -30,6 +27,8 @@ import net.doge.util.ui.ImageUtil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -63,10 +62,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(I18n.getText("coverImg")),
             new CustomLabel(I18n.getText("genre")),
             new CustomLabel(I18n.getText("fileComment")),
-            new CustomLabel(I18n.getText("copyright"))
+            new CustomLabel(I18n.getText("recordLabel")),
     };
 
-    private CustomComboBox<String> comboBox = new CustomComboBox<>();
+    //    private CustomComboBox<String> comboBox = new CustomComboBox<>();
     private final int columns = 20;
     private final Component[] components = {
             new CustomLabel(),
@@ -80,7 +79,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomTextField(columns),
             new CustomTextField(columns),
             new DialogButton(I18n.getText("browseImg")),
-            comboBox,
+//            comboBox,
+            new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns)
     };
@@ -102,8 +102,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
         okButton = new DialogButton(I18n.getText("save"), textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
 
-        comboBox.addItem("");
-        for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
+//        comboBox.addItem("");
+//        for (String genre : ID3v1Genres.GENRES) comboBox.addItem(genre);
     }
 
     public void showDialog() {
@@ -133,7 +133,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 mediaInfo.setAlbumImage((BufferedImage) results[10]);
                 mediaInfo.setGenre((String) results[11]);
                 mediaInfo.setComment((String) results[12]);
-                mediaInfo.setCopyright((String) results[13]);
+                mediaInfo.setRecordLabel((String) results[13]);
                 mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file.getAbsolutePath(), mediaInfo);
                 // 歌曲信息更改后重新填充
@@ -173,9 +173,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String artist = file.getArtist();
         String album = file.getAlbum();
         BufferedImage albumImage = MediaUtil.getAlbumImage(file);
-        String genre = MediaUtil.getGenre(file);
-        String comment = MediaUtil.getComment(file);
-        String copyright = MediaUtil.getCopyright(file);
+        MediaInfo extraMediaInfo = MediaUtil.getExtraMediaInfo(file);
+        String genre = extraMediaInfo.getGenre();
+        String comment = extraMediaInfo.getComment();
+        String recordLabel = extraMediaInfo.getRecordLabel();
 
         results[0] = fileName;
         results[1] = filePath;
@@ -190,7 +191,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[10] = albumImage;
         results[11] = genre;
         results[12] = comment;
-        results[13] = copyright;
+        results[13] = recordLabel;
 
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 
@@ -205,40 +206,55 @@ public class EditInfoDialog extends AbstractTitledDialog {
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomLabel) {
-                CustomLabel component = (CustomLabel) components[i];
-                component.setForeground(textColor);
-                component.setText(StringUtil.textToHtml((String) results[i]));
+                CustomLabel label = (CustomLabel) components[i];
+                label.setForeground(textColor);
+                label.setText(StringUtil.textToHtml((String) results[i]));
             } else if (components[i] instanceof CustomTextField) {
-                CustomTextField component = (CustomTextField) components[i];
-                component.setForeground(textColor);
-                component.setCaretColor(textColor);
-                component.setSelectedTextColor(textColor);
-                component.setSelectionColor(darkerTextAlphaColor);
-                component.setText((String) results[i]);
-            } else if (components[i] instanceof CustomComboBox) {
-                CustomComboBox component = (CustomComboBox) components[i];
-                // 下拉框 UI
-                component.setUI(new StringComboBoxUI(component, f));
-
+                CustomTextField textField = (CustomTextField) components[i];
+                textField.setForeground(textColor);
+                textField.setCaretColor(textColor);
+                textField.setSelectedTextColor(textColor);
+                textField.setSelectionColor(darkerTextAlphaColor);
+                textField.setText((String) results[i]);
+            }
+//            else if (components[i] instanceof CustomComboBox) {
+//                CustomComboBox comboBox = (CustomComboBox) components[i];
+//                // 下拉框 UI
+//                comboBox.setUI(new StringComboBoxUI(comboBox, f));
+//
+//                int finalI = i;
+//                comboBox.addItemListener(e -> {
+//                    results[finalI] = e.getItem().toString();
+//                });
+//                comboBox.setSelectedItem(results[i]);
+//            }
+            else if (components[i] instanceof DialogButton) {
+                CustomLabel label = labels[i];
+                label.setHorizontalTextPosition(SwingConstants.LEFT);
+                boolean hasAlbumImg = results[i] != null;
                 int finalI = i;
-                component.addItemListener(e -> {
-                    results[finalI] = e.getItem().toString();
+                // 右键清除封面图片
+                label.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        if (e.getButton() == MouseEvent.BUTTON3) {
+                            if (!hasAlbumImg) return;
+                            results[finalI] = null;
+                            label.setIcon(null);
+                        }
+                    }
                 });
-                component.setSelectedItem(results[i]);
-            } else if (components[i] instanceof DialogButton) {
-                DialogButton component = (DialogButton) components[i];
-                component.setForeColor(textColor);
-                labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载封面图片(显示一个缩略图)
-                if (results[i] != null) {
+                if (hasAlbumImg) {
                     BufferedImage image = (BufferedImage) results[i];
                     if (image.getWidth() >= image.getHeight())
-                        labels[i].setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
-                    else labels[i].setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
+                        label.setIcon(new ImageIcon(ImageUtil.width(image, imgWidth)));
+                    else label.setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
                 }
-                int finalI = i;
+                DialogButton dialogButton = (DialogButton) components[i];
+                dialogButton.setForeColor(textColor);
                 // 图片文件选择
-                component.addActionListener(e -> {
+                dialogButton.addActionListener(e -> {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
