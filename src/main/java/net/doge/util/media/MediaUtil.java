@@ -1,5 +1,6 @@
 package net.doge.util.media;
 
+import net.doge.constant.system.Format;
 import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -14,6 +15,7 @@ import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPicture;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.mp3.MP3AudioHeader;
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.datatype.Artwork;
@@ -83,28 +85,12 @@ public class MediaUtil {
         String albumName = musicInfo.getAlbumName();
         BufferedImage albumImg = musicInfo.getAlbumImage();
 
-        // 创建临时文件
-        File destFile = new File(sourcePath);
+        File source = new File(sourcePath);
         try {
-            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
             Tag tag = af.getTagOrCreateAndSetDefault();
 
-            // 设置封面之前必须先清除原有的字段！
-            tag.deleteArtworkField();
-            if (albumImg != null) {
-                if (musicInfo.isMp3()) {
-                    MetadataBlockDataPicture picture = new MetadataBlockDataPicture(ImageUtil.toBytes(albumImg), PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "",
-                            albumImg.getWidth(), albumImg.getHeight(), 24, 0);
-                    Artwork artwork = Artwork.createArtworkFromMetadataBlockDataPicture(picture);
-                    tag.setField(artwork);
-                } else if (musicInfo.isFlac()) {
-                    FlacTag flacTag = (FlacTag) tag;
-                    flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
-                } else if (musicInfo.isM4a()) {
-                    Mp4Tag mp4Tag = (Mp4Tag) tag;
-                    mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
-                }
-            }
+            setAlbumImageToTag(albumImg, tag, musicInfo.getFormat());
             tag.setField(FieldKey.TITLE, name);
             tag.setField(FieldKey.ARTIST, artist);
             tag.setField(FieldKey.ALBUM, albumName);
@@ -118,10 +104,10 @@ public class MediaUtil {
     /**
      * 为音频文件写入信息(通过 MediaInfo)
      *
-     * @param sourcePath
+     * @param audioFile
      * @param mediaInfo
      */
-    public static void writeAudioFileInfo(String sourcePath, MediaInfo mediaInfo) {
+    public static void writeAudioFileInfo(AudioFile audioFile, MediaInfo mediaInfo) {
         String title = mediaInfo.getTitle();
         String artist = mediaInfo.getArtist();
         String albumName = mediaInfo.getAlbum();
@@ -130,27 +116,11 @@ public class MediaUtil {
         String recordLabel = mediaInfo.getRecordLabel();
         BufferedImage albumImg = mediaInfo.getAlbumImage();
 
-        File destFile = new File(sourcePath);
         try {
-            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(destFile);
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(audioFile);
             Tag tag = af.getTagOrCreateAndSetDefault();
 
-            // 设置封面之前必须先清除原有的字段！
-            tag.deleteArtworkField();
-            if (albumImg != null) {
-                if (mediaInfo.isMp3()) {
-                    MetadataBlockDataPicture picture = new MetadataBlockDataPicture(ImageUtil.toBytes(albumImg), PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "",
-                            albumImg.getWidth(), albumImg.getHeight(), 24, 0);
-                    Artwork artwork = Artwork.createArtworkFromMetadataBlockDataPicture(picture);
-                    tag.setField(artwork);
-                } else if (mediaInfo.isFlac()) {
-                    FlacTag flacTag = (FlacTag) tag;
-                    flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
-                } else if (mediaInfo.isM4a()) {
-                    Mp4Tag mp4Tag = (Mp4Tag) tag;
-                    mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
-                }
-            }
+            setAlbumImageToTag(albumImg, tag, mediaInfo.getFormat());
             tag.setField(FieldKey.TITLE, title);
             tag.setField(FieldKey.ARTIST, artist);
             tag.setField(FieldKey.ALBUM, albumName);
@@ -161,6 +131,29 @@ public class MediaUtil {
             af.commit();
         } catch (Exception e) {
             LogUtil.error(e);
+        }
+    }
+
+    // 为 Tag 写入封面图片
+    private static void setAlbumImageToTag(BufferedImage albumImg, Tag tag, String format) throws FieldDataInvalidException {
+        // 设置封面之前必须先清除原有的字段！
+        tag.deleteArtworkField();
+        if (albumImg == null) return;
+        switch (format) {
+            case Format.MP3:
+                MetadataBlockDataPicture picture = new MetadataBlockDataPicture(ImageUtil.toBytes(albumImg), PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "",
+                        albumImg.getWidth(), albumImg.getHeight(), 24, 0);
+                Artwork artwork = Artwork.createArtworkFromMetadataBlockDataPicture(picture);
+                tag.setField(artwork);
+                break;
+            case Format.FLAC:
+                FlacTag flacTag = (FlacTag) tag;
+                flacTag.setField(flacTag.createArtworkField(albumImg, PictureTypes.DEFAULT_ID, ImageFormats.MIME_TYPE_PNG, "", 24, 0));
+                break;
+            case Format.M4A:
+                Mp4Tag mp4Tag = (Mp4Tag) tag;
+                mp4Tag.setField(mp4Tag.createArtworkField(ImageUtil.toBytes(albumImg)));
+                break;
         }
     }
 
@@ -175,7 +168,7 @@ public class MediaUtil {
             file.setFormat(FileUtil.getSuffix(file).toLowerCase());
 
             org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
-            Tag tag = af.getTag();
+            Tag tag = af.getTagOrCreateAndSetDefault();
 
             String title = StringUtil.fixEncoding(tag.getFirst(FieldKey.TITLE));
             String artist = StringUtil.fixEncoding(tag.getFirst(FieldKey.ARTIST));
@@ -201,7 +194,7 @@ public class MediaUtil {
         try {
             BufferedImage albumImage = null;
             org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
-            Tag tag = af.getTag();
+            Tag tag = af.getTagOrCreateAndSetDefault();
             Artwork artwork = tag.getFirstArtwork();
             if (artwork != null) albumImage = artwork.getImage();
             return albumImage;
@@ -220,7 +213,7 @@ public class MediaUtil {
         MediaInfo mediaInfo = new MediaInfo();
         try {
             org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
-            Tag tag = af.getTag();
+            Tag tag = af.getTagOrCreateAndSetDefault();
 
             String genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
             String comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));

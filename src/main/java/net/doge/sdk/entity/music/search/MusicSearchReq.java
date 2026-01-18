@@ -64,7 +64,7 @@ public class MusicSearchReq {
     // 关键词搜索歌曲 API (千千)
     private final String SEARCH_MUSIC_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=1&word=%s";
     // 关键词搜索歌曲 API (音乐磁场)
-//    private final String SEARCH_MUSIC_HF_API = "https://www.hifini.com/search-%s-1-%s.htm";
+    private final String SEARCH_MUSIC_HF_API = "https://www.hifiti.com/search-%s-1-0-%s.htm";
     // 关键词搜索歌曲 API (咕咕咕音乐)
     private final String SEARCH_MUSIC_GG_API = "http://www.gggmusic.com/search-%s-1-%s.htm";
     // 关键词搜索歌曲 API (5sing)
@@ -922,40 +922,40 @@ public class MusicSearchReq {
             List<NetMusicInfo> r = new LinkedList<>();
             Integer t = 0;
 
-//            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_HF_API, encodedKeyword.replace("%", "_"), page))
-//                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-//                    .cookie(SdkCommon.HF_COOKIE)
-//                    .executeAsync()
-//                    .body();
-//            Document doc = Jsoup.parse(musicInfoBody);
-//            Elements songs = doc.select(".media.thread.tap");
-//            Elements ap = doc.select("a.page-link");
-//            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
-//            if (StringUtil.isEmpty(ts))
-//                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
-//            boolean hasTs = StringUtil.notEmpty(ts);
-//            if (hasTs) t = Integer.parseInt(ts) * limit;
-//            else t = limit;
-//            for (int i = 0, len = songs.size(); i < len; i++) {
-//                Element song = songs.get(i);
-//
-//                Elements a = song.select(".subject.break-all a");
-//                Element span = song.select(".username.text-grey.mr-1").first();
-//
-//                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
-//                String songName = a.text();
-//                String artist = span.text();
-//                String artistId = span.attr("uid");
-//
-//                NetMusicInfo musicInfo = new NetMusicInfo();
-//                musicInfo.setSource(NetMusicSource.HF);
-//                musicInfo.setId(songId);
-//                musicInfo.setName(songName);
-//                musicInfo.setArtist(artist);
-//                musicInfo.setArtistId(artistId);
-//
-//                r.add(musicInfo);
-//            }
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_HF_API, encodedKeyword.replace("%", "_"), page))
+                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
+                    .cookie(SdkCommon.HF_COOKIE)
+                    .executeAsync()
+                    .body();
+            Document doc = Jsoup.parse(musicInfoBody);
+            Elements songs = doc.select(".media.thread.tap");
+            Elements ap = doc.select("a.page-link");
+            String ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 1).text());
+            if (StringUtil.isEmpty(ts))
+                ts = RegexUtil.getGroup1("(\\d+)", ap.isEmpty() ? "" : ap.get(ap.size() - 2).text());
+            boolean hasTs = StringUtil.notEmpty(ts);
+            if (hasTs) t = Integer.parseInt(ts) * limit;
+            else t = limit;
+            for (int i = 0, len = songs.size(); i < len; i++) {
+                Element song = songs.get(i);
+
+                Elements a = song.select(".subject.break-all a");
+                Element span = song.select(".haya-post-info-username .username").first();
+
+                String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
+                String songName = a.text();
+                String artist = span.text();
+                String artistId = span.attr("uid");
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetMusicSource.HF);
+                musicInfo.setId(songId);
+                musicInfo.setName(songName);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+
+                r.add(musicInfo);
+            }
             return new CommonResult<>(r, t);
         };
 

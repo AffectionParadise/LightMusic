@@ -135,7 +135,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 mediaInfo.setComment((String) results[12]);
                 mediaInfo.setRecordLabel((String) results[13]);
                 mediaInfo.setFormat(file.getFormat());
-                MediaUtil.writeAudioFileInfo(file.getAbsolutePath(), mediaInfo);
+                MediaUtil.writeAudioFileInfo(file, mediaInfo);
                 // 歌曲信息更改后重新填充
                 MediaUtil.fillAudioFileInfo(file);
             }

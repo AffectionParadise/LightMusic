@@ -67,7 +67,7 @@ public class NewMusicReq {
     // 推荐新歌 API (千千)
     private final String RECOMMEND_NEW_SONG_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
     // 推荐新歌 API (音乐磁场)
-    private final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm?orderby=tid";
+    private final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifiti.com/%s-%s.htm?orderby=tid";
     // 推荐新歌 API (咕咕咕音乐)
     private final String RECOMMEND_NEW_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm?orderby=tid";
     // 最新上传(原唱) API (5sing)
@@ -607,7 +607,7 @@ public class NewMusicReq {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
-                    Element span = song.select(".username.text-grey.mr-1").first();
+                    Element span = song.select(".haya-post-info-username .username").first();
 
                     String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                     String songName = a.text();

@@ -63,13 +63,13 @@ public class HotSongTagReq {
         Tags.hotSongTag.put("周榜", new String[]{"", "", "", "", "", "index-0-4", ""});
         Tags.hotSongTag.put("日榜", new String[]{"", "", "", "", "", "index-0-5", ""});
         Tags.hotSongTag.put("华语", new String[]{"", "", "", "", "", "forum-1", "forum-1"});
-        Tags.hotSongTag.put("日韩", new String[]{"", "", "", "", "", "forum-15", "forum-7"});
-        Tags.hotSongTag.put("欧美", new String[]{"", "", "", "", "", "forum-10", "forum-3"});
-        Tags.hotSongTag.put("Remix", new String[]{"", "", "", "", "", "forum-11", ""});
-        Tags.hotSongTag.put("纯音乐", new String[]{"", "", "", "", "", "forum-12", "forum-6"});
-        Tags.hotSongTag.put("异次元", new String[]{"", "", "", "", "", "forum-13", ""});
-        Tags.hotSongTag.put("特供", new String[]{"", "", "", "", "", "forum-17", ""});
-        Tags.hotSongTag.put("百科", new String[]{"", "", "", "", "", "forum-18", ""});
+        Tags.hotSongTag.put("日韩", new String[]{"", "", "", "", "", "forum-2", "forum-7"});
+        Tags.hotSongTag.put("欧美", new String[]{"", "", "", "", "", "forum-3", "forum-3"});
+        Tags.hotSongTag.put("Remix", new String[]{"", "", "", "", "", "forum-4", ""});
+        Tags.hotSongTag.put("纯音乐", new String[]{"", "", "", "", "", "forum-5", "forum-6"});
+//        Tags.hotSongTag.put("异次元", new String[]{"", "", "", "", "", "forum-13", ""});
+        Tags.hotSongTag.put("音友", new String[]{"", "", "", "", "", "forum-6", ""});
+        Tags.hotSongTag.put("互助", new String[]{"", "", "", "", "", "forum-7", ""});
         Tags.hotSongTag.put("站务", new String[]{"", "", "", "", "", "forum-9", ""});
 
         // 咕咕咕音乐

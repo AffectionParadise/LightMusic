@@ -55,17 +55,17 @@ public class NewSongTagReq {
         Tags.newSongTag.put("华语", new String[]{"7", "", "1", "", "5", "forum-1", "forum-1", ""});
         Tags.newSongTag.put("内地", new String[]{"", "", "", "", "1", "", "", ""});
         Tags.newSongTag.put("港台", new String[]{"", "", "", "", "6", "", "", ""});
-        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "", "2", "forum-10", "forum-3", ""});
+        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "", "2", "forum-2", "forum-3", ""});
         Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "", "4", "", "", ""});
         Tags.newSongTag.put("日本", new String[]{"8", "", "5", "", "3", "", "", ""});
-        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "", "forum-15", "forum-7", ""});
+        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "", "forum-3", "forum-7", ""});
 
         // 音乐磁场
-        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "", "forum-11", "", ""});
-        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "", "forum-12", "", ""});
-        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "", "forum-13", "", ""});
-        Tags.newSongTag.put("特供", new String[]{"", "", "", "", "", "forum-17", "", ""});
-        Tags.newSongTag.put("百科", new String[]{"", "", "", "", "", "forum-18", "", ""});
+        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "", "forum-4", "", ""});
+        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "", "forum-5", "", ""});
+//        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "", "forum-13", "", ""});
+        Tags.newSongTag.put("音友", new String[]{"", "", "", "", "", "forum-6", "", ""});
+        Tags.newSongTag.put("互助", new String[]{"", "", "", "", "", "forum-7", "", ""});
         Tags.newSongTag.put("站务", new String[]{"", "", "", "", "", "forum-9", "", ""});
 
         // 咕咕咕音乐

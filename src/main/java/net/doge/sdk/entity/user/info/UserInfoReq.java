@@ -55,9 +55,9 @@ public class UserInfoReq {
     // 用户节目 API (喜马拉雅)
     private final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
     // 用户信息 API (音乐磁场)
-    private final String USER_DETAIL_HF_API = "https://www.hifini.com/user-%s.htm";
+    private final String USER_DETAIL_HF_API = "https://www.hifiti.com/user-%s.htm";
     // 用户节目 API (音乐磁场)
-    private final String USER_PROGRAMS_HF_API = "https://www.hifini.com/user-thread-%s-%s.htm";
+    private final String USER_PROGRAMS_HF_API = "https://www.hifiti.com/user-thread-%s-%s.htm";
     // 用户信息 API (咕咕咕音乐)
     private final String USER_DETAIL_GG_API = "http://www.gggmusic.com/user-%s.htm";
     // 用户节目 API (咕咕咕音乐)
@@ -504,7 +504,7 @@ public class UserInfoReq {
                 Elements a = song.select(".subject.break-all a");
                 // 用户没有帖子直接跳过
                 if (a.isEmpty()) continue;
-                Element span = song.select(".username.text-grey.mr-1").first();
+                Element span = song.select(".haya-post-info-username .username").first();
 
                 String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                 String songName = a.text();
@@ -968,7 +968,7 @@ public class UserInfoReq {
                 String userId = id;
                 String userName = b.text().trim();
                 String gender = "保密";
-                String avatarThumbUrl = "https://www.hifini.com/" + tc.select("img").attr("src");
+                String avatarThumbUrl = "https://www.hifiti.com/" + tc.select("img").attr("src");
                 String avatarUrl = avatarThumbUrl;
                 Integer programCount = Integer.parseInt(RegexUtil.getGroup1("主题数：(\\d+)", sm.text()));
 

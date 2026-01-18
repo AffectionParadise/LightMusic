@@ -69,7 +69,7 @@ public class MusicUrlReq {
     // 歌曲信息 API (酷狗)
 //    private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
     // 歌曲信息 API (音乐磁场)
-    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
+    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
     private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
     // 歌曲信息 API (猫耳)
@@ -339,13 +339,13 @@ public class MusicUrlReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(songBody);
-            String dataStr = RegexUtil.getGroup1("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html());
+            String dataStr = RegexUtil.getGroup1("audio:\\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
                 // json 字段带引号
-                JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
+                JSONObject data = JSONObject.parseObject(dataStr.replaceAll("(\\w+):'(.*?)'", "'$1':'$2'"));
                 String url = StringUtil.urlEncodeBlank(data.getString("url"));
                 if (url.startsWith("http")) return url;
-                return SdkUtil.getRedirectUrl("https://www.hifini.com/" + url);
+                return SdkUtil.getRedirectUrl("https://www.hifiti.com/" + url);
             }
         }
 

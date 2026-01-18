@@ -71,7 +71,7 @@ public class CommentReq {
     // 节目评论 API (喜马拉雅)
     private final String COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
     // 评论 API (音乐磁场)
-    private final String COMMENTS_HF_API = "https://www.hifini.com/thread-%s-%s.htm?sort=desc";
+    private final String COMMENTS_HF_API = "https://www.hifiti.com/thread-%s-%s.htm?sort=desc";
     // 评论 API (咕咕咕音乐)
     private final String COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
     // 评论 API (5sing)
@@ -775,7 +775,7 @@ public class CommentReq {
 
                 String username = comment.select(".username").text();
                 String userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select(".username a").attr("href"));
-                String profileUrl = "https://www.hifini.com/" + comment.select("img").attr("src");
+                String profileUrl = "https://www.hifiti.com/" + comment.select("img").attr("src");
                 String content = msg.text();
                 if (StringUtil.isEmpty(content)) content = msg.text().trim();
                 String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
@@ -801,7 +801,7 @@ public class CommentReq {
 
                 username = bq.select("a").text().trim();
                 userId = RegexUtil.getGroup1("user-(\\d+)\\.htm", comment.select("a").attr("href"));
-                profileUrl = "https://www.hifini.com/" + bq.select("img").attr("src");
+                profileUrl = "https://www.hifiti.com/" + bq.select("img").attr("src");
                 content = bq.first().ownText();
 
                 NetCommentInfo ci = new NetCommentInfo();

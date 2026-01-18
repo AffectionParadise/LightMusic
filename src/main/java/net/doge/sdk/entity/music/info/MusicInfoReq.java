@@ -29,6 +29,8 @@ import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
@@ -68,7 +70,7 @@ public class MusicInfoReq {
     // 歌曲信息 API (千千)
     private final String SINGLE_SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲信息 API (音乐磁场)
-    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifini.com/thread-%s.htm";
+    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
     // 歌曲信息 API (咕咕咕音乐)
     private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
     // 歌曲信息 API (5sing)
@@ -337,9 +339,9 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(songBody);
-            String dataStr = RegexUtil.getGroup1("music: \\[.*?(\\{.*?\\}).*?\\]", doc.html());
+            String dataStr = RegexUtil.getGroup1("audio:\\[.*?(\\{.*?\\}).*?\\]", doc.html());
             // json 字段带引号
-            if (StringUtil.notEmpty(dataStr)) dataStr = dataStr.replaceAll(" (\\w+):", "'$1':");
+            if (StringUtil.notEmpty(dataStr)) dataStr = dataStr.replaceAll("(\\w+):'(.*?)'", "'$1':'$2'");
             JSONObject data = JSONObject.parseObject(dataStr);
 
             Elements a = doc.select(".m-3.text-center h5 a");
@@ -349,12 +351,12 @@ public class MusicInfoReq {
                 musicInfo.setArtistId(RegexUtil.getGroup1("user-(\\d+)\\.htm", a.attr("href")));
             if (!musicInfo.hasAlbumImage()) {
                 GlobalExecutors.imageExecutor.execute(() -> {
-                    String picUrl = data.getString("pic");
+                    String picUrl = data.getString("cover");
                     if (picUrl.contains("music.126.net"))
                         picUrl = picUrl.replaceFirst("param=\\d+y\\d+", "param=500y500");
                     else if (picUrl.contains("y.gtimg.cn"))
                         picUrl = picUrl.replaceFirst("300x300", "500x500");
-                    if (!picUrl.startsWith("http")) picUrl = "https://www.hifini.com/" + picUrl;
+                    if (!picUrl.startsWith("http")) picUrl = "https://www.hifiti.com/" + picUrl;
                     BufferedImage albumImage = SdkUtil.getImageFromUrl(picUrl);
                     FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
                     ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
@@ -628,10 +630,14 @@ public class MusicInfoReq {
             Elements ps = doc.select("p:not(.text-center)");
             StringBuilder sb = new StringBuilder();
             for (Element p : ps) {
-                String lrc = p.text().trim();
-                if (StringUtil.isEmpty(lrc)) continue;
-                sb.append(lrc);
-                sb.append('\n');
+                List<Node> nodes = p.childNodes();
+                for (Node node : nodes) {
+                    if (!(node instanceof TextNode)) continue;
+                    String lrc = node.toString();
+                    if (StringUtil.isEmpty(lrc)) continue;
+                    sb.append(lrc);
+                    sb.append('\n');
+                }
             }
             musicInfo.setLrc(sb.toString());
             musicInfo.setTrans("");

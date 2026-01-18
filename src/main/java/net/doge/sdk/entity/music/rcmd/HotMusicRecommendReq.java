@@ -70,7 +70,7 @@ public class HotMusicRecommendReq {
     // 尖叫热歌榜 API (咪咕)
 //    private final String HOT_MUSIC_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=27186466";
     // 热歌 API (音乐磁场)
-    private final String HOT_MUSIC_HF_API = "https://www.hifini.com/%s-%s.htm";
+    private final String HOT_MUSIC_HF_API = "https://www.hifiti.com/%s-%s.htm";
     // 热歌 API (咕咕咕音乐)
     private final String HOT_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm";
     // 传播最快(原唱) API (5sing)
@@ -740,7 +740,7 @@ public class HotMusicRecommendReq {
                     Element song = songs.get(i);
 
                     Elements a = song.select(".subject.break-all a");
-                    Element span = song.select(".username.text-grey.mr-1").first();
+                    Element span = song.select(".haya-post-info-username .username").first();
 
                     String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
                     String songName = a.text();
