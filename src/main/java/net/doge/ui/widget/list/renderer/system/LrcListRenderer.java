@@ -7,7 +7,7 @@ import net.doge.model.lyric.Statement;
 import net.doge.ui.widget.label.ui.LabelUI;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -140,7 +140,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         else {
             label.setFont(index == lRow ? shrinkFont : defaultFont);
             // 对长歌词手动添加 <br> 换行，由于排版问题取消自动换行
-            label.setText(StringUtil.textToHtmlNoWrap(StringUtil.wrapLineByWidth(plainLyric, maxWidth, defaultFont.getSize())));
+            label.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(plainLyric, maxWidth, defaultFont.getSize())));
 //            labelUI.setDrawBg(index == hoverIndex && StringUtil.notEmpty(text.trim()));
             label.setIcon(null);
         }

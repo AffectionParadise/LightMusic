@@ -1,11 +1,11 @@
 package net.doge.util;
 
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.system.LMDataConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.core.LMDataConstants;
+import net.doge.constant.core.SimplePath;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.lmdata.LMDataUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 
 import java.io.File;
 

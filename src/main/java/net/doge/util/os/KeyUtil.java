@@ -1,4 +1,4 @@
-package net.doge.util.system;
+package net.doge.util.os;
 
 import com.alibaba.fastjson2.JSONArray;
 import net.doge.util.common.JsonUtil;

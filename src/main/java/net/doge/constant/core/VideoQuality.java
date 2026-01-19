@@ -1,4 +1,4 @@
-package net.doge.constant.system;
+package net.doge.constant.core;
 
 import net.doge.constant.lang.I18n;
 

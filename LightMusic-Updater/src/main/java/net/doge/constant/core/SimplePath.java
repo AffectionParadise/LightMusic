@@ -1,4 +1,4 @@
-package net.doge.constant.system;
+package net.doge.constant.core;
 
 import java.io.File;
 import java.lang.reflect.Field;

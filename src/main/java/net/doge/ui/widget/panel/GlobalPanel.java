@@ -16,13 +16,17 @@ import java.awt.image.BufferedImage;
  */
 @Data
 public class GlobalPanel extends JPanel {
+//    // 最大阴影透明度
+//    private final int TOP_OPACITY = 30;
+//    // 阴影大小像素
+//    protected final int pixels = 10;
+
     private BufferedImage lImg;
     private BufferedImage bgImg;
     // 放大后的背景图，用于旋转
     private BufferedImage lImgScaled;
     private BufferedImage bgImgScaled;
     private float opacity;
-    //    private float scale;
     // 旋转律动
     private boolean grooveOn;
     private double angle;
@@ -33,6 +37,7 @@ public class GlobalPanel extends JPanel {
 
     public GlobalPanel() {
         setOpaque(false);
+//        initBorder();
     }
 
     public void setBgImg(BufferedImage bgImg) {
@@ -46,7 +51,6 @@ public class GlobalPanel extends JPanel {
             if (onImgScaledReady != null) onImgScaledReady.run();
         });
         this.opacity = 0;
-//        this.scale = 1;
     }
 
     public void setOpacity(float opacity) {
@@ -64,15 +68,16 @@ public class GlobalPanel extends JPanel {
         repaint();
     }
 
-    //    public void setScale(float scale) {
-//        this.scale = scale;
-//        repaint();
-//    }
-
     // 是否在滑动动画状态
     public boolean isSlideAnimating() {
         return slideTimer != null && slideTimer.isRunning();
     }
+
+//    public void initBorder() {
+//        // 阴影边框
+//        Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
+//        setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+//    }
 
     // 组件滑入滑出替换
     public void slideFrom(Component srcComp, Component targetComp, int from) {
@@ -134,7 +139,6 @@ public class GlobalPanel extends JPanel {
         if (bgImg == null) return;
 
         int pw = getWidth(), ph = getHeight();
-//        int w = (int) (pw * scale), h = (int) (ph * scale), x = (pw - w) / 2, y = (ph - h) / 2;
         Graphics2D g2d = (Graphics2D) g;
 
         // 律动动画
@@ -151,14 +155,18 @@ public class GlobalPanel extends JPanel {
             if (lImg != null) {
                 if (opacity < 1) {
                     // 宽高设置为组件的宽高，observer 设置成组件就可以自适应
-//                g2d.drawImage(lImg, x, y, w, h, this);
                     g2d.drawImage(lImg, 0, 0, pw, ph, this);
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
                 } else lImg = null;
             }
-//            g2d.drawImage(bgImg, x, y, w, h, this);
             g2d.drawImage(bgImg, 0, 0, pw, ph, this);
         }
+
+//        // 画边框阴影
+//        for (int i = 0; i < pixels; i++) {
+//            g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
+//            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
+//        }
 
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }

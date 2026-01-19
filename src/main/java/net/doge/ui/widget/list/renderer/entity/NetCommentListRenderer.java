@@ -6,7 +6,7 @@ import net.doge.constant.ui.ImageConstants;
 import net.doge.model.entity.NetCommentInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
@@ -81,7 +81,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         int lw = list.getVisibleRect().width - 10;
 
         iconLabel.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
-        textLabel.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
+        textLabel.setText(HtmlUtil.textToHtmlWithSpace(HtmlUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
 
         // 缩进
         outerPanel.setBorder(BorderFactory.createEmptyBorder(6, sub ? 120 : 45, 0, 0));

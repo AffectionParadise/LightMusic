@@ -10,6 +10,7 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -99,7 +100,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messagePanel.setMaximumSize(d);
         messagePanel.setLayout(new BoxLayout(messagePanel, BoxLayout.Y_AXIS));
 
-        messageLabel.setText(StringUtil.textToHtml(message));
+        messageLabel.setText(HtmlUtil.textToHtml(message));
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);

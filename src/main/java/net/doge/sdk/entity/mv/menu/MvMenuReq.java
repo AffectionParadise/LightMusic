@@ -163,7 +163,7 @@ public class MvMenuReq {
         int source = netMvInfo.getSource();
         String id = netMvInfo.getId();
         String bvid = netMvInfo.getBvid();
-        String name = StringUtil.urlEncodeAll(netMvInfo.getName());
+        String name = UrlUtil.encodeAll(netMvInfo.getName());
         boolean isVideo = netMvInfo.isVideo();
         boolean isMlog = netMvInfo.isMlog();
 

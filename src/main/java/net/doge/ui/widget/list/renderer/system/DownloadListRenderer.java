@@ -12,9 +12,10 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -121,13 +122,13 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         statusLabel.setFont(customFont);
 
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
-        String type = StringUtil.textToHtml(TaskType.NAMES[task.getType()]);
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
+        String type = HtmlUtil.textToHtml(TaskType.NAMES[task.getType()]);
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
-        String percentStr = StringUtil.textToHtml(String.format("%.1f%%", percent).replace(".0", ""));
-        String size = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String percentStr = HtmlUtil.textToHtml(String.format("%.1f%%", percent).replace(".0", ""));
+        String size = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 String.format("%s / %s", FileUtil.getUnitString(task.getFinished()), FileUtil.getUnitString(task.getTotal())), maxWidth));
-        String status = StringUtil.textToHtml(TaskStatus.NAMES[task.getStatus()]);
+        String status = HtmlUtil.textToHtml(TaskStatus.NAMES[task.getStatus()]);
 
         nameLabel.setText(name);
         typeLabel.setText(type);

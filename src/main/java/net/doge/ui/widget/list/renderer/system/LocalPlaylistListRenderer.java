@@ -3,11 +3,11 @@ package net.doge.ui.widget.list.renderer.system;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.ui.Fonts;
+import net.doge.model.core.ChoosableListItem;
 import net.doge.model.entity.LocalPlaylist;
-import net.doge.model.system.ChoosableListItem;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -56,7 +56,7 @@ public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
         nameLabel.setFont(customFont);
 
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(playlist.getName(), maxWidth));
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(playlist.getName(), maxWidth));
 
         nameLabel.setText(name);
 

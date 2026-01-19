@@ -30,6 +30,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.SliderUI;
 import net.doge.util.common.DurationUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ColorUtil;
@@ -163,7 +164,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private NetMvInfo mvInfo;
 
     public VideoDialog(NetMvInfo mvInfo, String dest, MainFrame f) {
-        super(f, StringUtil.textToHtml(StringUtil.shorten(mvInfo.toSimpleString(), 60)));
+        super(f, HtmlUtil.textToHtml(StringUtil.shorten(mvInfo.toSimpleString(), 60)));
         this.isLocal = dest != null;
         this.mvInfo = mvInfo;
         this.uri = isLocal ? dest : mvInfo.getUrl();

@@ -1,8 +1,8 @@
 package net.doge;
 
 import net.doge.constant.meta.SoftInfo;
-import net.doge.constant.system.SimplePath;
-import net.doge.util.system.FileUtil;
+import net.doge.constant.core.SimplePath;
+import net.doge.util.os.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

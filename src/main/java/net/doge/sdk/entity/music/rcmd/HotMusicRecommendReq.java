@@ -6,8 +6,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -24,6 +24,7 @@ import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -1028,7 +1029,7 @@ public class HotMusicRecommendReq {
                     .body();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
-            String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
+            String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(HOT_MUSIC_FA_API, musicSet, _nonce))

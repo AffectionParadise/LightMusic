@@ -4,8 +4,8 @@ import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetRankingInfo;
 import net.doge.sdk.common.CommonResult;
@@ -13,6 +13,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.common.DurationUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
 
@@ -121,7 +122,7 @@ public class RankingInfoReq {
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info").getJSONObject("album");
 
-            String description = StringUtil.removeHTMLLabel(data.getString("intro"));
+            String description = HtmlUtil.removeHtmlLabel(data.getString("intro"));
 
             GlobalExecutors.imageExecutor.execute(() -> rankingInfo.setCoverImg(SdkUtil.getImageFromUrl(rankingInfo.getCoverImgUrl())));
             rankingInfo.setDescription(description);

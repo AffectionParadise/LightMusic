@@ -7,6 +7,7 @@ import net.doge.sdk.common.opt.kg.KugouReqOptConstants;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.util.Map;
 import java.util.StringJoiner;
@@ -73,7 +74,7 @@ public class KugouReqBuilder {
         StringJoiner sj = new StringJoiner("&");
         for (String k : params.keySet()) {
             Object o = params.get(k);
-            Object v = o instanceof String ? StringUtil.urlEncodeAll((String) o) : o;
+            Object v = o instanceof String ? UrlUtil.encodeAll((String) o) : o;
             sj.add(k + "=" + v);
         }
         return sj.toString();

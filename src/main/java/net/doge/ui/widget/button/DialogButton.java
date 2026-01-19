@@ -2,7 +2,7 @@ package net.doge.ui.widget.button;
 
 import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.Fonts;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
@@ -32,7 +32,7 @@ public class DialogButton extends JButton implements MouseListener {
 
     // 关键词按钮，需显示多种字符
     public DialogButton(String text) {
-        this(StringUtil.textToHtml(text), Colors.WHITE);
+        this(HtmlUtil.textToHtml(text), Colors.WHITE);
     }
 
     // 常规按钮
@@ -68,7 +68,7 @@ public class DialogButton extends JButton implements MouseListener {
     }
 
     public String getPlainText() {
-        return StringUtil.removeHTMLLabel(getText());
+        return HtmlUtil.removeHtmlLabel(getText());
     }
 
     @Override

@@ -1,4 +1,4 @@
-package net.doge.model.system;
+package net.doge.model.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

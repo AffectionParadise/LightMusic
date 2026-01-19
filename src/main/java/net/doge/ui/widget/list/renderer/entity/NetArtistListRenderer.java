@@ -8,6 +8,7 @@ import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -94,10 +95,10 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String songNum = artistInfo.hasSongNum() ? StringUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";
-        String albumNum = artistInfo.hasAlbumNum() ? StringUtil.textToHtml(artistInfo.getAlbumNum() + " 专辑") : "";
-        String mvNum = artistInfo.hasMvNum() ? StringUtil.textToHtml(artistInfo.getMvNum() + " MV") : "";
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String songNum = artistInfo.hasSongNum() ? HtmlUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";
+        String albumNum = artistInfo.hasAlbumNum() ? HtmlUtil.textToHtml(artistInfo.getAlbumNum() + " 专辑") : "";
+        String mvNum = artistInfo.hasMvNum() ? HtmlUtil.textToHtml(artistInfo.getMvNum() + " MV") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

@@ -1,5 +1,6 @@
 package net.doge.ui.widget.textfield;
 
+import net.doge.util.common.NumUtil;
 import net.doge.util.common.StringUtil;
 
 import javax.swing.text.AttributeSet;
@@ -23,7 +24,7 @@ public class SafeDocument extends PlainDocument {
     }
 
     public SafeDocument(int min, int max) {
-        this(StringUtil.bit(max));
+        this(NumUtil.bit(max));
         this.min = min;
         this.max = max;
         numberRequired = ranged = true;
@@ -37,10 +38,10 @@ public class SafeDocument extends PlainDocument {
         String ns = StringUtil.insert(text, offs, str);
 
         // 数字
-        if (numberRequired && !StringUtil.isNumber(ns)) return;
+        if (numberRequired && !NumUtil.isNumber(ns)) return;
         // 数值范围
         if (ranged) {
-            int number = StringUtil.toNumber(ns);
+            int number = NumUtil.toNumber(ns);
             if (min > number || max < number) return;
         }
         // 长度

@@ -1,4 +1,4 @@
-package net.doge.util.system;
+package net.doge.util.os;
 
 import java.io.File;
 import java.io.FileInputStream;

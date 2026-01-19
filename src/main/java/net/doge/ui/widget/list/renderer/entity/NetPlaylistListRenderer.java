@@ -8,6 +8,8 @@ import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetPlaylistInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.HtmlUtil;
+import net.doge.util.common.LangUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -95,11 +97,11 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String creator = playlistInfo.hasCreator() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String creator = playlistInfo.hasCreator() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-        String playCount = playlistInfo.hasPlayCount() ? StringUtil.textToHtml(StringUtil.formatNumber(playlistInfo.getPlayCount())) : "";
-        String trackCount = playlistInfo.hasTrackCount() ? StringUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
+        String playCount = playlistInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(playlistInfo.getPlayCount())) : "";
+        String trackCount = playlistInfo.hasTrackCount() ? HtmlUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

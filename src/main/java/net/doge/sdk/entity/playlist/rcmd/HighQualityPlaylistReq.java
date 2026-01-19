@@ -19,9 +19,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -302,7 +300,7 @@ public class HighQualityPlaylistReq {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtil.parseNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -340,7 +338,7 @@ public class HighQualityPlaylistReq {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtil.parseNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -378,7 +376,7 @@ public class HighQualityPlaylistReq {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtil.parseNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -498,14 +496,14 @@ public class HighQualityPlaylistReq {
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
+                    url = CAT_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_playlist_by_tag\"," +
                                     "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":5,\"cur_page\":%s}," +
                                     "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
                 } else {
-                    url = CAT_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
+                    url = CAT_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_category_content\"," +
@@ -761,7 +759,7 @@ public class HighQualityPlaylistReq {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
                 String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
-                Long playCount = StringUtil.parseNumber(fs);
+                Long playCount = LangUtil.parseNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -841,7 +839,7 @@ public class HighQualityPlaylistReq {
                     String playlistName = playlistJson.getString("title");
                     String creator = playlistJson.getString("subTitle");
                     String fs = playlistJson.getString("playNum");
-                    Long playCount = StringUtil.parseNumber(fs);
+                    Long playCount = LangUtil.parseNumber(fs);
                     String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();

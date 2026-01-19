@@ -6,8 +6,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetArtistInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
@@ -18,9 +18,7 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -528,7 +526,7 @@ public class ArtistInfoReq {
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
 
-            String description = StringUtil.removeHTMLLabel(data.getString("info"));
+            String description = HtmlUtil.removeHtmlLabel(data.getString("info"));
             String coverImgUrl = data.getString("pic300");
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
@@ -600,8 +598,8 @@ public class ArtistInfoReq {
                 JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
 
                 String coverImgUrl = data.getString("avatar");
-                String intro = StringUtil.removeHTMLLabel(data.getString("intro"));
-                String announcement = StringUtil.removeHTMLLabel(data.getString("announcement"));
+                String intro = HtmlUtil.removeHtmlLabel(data.getString("intro"));
+                String announcement = HtmlUtil.removeHtmlLabel(data.getString("announcement"));
 
                 if (!artistInfo.hasDescription()) artistInfo.setDescription(intro + "\n\n" + announcement);
 
@@ -653,10 +651,10 @@ public class ArtistInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(artistInfoBody);
-            String info = StringUtil.getPrettyText(doc.select("#headline .info").first()) + "\n";
+            String info = HtmlUtil.getPrettyText(doc.select("#headline .info").first()) + "\n";
             Element bd = doc.select("#intro .bd").first();
             Elements span = bd.select("span");
-            String desc = StringUtil.getPrettyText(span.isEmpty() ? bd : span.last());
+            String desc = HtmlUtil.getPrettyText(span.isEmpty() ? bd : span.last());
             String coverImgUrl = doc.select(".nbg img").attr("src");
 
             artistInfo.setDescription(info + desc);
@@ -862,7 +860,7 @@ public class ArtistInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id))
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id))
                     .executeAsync()
                     .body();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -874,7 +872,7 @@ public class ArtistInfoReq {
 
                 String songId = songJson.getString("rid");
                 // 酷我歌名中可能含有 HTML 标签，先去除
-                String name = StringUtil.removeHTMLLabel(songJson.getString("name"));
+                String name = HtmlUtil.removeHtmlLabel(songJson.getString("name"));
                 String artist = songJson.getString("artist").replace("&", "、");
                 String artistId = songJson.getString("artistid");
                 String albumName = songJson.getString("album");

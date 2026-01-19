@@ -1,4 +1,4 @@
-package net.doge.util.system;
+package net.doge.util.os;
 
 import com.github.houbb.heaven.util.util.OsUtil;
 import net.doge.util.common.LogUtil;

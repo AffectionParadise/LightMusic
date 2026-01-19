@@ -14,10 +14,8 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
+import net.doge.util.common.HtmlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -73,7 +71,7 @@ public class AlbumSearchReq {
         List<NetAlbumInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetAlbumInfo>> searchAlbums = () -> {
@@ -260,7 +258,7 @@ public class AlbumSearchReq {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumid");
-                    String albumName = StringUtil.removeHTMLLabel(albumJson.getString("album"));
+                    String albumName = HtmlUtil.removeHtmlLabel(albumJson.getString("album"));
                     String artist = albumJson.getString("artist").replace("&", "、");
                     String artistId = albumJson.getString("artistid");
                     String publishTime = albumJson.getString("releaseDate");

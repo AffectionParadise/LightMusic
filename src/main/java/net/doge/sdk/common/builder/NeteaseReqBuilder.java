@@ -9,6 +9,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -125,7 +126,7 @@ public class NeteaseReqBuilder {
     private String getCookie(Map<String, String> headers) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, String> entry : headers.entrySet()) {
-            sb.append(entry.getKey()).append("=").append(StringUtil.urlEncodeAll(entry.getValue())).append("; ");
+            sb.append(entry.getKey()).append("=").append(UrlUtil.encodeAll(entry.getValue())).append("; ");
         }
         return sb.toString();
     }

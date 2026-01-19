@@ -7,7 +7,7 @@ import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.lmdata.LMIconManager;
 
 import javax.swing.*;
@@ -45,7 +45,7 @@ public class DonateDialog extends AbstractTitledDialog {
     private CustomPanel rightPanel = new CustomPanel();
     private CustomLabel alipayLabel = new CustomLabel(I18n.getText("alipay"));
     private CustomPanel thankPanel = new CustomPanel();
-    private CustomLabel thankLabel = new CustomLabel(StringUtil.textToHtml(THANK_MSG));
+    private CustomLabel thankLabel = new CustomLabel(HtmlUtil.textToHtml(THANK_MSG));
     private CustomPanel buttonPanel = new CustomPanel();
 
     public DonateDialog(MainFrame f) {

@@ -1,14 +1,14 @@
 package net.doge.model.entity;
 
 import lombok.Data;
+import net.doge.constant.core.Format;
+import net.doge.constant.core.VideoQuality;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.Format;
-import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

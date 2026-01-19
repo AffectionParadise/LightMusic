@@ -14,10 +14,8 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
+import net.doge.util.common.HtmlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -266,7 +264,7 @@ public class ArtistMenuReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/album")
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/album")
                     .executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String albumInfoBody = resp.body();
@@ -278,8 +276,8 @@ public class ArtistMenuReq {
                     JSONObject albumJson = albumArray.getJSONObject(i);
 
                     String albumId = albumJson.getString("albumid");
-                    String albumName = StringUtil.removeHTMLLabel(albumJson.getString("album"));
-                    String artist = StringUtil.removeHTMLLabel(albumJson.getString("artist")).replace("&", "、");
+                    String albumName = HtmlUtil.removeHtmlLabel(albumJson.getString("album"));
+                    String artist = HtmlUtil.removeHtmlLabel(albumJson.getString("artist")).replace("&", "、");
                     String artistId = albumJson.getString("artistid");
                     String publishTime = albumJson.getString("releaseDate");
                     String coverImgThumbUrl = albumJson.getString("pic");
@@ -619,7 +617,7 @@ public class ArtistMenuReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, id, page, limit))
-                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + StringUtil.urlEncodeAll(id) + "/mv")
+                    .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/mv")
                     .executeAsync();
             if (resp.getStatus() == HttpStatus.HTTP_OK) {
                 String mvInfoBody = resp.body();

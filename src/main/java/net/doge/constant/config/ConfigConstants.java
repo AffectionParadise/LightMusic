@@ -1,7 +1,7 @@
 package net.doge.constant.config;
 
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.system.LMDataConstants;
+import net.doge.constant.core.LMDataConstants;
 import net.doge.util.lmdata.LMDataUtil;
 
 /**

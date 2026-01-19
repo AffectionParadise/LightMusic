@@ -2,7 +2,7 @@ package net.doge.sdk.common.crypto;
 
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.nio.charset.StandardCharsets;
 
@@ -38,7 +38,7 @@ public class NeteaseCrypto {
         ArrayUtil.reverse(secretKey);
         byte[] rsaBytes = CryptoUtil.rsaEncrypt(secretKey, CryptoUtil.base64DecodeToBytes(PUBLIC_KEY));
         String encSecKey = CryptoUtil.bytesToHex(rsaBytes);
-        return "params=" + StringUtil.urlEncodeAll(params) + "&encSecKey=" + encSecKey;
+        return "params=" + UrlUtil.encodeAll(params) + "&encSecKey=" + encSecKey;
     }
 
 //    public String linuxApi(Object object) throws Exception {

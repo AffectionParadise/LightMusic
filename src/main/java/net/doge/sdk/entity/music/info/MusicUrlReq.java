@@ -5,9 +5,9 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.AudioQuality;
+import net.doge.constant.core.Format;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
-import net.doge.constant.system.Format;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.MusicCandidate;
@@ -21,10 +21,7 @@ import net.doge.sdk.entity.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.entity.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.entity.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -343,7 +340,7 @@ public class MusicUrlReq {
             if (StringUtil.notEmpty(dataStr)) {
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll("(\\w+):'(.*?)'", "'$1':'$2'"));
-                String url = StringUtil.urlEncodeBlank(data.getString("url"));
+                String url = UrlUtil.encodeBlank(data.getString("url"));
                 if (url.startsWith("http")) return url;
                 return SdkUtil.getRedirectUrl("https://www.hifiti.com/" + url);
             }
@@ -364,7 +361,7 @@ public class MusicUrlReq {
 
                 // json 字段带引号
                 JSONObject data = JSONObject.parseObject(dataStr.replaceAll(" (\\w+):", "'$1':"));
-                String url = StringUtil.urlEncodeBlank(data.getString("url"));
+                String url = UrlUtil.encodeBlank(data.getString("url"));
                 if (url.startsWith("http")) return url;
                 else {
                     // 获取重定向之后的 url
@@ -430,7 +427,7 @@ public class MusicUrlReq {
                     .body();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
-            String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
+            String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(SONG_URL_FA_API, musicSet, _nonce))
@@ -442,7 +439,7 @@ public class MusicUrlReq {
             for (int i = 0, s = songArray.size(); i < s; i++) {
                 JSONObject songJson = songArray.getJSONObject(i);
                 if (!id.equals(songJson.getString("id"))) continue;
-                return StringUtil.urlEncodeBlank(songJson.getString("url"));
+                return UrlUtil.encodeBlank(songJson.getString("url"));
             }
         }
 
@@ -454,7 +451,7 @@ public class MusicUrlReq {
                     .body();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
             JSONObject urlJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
-            return StringUtil.urlEncodeBlank(urlJson.getString("audio"));
+            return UrlUtil.encodeBlank(urlJson.getString("audio"));
         }
 
         // 果核

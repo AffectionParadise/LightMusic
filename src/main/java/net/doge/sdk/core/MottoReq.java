@@ -1,4 +1,4 @@
-package net.doge.sdk.system;
+package net.doge.sdk.core;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;

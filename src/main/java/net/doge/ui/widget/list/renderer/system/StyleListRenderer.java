@@ -8,6 +8,7 @@ import net.doge.model.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 
 import javax.swing.*;
@@ -90,9 +91,9 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String type = StringUtil.textToHtml(style.isCustom() ? CUSTOM : PRESET);
-        String inUse = StringUtil.textToHtml(f.currUIStyle == style ? IN_USE : "");
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String type = HtmlUtil.textToHtml(style.isCustom() ? CUSTOM : PRESET);
+        String inUse = HtmlUtil.textToHtml(f.currUIStyle == style ? IN_USE : "");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

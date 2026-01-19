@@ -8,10 +8,7 @@ import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.entity.music.info.lyrichero.qq.decoder.QrcDecoder;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -106,8 +103,8 @@ public class QqLyricHero {
             JSONObject lrcJson = JSONObject.parseObject(lrcBody);
             String lyric = lrcJson.getString("lyric");
             String trans = lrcJson.getString("trans");
-            musicInfo.setLrc(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(lyric)));
-            musicInfo.setTrans(StringUtil.removeHTMLLabel(CryptoUtil.base64Decode(trans)));
+            musicInfo.setLrc(HtmlUtil.removeHtmlLabel(CryptoUtil.base64Decode(lyric)));
+            musicInfo.setTrans(HtmlUtil.removeHtmlLabel(CryptoUtil.base64Decode(trans)));
             musicInfo.setRoma("");
         }
         // qrc

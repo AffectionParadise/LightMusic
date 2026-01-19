@@ -5,8 +5,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetAlbumInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
@@ -426,11 +426,11 @@ public class AlbumInfoReq {
                     .executeAsync()
                     .body();
             Document doc = Jsoup.parse(albumInfoBody);
-            String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+            String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
             Element re = doc.select("#link-report").first();
             Elements span = re.select("span");
-            String desc = StringUtil.getPrettyText(span.isEmpty() ? re : span.last()) + "\n";
-            String tracks = StringUtil.getPrettyText(doc.select(".track-list div div").first());
+            String desc = HtmlUtil.getPrettyText(span.isEmpty() ? re : span.last()) + "\n";
+            String tracks = HtmlUtil.getPrettyText(doc.select(".track-list div div").first());
             String coverImgUrl = doc.select("#mainpic img").attr("src");
 
             albumInfo.setDescription(info + desc + "\n曲目：\n" + tracks);
@@ -465,7 +465,7 @@ public class AlbumInfoReq {
             Document doc = Jsoup.parse(albumInfoBody);
             Element tc = doc.select(".zaxu-alert-tips-content").first();
 
-            String description = StringUtil.getPrettyText(tc);
+            String description = HtmlUtil.getPrettyText(tc);
 
             GlobalExecutors.imageExecutor.execute(() -> albumInfo.setCoverImg(SdkUtil.getImageFromUrl(albumInfo.getCoverImgThumbUrl())));
             albumInfo.setDescription(description);
@@ -875,7 +875,7 @@ public class AlbumInfoReq {
         int source = albumInfo.getSource();
         String id = albumInfo.getId();
         List<String> imgUrls = new LinkedList<>();
-        cursor = StringUtil.urlEncodeAll(cursor);
+        cursor = UrlUtil.encodeAll(cursor);
         Integer total = 0;
 
         if (source == NetMusicSource.DT) {

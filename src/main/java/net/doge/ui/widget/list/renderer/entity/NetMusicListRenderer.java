@@ -2,8 +2,8 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetMusicInfo;
@@ -11,6 +11,7 @@ import net.doge.model.player.MusicPlayer;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.DurationUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -105,14 +106,14 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         durationLabel.setForeground(textColor);
 
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
+        String source = HtmlUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
-        String artist = musicInfo.hasArtist() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
+        String artist = musicInfo.hasArtist() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(musicInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
-        String albumName = musicInfo.hasAlbumName() ? StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String albumName = musicInfo.hasAlbumName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(musicInfo.getAlbumName(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
-        String duration = StringUtil.textToHtml(musicInfo.hasDuration() ? DurationUtil.format(musicInfo.getDuration()) : "--:--");
+        String duration = HtmlUtil.textToHtml(musicInfo.hasDuration() ? DurationUtil.format(musicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);
         nameLabel.setText(name);
@@ -130,7 +131,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         list.setFixedCellWidth(lw);
 
         if (musicInfo.hasLrcMatch()) {
-            String lrcMatch = StringUtil.textToHtml(StringUtil.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
+            String lrcMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
             lrcMatchLabel.setText(lrcMatch);
             lrcMatchLabel.setForeground(textColor);
             Dimension p = lrcMatchLabel.getPreferredSize();

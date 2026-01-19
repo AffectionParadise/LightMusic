@@ -6,7 +6,7 @@ import net.doge.model.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.TipDialog;
 import net.doge.util.common.DurationUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;
@@ -163,7 +163,7 @@ public class SliderUI extends BasicSliderUI {
                     String lrc = isMusic ? f.getTimeLrc(cSec) : "";
                     dialog.setMessage(String.format("%s / %s", DurationUtil.format(cSec), dStr));
                     if (lrcDialog != null) {
-                        lrcDialog.setMessage(StringUtil.textToHtml(lrc));
+                        lrcDialog.setMessage(HtmlUtil.textToHtml(lrc));
                         lrcDialog.updateSize();
                         // 将把手坐标转为屏幕上的坐标，确定歌词对话框位置
                         Point p = new Point(thumbRect.x, thumbRect.y);

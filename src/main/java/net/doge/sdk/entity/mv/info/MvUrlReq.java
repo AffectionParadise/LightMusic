@@ -4,9 +4,9 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.VideoQuality;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.VideoQuality;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
@@ -14,6 +14,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -382,7 +383,7 @@ public class MvUrlReq {
             Document doc = Jsoup.parse(mvBody);
             Elements vs = doc.select("video source");
             if (vs.isEmpty()) vs = doc.select("video");
-            if (!vs.isEmpty()) return StringUtil.urlEncodeBlank(vs.attr("src"));
+            if (!vs.isEmpty()) return UrlUtil.encodeBlank(vs.attr("src"));
         }
 
         // 李志
@@ -392,7 +393,7 @@ public class MvUrlReq {
                     .body();
             Document doc = Jsoup.parse(mvBody);
             Elements video = doc.select("video");
-            return StringUtil.urlEncodeBlank(video.attr("src"));
+            return UrlUtil.encodeBlank(video.attr("src"));
         }
 
         return "";

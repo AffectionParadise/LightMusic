@@ -3,9 +3,10 @@ package net.doge.model.lyric;
 import lombok.Data;
 import net.doge.constant.lyric.LyricPattern;
 import net.doge.util.common.DurationUtil;
+import net.doge.util.common.LrcUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 
 import java.io.File;
 import java.util.Comparator;
@@ -54,7 +55,7 @@ public class LrcData {
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {
             for (String line : lrcArray) {
-                line = StringUtil.cleanLrcStr(line);
+                line = LrcUtil.cleanLrcStr(line);
                 if (StringUtil.isEmpty(line)) continue;
                 statements.add(new Statement(line));
             }
@@ -62,7 +63,7 @@ public class LrcData {
         // 解析完整的歌词
         else {
             for (String line : lrcArray) {
-                line = StringUtil.cleanLrcStr(line);
+                line = LrcUtil.cleanLrcStr(line);
                 if (StringUtil.isEmpty(line)) continue;
 
                 // 解析 offset

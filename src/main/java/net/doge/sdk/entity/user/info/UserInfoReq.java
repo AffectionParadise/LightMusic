@@ -6,8 +6,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetUserInfo;
 import net.doge.sdk.common.CommonResult;
@@ -17,10 +17,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.AreaUtil;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -322,7 +319,7 @@ public class UserInfoReq {
             if (!userInfo.hasGender()) userInfo.setGender("保密");
             if (!userInfo.hasArea()) userInfo.setArea(doc.select(".user-info a").text());
             if (!userInfo.hasSign())
-                userInfo.setSign(StringUtil.getPrettyText(doc.select("span#intro_display").first()));
+                userInfo.setSign(HtmlUtil.getPrettyText(doc.select("span#intro_display").first()));
 //            if (!userInfo.hasFollow())
 //                userInfo.setFollow(Integer.parseInt(doc.select(".home-follow span").first().text()));
 //            if (!userInfo.hasFan())

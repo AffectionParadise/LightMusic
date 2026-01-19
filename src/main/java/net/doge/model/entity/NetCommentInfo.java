@@ -1,6 +1,7 @@
 package net.doge.model.entity;
 
 import lombok.Data;
+import net.doge.util.common.LangUtil;
 import net.doge.util.common.StringUtil;
 
 import java.awt.image.BufferedImage;
@@ -74,9 +75,9 @@ public class NetCommentInfo {
         return username
                 + (hasTime() ? "    " + time : "")
                 + (hasLocation() ? "    " + location : "")
-                + (hasScore() ? "    " + StringUtil.genStar(score) + " " + score + " 分" : "") + "\n"
+                + (hasScore() ? "    " + LangUtil.genStar(score) + " " + score + " 分" : "") + "\n"
                 + content + "\n"
-                + (hasLikedCount() ? "❤ " + StringUtil.formatNumberWithoutSuffix(likedCount) : "");
+                + (hasLikedCount() ? "❤ " + LangUtil.formatNumberWithoutSuffix(likedCount) : "");
     }
 
     public String toSimpleString() {

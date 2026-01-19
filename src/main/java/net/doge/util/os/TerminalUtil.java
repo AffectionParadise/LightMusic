@@ -1,4 +1,4 @@
-package net.doge.util.system;
+package net.doge.util.os;
 
 import cn.hutool.core.util.RuntimeUtil;
 import net.doge.constant.async.GlobalExecutors;

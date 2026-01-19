@@ -16,7 +16,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -69,7 +69,7 @@ public class ArtistSearchReq {
         List<NetArtistInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetArtistInfo>> searchArtists = () -> {

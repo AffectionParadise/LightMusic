@@ -35,7 +35,7 @@ public class KgLyricHero {
         String lrcId, accessKey;
 
         // 搜索歌词
-        String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, StringUtil.urlEncodeAll(name), hash, duration))
+        String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, UrlUtil.encodeAll(name), hash, duration))
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")

@@ -19,6 +19,7 @@ import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.doge.constant.async.GlobalExecutors;
 import net.doge.constant.config.ConfigConstants;
+import net.doge.constant.core.*;
 import net.doge.constant.lang.I18n;
 import net.doge.constant.lyric.LyricType;
 import net.doge.constant.lyric.NextLrc;
@@ -28,7 +29,6 @@ import net.doge.constant.model.UIStyleConstants;
 import net.doge.constant.player.EqualizerData;
 import net.doge.constant.player.PlayMode;
 import net.doge.constant.player.PlayerStatus;
-import net.doge.constant.system.*;
 import net.doge.constant.tab.CollectionTabIndex;
 import net.doge.constant.tab.PersonalMusicTabIndex;
 import net.doge.constant.tab.RecommendTabIndex;
@@ -98,10 +98,10 @@ import net.doge.util.common.*;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.DesktopUtil;
-import net.doge.util.system.FileUtil;
-import net.doge.util.system.KeyUtil;
-import net.doge.util.system.TerminalUtil;
+import net.doge.util.os.DesktopUtil;
+import net.doge.util.os.FileUtil;
+import net.doge.util.os.KeyUtil;
+import net.doge.util.os.TerminalUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.SpectrumUtil;
@@ -2439,7 +2439,7 @@ public class MainFrame extends JFrame {
                 motto = MusicServerUtil.getMotto();
                 if (player.loadedMusicResource()) return;
                 titleLabel.setVisible(false);
-                titleLabel.setText(StringUtil.textToHtml(TITLE + "\n" + motto));
+                titleLabel.setText(HtmlUtil.textToHtml(TITLE + "\n" + motto));
                 titleLabel.setVisible(true);
             } catch (Exception e) {
                 titleLabel.setText(TITLE);
@@ -2489,7 +2489,7 @@ public class MainFrame extends JFrame {
         setDefaultLookAndFeelDecorated(true);
         // 窗口透明
         // 存在性能问题，别用
-//        setBackground(Colors.TRANSLUCENT);
+//        setBackground(Colors.TRANSPARENT);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -4385,7 +4385,7 @@ public class MainFrame extends JFrame {
                 String detail = sj.toString();
                 String updateInfo = StringUtil.notEmpty(detail) ? UPDATE_INFO_MSG + detail : "";
                 // 有新版本
-                if (latest.compareTo(now) > 0) {
+                if (VersionUtil.isGreaterVersion(latest, now)) {
                     File packageFile = new File(SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME);
                     boolean packageFileValid = packageFile.exists() && keyMD5.equalsIgnoreCase(CryptoUtil.md5(packageFile));
                     // 启动时，若更新包存在且 MD5 值相同，直接更新
@@ -4396,6 +4396,7 @@ public class MainFrame extends JFrame {
                     d.showDialog();
                     int response = d.getResponse();
                     boolean checked = d.isChecked();
+                    // 勾选禁用自动更新
                     if (mute && checked) autoUpdate = false;
                     // 在线更新
                     if (response == JOptionPane.YES_OPTION) {
@@ -5668,11 +5669,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                    collectionItemTagLabel.setText(HtmlUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -5759,9 +5760,9 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -5847,11 +5848,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                    collectionItemTagLabel.setText(HtmlUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -5938,11 +5939,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    collectionItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                    collectionItemTagLabel.setText(HtmlUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -6032,9 +6033,9 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillRankingInfo(rankingInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankingInfo.getName()));
                                 if (rankingInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(rankingInfo.getDescription()));
                                 if (rankingInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -6122,10 +6123,10 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillUserInfo(userInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
-                                collectionItemTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(userInfo.getName()));
+                                collectionItemTagLabel.setText(HtmlUtil.textToHtml(userInfo.getTag()));
                                 if (userInfo.getSign() != null)
-                                    collectionItemDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(userInfo.getSign()));
                                 if (userInfo.hasAvatar()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
@@ -7962,7 +7963,7 @@ public class MainFrame extends JFrame {
                     List<NetMusicInfo> musicInfos = result.data;
                     netMusicCurrPage = netMusicMaxPage = 1;
                     // 标题
-                    netMusicTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("similarTrackSuffix")));
+                    netMusicTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("similarTrackSuffix")));
                     netMusicToolBar.removeAll();
                     netMusicToolBar.add(netMusicBackwardButton);
                     netMusicToolBar.add(Box.createHorizontalGlue());
@@ -8029,7 +8030,7 @@ public class MainFrame extends JFrame {
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedPlaylistSuffix")));
+                    netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -8105,7 +8106,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("authorSuffix")));
+                        netUserTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -8154,7 +8155,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(currArtistMusicInfo.toSimpleString() + I18n.getText("artistSuffix")));
+                        netArtistTitleLabel.setText(HtmlUtil.textToHtml(currArtistMusicInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -8232,7 +8233,7 @@ public class MainFrame extends JFrame {
                         int total = result.total;
                         netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("radioSuffix")));
+                        netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("radioSuffix")));
                         netRadioToolBar.removeAll();
                         netRadioToolBar.add(netRadioBackwardButton);
                         netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8282,7 +8283,7 @@ public class MainFrame extends JFrame {
                         Integer total = result.total;
                         netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                         // 标题
-                        netAlbumTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("albumSuffix")));
+                        netAlbumTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("albumSuffix")));
                         netAlbumToolBar.removeAll();
                         netAlbumToolBar.add(netAlbumBackwardButton);
                         netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -8355,7 +8356,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("recRadioSuffix")));
+                    netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("recRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -8427,7 +8428,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedMvSuffix")));
+                    netMvTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -9386,7 +9387,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_RANKING) l = rankingCoverAndNameLabel;
             else if (si == TabIndex.NET_USER) l = userCoverAndNameLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemCoverAndNameLabel;
-            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
+            copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
         copyDescTagMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -9398,7 +9399,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
             if (l == null || l.getText().isEmpty()) return;
-            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
+            copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
         copyDescMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -9412,7 +9413,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
             if (l.getText().isEmpty()) return;
-            copyToClipboard(StringUtil.removeHTMLLabel(l.getText()));
+            copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
 
         // 描述收藏按钮
@@ -10092,11 +10093,11 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillPlaylistInfo(playlistInfo);
                             updateRenderer(netPlaylistList);
-                            playlistCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
+                            playlistCoverAndNameLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName()));
                             if (playlistInfo.getTag() != null)
-                                playlistTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                playlistTagLabel.setText(HtmlUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                             if (playlistInfo.getDescription() != null)
-                                playlistDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
+                                playlistDescriptionLabel.setText(HtmlUtil.textToHtml(playlistInfo.getDescription()));
                             if (playlistInfo.hasCoverImg()) {
                                 playlistCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -10318,7 +10319,7 @@ public class MainFrame extends JFrame {
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     netPlaylistCurrPage = netPlaylistMaxPage = 1;
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("similarPlaylistSuffix")));
+                    netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("similarPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -10386,7 +10387,7 @@ public class MainFrame extends JFrame {
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("creatorSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("creatorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -10455,7 +10456,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(playlistInfo.getName() + I18n.getText("collectorSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("collectorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -11093,9 +11094,9 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillAlbumInfo(albumInfo);
                             updateRenderer(netAlbumList);
-                            albumCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
+                            albumCoverAndNameLabel.setText(HtmlUtil.textToHtml(albumInfo.getName()));
                             if (albumInfo.getDescription() != null)
-                                albumDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
+                                albumDescriptionLabel.setText(HtmlUtil.textToHtml(albumInfo.getDescription()));
                             if (albumInfo.hasCoverImg()) {
                                 albumCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -11320,7 +11321,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("authorSuffix")));
+                        netUserTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -11369,7 +11370,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("artistSuffix")));
+                        netArtistTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -11438,7 +11439,7 @@ public class MainFrame extends JFrame {
                     List<NetAlbumInfo> albumInfos = result.data;
                     netAlbumCurrPage = netAlbumMaxPage = 1;
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(albumInfo.getName() + I18n.getText("similarAlbumSuffix")));
+                    netAlbumTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.getName() + I18n.getText("similarAlbumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -12123,11 +12124,11 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillArtistInfo(artistInfo);
                             updateRenderer(netArtistList);
-                            artistCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
+                            artistCoverAndNameLabel.setText(HtmlUtil.textToHtml(artistInfo.getName()));
                             if (artistInfo.getTag() != null)
-                                artistTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                artistTagLabel.setText(HtmlUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                             if (artistInfo.getDescription() != null)
-                                artistDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
+                                artistDescriptionLabel.setText(HtmlUtil.textToHtml(artistInfo.getDescription()));
                             if (artistInfo.hasCoverImg()) {
                                 artistCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -12346,7 +12347,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("albumSuffix")));
+                    netAlbumTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -12416,7 +12417,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("mvSuffix")));
+                    netMvTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("mvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -12482,7 +12483,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("similarArtistSuffix")));
+                    netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("similarArtistSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12551,7 +12552,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("fanSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -12620,7 +12621,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("buddySuffix")));
+                    netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("buddySuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -12688,7 +12689,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(artistInfo.getName() + I18n.getText("radioSuffix")));
+                    netRadioTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -13384,11 +13385,11 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillRadioInfo(radioInfo);
                             updateRenderer(netRadioList);
-                            radioCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
+                            radioCoverAndNameLabel.setText(HtmlUtil.textToHtml(radioInfo.getName()));
                             if (radioInfo.getTag() != null)
-                                radioTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                radioTagLabel.setText(HtmlUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                             if (radioInfo.getDescription() != null)
-                                radioDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
+                                radioDescriptionLabel.setText(HtmlUtil.textToHtml(radioInfo.getDescription()));
                             if (radioInfo.hasCoverImg()) {
                                 radioCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -13616,7 +13617,7 @@ public class MainFrame extends JFrame {
                     List<NetUserInfo> userInfos = result.data;
                     netUserCurrPage = netUserMaxPage = 1;
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("djSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("djSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13685,7 +13686,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("subscriberSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("subscriberSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -13754,7 +13755,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioCurrPage = netRadioMaxPage = 1;
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("similarRadioSuffix")));
+                    netRadioTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("similarRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -13822,7 +13823,7 @@ public class MainFrame extends JFrame {
                     List<NetArtistInfo> artistInfos = result.data;
                     netArtistCurrPage = netArtistMaxPage = 1;
                     // 标题
-                    netArtistTitleLabel.setText(StringUtil.textToHtml(radioInfo.getName() + I18n.getText("castSuffix")));
+                    netArtistTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("castSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
                     netArtistToolBar.add(Box.createHorizontalGlue());
@@ -14470,7 +14471,7 @@ public class MainFrame extends JFrame {
                     List<NetMvInfo> mvInfos = result.data;
                     netMvCurrPage = netMvMaxPage = 1;
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("similarMvSuffix")));
+                    netMvTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("similarMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14538,7 +14539,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("episodeSuffix")));
+                    netMvTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("episodeSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -14607,7 +14608,7 @@ public class MainFrame extends JFrame {
                         List<NetArtistInfo> artistInfos = result.data;
                         netArtistCurrPage = netArtistMaxPage = 1;
                         // 标题
-                        netArtistTitleLabel.setText(StringUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("artistSuffix")));
+                        netArtistTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
                         netArtistToolBar.add(Box.createHorizontalGlue());
@@ -14654,7 +14655,7 @@ public class MainFrame extends JFrame {
                         List<NetUserInfo> userInfos = result.data;
                         netUserCurrPage = netUserMaxPage = 1;
                         // 标题
-                        netUserTitleLabel.setText(StringUtil.textToHtml(mvInfo.getName() + I18n.getText("publisherSuffix")));
+                        netUserTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.getName() + I18n.getText("publisherSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
                         netUserToolBar.add(Box.createHorizontalGlue());
@@ -15139,9 +15140,9 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillRankingInfo(rankingInfo);
                             updateRenderer(netRankingList);
-                            rankingCoverAndNameLabel.setText(StringUtil.textToHtml(rankingInfo.getName()));
+                            rankingCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankingInfo.getName()));
                             if (rankingInfo.getDescription() != null)
-                                rankingDescriptionLabel.setText(StringUtil.textToHtml(rankingInfo.getDescription()));
+                                rankingDescriptionLabel.setText(HtmlUtil.textToHtml(rankingInfo.getDescription()));
                             if (rankingInfo.hasCoverImg()) {
                                 rankingCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -15921,10 +15922,10 @@ public class MainFrame extends JFrame {
                         try {
                             MusicServerUtil.fillUserInfo(userInfo);
                             updateRenderer(netUserList);
-                            userCoverAndNameLabel.setText(StringUtil.textToHtml(userInfo.getName()));
-                            userTagLabel.setText(StringUtil.textToHtml(userInfo.getTag()));
+                            userCoverAndNameLabel.setText(HtmlUtil.textToHtml(userInfo.getName()));
+                            userTagLabel.setText(HtmlUtil.textToHtml(userInfo.getTag()));
                             if (userInfo.getSign() != null)
-                                userDescriptionLabel.setText(StringUtil.textToHtml(userInfo.getSign()));
+                                userDescriptionLabel.setText(HtmlUtil.textToHtml(userInfo.getSign()));
                             if (userInfo.hasAvatar()) {
                                 userCoverAndNameLabel.setIcon(new ImageIcon(
                                         ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(userInfo.getAvatar(), coverImageWidth), MIDDLE_ARC))
@@ -16158,7 +16159,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("playlistSuffix")));
+                    netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -16224,7 +16225,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("albumSuffix")));
+                    netAlbumTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -16289,7 +16290,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netRadioTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("radioSuffix")));
+                    netRadioTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
                     netRadioToolBar.add(Box.createHorizontalGlue());
@@ -16358,7 +16359,7 @@ public class MainFrame extends JFrame {
                     mvCursor = result.cursor;
                     netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netMvTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
+                    netMvTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
                     netMvToolBar.add(Box.createHorizontalGlue());
@@ -16424,7 +16425,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("followSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("followSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16491,7 +16492,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netUserTitleLabel.setText(StringUtil.textToHtml(userInfo.getName() + I18n.getText("fanSuffix")));
+                    netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
                     netUserToolBar.add(Box.createHorizontalGlue());
@@ -16635,7 +16636,7 @@ public class MainFrame extends JFrame {
                 else if (resource instanceof NetRadioInfo) s = ((NetRadioInfo) resource).toSimpleString();
                 else if (resource instanceof NetMvInfo) s = ((NetMvInfo) resource).toSimpleString();
                 else if (resource instanceof NetRankingInfo) s = ((NetRankingInfo) resource).toSimpleString();
-                netCommentTitleLabel.setText(StringUtil.textToHtml(s + I18n.getText("commentSuffix")));
+                netCommentTitleLabel.setText(HtmlUtil.textToHtml(s + I18n.getText("commentSuffix")));
                 netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -16694,7 +16695,7 @@ public class MainFrame extends JFrame {
                 List<NetSheetInfo> sheetInfos = result.data;
                 netSheetCurrPage = netSheetMaxPage = 1;
                 // 更新标题和数量显示
-                netSheetTitleLabel.setText(StringUtil.textToHtml(info.toSimpleString() + I18n.getText("sheetSuffix")));
+                netSheetTitleLabel.setText(HtmlUtil.textToHtml(info.toSimpleString() + I18n.getText("sheetSuffix")));
                 netSheetCountLabel.setText(String.format(PAGINATION_MSG, netSheetCurrPage, netSheetMaxPage));
                 netSheetCountPanel.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -17032,7 +17033,7 @@ public class MainFrame extends JFrame {
                     int total = result.total;
                     netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netPlaylistTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + I18n.getText("playlistSuffix")));
+                    netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
                     netPlaylistToolBar.add(Box.createHorizontalGlue());
@@ -17098,7 +17099,7 @@ public class MainFrame extends JFrame {
                     Integer total = result.total;
                     netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
                     // 标题
-                    netAlbumTitleLabel.setText(StringUtil.textToHtml(commentInfo.getUsername() + I18n.getText("albumSuffix")));
+                    netAlbumTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
                     netAlbumToolBar.add(Box.createHorizontalGlue());
@@ -19019,11 +19020,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillPlaylistInfo(playlistInfo);
                                 updateRenderer(itemRecommendList);
-                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(playlistInfo.getName()));
+                                recommendItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName()));
                                 if (playlistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
+                                    recommendItemTagLabel.setText(HtmlUtil.textToHtml(playlistInfo.getTag().isEmpty() ? "" : "标签：" + playlistInfo.getTag()));
                                 if (playlistInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(playlistInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(HtmlUtil.textToHtml(playlistInfo.getDescription()));
                                 if (playlistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(playlistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -19113,9 +19114,9 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillAlbumInfo(albumInfo);
                                 updateRenderer(itemRecommendList);
-                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(albumInfo.getName()));
+                                recommendItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(albumInfo.getName()));
                                 if (albumInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(albumInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(HtmlUtil.textToHtml(albumInfo.getDescription()));
                                 if (albumInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(albumInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -19204,11 +19205,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillArtistInfo(artistInfo);
                                 updateRenderer(itemRecommendList);
-                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(artistInfo.getName()));
+                                recommendItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(artistInfo.getName()));
                                 if (artistInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
+                                    recommendItemTagLabel.setText(HtmlUtil.textToHtml(artistInfo.getTag().isEmpty() ? "" : artistInfo.getTag()));
                                 if (artistInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(artistInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(HtmlUtil.textToHtml(artistInfo.getDescription()));
                                 if (artistInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(artistInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -19298,11 +19299,11 @@ public class MainFrame extends JFrame {
                             try {
                                 MusicServerUtil.fillRadioInfo(radioInfo);
                                 updateRenderer(itemRecommendList);
-                                recommendItemCoverAndNameLabel.setText(StringUtil.textToHtml(radioInfo.getName()));
+                                recommendItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(radioInfo.getName()));
                                 if (radioInfo.getTag() != null)
-                                    recommendItemTagLabel.setText(StringUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
+                                    recommendItemTagLabel.setText(HtmlUtil.textToHtml(radioInfo.getTag().isEmpty() ? "" : "标签：" + radioInfo.getTag()));
                                 if (radioInfo.getDescription() != null)
-                                    recommendItemDescriptionLabel.setText(StringUtil.textToHtml(radioInfo.getDescription()));
+                                    recommendItemDescriptionLabel.setText(HtmlUtil.textToHtml(radioInfo.getDescription()));
                                 if (radioInfo.hasCoverImg()) {
                                     recommendItemCoverAndNameLabel.setIcon(new ImageIcon(
                                             ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(radioInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
@@ -20985,7 +20986,7 @@ public class MainFrame extends JFrame {
             statusText = st;
             String title = String.format(TITLE + "（%s%s）", st,
                     player.loadedNetMusic() ? player.getMusicInfo().toSimpleString() : player.getAudioFile());
-            titleLabel.setText(StringUtil.textToHtml(StringUtil.shorten(title, 80)));
+            titleLabel.setText(HtmlUtil.textToHtml(StringUtil.shorten(title, 80)));
             setTitle(title);
         }
     }
@@ -21027,9 +21028,9 @@ public class MainFrame extends JFrame {
         // 设置切换面板文字
         final int maxLen = 34;
         if (isNetMusic)
-            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(musicInfo.toSimpleString(), maxLen)));
+            changePaneButton.setText(HtmlUtil.textToHtml(StringUtil.shorten(musicInfo.toSimpleString(), maxLen)));
         else
-            changePaneButton.setText(StringUtil.textToHtml(StringUtil.shorten(file.toString(), maxLen)));
+            changePaneButton.setText(HtmlUtil.textToHtml(StringUtil.shorten(file.toString(), maxLen)));
         if (miniDialog != null) miniDialog.infoLabel.setText(changePaneButton.getText());
         // 设置 MV、收藏、下载、评论、乐谱按钮
         mvButton.setEnabled(isNetMusic && musicInfo.hasMv());
@@ -21048,18 +21049,18 @@ public class MainFrame extends JFrame {
         MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         // 设置歌曲名称
 //        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
-        songNameLabel.setText(StringUtil.textToHtml(metaMusicInfo.getName()));
+        songNameLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getName()));
         songNameLabel.setVisible(false);
         songNameLabel.setVisible(true);
         // 设置艺术家
 //        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
-        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(metaMusicInfo.getArtist(), 50)));
+        artistLabel.setText(HtmlUtil.textToHtml(StringUtil.shorten(metaMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.setVisible(false);
         artistLabel.setVisible(true);
         // 设置专辑名称
 //        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
-        albumLabel.setText(StringUtil.textToHtml(metaMusicInfo.getAlbumName()));
+        albumLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getAlbumName()));
         albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         albumLabel.setVisible(false);
         albumLabel.setVisible(true);
@@ -21174,10 +21175,10 @@ public class MainFrame extends JFrame {
                 } else statements = lrcData.getStatements();
                 // 繁体转换
                 if (lyricType == LyricType.TRADITIONAL_CN)
-                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
+                    for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
                     // 罗马音转换
                 else if (lyricType == LyricType.ROMA)
-                    for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
+                    for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
             } else state = NO_LRC;
         }
         // 在线音乐歌词
@@ -21196,7 +21197,7 @@ public class MainFrame extends JFrame {
                         // 繁体转换
                         if (lyricType == LyricType.TRADITIONAL_CN)
                             for (Statement stmt : statements)
-                                stmt.setLyric(StringUtil.toTraditionalChinese(stmt.getLyric()));
+                                stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
                     } else state = NO_LRC;
                     break;
                 // 翻译
@@ -21233,13 +21234,13 @@ public class MainFrame extends JFrame {
                             statements = new LrcData(lrc, true).getStatements();
                             state = BAD_FORMAT;
                         } else statements = lrcData.getStatements();
-                        for (Statement stmt : statements) stmt.setLyric(StringUtil.toRomaji(stmt.getLyric()));
+                        for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
                     } else state = NO_LRC;
                     break;
             }
         }
         lrcStr = lrcData == null ? "" : lrcData.getLrcStr();
-        if (StringUtil.isEmpty(StringUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
+        if (StringUtil.isEmpty(LrcUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
 
         if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
         else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
@@ -21817,7 +21818,7 @@ public class MainFrame extends JFrame {
                         AudioFile f2 = (AudioFile) o2;
                         s2 = f2.toString();
                     } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21831,7 +21832,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getSongName();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21845,7 +21846,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getArtist();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getArtist();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
-                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21859,7 +21860,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getAlbumName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getAlbum();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
-                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21873,7 +21874,7 @@ public class MainFrame extends JFrame {
                 if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getName();
                 else if (o2 instanceof NetMusicInfo) s2 = o2.toString();
                 try {
-                    return order == SortMethod.ASCENDING ? StringUtil.compare(s1, s2) : StringUtil.compare(s2, s1);
+                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                     return 0;

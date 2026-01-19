@@ -4,8 +4,8 @@ import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.SimplePath;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -20,11 +20,8 @@ import net.doge.sdk.entity.music.info.lyrichero.mg.MgLyricHero;
 import net.doge.sdk.entity.music.info.lyrichero.nc.NcLyricHero;
 import net.doge.sdk.entity.music.info.lyrichero.qq.QqLyricHero;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.common.*;
+import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -406,7 +403,7 @@ public class MusicInfoReq {
 
         // 5sing
         else if (source == NetMusicSource.FS) {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, StringUtil.urlEncodeAll(id.replace("_", "$"))))
+            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, UrlUtil.encodeAll(id.replace("_", "$"))))
                     .executeAsync()
                     .body();
             JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
@@ -529,7 +526,7 @@ public class MusicInfoReq {
                     .body();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
-            String musicSet = StringUtil.urlEncodeAll(ap.attr("data-songs"));
+            String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FA_API, musicSet, _nonce))

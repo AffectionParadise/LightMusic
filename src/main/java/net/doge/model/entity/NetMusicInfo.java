@@ -1,16 +1,16 @@
 package net.doge.model.entity;
 
 import lombok.Data;
+import net.doge.constant.core.AudioQuality;
+import net.doge.constant.core.Format;
+import net.doge.constant.core.SimplePath;
 import net.doge.constant.lyric.LyricPattern;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
-import net.doge.constant.system.Format;
-import net.doge.constant.system.SimplePath;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.model.entity.base.NetResource;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
 import java.awt.image.BufferedImage;

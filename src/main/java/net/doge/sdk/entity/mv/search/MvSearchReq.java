@@ -16,10 +16,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -65,7 +62,7 @@ public class MvSearchReq {
         AtomicReference<String> atomicCursor = new AtomicReference<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         // MV
@@ -177,8 +174,8 @@ public class MvSearchReq {
 
                 String mvId = mvJson.getString("hash");
                 // 酷狗返回的名称含有 HTML 标签，需要去除
-                String mvName = StringUtil.removeHTMLLabel(mvJson.getString("filename"));
-                String artistName = StringUtil.removeHTMLLabel(mvJson.getString("singername"));
+                String mvName = HtmlUtil.removeHtmlLabel(mvJson.getString("filename"));
+                String artistName = HtmlUtil.removeHtmlLabel(mvJson.getString("singername"));
                 String creatorId = mvJson.getString("userid");
                 Long playCount = mvJson.getLong("historyheat");
                 Double duration = mvJson.getDouble("duration");
@@ -362,7 +359,7 @@ public class MvSearchReq {
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
                 String creatorId = mvJson.getString("author_id");
-                Long playCount = StringUtil.parseNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
+                Long playCount = LangUtil.parseNumber(mvJson.getString("read_num").replaceFirst("次播放", ""));
                 Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
                 String pubTime = mvJson.getString("publishTimeText");
                 String coverImgUrl = mvJson.getString("cover_src");
@@ -404,7 +401,7 @@ public class MvSearchReq {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
                 String bvId = mvJson.getString("bvid");
-                String mvName = StringUtil.removeHTMLLabel(mvJson.getString("title"));
+                String mvName = HtmlUtil.removeHtmlLabel(mvJson.getString("title"));
                 String artistName = mvJson.getString("author");
                 String creatorId = mvJson.getString("mid");
                 Long playCount = mvJson.getLong("play");

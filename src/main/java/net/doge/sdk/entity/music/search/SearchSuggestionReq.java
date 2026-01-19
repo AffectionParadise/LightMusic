@@ -10,6 +10,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.util.*;
 import java.util.concurrent.Callable;
@@ -53,7 +54,7 @@ public class SearchSuggestionReq {
         if (StringUtil.isEmpty(keyword.trim())) return res;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         Callable<List<String>> getSimpleSearchSuggestion = () -> {

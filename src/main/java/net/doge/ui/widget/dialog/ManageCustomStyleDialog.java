@@ -14,7 +14,7 @@ import net.doge.ui.widget.list.renderer.system.StyleListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

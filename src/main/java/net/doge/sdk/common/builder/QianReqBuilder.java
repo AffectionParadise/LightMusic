@@ -2,7 +2,7 @@ package net.doge.sdk.common.builder;
 
 import cn.hutool.http.HttpRequest;
 import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.util.Arrays;
 import java.util.StringJoiner;
@@ -22,7 +22,7 @@ public class QianReqBuilder {
 
     public HttpRequest buildRequest(String url) {
         // 提取参数并解码
-        String params = StringUtil.urlDecode(url.substring(url.indexOf('?') + 1));
+        String params = UrlUtil.decode(url.substring(url.indexOf('?') + 1));
         // 将参数按照字典序排序
         String[] sp = params.split("&");
         Arrays.sort(sp);

@@ -6,7 +6,7 @@ import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -56,7 +56,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
 
         titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(title);
-        setTitle(StringUtil.removeHTMLLabel(title));
+        setTitle(HtmlUtil.removeHtmlLabel(title));
         titleLabel.setForeground(f.currUIStyle.getTextColor());
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new Dimension(600, 30));

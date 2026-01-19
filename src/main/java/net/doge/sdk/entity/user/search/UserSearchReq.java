@@ -13,9 +13,10 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -67,7 +68,7 @@ public class UserSearchReq {
         List<NetUserInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetUserInfo>> searchUsers = () -> {
@@ -271,7 +272,7 @@ public class UserSearchReq {
                     JSONObject userJson = userArray.getJSONObject(i);
 
                     String userId = userJson.getString("id");
-                    String name = StringUtil.removeHTMLLabel(userJson.getString("nickName"));
+                    String name = HtmlUtil.removeHtmlLabel(userJson.getString("nickName"));
                     int sex = userJson.getIntValue("sex");
                     String gender = sex == 0 ? "♂ 男" : sex == 1 ? "♀ 女" : "保密";
                     String avatarThumbUrl = userJson.getString("pictureUrl");

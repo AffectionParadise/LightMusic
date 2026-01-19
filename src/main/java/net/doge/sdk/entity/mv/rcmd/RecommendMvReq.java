@@ -18,10 +18,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -742,7 +739,7 @@ public class RecommendMvReq {
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
 //                String creatorId = mvJson.getString("author_id");
-                Long playCount = StringUtil.parseNumber(mvJson.getString("fmplaycnt"));
+                Long playCount = LangUtil.parseNumber(mvJson.getString("fmplaycnt"));
                 String coverImgUrl = "https:" + mvJson.getString("poster");
                 Double duration = DurationUtil.toSeconds(mvJson.getString("time_length"));
                 String pubTime = TimeUtil.msToDate(mvJson.getLong("publish_time") * 1000);
@@ -1018,7 +1015,7 @@ public class RecommendMvReq {
                 else {
                     for (int i = as.size() - 1; i >= 0; i--) {
                         String ts = as.get(i).text();
-                        if (!StringUtil.isNumber(ts)) continue;
+                        if (!NumUtil.isNumber(ts)) continue;
                         t = Integer.parseInt(ts) * limit;
                         break;
                     }
@@ -1036,7 +1033,7 @@ public class RecommendMvReq {
                     String mvName = a.text();
                     String artistName = author.text();
                     String coverImgUrl = img.attr("src");
-                    Long playCount = StringUtil.parseNumber(views.text());
+                    Long playCount = LangUtil.parseNumber(views.text());
                     String pubTime = time.text().trim();
 
                     NetMvInfo mvInfo = new NetMvInfo();
@@ -1074,7 +1071,7 @@ public class RecommendMvReq {
                 else {
                     for (int i = as.size() - 1; i >= 0; i--) {
                         String ts = as.get(i).text();
-                        if (!StringUtil.isNumber(ts)) continue;
+                        if (!NumUtil.isNumber(ts)) continue;
                         t = Integer.parseInt(ts) * limit;
                         break;
                     }
@@ -1092,7 +1089,7 @@ public class RecommendMvReq {
                     String mvName = a.text();
                     String artistName = author.text();
                     String coverImgUrl = img.attr("src");
-                    Long playCount = StringUtil.parseNumber(views.text());
+                    Long playCount = LangUtil.parseNumber(views.text());
                     String pubTime = time.text().trim();
 
                     NetMvInfo mvInfo = new NetMvInfo();

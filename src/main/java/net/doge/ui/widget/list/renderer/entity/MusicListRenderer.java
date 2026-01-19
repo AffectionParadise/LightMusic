@@ -3,8 +3,8 @@ package net.doge.ui.widget.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.AudioFile;
@@ -13,6 +13,7 @@ import net.doge.model.player.MusicPlayer;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.DurationUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -123,18 +124,18 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         durationLabel.setForeground(textColor);
 
         int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
-        String source = StringUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]
+        String source = HtmlUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
-        String artist = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String artist = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(isFile ? file.hasArtist() ? file.getArtist() : "" : musicInfo.hasArtist() ? musicInfo.getArtist() : "", RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
-        String albumName = StringUtil.textToHtml(StringUtil.wrapLineByWidth(
+        String albumName = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(isFile ? (file.hasAlbum() ? file.getAlbum() : "") : musicInfo.hasAlbumName() ? musicInfo.getAlbumName() : "", RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
-        String duration = StringUtil.textToHtml(isFile ? file.hasDuration() ? DurationUtil.format(file.getDuration()) : "--:--"
+        String duration = HtmlUtil.textToHtml(isFile ? file.hasDuration() ? DurationUtil.format(file.getDuration()) : "--:--"
                 : musicInfo.hasDuration() ? DurationUtil.format(musicInfo.getDuration()) : "--:--");
 
         iconLabel.setText(source);

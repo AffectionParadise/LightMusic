@@ -16,8 +16,10 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.LangUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -118,7 +120,7 @@ public class RecommendPlaylistReq {
                 String playlistName = pa.text();
                 String creator = fc.text();
                 String creatorId = RegexUtil.getGroup1("id=(\\d+)", fc.attr("href"));
-                Long playCount = StringUtil.parseNumber(nb.text());
+                Long playCount = LangUtil.parseNumber(nb.text());
                 String coverImgThumbUrl = img.attr("src");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -276,7 +278,7 @@ public class RecommendPlaylistReq {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtil.parseNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -314,7 +316,7 @@ public class RecommendPlaylistReq {
                     String playlistId = playlistJson.getString("specialid");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
-                    Long playCount = StringUtil.parseNumber(playlistJson.getString("total_play_count"));
+                    Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
                     String coverImgThumbUrl = playlistJson.getString("img");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -359,7 +361,7 @@ public class RecommendPlaylistReq {
                 String playlistId = playlistJson.getString("specialid");
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
-                Long playCount = StringUtil.parseNumber(playlistJson.getString("play_count"));
+                Long playCount = LangUtil.parseNumber(playlistJson.getString("play_count"));
                 String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -467,14 +469,14 @@ public class RecommendPlaylistReq {
                 boolean isAll = "10000000".equals(cat);
                 String url;
                 if (isAll) {
-                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
+                    url = NEW_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_playlist_by_tag\"," +
                                     "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":2,\"cur_page\":%s}," +
                                     "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
                 } else {
-                    url = NEW_PLAYLIST_QQ_API + StringUtil.urlEncodeAll(String.format(
+                    url = NEW_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
                             "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                     "\"playlist\":{" +
                                     "\"method\":\"get_category_content\"," +
@@ -651,7 +653,7 @@ public class RecommendPlaylistReq {
                 String playlistName = playlistJson.getString("title");
                 String creator = playlistJson.getString("subTitle");
                 String fs = playlistJson.getJSONArray("barList").getJSONObject(0).getString("title");
-                Long playCount = StringUtil.parseNumber(fs);
+                Long playCount = LangUtil.parseNumber(fs);
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();

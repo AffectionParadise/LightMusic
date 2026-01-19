@@ -119,7 +119,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
-        String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
+        String id = UrlUtil.encodeAll(commentInfo.getUserId());
         String name = commentInfo.getUsername();
 
         NetUserInfo userInfo = new NetUserInfo();
@@ -137,7 +137,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
-        String id = StringUtil.urlEncodeAll(commentInfo.getUserId());
+        String id = UrlUtil.encodeAll(commentInfo.getUserId());
 
         NetUserInfo userInfo = new NetUserInfo();
         userInfo.setSource(source);

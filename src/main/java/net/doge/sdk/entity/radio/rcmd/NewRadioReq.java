@@ -13,7 +13,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -348,7 +348,7 @@ public class NewRadioReq {
                 String radioName = radioJson.getString("name");
                 String dj = radioJson.getString("author");
                 String coverImgThumbUrl = "https:" + radioJson.getString("cover");
-                String description = StringUtil.removeHTMLLabel(radioJson.getString("abstract"));
+                String description = HtmlUtil.removeHtmlLabel(radioJson.getString("abstract"));
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetMusicSource.ME);

@@ -5,8 +5,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetRadioInfo;
 import net.doge.sdk.common.CommonResult;
@@ -14,6 +14,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.RegexUtil;
 import net.doge.util.common.StringUtil;
@@ -292,7 +293,7 @@ public class RadioInfoReq {
             if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTag(drama));
-            if (!radioInfo.hasDescription()) radioInfo.setDescription(StringUtil.removeHTMLLabel(description));
+            if (!radioInfo.hasDescription()) radioInfo.setDescription(HtmlUtil.removeHtmlLabel(description));
             if (!radioInfo.hasDj()) radioInfo.setDj(drama.getString("author"));
             if (!radioInfo.hasDjId()) radioInfo.setDjId(drama.getString("user_id"));
             if (!radioInfo.hasCategory()) radioInfo.setCategory(drama.getString("catalog_name"));
@@ -314,17 +315,17 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+                String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
                 Elements re = doc.select("#link-report");
                 Elements span = re.select("span");
                 Element intro = doc.select(".intro").last();
                 Element cata = doc.select(String.format("#dir_%s_full", id)).first();
                 Element tr = doc.select(".subject_show.block5:not(#rec-ebook-section) div").first();
 
-                String desc = StringUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
-                String authorIntro = StringUtil.getPrettyText(intro) + "\n";
-                String catalog = StringUtil.getPrettyText(cata) + "\n\n";
-                String trace = StringUtil.getPrettyText(tr);
+                String desc = HtmlUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
+                String authorIntro = HtmlUtil.getPrettyText(intro) + "\n";
+                String catalog = HtmlUtil.getPrettyText(cata) + "\n\n";
+                String trace = HtmlUtil.getPrettyText(tr);
                 String coverImgUrl = doc.select("#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc + "作者简介：\n" + authorIntro + "目录：\n" + catalog + "丛书信息：\n" + trace);
@@ -335,10 +336,10 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                String info = StringUtil.getPrettyText(doc.select("dl.game-attr").first()) + "\n";
+                String info = HtmlUtil.getPrettyText(doc.select("dl.game-attr").first()) + "\n";
                 Element p = doc.select("#link-report p").first();
 
-                String desc = StringUtil.getPrettyText(p) + "\n";
+                String desc = HtmlUtil.getPrettyText(p) + "\n";
                 String coverImgUrl = doc.select(".pic img").attr("src");
 
                 radioInfo.setDescription(info + desc);
@@ -349,11 +350,11 @@ public class RadioInfoReq {
                         .executeAsync()
                         .body();
                 Document doc = Jsoup.parse(radioInfoBody);
-                String info = StringUtil.getPrettyText(doc.select("#info").first()) + "\n";
+                String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
                 Elements re = doc.select("#link-report");
                 Elements span = re.select("span");
 
-                String desc = StringUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
+                String desc = HtmlUtil.getPrettyText(span.isEmpty() ? re.first() : span.last()) + "\n";
                 String coverImgUrl = doc.select("#mainpic img").attr("src");
 
                 radioInfo.setDescription(info + desc);

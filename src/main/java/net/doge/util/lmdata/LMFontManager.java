@@ -1,8 +1,8 @@
 package net.doge.util.lmdata;
 
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.system.LMDataConstants;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.core.LMDataConstants;
+import net.doge.constant.core.SimplePath;
 import net.doge.util.ui.FontUtil;
 
 import java.awt.*;

@@ -16,8 +16,9 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.JsonUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -61,7 +62,7 @@ public class PlaylistSearchReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         // 网易云
         Callable<CommonResult<NetPlaylistInfo>> searchPlaylists = () -> {
@@ -274,7 +275,7 @@ public class PlaylistSearchReq {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("playlistid");
-                String playlistName = StringUtil.removeHTMLLabel(playlistJson.getString("name"));
+                String playlistName = HtmlUtil.removeHtmlLabel(playlistJson.getString("name"));
                 String creator = playlistJson.getString("nickname");
                 Long playCount = playlistJson.getLong("playcnt");
                 Integer trackCount = playlistJson.getIntValue("songnum");
@@ -398,7 +399,7 @@ public class PlaylistSearchReq {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                     String playlistId = playlistJson.getString("songListId");
-                    String playlistName = StringUtil.removeHTMLLabel(playlistJson.getString("title"));
+                    String playlistName = HtmlUtil.removeHtmlLabel(playlistJson.getString("title"));
                     String creator = playlistJson.getString("userName");
                     String creatorId = playlistJson.getString("userId");
                     Long playCount = playlistJson.getLong("playCount");

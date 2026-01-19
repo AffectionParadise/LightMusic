@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.JSONWriter;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

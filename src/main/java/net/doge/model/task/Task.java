@@ -2,17 +2,17 @@ package net.doge.model.task;
 
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.Format;
+import net.doge.constant.core.SimplePath;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.Format;
-import net.doge.constant.system.SimplePath;
 import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.NetMvInfo;
 import net.doge.model.entity.base.Downloadable;
-import net.doge.sdk.system.listener.DownloadListener;
+import net.doge.sdk.core.listener.DownloadListener;
 import net.doge.sdk.util.MusicServerUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 
 import javax.swing.*;
 import java.util.HashMap;

@@ -4,7 +4,7 @@ import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.UrlUtil;
 
 public class MiguReqBuilder {
     private static MiguReqBuilder instance;
@@ -43,7 +43,7 @@ public class MiguReqBuilder {
                 break;
         }
         String url = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=0&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0&sid=USS";
-        return HttpRequest.get(String.format(url, StringUtil.urlEncodeAll(json), StringUtil.urlEncodeAll(keyword), page, limit))
+        return HttpRequest.get(String.format(url, UrlUtil.encodeAll(json), UrlUtil.encodeAll(keyword), page, limit))
                 .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                 .header("uiVersion", "A_music_3.6.1")
                 .header("deviceId", deviceId)

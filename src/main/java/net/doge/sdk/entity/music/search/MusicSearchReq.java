@@ -6,8 +6,8 @@ import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.async.GlobalExecutors;
+import net.doge.constant.core.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.system.AudioQuality;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.sdk.common.CommonResult;
 import net.doge.sdk.common.SdkCommon;
@@ -18,9 +18,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -83,7 +81,7 @@ public class MusicSearchReq {
         List<NetMusicInfo> res = new LinkedList<>();
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = StringUtil.urlEncodeAll(keyword);
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
 
         boolean dt = "默认".equals(subType);
         String[] s = Tags.programSearchTag.get(subType);
@@ -183,7 +181,7 @@ public class MusicSearchReq {
                             for (int j = 0, size = lyrics.size(); j < size; j++) {
                                 sj.add(lyrics.getString(j));
                             }
-                            lrcMatch = StringUtil.removeHTMLLabel(sj.toString());
+                            lrcMatch = HtmlUtil.removeHtmlLabel(sj.toString());
                         }
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
@@ -569,7 +567,7 @@ public class MusicSearchReq {
                 else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
                 else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
                 else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-                String lrcMatch = StringUtil.removeHTMLLabel(songJson.getString("content")).replace("\\n", " / ");
+                String lrcMatch = HtmlUtil.removeHtmlLabel(songJson.getString("content")).replace("\\n", " / ");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QQ);
@@ -1012,8 +1010,8 @@ public class MusicSearchReq {
 
                     String songId = songJson.getString("songId");
                     String songType = songJson.getString("typeEname");
-                    String songName = StringUtil.removeHTMLLabel(songJson.getString("songName"));
-                    String artist = StringUtil.removeHTMLLabel(songJson.getString("singer"));
+                    String songName = HtmlUtil.removeHtmlLabel(songJson.getString("songName"));
+                    String artist = HtmlUtil.removeHtmlLabel(songJson.getString("singer"));
                     String artistId = songJson.getString("singerId");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
@@ -1084,7 +1082,7 @@ public class MusicSearchReq {
                     JSONObject songJson = songArray.getJSONObject(i);
 
                     String songId = songJson.getString("id");
-                    String name = StringUtil.removeHTMLLabel(songJson.getString("soundstr"));
+                    String name = HtmlUtil.removeHtmlLabel(songJson.getString("soundstr"));
                     String artist = songJson.getString("username");
                     String artistId = songJson.getString("user_id");
                     Double duration = songJson.getDouble("duration") / 1000;

@@ -1,4 +1,4 @@
-package net.doge.util.system;
+package net.doge.util.os;
 
 import info.monitorenter.cpdetector.io.*;
 import net.doge.util.common.LogUtil;

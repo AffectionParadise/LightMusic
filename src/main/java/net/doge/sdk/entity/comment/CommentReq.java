@@ -21,10 +21,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.common.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -502,16 +499,16 @@ public class CommentReq {
             String ref = "";
             switch (Integer.parseInt(typeStr[2])) {
                 case 15:
-                    ref = "https://kuwo.cn/play_detail/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/play_detail/" + UrlUtil.encodeAll(id);
                     break;
                 case 7:
-                    ref = "https://kuwo.cn/mvplay/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/mvplay/" + UrlUtil.encodeAll(id);
                     break;
                 case 8:
-                    ref = "https://kuwo.cn/playlist_detail/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/playlist_detail/" + UrlUtil.encodeAll(id);
                     break;
                 case 2:
-                    ref = "https://kuwo.cn/rankList/" + StringUtil.urlEncodeAll(id);
+                    ref = "https://kuwo.cn/rankList/" + UrlUtil.encodeAll(id);
                     break;
             }
             String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;

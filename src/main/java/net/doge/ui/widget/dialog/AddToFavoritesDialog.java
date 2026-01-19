@@ -3,11 +3,11 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.lang.I18n;
 import net.doge.constant.tab.PersonalMusicTabIndex;
 import net.doge.constant.ui.Colors;
+import net.doge.model.core.ChoosableListItem;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.LocalPlaylist;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.model.entity.base.MusicResource;
-import net.doge.model.system.ChoosableListItem;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
@@ -154,7 +154,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
                 if (item.isSelected()) {
                     for (MusicResource resource : resources) {
                         if (musicListModel.contains(resource)) continue;
-                        musicListModel.addElement(resource);
+                        musicListModel.add(0, resource);
                     }
                 }
                 // 取消收藏

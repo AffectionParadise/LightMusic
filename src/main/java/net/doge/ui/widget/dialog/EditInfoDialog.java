@@ -3,8 +3,8 @@ package net.doge.ui.widget.dialog;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
+import net.doge.constant.core.Format;
 import net.doge.constant.lang.I18n;
-import net.doge.constant.system.Format;
 import net.doge.constant.ui.Colors;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
@@ -17,10 +17,10 @@ import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.common.DurationUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.TimeUtil;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.system.FileUtil;
+import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -162,8 +162,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
         centerPanel.setLayout(new GridLayout(7, 2));
 
         // 获得传入的歌曲信息
-        String fileName = StringUtil.wrapLineByWidth(file.getName(), 300);
-        String filePath = StringUtil.wrapLineByWidth(file.getParent(), 300);
+        String fileName = HtmlUtil.wrapLineByWidth(file.getName(), 300);
+        String filePath = HtmlUtil.wrapLineByWidth(file.getParent(), 300);
         String fileSize = FileUtil.getUnitString(FileUtil.size(file));
         String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
         String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
@@ -208,7 +208,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             if (components[i] instanceof CustomLabel) {
                 CustomLabel label = (CustomLabel) components[i];
                 label.setForeground(textColor);
-                label.setText(StringUtil.textToHtml((String) results[i]));
+                label.setText(HtmlUtil.textToHtml((String) results[i]));
             } else if (components[i] instanceof CustomTextField) {
                 CustomTextField textField = (CustomTextField) components[i];
                 textField.setForeground(textColor);

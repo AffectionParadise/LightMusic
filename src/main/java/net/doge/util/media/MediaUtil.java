@@ -1,14 +1,14 @@
 package net.doge.util.media;
 
-import net.doge.constant.system.Format;
-import net.doge.constant.system.SimplePath;
+import net.doge.constant.core.Format;
+import net.doge.constant.core.SimplePath;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
 import net.doge.model.entity.NetMusicInfo;
 import net.doge.util.common.LogUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.system.FileUtil;
-import net.doge.util.system.TerminalUtil;
+import net.doge.util.os.FileUtil;
+import net.doge.util.os.TerminalUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;

@@ -8,6 +8,7 @@ import net.doge.constant.ui.RendererConstants;
 import net.doge.model.entity.NetSheetInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.lmdata.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -112,13 +113,13 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = StringUtil.textToHtml(StringUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String difficulty = sheetInfo.hasDifficulty() ? StringUtil.textToHtml(sheetInfo.getDifficulty() + "难度") : "";
-        String musicKey = sheetInfo.hasMusicKey() ? StringUtil.textToHtml(sheetInfo.getMusicKey() + "调") : "";
-        String playVersion = sheetInfo.hasPlayVersion() ? StringUtil.textToHtml(sheetInfo.getPlayVersion()) : "";
-        String chordName = sheetInfo.hasChordName() ? StringUtil.textToHtml(sheetInfo.getChordName()) : "";
-        String bpm = sheetInfo.hasBpm() ? StringUtil.textToHtml(sheetInfo.getBpm() + " 拍/分钟") : "";
-        String pageSize = sheetInfo.hasPageSize() ? StringUtil.textToHtml(sheetInfo.getPageSize() + " 页") : "";
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String difficulty = sheetInfo.hasDifficulty() ? HtmlUtil.textToHtml(sheetInfo.getDifficulty() + "难度") : "";
+        String musicKey = sheetInfo.hasMusicKey() ? HtmlUtil.textToHtml(sheetInfo.getMusicKey() + "调") : "";
+        String playVersion = sheetInfo.hasPlayVersion() ? HtmlUtil.textToHtml(sheetInfo.getPlayVersion()) : "";
+        String chordName = sheetInfo.hasChordName() ? HtmlUtil.textToHtml(sheetInfo.getChordName()) : "";
+        String bpm = sheetInfo.hasBpm() ? HtmlUtil.textToHtml(sheetInfo.getBpm() + " 拍/分钟") : "";
+        String pageSize = sheetInfo.hasPageSize() ? HtmlUtil.textToHtml(sheetInfo.getPageSize() + " 页") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
