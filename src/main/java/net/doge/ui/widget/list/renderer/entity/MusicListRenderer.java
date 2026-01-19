@@ -3,7 +3,7 @@ package net.doge.ui.widget.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.constant.core.AudioQuality;
+import net.doge.constant.media.AudioQuality;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.ui.ImageConstants;
 import net.doge.constant.ui.RendererConstants;

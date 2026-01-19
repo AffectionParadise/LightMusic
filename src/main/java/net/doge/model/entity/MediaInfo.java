@@ -1,7 +1,7 @@
 package net.doge.model.entity;
 
 import lombok.Data;
-import net.doge.constant.core.Format;
+import net.doge.constant.media.Format;
 
 import java.awt.image.BufferedImage;
 

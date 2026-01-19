@@ -2,8 +2,8 @@ package net.doge.model.task;
 
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.core.Format;
 import net.doge.constant.core.SimplePath;
+import net.doge.constant.media.Format;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.task.TaskStatus;
 import net.doge.constant.task.TaskType;

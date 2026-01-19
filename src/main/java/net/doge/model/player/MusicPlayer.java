@@ -10,7 +10,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
 import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.core.Format;
+import net.doge.constant.media.Format;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.constant.player.EqualizerData;
 import net.doge.constant.player.PlayerStatus;

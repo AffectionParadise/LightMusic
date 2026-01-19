@@ -1,4 +1,4 @@
-package net.doge.constant.core;
+package net.doge.constant.media;
 
 import net.doge.constant.lang.I18n;
 

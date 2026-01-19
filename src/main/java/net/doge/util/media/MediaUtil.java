@@ -1,7 +1,7 @@
 package net.doge.util.media;
 
-import net.doge.constant.core.Format;
 import net.doge.constant.core.SimplePath;
+import net.doge.constant.media.Format;
 import net.doge.model.entity.AudioFile;
 import net.doge.model.entity.MediaInfo;
 import net.doge.model.entity.NetMusicInfo;

@@ -1,10 +1,10 @@
 package net.doge.model.entity;
 
 import lombok.Data;
-import net.doge.constant.core.AudioQuality;
-import net.doge.constant.core.Format;
 import net.doge.constant.core.SimplePath;
 import net.doge.constant.lyric.LyricPattern;
+import net.doge.constant.media.AudioQuality;
+import net.doge.constant.media.Format;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.base.Downloadable;
 import net.doge.model.entity.base.MusicResource;

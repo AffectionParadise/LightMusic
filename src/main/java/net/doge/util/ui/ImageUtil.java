@@ -6,7 +6,7 @@ import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.*;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constant.core.Format;
+import net.doge.constant.media.Format;
 import net.doge.constant.ui.BlurConstants;
 import net.doge.constant.ui.Colors;
 import net.doge.util.common.LogUtil;

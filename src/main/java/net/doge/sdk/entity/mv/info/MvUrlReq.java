@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.VideoQuality;
+import net.doge.constant.media.VideoQuality;
 import net.doge.constant.model.MvInfoType;
 import net.doge.constant.model.NetMusicSource;
 import net.doge.model.entity.NetMvInfo;
