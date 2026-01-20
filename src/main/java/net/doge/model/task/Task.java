@@ -99,7 +99,7 @@ public class Task {
         setStatus(TaskStatus.WAITING);
         future = GlobalExecutors.downloadExecutor.submit(() -> {
             try {
-                dirCheck();
+                ensureDir();
                 prepareInfo();
                 setStatus(TaskStatus.RUNNING);
                 MusicServerUtil.download(url, dest, getHeaders(), new DownloadListener() {
@@ -190,7 +190,7 @@ public class Task {
         }
     }
 
-    private void dirCheck() {
+    private void ensureDir() {
         FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
         FileUtil.mkDir(SimplePath.DOWNLOAD_MV_PATH);
     }

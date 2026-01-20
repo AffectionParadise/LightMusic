@@ -26,12 +26,12 @@
 //        eMap.put("128k", "mp3");
 //        eMap.put("320k", "mp3");
 //        eMap.put("flac", "flac");
-//        eMap.put("flac24bit", "flac");
+//        eMap.put("hires", "flac");
 //
 //        hMap.put("128k", "128k");
 //        hMap.put("320k", "320k");
 //        hMap.put("flac", "2000k");
-//        hMap.put("flac24bit", "4000k");
+//        hMap.put("hires", "4000k");
 //    }
 //
 //    /**

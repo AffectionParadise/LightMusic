@@ -68,6 +68,20 @@ public class MediaUtil {
         }
     }
 
+//    /**
+//     * 获取音频文件时长(备选)
+//     *
+//     * @param file
+//     */
+//    public static double getDurationByMp3agic(AudioFile file) {
+//        try {
+//            Mp3File mp3File = new Mp3File(file);
+//            return mp3File.getLengthInSeconds();
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
+
     /**
      * 为音频文件写入信息(包含曲名、艺术家、专辑、封面图片)
      *

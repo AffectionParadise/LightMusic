@@ -43,7 +43,7 @@ public class QqTrackHeroV2 {
         eMap.put("128k", ".mp3");
         eMap.put("320k", ".mp3");
         eMap.put("flac", ".flac");
-        eMap.put("flac24bit", ".flac");
+        eMap.put("hires", ".flac");
         eMap.put("dolby", ".flac");
         eMap.put("master", ".flac");
     }

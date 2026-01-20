@@ -149,19 +149,19 @@
 //        eMap.put("128k", "mp3");
 //        eMap.put("320k", "mp3");
 //        eMap.put("flac", "flac");
-//        eMap.put("flac24bit", "flac");
+//        eMap.put("hires", "flac");
 //
 //        hMap.put("128k", "128k");
 //        hMap.put("320k", "320k");
 //        hMap.put("flac", "2000k");
-//        hMap.put("flac24bit", "4000k");
+//        hMap.put("hires", "4000k");
 //    }
 //
 //    /**
 //     * 获取酷我音乐歌曲链接
 //     *
 //     * @param mid     歌曲 id
-//     * @param quality 品质(128k 320k flac flac24bit)
+//     * @param quality 品质(128k 320k flac hires)
 //     * @return
 //     */
 //    public String getTrackUrl(String mid, String quality) {
@@ -169,7 +169,7 @@
 //                "&p2p=1&q36=8899378ed08282acc723cdbc100010615202&approval=false&loginUid=0&loginSid=0&appuid=2788274549&allpay=0&notrace=0&oaid=3d3e1ab6-b5a1-4767-be7c-55fe63786812" +
 //                "&type=convert_url_with_sign&br=%s%s&format=%s&sig=0&rid=%s&priority=bitrate&network=4G&localUid=-1&mode=audition&from=PC&token=bad205aa9e8a50181d948b1cafc16091" +
 //                "&bc_token=1462dab652d0a688811e13bddf48596a&timestamp=1755249729&uid=2788274549", hMap.get(quality), eMap.get(quality), eMap.get(quality), mid);
-//        String url = "http://nmobi.kuwo.cn/mobi.s?f=kuwo&q=" + params;
+//        String url = "http://nmobi.kuwo.cn/mobi.s?f=kuwo&q=" + base64Encrypt(params);
 //        String urlBody = HttpRequest.get(url)
 //                .executeAsync()
 //                .body();

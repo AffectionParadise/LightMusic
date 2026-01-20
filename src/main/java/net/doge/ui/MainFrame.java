@@ -2144,7 +2144,7 @@ public class MainFrame extends JFrame {
     // 歌词控制面板 Panel
     private CustomPanel controlLrcPanel = new CustomPanel();
     // 进度条 Panel
-    private CustomPanel progressPanel = new CustomPanel();
+//    private CustomPanel progressPanel = new CustomPanel();
 
     // 顶部盒子
     private Box topBox = new Box(BoxLayout.X_AXIS);
@@ -20500,6 +20500,9 @@ public class MainFrame extends JFrame {
     private void initTimeBar() {
         // 当前播放时间
         currTimeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        currTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        int bw = 10;
+        currTimeLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, bw));
         currTimeLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20511,6 +20514,10 @@ public class MainFrame extends JFrame {
                 currTimeLabel.setText(DurationUtil.format(t));
             }
         });
+
+        // 时长
+        durationLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        durationLabel.setBorder(BorderFactory.createEmptyBorder(0, bw, 0, 0));
 
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(0);
@@ -20531,10 +20538,10 @@ public class MainFrame extends JFrame {
             currTimeLabel.setText(DurationUtil.format(t));
         });
 
-        progressPanel.add(currTimeLabel);
-        progressPanel.add(timeBar);
-        progressPanel.add(durationLabel);
-        progressBox.add(progressPanel);
+        progressBox.add(currTimeLabel);
+        progressBox.add(timeBar);
+        progressBox.add(durationLabel);
+//        progressBox.add(progressPanel);
         bottomBox.add(progressBox);
     }
 
@@ -20996,22 +21003,26 @@ public class MainFrame extends JFrame {
         }
     }
 
+    // 更新时间标签
+    private void updateTimeLabel() {
+        // 重置总时间
+        durationLabel.setText(player.getDurationString());
+        // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
+        String t = durationLabel.getText().replaceAll("[1-9]", "0");
+        FontMetrics m = durationLabel.getFontMetrics(globalFont);
+        Dimension d = new Dimension(m.stringWidth(t) + 40, durationLabel.getHeight());
+        currTimeLabel.setPreferredSize(d);
+        durationLabel.setPreferredSize(d);
+    }
+
     // 界面加载新文件
     private void loadUI(AudioFile file, NetMusicInfo musicInfo) {
         // 设置标题
         updateTitle(LOAD_TRACK);
         // 重置当前播放时间
         timeBar.setValue(0);
-        String durationString = player.getDurationString();
-        if (!timeElapsedMode) currTimeLabel.setText(durationString);
-        // 重置总时间
-        durationLabel.setText(durationString);
-        // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
-        String t = durationLabel.getText().replaceAll("[1-9]", "0");
-        FontMetrics m = durationLabel.getFontMetrics(globalFont);
-        Dimension d = new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight());
-        currTimeLabel.setPreferredSize(d);
-        durationLabel.setPreferredSize(d);
+        if (!timeElapsedMode) currTimeLabel.setText(player.getDurationString());
+        updateTimeLabel();
         // 重置为“播放”
         playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
@@ -21294,24 +21305,21 @@ public class MainFrame extends JFrame {
         // 部分无法提前获取时长的歌曲，等待播放时更新时长
         mp.totalDurationProperty().addListener((observable, oldValue, newValue) -> {
             MetaMusicInfo musicInfo = player.getMetaMusicInfo();
-            if (musicInfo.hasDuration()) return;
+            boolean loadedNetMusic = player.loadedNetMusic();
             double duration = newValue.toSeconds();
+            // 存在时长信息 且 时长误差范围可接受(部分情况本地歌曲读取时长出现异常值)，跳过
+            if (musicInfo.hasDuration() && (loadedNetMusic || Math.abs(duration - musicInfo.getDuration()) <= 2))
+                return;
             musicInfo.setDuration(duration);
             // 填充音乐时长
-            if (player.loadedNetMusic()) player.getMusicInfo().setDuration(duration);
+            if (loadedNetMusic) player.getMusicInfo().setDuration(duration);
             else player.getAudioFile().setDuration(duration);
             // 刷新列表时长显示
             if (musicList.isShowing()) musicList.repaint();
             else if (netMusicList.isShowing()) netMusicList.repaint();
             else if (playQueue.isShowing()) playQueue.repaint();
-            // 重置总时间
-            durationLabel.setText(player.getDurationString());
-            // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
-            String t = durationLabel.getText().replaceAll("[1-9]", "0");
-            FontMetrics m = durationLabel.getFontMetrics(globalFont);
-            Dimension d = new Dimension(m.stringWidth(t) + 2, durationLabel.getHeight());
-            currTimeLabel.setPreferredSize(d);
-            durationLabel.setPreferredSize(d);
+            // 更新时间标签
+            updateTimeLabel();
         });
         // 错误处理
         mp.setOnError(() -> {
