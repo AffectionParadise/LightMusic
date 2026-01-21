@@ -1,5 +1,7 @@
 package net.doge.model.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.doge.constant.media.Format;
 import net.doge.model.entity.base.MusicResource;
 import net.doge.util.common.StringUtil;
@@ -9,21 +11,25 @@ import java.io.File;
 
 public class AudioFile extends File implements MusicResource {
     // 格式
+    @Getter
+    @Setter
     private String format;
     // 曲名
+    @Getter
+    @Setter
     private String songName;
     // 艺术家
+    @Getter
+    @Setter
     private String artist;
     // 专辑
+    @Getter
+    @Setter
     private String album;
     // 时长
+    @Getter
+    @Setter
     private double duration;
-//    // 流派
-//    private String genre;
-//    // 注释
-//    private String comment;
-//    // 版权
-//    private String copyright;
 
     public AudioFile(String path) {
         super(path);
@@ -72,14 +78,6 @@ public class AudioFile extends File implements MusicResource {
         return Format.FLAC.equalsIgnoreCase(format);
     }
 
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
     public boolean hasArtist() {
         return StringUtil.notEmpty(artist);
     }
@@ -92,64 +90,12 @@ public class AudioFile extends File implements MusicResource {
         return duration != 0;
     }
 
-    public String getSongName() {
-        return songName;
-    }
-
-    public void setSongName(String songName) {
-        this.songName = songName;
-    }
-
-    public String getArtist() {
-        return artist;
-    }
-
-    public void setArtist(String artist) {
-        this.artist = artist;
-    }
-
-    public String getAlbum() {
-        return album;
-    }
-
-    public void setAlbum(String album) {
-        this.album = album;
-    }
-
-    public double getDuration() {
-        return duration;
-    }
-
-    public void setDuration(double duration) {
-        this.duration = duration;
-    }
-
-//    public String getGenre() {
-//        return genre;
-//    }
-//
-//    public void setGenre(String genre) {
-//        this.genre = genre;
-//    }
-//
-//    public String getComment() {
-//        return comment;
-//    }
-//
-//    public void setComment(String comment) {
-//        this.comment = comment;
-//    }
-//
-//    public String getCopyright() {
-//        return copyright;
-//    }
-//
-//    public void setCopyright(String copyright) {
-//        this.copyright = copyright;
-//    }
-
     public String toKeywords() {
         return songName
                 + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
+    }
+
+    public File toLrcFile() {
+        return new File(FileUtil.getPathWithoutSuffix(this) + ".lrc");
     }
 }

@@ -126,6 +126,8 @@ public class MediaUtil {
         String artist = mediaInfo.getArtist();
         String albumName = mediaInfo.getAlbum();
         String genre = mediaInfo.getGenre();
+        String lyrics = mediaInfo.getLyrics();
+        String lyricist = mediaInfo.getLyricist();
         String comment = mediaInfo.getComment();
         String recordLabel = mediaInfo.getRecordLabel();
         BufferedImage albumImg = mediaInfo.getAlbumImage();
@@ -139,6 +141,8 @@ public class MediaUtil {
             tag.setField(FieldKey.ARTIST, artist);
             tag.setField(FieldKey.ALBUM, albumName);
             tag.setField(FieldKey.GENRE, genre);
+            tag.setField(FieldKey.LYRICS, lyrics);
+            tag.setField(FieldKey.LYRICIST, lyricist);
             tag.setField(FieldKey.COMMENT, comment);
             tag.setField(FieldKey.RECORD_LABEL, recordLabel);
 
@@ -230,16 +234,37 @@ public class MediaUtil {
             Tag tag = af.getTagOrCreateAndSetDefault();
 
             String genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
+            String lyrics = StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICS));
+            String lyricist = StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICIST));
             String comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));
             String recordLabel = StringUtil.fixEncoding(tag.getFirst(FieldKey.RECORD_LABEL));
 
             mediaInfo.setGenre(genre);
+            mediaInfo.setLyrics(lyrics);
+            mediaInfo.setLyricist(lyricist);
             mediaInfo.setComment(comment);
             mediaInfo.setRecordLabel(recordLabel);
         } catch (Exception e) {
 
         }
         return mediaInfo;
+    }
+
+    /**
+     * 读取音频文件内嵌歌词
+     *
+     * @param source
+     * @return
+     */
+    public static String getEmbeddedLyric(AudioFile source) {
+        try {
+            org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(source);
+            Tag tag = af.getTagOrCreateAndSetDefault();
+
+            return StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICS));
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     /**

@@ -158,7 +158,6 @@ public class StringTwoColor {
                     g1.drawString(str, widthDrawn, dy);
                     g2.drawString(str, widthDrawn, dy);
                     int strWidth = metricsBig[j].stringWidth(str);
-//                        blockList.add(new CharBlock(widthDrawn, strWidth));
                     widthDrawn += strWidth;
                     i += chars.length - 1;
                     break;
@@ -254,28 +253,39 @@ public class StringTwoColor {
      * 根据歌词时间计算比率
      *
      * @param currTime  当前播放时间
-     * @param startTime 当行歌词起始时间
+     * @param lineStartTime 当行歌词起始时间
      * @return
      */
-    public double calcRatio(double currTime, double startTime) {
+    public double calcRatio(double currTime, double lineStartTime) {
         int currTimeMs = (int) (currTime * 1000);
-        int startTimeMs = (int) (startTime * 1000);
+        int lineStartTimeMs = (int) (lineStartTime * 1000);
 
-        int lineCurrTimeMs = currTimeMs - startTimeMs;
+        int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
 
         int wordStartIndex = ListUtil.biSearchLeft(wordStartList, lineCurrTimeMs);
         if (wordStartIndex < 0) return 0;
+//        wStartIndex = wordStartIndex;
         int wordStart = wordStartList.get(wordStartIndex);
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         // 部分情况有 NAN 值
         if (wordRatio != wordRatio) wordRatio = 1;
+//        wRatio = wordRatio;
         double currWidth = ListUtil.rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
         int totalWidth = width - 2 * shadowHOffset;
         // 防止整句比率超出
         double ratio = Math.min(1, currWidth / totalWidth);
         return ratio;
     }
+
+//    private double wRatio;
+//    private int wStartIndex;
+//
+//    private int getWordOffsetY(int x1, int x2, double wRatio) {
+//        double h = 10, x = x1 + (x2 - x1) * wRatio, c = (double) (x1 + x2) / 2;
+//        if (x >= x1 && x <= c) return (int) (2 * h / (x2 - x1) * (x - x1));
+//        else return (int) (2 * h / (x2 - x1) * (x2 - x));
+//    }
 
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
@@ -287,6 +297,10 @@ public class StringTwoColor {
         Graphics2D g2d = buffImg.createGraphics();
 
         if (ratio > 0) {
+//            if (wStartIndex - 1 >= 0) {
+//                int x1 = wordDurationList.get(wStartIndex - 1) + shadowHOffset, x2 = wordDurationList.get(wStartIndex) + shadowHOffset;
+//                g2d.translate(0, -getWordOffsetY(x1, x2, wRatio));
+//            }
             // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
             g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
             g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
@@ -307,36 +321,9 @@ public class StringTwoColor {
 
         cropImg();
         makeIcon();
-//        } else {
-//            int o = (int) (shadowHOffset + pw * this.ratio + 0.5);
-//            Graphics2D g2d = buffImg.createGraphics();
-//            if (this.ratio < ratio) {
-//                // 清除图像区域为透明
-//                clearRect(g2d, o, 0, t - o, height);
-//                // 将 buffImg 的需要更新的部分用 buffImg1 的对应部分替换
-//                g2d.drawImage(buffImg1, o, 0, t, height, o, 0, t, height, null);
-////                g2d.drawImage(buffImg1, o, 0, t, height - dropOffset, o, 0, t, height - dropOffset, null);
-//            } else if (this.ratio > ratio) {
-//                // 清除图像区域为透明
-//                clearRect(g2d, t, 0, o - t, height);
-//                // 将 buffImg 的需要更新的部分用 buffImg2 的对应部分替换
-//                g2d.drawImage(buffImg2, t, 0, o, height, t, 0, o, height, null);
-////                g2d.drawImage(buffImg2, t, 0, o, height - dropOffset, t, 0, o, height - dropOffset, null);
-//            }
-//            g2d.dispose();
-//        }
+
         this.ratio = ratio;
     }
-
-//    // 清除图像区域为透明
-//    private void clearRect(Graphics2D g2d, int x, int y, int w, int h) {
-
-    /// /        if (x < 0) return;
-//        Composite oc = g2d.getComposite();
-//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR));
-//        g2d.fillRect(x, y, w, h);
-//        g2d.setComposite(oc);
-//    }
 
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {

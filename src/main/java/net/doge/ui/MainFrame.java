@@ -21179,23 +21179,26 @@ public class MainFrame extends JFrame {
         int state = -1;
         boolean isFile = musicInfo == null;
 
-        // 从文件读取歌词
+        // 本地音乐歌词
         if (isFile) {
-            File lrcFile = new File(FileUtil.getPathWithoutSuffix(file) + ".lrc");
-            if (lrcFile.exists()) {
-                // 翻译同原歌词
-                lrcData = new LrcData(lrcFile);
-                if (lrcData.isEmpty()) {
-                    statements = new LrcData(lrcFile, true).getStatements();
-                    state = BAD_FORMAT;
-                } else statements = lrcData.getStatements();
-                // 繁体转换
-                if (lyricType == LyricType.TRADITIONAL_CN)
-                    for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
-                    // 罗马音转换
-                else if (lyricType == LyricType.ROMA)
-                    for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
-            } else state = NO_LRC;
+            File lrcFile = file.toLrcFile();
+            boolean exists = lrcFile.exists();
+            String embeddedLyric = null;
+            // 从歌词文件读取歌词，若不存在，读取内嵌歌词
+            lrcData = exists ? new LrcData(lrcFile) : new LrcData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
+            // 首次读取为空，说明歌词格式不正确或者歌词为空
+            if (lrcData.isEmpty()) {
+                statements = exists ? new LrcData(lrcFile, true).getStatements()
+                        : new LrcData(embeddedLyric, true).getStatements();
+                // 再次读取为空，说明歌词为空
+                state = statements.isEmpty() ? NO_LRC : BAD_FORMAT;
+            } else statements = lrcData.getStatements();
+            // 繁体转换
+            if (lyricType == LyricType.TRADITIONAL_CN)
+                for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
+                // 罗马音转换
+            else if (lyricType == LyricType.ROMA)
+                for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
         }
         // 在线音乐歌词
         else {

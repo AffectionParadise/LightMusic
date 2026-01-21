@@ -24,6 +24,10 @@ public class MediaInfo {
     private String comment;
     // 厂牌
     private String recordLabel;
+    // 歌词
+    private String lyrics;
+    // 作词
+    private String lyricist;
     // 封面图片
     private BufferedImage albumImage;
     // 格式

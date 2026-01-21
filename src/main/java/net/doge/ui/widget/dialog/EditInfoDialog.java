@@ -61,6 +61,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(I18n.getText("fileAlbum")),
             new CustomLabel(I18n.getText("coverImg")),
             new CustomLabel(I18n.getText("genre")),
+            new CustomLabel(I18n.getText("lyrics")),
+            new CustomLabel(I18n.getText("lyricist")),
             new CustomLabel(I18n.getText("fileComment")),
             new CustomLabel(I18n.getText("recordLabel")),
     };
@@ -80,6 +82,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomTextField(columns),
             new DialogButton(I18n.getText("browseImg")),
 //            comboBox,
+            new CustomTextField(columns),
+            new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns)
@@ -132,8 +136,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 mediaInfo.setAlbum((String) results[9]);
                 mediaInfo.setAlbumImage((BufferedImage) results[10]);
                 mediaInfo.setGenre((String) results[11]);
-                mediaInfo.setComment((String) results[12]);
-                mediaInfo.setRecordLabel((String) results[13]);
+                mediaInfo.setLyrics((String) results[12]);
+                mediaInfo.setLyricist((String) results[13]);
+                mediaInfo.setComment((String) results[14]);
+                mediaInfo.setRecordLabel((String) results[15]);
                 mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file, mediaInfo);
                 // 歌曲信息更改后重新填充
@@ -159,7 +165,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
     }
 
     private void initView() {
-        centerPanel.setLayout(new GridLayout(7, 2));
+        centerPanel.setLayout(new GridLayout(8, 2));
 
         // 获得传入的歌曲信息
         String fileName = HtmlUtil.wrapLineByWidth(file.getName(), 300);
@@ -175,6 +181,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
         BufferedImage albumImage = MediaUtil.getAlbumImage(file);
         MediaInfo extraMediaInfo = MediaUtil.getExtraMediaInfo(file);
         String genre = extraMediaInfo.getGenre();
+        String lyrics = extraMediaInfo.getLyrics();
+        String lyricist = extraMediaInfo.getLyricist();
         String comment = extraMediaInfo.getComment();
         String recordLabel = extraMediaInfo.getRecordLabel();
 
@@ -190,8 +198,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[9] = album;
         results[10] = albumImage;
         results[11] = genre;
-        results[12] = comment;
-        results[13] = recordLabel;
+        results[12] = lyrics;
+        results[13] = lyricist;
+        results[14] = comment;
+        results[15] = recordLabel;
 
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 

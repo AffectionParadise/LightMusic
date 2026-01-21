@@ -1,7 +1,6 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Getter;
-import net.doge.constant.ui.Colors;
 import net.doge.constant.ui.SpectrumConstants;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.ColorUtil;
@@ -58,9 +57,10 @@ public class SpectrumPanel extends JPanel {
         Color spectrumColor = f.currUIStyle.getSpectrumColor();
 
         // 频谱渐变
-        GradientPaint groundGP = new GradientPaint(0, 0, spectrumColor, 0, ph, Colors.TRANSPARENT);
+        Color transparentColor = ColorUtil.deriveAlphaColor(spectrumColor, 0);
+        GradientPaint groundGP = new GradientPaint(0, 0, spectrumColor, 0, ph, transparentColor);
         LinearGradientPaint aboveGP = new LinearGradientPaint(0, 0, 0, ph, new float[]{0, 0.5f, 1f},
-                new Color[]{spectrumColor, Colors.TRANSPARENT, ColorUtil.deriveAlphaColor(spectrumColor, 0.3f)});
+                new Color[]{spectrumColor, transparentColor, ColorUtil.deriveAlphaColor(spectrumColor, 0.3f)});
 
         switch (f.currSpecStyle) {
             case SpectrumConstants.GROUND:

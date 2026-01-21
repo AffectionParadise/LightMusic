@@ -499,6 +499,8 @@ public class I18n {
         LANG_MAP.put("fileArtist", new String[]{"艺术家：", "Artist: "});
         LANG_MAP.put("fileAlbum", new String[]{"专辑：", "Album: "});
         LANG_MAP.put("genre", new String[]{"流派：", "Genre: "});
+        LANG_MAP.put("lyrics", new String[]{"歌词：", "Lyrics: "});
+        LANG_MAP.put("lyricist", new String[]{"作词：", "Lyricist: "});
         LANG_MAP.put("fileComment", new String[]{"注释：", "Comment: "});
         LANG_MAP.put("recordLabel", new String[]{"厂牌：", "Record label: "});
         LANG_MAP.put("coverImg", new String[]{"封面图片：", "Cover image: "});
