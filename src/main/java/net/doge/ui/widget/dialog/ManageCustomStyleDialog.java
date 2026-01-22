@@ -315,8 +315,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             }
         });
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
@@ -368,8 +368,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         r.setSelectedColor(st.getSelectedColor());
         r.setTextColor(textColor);
 
-        styleListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
 
         globalPanel.repaint();
     }

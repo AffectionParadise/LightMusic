@@ -104,8 +104,8 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
-        messageScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        messageScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        messageScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        messageScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         FlowLayout fl = new FlowLayout();

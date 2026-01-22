@@ -223,8 +223,8 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(localPlaylistList);
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        sp.setHUI(new ScrollBarUI(scrollBarColor));
-        sp.setVUI(new ScrollBarUI(scrollBarColor));
+        sp.setHBarUI(new ScrollBarUI(scrollBarColor));
+        sp.setVBarUI(new ScrollBarUI(scrollBarColor));
         sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

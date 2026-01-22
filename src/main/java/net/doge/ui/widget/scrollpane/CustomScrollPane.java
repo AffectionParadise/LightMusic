@@ -28,20 +28,20 @@ public class CustomScrollPane extends JScrollPane {
 
         // 滚轮滚动动画
         wheelScrollingTimer = new Timer(0, e -> {
-            int vValue = getVValue();
+            int vValue = getVBarValue();
             if (vValue == scrollingTo) wheelScrollingTimer.stop();
 
             int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / 20);
             setVValue(gap > 0 ? Math.min(scrollingTo, vValue + piece) : Math.max(scrollingTo, vValue - piece));
 
-            if (getVValue() == vValue) wheelScrollingTimer.stop();
+            if (getVBarValue() == vValue) wheelScrollingTimer.stop();
         });
         setWheelScrollingEnabled(false);
         addMouseWheelListener(e -> {
             // 单位滚动长度
             final int scrollAmount = 200;
-            scrollingFrom = getVValue();
-            scrollingTo = e.getWheelRotation() > 0 ? Math.min(getVMax(), scrollingFrom + scrollAmount) : Math.max(getVMin(), scrollingFrom - scrollAmount);
+            scrollingFrom = getVBarValue();
+            scrollingTo = e.getWheelRotation() > 0 ? Math.min(getVBarMax(), scrollingFrom + scrollAmount) : Math.max(getVBarMin(), scrollingFrom - scrollAmount);
             if (scrollingFrom == scrollingTo || wheelScrollingTimer.isRunning()) return;
             wheelScrollingTimer.start();
         });
@@ -57,7 +57,7 @@ public class CustomScrollPane extends JScrollPane {
     }
 
     public boolean setVValue(int value) {
-        if (value < getVMin() || value > getVMax()) return false;
+        if (value < getVBarMin() || value > getVBarMax()) return false;
         verticalScrollBar.setValue(value);
         // 修复某些情况滚动条不显示并且无法滚动
         if (value == 0 && !verticalScrollBar.isShowing()) {
@@ -67,36 +67,40 @@ public class CustomScrollPane extends JScrollPane {
         return true;
     }
 
-    public int getVValue() {
+    public int getVBarValue() {
         return verticalScrollBar.getValue();
     }
 
-    public int getVMax() {
+    public int getVBarMax() {
         return verticalScrollBar.getMaximum();
     }
 
-    public int getVMin() {
+    public int getVBarMin() {
         return verticalScrollBar.getMinimum();
     }
 
-    public void setHUI(ScrollBarUI ui) {
+    public void setHBarUI(ScrollBarUI ui) {
         horizontalScrollBar.setUI(ui);
     }
 
-    public ScrollBarUI getHUI() {
+    public ScrollBarUI getHBarUI() {
         return horizontalScrollBar.getUI();
     }
 
-    public void setVUI(ScrollBarUI ui) {
+    public void setVBarUI(ScrollBarUI ui) {
         verticalScrollBar.setUI(ui);
     }
 
-    public ScrollBarUI getVUI() {
+    public ScrollBarUI getVBarUI() {
         return verticalScrollBar.getUI();
     }
 
     @Override
     protected JViewport createViewport() {
         return new CustomViewport();
+    }
+
+    public Component getViewportView() {
+        return viewport.getView();
     }
 }

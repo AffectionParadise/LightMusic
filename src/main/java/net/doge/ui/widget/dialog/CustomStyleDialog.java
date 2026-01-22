@@ -322,8 +322,8 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        centerScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 

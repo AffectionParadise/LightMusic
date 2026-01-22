@@ -1,4 +1,4 @@
-package net.doge.ui.widget.textfield;
+package net.doge.ui.widget.textarea;
 
 import lombok.Data;
 import net.doge.constant.ui.Fonts;
@@ -9,11 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 
 @Data
-public class CustomTextField extends JTextField {
+public class CustomTextArea extends JTextArea {
     private boolean occupied;
 
-    public CustomTextField(int length) {
-        super(length);
+    public CustomTextArea(int rows, int columns) {
+        super(rows, columns);
         init();
     }
 
@@ -21,11 +21,11 @@ public class CustomTextField extends JTextField {
     private void init() {
         setOpaque(false);
         setFocusable(false);
-        setHorizontalAlignment(CENTER);
+        setLineWrap(true);
         setMaximumSize(new Dimension(3000, 30));
         setFont(Fonts.NORMAL);
         Insets insets = getMargin();
-        insets.top = insets.bottom = 2;
+        insets.top = insets.bottom = 8;
         insets.left = insets.right = 5;
 
         addMouseListener(new MouseAdapter() {

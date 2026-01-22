@@ -15,6 +15,7 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.textarea.CustomTextArea;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.common.DurationUtil;
 import net.doge.util.common.HtmlUtil;
@@ -68,7 +69,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
     };
 
     //    private CustomComboBox<String> comboBox = new CustomComboBox<>();
-    private final int columns = 20;
+    private final int rows = 5, columns = 20;
     private final Component[] components = {
             new CustomLabel(),
             new CustomLabel(),
@@ -83,7 +84,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new DialogButton(I18n.getText("browseImg")),
 //            comboBox,
             new CustomTextField(columns),
-            new CustomTextField(columns),
+            new CustomScrollPane(new CustomTextArea(rows, columns)),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns)
@@ -128,6 +129,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 for (int i = 0, size = labels.length; i < size; i++) {
                     if (components[i] instanceof CustomTextField) {
                         results[i] = ((CustomTextField) components[i]).getText();
+                    } else if (components[i] instanceof CustomScrollPane) {
+                        CustomScrollPane sp = (CustomScrollPane) components[i];
+                        CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
+                        results[i] = textArea.getText();
                     }
                 }
                 MediaInfo mediaInfo = new MediaInfo();
@@ -207,6 +212,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         Color textColor = f.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
@@ -226,6 +232,18 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 textField.setSelectedTextColor(textColor);
                 textField.setSelectionColor(darkerTextAlphaColor);
                 textField.setText((String) results[i]);
+            } else if (components[i] instanceof CustomScrollPane) {
+                CustomScrollPane sp = (CustomScrollPane) components[i];
+                sp.setHBarUI(new ScrollBarUI(scrollBarColor));
+                sp.setVBarUI(new ScrollBarUI(scrollBarColor));
+                sp.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+
+                CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
+                textArea.setForeground(textColor);
+                textArea.setCaretColor(textColor);
+                textArea.setSelectedTextColor(textColor);
+                textArea.setSelectionColor(darkerTextAlphaColor);
+                textArea.setText((String) results[i]);
             }
 //            else if (components[i] instanceof CustomComboBox) {
 //                CustomComboBox comboBox = (CustomComboBox) components[i];
@@ -299,9 +317,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
             centerPanel.add(outer);
         }
 
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        centerScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
     }
 }

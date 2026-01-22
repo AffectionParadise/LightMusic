@@ -20,18 +20,18 @@ public class ScrollPaneListener extends MouseAdapter {
         this.sp = sp;
         this.f = f;
         sp.getVerticalScrollBar().addMouseListener(this);
-        sp.getViewport().getView().addMouseListener(this);
+        sp.getViewportView().addMouseListener(this);
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
+        ScrollBarUI ui = (ScrollBarUI) sp.getVBarUI();
         ui.setActive(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        ScrollBarUI ui = (ScrollBarUI) sp.getVUI();
+        ScrollBarUI ui = (ScrollBarUI) sp.getVBarUI();
         ui.setActive(false);
     }
 }

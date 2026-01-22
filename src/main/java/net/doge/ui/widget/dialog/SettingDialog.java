@@ -311,16 +311,16 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, f.currUIStyle));
 
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        generalScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        generalScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
-        playbackScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        playbackScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        generalScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        generalScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        appearanceScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        appearanceScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        downloadAndCacheScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        downloadAndCacheScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        playbackScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        playbackScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        hoyKeyScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        hoyKeyScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
 
         // 标签大小
         Dimension d = new Dimension(120, 40);

@@ -8728,13 +8728,13 @@ public class MainFrame extends JFrame {
         playlistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) playlistDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) playlistDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
 //                if (vs.getValueIsAdjusting()) return;
-                ((ScrollBarUI) playlistDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) playlistDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8774,12 +8774,12 @@ public class MainFrame extends JFrame {
         albumCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) albumDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) albumDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) albumDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) albumDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8819,12 +8819,12 @@ public class MainFrame extends JFrame {
         artistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) artistDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) artistDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) artistDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) artistDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8864,12 +8864,12 @@ public class MainFrame extends JFrame {
         radioCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) radioDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) radioDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) radioDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) radioDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8909,12 +8909,12 @@ public class MainFrame extends JFrame {
         rankingCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) rankingDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) rankingDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) rankingDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) rankingDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8954,12 +8954,12 @@ public class MainFrame extends JFrame {
         userCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -8999,12 +8999,12 @@ public class MainFrame extends JFrame {
         userDescriptionLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) userDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -9044,12 +9044,12 @@ public class MainFrame extends JFrame {
         recommendItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) recommendItemDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -9103,12 +9103,12 @@ public class MainFrame extends JFrame {
         collectionItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -9168,12 +9168,12 @@ public class MainFrame extends JFrame {
         collectionItemDescriptionLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(true);
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVUI()).setActive(false);
+                ((ScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(false);
             }
 
             @Override
@@ -20306,7 +20306,7 @@ public class MainFrame extends JFrame {
                 lrcScrollWaiting = true;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
-                boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVValue() + yOffset);
+                boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVBarValue() + yOffset);
                 dragFrom.x = p.x;
                 // 拖动时超出滚动条范围后不再叠加参数
                 dragFrom.y = ok ? p.y + yOffset : p.y;
@@ -20471,11 +20471,11 @@ public class MainFrame extends JFrame {
                 Rectangle bounds = lrcList.getCellBounds(row, row);
                 if (bounds == null) return;
                 Insets insets = lrcScrollPane.getInsets();
-                int val = lrcScrollPane.getVValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
+                int val = lrcScrollPane.getVBarValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
                         + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / 20);
                 int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
                 lrcScrollPane.setVValue(nv);
-                if (nv == dVal || lrcScrollPane.getVValue() == val) lrcScrollAnimation = false;
+                if (nv == dVal || lrcScrollPane.getVBarValue() == val) lrcScrollAnimation = false;
 //                });
             }
         });
@@ -21378,7 +21378,7 @@ public class MainFrame extends JFrame {
                 while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() - lrcOffset) {
                     row = nextLrc;
                     if (!lrcScrollAnimation && !lrcScrollWaiting) {
-                        currScrollVal = lrcScrollPane.getVValue();
+                        currScrollVal = lrcScrollPane.getVBarValue();
                         if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
                     }
                     LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
@@ -22949,29 +22949,29 @@ public class MainFrame extends JFrame {
         this.playQueueRenderer = playQueueRenderer;
 
         // 歌单/专辑/歌手/电台/榜单描述
-        playlistDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        playlistDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        playlistDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        playlistDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        albumDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        albumDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        albumDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        albumDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        artistDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        artistDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        artistDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        artistDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        radioDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        radioDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        radioDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        radioDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        rankingDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        rankingDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        rankingDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        rankingDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        userDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        userDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        userDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        userDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        recommendItemDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        recommendItemDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        recommendItemDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        recommendItemDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
-        collectionItemDescriptionScrollPane.setHUI(new ScrollBarUI(scrollBarColor, false));
-        collectionItemDescriptionScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        collectionItemDescriptionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor, false));
+        collectionItemDescriptionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
         // 描述收藏按钮
         playlistDescriptionCollectionButton.setForeground(textColor);
@@ -23017,71 +23017,71 @@ public class MainFrame extends JFrame {
         collectionItemDescriptionLabel.setForeground(textColor);
 
         // 滚动面板消除边框、自定义样式
-        musicScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        musicScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        musicScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        musicScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 关键词面板列表滚动面板消除边框、自定义样式
-        netMusicKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netMusicKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netMusicKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netMusicKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线音乐列表滚动面板消除边框、自定义样式
-        netMusicScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netMusicScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netMusicScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netMusicScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 歌单关键词面板列表滚动面板消除边框、自定义样式
-        netPlaylistKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netPlaylistKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线歌单滚动面板消除边框、自定义样式
-        netPlaylistScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netPlaylistScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netPlaylistScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 专辑关键词面板列表滚动面板消除边框、自定义样式
-        netAlbumKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netAlbumKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netAlbumKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netAlbumKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线专辑滚动面板消除边框、自定义样式
-        netAlbumScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netAlbumScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netAlbumScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netAlbumScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 歌手关键词面板列表滚动面板消除边框、自定义样式
-        netArtistKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netArtistKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netArtistKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netArtistKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线歌手滚动面板消除边框、自定义样式
-        netArtistScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netArtistScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netArtistScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netArtistScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 电台关键词面板列表滚动面板消除边框、自定义样式
-        netRadioKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netRadioKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netRadioKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netRadioKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线电台滚动面板消除边框、自定义样式
-        netRadioScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netRadioScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netRadioScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netRadioScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // MV 关键词面板列表滚动面板消除边框、自定义样式
-        netMvKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netMvKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netMvKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netMvKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线 MV 滚动面板消除边框、自定义样式
-        netMvScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netMvScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netMvScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netMvScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 榜单滚动面板消除边框、自定义样式
-        netRankingScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netRankingScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netRankingScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netRankingScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 用户关键词面板列表滚动面板消除边框、自定义样式
-        netUserKeywordsPanelScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netUserKeywordsPanelScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netUserKeywordsPanelScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netUserKeywordsPanelScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 在线用户滚动面板消除边框、自定义样式
-        netUserScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netUserScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netUserScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netUserScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 评论滚动面板消除边框、自定义样式
-        netCommentScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netCommentScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netCommentScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netCommentScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 乐谱滚动面板消除边框、自定义样式
-        netSheetScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        netSheetScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        netSheetScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        netSheetScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 推荐滚动面板消除边框、自定义样式
-        itemRecommendScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        itemRecommendScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        itemRecommendScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        itemRecommendScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 收藏滚动面板消除边框、自定义样式
-        collectionScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        collectionScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        collectionScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        collectionScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 下载滚动面板消除边框、自定义样式
-        downloadListScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        downloadListScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        downloadListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        downloadListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         // 播放队列滚动面板消除边框、自定义样式
-        playQueueScrollPane.setHUI(new ScrollBarUI(scrollBarColor));
-        playQueueScrollPane.setVUI(new ScrollBarUI(scrollBarColor));
+        playQueueScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
+        playQueueScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
 
         // 歌词高亮显示
         LrcListRenderer lrcListRenderer = new LrcListRenderer();
@@ -23092,7 +23092,7 @@ public class MainFrame extends JFrame {
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new ListUI(-1));  // 歌词禁用字体透明，需要用到自定义 List
 
-        lrcScrollPane.setVUI(new ScrollBarUI(scrollBarColor, false));
+        lrcScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor, false));
 
         // 进度条和控制面板透明
         timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
@@ -23598,7 +23598,7 @@ public class MainFrame extends JFrame {
             else continue;
             row = nextLrc - 1;
             if (!lrcScrollAnimation) {
-                currScrollVal = lrcScrollPane.getVValue();
+                currScrollVal = lrcScrollPane.getVBarValue();
                 lrcScrollAnimation = true;
             }
             LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
