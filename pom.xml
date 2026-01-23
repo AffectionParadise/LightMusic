@@ -14,8 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--        <jfx.version>17.0.16</jfx.version>-->
-        <!--        <mp3agic.version>0.9.1</mp3agic.version>-->
-        <jaudiotagger.version>2.0.3</jaudiotagger.version>
+        <jaudiotagger.version>3.0.1</jaudiotagger.version>
         <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <filters.version>2.0.235-1</filters.version>
@@ -62,28 +61,12 @@
         <!--            <version>${jfx.version}</version>-->
         <!--        </dependency>-->
 
-        <!--        &lt;!&ndash; mp3agic 读取 mp3 时长备选方案 &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>com.mpatric</groupId>-->
-        <!--            <artifactId>mp3agic</artifactId>-->
-        <!--            <version>${mp3agic.version}</version>-->
-        <!--        </dependency>-->
-
-        <!-- jaudiotagger 读取和写入媒体信息 -->
+        <!-- jaudiotagger 读取和写入媒体信息(该包是原版的重制版，支持更多功能，api 有所变化) -->
         <dependency>
-            <groupId>org</groupId>
+            <groupId>net.jthink</groupId>
             <artifactId>jaudiotagger</artifactId>
             <version>${jaudiotagger.version}</version>
         </dependency>
-
-        <!-- jave 读取媒体文件时长 -->
-        <!--        <dependency>-->
-        <!--            <groupId>jave</groupId>-->
-        <!--            <artifactId>jave</artifactId>-->
-        <!--            <version>1.0.2</version>-->
-        <!--            <scope>system</scope>-->
-        <!--            <systemPath>${project.basedir}/lib/jave-1.0.2.jar</systemPath>-->
-        <!--        </dependency>-->
 
         <!-- 图片主色调提取 -->
         <!--        <dependency>-->

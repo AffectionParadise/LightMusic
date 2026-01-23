@@ -494,15 +494,21 @@ public class I18n {
         LANG_MAP.put("creationTime", new String[]{"创建时间：", "Creation time: "});
         LANG_MAP.put("modificationTime", new String[]{"修改时间：", "Modification time: "});
         LANG_MAP.put("accessTime", new String[]{"访问时间：", "Access time: "});
-        LANG_MAP.put("duration", new String[]{"时长：", "Duration: "});
+        LANG_MAP.put("fileDuration", new String[]{"时长：", "Duration: "});
         LANG_MAP.put("fileTitle", new String[]{"标题：", "Title: "});
         LANG_MAP.put("fileArtist", new String[]{"艺术家：", "Artist: "});
         LANG_MAP.put("fileAlbum", new String[]{"专辑：", "Album: "});
-        LANG_MAP.put("genre", new String[]{"流派：", "Genre: "});
-        LANG_MAP.put("lyrics", new String[]{"歌词：", "Lyrics: "});
-        LANG_MAP.put("lyricist", new String[]{"作词：", "Lyricist: "});
+        LANG_MAP.put("fileGenre", new String[]{"流派：", "Genre: "});
+        LANG_MAP.put("fileLyrics", new String[]{"歌词：", "Lyrics: "});
+        LANG_MAP.put("fileLyricist", new String[]{"作词：", "Lyricist: "});
         LANG_MAP.put("fileComment", new String[]{"注释：", "Comment: "});
-        LANG_MAP.put("recordLabel", new String[]{"厂牌：", "Record label: "});
+        LANG_MAP.put("fileRecordLabel", new String[]{"厂牌：", "Record label: "});
+        LANG_MAP.put("fileMood", new String[]{"情绪：", "Mood: "});
+        LANG_MAP.put("fileOccasion", new String[]{"场合：", "Occasion: "});
+        LANG_MAP.put("fileLanguage", new String[]{"语言：", "Language: "});
+        LANG_MAP.put("fileCountry", new String[]{"地区：", "Country: "});
+        LANG_MAP.put("fileVersion", new String[]{"版本：", "Version: "});
+        LANG_MAP.put("fileCopyright", new String[]{"版权：", "Copyright: "});
         LANG_MAP.put("coverImg", new String[]{"封面图片：", "Cover image: "});
         LANG_MAP.put("save", new String[]{"保存", "Save"});
 

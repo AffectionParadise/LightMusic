@@ -20,14 +20,26 @@ public class MediaInfo {
     private String album;
     // 流派
     private String genre;
-    // 注释
-    private String comment;
-    // 厂牌
-    private String recordLabel;
     // 歌词
     private String lyrics;
     // 作词
     private String lyricist;
+    // 注释
+    private String comment;
+    // 厂牌
+    private String recordLabel;
+    // 情绪
+    private String mood;
+    // 场合
+    private String occasion;
+    // 语言
+    private String language;
+    // 地区
+    private String country;
+    // 版本
+    private String version;
+    // 版权
+    private String copyright;
     // 封面图片
     private BufferedImage albumImage;
     // 格式

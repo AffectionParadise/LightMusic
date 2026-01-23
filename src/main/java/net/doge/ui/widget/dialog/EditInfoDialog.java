@@ -56,16 +56,22 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(I18n.getText("creationTime")),
             new CustomLabel(I18n.getText("modificationTime")),
             new CustomLabel(I18n.getText("accessTime")),
-            new CustomLabel(I18n.getText("duration")),
+            new CustomLabel(I18n.getText("fileDuration")),
             new CustomLabel(I18n.getText("fileTitle")),
             new CustomLabel(I18n.getText("fileArtist")),
             new CustomLabel(I18n.getText("fileAlbum")),
             new CustomLabel(I18n.getText("coverImg")),
-            new CustomLabel(I18n.getText("genre")),
-            new CustomLabel(I18n.getText("lyrics")),
-            new CustomLabel(I18n.getText("lyricist")),
+            new CustomLabel(I18n.getText("fileGenre")),
+            new CustomLabel(I18n.getText("fileLyrics")),
+            new CustomLabel(I18n.getText("fileLyricist")),
             new CustomLabel(I18n.getText("fileComment")),
-            new CustomLabel(I18n.getText("recordLabel")),
+            new CustomLabel(I18n.getText("fileRecordLabel")),
+            new CustomLabel(I18n.getText("fileMood")),
+            new CustomLabel(I18n.getText("fileOccasion")),
+            new CustomLabel(I18n.getText("fileLanguage")),
+            new CustomLabel(I18n.getText("fileCountry")),
+            new CustomLabel(I18n.getText("fileVersion")),
+            new CustomLabel(I18n.getText("fileCopyright")),
     };
 
     //    private CustomComboBox<String> comboBox = new CustomComboBox<>();
@@ -85,6 +91,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
 //            comboBox,
             new CustomTextField(columns),
             new CustomScrollPane(new CustomTextArea(rows, columns)),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns)
@@ -145,6 +157,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 mediaInfo.setLyricist((String) results[13]);
                 mediaInfo.setComment((String) results[14]);
                 mediaInfo.setRecordLabel((String) results[15]);
+                mediaInfo.setMood((String) results[16]);
+                mediaInfo.setOccasion((String) results[17]);
+                mediaInfo.setLanguage((String) results[18]);
+                mediaInfo.setCountry((String) results[19]);
+                mediaInfo.setVersion((String) results[20]);
+                mediaInfo.setCopyright((String) results[21]);
                 mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file, mediaInfo);
                 // 歌曲信息更改后重新填充
@@ -170,7 +188,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
     }
 
     private void initView() {
-        centerPanel.setLayout(new GridLayout(8, 2));
+        centerPanel.setLayout(new GridLayout(11, 2));
 
         // 获得传入的歌曲信息
         String fileName = HtmlUtil.wrapLineByWidth(file.getName(), 300);
@@ -190,6 +208,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String lyricist = extraMediaInfo.getLyricist();
         String comment = extraMediaInfo.getComment();
         String recordLabel = extraMediaInfo.getRecordLabel();
+        String mood = extraMediaInfo.getMood();
+        String occasion = extraMediaInfo.getOccasion();
+        String language = extraMediaInfo.getLanguage();
+        String country = extraMediaInfo.getCountry();
+        String version = extraMediaInfo.getVersion();
+        String copyright = extraMediaInfo.getCopyright();
 
         results[0] = fileName;
         results[1] = filePath;
@@ -207,6 +231,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[13] = lyricist;
         results[14] = comment;
         results[15] = recordLabel;
+        results[16] = mood;
+        results[17] = occasion;
+        results[18] = language;
+        results[19] = country;
+        results[20] = version;
+        results[21] = copyright;
 
         Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
 
