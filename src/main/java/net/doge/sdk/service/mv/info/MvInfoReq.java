@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.info;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.service.NetMusicSource;

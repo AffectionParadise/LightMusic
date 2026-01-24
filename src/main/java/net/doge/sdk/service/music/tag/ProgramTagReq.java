@@ -1,7 +1,7 @@
 package net.doge.sdk.service.music.tag;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

@@ -1,7 +1,7 @@
 package net.doge.entity.core.ui;
 
 import lombok.Data;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.style.UIStyleConstants;
 import net.doge.util.common.StringUtil;

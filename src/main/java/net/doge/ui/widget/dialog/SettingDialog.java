@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.media.VideoQuality;

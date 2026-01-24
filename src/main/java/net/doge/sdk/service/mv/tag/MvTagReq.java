@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.tag;
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;

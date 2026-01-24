@@ -2,7 +2,7 @@ package net.doge.ui.widget.dialog;
 
 import cn.hutool.http.HttpRequest;
 import lombok.Getter;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.os.SimplePath;

@@ -10,7 +10,7 @@ import javafx.scene.media.MediaException;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.util.Duration;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;

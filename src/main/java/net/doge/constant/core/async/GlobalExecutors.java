@@ -1,4 +1,4 @@
-package net.doge.async;
+package net.doge.constant.core.async;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -12,7 +12,7 @@ public class GlobalExecutors {
     // 下载任务(大小由设置决定)
     public static ExecutorService downloadExecutor;
     // 请求
-    public static ExecutorService requestExecutor = Executors.newFixedThreadPool(12);
+    public static final ExecutorService requestExecutor = Executors.newFixedThreadPool(12);
     // 图片加载
-    public static ExecutorService imageExecutor = Executors.newFixedThreadPool(5);
+    public static final ExecutorService imageExecutor = Executors.newFixedThreadPool(5);
 }

@@ -3,7 +3,7 @@ package net.doge.sdk.service.album.search;
 import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;

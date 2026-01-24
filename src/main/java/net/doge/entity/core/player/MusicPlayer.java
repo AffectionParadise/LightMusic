@@ -9,7 +9,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Data;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.player.PlayerStatus;

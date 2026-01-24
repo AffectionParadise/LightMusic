@@ -17,7 +17,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.config.ConfigConstants;
 import net.doge.constant.core.data.HistorySearchType;
 import net.doge.constant.core.data.Tags;
@@ -2498,10 +2498,9 @@ public class MainFrame extends JFrame {
                     desktopLyricDialog.setVisible(showDesktopLyric);
             }
         });
-        // 窗口圆角
+        // 窗口圆角前置调用
         setDefaultLookAndFeelDecorated(true);
-        // 窗口透明
-        // 存在性能问题，别用
+        // 窗口透明(存在性能问题，别用)
 //        setBackground(Colors.TRANSPARENT);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
@@ -23697,7 +23696,7 @@ public class MainFrame extends JFrame {
             // 暗角滤镜
             if (darkerOn) img = ImageUtil.darker(img);
             // 设置圆角
-//                img = ImageUtils.setRadius(img, WIN_ARC);
+//            img = ImageUtil.radius(img, WIN_ARC);
             globalPanel.setBgImg(img);
             updateUpperComp();
             globalPanel.setOnImgScaledReady(() -> {

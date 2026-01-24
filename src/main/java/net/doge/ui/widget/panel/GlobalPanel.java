@@ -138,6 +138,7 @@ public class GlobalPanel extends JPanel {
 
         if (bgImg == null) return;
 
+//        int pw = getWidth() - 2 * pixels, ph = getHeight() - 2 * pixels;
         int pw = getWidth(), ph = getHeight();
         Graphics2D g2d = (Graphics2D) g;
 
@@ -155,10 +156,12 @@ public class GlobalPanel extends JPanel {
             if (lImg != null) {
                 if (opacity < 1) {
                     // 宽高设置为组件的宽高，observer 设置成组件就可以自适应
+//                    g2d.drawImage(lImg, pixels, pixels, pw, ph, this);
                     g2d.drawImage(lImg, 0, 0, pw, ph, this);
                     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
                 } else lImg = null;
             }
+//            g2d.drawImage(bgImg, pixels, pixels, pw, ph, this);
             g2d.drawImage(bgImg, 0, 0, pw, ph, this);
         }
 

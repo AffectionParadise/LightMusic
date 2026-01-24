@@ -1,7 +1,7 @@
 package net.doge.sdk.service.album.menu;
 
 import cn.hutool.http.HttpRequest;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;

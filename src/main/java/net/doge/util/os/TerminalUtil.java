@@ -1,7 +1,7 @@
 package net.doge.util.os;
 
 import cn.hutool.core.util.RuntimeUtil;
-import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.meta.SoftInfo;
 import net.doge.util.common.LogUtil;
 
