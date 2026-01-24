@@ -1,8 +1,8 @@
 package net.doge.ui.widget.dialog.factory;
 
-import net.doge.constant.ui.BlurConstants;
-import net.doge.constant.ui.ImageConstants;
-import net.doge.model.ui.UIStyle;
+import net.doge.constant.core.ui.image.BlurConstants;
+import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.panel.GlobalPanel;
 import net.doge.util.ui.ImageUtil;

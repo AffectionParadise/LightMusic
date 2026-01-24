@@ -1,7 +1,7 @@
 package net.doge.ui.widget.textarea;
 
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 
 import javax.swing.*;

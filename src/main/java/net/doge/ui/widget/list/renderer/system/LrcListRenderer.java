@@ -1,9 +1,9 @@
 package net.doge.ui.widget.list.renderer.system;
 
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
-import net.doge.constant.ui.LyricAlignment;
-import net.doge.model.lyric.Statement;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.lyric.LyricAlignment;
+import net.doge.entity.core.lyric.Statement;
 import net.doge.ui.widget.label.ui.LabelUI;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;

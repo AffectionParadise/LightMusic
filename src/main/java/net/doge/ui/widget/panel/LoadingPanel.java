@@ -1,6 +1,6 @@
 package net.doge.ui.widget.panel;
 
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.util.ui.ImageUtil;

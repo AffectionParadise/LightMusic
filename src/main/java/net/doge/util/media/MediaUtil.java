@@ -1,9 +1,9 @@
 package net.doge.util.media;
 
-import net.doge.constant.core.SimplePath;
-import net.doge.model.entity.AudioFile;
-import net.doge.model.entity.MediaInfo;
-import net.doge.model.entity.NetMusicInfo;
+import net.doge.constant.core.os.SimplePath;
+import net.doge.entity.service.AudioFile;
+import net.doge.entity.service.MediaInfo;
+import net.doge.entity.service.NetMusicInfo;
 import net.doge.util.common.LogUtil;
 import net.doge.util.common.StringUtil;
 import net.doge.util.os.FileUtil;

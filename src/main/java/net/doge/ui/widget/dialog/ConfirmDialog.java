@@ -1,7 +1,7 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
-import net.doge.constant.ui.Colors;
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;

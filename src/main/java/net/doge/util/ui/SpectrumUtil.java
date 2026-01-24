@@ -1,7 +1,7 @@
 package net.doge.util.ui;
 
-import net.doge.constant.ui.SpectrumConstants;
-import net.doge.model.player.MusicPlayer;
+import net.doge.constant.core.ui.spectrum.SpectrumConstants;
+import net.doge.entity.core.player.MusicPlayer;
 
 /**
  * @Author Doge

@@ -1,7 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Data;
-import net.doge.constant.ui.SlideFrom;
+import net.doge.constant.core.ui.pane.SlideFrom;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

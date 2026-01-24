@@ -2,10 +2,10 @@ package net.doge.ui.widget.list.renderer.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
-import net.doge.model.core.ChoosableListItem;
-import net.doge.model.entity.LocalPlaylist;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.HtmlUtil;
 

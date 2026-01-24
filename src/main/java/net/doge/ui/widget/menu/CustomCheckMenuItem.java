@@ -1,6 +1,6 @@
 package net.doge.ui.widget.menu;
 
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 
 import javax.swing.*;
 import java.awt.*;

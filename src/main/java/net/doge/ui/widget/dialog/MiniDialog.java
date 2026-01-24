@@ -1,14 +1,14 @@
 package net.doge.ui.widget.dialog;
 
-import net.doge.constant.lang.I18n;
-import net.doge.constant.ui.Colors;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.dialog.factory.AbstractMiniDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

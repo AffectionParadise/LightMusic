@@ -1,10 +1,10 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
-import net.doge.constant.lang.I18n;
-import net.doge.constant.ui.Colors;
-import net.doge.model.color.HSL;
-import net.doge.model.color.HSV;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.entity.core.color.HSL;
+import net.doge.entity.core.color.HSV;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.combobox.CustomComboBox;

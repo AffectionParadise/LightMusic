@@ -2,18 +2,18 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.media.AudioQuality;
-import net.doge.constant.model.NetMusicSource;
-import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.ui.RendererConstants;
-import net.doge.model.entity.NetMusicInfo;
-import net.doge.model.player.MusicPlayer;
+import net.doge.constant.core.media.AudioQuality;
+import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.constant.core.ui.list.RendererConstants;
+import net.doge.constant.service.NetMusicSource;
+import net.doge.entity.core.player.MusicPlayer;
+import net.doge.entity.service.NetMusicInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.DurationUtil;
 import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

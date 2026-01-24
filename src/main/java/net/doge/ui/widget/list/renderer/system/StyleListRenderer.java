@@ -1,10 +1,10 @@
 package net.doge.ui.widget.list.renderer.system;
 
 import lombok.Data;
-import net.doge.constant.lang.I18n;
-import net.doge.constant.ui.Fonts;
-import net.doge.constant.ui.RendererConstants;
-import net.doge.model.ui.UIStyle;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.list.RendererConstants;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;

@@ -1,7 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Getter;
-import net.doge.constant.ui.SpectrumConstants;
+import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.ColorUtil;
 

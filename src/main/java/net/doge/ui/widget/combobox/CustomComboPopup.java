@@ -1,6 +1,6 @@
 package net.doge.ui.widget.combobox;
 
-import net.doge.constant.ui.Colors;
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;

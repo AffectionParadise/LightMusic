@@ -2,17 +2,17 @@ package net.doge.ui.widget.list.renderer.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
-import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.ui.RendererConstants;
-import net.doge.model.entity.NetMvInfo;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.constant.core.ui.list.RendererConstants;
+import net.doge.entity.service.NetMvInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.DurationUtil;
 import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.LangUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

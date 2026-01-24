@@ -1,7 +1,7 @@
 package net.doge.ui.widget.button;
 
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.util.common.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 

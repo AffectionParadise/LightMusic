@@ -1,8 +1,8 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Setter;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;

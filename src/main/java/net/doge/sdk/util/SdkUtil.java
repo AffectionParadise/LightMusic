@@ -5,7 +5,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.ui.ImageConstants;
+import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.common.JsonUtil;
 import net.doge.util.common.StringUtil;

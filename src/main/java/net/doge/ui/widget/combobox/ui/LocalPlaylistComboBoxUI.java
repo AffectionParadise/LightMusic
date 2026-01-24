@@ -1,6 +1,6 @@
 package net.doge.ui.widget.combobox.ui;
 
-import net.doge.model.entity.LocalPlaylist;
+import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;

@@ -3,7 +3,7 @@ package net.doge.ui.widget.list.renderer.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.model.entity.*;
+import net.doge.entity.service.*;
 
 import javax.swing.*;
 import java.awt.*;

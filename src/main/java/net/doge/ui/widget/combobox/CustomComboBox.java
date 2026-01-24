@@ -1,7 +1,7 @@
 package net.doge.ui.widget.combobox;
 
 import lombok.Getter;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;
 

@@ -2,19 +2,19 @@ package net.doge.ui.widget.list.renderer.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.task.TaskStatus;
-import net.doge.constant.task.TaskType;
-import net.doge.constant.ui.Fonts;
-import net.doge.constant.ui.ImageConstants;
-import net.doge.constant.ui.RendererConstants;
-import net.doge.model.task.Task;
+import net.doge.constant.core.task.TaskStatus;
+import net.doge.constant.core.task.TaskType;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.constant.core.ui.list.RendererConstants;
+import net.doge.entity.core.task.Task;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
 import net.doge.util.common.HtmlUtil;
 import net.doge.util.common.StringUtil;
-import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 

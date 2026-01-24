@@ -2,15 +2,13 @@ package net.doge.ui.widget.dialog;
 
 import cn.hutool.http.HttpRequest;
 import lombok.Getter;
-import net.doge.constant.async.GlobalExecutors;
-import net.doge.constant.core.SimplePath;
-import net.doge.constant.lang.I18n;
-import net.doge.constant.meta.SoftInfo;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
+import net.doge.async.GlobalExecutors;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.meta.SoftInfo;
+import net.doge.constant.core.os.SimplePath;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.exception.InvalidPackageFileException;
-import net.doge.sdk.core.listener.DownloadListener;
-import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
@@ -19,6 +17,8 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
 import net.doge.util.common.CryptoUtil;
+import net.doge.util.common.NetUtil;
+import net.doge.util.common.listener.DownloadListener;
 import net.doge.util.os.FileUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -128,7 +128,7 @@ public class UpdateDialog extends AbstractShadowDialog {
             Document doc = Jsoup.parse(releaseBody);
             Element a = doc.select("li a").first();
             String url = "https://github.com" + a.attr("href");
-            MusicServerUtil.download(url, dest, new DownloadListener() {
+            NetUtil.download(url, dest, new DownloadListener() {
                 @Override
                 public void progress(long finishedSize, long totalSize) {
                     msgLabel.setText(String.format(DOWNLOAD_MSG + "(%s / %s)", FileUtil.getUnitString(finishedSize), FileUtil.getUnitString(totalSize)));

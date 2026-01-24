@@ -1,61 +1,58 @@
 package net.doge.sdk.util;
 
-import net.doge.model.entity.*;
-import net.doge.model.entity.base.NetResource;
-import net.doge.sdk.common.CommonResult;
-import net.doge.sdk.core.DownloadReq;
-import net.doge.sdk.core.MottoReq;
-import net.doge.sdk.core.listener.DownloadListener;
-import net.doge.sdk.entity.album.info.AlbumInfoReq;
-import net.doge.sdk.entity.album.menu.AlbumMenuReq;
-import net.doge.sdk.entity.album.rcmd.NewAlbumReq;
-import net.doge.sdk.entity.album.search.AlbumSearchReq;
-import net.doge.sdk.entity.album.tag.NewAlbumTagReq;
-import net.doge.sdk.entity.artist.info.ArtistInfoReq;
-import net.doge.sdk.entity.artist.menu.ArtistMenuReq;
-import net.doge.sdk.entity.artist.rcmd.ArtistListReq;
-import net.doge.sdk.entity.artist.search.ArtistSearchReq;
-import net.doge.sdk.entity.artist.tag.ArtistTagReq;
-import net.doge.sdk.entity.comment.CommentReq;
-import net.doge.sdk.entity.music.info.MusicInfoReq;
-import net.doge.sdk.entity.music.info.MusicUrlReq;
-import net.doge.sdk.entity.music.menu.MusicMenuReq;
-import net.doge.sdk.entity.music.rcmd.HotMusicRecommendReq;
-import net.doge.sdk.entity.music.rcmd.NewMusicReq;
-import net.doge.sdk.entity.music.rcmd.RecommendProgramReq;
-import net.doge.sdk.entity.music.search.HotSearchReq;
-import net.doge.sdk.entity.music.search.MusicSearchReq;
-import net.doge.sdk.entity.music.search.SearchSuggestionReq;
-import net.doge.sdk.entity.music.tag.HotSongTagReq;
-import net.doge.sdk.entity.music.tag.MusicSearchTagReq;
-import net.doge.sdk.entity.music.tag.NewSongTagReq;
-import net.doge.sdk.entity.music.tag.ProgramTagReq;
-import net.doge.sdk.entity.mv.info.MvInfoReq;
-import net.doge.sdk.entity.mv.menu.MvMenuReq;
-import net.doge.sdk.entity.mv.rcmd.RecommendMvReq;
-import net.doge.sdk.entity.mv.search.MvSearchReq;
-import net.doge.sdk.entity.mv.tag.MvTagReq;
-import net.doge.sdk.entity.playlist.info.PlaylistInfoReq;
-import net.doge.sdk.entity.playlist.menu.PlaylistMenuReq;
-import net.doge.sdk.entity.playlist.rcmd.HighQualityPlaylistReq;
-import net.doge.sdk.entity.playlist.rcmd.RecommendPlaylistReq;
-import net.doge.sdk.entity.playlist.search.PlaylistSearchReq;
-import net.doge.sdk.entity.playlist.tag.HotPlaylistTagReq;
-import net.doge.sdk.entity.playlist.tag.RecPlaylistTagReq;
-import net.doge.sdk.entity.radio.info.RadioInfoReq;
-import net.doge.sdk.entity.radio.menu.RadioMenuReq;
-import net.doge.sdk.entity.radio.rcmd.HotRadioReq;
-import net.doge.sdk.entity.radio.rcmd.NewRadioReq;
-import net.doge.sdk.entity.radio.search.RadioSearchReq;
-import net.doge.sdk.entity.radio.tag.HotRadioTagReq;
-import net.doge.sdk.entity.ranking.info.RankingInfoReq;
-import net.doge.sdk.entity.ranking.search.RankingSearchReq;
-import net.doge.sdk.entity.sheet.SheetReq;
-import net.doge.sdk.entity.user.info.UserInfoReq;
-import net.doge.sdk.entity.user.menu.UserMenuReq;
-import net.doge.sdk.entity.user.search.UserSearchReq;
+import net.doge.entity.service.*;
+import net.doge.entity.service.base.NetResource;
+import net.doge.sdk.common.entity.CommonResult;
+import net.doge.sdk.service.album.info.AlbumInfoReq;
+import net.doge.sdk.service.album.menu.AlbumMenuReq;
+import net.doge.sdk.service.album.rcmd.NewAlbumReq;
+import net.doge.sdk.service.album.search.AlbumSearchReq;
+import net.doge.sdk.service.album.tag.NewAlbumTagReq;
+import net.doge.sdk.service.artist.info.ArtistInfoReq;
+import net.doge.sdk.service.artist.menu.ArtistMenuReq;
+import net.doge.sdk.service.artist.rcmd.ArtistListReq;
+import net.doge.sdk.service.artist.search.ArtistSearchReq;
+import net.doge.sdk.service.artist.tag.ArtistTagReq;
+import net.doge.sdk.service.comment.CommentReq;
+import net.doge.sdk.service.motto.MottoReq;
+import net.doge.sdk.service.music.info.MusicInfoReq;
+import net.doge.sdk.service.music.info.MusicUrlReq;
+import net.doge.sdk.service.music.menu.MusicMenuReq;
+import net.doge.sdk.service.music.rcmd.HotMusicRecommendReq;
+import net.doge.sdk.service.music.rcmd.NewMusicReq;
+import net.doge.sdk.service.music.rcmd.RecommendProgramReq;
+import net.doge.sdk.service.music.search.HotSearchReq;
+import net.doge.sdk.service.music.search.MusicSearchReq;
+import net.doge.sdk.service.music.search.SearchSuggestionReq;
+import net.doge.sdk.service.music.tag.HotSongTagReq;
+import net.doge.sdk.service.music.tag.MusicSearchTagReq;
+import net.doge.sdk.service.music.tag.NewSongTagReq;
+import net.doge.sdk.service.music.tag.ProgramTagReq;
+import net.doge.sdk.service.mv.info.MvInfoReq;
+import net.doge.sdk.service.mv.menu.MvMenuReq;
+import net.doge.sdk.service.mv.rcmd.RecommendMvReq;
+import net.doge.sdk.service.mv.search.MvSearchReq;
+import net.doge.sdk.service.mv.tag.MvTagReq;
+import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
+import net.doge.sdk.service.playlist.menu.PlaylistMenuReq;
+import net.doge.sdk.service.playlist.rcmd.HighQualityPlaylistReq;
+import net.doge.sdk.service.playlist.rcmd.RecommendPlaylistReq;
+import net.doge.sdk.service.playlist.search.PlaylistSearchReq;
+import net.doge.sdk.service.playlist.tag.HotPlaylistTagReq;
+import net.doge.sdk.service.playlist.tag.RecPlaylistTagReq;
+import net.doge.sdk.service.radio.info.RadioInfoReq;
+import net.doge.sdk.service.radio.menu.RadioMenuReq;
+import net.doge.sdk.service.radio.rcmd.HotRadioReq;
+import net.doge.sdk.service.radio.rcmd.NewRadioReq;
+import net.doge.sdk.service.radio.search.RadioSearchReq;
+import net.doge.sdk.service.radio.tag.HotRadioTagReq;
+import net.doge.sdk.service.ranking.info.RankingInfoReq;
+import net.doge.sdk.service.ranking.search.RankingSearchReq;
+import net.doge.sdk.service.sheet.SheetReq;
+import net.doge.sdk.service.user.info.UserInfoReq;
+import net.doge.sdk.service.user.menu.UserMenuReq;
+import net.doge.sdk.service.user.search.UserSearchReq;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -789,40 +786,5 @@ public class MusicServerUtil {
      */
     public static void fillLrc(NetMusicInfo musicInfo) {
         MusicInfoReq.getInstance().fillLrc(musicInfo);
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param url
-     * @param dest
-     * @throws Exception
-     */
-    public static void download(String url, String dest, Map<String, String> headers) throws Exception {
-        download(url, dest, headers, null);
-    }
-
-    /**
-     * 下载文件
-     *
-     * @param url
-     * @param dest
-     * @throws Exception
-     */
-    public static void download(String url, String dest, DownloadListener listener) throws Exception {
-        download(url, dest, null, listener);
-    }
-
-    /**
-     * 下载文件，监听下载进度
-     *
-     * @param url
-     * @param dest
-     * @param headers
-     * @param listener
-     * @throws Exception
-     */
-    public static void download(String url, String dest, Map<String, String> headers, DownloadListener listener) throws Exception {
-        DownloadReq.getInstance().download(url, dest, headers, listener);
     }
 }

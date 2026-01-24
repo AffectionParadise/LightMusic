@@ -1,9 +1,9 @@
 package net.doge.ui.widget.dialog;
 
-import net.doge.constant.lang.I18n;
-import net.doge.constant.model.UIStyleConstants;
-import net.doge.constant.ui.Colors;
-import net.doge.model.ui.UIStyle;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleConstants;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;

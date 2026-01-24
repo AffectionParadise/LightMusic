@@ -1,6 +1,6 @@
 package net.doge.util.common;
 
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;

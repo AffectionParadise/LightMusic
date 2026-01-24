@@ -1,8 +1,8 @@
 package net.doge.ui.widget.slider.ui;
 
 import javafx.scene.media.MediaPlayer;
-import net.doge.constant.lang.I18n;
-import net.doge.model.player.MusicPlayer;
+import net.doge.constant.core.lang.I18n;
+import net.doge.entity.core.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.TipDialog;
 import net.doge.util.common.DurationUtil;

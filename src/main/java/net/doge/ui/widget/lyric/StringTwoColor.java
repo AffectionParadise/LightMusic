@@ -1,10 +1,10 @@
 package net.doge.ui.widget.lyric;
 
 import lombok.Data;
-import net.doge.constant.lyric.LyricPattern;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
-import net.doge.model.lyric.Statement;
+import net.doge.constant.core.lyric.LyricPattern;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.entity.core.lyric.Statement;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.common.RegexUtil;

@@ -1,8 +1,8 @@
 package net.doge.ui.widget.dialog;
 
-import net.doge.constant.lang.I18n;
-import net.doge.constant.ui.Colors;
-import net.doge.model.entity.LocalPlaylist;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;

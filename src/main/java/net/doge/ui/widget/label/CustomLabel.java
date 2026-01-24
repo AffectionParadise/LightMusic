@@ -2,7 +2,7 @@ package net.doge.ui.widget.label;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 
 import javax.swing.*;
 import java.awt.*;

@@ -6,11 +6,12 @@ import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.*;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
-import net.doge.constant.media.Format;
-import net.doge.constant.ui.BlurConstants;
-import net.doge.constant.ui.Colors;
+import net.doge.constant.core.media.Format;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.util.common.LogUtil;
 import net.doge.util.common.StringUtil;
+import net.doge.util.ui.quantizer.MMCQ;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;

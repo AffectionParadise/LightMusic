@@ -1,6 +1,6 @@
 package net.doge.ui.widget.dialog.factory;
 
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;

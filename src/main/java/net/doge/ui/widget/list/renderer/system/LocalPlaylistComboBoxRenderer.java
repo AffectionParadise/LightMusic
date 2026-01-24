@@ -3,8 +3,8 @@ package net.doge.ui.widget.list.renderer.system;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.doge.constant.ui.Fonts;
-import net.doge.model.entity.LocalPlaylist;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 

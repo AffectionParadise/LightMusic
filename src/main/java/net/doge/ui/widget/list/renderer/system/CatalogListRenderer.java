@@ -2,7 +2,7 @@ package net.doge.ui.widget.list.renderer.system;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.common.HtmlUtil;

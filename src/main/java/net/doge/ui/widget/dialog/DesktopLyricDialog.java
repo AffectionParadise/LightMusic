@@ -1,18 +1,18 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
-import net.doge.constant.lang.I18n;
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
-import net.doge.model.lyric.Statement;
-import net.doge.model.ui.UIStyle;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
+import net.doge.entity.core.lyric.Statement;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.lmdata.LMIconManager;
+import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

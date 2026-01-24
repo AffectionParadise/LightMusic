@@ -1,18 +1,18 @@
 package net.doge.ui.widget.dialog;
 
-import net.doge.constant.lang.I18n;
-import net.doge.constant.tab.PersonalMusicTabIndex;
-import net.doge.constant.ui.Colors;
-import net.doge.model.core.ChoosableListItem;
-import net.doge.model.entity.AudioFile;
-import net.doge.model.entity.LocalPlaylist;
-import net.doge.model.entity.NetMusicInfo;
-import net.doge.model.entity.base.MusicResource;
+import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.tab.PersonalMusicTabIndex;
+import net.doge.entity.service.AudioFile;
+import net.doge.entity.service.LocalPlaylist;
+import net.doge.entity.service.NetMusicInfo;
+import net.doge.entity.service.base.MusicResource;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
+import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.list.renderer.system.LocalPlaylistListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;

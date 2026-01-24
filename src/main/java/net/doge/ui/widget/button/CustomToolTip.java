@@ -1,7 +1,7 @@
 package net.doge.ui.widget.button;
 
-import net.doge.constant.ui.Colors;
-import net.doge.constant.ui.Fonts;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.core.Fonts;
 
 import javax.swing.*;
 import javax.swing.border.Border;
