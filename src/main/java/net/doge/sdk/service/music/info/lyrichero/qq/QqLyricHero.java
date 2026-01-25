@@ -8,7 +8,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.lyrichero.qq.decoder.QrcDecoder;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

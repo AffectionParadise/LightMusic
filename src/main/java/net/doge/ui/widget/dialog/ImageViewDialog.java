@@ -15,9 +15,9 @@ import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.SafeDocument;
+import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -242,7 +242,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             showImg(p = results.total);
         });
         // 页数框
-        pageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        pageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         pageTextField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {

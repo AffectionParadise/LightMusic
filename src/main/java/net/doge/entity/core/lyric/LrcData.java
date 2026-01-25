@@ -2,10 +2,10 @@ package net.doge.entity.core.lyric;
 
 import lombok.Data;
 import net.doge.constant.core.lyric.LyricPattern;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.LrcUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.DurationUtil;
+import net.doge.util.core.LrcUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.os.FileUtil;
 
 import java.io.File;

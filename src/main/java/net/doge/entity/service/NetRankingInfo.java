@@ -3,7 +3,7 @@ package net.doge.entity.service;
 import lombok.Data;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.NetResource;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

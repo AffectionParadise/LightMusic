@@ -1,4 +1,4 @@
-package net.doge.ui.widget.list.renderer.system;
+package net.doge.ui.widget.list.renderer.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

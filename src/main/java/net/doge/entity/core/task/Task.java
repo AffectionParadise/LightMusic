@@ -11,8 +11,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.sdk.util.MusicServerUtil;
-import net.doge.util.common.NetUtil;
-import net.doge.util.common.listener.DownloadListener;
+import net.doge.util.core.NetUtil;
+import net.doge.util.core.listener.DownloadListener;
 import net.doge.util.os.FileUtil;
 
 import javax.swing.*;

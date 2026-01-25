@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import java.util.List;
 

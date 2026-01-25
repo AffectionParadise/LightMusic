@@ -4,7 +4,7 @@ import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;
-import net.doge.ui.widget.list.renderer.system.LocalPlaylistComboBoxRenderer;
+import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
 
 import java.awt.*;
 

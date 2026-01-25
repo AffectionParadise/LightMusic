@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.trackhero.qq.entity.QQualityEntry;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.JsonUtil;
+import net.doge.util.core.StringUtil;
 
 import java.util.HashMap;
 import java.util.Map;

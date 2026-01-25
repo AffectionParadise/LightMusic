@@ -10,8 +10,8 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
-import net.doge.util.common.HtmlUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

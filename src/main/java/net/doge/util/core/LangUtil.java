@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import com.moji4j.MojiConverter;

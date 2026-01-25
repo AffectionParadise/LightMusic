@@ -1,8 +1,8 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.util.common.LangUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.LangUtil;
+import net.doge.util.core.StringUtil;
 
 import java.awt.image.BufferedImage;
 

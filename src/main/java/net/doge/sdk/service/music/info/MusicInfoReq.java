@@ -20,7 +20,7 @@ import net.doge.sdk.service.music.info.lyrichero.mg.MgLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.nc.NcLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.qq.QqLyricHero;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;

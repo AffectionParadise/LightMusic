@@ -1,7 +1,7 @@
 package net.doge.util.lmdata;
 
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.util.common.CryptoUtil;
+import net.doge.util.core.CryptoUtil;
 import net.doge.util.os.FileUtil;
 
 import java.io.File;

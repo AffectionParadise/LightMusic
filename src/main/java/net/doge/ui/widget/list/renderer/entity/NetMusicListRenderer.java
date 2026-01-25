@@ -10,9 +10,9 @@ import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.HtmlUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.DurationUtil;
+import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 

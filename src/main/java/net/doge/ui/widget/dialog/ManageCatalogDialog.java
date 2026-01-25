@@ -9,11 +9,11 @@ import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
-import net.doge.ui.widget.list.renderer.system.CatalogListRenderer;
+import net.doge.ui.widget.list.renderer.core.CatalogListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
-import net.doge.util.common.LogUtil;
+import net.doge.util.core.LogUtil;
 
 import javax.swing.*;
 import java.awt.*;

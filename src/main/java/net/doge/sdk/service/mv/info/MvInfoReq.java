@@ -12,7 +12,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.TimeUtil;
+import net.doge.util.core.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;

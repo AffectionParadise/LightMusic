@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.util.common.JsonUtil;
+import net.doge.util.core.JsonUtil;
 
 import java.util.HashMap;
 import java.util.Map;

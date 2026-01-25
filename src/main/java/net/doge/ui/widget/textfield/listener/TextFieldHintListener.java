@@ -2,7 +2,7 @@ package net.doge.ui.widget.textfield.listener;
 
 import lombok.Data;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;

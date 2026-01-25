@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import cn.hutool.core.util.URLUtil;
 

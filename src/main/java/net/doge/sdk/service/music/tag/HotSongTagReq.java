@@ -11,8 +11,8 @@ import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
+import net.doge.util.core.JsonUtil;
+import net.doge.util.core.RegexUtil;
 
 import java.util.LinkedList;
 import java.util.List;

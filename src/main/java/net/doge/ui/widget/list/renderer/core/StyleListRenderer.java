@@ -1,4 +1,4 @@
-package net.doge.ui.widget.list.renderer.system;
+package net.doge.ui.widget.list.renderer.core;
 
 import lombok.Data;
 import net.doge.constant.core.lang.I18n;
@@ -8,8 +8,8 @@ import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.HtmlUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -18,7 +18,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -1015,7 +1015,7 @@ public class RecommendMvReq {
                 else {
                     for (int i = as.size() - 1; i >= 0; i--) {
                         String ts = as.get(i).text();
-                        if (!NumUtil.isNumber(ts)) continue;
+                        if (!StringUtil.isNumber(ts)) continue;
                         t = Integer.parseInt(ts) * limit;
                         break;
                     }
@@ -1071,7 +1071,7 @@ public class RecommendMvReq {
                 else {
                     for (int i = as.size() - 1; i >= 0; i--) {
                         String ts = as.get(i).text();
-                        if (!NumUtil.isNumber(ts)) continue;
+                        if (!StringUtil.isNumber(ts)) continue;
                         t = Integer.parseInt(ts) * limit;
                         break;
                     }

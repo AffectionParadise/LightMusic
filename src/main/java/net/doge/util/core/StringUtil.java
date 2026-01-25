@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import cn.hutool.core.util.StrUtil;
 import net.doge.util.collection.ArrayUtil;
@@ -64,6 +64,30 @@ public class StringUtil {
     public static String shortenBlank(String s) {
         if (s == null) return s;
         return s.replaceAll(" +", " ");
+    }
+
+    /**
+     * 判断字符串是否为纯数字
+     *
+     * @param s
+     * @return
+     */
+    public static boolean isNumber(String s) {
+        return StrUtil.isNumeric(s);
+    }
+
+    /**
+     * 转为数字
+     *
+     * @param s
+     * @return
+     */
+    public static int toNumber(String s) {
+        try {
+            return Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     /**

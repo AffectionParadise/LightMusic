@@ -1,13 +1,12 @@
-package net.doge.ui.widget.textfield;
+package net.doge.ui.widget.textfield.document;
 
-import net.doge.util.common.NumUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class SafeDocument extends PlainDocument {
+public class LimitedDocument extends PlainDocument {
     // 数值范围限制
     private int min;
     private int max;
@@ -18,13 +17,13 @@ public class SafeDocument extends PlainDocument {
     private int lengthLimit;
     private boolean lengthLimited;
 
-    public SafeDocument(int lengthLimit) {
+    public LimitedDocument(int lengthLimit) {
         this.lengthLimit = lengthLimit;
         lengthLimited = true;
     }
 
-    public SafeDocument(int min, int max) {
-        this(NumUtil.bit(max));
+    public LimitedDocument(int min, int max) {
+        this(Math.max(String.valueOf(min).length(), String.valueOf(max).length()));
         this.min = min;
         this.max = max;
         numberRequired = ranged = true;
@@ -38,10 +37,10 @@ public class SafeDocument extends PlainDocument {
         String ns = StringUtil.insert(text, offs, str);
 
         // 数字
-        if (numberRequired && !NumUtil.isNumber(ns)) return;
+        if (numberRequired && !StringUtil.isNumber(ns)) return;
         // 数值范围
         if (ranged) {
-            int number = NumUtil.toNumber(ns);
+            int number = StringUtil.toNumber(ns);
             if (min > number || max < number) return;
         }
         // 长度

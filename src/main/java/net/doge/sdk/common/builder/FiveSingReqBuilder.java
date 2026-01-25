@@ -4,9 +4,9 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.UrlUtil;
+import net.doge.util.core.CryptoUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.UrlUtil;
 
 import java.util.Map;
 import java.util.StringJoiner;

@@ -3,8 +3,8 @@ package net.doge.sdk.common.builder;
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.UrlUtil;
+import net.doge.util.core.CryptoUtil;
+import net.doge.util.core.UrlUtil;
 
 public class MiguReqBuilder {
     private static MiguReqBuilder instance;

@@ -13,7 +13,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.HtmlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;

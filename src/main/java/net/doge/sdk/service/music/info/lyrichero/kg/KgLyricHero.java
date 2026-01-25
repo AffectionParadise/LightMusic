@@ -7,7 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

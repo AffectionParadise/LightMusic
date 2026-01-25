@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.core.media.Format;
 import net.doge.entity.service.base.MusicResource;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.os.FileUtil;
 
 import java.io.File;

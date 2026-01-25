@@ -1,4 +1,4 @@
-package net.doge.ui.widget.list.renderer.system;
+package net.doge.ui.widget.list.renderer.core;
 
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
@@ -7,7 +7,7 @@ import net.doge.entity.core.lyric.Statement;
 import net.doge.ui.widget.label.ui.LabelUI;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.HtmlUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;

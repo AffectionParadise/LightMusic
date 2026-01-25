@@ -1,7 +1,7 @@
 package net.doge.util.os;
 
 import com.github.houbb.heaven.util.util.OsUtil;
-import net.doge.util.common.LogUtil;
+import net.doge.util.core.LogUtil;
 
 import java.awt.*;
 import java.io.File;

@@ -1,6 +1,6 @@
 package net.doge.ui;
 
-import net.doge.util.common.LogUtil;
+import net.doge.util.core.LogUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.InsetsUIResource;

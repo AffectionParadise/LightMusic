@@ -9,10 +9,10 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.DurationUtil;
+import net.doge.util.core.JsonUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
 
 import java.util.List;
 import java.util.Map;

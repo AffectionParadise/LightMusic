@@ -6,7 +6,7 @@ import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;

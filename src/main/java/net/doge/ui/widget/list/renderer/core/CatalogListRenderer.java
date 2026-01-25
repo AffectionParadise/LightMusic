@@ -1,11 +1,11 @@
-package net.doge.ui.widget.list.renderer.system;
+package net.doge.ui.widget.list.renderer.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.HtmlUtil;
 
 import javax.swing.*;
 import java.awt.*;

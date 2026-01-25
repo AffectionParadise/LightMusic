@@ -9,8 +9,8 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
-import net.doge.util.common.LogUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.LogUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.quantizer.MMCQ;
 
 import javax.imageio.ImageIO;

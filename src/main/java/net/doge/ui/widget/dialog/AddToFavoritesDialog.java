@@ -13,7 +13,7 @@ import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.entity.ChoosableListItem;
-import net.doge.ui.widget.list.renderer.system.LocalPlaylistListRenderer;
+import net.doge.ui.widget.list.renderer.core.LocalPlaylistListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;

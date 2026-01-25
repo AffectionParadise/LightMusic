@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;

@@ -6,8 +6,8 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
-import net.doge.util.common.HtmlUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.StringUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -4,9 +4,9 @@ import cn.hutool.http.HttpRequest;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.CryptoUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

@@ -2,7 +2,7 @@ package net.doge.sdk.service.motto;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 
 public class MottoReq {
     private static MottoReq instance;

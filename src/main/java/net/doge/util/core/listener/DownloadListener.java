@@ -1,4 +1,4 @@
-package net.doge.util.common.listener;
+package net.doge.util.core.listener;
 
 public interface DownloadListener {
     default void totalSizeInitialized(long totalSize) {

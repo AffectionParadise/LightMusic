@@ -1,4 +1,4 @@
-package net.doge.ui.widget.list.renderer.system;
+package net.doge.ui.widget.list.renderer.core;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +12,8 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
-import net.doge.util.common.HtmlUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;

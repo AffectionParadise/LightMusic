@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.info.trackhero.kw;
 
 import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.util.common.JsonUtil;
+import net.doge.util.core.JsonUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;

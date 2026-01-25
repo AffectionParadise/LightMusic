@@ -5,8 +5,8 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.TipDialog;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.DurationUtil;
+import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 
 import javax.swing.*;

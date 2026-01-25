@@ -9,7 +9,7 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.entity.service.base.NetResource;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 

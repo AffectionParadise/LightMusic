@@ -1,10 +1,10 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import cn.hutool.http.Header;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.util.common.listener.DownloadListener;
+import net.doge.util.core.listener.DownloadListener;
 
 import java.io.*;
 import java.util.Map;

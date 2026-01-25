@@ -6,7 +6,7 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.common.HtmlUtil;
+import net.doge.util.core.HtmlUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 

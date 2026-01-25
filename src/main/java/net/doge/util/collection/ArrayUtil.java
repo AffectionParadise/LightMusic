@@ -1,6 +1,6 @@
 package net.doge.util.collection;
 
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 
 import java.util.Arrays;
 import java.util.Random;

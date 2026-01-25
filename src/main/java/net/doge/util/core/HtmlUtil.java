@@ -1,4 +1,4 @@
-package net.doge.util.common;
+package net.doge.util.core;
 
 import net.doge.constant.core.ui.core.Fonts;
 import org.jsoup.nodes.Element;

@@ -7,10 +7,10 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.common.JsonUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
-import net.doge.util.common.UrlUtil;
+import net.doge.util.core.JsonUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.UrlUtil;
 
 import java.util.*;
 import java.util.concurrent.Callable;

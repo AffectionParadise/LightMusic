@@ -4,7 +4,7 @@ import lombok.Data;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.style.UIStyleConstants;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
 import net.doge.util.ui.ImageUtil;
 

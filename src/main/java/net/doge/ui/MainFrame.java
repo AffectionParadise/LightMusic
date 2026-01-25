@@ -81,9 +81,9 @@ import net.doge.ui.widget.dialog.*;
 import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
+import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
+import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
 import net.doge.ui.widget.list.renderer.entity.*;
-import net.doge.ui.widget.list.renderer.system.DownloadListRenderer;
-import net.doge.ui.widget.list.renderer.system.LrcListRenderer;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.ui.widget.menu.*;
@@ -103,11 +103,11 @@ import net.doge.ui.widget.slider.ui.SliderUI;
 import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.TabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.SafeDocument;
+import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.media.MediaUtil;
@@ -2502,6 +2502,7 @@ public class MainFrame extends JFrame {
         setDefaultLookAndFeelDecorated(true);
         // 窗口透明(存在性能问题，别用)
 //        setBackground(Colors.TRANSPARENT);
+//        AWTUtilities.setWindowOpaque(THIS, false);
         // 窗口大小适应
         addComponentListener(new ComponentAdapter() {
             @Override
@@ -5318,7 +5319,7 @@ public class MainFrame extends JFrame {
 //        collectionPageTextField.addFocusListener(
 //                new JTextFieldHintListener(collectionPageTextField, "", currUIStyle.getForeColor()));
         // 只能输入数字
-        collectionPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        collectionPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
         collectionBackwardButton.addActionListener(e -> {
             collectionBackwardButton.setDrawBg(false);
@@ -7521,7 +7522,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netMusicPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netMusicPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 返回关键词面板事件
         netMusicBackwardButton.addActionListener(e -> {
             netMusicListModel.clear();
@@ -9598,7 +9599,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netPlaylistPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netPlaylistPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netPlaylistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netPlaylistLeftBox.getComponentCount() - 1;
@@ -10608,7 +10609,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netAlbumPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netAlbumPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netAlbumBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netAlbumLeftBox.getComponentCount() - 1;
@@ -11626,7 +11627,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netArtistPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netArtistPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netArtistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netArtistLeftBox.getComponentCount() - 1;
@@ -12880,7 +12881,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netRadioPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netRadioPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRadioBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netRadioLeftBox.getComponentCount() - 1;
@@ -14061,7 +14062,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netMvPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netMvPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 清除输入事件
         netMvClearInputButton.addActionListener(e -> {
             netMvSearchTextField.requestFocus();
@@ -14798,7 +14799,7 @@ public class MainFrame extends JFrame {
     // 初始化榜单工具栏
     private void initNetRankingToolBar() {
         // 只能输入数字
-        netRankingPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netRankingPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRankingBackwardButton.addActionListener(e -> {
             netMusicListForRankingModel.clear();
@@ -15397,7 +15398,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netUserPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netUserPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netUserBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netUserLeftBox.getComponentCount() - 1;
@@ -16758,7 +16759,7 @@ public class MainFrame extends JFrame {
     // 初始化评论工具栏
     private void initNetCommentToolBar() {
         // 只能输入数字
-        netCommentPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netCommentPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
             netCommentBackwardButton.setDrawBg(false);
@@ -17182,7 +17183,7 @@ public class MainFrame extends JFrame {
     // 初始化乐谱工具栏
     private void initNetSheetToolBar() {
         // 只能输入数字
-        netSheetPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netSheetPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
             netSheetBackwardButton.setDrawBg(false);
@@ -17420,7 +17421,7 @@ public class MainFrame extends JFrame {
     // 初始化推荐工具条
     private void initRecommendToolBar() {
         // 只能输入数字
-        netRecommendPageTextField.setDocument(new SafeDocument(0, Integer.MAX_VALUE));
+        netRecommendPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
         recommendBackwardButton.addActionListener(e -> {
             recommendBackwardButton.setDrawBg(false);

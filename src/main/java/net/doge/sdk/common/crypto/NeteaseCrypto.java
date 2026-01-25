@@ -1,8 +1,8 @@
 package net.doge.sdk.common.crypto;
 
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.CryptoUtil;
-import net.doge.util.common.UrlUtil;
+import net.doge.util.core.CryptoUtil;
+import net.doge.util.core.UrlUtil;
 
 import java.nio.charset.StandardCharsets;
 

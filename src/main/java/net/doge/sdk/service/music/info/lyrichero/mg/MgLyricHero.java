@@ -6,9 +6,9 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.lyrichero.mg.decoder.MrcDecoder;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.DurationUtil;
-import net.doge.util.common.RegexUtil;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.DurationUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
 
 import java.util.List;
 

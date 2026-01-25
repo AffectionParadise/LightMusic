@@ -15,8 +15,8 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.ColorSliderUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.SafeDocument;
-import net.doge.util.common.StringUtil;
+import net.doge.ui.widget.textfield.document.LimitedDocument;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -317,7 +317,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         hexTextField.setCaretColor(textColor);
         hexTextField.setSelectedTextColor(textColor);
         hexTextField.setSelectionColor(darkerTextAlphaColor);
-        SafeDocument doc = new SafeDocument(7);
+        LimitedDocument doc = new LimitedDocument(7);
         doc.addDocumentListener(this);
         hexTextField.setDocument(doc);
 
@@ -387,13 +387,13 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         gSlider.setMaximum(max2);
         bSlider.setMaximum(max3);
 
-        SafeDocument doc = new SafeDocument(0, max1);
+        LimitedDocument doc = new LimitedDocument(0, max1);
         doc.addDocumentListener(this);
         rTextField.setDocument(doc);
-        doc = new SafeDocument(0, max2);
+        doc = new LimitedDocument(0, max2);
         doc.addDocumentListener(this);
         gTextField.setDocument(doc);
-        doc = new SafeDocument(0, max3);
+        doc = new LimitedDocument(0, max3);
         doc.addDocumentListener(this);
         bTextField.setDocument(doc);
 
@@ -461,7 +461,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
     private void checkDocument(DocumentEvent e) {
         Document doc = e.getDocument();
-        JTextField tf = null;
+        CustomTextField tf = null;
         boolean d1 = doc == rTextField.getDocument(), d2 = doc == gTextField.getDocument(),
                 d3 = doc == bTextField.getDocument(), d4 = doc == hexTextField.getDocument();
         if (d1) tf = rTextField;

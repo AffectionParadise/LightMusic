@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.info.lyrichero.qq.decoder;
 
 import net.doge.sdk.service.music.info.lyrichero.qq.helper.QrcDecodeHelper;
 import net.doge.util.collection.ArrayUtil;
-import net.doge.util.common.CryptoUtil;
+import net.doge.util.core.CryptoUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;

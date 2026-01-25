@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.info.lyrichero.mg.decoder;
 
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;

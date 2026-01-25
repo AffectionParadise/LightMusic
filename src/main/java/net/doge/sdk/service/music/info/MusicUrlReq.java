@@ -21,7 +21,7 @@ import net.doge.sdk.service.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.service.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.service.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.common.*;
+import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;

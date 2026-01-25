@@ -17,7 +17,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.util.common.StringUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ColorUtil;
