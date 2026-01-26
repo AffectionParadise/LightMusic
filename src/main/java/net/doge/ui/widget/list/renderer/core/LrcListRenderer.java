@@ -12,8 +12,6 @@ import net.doge.util.core.HtmlUtil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Author Doge
@@ -49,7 +47,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //    private CustomLabel lyricLabel = new CustomLabel();
 
     // 上下边缘元素数量
-    public final int edgeCellNum = 3;
+//    public final int edgeCellNum = 3;
     // 高亮最大透明度
     private final float highlightMaxAlpha = 1f;
     // 普通歌词最大最小透明度
@@ -57,7 +55,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     public final float normalMinAlpha = 0.05f;
     private LabelUI labelUI = new LabelUI(normalMaxAlpha);
     private Timer fontTimer;
-    private Map<Integer, Float> alphas = new HashMap<>();
+//    private Map<Integer, Float> alphas = new HashMap<>();
 
     private final int SPACE = 90;
     private final int SPACE_UD = 25;
@@ -123,7 +121,8 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         label.setUI(labelUI);
         if (index == row) labelUI.setAlpha(highlightMaxAlpha);
         else if (index < row) labelUI.setAlpha(normalMinAlpha);
-        else labelUI.setAlpha(alphas.getOrDefault(index, normalMaxAlpha));
+        else labelUI.setAlpha(normalMaxAlpha);
+//        else labelUI.setAlpha(alphas.getOrDefault(index, normalMaxAlpha));
 
         // 高亮的行的样式
         if (index == row) {
