@@ -1,6 +1,7 @@
 package net.doge.ui.widget.button;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
 

@@ -2,6 +2,7 @@ package net.doge.ui.widget.button;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 
@@ -27,17 +28,25 @@ public class DialogButton extends JButton implements MouseListener {
     private static final Border BORDER = BorderFactory.createEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
-        this(null, Colors.WHITE);
+        this(null);
     }
 
-    // 关键词按钮，需显示多种字符
     public DialogButton(String text) {
         this(text, Colors.WHITE);
     }
 
-    // 常规按钮
     public DialogButton(String text, Color foreColor) {
-        super(text);
+        this(text, foreColor, false);
+    }
+
+    // 关键词按钮，需显示多种字符
+    public DialogButton(String text, boolean htmlMode) {
+        this(text, Colors.WHITE, htmlMode);
+    }
+
+    // 常规按钮
+    public DialogButton(String text, Color foreColor, boolean htmlMode) {
+        super(htmlMode ? HtmlUtil.textToHtml(text) : text);
         setForeColor(foreColor);
         init();
     }
@@ -65,11 +74,6 @@ public class DialogButton extends JButton implements MouseListener {
         this.foreColor = foreColor;
         this.foreColorBk = foreColor;
         repaint();
-    }
-
-    @Override
-    public void setText(String text) {
-        super.setText(HtmlUtil.textToHtml(text));
     }
 
     public String getPlainText() {

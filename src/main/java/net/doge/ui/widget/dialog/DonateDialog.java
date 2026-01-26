@@ -67,6 +67,8 @@ public class DonateDialog extends AbstractTitledDialog {
         alipayLabel.setForeground(textColor);
         thankLabel.setForeground(textColor);
 
+        thankLabel.setInstantAlpha(0.8f);
+
         messagePanel.add(messageLabel);
         messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
 

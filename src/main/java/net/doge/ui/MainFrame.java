@@ -3393,7 +3393,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
                     searchTextField.setText(keyword);
@@ -3423,7 +3423,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
                     netPlaylistSearchTextField.setText(keyword);
@@ -3453,7 +3453,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
                     netAlbumSearchTextField.setText(keyword);
@@ -3483,7 +3483,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
                     netArtistSearchTextField.setText(keyword);
@@ -3513,7 +3513,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
                     netRadioSearchTextField.setText(keyword);
@@ -3543,7 +3543,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
                     netMvSearchTextField.setText(keyword);
@@ -3573,7 +3573,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword);
+                DialogButton b = new DialogButton(keyword, true);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
                     netUserSearchTextField.setText(keyword);
@@ -7554,7 +7554,7 @@ public class MainFrame extends JFrame {
             netMusicCurrKeyword = searchTextField.getText().trim();
             if (!netMusicCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netMusicCurrKeyword);
+                DialogButton b = new DialogButton(netMusicCurrKeyword, true);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
                     searchTextField.setText(b.getPlainText());
@@ -9670,7 +9670,7 @@ public class MainFrame extends JFrame {
             netPlaylistCurrKeyword = netPlaylistSearchTextField.getText().trim();
             if (!netPlaylistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netPlaylistCurrKeyword);
+                DialogButton b = new DialogButton(netPlaylistCurrKeyword, true);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
                     netPlaylistSearchTextField.setText(b.getPlainText());
@@ -10675,7 +10675,7 @@ public class MainFrame extends JFrame {
             netAlbumCurrKeyword = netAlbumSearchTextField.getText().trim();
             if (!netAlbumCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netAlbumCurrKeyword);
+                DialogButton b = new DialogButton(netAlbumCurrKeyword, true);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
                     netAlbumSearchTextField.setText(b.getPlainText());
@@ -11700,7 +11700,7 @@ public class MainFrame extends JFrame {
             netArtistCurrKeyword = netArtistSearchTextField.getText().trim();
             if (!netArtistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netArtistCurrKeyword);
+                DialogButton b = new DialogButton(netArtistCurrKeyword, true);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
                     netArtistSearchTextField.setText(b.getPlainText());
@@ -12953,7 +12953,7 @@ public class MainFrame extends JFrame {
             netRadioCurrKeyword = netRadioSearchTextField.getText().trim();
             if (!netRadioCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netRadioCurrKeyword);
+                DialogButton b = new DialogButton(netRadioCurrKeyword, true);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
                     netRadioSearchTextField.setText(b.getPlainText());
@@ -14074,7 +14074,7 @@ public class MainFrame extends JFrame {
             netMvCurrKeyword = netMvSearchTextField.getText().trim();
             if (!netMvCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netMvCurrKeyword);
+                DialogButton b = new DialogButton(netMvCurrKeyword, true);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
                     netMvSearchTextField.setText(b.getPlainText());
@@ -15471,7 +15471,7 @@ public class MainFrame extends JFrame {
             netUserCurrKeyword = netUserSearchTextField.getText().trim();
             if (!netUserCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netUserCurrKeyword);
+                DialogButton b = new DialogButton(netUserCurrKeyword, true);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
                     netUserSearchTextField.setText(b.getPlainText());
@@ -23825,7 +23825,7 @@ public class MainFrame extends JFrame {
                 netMusicSearchSuggestionInnerPanel2.removeAll();
                 DialogButton b = null;
                 for (String keyword : suggestions) {
-                    b = new DialogButton(keyword);
+                    b = new DialogButton(keyword, true);
                     b.addActionListener(event -> {
                         searchTextField.requestFocus();
                         searchTextField.setText(keyword);
@@ -23881,7 +23881,7 @@ public class MainFrame extends JFrame {
                 netMusicHotSearchInnerPanel2.removeAll();
                 DialogButton b = null;
                 for (String keyword : hotSearch) {
-                    b = new DialogButton(keyword);
+                    b = new DialogButton(keyword, true);
                     DialogButton finalB = b;
                     b.addActionListener(event -> {
                         searchTextField.requestFocus();

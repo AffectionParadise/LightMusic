@@ -1,4 +1,4 @@
-package net.doge.ui.widget.scrollpane;
+package net.doge.ui.widget.scrollpane.viewport;
 
 import javax.swing.*;
 

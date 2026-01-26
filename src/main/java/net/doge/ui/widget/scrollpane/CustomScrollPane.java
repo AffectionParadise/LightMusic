@@ -1,6 +1,7 @@
 package net.doge.ui.widget.scrollpane;
 
 import lombok.Getter;
+import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
 
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
