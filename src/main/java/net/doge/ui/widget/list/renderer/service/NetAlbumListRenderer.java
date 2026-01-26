@@ -1,15 +1,14 @@
-package net.doge.ui.widget.list.renderer.entity;
+package net.doge.ui.widget.list.renderer.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
-import net.doge.entity.service.NetRankingInfo;
+import net.doge.entity.service.NetAlbumInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
-import net.doge.util.core.LangUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
@@ -24,7 +23,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class NetRankingListRenderer extends DefaultListCellRenderer {
+public class NetAlbumListRenderer extends DefaultListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
@@ -35,32 +34,32 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
     private CustomPanel outerPanel = new CustomPanel();
     private CustomLabel iconLabel = new CustomLabel();
     private CustomLabel nameLabel = new CustomLabel();
-    private CustomLabel playCountLabel = new CustomLabel();
-    private CustomLabel updateFreLabel = new CustomLabel();
-    private CustomLabel updateTimeLabel = new CustomLabel();
+    private CustomLabel artistLabel = new CustomLabel();
+    private CustomLabel songNumLabel = new CustomLabel();
+    private CustomLabel publishTimeLabel = new CustomLabel();
 
-    private ImageIcon rankingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankingItem"), ImageConstants.MEDIUM_WIDTH));
+    private static ImageIcon albumIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.albumItem"), ImageConstants.MEDIUM_WIDTH));
 
-    public NetRankingListRenderer() {
+    public NetAlbumListRenderer() {
         init();
     }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        rankingIcon = ImageUtil.dye(rankingIcon, iconColor);
+        albumIcon = ImageUtil.dye(albumIcon, iconColor);
     }
 
     private void init() {
         iconLabel.setIconTextGap(0);
 
-        playCountLabel.setFont(tinyFont);
-        updateFreLabel.setFont(tinyFont);
-        updateTimeLabel.setFont(tinyFont);
+        artistLabel.setFont(tinyFont);
+        songNumLabel.setFont(tinyFont);
+        publishTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        playCountLabel.setInstantAlpha(alpha);
-        updateFreLabel.setInstantAlpha(alpha);
-        updateTimeLabel.setInstantAlpha(alpha);
+        artistLabel.setInstantAlpha(alpha);
+        songNumLabel.setInstantAlpha(alpha);
+        publishTimeLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -68,11 +67,11 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
         outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(playCountLabel);
+        outerPanel.add(artistLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(updateFreLabel);
+        outerPanel.add(songNumLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(updateTimeLabel);
+        outerPanel.add(publishTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
         outerPanel.setInstantDrawBg(true);
@@ -80,32 +79,33 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetRankingInfo rankingInfo = (NetRankingInfo) value;
+        NetAlbumInfo albumInfo = (NetAlbumInfo) value;
 
-        iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
+        iconLabel.setIcon(albumInfo.hasCoverImgThumb() ? new ImageIcon(albumInfo.getCoverImgThumb()) : albumIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        playCountLabel.setForeground(textColor);
-        updateFreLabel.setForeground(textColor);
-        updateTimeLabel.setForeground(textColor);
+        artistLabel.setForeground(textColor);
+        songNumLabel.setForeground(textColor);
+        publishTimeLabel.setForeground(textColor);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String playCount = rankingInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(rankingInfo.getPlayCount())) : "";
-        String updateFre = rankingInfo.hasUpdateFre() ? HtmlUtil.textToHtml(rankingInfo.getUpdateFre()) : "";
-        String updateTime = rankingInfo.hasUpdateTime() ? HtmlUtil.textToHtml(rankingInfo.getUpdateTime() + " 更新") : "";
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(albumInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String artist = albumInfo.hasArtist() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
+                StringUtil.shorten(albumInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String songNum = albumInfo.hasSongNum() ? HtmlUtil.textToHtml(albumInfo.isPhoto() ? albumInfo.getSongNum() + " 图片" : albumInfo.getSongNum() + " 歌曲") : "";
+        String publishTime = albumInfo.hasPublishTime() ? HtmlUtil.textToHtml(albumInfo.getPublishTime() + " 发行") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        playCountLabel.setText(playCount);
-        updateFreLabel.setText(updateFre);
-        updateTimeLabel.setText(updateTime);
+        artistLabel.setText(artist);
+        songNumLabel.setText(songNum);
+        publishTimeLabel.setText(publishTime);
 
         list.setFixedCellWidth(pw);
 

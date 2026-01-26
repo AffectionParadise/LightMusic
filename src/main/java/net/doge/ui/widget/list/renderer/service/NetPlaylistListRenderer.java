@@ -1,14 +1,13 @@
-package net.doge.ui.widget.list.renderer.entity;
+package net.doge.ui.widget.list.renderer.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
-import net.doge.entity.service.NetMvInfo;
+import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.LangUtil;
 import net.doge.util.core.StringUtil;
@@ -25,7 +24,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class NetMvListRenderer extends DefaultListCellRenderer {
+public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
@@ -36,35 +35,32 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
     private CustomPanel outerPanel = new CustomPanel();
     private CustomLabel iconLabel = new CustomLabel();
     private CustomLabel nameLabel = new CustomLabel();
-    private CustomLabel artistLabel = new CustomLabel();
-    private CustomLabel durationLabel = new CustomLabel();
+    private CustomLabel creatorLabel = new CustomLabel();
     private CustomLabel playCountLabel = new CustomLabel();
-    private CustomLabel pubTimeLabel = new CustomLabel();
+    private CustomLabel trackCountLabel = new CustomLabel();
 
-    private static ImageIcon mvIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.mvItem"), ImageConstants.MEDIUM_WIDTH));
+    private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playlistItem"), ImageConstants.MEDIUM_WIDTH));
 
-    public NetMvListRenderer() {
+    public NetPlaylistListRenderer() {
         init();
     }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        mvIcon = ImageUtil.dye(mvIcon, iconColor);
+        playlistIcon = ImageUtil.dye(playlistIcon, iconColor);
     }
 
     private void init() {
         iconLabel.setIconTextGap(0);
 
-        artistLabel.setFont(tinyFont);
-        durationLabel.setFont(tinyFont);
+        creatorLabel.setFont(tinyFont);
         playCountLabel.setFont(tinyFont);
-        pubTimeLabel.setFont(tinyFont);
+        trackCountLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        artistLabel.setInstantAlpha(alpha);
-        durationLabel.setInstantAlpha(alpha);
+        creatorLabel.setInstantAlpha(alpha);
         playCountLabel.setInstantAlpha(alpha);
-        pubTimeLabel.setInstantAlpha(alpha);
+        trackCountLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -72,13 +68,11 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
         outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(artistLabel);
+        outerPanel.add(creatorLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(durationLabel);
+        outerPanel.add(trackCountLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(playCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(pubTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
         outerPanel.setInstantDrawBg(true);
@@ -86,35 +80,34 @@ public class NetMvListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetMvInfo mvInfo = (NetMvInfo) value;
+        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
 
-        iconLabel.setIcon(mvInfo.hasCoverImgThumb() ? new ImageIcon(mvInfo.getCoverImgThumb()) : mvIcon);
+        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
+
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        artistLabel.setForeground(textColor);
-        durationLabel.setForeground(textColor);
+        creatorLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
-        pubTimeLabel.setForeground(textColor);
+        trackCountLabel.setForeground(textColor);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String artist = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String duration = HtmlUtil.textToHtml(mvInfo.hasDuration() ? DurationUtil.format(mvInfo.getDuration()) : "--:--");
-        String playCount = mvInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(mvInfo.getPlayCount())) : "";
-        String pubTime = mvInfo.hasPubTime() ? HtmlUtil.textToHtml(mvInfo.getPubTime()) : "";
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String creator = playlistInfo.hasCreator() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
+                StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String playCount = playlistInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(playlistInfo.getPlayCount())) : "";
+        String trackCount = playlistInfo.hasTrackCount() ? HtmlUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        artistLabel.setText(artist);
-        durationLabel.setText(duration);
+        creatorLabel.setText(creator);
         playCountLabel.setText(playCount);
-        pubTimeLabel.setText(pubTime);
+        trackCountLabel.setText(trackCount);
 
         list.setFixedCellWidth(pw);
 

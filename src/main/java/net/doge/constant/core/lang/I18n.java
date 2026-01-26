@@ -318,6 +318,18 @@ public class I18n {
         LANG_MAP.put("sortByLastAccessTime", new String[]{"按访问时间", "By access time"});
         LANG_MAP.put("sortBySize", new String[]{"按大小", "By file size"});
 
+        // 表头
+        LANG_MAP.put("sourceHeader", new String[]{"源", "Source"});
+        LANG_MAP.put("nameHeader", new String[]{"标题", "Title"});
+        LANG_MAP.put("artistHeader", new String[]{"艺术家", "Artist"});
+        LANG_MAP.put("albumHeader", new String[]{"专辑", "Album"});
+        LANG_MAP.put("durationHeader", new String[]{"时长", "Duration"});
+        LANG_MAP.put("typeHeader", new String[]{"类型", "Type"});
+        LANG_MAP.put("sizeHeader", new String[]{"大小", "Size"});
+        LANG_MAP.put("progressHeader", new String[]{"进度", "Progress"});
+        LANG_MAP.put("percentHeader", new String[]{"百分比", "Percent"});
+        LANG_MAP.put("statusHeader", new String[]{"状态", "Status"});
+
         LANG_MAP.put("searchSuggestion", new String[]{"搜索建议", "Suggestion"});
         LANG_MAP.put("hotSearch", new String[]{"热门搜索", "Hot"});
         LANG_MAP.put("historySearch", new String[]{"搜索历史", "History"});

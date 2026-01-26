@@ -83,7 +83,7 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
 import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
-import net.doge.ui.widget.list.renderer.entity.*;
+import net.doge.ui.widget.list.renderer.service.*;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.ui.widget.menu.*;
@@ -1108,6 +1108,13 @@ public class MainFrame extends JFrame {
     private DefaultListModel<MusicResource> musicListModel = currLocalPlaylist.getMusicListModel();
     // 播放历史 ListModel
     public DefaultListModel<MusicResource> historyModel = new DefaultListModel<>();
+    // 个人音乐歌曲表头
+    private CustomPanel musicHeaderPanel = new CustomPanel();
+    private CustomLabel musicSourceHeaderLabel = new CustomLabel(I18n.getText("sourceHeader"));
+    private CustomLabel musicNameHeaderLabel = new CustomLabel(I18n.getText("nameHeader"));
+    private CustomLabel musicArtistHeaderLabel = new CustomLabel(I18n.getText("artistHeader"));
+    private CustomLabel musicAlbumHeaderLabel = new CustomLabel(I18n.getText("albumHeader"));
+    private CustomLabel musicDurationHeaderLabel = new CustomLabel(I18n.getText("durationHeader"));
 
     // 收藏列表
     public CustomList<NetResource> collectionList = new CustomList<>();
@@ -1281,6 +1288,13 @@ public class MainFrame extends JFrame {
     private CustomList<NetMusicInfo> netMusicList = new CustomList<>();
     private CustomScrollPane netMusicScrollPane = new CustomScrollPane(netMusicList);
     private DefaultListModel<NetMusicInfo> netMusicListModel = new DefaultListModel<>();
+    // 在线歌曲表头
+    private CustomPanel netMusicHeaderPanel = new CustomPanel();
+    private CustomLabel netMusicSourceHeaderLabel = new CustomLabel(I18n.getText("sourceHeader"));
+    private CustomLabel netMusicNameHeaderLabel = new CustomLabel(I18n.getText("nameHeader"));
+    private CustomLabel netMusicArtistHeaderLabel = new CustomLabel(I18n.getText("artistHeader"));
+    private CustomLabel netMusicAlbumHeaderLabel = new CustomLabel(I18n.getText("albumHeader"));
+    private CustomLabel netMusicDurationHeaderLabel = new CustomLabel(I18n.getText("durationHeader"));
     // 在线音乐右键弹出菜单
     private CustomPopupMenu netMusicPopupMenu = new CustomPopupMenu(THIS);
     // 在线音乐右键菜单：播放
@@ -1972,6 +1986,15 @@ public class MainFrame extends JFrame {
     private CustomScrollPane downloadListScrollPane = new CustomScrollPane(downloadList);
     // 下载列表 ListModel
     private DefaultListModel<Task> downloadListModel = new DefaultListModel<>();
+    // 下载列表表头
+    private CustomPanel downloadHeaderPanel = new CustomPanel();
+    private CustomLabel downloadIconHeaderLabel = new CustomLabel();
+    private CustomLabel downloadNameHeaderLabel = new CustomLabel(I18n.getText("nameHeader"));
+    private CustomLabel downloadTypeHeaderLabel = new CustomLabel(I18n.getText("typeHeader"));
+    private CustomLabel downloadSizeHeaderLabel = new CustomLabel(I18n.getText("sizeHeader"));
+    private CustomLabel downloadProgressHeaderLabel = new CustomLabel(I18n.getText("progressHeader"));
+    private CustomLabel downloadPercentHeaderLabel = new CustomLabel(I18n.getText("percentHeader"));
+    private CustomLabel downloadStatusHeaderLabel = new CustomLabel(I18n.getText("statusHeader"));
     // 下载右键弹出菜单
     private CustomPopupMenu downloadPopupMenu = new CustomPopupMenu(THIS);
     // 下载右键菜单：播放
@@ -2011,6 +2034,13 @@ public class MainFrame extends JFrame {
     private CustomScrollPane playQueueScrollPane = new CustomScrollPane(playQueue);
     // 播放队列 ListModel
     private DefaultListModel<MusicResource> playQueueModel = new DefaultListModel<>();
+    // 播放队列表头
+    private CustomPanel playQueueHeaderPanel = new CustomPanel();
+    private CustomLabel playQueueSourceHeaderLabel = new CustomLabel(I18n.getText("sourceHeader"));
+    private CustomLabel playQueueNameHeaderLabel = new CustomLabel(I18n.getText("nameHeader"));
+    private CustomLabel playQueueArtistHeaderLabel = new CustomLabel(I18n.getText("artistHeader"));
+    private CustomLabel playQueueAlbumHeaderLabel = new CustomLabel(I18n.getText("albumHeader"));
+    private CustomLabel playQueueDurationHeaderLabel = new CustomLabel(I18n.getText("durationHeader"));
     // 播放队列右键弹出菜单
     private CustomPopupMenu playQueuePopupMenu = new CustomPopupMenu(THIS);
     // 播放队列右键菜单：播放
@@ -7489,6 +7519,32 @@ public class MainFrame extends JFrame {
         musicPopupMenu.add(editInfoMenuItem);
         musicPopupMenu.add(removeMenuItem);
 
+        // 表头
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        musicHeaderPanel.setLayout(layout);
+        musicHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+        float alpha = 0.5f;
+        musicSourceHeaderLabel.setInstantAlpha(alpha);
+        musicNameHeaderLabel.setInstantAlpha(alpha);
+        musicArtistHeaderLabel.setInstantAlpha(alpha);
+        musicAlbumHeaderLabel.setInstantAlpha(alpha);
+        musicDurationHeaderLabel.setInstantAlpha(alpha);
+
+        Font tf = Fonts.NORMAL_TINY;
+        musicSourceHeaderLabel.setFont(tf);
+        musicNameHeaderLabel.setFont(tf);
+        musicArtistHeaderLabel.setFont(tf);
+        musicAlbumHeaderLabel.setFont(tf);
+        musicDurationHeaderLabel.setFont(tf);
+
+        musicHeaderPanel.add(musicSourceHeaderLabel);
+        musicHeaderPanel.add(musicNameHeaderLabel);
+        musicHeaderPanel.add(musicArtistHeaderLabel);
+        musicHeaderPanel.add(musicAlbumHeaderLabel);
+        musicHeaderPanel.add(musicDurationHeaderLabel);
+        musicScrollPane.setColumnHeaderView(musicHeaderPanel);
         // 最佳大小
         musicScrollPane.setPreferredSize(new Dimension(260, 3000));
         leftBox.add(musicScrollPane);
@@ -8634,12 +8690,36 @@ public class MainFrame extends JFrame {
         netMusicScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                // 重新设置 renderer 可以避免 netMusicList 宽度不刷新！
-//                updateRenderer(netMusicList);
-                netMusicScrollPane.setVisible(false);
-                netMusicScrollPane.setVisible(true);
+                // 刷新视口，避免 netMusicList 宽度不刷新！
+                netMusicScrollPane.setViewportView(netMusicScrollPane.getViewportView());
             }
         });
+        // 表头
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        netMusicHeaderPanel.setLayout(layout);
+        netMusicHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+        float alpha = 0.5f;
+        netMusicSourceHeaderLabel.setInstantAlpha(alpha);
+        netMusicNameHeaderLabel.setInstantAlpha(alpha);
+        netMusicArtistHeaderLabel.setInstantAlpha(alpha);
+        netMusicAlbumHeaderLabel.setInstantAlpha(alpha);
+        netMusicDurationHeaderLabel.setInstantAlpha(alpha);
+
+        Font tf = Fonts.NORMAL_TINY;
+        netMusicSourceHeaderLabel.setFont(tf);
+        netMusicNameHeaderLabel.setFont(tf);
+        netMusicArtistHeaderLabel.setFont(tf);
+        netMusicAlbumHeaderLabel.setFont(tf);
+        netMusicDurationHeaderLabel.setFont(tf);
+
+        netMusicHeaderPanel.add(netMusicSourceHeaderLabel);
+        netMusicHeaderPanel.add(netMusicNameHeaderLabel);
+        netMusicHeaderPanel.add(netMusicArtistHeaderLabel);
+        netMusicHeaderPanel.add(netMusicAlbumHeaderLabel);
+        netMusicHeaderPanel.add(netMusicDurationHeaderLabel);
+        netMusicScrollPane.setColumnHeaderView(netMusicHeaderPanel);
         // 在线歌单最佳大小
         netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
         netLeftBox.add(netMusicScrollPane);
@@ -19726,6 +19806,40 @@ public class MainFrame extends JFrame {
         downloadPopupMenu.add(restartTaskMenuItem);
         downloadPopupMenu.add(removeTaskMenuItem);
 
+        // 表头
+        GridLayout layout = new GridLayout(1, 7);
+        layout.setHgap(15);
+        downloadHeaderPanel.setLayout(layout);
+        downloadHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+        float alpha = 0.5f;
+        downloadIconHeaderLabel.setInstantAlpha(alpha);
+        downloadNameHeaderLabel.setInstantAlpha(alpha);
+        downloadTypeHeaderLabel.setInstantAlpha(alpha);
+        downloadSizeHeaderLabel.setInstantAlpha(alpha);
+        downloadProgressHeaderLabel.setInstantAlpha(alpha);
+        downloadPercentHeaderLabel.setInstantAlpha(alpha);
+        downloadStatusHeaderLabel.setInstantAlpha(alpha);
+
+        Font tf = Fonts.NORMAL_TINY;
+        downloadIconHeaderLabel.setFont(tf);
+        downloadNameHeaderLabel.setFont(tf);
+        downloadTypeHeaderLabel.setFont(tf);
+        downloadSizeHeaderLabel.setFont(tf);
+        downloadProgressHeaderLabel.setFont(tf);
+        downloadPercentHeaderLabel.setFont(tf);
+        downloadStatusHeaderLabel.setFont(tf);
+
+        downloadHeaderPanel.add(downloadIconHeaderLabel);
+        downloadHeaderPanel.add(downloadNameHeaderLabel);
+        downloadHeaderPanel.add(downloadTypeHeaderLabel);
+        downloadHeaderPanel.add(downloadSizeHeaderLabel);
+        downloadHeaderPanel.add(downloadProgressHeaderLabel);
+        downloadHeaderPanel.add(downloadPercentHeaderLabel);
+        downloadHeaderPanel.add(downloadStatusHeaderLabel);
+        downloadListScrollPane.setColumnHeaderView(downloadHeaderPanel);
+
+        // 最佳大小
         downloadListScrollPane.setPreferredSize(new Dimension(600, 300));
         downloadLeftBox.add(downloadListScrollPane);
     }
@@ -20132,6 +20246,33 @@ public class MainFrame extends JFrame {
         playQueuePopupMenu.add(playQueueLocateFileMenuItem);
         playQueuePopupMenu.add(playQueueEditInfoMenuItem);
         playQueuePopupMenu.add(playQueueRemoveMenuItem);
+
+        // 表头
+        GridLayout layout = new GridLayout(1, 5);
+        layout.setHgap(15);
+        playQueueHeaderPanel.setLayout(layout);
+        playQueueHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+
+        float alpha = 0.5f;
+        playQueueSourceHeaderLabel.setInstantAlpha(alpha);
+        playQueueNameHeaderLabel.setInstantAlpha(alpha);
+        playQueueArtistHeaderLabel.setInstantAlpha(alpha);
+        playQueueAlbumHeaderLabel.setInstantAlpha(alpha);
+        playQueueDurationHeaderLabel.setInstantAlpha(alpha);
+
+        Font tf = Fonts.NORMAL_TINY;
+        playQueueSourceHeaderLabel.setFont(tf);
+        playQueueNameHeaderLabel.setFont(tf);
+        playQueueArtistHeaderLabel.setFont(tf);
+        playQueueAlbumHeaderLabel.setFont(tf);
+        playQueueDurationHeaderLabel.setFont(tf);
+
+        playQueueHeaderPanel.add(playQueueSourceHeaderLabel);
+        playQueueHeaderPanel.add(playQueueNameHeaderLabel);
+        playQueueHeaderPanel.add(playQueueArtistHeaderLabel);
+        playQueueHeaderPanel.add(playQueueAlbumHeaderLabel);
+        playQueueHeaderPanel.add(playQueueDurationHeaderLabel);
+        playQueueScrollPane.setColumnHeaderView(playQueueHeaderPanel);
 
         playQueueScrollPane.setPreferredSize(new Dimension(600, 300));
         playQueueLeftBox.add(playQueueScrollPane);
@@ -23023,6 +23164,33 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionLabel.setForeground(textColor);
         collectionItemTagLabel.setForeground(textColor);
         collectionItemDescriptionLabel.setForeground(textColor);
+
+        // 表头
+        musicSourceHeaderLabel.setForeground(textColor);
+        musicNameHeaderLabel.setForeground(textColor);
+        musicArtistHeaderLabel.setForeground(textColor);
+        musicAlbumHeaderLabel.setForeground(textColor);
+        musicDurationHeaderLabel.setForeground(textColor);
+
+        netMusicSourceHeaderLabel.setForeground(textColor);
+        netMusicNameHeaderLabel.setForeground(textColor);
+        netMusicArtistHeaderLabel.setForeground(textColor);
+        netMusicAlbumHeaderLabel.setForeground(textColor);
+        netMusicDurationHeaderLabel.setForeground(textColor);
+
+        playQueueSourceHeaderLabel.setForeground(textColor);
+        playQueueNameHeaderLabel.setForeground(textColor);
+        playQueueArtistHeaderLabel.setForeground(textColor);
+        playQueueAlbumHeaderLabel.setForeground(textColor);
+        playQueueDurationHeaderLabel.setForeground(textColor);
+
+        downloadIconHeaderLabel.setForeground(textColor);
+        downloadNameHeaderLabel.setForeground(textColor);
+        downloadTypeHeaderLabel.setForeground(textColor);
+        downloadSizeHeaderLabel.setForeground(textColor);
+        downloadProgressHeaderLabel.setForeground(textColor);
+        downloadPercentHeaderLabel.setForeground(textColor);
+        downloadStatusHeaderLabel.setForeground(textColor);
 
         // 滚动面板消除边框、自定义样式
         musicScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));

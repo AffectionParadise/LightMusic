@@ -1,11 +1,11 @@
-package net.doge.ui.widget.list.renderer.entity;
+package net.doge.ui.widget.list.renderer.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
-import net.doge.entity.service.NetPlaylistInfo;
+import net.doge.entity.service.NetRankingInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -24,7 +24,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class NetPlaylistListRenderer extends DefaultListCellRenderer {
+public class NetRankingListRenderer extends DefaultListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
@@ -35,32 +35,32 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     private CustomPanel outerPanel = new CustomPanel();
     private CustomLabel iconLabel = new CustomLabel();
     private CustomLabel nameLabel = new CustomLabel();
-    private CustomLabel creatorLabel = new CustomLabel();
     private CustomLabel playCountLabel = new CustomLabel();
-    private CustomLabel trackCountLabel = new CustomLabel();
+    private CustomLabel updateFreLabel = new CustomLabel();
+    private CustomLabel updateTimeLabel = new CustomLabel();
 
-    private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playlistItem"), ImageConstants.MEDIUM_WIDTH));
+    private ImageIcon rankingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankingItem"), ImageConstants.MEDIUM_WIDTH));
 
-    public NetPlaylistListRenderer() {
+    public NetRankingListRenderer() {
         init();
     }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        playlistIcon = ImageUtil.dye(playlistIcon, iconColor);
+        rankingIcon = ImageUtil.dye(rankingIcon, iconColor);
     }
 
     private void init() {
         iconLabel.setIconTextGap(0);
 
-        creatorLabel.setFont(tinyFont);
         playCountLabel.setFont(tinyFont);
-        trackCountLabel.setFont(tinyFont);
+        updateFreLabel.setFont(tinyFont);
+        updateTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        creatorLabel.setInstantAlpha(alpha);
         playCountLabel.setInstantAlpha(alpha);
-        trackCountLabel.setInstantAlpha(alpha);
+        updateFreLabel.setInstantAlpha(alpha);
+        updateTimeLabel.setInstantAlpha(alpha);
 
         int sh = 10;
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -68,11 +68,11 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
         outerPanel.add(Box.createVerticalGlue());
-        outerPanel.add(creatorLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-        outerPanel.add(trackCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(playCountLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(updateFreLabel);
+        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(updateTimeLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
 
         outerPanel.setInstantDrawBg(true);
@@ -80,34 +80,32 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
+        NetRankingInfo rankingInfo = (NetRankingInfo) value;
 
-        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
+        iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
-
         iconLabel.setForeground(textColor);
         nameLabel.setForeground(textColor);
-        creatorLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
-        trackCountLabel.setForeground(textColor);
+        updateFreLabel.setForeground(textColor);
+        updateTimeLabel.setForeground(textColor);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String creator = playlistInfo.hasCreator() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
-                StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
-        String playCount = playlistInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(playlistInfo.getPlayCount())) : "";
-        String trackCount = playlistInfo.hasTrackCount() ? HtmlUtil.textToHtml(playlistInfo.getTrackCount() + " 歌曲") : "";
+        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String playCount = rankingInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(rankingInfo.getPlayCount())) : "";
+        String updateFre = rankingInfo.hasUpdateFre() ? HtmlUtil.textToHtml(rankingInfo.getUpdateFre()) : "";
+        String updateTime = rankingInfo.hasUpdateTime() ? HtmlUtil.textToHtml(rankingInfo.getUpdateTime() + " 更新") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);
-        creatorLabel.setText(creator);
         playCountLabel.setText(playCount);
-        trackCountLabel.setText(trackCount);
+        updateFreLabel.setText(updateFre);
+        updateTimeLabel.setText(updateTime);
 
         list.setFixedCellWidth(pw);
 
