@@ -8691,10 +8691,11 @@ public class MainFrame extends JFrame {
         netMusicScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                // 刷新视口，避免 netMusicList 宽度不刷新！
-                netMusicScrollPane.setViewportView(netMusicScrollPane.getViewportView());
+                // 修复部分情况在线音乐列表宽度显示不正确问题
+                netMusicList.setPreferredSize(new Dimension(200, 600));
             }
         });
+
         // 表头
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -8721,6 +8722,7 @@ public class MainFrame extends JFrame {
         netMusicHeaderPanel.add(netMusicAlbumHeaderLabel);
         netMusicHeaderPanel.add(netMusicDurationHeaderLabel);
         netMusicScrollPane.setColumnHeaderView(netMusicHeaderPanel);
+
         // 在线歌单最佳大小
         netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
         netLeftBox.add(netMusicScrollPane);

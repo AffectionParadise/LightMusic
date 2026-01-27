@@ -129,7 +129,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         Dimension d = new Dimension(lw, Math.max(ph, 36));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
-        list.setFixedCellWidth(lw);
 
         if (musicInfo.hasLrcMatch()) {
             String lrcMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(musicInfo.getLrcMatch(), lw));
@@ -143,6 +142,8 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             outerPanel.remove(lrcMatchLabel);
             outerPanel.setPreferredSize(null);
         }
+
+        list.setFixedCellWidth(lw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
