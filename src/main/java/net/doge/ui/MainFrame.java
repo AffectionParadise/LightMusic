@@ -20666,6 +20666,7 @@ public class MainFrame extends JFrame {
         // 时长
         durationLabel.setHorizontalAlignment(SwingConstants.LEFT);
         durationLabel.setBorder(BorderFactory.createEmptyBorder(0, bw, 0, 0));
+        updateTimeLabel();
 
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(0);
@@ -22212,6 +22213,7 @@ public class MainFrame extends JFrame {
         emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
         emptyHintLabel.setIconTextGap(10);
         emptyHintLabel.setForeground(textColor);
+        emptyHintLabel.setInstantAlpha(0.5f);
 
         // 按钮被禁用时颜色
         netMusicBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), darkerIconColor));

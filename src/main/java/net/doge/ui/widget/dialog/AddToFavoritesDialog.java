@@ -205,10 +205,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
             public void mouseReleased(MouseEvent e) {
                 // 左键进行复选
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    ChoosableListItem<LocalPlaylist> item = localPlaylistList.getSelectedValue();
-                    if (item == null) return;
-                    item.setSelected(!item.isSelected());
-                    localPlaylistList.repaint();
+                    switchLocalPlaylistSelection(localPlaylistList.getSelectedValue());
                 }
             }
 
@@ -231,9 +228,24 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         centerPanel.add(bottomBox, BorderLayout.CENTER);
     }
 
+    // 复选
+    private void switchLocalPlaylistSelection(ChoosableListItem<LocalPlaylist> item) {
+        if (item == null) return;
+        item.setSelected(!item.isSelected());
+        localPlaylistList.repaint();
+    }
+
     // 初始化数据
     private void initLocalPlaylists() {
-        for (LocalPlaylist playlist : playlists)
-            localPlaylistListModel.addElement(new ChoosableListItem<>(playlist, playlist.getMusicListModel().contains(firstResource)));
+        boolean noOneContains = true;
+        for (LocalPlaylist playlist : playlists) {
+            boolean contains = playlist.getMusicListModel().contains(firstResource);
+            if (contains) noOneContains = false;
+            localPlaylistListModel.addElement(new ChoosableListItem<>(playlist, contains));
+        }
+        // 没有收藏过的资源，默认选中第一个收藏夹
+        if (noOneContains && !playlists.isEmpty()) {
+            switchLocalPlaylistSelection(localPlaylistListModel.get(0));
+        }
     }
 }

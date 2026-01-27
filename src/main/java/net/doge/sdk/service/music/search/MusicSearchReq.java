@@ -567,7 +567,7 @@ public class MusicSearchReq {
                 else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
                 else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
                 else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-                String lrcMatch = HtmlUtil.removeHtmlLabel(songJson.getString("content")).replace("\\n", " / ");
+                String lrcMatch = songJson.getString("content").replace("\n", " / ");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QQ);

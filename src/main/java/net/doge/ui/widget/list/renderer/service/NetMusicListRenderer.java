@@ -69,6 +69,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
 
         artistLabel.setInstantAlpha(alpha);
         albumNameLabel.setInstantAlpha(alpha);
+        lrcMatchLabel.setInstantAlpha(alpha);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(15);
@@ -131,7 +132,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         list.setFixedCellWidth(lw);
 
         if (musicInfo.hasLrcMatch()) {
-            String lrcMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth("词： " + musicInfo.getLrcMatch(), lw));
+            String lrcMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(musicInfo.getLrcMatch(), lw));
             lrcMatchLabel.setText(lrcMatch);
             lrcMatchLabel.setForeground(textColor);
             Dimension p = lrcMatchLabel.getPreferredSize();
