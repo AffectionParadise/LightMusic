@@ -75,8 +75,7 @@ public class CustomTextField extends JTextField {
         super.setText(t);
         // 解决设置文本后不刷新的问题
         if (!needRefresh()) return;
-        setVisible(false);
-        setVisible(true);
+        revalidate();
     }
 
     @Override

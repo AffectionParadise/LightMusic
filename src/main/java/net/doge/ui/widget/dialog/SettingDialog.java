@@ -1034,8 +1034,7 @@ public class SettingDialog extends AbstractTitledDialog {
         SpectrumConstants.barMaxHeight = Integer.parseInt(text);
         f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, SpectrumConstants.barMaxHeight));
         f.spectrumPanel.setMinimumSize(new Dimension(1, SpectrumConstants.barMaxHeight));
-        f.spectrumPanel.setVisible(false);
-        f.spectrumPanel.setVisible(true);
+        f.spectrumPanel.revalidate();
 
         text = maxCacheSizeTextField.getText();
         if (StringUtil.isEmpty(text)) {

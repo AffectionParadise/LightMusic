@@ -2335,8 +2335,6 @@ public class MainFrame extends JFrame {
     Runnable openCollectionItemAction;
     // 推荐打开事件
     Runnable openRecommendItemAction;
-    // 获取榜单事件
-    Runnable getRankingAction;
 
     // 当前音效索引
     public int currSoundEffect;
@@ -2551,8 +2549,7 @@ public class MainFrame extends JFrame {
                     lrcScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
-                    currTimeLabel.setVisible(false);
-                    currTimeLabel.setVisible(true);
+                    currTimeLabel.revalidate();
                     timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 20));
                     // 专辑图片
                     albumImageWidth = (int) (w * 0.33);
@@ -2563,8 +2560,7 @@ public class MainFrame extends JFrame {
                     songNameLabel.setPreferredSize(ld);
                     artistLabel.setPreferredSize(ld);
                     albumLabel.setPreferredSize(ld);
-                    songNameLabel.setVisible(false);
-                    songNameLabel.setVisible(true);
+                    songNameLabel.revalidate();
                     if (player.loadedMusicResource()) {
                         showAlbumImage();
                     }
@@ -4991,7 +4987,7 @@ public class MainFrame extends JFrame {
             // 榜单音乐
             else if (selectedIndex == TabIndex.NET_RANKING) {
                 if (netRankingListModel.isEmpty()) {
-                    getRankingAction.run();
+                    getRankingGoPage(netRankingCurrPage);
                     return;
                 }
                 // 显示榜单的歌曲列表
@@ -5345,6 +5341,159 @@ public class MainFrame extends JFrame {
         });
     }
 
+    // 收藏模块跳页事件，可复用
+    private void collectionGoPage(int page) {
+        // 搜索收藏歌单/专辑/歌手/电台里的歌
+        if (collectionBackwardButton.isEnabled()) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    NetResource resource = collectionList.getSelectedValue();
+                    // 这是歌单里的歌
+                    if (resource instanceof NetPlaylistInfo) {
+                        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForPlaylistCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForPlaylistCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForPlaylistCollectionModel);
+                        collectionLeftBox.repaint();
+                    }
+                    // 这是专辑里的歌
+                    else if (resource instanceof NetAlbumInfo) {
+                        NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForAlbumCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForAlbumCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForAlbumCollectionModel);
+                        collectionLeftBox.repaint();
+                    }
+                    // 这是歌手里的歌
+                    else if (resource instanceof NetArtistInfo) {
+                        NetArtistInfo artistInfo = (NetArtistInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForArtistCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForArtistCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForArtistCollectionModel);
+                        collectionLeftBox.repaint();
+                    }
+                    // 这是电台里的歌
+                    else if (resource instanceof NetRadioInfo) {
+                        NetRadioInfo radioInfo = (NetRadioInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        Integer total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForRadioCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForRadioCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForRadioCollectionModel);
+                        collectionLeftBox.repaint();
+                    }
+                    // 这是榜单里的歌
+                    else if (resource instanceof NetRankingInfo) {
+                        NetRankingInfo RankingInfo = (NetRankingInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
+                                RankingInfo.getId(), RankingInfo.getSource(), page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        Integer total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForRankingCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForRankingCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForRankingCollectionModel);
+                        collectionLeftBox.repaint();
+                    }
+                    // 这是用户里的歌
+                    else if (resource instanceof NetUserInfo) {
+                        NetUserInfo userInfo = (NetUserInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
+                                collectionRecordTypeComboBox.getSelectedIndex(), userInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        Integer total = result.total;
+                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForUserCollectionModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForUserCollectionModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForUserCollectionModel);
+                        if (netMusicListForUserCollectionModel.isEmpty()) {
+                            collectionItemListCountBox.remove(netMusicScrollPane);
+                            collectionItemListCountBox.add(emptyHintPanel);
+                        } else {
+                            collectionItemListCountBox.remove(emptyHintPanel);
+                            collectionItemListCountBox.add(netMusicScrollPane);
+                        }
+                        collectionLeftBox.repaint();
+                    }
+                    netMusicScrollPane.setVValue(0);
+                    netMusicInCollectionCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化收藏工具条
     private void initCollectionToolBar() {
 //        collectionPageTextField.addFocusListener(
@@ -5361,157 +5510,7 @@ public class MainFrame extends JFrame {
             collectionRecordTypeComboBox.setVisible(false);
             leftBox.repaint();
         });
-        // 收藏模块跳页事件，可复用
-        Runnable collectionGoPageAction = () -> {
-            // 搜索收藏歌单/专辑/歌手/电台里的歌
-            if (collectionBackwardButton.isEnabled()) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        NetResource resource = collectionList.getSelectedValue();
-                        // 这是歌单里的歌
-                        if (resource instanceof NetPlaylistInfo) {
-                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForPlaylistCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForPlaylistCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForPlaylistCollectionModel);
-                            collectionLeftBox.repaint();
-                        }
-                        // 这是专辑里的歌
-                        else if (resource instanceof NetAlbumInfo) {
-                            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForAlbumCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForAlbumCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForAlbumCollectionModel);
-                            collectionLeftBox.repaint();
-                        }
-                        // 这是歌手里的歌
-                        else if (resource instanceof NetArtistInfo) {
-                            NetArtistInfo artistInfo = (NetArtistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForArtistCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForArtistCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForArtistCollectionModel);
-                            collectionLeftBox.repaint();
-                        }
-                        // 这是电台里的歌
-                        else if (resource instanceof NetRadioInfo) {
-                            NetRadioInfo radioInfo = (NetRadioInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            Integer total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForRadioCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForRadioCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForRadioCollectionModel);
-                            collectionLeftBox.repaint();
-                        }
-                        // 这是榜单里的歌
-                        else if (resource instanceof NetRankingInfo) {
-                            NetRankingInfo RankingInfo = (NetRankingInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                    RankingInfo.getId(), RankingInfo.getSource(), netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            Integer total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForRankingCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForRankingCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForRankingCollectionModel);
-                            collectionLeftBox.repaint();
-                        }
-                        // 这是用户里的歌
-                        else if (resource instanceof NetUserInfo) {
-                            NetUserInfo userInfo = (NetUserInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                                    collectionRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInCollectionCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            Integer total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForUserCollectionModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForUserCollectionModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForUserCollectionModel);
-                            if (netMusicListForUserCollectionModel.isEmpty()) {
-                                collectionItemListCountBox.remove(netMusicScrollPane);
-                                collectionItemListCountBox.add(emptyHintPanel);
-                            } else {
-                                collectionItemListCountBox.remove(emptyHintPanel);
-                                collectionItemListCountBox.add(netMusicScrollPane);
-                            }
-                            collectionLeftBox.repaint();
-                        }
-                        netMusicScrollPane.setVValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         collectionRecordTypeComboBoxModel.addElement(I18n.getText("recentWeek"));
         collectionRecordTypeComboBoxModel.addElement(I18n.getText("allTime"));
         collectionOrderComboBoxModel.addElement(I18n.getText("latest"));
@@ -5525,8 +5524,7 @@ public class MainFrame extends JFrame {
             if (collectionRecordTypeComboBox.getItemCount() <= 1
                     || collectionRecordTypeComboBox.getSelectedItem() == null
                     || e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicInCollectionCurrPage = 1;
-            collectionGoPageAction.run();
+            collectionGoPage(1);
         });
         // 播放全部
         collectionPlayAllButton.addActionListener(e -> {
@@ -5540,7 +5538,7 @@ public class MainFrame extends JFrame {
         });
         // 刷新按钮事件
         collectionRefreshButton.addActionListener(e -> {
-            collectionGoPageAction.run();
+            collectionGoPage(netMusicInCollectionCurrPage);
         });
         // 第一页按钮事件
         collectionStartPageButton.addActionListener(e -> {
@@ -5548,8 +5546,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicInCollectionCurrPage = 1;
-            collectionGoPageAction.run();
+            collectionGoPage(1);
         });
         // 上一页按钮事件
         collectionLastPageButton.addActionListener(e -> {
@@ -5557,8 +5554,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicInCollectionCurrPage--;
-            collectionGoPageAction.run();
+            collectionGoPage(netMusicInCollectionCurrPage - 1);
         });
         // 下一页按钮事件
         collectionNextPageButton.addActionListener(e -> {
@@ -5566,8 +5562,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicInCollectionCurrPage++;
-            collectionGoPageAction.run();
+            collectionGoPage(netMusicInCollectionCurrPage + 1);
         });
         // 最后一页按钮事件
         collectionEndPageButton.addActionListener(e -> {
@@ -5575,8 +5570,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicInCollectionCurrPage = netMusicInCollectionMaxPage;
-            collectionGoPageAction.run();
+            collectionGoPage(netMusicInCollectionMaxPage);
         });
         // 跳页按钮事件
         collectionGoButton.addActionListener(e -> {
@@ -5588,8 +5582,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicInCollectionCurrPage = destPage;
-            collectionGoPageAction.run();
+            collectionGoPage(destPage);
         });
         collectionRecordTypeComboBox.setVisible(false);
         // 控制按钮大小
@@ -6352,7 +6345,7 @@ public class MainFrame extends JFrame {
         leftInfoBox.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.getButton() != MouseEvent.BUTTON3) return;
+                if (e.getButton() != MouseEvent.BUTTON3 || !player.loadedMusicResource()) return;
                 leftInfoPopupMenu.show(leftInfoBox, e.getX(), e.getY());
             }
         });
@@ -7551,6 +7544,62 @@ public class MainFrame extends JFrame {
         leftBox.add(musicScrollPane);
     }
 
+    // 在线音乐跳页事件
+    private void netMusicGoPage(int page) {
+        boolean songRequest = currMusicMusicInfo != null;
+        if (songRequest || StringUtil.notEmpty(netMusicCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 显示节目搜索分类标签
+                    if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
+                        MusicServerUtil.initProgramSearchTag();
+                        for (String tag : Tags.programSearchTag.keySet())
+                            netMusicSearchSubTypeComboBox.addItem(tag);
+                    }
+
+                    // 搜索歌曲并显示在在线歌曲列表
+                    CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtil.getSimilarSongs(currMusicMusicInfo)
+                            : MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
+                            (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netMusicCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicMaxPage));
+                    netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
+                    netMusicCountPanel.setVisible(true);
+                    netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListModel.isEmpty()) {
+                        netLeftBox.remove(netMusicScrollPane);
+                        netLeftBox.add(emptyHintPanel);
+                    } else {
+                        netLeftBox.remove(emptyHintPanel);
+                        netLeftBox.add(netMusicScrollPane);
+                    }
+                    netMusicCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化在线音乐工具栏
     private void initNetMusicToolBar() {
         searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", currUIStyle.getForeColor()));
@@ -7692,60 +7741,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 在线音乐跳页事件
-        Runnable netMusicGoPageAction = () -> {
-            boolean songRequest = currMusicMusicInfo != null;
-            if (songRequest || StringUtil.notEmpty(netMusicCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 显示节目搜索分类标签
-                        if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
-                            MusicServerUtil.initProgramSearchTag();
-                            for (String tag : Tags.programSearchTag.keySet())
-                                netMusicSearchSubTypeComboBox.addItem(tag);
-                        }
 
-                        // 搜索歌曲并显示在在线歌曲列表
-                        CommonResult<NetMusicInfo> result = songRequest ? MusicServerUtil.getSimilarSongs(currMusicMusicInfo)
-                                : MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(), netMusicSearchTypeComboBox.getSelectedIndex(),
-                                (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
-                        netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
-                        netMusicCountPanel.setVisible(true);
-                        netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListModel.isEmpty()) {
-                            netLeftBox.remove(netMusicScrollPane);
-                            netLeftBox.add(emptyHintPanel);
-                        } else {
-                            netLeftBox.remove(emptyHintPanel);
-                            netLeftBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
         for (String name : NetMusicSource.NAMES) netMusicSourceComboBox.addItem(name);
         netMusicSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
@@ -7770,7 +7766,7 @@ public class MainFrame extends JFrame {
         netMusicSearchSubTypeComboBox.setVisible(false);
         // 刷新按钮事件
         netMusicRefreshButton.addActionListener(e -> {
-            netMusicGoPageAction.run();
+            netMusicGoPage(netMusicCurrPage);
         });
         // 第一页按钮
         netMusicStartPageButton.addActionListener(e -> {
@@ -7778,8 +7774,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicCurrPage = 1;
-            netMusicGoPageAction.run();
+            netMusicGoPage(1);
         });
         // 上一页按钮事件
         netMusicLastPageButton.addActionListener(e -> {
@@ -7787,8 +7782,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicCurrPage--;
-            netMusicGoPageAction.run();
+            netMusicGoPage(netMusicCurrPage - 1);
         });
         // 下一页按钮事件
         netMusicNextPageButton.addActionListener(e -> {
@@ -7796,8 +7790,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicCurrPage++;
-            netMusicGoPageAction.run();
+            netMusicGoPage(netMusicCurrPage + 1);
         });
         // 最后一页按钮
         netMusicEndPageButton.addActionListener(e -> {
@@ -7805,8 +7798,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicCurrPage = netMusicMaxPage;
-            netMusicGoPageAction.run();
+            netMusicGoPage(netMusicMaxPage);
         });
         // 跳页按钮事件
         netMusicGoButton.addActionListener(e -> {
@@ -7818,8 +7810,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                 return;
             }
-            netMusicCurrPage = destPage;
-            netMusicGoPageAction.run();
+            netMusicGoPage(destPage);
         });
         // 按钮大小限制
         Dimension dimension = new Dimension(30, 30);
@@ -8692,7 +8683,9 @@ public class MainFrame extends JFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 // 修复部分情况在线音乐列表宽度显示不正确问题
-                netMusicList.setPreferredSize(new Dimension(200, 600));
+                DefaultListModel model = (DefaultListModel) netMusicList.getModel();
+                netMusicList.setModel(emptyListModel);
+                netMusicList.setModel(model);
             }
         });
 
@@ -9662,6 +9655,109 @@ public class MainFrame extends JFrame {
         }
     }
 
+    // 搜索歌单跳页事件
+    private void searchPlaylistGoPage(int page) {
+        loadingAndRun(() -> {
+            boolean songRequest = currPlaylistMusicInfo != null, playlistRequest = currPlaylistPlaylistInfo != null,
+                    commentRequest = currPlaylistCommentInfo != null, userRequest = currPlaylistUserInfo != null;
+            if (songRequest || playlistRequest || commentRequest || userRequest || StringUtil.notEmpty(netPlaylistCurrKeyword)) {
+                try {
+                    // 搜索歌单并显示歌单列表
+                    CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
+                            : playlistRequest ? MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo)
+                            : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, page, limit)
+                            : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, page, limit)
+                            : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                            : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, page, limit);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
+                    Integer total = result.total;
+                    netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, page, netPlaylistMaxPage));
+                    netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
+                    netPlaylistCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netPlaylistList.setModel(emptyListModel);
+                    netPlaylistListModel.clear();
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
+                        // 设置图片加载后重绘的事件
+                        playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
+                            netPlaylistList.repaint();
+                            collectionList.repaint();
+                        });
+                        netPlaylistListModel.addElement(playlistInfo);
+                    });
+                    netPlaylistList.setModel(netPlaylistListModel);
+                    netPlaylistScrollPane.setVValue(0);
+                    if (netPlaylistListModel.isEmpty()) {
+                        netPlaylistLeftBox.remove(netPlaylistScrollPane);
+                        netPlaylistLeftBox.add(emptyHintPanel);
+                    } else {
+                        netPlaylistLeftBox.remove(emptyHintPanel);
+                        netPlaylistLeftBox.add(netPlaylistScrollPane);
+                    }
+                    netPlaylistCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            }
+        });
+    }
+
+    // 获取歌单内歌曲并显示在在线歌曲列表
+    private void getMusicInPlaylistGoPage(int page) {
+        if (!netMusicListForPlaylistModel.isEmpty()) {
+            loadingAndRun(() -> {
+                try {
+                    NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    int total = result.total;
+                    netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInPlaylistMaxPage));
+                    netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListForPlaylistModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListForPlaylistModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListForPlaylistModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListForPlaylistModel.isEmpty()) {
+                        playlistListCountBox.remove(netMusicScrollPane);
+                        playlistListCountBox.add(emptyHintPanel);
+                    } else {
+                        playlistListCountBox.remove(emptyHintPanel);
+                        playlistListCountBox.add(netMusicScrollPane);
+                    }
+                    netMusicInPlaylistCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化在线歌单工具栏
     private void initNetPlaylistToolBar() {
         netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", currUIStyle.getForeColor()));
@@ -9835,105 +9931,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索歌单跳页事件
-        Runnable searchPlaylistGoPageAction = () -> {
-            loadingAndRun(() -> {
-                boolean songRequest = currPlaylistMusicInfo != null, playlistRequest = currPlaylistPlaylistInfo != null,
-                        commentRequest = currPlaylistCommentInfo != null, userRequest = currPlaylistUserInfo != null;
-                if (songRequest || playlistRequest || commentRequest || userRequest || StringUtil.notEmpty(netPlaylistCurrKeyword)) {
-                    try {
-                        // 搜索歌单并显示歌单列表
-                        CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
-                                : playlistRequest ? MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo)
-                                : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, netPlaylistCurrPage, limit)
-                                : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, netPlaylistCurrPage, limit)
-                                : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
-                        List<NetPlaylistInfo> playlistInfos = result.data;
-                        Integer total = result.total;
-                        netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
-                        netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
-                        netPlaylistCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netPlaylistList.setModel(emptyListModel);
-                        netPlaylistListModel.clear();
-                        playlistInfos.forEach(playlistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(playlistInfo));
-                            // 设置图片加载后重绘的事件
-                            playlistInfo.setInvokeLater(() -> {
-                                updateRenderer(netPlaylistList);
-                                updateRenderer(collectionList);
-                                netPlaylistList.repaint();
-                                collectionList.repaint();
-                            });
-                            netPlaylistListModel.addElement(playlistInfo);
-                        });
-                        netPlaylistList.setModel(netPlaylistListModel);
-                        netPlaylistScrollPane.setVValue(0);
-                        if (netPlaylistListModel.isEmpty()) {
-                            netPlaylistLeftBox.remove(netPlaylistScrollPane);
-                            netPlaylistLeftBox.add(emptyHintPanel);
-                        } else {
-                            netPlaylistLeftBox.remove(emptyHintPanel);
-                            netPlaylistLeftBox.add(netPlaylistScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                }
-            });
-        };
-        // 搜索歌单内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInPlaylist = () -> {
-            if (!netMusicListForPlaylistModel.isEmpty()) {
-                loadingAndRun(() -> {
-                    try {
-                        NetPlaylistInfo playlistInfo = netPlaylistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInPlaylistCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        int total = result.total;
-                        netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInPlaylistCurrPage, netMusicInPlaylistMaxPage));
-                        netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListForPlaylistModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForPlaylistModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListForPlaylistModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListForPlaylistModel.isEmpty()) {
-                            playlistListCountBox.remove(netMusicScrollPane);
-                            playlistListCountBox.add(emptyHintPanel);
-                        } else {
-                            playlistListCountBox.remove(emptyHintPanel);
-                            playlistListCountBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 播放全部
         netPlaylistPlayAllButton.addActionListener(e -> netPlaylistPlayAllMenuItem.doClick());
         // 刷新按钮事件
@@ -9941,11 +9939,11 @@ public class MainFrame extends JFrame {
             Component lc = netPlaylistLeftBox.getComponent(netPlaylistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌单列表，刷新歌单
             if (lc == netPlaylistScrollPane || lc == emptyHintPanel) {
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(netPlaylistCurrPage);
             }
             // 当前显示的是某歌单的歌曲，刷新歌曲
             else {
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(netMusicInPlaylistCurrPage);
             }
         });
         // 第一页按钮事件
@@ -9957,8 +9955,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netPlaylistCurrPage = 1;
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(1);
             }
             // 当前显示的是某歌单的歌曲，跳到第一页歌曲
             else {
@@ -9966,8 +9963,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInPlaylistCurrPage = 1;
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -9979,8 +9975,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netPlaylistCurrPage--;
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(netPlaylistCurrPage - 1);
             }
             // 当前显示的是某歌单的歌曲，跳到上一页歌曲
             else {
@@ -9988,8 +9983,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInPlaylistCurrPage--;
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(netMusicInPlaylistCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -10001,8 +9995,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netPlaylistCurrPage++;
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(netPlaylistCurrPage + 1);
             }
             // 当前显示的是某歌单的歌曲，跳到下一页歌曲
             else {
@@ -10010,8 +10003,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInPlaylistCurrPage++;
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(netMusicInPlaylistCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -10023,8 +10015,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netPlaylistCurrPage = netPlaylistMaxPage;
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(netPlaylistMaxPage);
             }
             // 当前显示的是某歌单的歌曲，跳到最后一页歌曲
             else {
@@ -10032,8 +10023,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInPlaylistCurrPage = netMusicInPlaylistMaxPage;
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(netMusicInPlaylistMaxPage);
             }
         });
         // 跳页按钮事件
@@ -10049,8 +10039,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netPlaylistCurrPage = destPage;
-                searchPlaylistGoPageAction.run();
+                searchPlaylistGoPage(destPage);
             }
             // 当前显示的是某歌单的歌曲，跳页歌曲
             else {
@@ -10062,8 +10051,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInPlaylistCurrPage = destPage;
-                searchMusicInPlaylist.run();
+                getMusicInPlaylistGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -10670,6 +10658,109 @@ public class MainFrame extends JFrame {
         netPlaylistLeftBox.add(netPlaylistScrollPane);
     }
 
+    // 搜索专辑跳页事件
+    private void searchAlbumGoPage(int page) {
+        boolean songRequest = currAlbumMusicInfo != null, artistRequest = currAlbumArtistInfo != null, albumRequest = currAlbumAlbumInfo != null,
+                userRequest = currAlbumUserInfo != null, commentRequest = currAlbumCommentInfo != null;
+        if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtil.notEmpty(netAlbumCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 搜索专辑并显示专辑列表
+                    CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, page, limit)
+                            : albumRequest ? MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo)
+                            : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, page, limit)
+                            : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, page, limit)
+                            : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getSource(), currAlbumMusicInfo.getAlbumId())
+                            : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, page, limit);
+                    List<NetAlbumInfo> albumInfos = result.data;
+                    Integer total = result.total;
+                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, page, netAlbumMaxPage));
+                    netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
+                    netAlbumCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netAlbumList.setModel(emptyListModel);
+                    netAlbumListModel.clear();
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
+                        // 设置图片加载后重绘的事件
+                        albumInfo.setInvokeLater(() -> {
+                            updateRenderer(netAlbumList);
+                            updateRenderer(collectionList);
+                            netAlbumList.repaint();
+                            collectionList.repaint();
+                        });
+                        netAlbumListModel.addElement(albumInfo);
+                    });
+                    netAlbumList.setModel(netAlbumListModel);
+                    netAlbumScrollPane.setVValue(0);
+                    if (netAlbumListModel.isEmpty()) {
+                        netAlbumLeftBox.remove(netAlbumScrollPane);
+                        netAlbumLeftBox.add(emptyHintPanel);
+                    } else {
+                        netAlbumLeftBox.remove(emptyHintPanel);
+                        netAlbumLeftBox.add(netAlbumScrollPane);
+                    }
+                    netAlbumCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
+    // 获取专辑内歌曲并显示在在线歌曲列表
+    private void getMusicInAlbumGoPage(int page) {
+        if (!netMusicListForAlbumModel.isEmpty()) {
+            loadingAndRun(() -> {
+                try {
+                    NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInAlbumMaxPage));
+                    netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListForAlbumModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListForAlbumModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListForAlbumModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListForAlbumModel.isEmpty()) {
+                        albumListCountBox.remove(netMusicScrollPane);
+                        albumListCountBox.add(emptyHintPanel);
+                    } else {
+                        albumListCountBox.remove(emptyHintPanel);
+                        albumListCountBox.add(netMusicScrollPane);
+                    }
+                    netMusicInAlbumCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化在线专辑工具栏
     private void initNetAlbumToolBar() {
         netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", currUIStyle.getForeColor()));
@@ -10838,105 +10929,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索专辑跳页事件
-        Runnable searchAlbumGoPageAction = () -> {
-            boolean songRequest = currAlbumMusicInfo != null, artistRequest = currAlbumArtistInfo != null, albumRequest = currAlbumAlbumInfo != null,
-                    userRequest = currAlbumUserInfo != null, commentRequest = currAlbumCommentInfo != null;
-            if (artistRequest || albumRequest || userRequest || commentRequest || songRequest || StringUtil.notEmpty(netAlbumCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索专辑并显示专辑列表
-                        CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, netAlbumCurrPage, limit)
-                                : albumRequest ? MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo)
-                                : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, netAlbumCurrPage, limit)
-                                : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, netAlbumCurrPage, limit)
-                                : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getSource(), currAlbumMusicInfo.getAlbumId())
-                                : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage, limit);
-                        List<NetAlbumInfo> albumInfos = result.data;
-                        Integer total = result.total;
-                        netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
-                        netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
-                        netAlbumCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netAlbumList.setModel(emptyListModel);
-                        netAlbumListModel.clear();
-                        albumInfos.forEach(albumInfo -> {
-                            globalExecutor.execute(() -> updateCollection(albumInfo));
-                            // 设置图片加载后重绘的事件
-                            albumInfo.setInvokeLater(() -> {
-                                updateRenderer(netAlbumList);
-                                updateRenderer(collectionList);
-                                netAlbumList.repaint();
-                                collectionList.repaint();
-                            });
-                            netAlbumListModel.addElement(albumInfo);
-                        });
-                        netAlbumList.setModel(netAlbumListModel);
-                        netAlbumScrollPane.setVValue(0);
-                        if (netAlbumListModel.isEmpty()) {
-                            netAlbumLeftBox.remove(netAlbumScrollPane);
-                            netAlbumLeftBox.add(emptyHintPanel);
-                        } else {
-                            netAlbumLeftBox.remove(emptyHintPanel);
-                            netAlbumLeftBox.add(netAlbumScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
-        // 搜索专辑内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInAlbum = () -> {
-            if (!netMusicListForAlbumModel.isEmpty()) {
-                loadingAndRun(() -> {
-                    try {
-                        NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInAlbumCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netMusicInAlbumCurrPage, netMusicInAlbumMaxPage));
-                        netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListForAlbumModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForAlbumModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListForAlbumModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListForAlbumModel.isEmpty()) {
-                            albumListCountBox.remove(netMusicScrollPane);
-                            albumListCountBox.add(emptyHintPanel);
-                        } else {
-                            albumListCountBox.remove(emptyHintPanel);
-                            albumListCountBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 播放全部
         netAlbumPlayAllButton.addActionListener(e -> netAlbumPlayAllMenuItem.doClick());
         // 刷新按钮事件
@@ -10944,11 +10937,11 @@ public class MainFrame extends JFrame {
             Component lc = netAlbumLeftBox.getComponent(netAlbumLeftBox.getComponentCount() - 1);
             // 当前显示的是专辑列表，刷新专辑
             if (lc == netAlbumScrollPane || lc == emptyHintPanel) {
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(netAlbumCurrPage);
             }
             // 当前显示的是某专辑的歌曲，刷新歌曲
             else {
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(netMusicInAlbumCurrPage);
             }
         });
         // 第一页按钮事件
@@ -10960,8 +10953,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netAlbumCurrPage = 1;
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(1);
             }
             // 当前显示的是某专辑的歌曲，跳到第一页歌曲
             else {
@@ -10969,8 +10961,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInAlbumCurrPage = 1;
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -10982,8 +10973,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netAlbumCurrPage--;
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(netAlbumCurrPage - 1);
             }
             // 当前显示的是某专辑的歌曲，跳到上一页歌曲
             else {
@@ -10991,8 +10981,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInAlbumCurrPage--;
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(netMusicInAlbumCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -11004,8 +10993,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netAlbumCurrPage++;
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(netAlbumCurrPage + 1);
             }
             // 当前显示的是某专辑的歌曲，跳到下一页歌曲
             else {
@@ -11013,8 +11001,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInAlbumCurrPage++;
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(netMusicInAlbumCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -11026,8 +11013,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netAlbumCurrPage = netAlbumMaxPage;
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(netAlbumMaxPage);
             }
             // 当前显示的是某专辑的歌曲，跳到最后一页歌曲
             else {
@@ -11035,8 +11021,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInAlbumCurrPage = netMusicInAlbumMaxPage;
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(netMusicInAlbumMaxPage);
             }
         });
         // 跳页按钮事件
@@ -11052,8 +11037,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netAlbumCurrPage = destPage;
-                searchAlbumGoPageAction.run();
+                searchAlbumGoPage(destPage);
             }
             // 当前显示的是某专辑的歌曲，跳页歌曲
             else {
@@ -11065,8 +11049,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInAlbumCurrPage = destPage;
-                searchMusicInAlbum.run();
+                getMusicInAlbumGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -11688,6 +11671,113 @@ public class MainFrame extends JFrame {
         netAlbumLeftBox.add(netAlbumScrollPane);
     }
 
+    // 搜索歌手跳页事件
+    private void searchArtistGoPage(int page) {
+        boolean songRequest = currArtistMusicInfo != null, albumRequest = currArtistAlbumInfo != null, artistRequest = currArtistArtistInfo != null,
+                buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
+                radioCVRequest = currCVRadioInfo != null;
+        if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest ||
+                albumRequest || mvRequest || StringUtil.notEmpty(netArtistCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 搜索歌手并显示歌手列表
+                    CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo)
+                            : buddyRequest ? MusicServerUtil.getArtistBuddies(currBuddyArtistInfo, page, limit)
+                            : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
+                            : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
+                            : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getSource(), currArtistMusicInfo.getArtistId())
+                            : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getSource(), currArtistAlbumInfo.getArtistId())
+                            : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getSource(), currArtistMvInfo.getCreatorId())
+                            : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, page, limit);
+                    List<NetArtistInfo> artistInfos = result.data;
+                    Integer total = result.total;
+                    netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, page, netArtistMaxPage));
+                    netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
+                    netArtistCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netArtistList.setModel(emptyListModel);
+                    netArtistListModel.clear();
+                    artistInfos.forEach(artistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(artistInfo));
+                        // 设置图片加载后重绘的事件
+                        artistInfo.setInvokeLater(() -> {
+                            updateRenderer(netArtistList);
+                            updateRenderer(collectionList);
+                            netArtistList.repaint();
+                            collectionList.repaint();
+                        });
+                        netArtistListModel.addElement(artistInfo);
+                    });
+                    netArtistList.setModel(netArtistListModel);
+                    netArtistScrollPane.setVValue(0);
+                    if (netArtistListModel.isEmpty()) {
+                        netArtistLeftBox.remove(netArtistScrollPane);
+                        netArtistLeftBox.add(emptyHintPanel);
+                    } else {
+                        netArtistLeftBox.remove(emptyHintPanel);
+                        netArtistLeftBox.add(netArtistScrollPane);
+                    }
+                    netArtistCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
+    // 获取歌手内歌曲并显示在在线歌曲列表
+    private void getMusicInArtistGoPage(int page) {
+        if (!netMusicListForArtistModel.isEmpty()) {
+            loadingAndRun(() -> {
+                try {
+                    NetArtistInfo artistInfo = netArtistList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInArtistMaxPage));
+                    netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicListForArtistModel.clear();
+                    netMusicList.setModel(emptyListModel);
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListForArtistModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListForArtistModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListForArtistModel.isEmpty()) {
+                        artistListCountBox.remove(netMusicScrollPane);
+                        artistListCountBox.add(emptyHintPanel);
+                    } else {
+                        artistListCountBox.remove(emptyHintPanel);
+                        artistListCountBox.add(netMusicScrollPane);
+                    }
+                    netMusicInArtistCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化歌手工具栏
     private void initNetArtistToolBar() {
         netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", currUIStyle.getForeColor()));
@@ -11863,109 +11953,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索歌手跳页事件
-        Runnable searchArtistGoPageAction = () -> {
-            boolean songRequest = currArtistMusicInfo != null, albumRequest = currArtistAlbumInfo != null, artistRequest = currArtistArtistInfo != null,
-                    buddyRequest = currBuddyArtistInfo != null, mvRequest = currArtistMvInfo != null, radioRequest = currArtistRadioInfo != null,
-                    radioCVRequest = currCVRadioInfo != null;
-            if (artistRequest || buddyRequest || radioRequest || radioCVRequest || songRequest ||
-                    albumRequest || mvRequest || StringUtil.notEmpty(netArtistCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo)
-                                : buddyRequest ? MusicServerUtil.getArtistBuddies(currBuddyArtistInfo, netArtistCurrPage, limit)
-                                : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
-                                : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
-                                : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getSource(), currArtistMusicInfo.getArtistId())
-                                : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getSource(), currArtistAlbumInfo.getArtistId())
-                                : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getSource(), currArtistMvInfo.getCreatorId())
-                                : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage, limit);
-                        List<NetArtistInfo> artistInfos = result.data;
-                        Integer total = result.total;
-                        netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
-                        netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
-                        netArtistCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netArtistList.setModel(emptyListModel);
-                        netArtistListModel.clear();
-                        artistInfos.forEach(artistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(artistInfo));
-                            // 设置图片加载后重绘的事件
-                            artistInfo.setInvokeLater(() -> {
-                                updateRenderer(netArtistList);
-                                updateRenderer(collectionList);
-                                netArtistList.repaint();
-                                collectionList.repaint();
-                            });
-                            netArtistListModel.addElement(artistInfo);
-                        });
-                        netArtistList.setModel(netArtistListModel);
-                        netArtistScrollPane.setVValue(0);
-                        if (netArtistListModel.isEmpty()) {
-                            netArtistLeftBox.remove(netArtistScrollPane);
-                            netArtistLeftBox.add(emptyHintPanel);
-                        } else {
-                            netArtistLeftBox.remove(emptyHintPanel);
-                            netArtistLeftBox.add(netArtistScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
-        // 搜索歌手内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInArtist = () -> {
-            if (!netMusicListForArtistModel.isEmpty()) {
-                loadingAndRun(() -> {
-                    try {
-                        NetArtistInfo artistInfo = netArtistList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInArtistCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInArtistCurrPage, netMusicInArtistMaxPage));
-                        netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicListForArtistModel.clear();
-                        netMusicList.setModel(emptyListModel);
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForArtistModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListForArtistModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListForArtistModel.isEmpty()) {
-                            artistListCountBox.remove(netMusicScrollPane);
-                            artistListCountBox.add(emptyHintPanel);
-                        } else {
-                            artistListCountBox.remove(emptyHintPanel);
-                            artistListCountBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 播放全部
         netArtistPlayAllButton.addActionListener(e -> netArtistPlayAllMenuItem.doClick());
         // 刷新按钮事件
@@ -11973,11 +11961,11 @@ public class MainFrame extends JFrame {
             Component lc = netArtistLeftBox.getComponent(netArtistLeftBox.getComponentCount() - 1);
             // 当前显示的是歌手列表，刷新歌手
             if (lc == netArtistScrollPane || lc == emptyHintPanel) {
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(netArtistCurrPage);
             }
             // 当前显示的是某歌手的歌曲，刷新歌曲
             else {
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(netMusicInArtistCurrPage);
             }
         });
         // 第一页按钮事件
@@ -11989,8 +11977,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netArtistCurrPage = 1;
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(1);
             }
             // 当前显示的是某歌手的歌曲，跳到第一页歌曲
             else {
@@ -11998,8 +11985,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInArtistCurrPage = 1;
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -12011,8 +11997,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netArtistCurrPage--;
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(netArtistCurrPage - 1);
             }
             // 当前显示的是某歌手的歌曲，跳到上一页歌曲
             else {
@@ -12020,8 +12005,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInArtistCurrPage--;
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(netMusicInArtistCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -12033,8 +12017,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netArtistCurrPage++;
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(netArtistCurrPage + 1);
             }
             // 当前显示的是某歌手的歌曲，跳到下一页歌曲
             else {
@@ -12042,8 +12025,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInArtistCurrPage++;
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(netMusicInArtistCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -12055,8 +12037,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netArtistCurrPage = netArtistMaxPage;
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(netArtistMaxPage);
             }
             // 当前显示的是某歌手的歌曲，跳到最后一页歌曲
             else {
@@ -12064,8 +12045,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInArtistCurrPage = netMusicInArtistMaxPage;
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(netMusicInArtistMaxPage);
             }
         });
         // 跳页按钮事件
@@ -12081,8 +12061,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netArtistCurrPage = destPage;
-                searchArtistGoPageAction.run();
+                searchArtistGoPage(destPage);
             }
             // 当前显示的是某歌手的歌曲，跳页歌曲
             else {
@@ -12094,8 +12073,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInArtistCurrPage = destPage;
-                searchMusicInArtist.run();
+                getMusicInArtistGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -12942,6 +12920,109 @@ public class MainFrame extends JFrame {
         netArtistLeftBox.add(netArtistScrollPane);
     }
 
+    // 搜索电台跳页事件
+    private void searchRadioGoPage(int page) {
+        boolean songRequest = currRadioMusicInfo != null, songRecRequest = currRecRadioMusicInfo != null, userRequest = currRadioUserInfo != null,
+                artistRequest = currRadioArtistInfo != null, radioRequest = currRadioRadioInfo != null;
+        if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtil.notEmpty(netRadioCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 搜索电台并显示电台列表
+                    CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, page, limit)
+                            : artistRequest ? MusicServerUtil.getArtistRadios(currRadioArtistInfo, page, limit)
+                            : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
+                            : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getSource(), currRadioMusicInfo.getAlbumId())
+                            : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
+                            : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, page, limit);
+                    List<NetRadioInfo> radioInfos = result.data;
+                    Integer total = result.total;
+                    netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, page, netRadioMaxPage));
+                    netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
+                    netRadioCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netRadioList.setModel(emptyListModel);
+                    netRadioListModel.clear();
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
+                        // 设置图片加载后重绘的事件
+                        radioInfo.setInvokeLater(() -> {
+                            updateRenderer(netRadioList);
+                            updateRenderer(collectionList);
+                            netRadioList.repaint();
+                            collectionList.repaint();
+                        });
+                        netRadioListModel.addElement(radioInfo);
+                    });
+                    netRadioList.setModel(netRadioListModel);
+                    netRadioScrollPane.setVValue(0);
+                    if (netRadioListModel.isEmpty()) {
+                        netRadioLeftBox.remove(netRadioScrollPane);
+                        netRadioLeftBox.add(emptyHintPanel);
+                    } else {
+                        netRadioLeftBox.remove(emptyHintPanel);
+                        netRadioLeftBox.add(netRadioScrollPane);
+                    }
+                    netRadioCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
+    // 获取电台内歌曲并显示在在线歌曲列表
+    private void getMusicInRadioGoPage(int page) {
+        if (!netMusicListForRadioModel.isEmpty()) {
+            loadingAndRun(() -> {
+                try {
+                    NetRadioInfo radioInfo = netRadioList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRadioMaxPage));
+                    netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListForRadioModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListForRadioModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListForRadioModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListForRadioModel.isEmpty()) {
+                        radioListCountBox.remove(netMusicScrollPane);
+                        radioListCountBox.add(emptyHintPanel);
+                    } else {
+                        radioListCountBox.remove(emptyHintPanel);
+                        radioListCountBox.add(netMusicScrollPane);
+                    }
+                    netMusicInRadioCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化电台工具栏
     private void initNetRadioToolBar() {
         netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", currUIStyle.getForeColor()));
@@ -13116,105 +13197,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索电台跳页事件
-        Runnable searchRadioGoPageAction = () -> {
-            boolean songRequest = currRadioMusicInfo != null, songRecRequest = currRecRadioMusicInfo != null, userRequest = currRadioUserInfo != null,
-                    artistRequest = currRadioArtistInfo != null, radioRequest = currRadioRadioInfo != null;
-            if (userRequest || artistRequest || radioRequest || songRequest || songRecRequest || StringUtil.notEmpty(netRadioCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索电台并显示电台列表
-                        CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, netRadioCurrPage, limit)
-                                : artistRequest ? MusicServerUtil.getArtistRadios(currRadioArtistInfo, netRadioCurrPage, limit)
-                                : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
-                                : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getSource(), currRadioMusicInfo.getAlbumId())
-                                : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
-                                : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage, limit);
-                        List<NetRadioInfo> radioInfos = result.data;
-                        Integer total = result.total;
-                        netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
-                        netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
-                        netRadioCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netRadioList.setModel(emptyListModel);
-                        netRadioListModel.clear();
-                        radioInfos.forEach(radioInfo -> {
-                            globalExecutor.execute(() -> updateCollection(radioInfo));
-                            // 设置图片加载后重绘的事件
-                            radioInfo.setInvokeLater(() -> {
-                                updateRenderer(netRadioList);
-                                updateRenderer(collectionList);
-                                netRadioList.repaint();
-                                collectionList.repaint();
-                            });
-                            netRadioListModel.addElement(radioInfo);
-                        });
-                        netRadioList.setModel(netRadioListModel);
-                        netRadioScrollPane.setVValue(0);
-                        if (netRadioListModel.isEmpty()) {
-                            netRadioLeftBox.remove(netRadioScrollPane);
-                            netRadioLeftBox.add(emptyHintPanel);
-                        } else {
-                            netRadioLeftBox.remove(emptyHintPanel);
-                            netRadioLeftBox.add(netRadioScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
-        // 搜索电台内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInRadio = () -> {
-            if (!netMusicListForRadioModel.isEmpty()) {
-                loadingAndRun(() -> {
-                    try {
-                        NetRadioInfo radioInfo = netRadioList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netMusicInRadioCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRadioCurrPage, netMusicInRadioMaxPage));
-                        netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListForRadioModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForRadioModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListForRadioModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListForRadioModel.isEmpty()) {
-                            radioListCountBox.remove(netMusicScrollPane);
-                            radioListCountBox.add(emptyHintPanel);
-                        } else {
-                            radioListCountBox.remove(emptyHintPanel);
-                            radioListCountBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 播放全部
         netRadioPlayAllButton.addActionListener(e -> netRadioPlayAllMenuItem.doClick());
         // 刷新按钮事件
@@ -13222,11 +13205,11 @@ public class MainFrame extends JFrame {
             Component lc = netRadioLeftBox.getComponent(netRadioLeftBox.getComponentCount() - 1);
             // 当前显示的是电台列表，刷新电台
             if (lc == netRadioScrollPane || lc == emptyHintPanel) {
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(netRadioCurrPage);
             }
             // 当前显示的是某电台的歌曲，刷新歌曲
             else {
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(netMusicInRadioCurrPage);
             }
         });
         // 第一页按钮事件
@@ -13238,8 +13221,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRadioCurrPage = 1;
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(1);
             }
             // 当前显示的是某电台的歌曲，跳到第一页歌曲
             else {
@@ -13247,8 +13229,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRadioCurrPage = 1;
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -13260,8 +13241,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRadioCurrPage--;
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(netRadioCurrPage - 1);
             }
             // 当前显示的是某电台的歌曲，跳到上一页歌曲
             else {
@@ -13269,8 +13249,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRadioCurrPage--;
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(netMusicInRadioCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -13282,8 +13261,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRadioCurrPage++;
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(netRadioCurrPage + 1);
             }
             // 当前显示的是某电台的歌曲，跳到下一页歌曲
             else {
@@ -13291,8 +13269,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRadioCurrPage++;
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(netMusicInRadioCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -13304,8 +13281,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRadioCurrPage = netRadioMaxPage;
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(netRadioMaxPage);
             }
             // 当前显示的是某电台的歌曲，跳到最后一页歌曲
             else {
@@ -13313,8 +13289,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRadioCurrPage = netMusicInRadioMaxPage;
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(netMusicInRadioMaxPage);
             }
         });
         // 跳页按钮事件
@@ -13330,8 +13305,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netRadioCurrPage = destPage;
-                searchRadioGoPageAction.run();
+                searchRadioGoPage(destPage);
             }
             // 当前显示的是某电台的歌曲，跳页歌曲
             else {
@@ -13343,8 +13317,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRadioCurrPage = destPage;
-                searchMusicInRadio.run();
+                getMusicInRadioGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -14105,6 +14078,66 @@ public class MainFrame extends JFrame {
         netRadioLeftBox.add(netRadioScrollPane);
     }
 
+    // 搜索 MV 跳页事件
+    private void searchMvGoPage(int page) {
+        boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
+                mvRequest = currMvMvInfo != null, episodeRequest = currEpisodesMvInfo != null, userRequest = currMvUserInfo != null;
+        if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtil.notEmpty(netMvCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 搜索 MV 并显示 MV 列表
+                    CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, page, limit)
+                            : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, page, limit)
+                            : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
+                            : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, page, limit)
+                            : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), page, limit, mvCursor)
+                            : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, page, limit, mvCursor);
+                    List<NetMvInfo> mvInfos = result.data;
+                    Integer total = result.total;
+                    mvCursor = result.cursor;
+                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, page, netMvMaxPage));
+                    netMvCountPanel.setVisible(true);
+                    netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMvList.setModel(emptyListModel);
+                    netMvListModel.clear();
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
+                        // 设置图片加载后重绘的事件
+                        mvInfo.setInvokeLater(() -> {
+                            updateRenderer(netMvList);
+                            updateRenderer(collectionList);
+                            netMvList.repaint();
+                            collectionList.repaint();
+                        });
+                        netMvListModel.addElement(mvInfo);
+                    });
+                    netMvList.setModel(netMvListModel);
+                    netMvScrollPane.setVValue(0);
+                    if (netMvListModel.isEmpty()) {
+                        netMvLeftBox.remove(netMvScrollPane);
+                        netMvLeftBox.add(emptyHintPanel);
+                    } else {
+                        netMvLeftBox.remove(emptyHintPanel);
+                        netMvLeftBox.add(netMvScrollPane);
+                    }
+                    netMvCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化 MV 工具栏
     private void initNetMvToolBar() {
         // 返回关键词面板事件
@@ -14238,64 +14271,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索 MV 跳页事件
-        Runnable searchMvGoPageAction = () -> {
-            boolean artistRequest = currMvArtistInfo != null, songRequest = currMvMusicInfo != null,
-                    mvRequest = currMvMvInfo != null, episodeRequest = currEpisodesMvInfo != null, userRequest = currMvUserInfo != null;
-            if (artistRequest || songRequest || mvRequest || episodeRequest || userRequest || StringUtil.notEmpty(netMvCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索 MV 并显示 MV 列表
-                        CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, netMvCurrPage, limit)
-                                : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, netMvCurrPage, limit)
-                                : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
-                                : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, netMvCurrPage, limit)
-                                : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), netMvCurrPage, limit, mvCursor)
-                                : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, netMvCurrPage, limit, mvCursor);
-                        List<NetMvInfo> mvInfos = result.data;
-                        Integer total = result.total;
-                        mvCursor = result.cursor;
-                        netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
-                        netMvCountPanel.setVisible(true);
-                        netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMvList.setModel(emptyListModel);
-                        netMvListModel.clear();
-                        mvInfos.forEach(mvInfo -> {
-                            globalExecutor.execute(() -> updateCollection(mvInfo));
-                            // 设置图片加载后重绘的事件
-                            mvInfo.setInvokeLater(() -> {
-                                updateRenderer(netMvList);
-                                updateRenderer(collectionList);
-                                netMvList.repaint();
-                                collectionList.repaint();
-                            });
-                            netMvListModel.addElement(mvInfo);
-                        });
-                        netMvList.setModel(netMvListModel);
-                        netMvScrollPane.setVValue(0);
-                        if (netMvListModel.isEmpty()) {
-                            netMvLeftBox.remove(netMvScrollPane);
-                            netMvLeftBox.add(emptyHintPanel);
-                        } else {
-                            netMvLeftBox.remove(emptyHintPanel);
-                            netMvLeftBox.add(netMvScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         netMvSortTypeComboBox.addItem(I18n.getText("latest"));
         netMvSortTypeComboBox.addItem(I18n.getText("mostPlayed"));
         netMvSortTypeComboBox.addItem(I18n.getText("mostCollected"));
@@ -14308,7 +14284,7 @@ public class MainFrame extends JFrame {
         });
         // 刷新按钮事件
         netMvRefreshButton.addActionListener(e -> {
-            searchMvGoPageAction.run();
+            searchMvGoPage(netMvCurrPage);
         });
         // 第一页按钮事件
         netMvStartPageButton.addActionListener(e -> {
@@ -14316,8 +14292,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMvCurrPage = 1;
-            searchMvGoPageAction.run();
+            searchMvGoPage(1);
         });
         // 上一页按钮事件
         netMvLastPageButton.addActionListener(e -> {
@@ -14325,8 +14300,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                 return;
             }
-            netMvCurrPage--;
-            searchMvGoPageAction.run();
+            searchMvGoPage(netMvCurrPage - 1);
         });
         // 下一页按钮事件
         netMvNextPageButton.addActionListener(e -> {
@@ -14334,8 +14308,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMvCurrPage++;
-            searchMvGoPageAction.run();
+            searchMvGoPage(netMvCurrPage + 1);
         });
         // 最后一页按钮事件
         netMvEndPageButton.addActionListener(e -> {
@@ -14343,8 +14316,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                 return;
             }
-            netMvCurrPage = netMvMaxPage;
-            searchMvGoPageAction.run();
+            searchMvGoPage(netMvMaxPage);
         });
         // 跳页按钮事件
         netMvGoButton.addActionListener(e -> {
@@ -14356,8 +14328,7 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                 return;
             }
-            netMvCurrPage = destPage;
-            searchMvGoPageAction.run();
+            searchMvGoPage(destPage);
         });
         // 按钮大小限制
         Dimension dimension = new Dimension(30, 30);
@@ -14879,6 +14850,102 @@ public class MainFrame extends JFrame {
         netMvLeftBox.add(netMvScrollPane);
     }
 
+    // 获取榜单事件
+    private void getRankingGoPage(int page) {
+        loadingAndRun(() -> {
+            try {
+                // 搜索榜单并显示榜单列表
+                CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
+                List<NetRankingInfo> rankingInfos = result.data;
+//                        Integer total = result.total;
+//                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                netRankingMaxPage = 1;
+                // 更新数量显示
+                netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netRankingMaxPage));
+                netRankingCountPanel.setVisible(true);
+                netRankingSourceComboBox.setVisible(true);
+                // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                netRankingList.setModel(emptyListModel);
+                netRankingListModel.clear();
+                rankingInfos.forEach(rankingInfo -> {
+                    globalExecutor.execute(() -> updateCollection(rankingInfo));
+                    // 设置图片加载后重绘的事件
+                    rankingInfo.setInvokeLater(() -> {
+                        updateRenderer(netRankingList);
+                        updateRenderer(collectionList);
+                        netRankingList.repaint();
+                        collectionList.repaint();
+                    });
+                    netRankingListModel.addElement(rankingInfo);
+                });
+                netRankingList.setModel(netRankingListModel);
+                if (netRankingListModel.isEmpty()) {
+                    netRankingLeftBox.remove(netRankingScrollPane);
+                    netRankingLeftBox.add(emptyHintPanel);
+                } else {
+                    netRankingLeftBox.remove(emptyHintPanel);
+                    netRankingLeftBox.add(netRankingScrollPane);
+                }
+                netRankingScrollPane.setVValue(0);
+                netRankingCurrPage = page;
+            } catch (IORuntimeException ioRuntimeException) {
+                // 无网络连接
+                new TipDialog(THIS, NO_NET_MSG).showDialog();
+            } catch (HttpException httpException) {
+                // 请求超时
+                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            } catch (JSONException jsonException) {
+                // 接口异常
+                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            }
+        });
+    }
+
+    // 获取榜单内歌曲并显示在在线歌曲列表
+    private void getMusicInRankingGoPage(int page) {
+        if (!netMusicListForRankingModel.isEmpty()) {
+            loadingAndRun(() -> {
+                try {
+                    NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
+                            rankingInfo.getId(), rankingInfo.getSource(), page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRankingMaxPage));
+                    netRankingCountPanel.add(netRankingCountLabel, netRankingCountPanel.getComponentIndex(netRankingCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListForRankingModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListForRankingModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListForRankingModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicListForRankingModel.isEmpty()) {
+                        rankingListCountBox.remove(netMusicScrollPane);
+                        rankingListCountBox.add(emptyHintPanel);
+                    } else {
+                        rankingListCountBox.remove(emptyHintPanel);
+                        rankingListCountBox.add(netMusicScrollPane);
+                    }
+                    netMusicInRankingCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化榜单工具栏
     private void initNetRankingToolBar() {
         // 只能输入数字
@@ -14898,98 +14965,7 @@ public class MainFrame extends JFrame {
             // 切换后一定要刷新！
             netRankingLeftBox.repaint();
         });
-        // 获取榜单事件
-        getRankingAction = () -> {
-            loadingAndRun(() -> {
-                try {
-                    // 搜索榜单并显示榜单列表
-                    CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
-                    List<NetRankingInfo> rankingInfos = result.data;
-//                        Integer total = result.total;
-//                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                    netRankingMaxPage = 1;
-                    // 更新数量显示
-                    netRankingCountLabel.setText(String.format(PAGINATION_MSG, netRankingCurrPage, netRankingMaxPage));
-                    netRankingCountPanel.setVisible(true);
-                    netRankingSourceComboBox.setVisible(true);
-                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                    netRankingList.setModel(emptyListModel);
-                    netRankingListModel.clear();
-                    rankingInfos.forEach(rankingInfo -> {
-                        globalExecutor.execute(() -> updateCollection(rankingInfo));
-                        // 设置图片加载后重绘的事件
-                        rankingInfo.setInvokeLater(() -> {
-                            updateRenderer(netRankingList);
-                            updateRenderer(collectionList);
-                            netRankingList.repaint();
-                            collectionList.repaint();
-                        });
-                        netRankingListModel.addElement(rankingInfo);
-                    });
-                    netRankingList.setModel(netRankingListModel);
-                    if (netRankingListModel.isEmpty()) {
-                        netRankingLeftBox.remove(netRankingScrollPane);
-                        netRankingLeftBox.add(emptyHintPanel);
-                    } else {
-                        netRankingLeftBox.remove(emptyHintPanel);
-                        netRankingLeftBox.add(netRankingScrollPane);
-                    }
-                    netRankingScrollPane.setVValue(0);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                }
-            });
-        };
-        // 搜索榜单内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInRanking = () -> {
-            if (!netMusicListForRankingModel.isEmpty()) {
-                loadingAndRun(() -> {
-                    try {
-                        NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                rankingInfo.getId(), rankingInfo.getSource(), netMusicInRankingCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netRankingCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankingCurrPage, netMusicInRankingMaxPage));
-                        netRankingCountPanel.add(netRankingCountLabel, netRankingCountPanel.getComponentIndex(netRankingCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListForRankingModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForRankingModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListForRankingModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicListForRankingModel.isEmpty()) {
-                            rankingListCountBox.remove(netMusicScrollPane);
-                            rankingListCountBox.add(emptyHintPanel);
-                        } else {
-                            rankingListCountBox.remove(emptyHintPanel);
-                            rankingListCountBox.add(netMusicScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 播放全部
         netRankingPlayAllButton.addActionListener(e -> netRankingPlayAllMenuItem.doClick());
         // 刷新按钮事件
@@ -14997,11 +14973,11 @@ public class MainFrame extends JFrame {
             Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，刷新榜单
             if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                getRankingAction.run();
+                getRankingGoPage(netRankingCurrPage);
             }
             // 当前显示的是某榜单的歌曲，刷新歌曲
             else {
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(netMusicInRankingCurrPage);
             }
         });
         // 第一页按钮事件
@@ -15013,8 +14989,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRankingCurrPage = 1;
-                getRankingAction.run();
+                getRankingGoPage(1);
             }
             // 当前显示的是某榜单的歌曲，跳到第一页歌曲
             else {
@@ -15022,8 +14997,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRankingCurrPage = 1;
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -15035,8 +15009,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRankingCurrPage--;
-                getRankingAction.run();
+                getRankingGoPage(netRankingCurrPage - 1);
             }
             // 当前显示的是某榜单的歌曲，跳到上一页歌曲
             else {
@@ -15044,8 +15017,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRankingCurrPage--;
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(netMusicInRankingCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -15057,8 +15029,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRankingCurrPage++;
-                getRankingAction.run();
+                getRankingGoPage(netRankingCurrPage + 1);
             }
             // 当前显示的是某榜单的歌曲，跳到下一页歌曲
             else {
@@ -15066,8 +15037,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRankingCurrPage++;
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(netMusicInRankingCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -15079,8 +15049,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRankingCurrPage = netRankingMaxPage;
-                getRankingAction.run();
+                getRankingGoPage(netRankingMaxPage);
             }
             // 当前显示的是某榜单的歌曲，跳到最后一页歌曲
             else {
@@ -15088,8 +15057,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRankingCurrPage = netMusicInRankingMaxPage;
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(netMusicInRankingMaxPage);
             }
         });
         // 跳页按钮事件
@@ -15105,7 +15073,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingAction.run();
+                getRankingGoPage(destPage);
             }
             // 当前显示的是某榜单的歌曲，跳页歌曲
             else {
@@ -15117,8 +15085,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRankingCurrPage = destPage;
-                searchMusicInRanking.run();
+                getMusicInRankingGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -15459,6 +15426,118 @@ public class MainFrame extends JFrame {
         netRankingLeftBox.add(netRankingScrollPane);
     }
 
+    // 搜索用户跳页事件
+    private void searchUserGoPage(int page) {
+        boolean followUserRequest = currFollowUserUserInfo != null, fanUserRequest = currFanUserUserInfo != null,
+                playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
+                commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
+                radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
+                songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
+        if (followUserRequest || fanUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
+                playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.notEmpty(netUserCurrKeyword)) {
+            loadingAndRun(() -> {
+                try {
+                    // 搜索用户并显示用户列表
+                    CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, page, limit)
+                            : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, page, limit)
+                            : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, page, limit)
+                            : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, page, limit)
+                            : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, page, limit)
+                            : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getSource(), currUserPlaylistInfo.getCreatorId())
+                            : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getSource(), currUserMvInfo.getCreatorId())
+                            : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getSource(), currUserRadioInfo.getDjId())
+                            : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getSource(), currUserCommentInfo.getUserId())
+                            : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getSource(), currAuthorMusicInfo.getArtistId())
+                            : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getSource(), currAuthorAlbumInfo.getArtistId())
+                            : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, page, limit);
+                    List<NetUserInfo> userInfos = result.data;
+                    Integer total = result.total;
+                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, page, netUserMaxPage));
+                    netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
+                    netUserCountPanel.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netUserList.setModel(emptyListModel);
+                    netUserListModel.clear();
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
+                        // 设置图片加载后重绘的事件
+                        userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
+                            netUserList.repaint();
+                            collectionList.repaint();
+                        });
+                        netUserListModel.addElement(userInfo);
+                    });
+                    netUserList.setModel(netUserListModel);
+                    netUserScrollPane.setVValue(0);
+                    if (netUserListModel.isEmpty()) {
+                        netUserLeftBox.remove(netUserScrollPane);
+                        netUserLeftBox.add(emptyHintPanel);
+                    } else {
+                        netUserLeftBox.remove(emptyHintPanel);
+                        netUserLeftBox.add(netUserScrollPane);
+                    }
+                    netUserCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
+    // 获取用户内歌曲并显示在在线歌曲列表
+    private void getMusicInUserGoPage(int page) {
+        loadingAndRun(() -> {
+            try {
+                NetUserInfo userInfo = netUserList.getSelectedValue();
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
+                        netUserRecordTypeComboBox.getSelectedIndex(), userInfo, page, limit);
+                List<NetMusicInfo> musicInfos = result.data;
+                Integer total = result.total;
+                netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                // 更新数量显示
+                netUserCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInUserMaxPage));
+                netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
+                // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                netMusicList.setModel(emptyListModel);
+                netMusicListForUserModel.clear();
+                musicInfos.forEach(musicInfo -> {
+                    globalExecutor.execute(() -> updateCollection(musicInfo));
+                    netMusicListForUserModel.addElement(musicInfo);
+                });
+                netMusicList.setModel(netMusicListForUserModel);
+                netMusicScrollPane.setVValue(0);
+                if (netMusicListForUserModel.isEmpty()) {
+                    userListCountBox.remove(netMusicScrollPane);
+                    userListCountBox.add(emptyHintPanel);
+                } else {
+                    userListCountBox.remove(emptyHintPanel);
+                    userListCountBox.add(netMusicScrollPane);
+                }
+                netMusicInUserCurrPage = page;
+            } catch (IORuntimeException ioRuntimeException) {
+                // 无网络连接
+                new TipDialog(THIS, NO_NET_MSG).showDialog();
+            } catch (HttpException httpException) {
+                // 请求超时
+                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+            } catch (JSONException jsonException) {
+                // 接口异常
+                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            }
+        });
+    }
+
     // 初始化用户工具栏
     private void initNetUserToolBar() {
         netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", currUIStyle.getForeColor()));
@@ -15634,116 +15713,7 @@ public class MainFrame extends JFrame {
                 });
             }
         });
-        // 搜索用户跳页事件
-        Runnable searchUserGoPageAction = () -> {
-            boolean followUserRequest = currFollowUserUserInfo != null, fanUserRequest = currFanUserUserInfo != null,
-                    playlistRequest = currUserPlaylistInfo != null, mvRequest = currUserMvInfo != null, radioRequest = currUserRadioInfo != null,
-                    commentRequest = currUserCommentInfo != null, playlistSubRequest = currSubscriberPlaylistInfo != null,
-                    radioSubRequest = currSubscriberRadioInfo != null, artistRequest = currUserArtistInfo != null,
-                    songRequest = currAuthorMusicInfo != null, albumRequest = currAuthorAlbumInfo != null;
-            if (followUserRequest || fanUserRequest || playlistSubRequest || radioSubRequest || artistRequest ||
-                    playlistRequest || mvRequest || radioRequest || commentRequest || songRequest || StringUtil.notEmpty(netUserCurrKeyword)) {
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索用户并显示用户列表
-                        CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, netUserCurrPage, limit)
-                                : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, netUserCurrPage, limit)
-                                : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, netUserCurrPage, limit)
-                                : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, netUserCurrPage, limit)
-                                : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, netUserCurrPage, limit)
-                                : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getSource(), currUserPlaylistInfo.getCreatorId())
-                                : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getSource(), currUserMvInfo.getCreatorId())
-                                : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getSource(), currUserRadioInfo.getDjId())
-                                : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getSource(), currUserCommentInfo.getUserId())
-                                : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getSource(), currAuthorMusicInfo.getArtistId())
-                                : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getSource(), currAuthorAlbumInfo.getArtistId())
-                                : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage, limit);
-                        List<NetUserInfo> userInfos = result.data;
-                        Integer total = result.total;
-                        netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
-                        netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
-                        netUserCountPanel.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netUserList.setModel(emptyListModel);
-                        netUserListModel.clear();
-                        userInfos.forEach(userInfo -> {
-                            globalExecutor.execute(() -> updateCollection(userInfo));
-                            // 设置图片加载后重绘的事件
-                            userInfo.setInvokeLater(() -> {
-                                updateRenderer(netUserList);
-                                updateRenderer(collectionList);
-                                netUserList.repaint();
-                                collectionList.repaint();
-                            });
-                            netUserListModel.addElement(userInfo);
-                        });
-                        netUserList.setModel(netUserListModel);
-                        netUserScrollPane.setVValue(0);
-                        if (netUserListModel.isEmpty()) {
-                            netUserLeftBox.remove(netUserScrollPane);
-                            netUserLeftBox.add(emptyHintPanel);
-                        } else {
-                            netUserLeftBox.remove(emptyHintPanel);
-                            netUserLeftBox.add(netUserScrollPane);
-                        }
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
-        // 搜索用户内歌曲并显示在在线歌曲列表
-        Runnable searchMusicInUser = () -> {
-//            if (!netMusicListForUserModel.isEmpty()) {
-            loadingAndRun(() -> {
-                try {
-                    NetUserInfo userInfo = netUserList.getSelectedValue();
-                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInUser(
-                            netUserRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInUserCurrPage, limit);
-                    List<NetMusicInfo> musicInfos = result.data;
-                    Integer total = result.total;
-                    netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                    // 更新数量显示
-                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
-                    netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
-                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                    netMusicList.setModel(emptyListModel);
-                    netMusicListForUserModel.clear();
-                    musicInfos.forEach(musicInfo -> {
-                        globalExecutor.execute(() -> updateCollection(musicInfo));
-                        netMusicListForUserModel.addElement(musicInfo);
-                    });
-                    netMusicList.setModel(netMusicListForUserModel);
-                    netMusicScrollPane.setVValue(0);
-                    if (netMusicListForUserModel.isEmpty()) {
-                        userListCountBox.remove(netMusicScrollPane);
-                        userListCountBox.add(emptyHintPanel);
-                    } else {
-                        userListCountBox.remove(emptyHintPanel);
-                        userListCountBox.add(netMusicScrollPane);
-                    }
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                }
-            });
-//            }
-        };
+
         recordTypeComboBoxModel.addElement(I18n.getText("recentWeek"));
         recordTypeComboBoxModel.addElement(I18n.getText("allTime"));
         orderComboBoxModel.addElement(I18n.getText("latest"));
@@ -15757,8 +15727,7 @@ public class MainFrame extends JFrame {
             if (netUserRecordTypeComboBox.getItemCount() <= 1
                     || netUserRecordTypeComboBox.getSelectedItem() == null
                     || e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicInUserCurrPage = 1;
-            searchMusicInUser.run();
+            getMusicInUserGoPage(1);
         });
         // 播放全部
         netUserPlayAllButton.addActionListener(e -> netUserPlayAllMenuItem.doClick());
@@ -15767,11 +15736,11 @@ public class MainFrame extends JFrame {
             Component lc = netUserLeftBox.getComponent(netUserLeftBox.getComponentCount() - 1);
             // 当前显示的是用户列表，刷新用户
             if (lc == netUserScrollPane || lc == emptyHintPanel) {
-                searchUserGoPageAction.run();
+                searchUserGoPage(netUserCurrPage);
             }
             // 当前显示的是某用户的歌曲，刷新歌曲
             else {
-                searchMusicInUser.run();
+                getMusicInUserGoPage(netMusicInUserCurrPage);
             }
         });
         // 第一页按钮事件
@@ -15783,8 +15752,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netUserCurrPage = 1;
-                searchUserGoPageAction.run();
+                searchUserGoPage(1);
             }
             // 当前显示的是某用户的歌曲，跳到第一页歌曲
             else {
@@ -15792,8 +15760,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInUserCurrPage = 1;
-                searchMusicInUser.run();
+                getMusicInUserGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -15805,8 +15772,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netUserCurrPage--;
-                searchUserGoPageAction.run();
+                searchUserGoPage(netUserCurrPage - 1);
             }
             // 当前显示的是某用户的歌曲，跳到上一页歌曲
             else {
@@ -15814,8 +15780,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInUserCurrPage--;
-                searchMusicInUser.run();
+                getMusicInUserGoPage(netMusicInUserCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -15827,8 +15792,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netUserCurrPage++;
-                searchUserGoPageAction.run();
+                searchUserGoPage(netUserCurrPage + 1);
             }
             // 当前显示的是某用户的歌曲，跳到下一页歌曲
             else {
@@ -15836,8 +15800,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInUserCurrPage++;
-                searchMusicInUser.run();
+                getMusicInUserGoPage(netMusicInUserCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -15849,8 +15812,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netUserCurrPage = netUserMaxPage;
-                searchUserGoPageAction.run();
+                searchUserGoPage(netUserMaxPage);
             }
             // 当前显示的是某用户的歌曲，跳到最后一页歌曲
             else {
@@ -15858,8 +15820,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInUserCurrPage = netMusicInUserMaxPage;
-                searchMusicInUser.run();
+                getMusicInUserGoPage(netMusicInUserMaxPage);
             }
         });
         // 跳页按钮事件
@@ -15875,8 +15836,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netUserCurrPage = destPage;
-                searchUserGoPageAction.run();
+                searchUserGoPage(destPage);
             }
             // 当前显示的是某用户的歌曲，跳页歌曲
             else {
@@ -15888,8 +15848,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInUserCurrPage = destPage;
-                searchMusicInUser.run();
+                getMusicInUserGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
@@ -17501,6 +17460,614 @@ public class MainFrame extends JFrame {
         netSheetBox.add(netSheetScrollPane);
     }
 
+    // 推荐模块跳页事件，可复用
+    private void recommendGoPage(int page) {
+        // 搜索推荐歌单/专辑/歌手/电台里的歌
+        if (recommendBackwardButton.isEnabled()) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    NetResource resource = itemRecommendList.getSelectedValue();
+                    // 这是歌单里的歌
+                    if (resource instanceof NetPlaylistInfo) {
+                        NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForPlaylistRecommendModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForPlaylistRecommendModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForPlaylistRecommendModel);
+                        if (netMusicListForPlaylistRecommendModel.isEmpty()) {
+                            recommendItemListCountBox.remove(netMusicScrollPane);
+                            recommendItemListCountBox.add(emptyHintPanel);
+                        } else {
+                            recommendItemListCountBox.remove(emptyHintPanel);
+                            recommendItemListCountBox.add(netMusicScrollPane);
+                        }
+                        recommendLeftBox.repaint();
+                    }
+                    // 这是专辑里的歌
+                    else if (resource instanceof NetAlbumInfo) {
+                        NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForAlbumRecommendModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForAlbumRecommendModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForAlbumRecommendModel);
+                        if (netMusicListForAlbumRecommendModel.isEmpty()) {
+                            recommendItemListCountBox.remove(netMusicScrollPane);
+                            recommendItemListCountBox.add(emptyHintPanel);
+                        } else {
+                            recommendItemListCountBox.remove(emptyHintPanel);
+                            recommendItemListCountBox.add(netMusicScrollPane);
+                        }
+                        recommendLeftBox.repaint();
+                    }
+                    // 这是歌手里的歌
+                    else if (resource instanceof NetArtistInfo) {
+                        NetArtistInfo artistInfo = (NetArtistInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        int total = result.total;
+                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForArtistRecommendModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForArtistRecommendModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForArtistRecommendModel);
+                        if (netMusicListForArtistRecommendModel.isEmpty()) {
+                            recommendItemListCountBox.remove(netMusicScrollPane);
+                            recommendItemListCountBox.add(emptyHintPanel);
+                        } else {
+                            recommendItemListCountBox.remove(emptyHintPanel);
+                            recommendItemListCountBox.add(netMusicScrollPane);
+                        }
+                        recommendLeftBox.repaint();
+                    }
+                    // 这是电台里的歌
+                    else if (resource instanceof NetRadioInfo) {
+                        NetRadioInfo radioInfo = (NetRadioInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
+                                radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), page, limit);
+                        List<NetMusicInfo> musicInfos = result.data;
+                        Integer total = result.total;
+                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
+                        // 解决数量标签文字显示不全问题
+                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                        netMusicList.setModel(emptyListModel);
+                        netMusicListForRadioRecommendModel.clear();
+                        musicInfos.forEach(musicInfo -> {
+                            globalExecutor.execute(() -> updateCollection(musicInfo));
+                            netMusicListForRadioRecommendModel.addElement(musicInfo);
+                        });
+                        netMusicList.setModel(netMusicListForRadioRecommendModel);
+                        if (netMusicListForRadioRecommendModel.isEmpty()) {
+                            recommendItemListCountBox.remove(netMusicScrollPane);
+                            recommendItemListCountBox.add(emptyHintPanel);
+                        } else {
+                            recommendItemListCountBox.remove(emptyHintPanel);
+                            recommendItemListCountBox.add(netMusicScrollPane);
+                        }
+                        recommendLeftBox.repaint();
+                    }
+                    netMusicScrollPane.setVValue(0);
+                    netMusicInRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索推荐歌单
+        else if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    playlistRecommendListModel.clear();
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
+                        // 设置图片加载后重绘的事件
+                        playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        playlistRecommendListModel.addElement(playlistInfo);
+                    });
+                    itemRecommendList.setModel(playlistRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (playlistRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索精品歌单
+        else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    playlistRecommendListModel.clear();
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
+                        // 设置图片加载后重绘的事件
+                        playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        playlistRecommendListModel.addElement(playlistInfo);
+                    });
+                    itemRecommendList.setModel(playlistRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (playlistRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索飙升歌曲
+        else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicRecommendListModel.clear();
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
+                    netMusicList.setModel(netMusicRecommendListModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(netMusicScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(netMusicScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索新歌速递
+        else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicRecommendListModel.clear();
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
+                    netMusicList.setModel(netMusicRecommendListModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(netMusicScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(netMusicScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索新碟上架
+        else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetAlbumInfo> albumInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    albumRecommendListModel.clear();
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
+                        // 设置图片加载后重绘的事件
+                        albumInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        albumRecommendListModel.addElement(albumInfo);
+                    });
+                    itemRecommendList.setModel(albumRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (albumRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索歌手排行
+        else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetArtistInfo> artistInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    artistRecommendListModel.clear();
+                    artistInfos.forEach(artistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(artistInfo));
+                        // 设置图片加载后重绘的事件
+                        artistInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        artistRecommendListModel.addElement(artistInfo);
+                    });
+                    itemRecommendList.setModel(artistRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (artistRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索新晋电台
+        else if (currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
+                            netRecommendSourceComboBox.getSelectedIndex(), page, limit);
+                    List<NetRadioInfo> radioInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    radioRecommendListModel.clear();
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
+                        // 设置图片加载后重绘的事件
+                        radioInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        radioRecommendListModel.addElement(radioInfo);
+                    });
+                    itemRecommendList.setModel(radioRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (radioRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索热门电台
+        else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetRadioInfo> radioInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    radioRecommendListModel.clear();
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
+                        // 设置图片加载后重绘的事件
+                        radioInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        radioRecommendListModel.addElement(radioInfo);
+                    });
+                    itemRecommendList.setModel(radioRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (radioRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索推荐节目
+        else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicRecommendListModel.clear();
+                    musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
+                    netMusicList.setModel(netMusicRecommendListModel);
+                    netMusicScrollPane.setVValue(0);
+                    if (netMusicRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(netMusicScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(netMusicScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+        // 搜索推荐 MV
+        else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
+            loadingAndRun(() -> {
+                // 搜索歌曲并显示在在线歌曲列表
+                try {
+                    CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
+                            netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
+                    List<NetMvInfo> mvInfos = result.data;
+                    int total = result.total;
+                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    // 更新数量显示
+                    recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
+                    // 解决数量标签文字显示不全问题
+                    recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    itemRecommendList.setModel(emptyListModel);
+                    mvRecommendListModel.clear();
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
+                        // 设置图片加载后重绘的事件
+                        mvInfo.setInvokeLater(() -> {
+                            updateRenderer(itemRecommendList);
+                            updateRenderer(collectionList);
+                            itemRecommendList.repaint();
+                            collectionList.repaint();
+                        });
+                        mvRecommendListModel.addElement(mvInfo);
+                    });
+                    itemRecommendList.setModel(mvRecommendListModel);
+                    itemRecommendScrollPane.setVValue(0);
+                    if (mvRecommendListModel.isEmpty()) {
+                        recommendLeftBox.remove(itemRecommendScrollPane);
+                        recommendLeftBox.add(emptyHintPanel);
+                    } else {
+                        recommendLeftBox.remove(emptyHintPanel);
+                        recommendLeftBox.add(itemRecommendScrollPane);
+                    }
+                    recommendLeftBox.repaint();
+                    netRecommendCurrPage = page;
+                } catch (IORuntimeException ioRuntimeException) {
+                    // 无网络连接
+                    new TipDialog(THIS, NO_NET_MSG).showDialog();
+                } catch (HttpException httpException) {
+                    // 请求超时
+                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+                } catch (JSONException jsonException) {
+                    // 接口异常
+                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                }
+            });
+        }
+    }
+
     // 初始化推荐工具条
     private void initRecommendToolBar() {
         // 只能输入数字
@@ -17533,610 +18100,14 @@ public class MainFrame extends JFrame {
             // 切换后一定要刷新！
             recommendLeftBox.repaint();
         });
-        // 推荐模块跳页事件，可复用
-        Runnable recommendGoPageAction = () -> {
-            // 搜索推荐歌单/专辑/歌手/电台里的歌
-            if (recommendBackwardButton.isEnabled()) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        NetResource resource = itemRecommendList.getSelectedValue();
-                        // 这是歌单里的歌
-                        if (resource instanceof NetPlaylistInfo) {
-                            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInRecommendCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForPlaylistRecommendModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForPlaylistRecommendModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForPlaylistRecommendModel);
-                            if (netMusicListForPlaylistRecommendModel.isEmpty()) {
-                                recommendItemListCountBox.remove(netMusicScrollPane);
-                                recommendItemListCountBox.add(emptyHintPanel);
-                            } else {
-                                recommendItemListCountBox.remove(emptyHintPanel);
-                                recommendItemListCountBox.add(netMusicScrollPane);
-                            }
-                            recommendLeftBox.repaint();
-                        }
-                        // 这是专辑里的歌
-                        else if (resource instanceof NetAlbumInfo) {
-                            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInRecommendCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForAlbumRecommendModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForAlbumRecommendModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForAlbumRecommendModel);
-                            if (netMusicListForAlbumRecommendModel.isEmpty()) {
-                                recommendItemListCountBox.remove(netMusicScrollPane);
-                                recommendItemListCountBox.add(emptyHintPanel);
-                            } else {
-                                recommendItemListCountBox.remove(emptyHintPanel);
-                                recommendItemListCountBox.add(netMusicScrollPane);
-                            }
-                            recommendLeftBox.repaint();
-                        }
-                        // 这是歌手里的歌
-                        else if (resource instanceof NetArtistInfo) {
-                            NetArtistInfo artistInfo = (NetArtistInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInRecommendCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForArtistRecommendModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForArtistRecommendModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForArtistRecommendModel);
-                            if (netMusicListForArtistRecommendModel.isEmpty()) {
-                                recommendItemListCountBox.remove(netMusicScrollPane);
-                                recommendItemListCountBox.add(emptyHintPanel);
-                            } else {
-                                recommendItemListCountBox.remove(emptyHintPanel);
-                                recommendItemListCountBox.add(netMusicScrollPane);
-                            }
-                            recommendLeftBox.repaint();
-                        }
-                        // 这是电台里的歌
-                        else if (resource instanceof NetRadioInfo) {
-                            NetRadioInfo radioInfo = (NetRadioInfo) resource;
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(
-                                    radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), netMusicInRecommendCurrPage, limit);
-                            List<NetMusicInfo> musicInfos = result.data;
-                            Integer total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                            recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
-                            // 解决数量标签文字显示不全问题
-                            recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                            // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                            netMusicList.setModel(emptyListModel);
-                            netMusicListForRadioRecommendModel.clear();
-                            musicInfos.forEach(musicInfo -> {
-                                globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForRadioRecommendModel.addElement(musicInfo);
-                            });
-                            netMusicList.setModel(netMusicListForRadioRecommendModel);
-                            if (netMusicListForRadioRecommendModel.isEmpty()) {
-                                recommendItemListCountBox.remove(netMusicScrollPane);
-                                recommendItemListCountBox.add(emptyHintPanel);
-                            } else {
-                                recommendItemListCountBox.remove(emptyHintPanel);
-                                recommendItemListCountBox.add(netMusicScrollPane);
-                            }
-                            recommendLeftBox.repaint();
-                        }
-                        netMusicScrollPane.setVValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索推荐歌单
-            else if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetPlaylistInfo> playlistInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        playlistRecommendListModel.clear();
-                        playlistInfos.forEach(playlistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(playlistInfo));
-                            // 设置图片加载后重绘的事件
-                            playlistInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            playlistRecommendListModel.addElement(playlistInfo);
-                        });
-                        itemRecommendList.setModel(playlistRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (playlistRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索精品歌单
-            else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetPlaylistInfo> playlistInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        playlistRecommendListModel.clear();
-                        playlistInfos.forEach(playlistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(playlistInfo));
-                            // 设置图片加载后重绘的事件
-                            playlistInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            playlistRecommendListModel.addElement(playlistInfo);
-                        });
-                        itemRecommendList.setModel(playlistRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (playlistRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索飙升歌曲
-            else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicRecommendListModel.clear();
-                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
-                        netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(netMusicScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(netMusicScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索新歌速递
-            else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicRecommendListModel.clear();
-                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
-                        netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(netMusicScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(netMusicScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索新碟上架
-            else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetAlbumInfo> albumInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        albumRecommendListModel.clear();
-                        albumInfos.forEach(albumInfo -> {
-                            globalExecutor.execute(() -> updateCollection(albumInfo));
-                            // 设置图片加载后重绘的事件
-                            albumInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            albumRecommendListModel.addElement(albumInfo);
-                        });
-                        itemRecommendList.setModel(albumRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (albumRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索歌手排行
-            else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetArtistInfo> artistInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        artistRecommendListModel.clear();
-                        artistInfos.forEach(artistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(artistInfo));
-                            // 设置图片加载后重绘的事件
-                            artistInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            artistRecommendListModel.addElement(artistInfo);
-                        });
-                        itemRecommendList.setModel(artistRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (artistRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索新晋电台
-            else if (currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
-                                netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage, limit);
-                        List<NetRadioInfo> radioInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        radioRecommendListModel.clear();
-                        radioInfos.forEach(radioInfo -> {
-                            globalExecutor.execute(() -> updateCollection(radioInfo));
-                            // 设置图片加载后重绘的事件
-                            radioInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            radioRecommendListModel.addElement(radioInfo);
-                        });
-                        itemRecommendList.setModel(radioRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (radioRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索热门电台
-            else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetRadioInfo> radioInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        radioRecommendListModel.clear();
-                        radioInfos.forEach(radioInfo -> {
-                            globalExecutor.execute(() -> updateCollection(radioInfo));
-                            // 设置图片加载后重绘的事件
-                            radioInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            radioRecommendListModel.addElement(radioInfo);
-                        });
-                        itemRecommendList.setModel(radioRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (radioRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索推荐节目
-            else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicRecommendListModel.clear();
-                        musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
-                        netMusicList.setModel(netMusicRecommendListModel);
-                        netMusicScrollPane.setVValue(0);
-                        if (netMusicRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(netMusicScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(netMusicScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-            // 搜索推荐 MV
-            else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
-                loadingAndRun(() -> {
-                    // 搜索歌曲并显示在在线歌曲列表
-                    try {
-                        CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
-                                netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage, limit);
-                        List<NetMvInfo> mvInfos = result.data;
-                        int total = result.total;
-                        netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
-                        // 更新数量显示
-                        recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
-                        // 解决数量标签文字显示不全问题
-                        recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        itemRecommendList.setModel(emptyListModel);
-                        mvRecommendListModel.clear();
-                        mvInfos.forEach(mvInfo -> {
-                            globalExecutor.execute(() -> updateCollection(mvInfo));
-                            // 设置图片加载后重绘的事件
-                            mvInfo.setInvokeLater(() -> {
-                                updateRenderer(itemRecommendList);
-                                updateRenderer(collectionList);
-                                itemRecommendList.repaint();
-                                collectionList.repaint();
-                            });
-                            mvRecommendListModel.addElement(mvInfo);
-                        });
-                        itemRecommendList.setModel(mvRecommendListModel);
-                        itemRecommendScrollPane.setVValue(0);
-                        if (mvRecommendListModel.isEmpty()) {
-                            recommendLeftBox.remove(itemRecommendScrollPane);
-                            recommendLeftBox.add(emptyHintPanel);
-                        } else {
-                            recommendLeftBox.remove(emptyHintPanel);
-                            recommendLeftBox.add(itemRecommendScrollPane);
-                        }
-                        recommendLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
-                    }
-                });
-            }
-        };
+
         // 推荐标签下拉框
         netRecommendTagComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (netRecommendTagComboBox.getItemCount() <= 1
                     || netRecommendTagComboBox.getSelectedItem() == null
                     || e.getStateChange() != ItemEvent.SELECTED) return;
-            netRecommendCurrPage = 1;
-            recommendGoPageAction.run();
+            recommendGoPage(1);
         });
         // 播放全部
         netRecommendPlayAllButton.addActionListener(e -> {
@@ -18150,11 +18121,11 @@ public class MainFrame extends JFrame {
         netRecommendRefreshButton.addActionListener(e -> {
             // 当前显示的是推荐列表，刷新推荐
             if (!recommendBackwardButton.isEnabled()) {
-                recommendGoPageAction.run();
+                recommendGoPage(netRecommendCurrPage);
             }
             // 当前显示的是推荐里的歌曲，刷新歌曲
             else {
-                recommendGoPageAction.run();
+                recommendGoPage(netMusicInRecommendCurrPage);
             }
         });
         // 第一页按钮事件
@@ -18165,8 +18136,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRecommendCurrPage = 1;
-                recommendGoPageAction.run();
+                recommendGoPage(1);
             }
             // 当前显示的是推荐里的歌曲，跳到第一页歌曲
             else {
@@ -18174,8 +18144,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRecommendCurrPage = 1;
-                recommendGoPageAction.run();
+                recommendGoPage(1);
             }
         });
         // 上一页按钮事件
@@ -18186,8 +18155,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRecommendCurrPage--;
-                recommendGoPageAction.run();
+                recommendGoPage(netRecommendCurrPage - 1);
             }
             // 当前显示的是推荐里的歌曲，跳到上一页歌曲
             else {
@@ -18195,8 +18163,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRecommendCurrPage--;
-                recommendGoPageAction.run();
+                recommendGoPage(netMusicInRecommendCurrPage - 1);
             }
         });
         // 下一页按钮事件
@@ -18208,8 +18175,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRecommendCurrPage++;
-                recommendGoPageAction.run();
+                recommendGoPage(netRecommendCurrPage + 1);
             }
             // 当前显示的是某推荐里的歌曲，跳到下一页歌曲
             else {
@@ -18217,8 +18183,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRecommendCurrPage++;
-                recommendGoPageAction.run();
+                recommendGoPage(netMusicInRecommendCurrPage + 1);
             }
         });
         // 最后一页按钮事件
@@ -18230,8 +18195,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netRecommendCurrPage = netRecommendMaxPage;
-                recommendGoPageAction.run();
+                recommendGoPage(netRecommendMaxPage);
             }
             // 当前显示的是某推荐里的歌曲，跳到最后一页歌曲
             else {
@@ -18239,8 +18203,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRecommendCurrPage = netMusicInRecommendMaxPage;
-                recommendGoPageAction.run();
+                recommendGoPage(netMusicInRecommendMaxPage);
             }
         });
         // 跳页按钮事件
@@ -18256,8 +18219,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netRecommendCurrPage = destPage;
-                recommendGoPageAction.run();
+                recommendGoPage(destPage);
             }
             // 当前显示的是某电台的歌曲，跳页歌曲
             else {
@@ -18269,8 +18231,7 @@ public class MainFrame extends JFrame {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                netMusicInRecommendCurrPage = destPage;
-                recommendGoPageAction.run();
+                recommendGoPage(destPage);
             }
         });
         // 推荐歌单事件
@@ -21216,20 +21177,17 @@ public class MainFrame extends JFrame {
         // 设置歌曲名称
 //        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
         songNameLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getName()));
-        songNameLabel.setVisible(false);
-        songNameLabel.setVisible(true);
+        songNameLabel.revalidate();
         // 设置艺术家
 //        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
         artistLabel.setText(HtmlUtil.textToHtml(StringUtil.shorten(metaMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-        artistLabel.setVisible(false);
-        artistLabel.setVisible(true);
+        artistLabel.revalidate();
         // 设置专辑名称
 //        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
         albumLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getAlbumName()));
         albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
-        albumLabel.setVisible(false);
-        albumLabel.setVisible(true);
+        albumLabel.revalidate();
     }
 
     // 界面关闭文件
@@ -24019,8 +23977,7 @@ public class MainFrame extends JFrame {
                             Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                             netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
-                            netMusicSearchSuggestionInnerPanel2.setVisible(false);
-                            netMusicSearchSuggestionInnerPanel2.setVisible(true);
+                            netMusicSearchSuggestionInnerPanel2.invalidate();
                         }
                     });
                 }
@@ -24072,12 +24029,13 @@ public class MainFrame extends JFrame {
                     b.addComponentListener(new ComponentAdapter() {
                         @Override
                         public void componentMoved(ComponentEvent e) {
+                            // 关键词按钮被移除时，屏蔽调整面板大小事件
+                            if (!fb.isShowing()) return;
                             Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
                             Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
                             netMusicHotSearchInnerPanel2.setMinimumSize(d);
                             netMusicHotSearchInnerPanel2.setPreferredSize(d);
-                            netMusicHotSearchInnerPanel2.setVisible(false);
-                            netMusicHotSearchInnerPanel2.setVisible(true);
+                            netMusicHotSearchInnerPanel2.invalidate();
                         }
                     });
                 }

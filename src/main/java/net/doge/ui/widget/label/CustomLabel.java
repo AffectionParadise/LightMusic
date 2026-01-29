@@ -61,6 +61,9 @@ public class CustomLabel extends JLabel {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
+//        // 解决 jdk9+ 绘制图像锯齿问题
+//        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
         if (drawBg) {
             // 画背景
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

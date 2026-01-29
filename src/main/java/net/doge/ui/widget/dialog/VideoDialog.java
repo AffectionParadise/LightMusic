@@ -186,8 +186,7 @@ public class VideoDialog extends AbstractTitledDialog {
                 if (fullScreen) return;
                 if (x == 0x3f3f3f3f && y == 0x3f3f3f3f) setLocationRelativeTo(null);
                 else setLocation(x, y);
-                currTimeLabel.setVisible(false);
-                currTimeLabel.setVisible(true);
+                currTimeLabel.revalidate();
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 20 * 2, 20));
                 setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - 2 + 2 * pixels);
             }
