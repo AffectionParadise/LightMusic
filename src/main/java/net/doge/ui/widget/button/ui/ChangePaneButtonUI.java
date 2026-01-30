@@ -3,6 +3,7 @@ package net.doge.ui.widget.button.ui;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -45,16 +46,15 @@ public class ChangePaneButtonUI extends BasicButtonUI {
         super.paintIcon(g, c, iconRect);
 
         // 画遮罩
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        Graphics2D g2d = GraphicsUtil.setup(g);
+        GraphicsUtil.srcOver(g2d, alpha);
         g2d.setColor(Colors.BLACK);
         g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, 10, 10);
 
         // 画框图
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(1, alpha * 3)));
+        GraphicsUtil.srcOver(g2d, Math.min(1, alpha * 3));
         g2d.drawImage(frameImg, iconRect.x, iconRect.y, null);
 
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        GraphicsUtil.srcOver(g2d);
     }
 }

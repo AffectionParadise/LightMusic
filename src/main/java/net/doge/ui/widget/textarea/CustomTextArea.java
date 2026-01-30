@@ -3,6 +3,7 @@ package net.doge.ui.widget.textarea;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -80,17 +81,15 @@ public class CustomTextArea extends JTextArea {
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // 画背景
         Color foreColor = getForeground();
         g2d.setColor(foreColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+        GraphicsUtil.srcOver(g2d, 0.2f);
         g2d.fillRoundRect(0, 0, w, h, 25, 25);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);
 

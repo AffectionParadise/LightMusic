@@ -2,6 +2,7 @@ package net.doge.ui.widget.button.tooltip;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,9 +40,7 @@ public class CustomToolTip extends JToolTip {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(Colors.LIGHT_GRAY);
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 4, 4);
 

@@ -13,6 +13,7 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -411,12 +412,11 @@ public class DesktopLyricDialog extends JDialog {
         @Override
         public void paintComponent(Graphics g) {
             if (!touchOver) {
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                Graphics2D g2d = GraphicsUtil.setup(g);
                 g2d.setColor(Colors.BLACK);
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, drawBg ? 0.2f : 0.01f));
+                GraphicsUtil.srcOver(g2d, drawBg ? 0.2f : 0.01f);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-                g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+                GraphicsUtil.srcOver(g2d);
             }
 
             super.paintComponent(g);

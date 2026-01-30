@@ -3,6 +3,7 @@ package net.doge.ui.widget.scrollpane.viewport;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +24,7 @@ public class CustomViewport extends JViewport {
     public void paint(Graphics g) {
         // 边缘渐隐
         if (edgeFaded) {
-            Graphics2D g2d = (Graphics2D) g;
+            Graphics2D g2d = GraphicsUtil.setup(g);
             // 获取尺寸
             int w = getWidth(), h = getHeight();
             // 创建临时图像用于合成

@@ -216,7 +216,7 @@ public class MusicSearchReq {
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
             int to = data.getIntValue("totalCount");
-            t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+            t = PageUtil.totalPage(to, lim) * limit;
             JSONArray songArray = data.getJSONArray("resources");
             if (JsonUtil.notEmpty(songArray)) {
                 for (int i = 0, len = songArray.size(); i < len; i++) {

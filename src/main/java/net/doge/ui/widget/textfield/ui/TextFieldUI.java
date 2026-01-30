@@ -1,5 +1,7 @@
 package net.doge.ui.widget.textfield.ui;
 
+import net.doge.util.ui.GraphicsUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTextFieldUI;
 import java.awt.*;
@@ -20,9 +22,7 @@ public class TextFieldUI extends BasicTextFieldUI {
 
     @Override
     protected void paintBackground(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(backgroundColor);
         g2d.fillRoundRect(0, 0, textField.getWidth(), textField.getHeight(), 25, 25);
     }

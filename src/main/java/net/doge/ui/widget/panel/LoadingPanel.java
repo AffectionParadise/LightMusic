@@ -3,6 +3,7 @@ package net.doge.ui.widget.panel;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -98,10 +99,7 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-        // 画笔参数
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
 
         int pw = getWidth(), ph = getHeight();
 

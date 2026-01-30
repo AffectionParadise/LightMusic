@@ -430,7 +430,7 @@ public class CommentReq {
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject commentJson = commentInfoJson.getJSONObject("comment");
             int to = commentJson.getIntValue("commenttotal");
-            total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+            total = PageUtil.totalPage(to, lim) * limit;
             JSONArray commentArray = commentJson.getJSONArray("commentlist");
             if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {
@@ -919,7 +919,7 @@ public class CommentReq {
                 if (hotOnly) total = commentArray.size();
                 else {
                     int count = data.getIntValue("count"), lim = 10;
-                    total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
+                    total = PageUtil.totalPage(count, lim) * limit;
                 }
             } else total = data.getJSONObject("page").getIntValue("totalCount");
             if (isMv) {
@@ -1258,7 +1258,7 @@ public class CommentReq {
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             int count = data.getJSONObject("page").getIntValue("count");
-            total = (count % lim == 0 ? count / lim : count / lim + 1) * limit;
+            total = PageUtil.totalPage(count, lim) * limit;
             JSONArray commentArray = data.getJSONArray("replies");
             if (JsonUtil.notEmpty(commentArray)) {
                 for (int i = 0, len = commentArray.size(); i < len; i++) {

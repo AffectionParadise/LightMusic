@@ -1,5 +1,7 @@
 package net.doge.ui.widget.slider.ui;
 
+import net.doge.util.ui.GraphicsUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
@@ -32,10 +34,9 @@ public class VSliderUI extends BasicSliderUI {
      */
     @Override
     public void paintThumb(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
+        GraphicsUtil.srcOver(g2d);
         g2d.setColor(thumbColor);
         g2d.fillOval(thumbRect.x + (thumbRect.width - thumbRect.height) / 2 + 2, thumbRect.y, thumbRect.height, thumbRect.height);
     }
@@ -47,12 +48,11 @@ public class VSliderUI extends BasicSliderUI {
      */
     @Override
     public void paintTrack(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
         // 画未填充部分
         g2d.setColor(trackColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
+        GraphicsUtil.srcOver(g2d, 0.3f);
         g2d.fillRoundRect(
                 trackRect.x + 9,
                 trackRect.y,
@@ -60,7 +60,7 @@ public class VSliderUI extends BasicSliderUI {
                 thumbRect.y - trackRect.y + thumbRect.height / 2, 6, 6
         );
         // 画已填充部分
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
         g2d.fillRoundRect(
                 trackRect.x + 9,
                 thumbRect.y + thumbRect.height / 2,

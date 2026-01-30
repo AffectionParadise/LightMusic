@@ -17,6 +17,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.core.PageUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ColorUtil;
@@ -357,7 +358,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     // 获取第 i 张图片
     private BufferedImage getImg(int i) {
         // 请求指定页数的图片
-        int dp = i % limit == 0 ? i / limit : i / limit + 1, di = (i - 1) % limit;
+        int dp = PageUtil.totalPage(i, limit), di = (i - 1) % limit;
         if (results == null || pn != dp) {
             String cursor = results == null || cursors.size() == 1 ? "" : cursors.get(dp - 1);
             results = requestImgUrls(pn = dp, limit, cursor);

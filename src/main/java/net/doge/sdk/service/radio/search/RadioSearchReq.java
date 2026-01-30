@@ -15,10 +15,7 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.collection.ListUtil;
-import net.doge.util.core.JsonUtil;
-import net.doge.util.core.RegexUtil;
-import net.doge.util.core.StringUtil;
-import net.doge.util.core.UrlUtil;
+import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -216,7 +213,7 @@ public class RadioSearchReq {
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
-                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+                t = PageUtil.totalPage(to, lim) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select(".result");
@@ -259,7 +256,7 @@ public class RadioSearchReq {
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
-                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+                t = PageUtil.totalPage(to, lim) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select(".result");
@@ -303,7 +300,7 @@ public class RadioSearchReq {
             JSONArray radioArray = radioInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(radioArray)) {
                 int to = radioInfoJson.getIntValue("total");
-                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+                t = PageUtil.totalPage(to, lim) * limit;
                 for (int i = 0, len = radioArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(radioArray.getString(i));
                     Elements result = doc.select(".result");

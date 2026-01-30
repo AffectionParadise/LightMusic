@@ -4,6 +4,7 @@ import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -111,11 +112,9 @@ public abstract class AbstractShadowDialog extends JDialog {
         }
 
         protected void paintComponent(Graphics g) {
-            Graphics2D g2d = (Graphics2D) g;
-            // 避免锯齿
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Graphics2D g2d = GraphicsUtil.setup(g);
             if (bgImg != null) {
-//            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f));
+//            GraphicsUtil.srcOver(g2d, 0.8f);
                 g2d.drawImage(bgImg, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
             }
 
@@ -124,7 +123,6 @@ public abstract class AbstractShadowDialog extends JDialog {
                 g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
                 g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
             }
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_DEFAULT);
         }
     }
 }

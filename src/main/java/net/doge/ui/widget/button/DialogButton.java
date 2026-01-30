@@ -5,6 +5,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -89,13 +90,12 @@ public class DialogButton extends JButton implements MouseListener {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(foreColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        GraphicsUtil.srcOver(g2d, alpha);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);
 
@@ -104,7 +104,7 @@ public class DialogButton extends JButton implements MouseListener {
 //        FontMetrics fontMetrics = getFontMetrics(getFont());
 //        int stringHeight = fontMetrics.getHeight();
 //        g2d.setColor(foreColor);
-//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+//        GraphicsUtil.srcOver(g2d);
 //
 //        FontMetrics[] metrics = new FontMetrics[Fonts.TYPES.size()];
 //        for (int i = 0, len = metrics.length; i < len; i++) {

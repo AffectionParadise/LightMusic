@@ -33,7 +33,7 @@ public class CustomScrollPane extends JScrollPane {
             if (vValue == scrollingTo) wheelScrollingTimer.stop();
 
             int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / 20);
-            setVValue(gap > 0 ? Math.min(scrollingTo, vValue + piece) : Math.max(scrollingTo, vValue - piece));
+            setVBarValue(gap > 0 ? Math.min(scrollingTo, vValue + piece) : Math.max(scrollingTo, vValue - piece));
 
             if (getVBarValue() == vValue) wheelScrollingTimer.stop();
         });
@@ -57,7 +57,7 @@ public class CustomScrollPane extends JScrollPane {
         setBorder(BorderFactory.createEmptyBorder());
     }
 
-    public boolean setVValue(int value) {
+    public boolean setVBarValue(int value) {
         if (value < getVBarMin() || value > getVBarMax()) return false;
         verticalScrollBar.setValue(value);
         // 修复某些情况滚动条不显示并且无法滚动

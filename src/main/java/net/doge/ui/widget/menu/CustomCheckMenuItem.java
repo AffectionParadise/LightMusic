@@ -1,6 +1,7 @@
 package net.doge.ui.widget.menu;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -75,13 +76,12 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
 
     @Override
     protected void paintComponent(Graphics g) {
+        Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setColor(getForeground());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        GraphicsUtil.srcOver(g2d, alpha);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);
     }

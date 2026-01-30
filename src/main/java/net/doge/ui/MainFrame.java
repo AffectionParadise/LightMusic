@@ -5355,7 +5355,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5375,7 +5375,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5395,7 +5395,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5415,7 +5415,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5436,7 +5436,7 @@ public class MainFrame extends JFrame {
                                 RankingInfo.getId(), RankingInfo.getSource(), page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5457,7 +5457,7 @@ public class MainFrame extends JFrame {
                                 collectionRecordTypeComboBox.getSelectedIndex(), userInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         collectionCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInCollectionMaxPage));
                         // 解决数量标签文字显示不全问题
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
@@ -5478,7 +5478,7 @@ public class MainFrame extends JFrame {
                         }
                         collectionLeftBox.repaint();
                     }
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     netMusicInCollectionCurrPage = page;
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -5737,7 +5737,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新歌单歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -5756,8 +5756,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForPlaylistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForPlaylistCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5825,7 +5825,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新专辑歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -5844,8 +5844,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForAlbumCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForAlbumCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -5916,7 +5916,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新歌手歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -5935,8 +5935,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForArtistCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForArtistCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6009,7 +6009,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, collectionRecordTypeComboBox.getSelectedIndex(), netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新电台歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -6029,8 +6029,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForRadioCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForRadioCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6099,7 +6099,7 @@ public class MainFrame extends JFrame {
                                     rankingInfo.getId(), rankingInfo.getSource(), netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新榜单歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -6118,8 +6118,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForRankingCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRankingCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForRankingCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6210,7 +6210,7 @@ public class MainFrame extends JFrame {
                                     collectionRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInCollectionMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新用户歌曲数量显示
                             collectionCountLabel.setText(String.format(PAGINATION_MSG, netMusicInCollectionCurrPage, netMusicInCollectionMaxPage));
                             collectionItemListCountBox.add(collectionCountPanel);
@@ -6230,8 +6230,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForUserCollectionModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForUserCollectionModel);
-                            collectionItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            collectionItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             if (netMusicListForUserCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
@@ -6459,7 +6459,7 @@ public class MainFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(musicListModel);
-            musicScrollPane.setVValue(0);
+            musicScrollPane.setVBarValue(0);
             countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
         });
         // 播放历史事件
@@ -6484,7 +6484,7 @@ public class MainFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(historyModel);
-            musicScrollPane.setVValue(0);
+            musicScrollPane.setVBarValue(0);
             countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
         });
         // 收藏事件
@@ -6551,7 +6551,7 @@ public class MainFrame extends JFrame {
             // 筛选框活跃状态时进行筛选
             if (filterTextField.isOccupied()) filterPersonalMusic();
             else musicList.setModel(collectionModel);
-            musicScrollPane.setVValue(0);
+            musicScrollPane.setVBarValue(0);
 
             if (selectedIndex == CollectionTabIndex.MUSIC)
                 countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
@@ -6632,7 +6632,7 @@ public class MainFrame extends JFrame {
                     }
                     leftBox.repaint();
                     countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
-                    musicScrollPane.setVValue(0);
+                    musicScrollPane.setVBarValue(0);
                 }
             } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
                 currCollectionPlaylist = (LocalPlaylist) localPlaylistComboBox.getSelectedItem();
@@ -6654,7 +6654,7 @@ public class MainFrame extends JFrame {
                     }
                     musicCollectionLeftBox.repaint();
                     countLabel.setText(String.format(TOTAL_MSG, newModel.size()));
-                    musicScrollPane.setVValue(0);
+                    musicScrollPane.setVBarValue(0);
                 }
             }
         });
@@ -7563,7 +7563,7 @@ public class MainFrame extends JFrame {
                             (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netMusicCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicMaxPage));
                     netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
@@ -7577,7 +7577,7 @@ public class MainFrame extends JFrame {
                         netMusicListModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListModel.isEmpty()) {
                         netLeftBox.remove(netMusicScrollPane);
                         netLeftBox.add(emptyHintPanel);
@@ -7703,7 +7703,7 @@ public class MainFrame extends JFrame {
                                 netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
                         netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
@@ -7727,7 +7727,7 @@ public class MainFrame extends JFrame {
                             netLeftBox.remove(emptyHintPanel);
                             netLeftBox.add(netMusicScrollPane);
                         }
-                        netMusicScrollPane.setVValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -8060,7 +8060,7 @@ public class MainFrame extends JFrame {
                         netLeftBox.remove(emptyHintPanel);
                         netLeftBox.add(netMusicScrollPane);
                     }
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
                     new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -8129,7 +8129,7 @@ public class MainFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.setVValue(0);
+                    netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -8206,7 +8206,7 @@ public class MainFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.setVValue(0);
+                        netUserScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     } else {
                         clearRequestForArtist();
@@ -8254,7 +8254,7 @@ public class MainFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.setVValue(0);
+                        netArtistScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -8292,7 +8292,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetRadioInfo> result = MusicServerUtil.getRadioInfo(musicInfo.getSource(), musicInfo.getAlbumId());
                         List<NetRadioInfo> radioInfos = result.data;
                         int total = result.total;
-                        netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 标题
                         netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("radioSuffix")));
                         netRadioToolBar.removeAll();
@@ -8333,7 +8333,7 @@ public class MainFrame extends JFrame {
                             netRadioLeftBox.remove(emptyHintPanel);
                             netRadioLeftBox.add(netRadioScrollPane);
                         }
-                        netRadioScrollPane.setVValue(0);
+                        netRadioScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                     } else {
                         clearRequestForAlbum();
@@ -8342,7 +8342,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfo(musicInfo.getSource(), musicInfo.getAlbumId());
                         List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
-                        netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 标题
                         netAlbumTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("albumSuffix")));
                         netAlbumToolBar.removeAll();
@@ -8382,7 +8382,7 @@ public class MainFrame extends JFrame {
                             netAlbumLeftBox.remove(emptyHintPanel);
                             netAlbumLeftBox.add(netAlbumScrollPane);
                         }
-                        netAlbumScrollPane.setVValue(0);
+                        netAlbumScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -8415,7 +8415,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getRecRadios(musicInfo);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("recRadioSuffix")));
                     netRadioToolBar.removeAll();
@@ -8456,7 +8456,7 @@ public class MainFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.setVValue(0);
+                    netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -8487,7 +8487,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRelatedMvs(currMvMusicInfo = musicInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
-                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedMvSuffix")));
                     netMvToolBar.removeAll();
@@ -8526,7 +8526,7 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -9671,7 +9671,7 @@ public class MainFrame extends JFrame {
                             : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
-                    netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, page, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -9691,7 +9691,7 @@ public class MainFrame extends JFrame {
                         netPlaylistListModel.addElement(playlistInfo);
                     });
                     netPlaylistList.setModel(netPlaylistListModel);
-                    netPlaylistScrollPane.setVValue(0);
+                    netPlaylistScrollPane.setVBarValue(0);
                     if (netPlaylistListModel.isEmpty()) {
                         netPlaylistLeftBox.remove(netPlaylistScrollPane);
                         netPlaylistLeftBox.add(emptyHintPanel);
@@ -9723,7 +9723,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicInPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -9735,7 +9735,7 @@ public class MainFrame extends JFrame {
                         netMusicListForPlaylistModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForPlaylistModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListForPlaylistModel.isEmpty()) {
                         playlistListCountBox.remove(netMusicScrollPane);
                         playlistListCountBox.add(emptyHintPanel);
@@ -9887,7 +9887,7 @@ public class MainFrame extends JFrame {
                                 : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
                         List<NetPlaylistInfo> playlistInfos = result.data;
                         Integer total = result.total;
-                        netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                         netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -9917,7 +9917,7 @@ public class MainFrame extends JFrame {
                             netPlaylistLeftBox.remove(emptyHintPanel);
                             netPlaylistLeftBox.add(netPlaylistScrollPane);
                         }
-                        netPlaylistScrollPane.setVValue(0);
+                        netPlaylistScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -10209,7 +10209,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInPlaylistCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新歌单歌曲数量显示
 //                            netCurrPlaylistLabel.setText(StringUtils.textToHtml(playlistInfo.getName()));
                         netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInPlaylistCurrPage, netMusicInPlaylistMaxPage));
@@ -10231,8 +10231,8 @@ public class MainFrame extends JFrame {
                             netMusicListForPlaylistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForPlaylistModel);
-                        playlistDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        playlistDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netPlaylistBackwardButton.setEnabled(true);
                         netPlaylistSourceComboBox.setVisible(false);
                         netPlaylistPlayAllButton.setVisible(true);
@@ -10440,7 +10440,7 @@ public class MainFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.setVValue(0);
+                    netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -10509,7 +10509,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -10538,7 +10538,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetUserInfo> result = MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo = playlistInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("collectorSuffix")));
                     netUserToolBar.removeAll();
@@ -10578,7 +10578,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -10674,7 +10674,7 @@ public class MainFrame extends JFrame {
                             : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, page, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
-                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, page, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -10694,7 +10694,7 @@ public class MainFrame extends JFrame {
                         netAlbumListModel.addElement(albumInfo);
                     });
                     netAlbumList.setModel(netAlbumListModel);
-                    netAlbumScrollPane.setVValue(0);
+                    netAlbumScrollPane.setVBarValue(0);
                     if (netAlbumListModel.isEmpty()) {
                         netAlbumLeftBox.remove(netAlbumScrollPane);
                         netAlbumLeftBox.add(emptyHintPanel);
@@ -10726,7 +10726,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicInAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -10738,7 +10738,7 @@ public class MainFrame extends JFrame {
                         netMusicListForAlbumModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForAlbumModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListForAlbumModel.isEmpty()) {
                         albumListCountBox.remove(netMusicScrollPane);
                         albumListCountBox.add(emptyHintPanel);
@@ -10885,7 +10885,7 @@ public class MainFrame extends JFrame {
                                 netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage = 1, limit);
                         List<NetAlbumInfo> albumInfos = result.data;
                         Integer total = result.total;
-                        netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                         netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -10915,7 +10915,7 @@ public class MainFrame extends JFrame {
                             netAlbumLeftBox.remove(emptyHintPanel);
                             netAlbumLeftBox.add(netAlbumScrollPane);
                         }
-                        netAlbumScrollPane.setVValue(0);
+                        netAlbumScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -11202,7 +11202,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInAlbumCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新专辑歌曲数量显示
 //                            netCurrAlbumLabel.setText(StringUtils.textToHtml(albumInfo.getName()));
                         netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netMusicInAlbumCurrPage, netMusicInAlbumMaxPage));
@@ -11226,8 +11226,8 @@ public class MainFrame extends JFrame {
                             netMusicListForAlbumModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForAlbumModel);
-                        albumDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        albumDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netAlbumBackwardButton.setEnabled(true);
                         netAlbumSourceComboBox.setVisible(false);
                         netAlbumPlayAllButton.setVisible(true);
@@ -11439,7 +11439,7 @@ public class MainFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.setVValue(0);
+                        netUserScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     } else {
                         clearRequestForArtist();
@@ -11487,7 +11487,7 @@ public class MainFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.setVValue(0);
+                        netArtistScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -11555,7 +11555,7 @@ public class MainFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.setVValue(0);
+                    netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -11691,7 +11691,7 @@ public class MainFrame extends JFrame {
                             : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, page, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
-                    netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netArtistCountLabel.setText(String.format(PAGINATION_MSG, page, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -11711,7 +11711,7 @@ public class MainFrame extends JFrame {
                         netArtistListModel.addElement(artistInfo);
                     });
                     netArtistList.setModel(netArtistListModel);
-                    netArtistScrollPane.setVValue(0);
+                    netArtistScrollPane.setVBarValue(0);
                     if (netArtistListModel.isEmpty()) {
                         netArtistLeftBox.remove(netArtistScrollPane);
                         netArtistLeftBox.add(emptyHintPanel);
@@ -11743,7 +11743,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicInArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netArtistCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -11755,7 +11755,7 @@ public class MainFrame extends JFrame {
                         netMusicListForArtistModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForArtistModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListForArtistModel.isEmpty()) {
                         artistListCountBox.remove(netMusicScrollPane);
                         artistListCountBox.add(emptyHintPanel);
@@ -11909,7 +11909,7 @@ public class MainFrame extends JFrame {
                                 netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage = 1, limit);
                         List<NetArtistInfo> artistInfos = result.data;
                         Integer total = result.total;
-                        netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -11939,7 +11939,7 @@ public class MainFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.setVValue(0);
+                        netArtistScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -12230,7 +12230,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInArtistCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新歌手歌曲数量显示
 //                            netCurrArtistLabel.setText(StringUtils.textToHtml(artistInfo.getName()));
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netMusicInArtistCurrPage, netMusicInArtistMaxPage));
@@ -12254,8 +12254,8 @@ public class MainFrame extends JFrame {
                             netMusicListForArtistModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForArtistModel);
-                        artistDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        artistDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netArtistBackwardButton.setEnabled(true);
                         netArtistSourceComboBox.setVisible(false);
                         netArtistPlayAllButton.setVisible(true);
@@ -12419,7 +12419,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo = artistInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
-                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
@@ -12458,7 +12458,7 @@ public class MainFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.setVValue(0);
+                    netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12489,7 +12489,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMvInfo> result = MusicServerUtil.getMvInfoInArtist(currMvArtistInfo = artistInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
-                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("mvSuffix")));
                     netMvToolBar.removeAll();
@@ -12526,7 +12526,7 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12555,7 +12555,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getSimilarArtists(currArtistArtistInfo = artistInfo);
                     List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
-                    netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("similarArtistSuffix")));
                     netArtistToolBar.removeAll();
@@ -12594,7 +12594,7 @@ public class MainFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.setVValue(0);
+                    netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12624,7 +12624,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetUserInfo> result = MusicServerUtil.getArtistFans(artistInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
@@ -12664,7 +12664,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12693,7 +12693,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistBuddies(currBuddyArtistInfo = artistInfo, netArtistCurrPage = 1, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
-                    netArtistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("buddySuffix")));
                     netArtistToolBar.removeAll();
@@ -12732,7 +12732,7 @@ public class MainFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.setVValue(0);
+                    netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12761,7 +12761,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getArtistRadios(currRadioArtistInfo = artistInfo, netRadioCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
@@ -12801,7 +12801,7 @@ public class MainFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.setVValue(0);
+                    netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -12936,7 +12936,7 @@ public class MainFrame extends JFrame {
                             : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     Integer total = result.total;
-                    netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, page, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -12956,7 +12956,7 @@ public class MainFrame extends JFrame {
                         netRadioListModel.addElement(radioInfo);
                     });
                     netRadioList.setModel(netRadioListModel);
-                    netRadioScrollPane.setVValue(0);
+                    netRadioScrollPane.setVBarValue(0);
                     if (netRadioListModel.isEmpty()) {
                         netRadioLeftBox.remove(netRadioScrollPane);
                         netRadioLeftBox.add(emptyHintPanel);
@@ -12988,7 +12988,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicInRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -13000,7 +13000,7 @@ public class MainFrame extends JFrame {
                         netMusicListForRadioModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForRadioModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListForRadioModel.isEmpty()) {
                         radioListCountBox.remove(netMusicScrollPane);
                         radioListCountBox.add(emptyHintPanel);
@@ -13153,7 +13153,7 @@ public class MainFrame extends JFrame {
                                 netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage = 1, limit);
                         List<NetRadioInfo> radioInfos = result.data;
                         Integer total = result.total;
-                        netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                         netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -13183,7 +13183,7 @@ public class MainFrame extends JFrame {
                             netRadioLeftBox.remove(emptyHintPanel);
                             netRadioLeftBox.add(netRadioScrollPane);
                         }
-                        netRadioScrollPane.setVValue(0);
+                        netRadioScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -13486,7 +13486,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRadio(radioInfo, netRadioSortTypeComboBox.getSelectedIndex(), netMusicInRadioCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新电台歌曲数量显示
 //                            netCurrRadioLabel.setText(StringUtils.textToHtml(radioInfo.getName()));
                         netRadioCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRadioCurrPage, netMusicInRadioMaxPage));
@@ -13511,8 +13511,8 @@ public class MainFrame extends JFrame {
                             netMusicListForRadioModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRadioModel);
-                        radioDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        radioDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netRadioBackwardButton.setEnabled(true);
                         netRadioSourceComboBox.setVisible(false);
                         netRadioSortTypeComboBox.setVisible(radioInfo.fromXM());
@@ -13724,7 +13724,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -13753,7 +13753,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetUserInfo> result = MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo = radioInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("subscriberSuffix")));
                     netUserToolBar.removeAll();
@@ -13793,7 +13793,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -13862,7 +13862,7 @@ public class MainFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.setVValue(0);
+                    netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -13929,7 +13929,7 @@ public class MainFrame extends JFrame {
                         netArtistLeftBox.remove(emptyHintPanel);
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
-                    netArtistScrollPane.setVValue(0);
+                    netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -14095,7 +14095,7 @@ public class MainFrame extends JFrame {
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     mvCursor = result.cursor;
-                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, page, netMvMaxPage));
                     netMvCountPanel.setVisible(true);
@@ -14115,7 +14115,7 @@ public class MainFrame extends JFrame {
                         netMvListModel.addElement(mvInfo);
                     });
                     netMvList.setModel(netMvListModel);
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     if (netMvListModel.isEmpty()) {
                         netMvLeftBox.remove(netMvScrollPane);
                         netMvLeftBox.add(emptyHintPanel);
@@ -14227,7 +14227,7 @@ public class MainFrame extends JFrame {
                         List<NetMvInfo> mvInfos = result.data;
                         Integer total = result.total;
                         mvCursor = result.cursor;
-                        netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                         netMvCountPanel.setVisible(true);
@@ -14257,7 +14257,7 @@ public class MainFrame extends JFrame {
                             netMvLeftBox.remove(emptyHintPanel);
                             netMvLeftBox.add(netMvScrollPane);
                         }
-                        netMvScrollPane.setVValue(0);
+                        netMvScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -14575,7 +14575,7 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -14604,7 +14604,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetMvInfo> result = MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo = mvInfo, netMvCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
-                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("episodeSuffix")));
                     netMvToolBar.removeAll();
@@ -14643,7 +14643,7 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -14712,7 +14712,7 @@ public class MainFrame extends JFrame {
                             netArtistLeftBox.remove(emptyHintPanel);
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
-                        netArtistScrollPane.setVValue(0);
+                        netArtistScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     } else {
                         clearRequestForUser();
@@ -14760,7 +14760,7 @@ public class MainFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.setVValue(0);
+                        netUserScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     }
                 } catch (IORuntimeException ioRuntimeException) {
@@ -14858,7 +14858,7 @@ public class MainFrame extends JFrame {
                 CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
                 List<NetRankingInfo> rankingInfos = result.data;
 //                        Integer total = result.total;
-//                        netRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+//                        netRankingMaxPage = PageUtil.totalPage(total, limit);
                 netRankingMaxPage = 1;
                 // 更新数量显示
                 netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netRankingMaxPage));
@@ -14886,7 +14886,7 @@ public class MainFrame extends JFrame {
                     netRankingLeftBox.remove(emptyHintPanel);
                     netRankingLeftBox.add(netRankingScrollPane);
                 }
-                netRankingScrollPane.setVValue(0);
+                netRankingScrollPane.setVBarValue(0);
                 netRankingCurrPage = page;
             } catch (IORuntimeException ioRuntimeException) {
                 // 无网络连接
@@ -14911,7 +14911,7 @@ public class MainFrame extends JFrame {
                             rankingInfo.getId(), rankingInfo.getSource(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMusicInRankingMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRankingMaxPage));
                     netRankingCountPanel.add(netRankingCountLabel, netRankingCountPanel.getComponentIndex(netRankingCountLabel));
@@ -14923,7 +14923,7 @@ public class MainFrame extends JFrame {
                         netMusicListForRankingModel.addElement(musicInfo);
                     });
                     netMusicList.setModel(netMusicListForRankingModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicListForRankingModel.isEmpty()) {
                         rankingListCountBox.remove(netMusicScrollPane);
                         rankingListCountBox.add(emptyHintPanel);
@@ -15233,7 +15233,7 @@ public class MainFrame extends JFrame {
                                 rankingInfo.getId(), rankingInfo.getSource(), netMusicInRankingCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInRankingMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRankingMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新榜单歌曲数量显示
 //                            netCurrRankingLabel.setText(StringUtils.textToHtml(RankingInfo.getName()));
                         netRankingCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankingCurrPage, netMusicInRankingMaxPage));
@@ -15251,8 +15251,8 @@ public class MainFrame extends JFrame {
                             netMusicListForRankingModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForRankingModel);
-                        rankingDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        rankingDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netRankingBackwardButton.setEnabled(true);
                         netRankingSourceComboBox.setVisible(false);
                         netRankingPlayAllButton.setVisible(true);
@@ -15452,7 +15452,7 @@ public class MainFrame extends JFrame {
                             : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, page, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, page, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -15472,7 +15472,7 @@ public class MainFrame extends JFrame {
                         netUserListModel.addElement(userInfo);
                     });
                     netUserList.setModel(netUserListModel);
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     if (netUserListModel.isEmpty()) {
                         netUserLeftBox.remove(netUserScrollPane);
                         netUserLeftBox.add(emptyHintPanel);
@@ -15504,7 +15504,7 @@ public class MainFrame extends JFrame {
                         netUserRecordTypeComboBox.getSelectedIndex(), userInfo, page, limit);
                 List<NetMusicInfo> musicInfos = result.data;
                 Integer total = result.total;
-                netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                netMusicInUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                 // 更新数量显示
                 netUserCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInUserMaxPage));
                 netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -15516,7 +15516,7 @@ public class MainFrame extends JFrame {
                     netMusicListForUserModel.addElement(musicInfo);
                 });
                 netMusicList.setModel(netMusicListForUserModel);
-                netMusicScrollPane.setVValue(0);
+                netMusicScrollPane.setVBarValue(0);
                 if (netMusicListForUserModel.isEmpty()) {
                     userListCountBox.remove(netMusicScrollPane);
                     userListCountBox.add(emptyHintPanel);
@@ -15669,7 +15669,7 @@ public class MainFrame extends JFrame {
                                 netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage = 1, limit);
                         List<NetUserInfo> userInfos = result.data;
                         Integer total = result.total;
-                        netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -15699,7 +15699,7 @@ public class MainFrame extends JFrame {
                             netUserLeftBox.remove(emptyHintPanel);
                             netUserLeftBox.add(netUserScrollPane);
                         }
-                        netUserScrollPane.setVValue(0);
+                        netUserScrollPane.setVBarValue(0);
                     } catch (IORuntimeException ioRuntimeException) {
                         // 无网络连接
                         new TipDialog(THIS, NO_NET_MSG).showDialog();
@@ -16027,7 +16027,7 @@ public class MainFrame extends JFrame {
                                 netUserRecordTypeComboBox.getSelectedIndex(), userInfo, netMusicInUserCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         netUserRecordTypeComboBox.setVisible(userInfo.fromNetCloud() || userInfo.fromME() || userInfo.fromXM() || userInfo.fromBI());
                         // 更新用户歌曲数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netMusicInUserCurrPage, netMusicInUserMaxPage));
@@ -16052,8 +16052,8 @@ public class MainFrame extends JFrame {
                             netMusicListForUserModel.addElement(musicInfo);
                         });
                         netMusicList.setModel(netMusicListForUserModel);
-                        userDescriptionScrollPane.setVValue(0);
-                        netMusicScrollPane.setVValue(0);
+                        userDescriptionScrollPane.setVBarValue(0);
+                        netMusicScrollPane.setVBarValue(0);
                         netUserBackwardButton.setEnabled(true);
                         netUserSourceComboBox.setVisible(false);
                         netUserPlayAllButton.setVisible(true);
@@ -16212,7 +16212,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistUserInfo = userInfo, netPlaylistCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
-                    netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
@@ -16251,7 +16251,7 @@ public class MainFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.setVValue(0);
+                    netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16278,7 +16278,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumUserInfo = userInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
-                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
@@ -16317,7 +16317,7 @@ public class MainFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.setVValue(0);
+                    netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16343,7 +16343,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getUserRadios(currRadioUserInfo = userInfo, netRadioCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRadioMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
@@ -16383,7 +16383,7 @@ public class MainFrame extends JFrame {
                         netRadioLeftBox.remove(emptyHintPanel);
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
-                    netRadioScrollPane.setVValue(0);
+                    netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16412,7 +16412,7 @@ public class MainFrame extends JFrame {
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     mvCursor = result.cursor;
-                    netMvMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
                     netMvToolBar.removeAll();
@@ -16451,7 +16451,7 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.remove(emptyHintPanel);
                         netMvLeftBox.add(netMvScrollPane);
                     }
-                    netMvScrollPane.setVValue(0);
+                    netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16478,7 +16478,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetUserInfo> result = MusicServerUtil.getUserFollows(currFollowUserUserInfo = userInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("followSuffix")));
                     netUserToolBar.removeAll();
@@ -16518,7 +16518,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16545,7 +16545,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetUserInfo> result = MusicServerUtil.getUserFans(currFanUserUserInfo = userInfo, netUserCurrPage = 1, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
-                    netUserMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
@@ -16585,7 +16585,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -16714,7 +16714,7 @@ public class MainFrame extends JFrame {
                     netCommentBox.remove(emptyHintPanel);
                     netCommentBox.add(netCommentScrollPane);
                 }
-                netCommentScrollPane.setVValue(0);
+                netCommentScrollPane.setVBarValue(0);
                 if (first) {
                     // 删除 Tab 面板、歌词面板、乐谱面板，加入评论面板
                     globalPanel.remove(infoAndLrcBox);
@@ -16773,7 +16773,7 @@ public class MainFrame extends JFrame {
                     netSheetBox.remove(emptyHintPanel);
                     netSheetBox.add(netSheetScrollPane);
                 }
-                netSheetScrollPane.setVValue(0);
+                netSheetScrollPane.setVBarValue(0);
                 if (first) {
                     // 删除 Tab 面板、歌词面板、评论面板，加入乐谱面板
                     globalPanel.remove(infoAndLrcBox);
@@ -17059,7 +17059,7 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.remove(emptyHintPanel);
                         netUserLeftBox.add(netUserScrollPane);
                     }
-                    netUserScrollPane.setVValue(0);
+                    netUserScrollPane.setVBarValue(0);
                     netUserLeftBox.remove(userListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -17086,7 +17086,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo = commentInfo, netPlaylistCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
-                    netPlaylistMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
@@ -17125,7 +17125,7 @@ public class MainFrame extends JFrame {
                         netPlaylistLeftBox.remove(emptyHintPanel);
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                    netPlaylistScrollPane.setVValue(0);
+                    netPlaylistScrollPane.setVBarValue(0);
                     netPlaylistLeftBox.remove(playlistListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -17152,7 +17152,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getUserAlbums(currAlbumCommentInfo = commentInfo, netAlbumCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
-                    netAlbumMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 标题
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
@@ -17191,7 +17191,7 @@ public class MainFrame extends JFrame {
                         netAlbumLeftBox.remove(emptyHintPanel);
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                    netAlbumScrollPane.setVValue(0);
+                    netAlbumScrollPane.setVBarValue(0);
                     netAlbumLeftBox.remove(albumListBox);
                     netCommentBackwardButton.doClick();
                     if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
@@ -17474,7 +17474,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17501,7 +17501,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17528,7 +17528,7 @@ public class MainFrame extends JFrame {
                         CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         int total = result.total;
-                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17556,7 +17556,7 @@ public class MainFrame extends JFrame {
                                 radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                        netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRecommendMaxPage));
                         // 解决数量标签文字显示不全问题
                         recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17577,7 +17577,7 @@ public class MainFrame extends JFrame {
                         }
                         recommendLeftBox.repaint();
                     }
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     netMusicInRecommendCurrPage = page;
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -17600,7 +17600,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17619,7 +17619,7 @@ public class MainFrame extends JFrame {
                         playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (playlistRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17650,7 +17650,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17669,7 +17669,7 @@ public class MainFrame extends JFrame {
                         playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (playlistRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17700,7 +17700,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17709,7 +17709,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(netMusicScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17740,7 +17740,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17749,7 +17749,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(netMusicScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17780,7 +17780,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -17800,7 +17800,7 @@ public class MainFrame extends JFrame {
                         albumRecommendListModel.addElement(albumInfo);
                     });
                     itemRecommendList.setModel(albumRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (albumRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17831,7 +17831,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -17851,7 +17851,7 @@ public class MainFrame extends JFrame {
                         artistRecommendListModel.addElement(artistInfo);
                     });
                     itemRecommendList.setModel(artistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (artistRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17882,7 +17882,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -17902,7 +17902,7 @@ public class MainFrame extends JFrame {
                         radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (radioRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17933,7 +17933,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -17953,7 +17953,7 @@ public class MainFrame extends JFrame {
                         radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (radioRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -17984,7 +17984,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
                     recommendCountPanel.add(recommendCountLabel, recommendCountPanel.getComponentIndex(recommendCountLabel));
@@ -17993,7 +17993,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     if (netMusicRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(netMusicScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -18024,7 +18024,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, page, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18044,7 +18044,7 @@ public class MainFrame extends JFrame {
                         mvRecommendListModel.addElement(mvInfo);
                     });
                     itemRecommendList.setModel(mvRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     if (mvRecommendListModel.isEmpty()) {
                         recommendLeftBox.remove(itemRecommendScrollPane);
                         recommendLeftBox.add(emptyHintPanel);
@@ -18253,7 +18253,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18273,7 +18273,7 @@ public class MainFrame extends JFrame {
                         playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表，加载歌单 Model
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (playlistRecommendListModel.isEmpty()) {
@@ -18317,7 +18317,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18337,7 +18337,7 @@ public class MainFrame extends JFrame {
                         playlistRecommendListModel.addElement(playlistInfo);
                     });
                     itemRecommendList.setModel(playlistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表，加载歌单 Model
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (playlistRecommendListModel.isEmpty()) {
@@ -18381,7 +18381,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18391,7 +18391,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -18435,7 +18435,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18445,7 +18445,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -18489,7 +18489,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18509,7 +18509,7 @@ public class MainFrame extends JFrame {
                         albumRecommendListModel.addElement(albumInfo);
                     });
                     itemRecommendList.setModel(albumRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (albumRecommendListModel.isEmpty()) {
@@ -18552,7 +18552,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18572,7 +18572,7 @@ public class MainFrame extends JFrame {
                         artistRecommendListModel.addElement(artistInfo);
                     });
                     itemRecommendList.setModel(artistRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (artistRecommendListModel.isEmpty()) {
@@ -18607,7 +18607,7 @@ public class MainFrame extends JFrame {
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18627,7 +18627,7 @@ public class MainFrame extends JFrame {
                         radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (radioRecommendListModel.isEmpty()) {
@@ -18670,7 +18670,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18690,7 +18690,7 @@ public class MainFrame extends JFrame {
                         radioRecommendListModel.addElement(radioInfo);
                     });
                     itemRecommendList.setModel(radioRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (radioRecommendListModel.isEmpty()) {
@@ -18733,7 +18733,7 @@ public class MainFrame extends JFrame {
                             netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18743,7 +18743,7 @@ public class MainFrame extends JFrame {
                     netMusicRecommendListModel.clear();
                     musicInfos.forEach(musicInfo -> netMusicRecommendListModel.addElement(musicInfo));
                     netMusicList.setModel(netMusicRecommendListModel);
-                    netMusicScrollPane.setVValue(0);
+                    netMusicScrollPane.setVBarValue(0);
                     // 删掉歌单列表/专辑列表
                     recommendLeftBox.remove(itemRecommendScrollPane);
                     if (netMusicRecommendListModel.isEmpty()) {
@@ -18787,7 +18787,7 @@ public class MainFrame extends JFrame {
                             netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     int total = result.total;
-                    netRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                    netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
                     recommendCountLabel.setText(String.format(PAGINATION_MSG, netRecommendCurrPage, netRecommendMaxPage));
                     // 解决数量标签文字显示不全问题
@@ -18807,7 +18807,7 @@ public class MainFrame extends JFrame {
                         mvRecommendListModel.addElement(mvInfo);
                     });
                     itemRecommendList.setModel(mvRecommendListModel);
-                    itemRecommendScrollPane.setVValue(0);
+                    itemRecommendScrollPane.setVBarValue(0);
                     // 删掉推荐单曲列表
                     recommendLeftBox.remove(netMusicScrollPane);
                     if (mvRecommendListModel.isEmpty()) {
@@ -19108,7 +19108,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInPlaylist(playlistInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新歌单歌曲数量显示
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
@@ -19127,8 +19127,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForPlaylistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForPlaylistRecommendModel);
-                            recommendItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            recommendItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -19199,7 +19199,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInAlbum(albumInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新专辑歌曲数量显示
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
@@ -19218,8 +19218,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForAlbumRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForAlbumRecommendModel);
-                            recommendItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            recommendItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -19293,7 +19293,7 @@ public class MainFrame extends JFrame {
                             CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInArtist(artistInfo, netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新歌手歌曲数量显示
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
@@ -19312,8 +19312,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForArtistRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForArtistRecommendModel);
-                            recommendItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            recommendItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -19388,7 +19388,7 @@ public class MainFrame extends JFrame {
                                     radioInfo, netRecommendSortTypeComboBox.getSelectedIndex(), netMusicInRecommendCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
-                            netMusicInRecommendMaxPage = Math.max(total % limit == 0 ? total / limit : total / limit + 1, 1);
+                            netMusicInRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                             // 更新电台歌曲数量显示
                             recommendCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRecommendCurrPage, netMusicInRecommendMaxPage));
                             recommendItemListCountBox.add(recommendCountPanel);
@@ -19407,8 +19407,8 @@ public class MainFrame extends JFrame {
                                 netMusicListForRadioRecommendModel.addElement(musicInfo);
                             });
                             netMusicList.setModel(netMusicListForRadioRecommendModel);
-                            recommendItemDescriptionScrollPane.setVValue(0);
-                            netMusicScrollPane.setVValue(0);
+                            recommendItemDescriptionScrollPane.setVBarValue(0);
+                            netMusicScrollPane.setVBarValue(0);
                             recommendLeftBox.remove(recommendToolBar);
                             recommendBackwardButton.setEnabled(true);
                             netRecommendSourceComboBox.setVisible(false);
@@ -20420,7 +20420,7 @@ public class MainFrame extends JFrame {
                 lrcScrollWaiting = true;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
-                boolean ok = lrcScrollPane.setVValue(lrcScrollPane.getVBarValue() + yOffset);
+                boolean ok = lrcScrollPane.setVBarValue(lrcScrollPane.getVBarValue() + yOffset);
                 dragFrom.x = p.x;
                 // 拖动时超出滚动条范围后不再叠加参数
                 dragFrom.y = ok ? p.y + yOffset : p.y;
@@ -20585,7 +20585,7 @@ public class MainFrame extends JFrame {
                 int val = lrcScrollPane.getVBarValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
                         + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / 20);
                 int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
-                lrcScrollPane.setVValue(nv);
+                lrcScrollPane.setVBarValue(nv);
                 if (nv == dVal || lrcScrollPane.getVBarValue() == val) lrcScrollAnimation = false;
 //                });
             }
@@ -21270,7 +21270,7 @@ public class MainFrame extends JFrame {
         row = 0;
         nextLrc = NextLrc.LOADING;
         originalRatio = 0;
-        lrcScrollPane.setVValue(currScrollVal = 0);
+        lrcScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
@@ -21379,7 +21379,7 @@ public class MainFrame extends JFrame {
         row = state == BAD_FORMAT || state == NO_LRC ? 0 : -1;
 
         originalRatio = 0;
-        lrcScrollPane.setVValue(currScrollVal = 0);
+        lrcScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
         LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);

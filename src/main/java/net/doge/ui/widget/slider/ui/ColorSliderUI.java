@@ -1,6 +1,7 @@
 package net.doge.ui.widget.slider.ui;
 
 import net.doge.ui.widget.dialog.ColorChooserDialog;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -35,10 +36,9 @@ public class ColorSliderUI extends BasicSliderUI {
      */
     @Override
     public void paintThumb(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
+        GraphicsUtil.srcOver(g2d);
         g2d.setColor(d.makeColorFromRgb(d.r, d.g, d.b));
         g2d.fillOval(thumbRect.x, thumbRect.y + (thumbRect.height - thumbRect.width) / 2, thumbRect.width, thumbRect.width);
     }
@@ -50,9 +50,8 @@ public class ColorSliderUI extends BasicSliderUI {
      */
     @Override
     public void paintTrack(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
         Color c1, c2;
         if (d.isRGB()) {
             c1 = slider == d.rSlider ? d.makeColorFromRgb(0, d.g, d.b) : slider == d.gSlider ? d.makeColorFromRgb(d.r, 0, d.b) : d.makeColorFromRgb(d.r, d.g, 0);

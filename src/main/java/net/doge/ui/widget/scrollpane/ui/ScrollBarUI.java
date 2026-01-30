@@ -1,5 +1,7 @@
 package net.doge.ui.widget.scrollpane.ui;
 
+import net.doge.util.ui.GraphicsUtil;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import java.awt.*;
@@ -59,12 +61,10 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
         if (!active) return;
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(thumbColor);
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         // 透明滚动条
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, entered ? 0.6f : 0.3f));
+        GraphicsUtil.srcOver(g2d, entered ? 0.6f : 0.3f);
         g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
     }
 

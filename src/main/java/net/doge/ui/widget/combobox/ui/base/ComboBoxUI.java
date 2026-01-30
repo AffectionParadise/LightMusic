@@ -7,6 +7,7 @@ import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.CustomComboPopup;
 import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -58,7 +59,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 //        // 画文字
 //        String text = (String) comboBox.getSelectedItem();
 //        if (text != null) {
-//            Graphics2D g2d = (Graphics2D) g;
+//            Graphics2D g2d = GraphicsUtil.setup(g);
 //            FontMetrics metrics = comboBox.getFontMetrics(font);
 //            int sw = metrics.stringWidth(text);
 //            int sh = metrics.getHeight();
@@ -69,12 +70,11 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     @Override
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(f.currUIStyle.getTextColor());
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, comboBox.getAlpha()));
+        GraphicsUtil.srcOver(g2d, comboBox.getAlpha());
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if(comboBox.getBounds().contains(e.getPoint())) return;
+                if (comboBox.getBounds().contains(e.getPoint())) return;
                 comboBox.setEntered(false);
             }
         });
@@ -113,7 +113,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
             }
 
             private void validateHiding(MouseEvent e) {
-                if(popup.getBounds().contains(e.getPoint())) return;
+                if (popup.getBounds().contains(e.getPoint())) return;
                 comboBox.hidePopup();
             }
         });

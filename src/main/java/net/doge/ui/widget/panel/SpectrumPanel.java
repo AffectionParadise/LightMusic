@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +52,8 @@ public class SpectrumPanel extends JPanel {
         if (pw == 0 || ph == 0) return;
         int barNum = SpectrumConstants.barNum, viewX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2,
                 barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP;
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f.specOpacity));
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
+        GraphicsUtil.srcOver(g2d, f.specOpacity);
         Color spectrumColor = f.currUIStyle.getSpectrumColor();
 
         // 频谱渐变

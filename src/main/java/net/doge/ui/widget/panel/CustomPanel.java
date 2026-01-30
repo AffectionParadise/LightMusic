@@ -1,6 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Setter;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,13 +51,12 @@ public class CustomPanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         if (drawBg) {
-            Graphics2D g2d = (Graphics2D) g;
+            Graphics2D g2d = GraphicsUtil.setup(g);
             // 画背景
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(getForeground());
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bgAlpha));
+            GraphicsUtil.srcOver(g2d, bgAlpha);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+            GraphicsUtil.srcOver(g2d);
         }
 
         super.paintComponent(g);

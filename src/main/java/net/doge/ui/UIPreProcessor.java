@@ -11,10 +11,22 @@ public class UIPreProcessor {
         // 全局字体抗锯齿，必须在初始化 UIManager 之前调用！
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
-        // opengl 加速
-        System.setProperty("sun.java2d.opengl", "true");
+
         // jdk 9 以上默认适配 dpi，会有图像绘制模糊问题，设置为关闭
 //        System.setProperty("sun.java2d.uiScale", "1.0");
+//        // 启用 OpenGL 硬件加速
+//        System.setProperty("sun.java2d.opengl", "true");
+//        // 对于 Windows，启用 Direct3D
+//        System.setProperty("sun.java2d.d3d", "true");
+//        // 禁用 DirectDraw(在某些情况下可能有问题)
+//        System.setProperty("sun.java2d.noddraw", "true");
+//        // Swing 的事件调度线程(EDT)
+//        // 禁用新的线程调度策略，使用旧的 FIFO 策略
+//        System.setProperty("java.awt.EventQueue.class", "sun.awt.EventQueue");
+//        // 设置事件队列的优先级
+//        System.setProperty("sun.awt.eventqueue.anon", "true");
+//        // 禁用中断检测(可能有助于减少延迟)
+//        System.setProperty("sun.awt.noerasebackground", "true");
     }
 
     // 统一 LAF 为 Metal，避免界面元素混乱

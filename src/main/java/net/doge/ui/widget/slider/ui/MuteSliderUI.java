@@ -1,6 +1,7 @@
 package net.doge.ui.widget.slider.ui;
 
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -46,19 +47,18 @@ public class MuteSliderUI extends BasicSliderUI {
      */
     @Override
     public void paintTrack(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
         g2d.setColor(trackBgColor);
         int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + 7, height = trackRect.height - 14, arc = 6;
         // 画未填充部分
         if (!rest) {
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            GraphicsUtil.srcOver(g2d, 0.2f);
             g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         }
         // 画已填充部分
         g2d.setColor(trackColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, rest ? 0.5f : 1f));
+        GraphicsUtil.srcOver(g2d, rest ? 0.5f : 1f);
         g2d.fillRoundRect(
                 trackRect.x,
                 thy,

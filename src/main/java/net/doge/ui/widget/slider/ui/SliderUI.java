@@ -8,6 +8,7 @@ import net.doge.ui.widget.dialog.TipDialog;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -102,10 +103,9 @@ public class SliderUI extends BasicSliderUI {
     @Override
     public void paintThumb(Graphics g) {
         if (!drawThumb) return;
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
+        GraphicsUtil.srcOver(g2d);
         g2d.setColor(thumbColor);
         g2d.fillOval(thumbRect.x, thumbRect.y + (thumbRect.height - thumbRect.width) / 2, thumbRect.width, thumbRect.width);
     }
@@ -117,11 +117,10 @@ public class SliderUI extends BasicSliderUI {
      */
     @Override
     public void paintTrack(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        // 避免锯齿
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
         g2d.setColor(trackBgColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, isTimeBar ? 0.1f : 0.3f));
+        GraphicsUtil.srcOver(g2d, isTimeBar ? 0.1f : 0.3f);
         int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (drawThumb ? 7 : 8), height = trackRect.height - (drawThumb ? 14 : 16),
                 arc = drawThumb ? 6 : 4;
         // 画未填充部分
@@ -130,7 +129,7 @@ public class SliderUI extends BasicSliderUI {
         if (isTimeBar) {
             int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
                     : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+            GraphicsUtil.srcOver(g2d, 0.2f);
             g2d.fillRoundRect(
                     thx, thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度
@@ -140,7 +139,7 @@ public class SliderUI extends BasicSliderUI {
         }
         // 画已填充部分
         g2d.setColor(trackColor);
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
         g2d.fillRoundRect(
                 trackRect.x, thy,
                 thumbRect.x - trackRect.x + thumbRect.width / 2, height,

@@ -2,6 +2,7 @@ package net.doge.ui.widget.panel;
 
 import lombok.Data;
 import net.doge.constant.core.ui.pane.SlideFrom;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -140,7 +141,7 @@ public class GlobalPanel extends JPanel {
 
 //        int pw = getWidth() - 2 * pixels, ph = getHeight() - 2 * pixels;
         int pw = getWidth(), ph = getHeight();
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = GraphicsUtil.setup(g);
 
         // 律动动画
         if (grooveOn) {
@@ -148,7 +149,7 @@ public class GlobalPanel extends JPanel {
                 // opacity < 1 时绘制底图，避免不必要的操作占用 CPU！
                 if (opacity < 1) {
                     paintRotatedImg(g2d, lImgScaled);
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                    GraphicsUtil.srcOver(g2d, opacity);
                 } else lImgScaled = null;
             }
             paintRotatedImg(g2d, bgImgScaled);
@@ -158,7 +159,7 @@ public class GlobalPanel extends JPanel {
                     // 宽高设置为组件的宽高，observer 设置成组件就可以自适应
 //                    g2d.drawImage(lImg, pixels, pixels, pw, ph, this);
                     g2d.drawImage(lImg, 0, 0, pw, ph, this);
-                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
+                    GraphicsUtil.srcOver(g2d, opacity);
                 } else lImg = null;
             }
 //            g2d.drawImage(bgImg, pixels, pixels, pw, ph, this);
@@ -171,7 +172,7 @@ public class GlobalPanel extends JPanel {
 //            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
 //        }
 
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+        GraphicsUtil.srcOver(g2d);
     }
 
     // 画出旋转后的图像

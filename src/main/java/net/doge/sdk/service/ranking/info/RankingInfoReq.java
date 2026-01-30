@@ -241,7 +241,7 @@ public class RankingInfoReq {
 //            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
 //            JSONObject data = rankingInfoJson.getJSONObject("data");
 //            int to = data.getIntValue("num");
-//            total = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+//            total = PageUtil.totalPage(to, lim) * limit;
 //            JSONArray songArray = data.getJSONArray("musicList");
 //            for (int i = 0, len = songArray.size(); i < len; i++) {
 //                JSONObject songJson = songArray.getJSONObject(i);

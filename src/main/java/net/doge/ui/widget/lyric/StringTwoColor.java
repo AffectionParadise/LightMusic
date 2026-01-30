@@ -9,6 +9,7 @@ import net.doge.util.collection.ArrayUtil;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
@@ -294,7 +295,7 @@ public class StringTwoColor {
 
         // 虽然不断创建新的图像存在性能开销，但是单例清除图像时会闪烁
         buffImg = ImageUtil.createTransparentImage(width, height);
-        Graphics2D g2d = buffImg.createGraphics();
+        Graphics2D g2d = GraphicsUtil.setup(buffImg.createGraphics());
 
         if (ratio > 0) {
 //            if (wStartIndex - 1 >= 0) {
@@ -302,18 +303,18 @@ public class StringTwoColor {
 //                g2d.translate(0, -getWordOffsetY(x1, x2, wRatio));
 //            }
             // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+            GraphicsUtil.srcOver(g2d);
             g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
 
             // 创建渐变覆盖层（使用黑色到透明的渐变，然后使用 DST_OUT）
             GradientPaint fadeOverlay = new GradientPaint(t, 0, Colors.TRANSPARENT, t + fadeWidth, 0, Colors.BLACK, false);
             // 使用 DST_OUT：目标在源外（移除黑色覆盖的部分）
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OUT));
+            g2d.setComposite(AlphaComposite.DstOut);
             g2d.setPaint(fadeOverlay);
             g2d.fillRect(t, 0, fadeWidth, height);
 
             // 背景覆盖前景的模式
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_OVER));
+            g2d.setComposite(AlphaComposite.DstOver);
         }
         // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
         g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);

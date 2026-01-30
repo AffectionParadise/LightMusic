@@ -24,9 +24,7 @@
 //    // 效果一般，且会发生未知偏移
 //    @Override
 //    public void paintIcon(Component c, Graphics g, int x, int y) {
-//        Graphics2D g2d = (Graphics2D) g;
-//        // 设置抗锯齿
-//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        Graphics2D g2d = GraphicsUtil.setup(g);
 //        // 计算旋转中心（图标的中心）
 //        int centerX = x + getIconWidth() / 2, centerY = y + getIconHeight() / 2;
 //        // 旋转

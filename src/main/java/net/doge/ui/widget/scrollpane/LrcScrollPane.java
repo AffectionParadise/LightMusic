@@ -47,9 +47,8 @@
 //        int pw = getWidth(), ph = getHeight();
 //        if (pw == 0 || ph == 0) return;
 //        int barNum = SpectrumConstants.barNum, viewX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2;
-//        Graphics2D g2d = (Graphics2D) g;
-//        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, f.specOpacity));
-//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        Graphics2D g2d = GraphicsUtil.setup(g);
+//        GraphicsUtil.srcOver(g2d, f.specOpacity);
 ////        g2d.setColor(f.currUIStyle.getSpectrumColor());
 //        Color spectrumColor = f.currUIStyle.getSpectrumColor();
 //        g2d.setPaint(new GradientPaint(0, ph - SpectrumConstants.barMaxHeight, spectrumColor, 0, ph, Colors.TRANSPARENT));

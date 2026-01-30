@@ -417,7 +417,7 @@ public class AlbumSearchReq {
             JSONArray albumArray = albumInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(albumArray)) {
                 int to = albumInfoJson.getIntValue("total");
-                t = (to % lim == 0 ? to / lim : to / lim + 1) * limit;
+                t = PageUtil.totalPage(to, lim) * limit;
                 for (int i = 0, len = albumArray.size(); i < len; i++) {
                     Document doc = Jsoup.parse(albumArray.getString(i));
                     Elements result = doc.select(".result");

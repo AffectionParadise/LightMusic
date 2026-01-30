@@ -3,6 +3,7 @@ package net.doge.ui.widget.label;
 import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.util.ui.GraphicsUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,20 +60,16 @@ public class CustomLabel extends JLabel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-
-//        // 解决 jdk9+ 绘制图像锯齿问题
-//        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        Graphics2D g2d = GraphicsUtil.setup(g);
 
         if (drawBg) {
             // 画背景
-            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2d.setColor(bgColor);
-            g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.1f));
+            GraphicsUtil.srcOver(g2d, 0.1f);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
         }
 
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+        GraphicsUtil.srcOver(g2d, alpha);
 
         super.paintComponent(g);
     }
