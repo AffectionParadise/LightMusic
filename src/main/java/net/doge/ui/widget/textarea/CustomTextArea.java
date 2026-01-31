@@ -1,9 +1,13 @@
 package net.doge.ui.widget.textarea;
 
 import lombok.Data;
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.inset.HDInsets;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,13 +25,12 @@ public class CustomTextArea extends JTextArea {
     // 解决设置文本后不刷新的问题
     private void init() {
         setOpaque(false);
+        setBackground(Colors.TRANSPARENT);
         setFocusable(false);
         setLineWrap(true);
-        setMaximumSize(new Dimension(3000, 30));
         setFont(Fonts.NORMAL);
-        Insets insets = getMargin();
-        insets.top = insets.bottom = 8;
-        insets.left = insets.right = 5;
+        setMaximumSize(new HDDimension(3000, 30));
+        setMargin(new HDInsets(4, 6, 4, 6));
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -88,7 +91,8 @@ public class CustomTextArea extends JTextArea {
         Color foreColor = getForeground();
         g2d.setColor(foreColor);
         GraphicsUtil.srcOver(g2d, 0.2f);
-        g2d.fillRoundRect(0, 0, w, h, 25, 25);
+        int arc = ScaleUtil.scale(25);
+        g2d.fillRoundRect(0, 0, w, h, arc, arc);
         GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);

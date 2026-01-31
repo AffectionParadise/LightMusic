@@ -13,6 +13,7 @@ import net.doge.util.core.LangUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +52,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        iconLabel.setIconTextGap(0);
+        iconLabel.setIconTextGap(ScaleUtil.scale(0));
 
         creatorLabel.setFont(tinyFont);
         playCountLabel.setFont(tinyFont);
@@ -62,7 +63,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         playCountLabel.setInstantAlpha(alpha);
         trackCountLabel.setInstantAlpha(alpha);
 
-        int sh = 10;
+        int sh = ScaleUtil.scale(10);
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -95,7 +96,7 @@ public class NetPlaylistListRenderer extends DefaultListCellRenderer {
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String creator = playlistInfo.hasCreator() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(

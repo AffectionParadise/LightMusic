@@ -4,11 +4,13 @@ import javafx.scene.media.MediaPlayer;
 import net.doge.constant.core.lang.I18n;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.dialog.TipDialog;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -92,7 +94,7 @@ public class SliderUI extends BasicSliderUI {
 
     @Override
     protected Dimension getThumbSize() {
-        return new Dimension(12, 20);
+        return new HDDimension(12, 20);
     }
 
     /**
@@ -121,8 +123,8 @@ public class SliderUI extends BasicSliderUI {
 
         g2d.setColor(trackBgColor);
         GraphicsUtil.srcOver(g2d, isTimeBar ? 0.1f : 0.3f);
-        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + (drawThumb ? 7 : 8), height = trackRect.height - (drawThumb ? 14 : 16),
-                arc = drawThumb ? 6 : 4;
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + ScaleUtil.scale(drawThumb ? 7 : 8), height = trackRect.height - ScaleUtil.scale(drawThumb ? 14 : 16),
+                arc = ScaleUtil.scale(drawThumb ? 6 : 4);
         // 画未填充部分
         g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         // 在时间条画出缓冲完成的部分
@@ -130,21 +132,15 @@ public class SliderUI extends BasicSliderUI {
             int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
                     : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
             GraphicsUtil.srcOver(g2d, 0.2f);
-            g2d.fillRoundRect(
-                    thx, thy,
+            g2d.fillRoundRect(thx, thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度
-                    Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x), height,
-                    arc, arc
-            );
+                    Math.min(Math.max(w - thx + trackRect.x, 0), trackRect.width - thx + trackRect.x), height, arc, arc);
         }
         // 画已填充部分
         g2d.setColor(trackColor);
         GraphicsUtil.srcOver(g2d);
-        g2d.fillRoundRect(
-                trackRect.x, thy,
-                thumbRect.x - trackRect.x + thumbRect.width / 2, height,
-                arc, arc
-        );
+        g2d.fillRoundRect(trackRect.x, thy,
+                thumbRect.x - trackRect.x + thumbRect.width / 2, height, arc, arc);
     }
 
     @Override

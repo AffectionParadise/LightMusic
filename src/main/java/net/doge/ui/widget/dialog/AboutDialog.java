@@ -4,12 +4,14 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -54,7 +56,7 @@ public class AboutDialog extends AbstractTitledDialog {
 
         appLabel.setText(f.TITLE);
         appLabel.setIcon(ImageUtil.dye(appIcon, textColor));
-        appLabel.setIconTextGap(15);
+        appLabel.setIconTextGap(ScaleUtil.scale(15));
 
         appLabel.setForeground(textColor);
         editionLabel.setForeground(textColor);
@@ -75,7 +77,7 @@ public class AboutDialog extends AbstractTitledDialog {
         websitePanel.add(websiteLabel);
         mailPanel.add(mailLabel);
 
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 10, 0);
+        Border eb = new HDEmptyBorder(0, 0, 10, 0);
         appPanel.setBorder(eb);
         editionPanel.setBorder(eb);
         technoPanel.setBorder(eb);
@@ -90,10 +92,10 @@ public class AboutDialog extends AbstractTitledDialog {
         centerPanel.add(mailPanel);
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(20);
+        fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         buttonPanel.add(yes);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(15, 0, 10, 0));
 
         globalPanel.setLayout(new BorderLayout());
         globalPanel.add(centerPanel, BorderLayout.CENTER);

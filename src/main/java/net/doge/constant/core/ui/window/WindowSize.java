@@ -1,23 +1,24 @@
 package net.doge.constant.core.ui.window;
 
 import net.doge.constant.core.lang.I18n;
+import net.doge.util.ui.ScaleUtil;
 
 public class WindowSize {
     public static final int[][] DIMENSIONS = {
-            {1182, 748},
-            {1245, 788},
-            {1370, 867},
-            {1494, 946},
-            {1619, 1024},
-            {1960, 1182},
+            {ScaleUtil.scale(1182), ScaleUtil.scale(748)},
+            {ScaleUtil.scale(1245), ScaleUtil.scale(788)},
+            {ScaleUtil.scale(1370), ScaleUtil.scale(867)},
+            {ScaleUtil.scale(1494), ScaleUtil.scale(946)},
+            {ScaleUtil.scale(1619), ScaleUtil.scale(1024)},
+            {ScaleUtil.scale(1960), ScaleUtil.scale(1182)},
     };
     public static final int[][] VIDEO_DIMENSIONS = {
-            {1140, 641},
-            {1200, 675},
-            {1320, 743},
-            {1440, 810},
-            {1560, 878},
-            {1800, 1013},
+            {ScaleUtil.scale(1140), ScaleUtil.scale(641)},
+            {ScaleUtil.scale(1200), ScaleUtil.scale(675)},
+            {ScaleUtil.scale(1320), ScaleUtil.scale(743)},
+            {ScaleUtil.scale(1440), ScaleUtil.scale(810)},
+            {ScaleUtil.scale(1560), ScaleUtil.scale(878)},
+            {ScaleUtil.scale(1800), ScaleUtil.scale(1013)},
     };
 
     public static final int MIDDLE = 1;

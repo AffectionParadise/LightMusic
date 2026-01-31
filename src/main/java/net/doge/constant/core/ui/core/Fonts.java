@@ -2,6 +2,7 @@ package net.doge.constant.core.ui.core;
 
 import net.doge.constant.core.config.ConfigConstants;
 import net.doge.util.lmdata.manager.LMFontManager;
+import net.doge.util.ui.ScaleUtil;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -22,19 +23,19 @@ public class Fonts {
 
     // 字体大小
     // 界面文字
-    public static final int FONT_SIZE = 17;
+    public static final int FONT_SIZE = ScaleUtil.scale(17);
     // 标题 / 歌词文字
-    public static final int TITLE_FONT_SIZE = FONT_SIZE + 8;
+    public static final int TITLE_FONT_SIZE = FONT_SIZE + ScaleUtil.scale(8);
     // 第二级别标题文字
-    public static final int TITLE2_FONT_SIZE = FONT_SIZE + 4;
+    public static final int TITLE2_FONT_SIZE = FONT_SIZE + ScaleUtil.scale(4);
     // 小文字
-    public static final int TINY_SIZE = FONT_SIZE - 2;
+    public static final int TINY_SIZE = FONT_SIZE - ScaleUtil.scale(2);
     // 对话框文字
-    public static final int MEDIUM_SIZE = FONT_SIZE + 3;
+    public static final int MEDIUM_SIZE = FONT_SIZE + ScaleUtil.scale(3);
     // 歌词高亮文字
-    public static final int BIG_SIZE = FONT_SIZE + 17;
+    public static final int BIG_SIZE = FONT_SIZE + ScaleUtil.scale(17);
     // 桌面歌词文字
-    public static final int HUGE_SIZE = BIG_SIZE + 20;
+    public static final int HUGE_SIZE = BIG_SIZE + ScaleUtil.scale(20);
 
     // 中英文
     public static final Font NORMAL_TINY = LMFontManager.getFont(NORMAL_NAME, TINY_SIZE);

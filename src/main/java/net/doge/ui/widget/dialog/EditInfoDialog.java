@@ -9,8 +9,9 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.MediaInfo;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
@@ -24,6 +25,7 @@ import net.doge.util.media.MediaUtil;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -39,8 +41,10 @@ import java.io.File;
  * @Date 2020/12/15
  */
 public class EditInfoDialog extends AbstractTitledDialog {
-    private final int imgWidth = 120;
-    private final int imgHeight = 120;
+    private final int WIDTH = ScaleUtil.scale(960);
+    private final int HEIGHT = ScaleUtil.scale(750);
+    private final int imgWidth = ScaleUtil.scale(120);
+    private final int imgHeight = ScaleUtil.scale(120);
 
     // 文件正在使用提示
     private final String FILE_USED_MSG = I18n.getText("fileUsedMsg");
@@ -125,7 +129,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(960, 750);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -173,7 +177,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
@@ -191,8 +195,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
         centerPanel.setLayout(new GridLayout(11, 2));
 
         // 获得传入的歌曲信息
-        String fileName = HtmlUtil.wrapLineByWidth(file.getName(), 300);
-        String filePath = HtmlUtil.wrapLineByWidth(file.getParent(), 300);
+        String fileName = HtmlUtil.wrapLineByWidth(file.getName(), ScaleUtil.scale(300));
+        String filePath = HtmlUtil.wrapLineByWidth(file.getParent(), ScaleUtil.scale(300));
         String fileSize = FileUtil.getUnitString(FileUtil.size(file));
         String creationTime = TimeUtil.msToDatetime(FileUtil.getCreationTime(file));
         String lastModifiedTime = TimeUtil.msToDatetime(file.lastModified());
@@ -238,7 +242,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[20] = version;
         results[21] = copyright;
 
-        Border b = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+        Border b = new HDEmptyBorder(0, 20, 0, 20);
 
         Color textColor = f.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
@@ -266,7 +270,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 CustomScrollPane sp = (CustomScrollPane) components[i];
                 sp.setHBarUI(new ScrollBarUI(scrollBarColor));
                 sp.setVBarUI(new ScrollBarUI(scrollBarColor));
-                sp.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+                sp.setBorder(new HDEmptyBorder(10, 0, 10, 0));
 
                 CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
                 textArea.setForeground(textColor);
@@ -349,6 +353,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 }

@@ -66,19 +66,22 @@ import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoCopyrightException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.button.TabButton;
-import net.doge.ui.widget.button.listener.ButtonMouseListener;
 import net.doge.ui.widget.button.listener.ChangePaneButtonMouseListener;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
+import net.doge.ui.widget.button.listener.TabButtonMouseListener;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.LocalPlaylistComboBoxUI;
 import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.*;
-import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
@@ -118,6 +121,7 @@ import net.doge.util.os.KeyUtil;
 import net.doge.util.os.TerminalUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SpectrumUtil;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
@@ -127,6 +131,7 @@ import org.jsoup.select.Elements;
 import javax.swing.*;
 import javax.swing.Timer;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataEvent;
@@ -174,10 +179,10 @@ public class MainFrame extends JFrame {
     // 最大尝试播放次数
     private final int MAX_RETRY = 3;
     // 图片圆角半径弧度
-    private final double TINY_ARC = 0.2;
-    private final double MIDDLE_ARC = 0.1;
-    private final double LARGE_ARC = 0.03;
-    //    private final double WIN_ARC = 0.01;
+    private final double TINY_ARC = ScaleUtil.scale(0.2);
+    private final double MIDDLE_ARC = ScaleUtil.scale(0.1);
+    private final double LARGE_ARC = ScaleUtil.scale(0.03);
+    //    private final double WIN_ARC = ScaleUtil.scale(0.01);
     private final String PAGINATION_MSG = I18n.getText("paginationMsg");
     private final String TOTAL_MSG = I18n.getText("totalMsg");
     private final String LRC_LOADING_MSG = I18n.getText("lrcLoadingMsg");
@@ -859,9 +864,9 @@ public class MainFrame extends JFrame {
     // 专辑图片宽/高
     private int albumImageWidth;
     // 封面图片宽/高
-    private int coverImageWidth = 200;
+    private int coverImageWidth = ScaleUtil.scale(200);
     // 切换面板按钮图片宽度
-    private int changePaneImageWidth = 50;
+    private int changePaneImageWidth = ScaleUtil.scale(50);
     // 当前面板
     private int currPane = MusicPane.MUSIC;
     // 上一个面板(评论跳转要用到)
@@ -2182,8 +2187,6 @@ public class MainFrame extends JFrame {
     private CustomPanel controlPanel = new CustomPanel();
     // 歌词控制面板 Panel
     private CustomPanel controlLrcPanel = new CustomPanel();
-    // 进度条 Panel
-//    private CustomPanel progressPanel = new CustomPanel();
 
     // 顶部盒子
     private Box topBox = new Box(BoxLayout.X_AXIS);
@@ -2550,7 +2553,7 @@ public class MainFrame extends JFrame {
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
                     currTimeLabel.revalidate();
-                    timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - 30 * 2, 20));
+                    timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - ScaleUtil.scale(30 * 2), ScaleUtil.scale(30)));
                     // 专辑图片
                     albumImageWidth = (int) (w * 0.33);
                     Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
@@ -2773,7 +2776,7 @@ public class MainFrame extends JFrame {
         titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
-        titleLabel.setIconTextGap(15);
+        titleLabel.setIconTextGap(ScaleUtil.scale(15));
         titleLabel.setInstantAlpha(0.5f);
         titleLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
@@ -2872,7 +2875,7 @@ public class MainFrame extends JFrame {
         // 隐藏详情暂时不可见
         hideDetailButton.setVisible(false);
         // 最佳大小
-        Dimension d = new Dimension(hideDetailIcon.getIconWidth() + 10, hideDetailIcon.getIconHeight() + 10);
+        Dimension d = new Dimension(hideDetailIcon.getIconWidth() + ScaleUtil.scale(10), hideDetailIcon.getIconHeight() + ScaleUtil.scale(10));
         hideDetailButton.setPreferredSize(d);
         styleToolButton.setPreferredSize(d);
         mainMenuButton.setPreferredSize(d);
@@ -2890,19 +2893,19 @@ public class MainFrame extends JFrame {
         maximizeButton.setToolTipText(MAXIMIZE_WINDOW_TIP);
         closeButton.setToolTipText(CLOSE_WINDOW_TIP);
         // 鼠标事件
-        hideDetailButton.addMouseListener(new ButtonMouseListener(hideDetailButton, THIS));
-        styleToolButton.addMouseListener(new ButtonMouseListener(styleToolButton, THIS));
-        mainMenuButton.addMouseListener(new ButtonMouseListener(mainMenuButton, THIS));
-        miniButton.addMouseListener(new ButtonMouseListener(miniButton, THIS));
-        minimizeButton.addMouseListener(new ButtonMouseListener(minimizeButton, THIS));
-        maximizeButton.addMouseListener(new ButtonMouseListener(maximizeButton, THIS));
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, THIS));
+        hideDetailButton.addMouseListener(new CustomButtonMouseListener(hideDetailButton, THIS));
+        styleToolButton.addMouseListener(new CustomButtonMouseListener(styleToolButton, THIS));
+        mainMenuButton.addMouseListener(new CustomButtonMouseListener(mainMenuButton, THIS));
+        miniButton.addMouseListener(new CustomButtonMouseListener(miniButton, THIS));
+        minimizeButton.addMouseListener(new CustomButtonMouseListener(minimizeButton, THIS));
+        maximizeButton.addMouseListener(new CustomButtonMouseListener(maximizeButton, THIS));
+        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, THIS));
 
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
-        fl.setHgap(14);
+        fl.setHgap(ScaleUtil.scale(14));
         windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 0));
-        windowCtrlPanel.setMinimumSize(new Dimension(360, 10));
+        windowCtrlPanel.setBorder(new HDEmptyBorder(3, 0, 0, 0));
+        windowCtrlPanel.setMinimumSize(new HDDimension(360, 10));
         windowCtrlPanel.add(hideDetailButton);
         windowCtrlPanel.add(styleToolButton);
         windowCtrlPanel.add(mainMenuButton);
@@ -2916,7 +2919,7 @@ public class MainFrame extends JFrame {
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
         topBox.add(topPanel);
-        topBox.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+        topBox.setBorder(new HDEmptyBorder(10, 20, 10, 10));
         globalPanel.add(topBox, BorderLayout.NORTH);
     }
 
@@ -3096,7 +3099,7 @@ public class MainFrame extends JFrame {
         LyricAlignment.lrcAlignmentIndex = config.getIntValue(ConfigConstants.LRC_ALIGNMENT, LyricAlignment.lrcAlignmentIndex);
         // 载入频谱最大高度
         SpectrumConstants.barMaxHeight = config.getIntValue(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
-        spectrumPanel.setMinimumSize(new Dimension(1, SpectrumConstants.barMaxHeight));
+        spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
         // 载入高斯模糊因子
         BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
@@ -4657,7 +4660,7 @@ public class MainFrame extends JFrame {
 
     // 初始化侧边栏大小
     public void updateTabSize() {
-        Dimension d = new Dimension(showTabText ? 125 : 43, 42);
+        Dimension d = new HDDimension(showTabText ? 125 : 43, 42);
         personalMusicPanel.setPreferredSize(d);
         netMusicPanel.setPreferredSize(d);
         netPlaylistPanel.setPreferredSize(d);
@@ -4687,7 +4690,7 @@ public class MainFrame extends JFrame {
 
     // 初始化标签页
     private void initTabbedPane() {
-        int gap = 10;
+        int gap = ScaleUtil.scale(10);
         personalMusicLabel.setIconTextGap(gap);
         netMusicLabel.setIconTextGap(gap);
         netPlaylistLabel.setIconTextGap(gap);
@@ -5113,7 +5116,7 @@ public class MainFrame extends JFrame {
     // 初始化收藏标签页
     private void initCollectionTabbedPane() {
         // 组装标签面板
-        int gap = 10;
+        int gap = ScaleUtil.scale(10);
         musicCollectionLabel.setIconTextGap(gap);
         musicCollectionPanel.add(musicCollectionLabel);
 
@@ -5586,7 +5589,7 @@ public class MainFrame extends JFrame {
         });
         collectionRecordTypeComboBox.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         collectionRefreshButton.setPreferredSize(dimension);
         collectionStartPageButton.setPreferredSize(dimension);
         collectionLastPageButton.setPreferredSize(dimension);
@@ -5594,14 +5597,14 @@ public class MainFrame extends JFrame {
         collectionNextPageButton.setPreferredSize(dimension);
         collectionEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        collectionBackwardButton.addMouseListener(new ButtonMouseListener(collectionBackwardButton, THIS));
-        collectionPlayAllButton.addMouseListener(new ButtonMouseListener(collectionPlayAllButton, THIS));
-        collectionRefreshButton.addMouseListener(new ButtonMouseListener(collectionRefreshButton, THIS));
-        collectionStartPageButton.addMouseListener(new ButtonMouseListener(collectionStartPageButton, THIS));
-        collectionLastPageButton.addMouseListener(new ButtonMouseListener(collectionLastPageButton, THIS));
-        collectionGoButton.addMouseListener(new ButtonMouseListener(collectionGoButton, THIS));
-        collectionNextPageButton.addMouseListener(new ButtonMouseListener(collectionNextPageButton, THIS));
-        collectionEndPageButton.addMouseListener(new ButtonMouseListener(collectionEndPageButton, THIS));
+        collectionBackwardButton.addMouseListener(new CustomButtonMouseListener(collectionBackwardButton, THIS));
+        collectionPlayAllButton.addMouseListener(new CustomButtonMouseListener(collectionPlayAllButton, THIS));
+        collectionRefreshButton.addMouseListener(new CustomButtonMouseListener(collectionRefreshButton, THIS));
+        collectionStartPageButton.addMouseListener(new CustomButtonMouseListener(collectionStartPageButton, THIS));
+        collectionLastPageButton.addMouseListener(new CustomButtonMouseListener(collectionLastPageButton, THIS));
+        collectionGoButton.addMouseListener(new CustomButtonMouseListener(collectionGoButton, THIS));
+        collectionNextPageButton.addMouseListener(new CustomButtonMouseListener(collectionNextPageButton, THIS));
+        collectionEndPageButton.addMouseListener(new CustomButtonMouseListener(collectionEndPageButton, THIS));
         // 提示语
         collectionBackwardButton.setToolTipText(BACKWARD_TIP);
         collectionPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -5612,7 +5615,7 @@ public class MainFrame extends JFrame {
         collectionNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         collectionEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        collectionPlayAllButton.setIconTextGap(5);
+        collectionPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         collectionCountLabel.setInstantAlpha(0.5f);
@@ -5632,7 +5635,7 @@ public class MainFrame extends JFrame {
         collectionCountPanel.add(collectionRefreshButton);
         collectionCountPanel.add(collectionPageTextField);
         collectionCountPanel.add(collectionGoButton);
-        collectionCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        collectionCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         collectionLeftBox.add(collectionCountPanel);
     }
 
@@ -6326,7 +6329,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 最佳大小
-        collectionScrollPane.setPreferredSize(new Dimension(200, 600));
+        collectionScrollPane.setPreferredSize(new HDDimension(200, 600));
         playlistCollectionLeftBox.add(collectionScrollPane);
     }
 
@@ -6416,13 +6419,13 @@ public class MainFrame extends JFrame {
         leftInfoBox.add(Box.createVerticalGlue());
         leftInfoBox.add(leftBottomBox);
         leftInfoBox.add(Box.createVerticalGlue());
-        leftInfoBox.setBorder(BorderFactory.createEmptyBorder(0, 30, 0, 0));
+        leftInfoBox.setBorder(new HDEmptyBorder(0, 30, 0, 0));
         infoAndLrcBox.add(leftInfoBox);
 
         // 列表为空提示
         emptyHintPanel.setLayout(new BorderLayout());
         emptyHintPanel.add(emptyHintLabel, BorderLayout.CENTER);
-        emptyHintPanel.setPreferredSize(new Dimension(260, 1000));
+        emptyHintPanel.setPreferredSize(new HDDimension(260, 1000));
     }
 
     // 下拉框添加第一个元素时会产生选择事件，该变量决定是否屏蔽
@@ -6558,9 +6561,9 @@ public class MainFrame extends JFrame {
             else countLabel.setText(String.format(TOTAL_MSG, collectionList.getModel().getSize()));
         });
         // 按钮悬浮和点击效果
-        localMusicButton.addMouseListener(new ButtonMouseListener(localMusicButton, THIS));
-        historyButton.addMouseListener(new ButtonMouseListener(historyButton, THIS));
-        collectionButton.addMouseListener(new ButtonMouseListener(collectionButton, THIS));
+        localMusicButton.addMouseListener(new TabButtonMouseListener(localMusicButton, THIS));
+        historyButton.addMouseListener(new TabButtonMouseListener(historyButton, THIS));
+        collectionButton.addMouseListener(new TabButtonMouseListener(collectionButton, THIS));
         // 按钮字体
         Font font = Fonts.NORMAL_TITLE2;
         localMusicButton.setFont(font);
@@ -6568,7 +6571,7 @@ public class MainFrame extends JFrame {
         collectionButton.setFont(font);
 
         // 按钮文字与图标的位置
-        int gap = 15;
+        int gap = ScaleUtil.scale(15);
         localMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         localMusicButton.setIconTextGap(gap);
         historyButton.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -6582,7 +6585,7 @@ public class MainFrame extends JFrame {
         personalMusicToolBar.add(historyButton);
         personalMusicToolBar.add(collectionButton);
 
-        personalMusicToolBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        personalMusicToolBar.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 50));
 
         leftBox.add(personalMusicToolBar);
     }
@@ -6590,20 +6593,20 @@ public class MainFrame extends JFrame {
     // 初始化本地音乐工具栏
     private void initMusicToolBar() {
         // 按钮悬浮和点击效果
-        localPlaylistToolButton.addMouseListener(new ButtonMouseListener(localPlaylistToolButton, THIS));
-        addToolButton.addMouseListener(new ButtonMouseListener(addToolButton, THIS));
-        reimportToolButton.addMouseListener(new ButtonMouseListener(reimportToolButton, THIS));
-        manageCatalogToolButton.addMouseListener(new ButtonMouseListener(manageCatalogToolButton, THIS));
-        removeToolButton.addMouseListener(new ButtonMouseListener(removeToolButton, THIS));
-        clearToolButton.addMouseListener(new ButtonMouseListener(clearToolButton, THIS));
-        duplicateToolButton.addMouseListener(new ButtonMouseListener(duplicateToolButton, THIS));
-        reverseToolButton.addMouseListener(new ButtonMouseListener(reverseToolButton, THIS));
-        sortToolButton.addMouseListener(new ButtonMouseListener(sortToolButton, THIS));
-        moveUpToolButton.addMouseListener(new ButtonMouseListener(moveUpToolButton, THIS));
-        moveDownToolButton.addMouseListener(new ButtonMouseListener(moveDownToolButton, THIS));
-        clearInputToolButton.addMouseListener(new ButtonMouseListener(clearInputToolButton, THIS));
+        localPlaylistToolButton.addMouseListener(new CustomButtonMouseListener(localPlaylistToolButton, THIS));
+        addToolButton.addMouseListener(new CustomButtonMouseListener(addToolButton, THIS));
+        reimportToolButton.addMouseListener(new CustomButtonMouseListener(reimportToolButton, THIS));
+        manageCatalogToolButton.addMouseListener(new CustomButtonMouseListener(manageCatalogToolButton, THIS));
+        removeToolButton.addMouseListener(new CustomButtonMouseListener(removeToolButton, THIS));
+        clearToolButton.addMouseListener(new CustomButtonMouseListener(clearToolButton, THIS));
+        duplicateToolButton.addMouseListener(new CustomButtonMouseListener(duplicateToolButton, THIS));
+        reverseToolButton.addMouseListener(new CustomButtonMouseListener(reverseToolButton, THIS));
+        sortToolButton.addMouseListener(new CustomButtonMouseListener(sortToolButton, THIS));
+        moveUpToolButton.addMouseListener(new CustomButtonMouseListener(moveUpToolButton, THIS));
+        moveDownToolButton.addMouseListener(new CustomButtonMouseListener(moveDownToolButton, THIS));
+        clearInputToolButton.addMouseListener(new CustomButtonMouseListener(clearInputToolButton, THIS));
         // 标签左间距
-        countLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        countLabel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
         // 透明度
         countLabel.setInstantAlpha(0.5f);
 
@@ -7515,9 +7518,9 @@ public class MainFrame extends JFrame {
 
         // 表头
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         musicHeaderPanel.setLayout(layout);
-        musicHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        musicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
         musicSourceHeaderLabel.setInstantAlpha(alpha);
@@ -7540,7 +7543,7 @@ public class MainFrame extends JFrame {
         musicHeaderPanel.add(musicDurationHeaderLabel);
         musicScrollPane.setColumnHeaderView(musicHeaderPanel);
         // 最佳大小
-        musicScrollPane.setPreferredSize(new Dimension(260, 3000));
+        musicScrollPane.setPreferredSize(new HDDimension(260, 3000));
         leftBox.add(musicScrollPane);
     }
 
@@ -7813,7 +7816,7 @@ public class MainFrame extends JFrame {
             netMusicGoPage(destPage);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netMusicRefreshButton.setPreferredSize(dimension);
         netMusicStartPageButton.setPreferredSize(dimension);
         netMusicLastPageButton.setPreferredSize(dimension);
@@ -7821,15 +7824,15 @@ public class MainFrame extends JFrame {
         netMusicNextPageButton.setPreferredSize(dimension);
         netMusicEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netMusicBackwardButton.addMouseListener(new ButtonMouseListener(netMusicBackwardButton, THIS));
-        netMusicClearInputButton.addMouseListener(new ButtonMouseListener(netMusicClearInputButton, THIS));
-        searchButton.addMouseListener(new ButtonMouseListener(searchButton, THIS));
-        netMusicRefreshButton.addMouseListener(new ButtonMouseListener(netMusicRefreshButton, THIS));
-        netMusicStartPageButton.addMouseListener(new ButtonMouseListener(netMusicStartPageButton, THIS));
-        netMusicLastPageButton.addMouseListener(new ButtonMouseListener(netMusicLastPageButton, THIS));
-        netMusicGoButton.addMouseListener(new ButtonMouseListener(netMusicGoButton, THIS));
-        netMusicNextPageButton.addMouseListener(new ButtonMouseListener(netMusicNextPageButton, THIS));
-        netMusicEndPageButton.addMouseListener(new ButtonMouseListener(netMusicEndPageButton, THIS));
+        netMusicBackwardButton.addMouseListener(new CustomButtonMouseListener(netMusicBackwardButton, THIS));
+        netMusicClearInputButton.addMouseListener(new CustomButtonMouseListener(netMusicClearInputButton, THIS));
+        searchButton.addMouseListener(new CustomButtonMouseListener(searchButton, THIS));
+        netMusicRefreshButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshButton, THIS));
+        netMusicStartPageButton.addMouseListener(new CustomButtonMouseListener(netMusicStartPageButton, THIS));
+        netMusicLastPageButton.addMouseListener(new CustomButtonMouseListener(netMusicLastPageButton, THIS));
+        netMusicGoButton.addMouseListener(new CustomButtonMouseListener(netMusicGoButton, THIS));
+        netMusicNextPageButton.addMouseListener(new CustomButtonMouseListener(netMusicNextPageButton, THIS));
+        netMusicEndPageButton.addMouseListener(new CustomButtonMouseListener(netMusicEndPageButton, THIS));
         // 帮助提示
         netMusicBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -7867,7 +7870,7 @@ public class MainFrame extends JFrame {
         netMusicCountPanel.add(netMusicRefreshButton);
         netMusicCountPanel.add(netMusicPageTextField);
         netMusicCountPanel.add(netMusicGoButton);
-        netMusicCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMusicCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMusicCountPanel.setVisible(false);
         netLeftBox.add(netMusicCountPanel);
     }
@@ -8565,9 +8568,9 @@ public class MainFrame extends JFrame {
         // 搜索建议面板
         // 刷新搜索建议按钮
         netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.execute(() -> updateSearchSuggestion()));
-        netMusicRefreshSearchSuggestionButton.setPreferredSize(new Dimension(30, 30));
+        netMusicRefreshSearchSuggestionButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
-        netMusicRefreshSearchSuggestionButton.addMouseListener(new ButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
+        netMusicRefreshSearchSuggestionButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
         Font font = Fonts.NORMAL_TITLE2;
         netMusicSearchSuggestionLabel.setFont(font);
@@ -8576,10 +8579,10 @@ public class MainFrame extends JFrame {
         netMusicSearchSuggestionInnerPanel1.add(netMusicSearchSuggestionLabel);
         netMusicSearchSuggestionInnerPanel1.add(netMusicRefreshSearchSuggestionButton);
         netMusicSearchSuggestionInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicSearchSuggestionInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netMusicSearchSuggestionInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMusicSearchSuggestionInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netMusicSearchSuggestionInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMusicSearchSuggestionInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicSearchSuggestionInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMusicSearchSuggestionInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
 //        netMusicSearchSuggestionInnerPanel2.addContainerListener(new ContainerAdapter() {
 //            @Override
 //            public void componentAdded(ContainerEvent e) {
@@ -8591,7 +8594,7 @@ public class MainFrame extends JFrame {
 //                if (netMusicSearchSuggestionInnerPanel2.getComponentCount() == 0) netMusicSearchSuggestionInnerPanel1.setVisible(false);
 //            }
 //        });
-        Dimension d = new Dimension(Integer.MAX_VALUE, 500);
+        Dimension d = new HDDimension(Integer.MAX_VALUE, 500);
         netMusicSearchSuggestionInnerPanel2.setMaximumSize(d);
         netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
         netMusicSearchSuggestionPanel.setVisible(false);
@@ -8602,9 +8605,9 @@ public class MainFrame extends JFrame {
         // 热搜面板
         // 刷新热门搜索按钮
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.execute(() -> updateHotSearch()));
-        netMusicRefreshHotSearchButton.setPreferredSize(new Dimension(30, 30));
+        netMusicRefreshHotSearchButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
-        netMusicRefreshHotSearchButton.addMouseListener(new ButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
+        netMusicRefreshHotSearchButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
         netMusicHotSearchLabel.setFont(font);
 
@@ -8612,10 +8615,10 @@ public class MainFrame extends JFrame {
         netMusicHotSearchInnerPanel1.add(netMusicHotSearchLabel);
         netMusicHotSearchInnerPanel1.add(netMusicRefreshHotSearchButton);
         netMusicHotSearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicHotSearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netMusicHotSearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMusicHotSearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netMusicHotSearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMusicHotSearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicHotSearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMusicHotSearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
 //        netMusicHotSearchInnerPanel2.addContainerListener(new ContainerAdapter() {
 //            @Override
 //            public void componentAdded(ContainerEvent e) {
@@ -8627,7 +8630,7 @@ public class MainFrame extends JFrame {
 //                if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) netMusicHotSearchInnerPanel1.setVisible(false);
 //            }
 //        });
-        d = new Dimension(Integer.MAX_VALUE, 500);
+        d = new HDDimension(Integer.MAX_VALUE, 500);
         netMusicHotSearchInnerPanel2.setMaximumSize(d);
         netMusicHotSearchInnerPanel2.setPreferredSize(d);
         netMusicHotSearchPanel.setVisible(false);
@@ -8638,9 +8641,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netMusicClearHistorySearchButton.addActionListener(e -> netMusicHistorySearchInnerPanel2.removeAll());
-        netMusicClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netMusicClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netMusicClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMusicClearHistorySearchButton, THIS));
+        netMusicClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netMusicClearHistorySearchButton, THIS));
 
         netMusicHistorySearchLabel.setFont(font);
 
@@ -8648,10 +8651,10 @@ public class MainFrame extends JFrame {
         netMusicHistorySearchInnerPanel1.add(netMusicHistorySearchLabel);
         netMusicHistorySearchInnerPanel1.add(netMusicClearHistorySearchButton);
         netMusicHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netMusicHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMusicHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netMusicHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMusicHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMusicHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMusicHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMusicHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -8675,7 +8678,7 @@ public class MainFrame extends JFrame {
         netMusicKeywordsPanel.add(netMusicHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        d = new Dimension(1000, 1000);
+        d = new HDDimension(1000, 1000);
         netMusicKeywordsPanel.setPreferredSize(d);
         netMusicKeywordsPanelScrollPane.setPreferredSize(d);
         // 滚动条
@@ -8691,9 +8694,9 @@ public class MainFrame extends JFrame {
 
         // 表头
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         netMusicHeaderPanel.setLayout(layout);
-        netMusicHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        netMusicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
         netMusicSourceHeaderLabel.setInstantAlpha(alpha);
@@ -8717,7 +8720,7 @@ public class MainFrame extends JFrame {
         netMusicScrollPane.setColumnHeaderView(netMusicHeaderPanel);
 
         // 在线歌单最佳大小
-        netMusicScrollPane.setPreferredSize(new Dimension(200, 600));
+        netMusicScrollPane.setPreferredSize(new HDDimension(200, 600));
         netLeftBox.add(netMusicScrollPane);
     }
 
@@ -8761,7 +8764,7 @@ public class MainFrame extends JFrame {
         collectionItemDescriptionLabel.setVerticalTextPosition(SwingConstants.TOP);
         collectionItemDescriptionLabel.setHorizontalTextPosition(SwingConstants.CENTER);
 
-        int gap = 30;
+        int gap = ScaleUtil.scale(30);
         playlistCoverAndNameLabel.setIconTextGap(gap);
         albumCoverAndNameLabel.setIconTextGap(gap);
         artistCoverAndNameLabel.setIconTextGap(gap);
@@ -9297,7 +9300,7 @@ public class MainFrame extends JFrame {
         });
 
         // 边框间距
-        Border eb = BorderFactory.createEmptyBorder(15, 0, 0, 0);
+        Border eb = new HDEmptyBorder(15, 0, 0, 0);
         playlistTagLabel.setBorder(eb);
         artistTagLabel.setBorder(eb);
         radioTagLabel.setBorder(eb);
@@ -9305,7 +9308,7 @@ public class MainFrame extends JFrame {
         recommendItemTagLabel.setBorder(eb);
         collectionItemTagLabel.setBorder(eb);
 
-        eb = BorderFactory.createEmptyBorder(gap, 0, 0, 0);
+        eb = new EmptyBorder(gap, 0, 0, 0);
         playlistDescriptionLabel.setBorder(eb);
         albumDescriptionLabel.setBorder(eb);
         artistDescriptionLabel.setBorder(eb);
@@ -9315,7 +9318,7 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionLabel.setBorder(eb);
         collectionItemDescriptionLabel.setBorder(eb);
         // 控制宽度
-        int width = coverImageWidth + 20;
+        int width = coverImageWidth + ScaleUtil.scale(20);
         Dimension size = new Dimension(width, Integer.MAX_VALUE);
         playlistCoverAndNameLabel.setMaximumSize(size);
         playlistTagLabel.setMaximumSize(size);
@@ -9340,7 +9343,7 @@ public class MainFrame extends JFrame {
         collectionItemTagLabel.setMaximumSize(size);
         collectionItemDescriptionLabel.setMaximumSize(size);
         // 滚动面板宽度
-        size = new Dimension(width + 10, Integer.MAX_VALUE);
+        size = new Dimension(width + ScaleUtil.scale(10), Integer.MAX_VALUE);
         playlistDescriptionScrollPane.setPreferredSize(size);
         albumDescriptionScrollPane.setPreferredSize(size);
         artistDescriptionScrollPane.setPreferredSize(size);
@@ -9554,14 +9557,14 @@ public class MainFrame extends JFrame {
             switchDescriptionCollectionStatus(collectionItemDescriptionCollectionButton);
         });
         // 描述收藏按钮鼠标事件
-        playlistDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(playlistDescriptionCollectionButton, THIS));
-        albumDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(albumDescriptionCollectionButton, THIS));
-        artistDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(artistDescriptionCollectionButton, THIS));
-        radioDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(radioDescriptionCollectionButton, THIS));
-        rankingDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(rankingDescriptionCollectionButton, THIS));
-        userDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(userDescriptionCollectionButton, THIS));
-        recommendItemDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(recommendItemDescriptionCollectionButton, THIS));
-        collectionItemDescriptionCollectionButton.addMouseListener(new ButtonMouseListener(collectionItemDescriptionCollectionButton, THIS));
+        playlistDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(playlistDescriptionCollectionButton, THIS));
+        albumDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(albumDescriptionCollectionButton, THIS));
+        artistDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(artistDescriptionCollectionButton, THIS));
+        radioDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(radioDescriptionCollectionButton, THIS));
+        rankingDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(rankingDescriptionCollectionButton, THIS));
+        userDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(userDescriptionCollectionButton, THIS));
+        recommendItemDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(recommendItemDescriptionCollectionButton, THIS));
+        collectionItemDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(collectionItemDescriptionCollectionButton, THIS));
         // 描述收藏按钮面板
         playlistDescriptionCollectionPanel.add(playlistDescriptionCollectionButton);
         albumDescriptionCollectionPanel.add(albumDescriptionCollectionButton);
@@ -9572,7 +9575,7 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionCollectionPanel.add(recommendItemDescriptionCollectionButton);
         collectionItemDescriptionCollectionPanel.add(collectionItemDescriptionCollectionButton);
 
-        Dimension ms = new Dimension(Integer.MAX_VALUE, 30);
+        Dimension ms = new HDDimension(Integer.MAX_VALUE, 30);
         playlistDescriptionCollectionPanel.setMaximumSize(ms);
         albumDescriptionCollectionPanel.setMaximumSize(ms);
         artistDescriptionCollectionPanel.setMaximumSize(ms);
@@ -9618,7 +9621,7 @@ public class MainFrame extends JFrame {
         collectionItemListBox.add(collectionItemDescriptionOuterPanel);
 
         // 设置一下列表盒子的最佳大小使其自动填充满
-        Dimension d = new Dimension(300, 100);
+        Dimension d = new HDDimension(300, 100);
         playlistListBox.setPreferredSize(d);
         albumListBox.setPreferredSize(d);
         artistListBox.setPreferredSize(d);
@@ -10060,7 +10063,7 @@ public class MainFrame extends JFrame {
         netPlaylistClearInputButton.setVisible(false);
         netPlaylistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netPlaylistRefreshButton.setPreferredSize(dimension);
         netPlaylistStartPageButton.setPreferredSize(dimension);
         netPlaylistLastPageButton.setPreferredSize(dimension);
@@ -10068,16 +10071,16 @@ public class MainFrame extends JFrame {
         netPlaylistNextPageButton.setPreferredSize(dimension);
         netPlaylistEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netPlaylistBackwardButton.addMouseListener(new ButtonMouseListener(netPlaylistBackwardButton, THIS));
-        netPlaylistClearInputButton.addMouseListener(new ButtonMouseListener(netPlaylistClearInputButton, THIS));
-        netPlaylistSearchButton.addMouseListener(new ButtonMouseListener(netPlaylistSearchButton, THIS));
-        netPlaylistPlayAllButton.addMouseListener(new ButtonMouseListener(netPlaylistPlayAllButton, THIS));
-        netPlaylistRefreshButton.addMouseListener(new ButtonMouseListener(netPlaylistRefreshButton, THIS));
-        netPlaylistStartPageButton.addMouseListener(new ButtonMouseListener(netPlaylistStartPageButton, THIS));
-        netPlaylistLastPageButton.addMouseListener(new ButtonMouseListener(netPlaylistLastPageButton, THIS));
-        netPlaylistGoButton.addMouseListener(new ButtonMouseListener(netPlaylistGoButton, THIS));
-        netPlaylistNextPageButton.addMouseListener(new ButtonMouseListener(netPlaylistNextPageButton, THIS));
-        netPlaylistEndPageButton.addMouseListener(new ButtonMouseListener(netPlaylistEndPageButton, THIS));
+        netPlaylistBackwardButton.addMouseListener(new CustomButtonMouseListener(netPlaylistBackwardButton, THIS));
+        netPlaylistClearInputButton.addMouseListener(new CustomButtonMouseListener(netPlaylistClearInputButton, THIS));
+        netPlaylistSearchButton.addMouseListener(new CustomButtonMouseListener(netPlaylistSearchButton, THIS));
+        netPlaylistPlayAllButton.addMouseListener(new CustomButtonMouseListener(netPlaylistPlayAllButton, THIS));
+        netPlaylistRefreshButton.addMouseListener(new CustomButtonMouseListener(netPlaylistRefreshButton, THIS));
+        netPlaylistStartPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistStartPageButton, THIS));
+        netPlaylistLastPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistLastPageButton, THIS));
+        netPlaylistGoButton.addMouseListener(new CustomButtonMouseListener(netPlaylistGoButton, THIS));
+        netPlaylistNextPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistNextPageButton, THIS));
+        netPlaylistEndPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistEndPageButton, THIS));
         // 帮助提示
         netPlaylistBackwardButton.setToolTipText(BACKWARD_TIP);
         netPlaylistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -10090,7 +10093,7 @@ public class MainFrame extends JFrame {
         netPlaylistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netPlaylistEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netPlaylistPlayAllButton.setIconTextGap(5);
+        netPlaylistPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netPlaylistCountLabel.setInstantAlpha(0.5f);
@@ -10120,7 +10123,7 @@ public class MainFrame extends JFrame {
         netPlaylistCountPanel.add(netPlaylistRefreshButton);
         netPlaylistCountPanel.add(netPlaylistPageTextField);
         netPlaylistCountPanel.add(netPlaylistGoButton);
-        netPlaylistCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netPlaylistCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netPlaylistCountPanel.setVisible(false);
         netPlaylistLeftBox.add(netPlaylistCountPanel);
     }
@@ -10614,9 +10617,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netPlaylistClearHistorySearchButton.addActionListener(e -> netPlaylistHistorySearchInnerPanel2.removeAll());
-        netPlaylistClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netPlaylistClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netPlaylistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
+        netPlaylistClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
         netPlaylistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -10624,10 +10627,10 @@ public class MainFrame extends JFrame {
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistHistorySearchLabel);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistClearHistorySearchButton);
         netPlaylistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netPlaylistHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netPlaylistHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netPlaylistHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netPlaylistHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netPlaylistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netPlaylistHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netPlaylistHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netPlaylistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -10649,12 +10652,12 @@ public class MainFrame extends JFrame {
         netPlaylistKeywordsPanel.add(netPlaylistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netPlaylistKeywordsPanel.setPreferredSize(d);
         netPlaylistKeywordsPanelScrollPane.setPreferredSize(d);
 
         // 在线歌单最佳大小
-        netPlaylistScrollPane.setPreferredSize(new Dimension(200, 600));
+        netPlaylistScrollPane.setPreferredSize(new HDDimension(200, 600));
         netPlaylistLeftBox.add(netPlaylistScrollPane);
     }
 
@@ -11058,7 +11061,7 @@ public class MainFrame extends JFrame {
         netAlbumClearInputButton.setVisible(false);
         netAlbumPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netAlbumRefreshButton.setPreferredSize(dimension);
         netAlbumStartPageButton.setPreferredSize(dimension);
         netAlbumLastPageButton.setPreferredSize(dimension);
@@ -11066,16 +11069,16 @@ public class MainFrame extends JFrame {
         netAlbumNextPageButton.setPreferredSize(dimension);
         netAlbumEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netAlbumBackwardButton.addMouseListener(new ButtonMouseListener(netAlbumBackwardButton, THIS));
-        netAlbumClearInputButton.addMouseListener(new ButtonMouseListener(netAlbumClearInputButton, THIS));
-        netAlbumSearchButton.addMouseListener(new ButtonMouseListener(netAlbumSearchButton, THIS));
-        netAlbumPlayAllButton.addMouseListener(new ButtonMouseListener(netAlbumPlayAllButton, THIS));
-        netAlbumRefreshButton.addMouseListener(new ButtonMouseListener(netAlbumRefreshButton, THIS));
-        netAlbumStartPageButton.addMouseListener(new ButtonMouseListener(netAlbumStartPageButton, THIS));
-        netAlbumLastPageButton.addMouseListener(new ButtonMouseListener(netAlbumLastPageButton, THIS));
-        netAlbumGoButton.addMouseListener(new ButtonMouseListener(netAlbumGoButton, THIS));
-        netAlbumNextPageButton.addMouseListener(new ButtonMouseListener(netAlbumNextPageButton, THIS));
-        netAlbumEndPageButton.addMouseListener(new ButtonMouseListener(netAlbumEndPageButton, THIS));
+        netAlbumBackwardButton.addMouseListener(new CustomButtonMouseListener(netAlbumBackwardButton, THIS));
+        netAlbumClearInputButton.addMouseListener(new CustomButtonMouseListener(netAlbumClearInputButton, THIS));
+        netAlbumSearchButton.addMouseListener(new CustomButtonMouseListener(netAlbumSearchButton, THIS));
+        netAlbumPlayAllButton.addMouseListener(new CustomButtonMouseListener(netAlbumPlayAllButton, THIS));
+        netAlbumRefreshButton.addMouseListener(new CustomButtonMouseListener(netAlbumRefreshButton, THIS));
+        netAlbumStartPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumStartPageButton, THIS));
+        netAlbumLastPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumLastPageButton, THIS));
+        netAlbumGoButton.addMouseListener(new CustomButtonMouseListener(netAlbumGoButton, THIS));
+        netAlbumNextPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumNextPageButton, THIS));
+        netAlbumEndPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumEndPageButton, THIS));
         // 帮助提示
         netAlbumBackwardButton.setToolTipText(BACKWARD_TIP);
         netAlbumClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -11088,7 +11091,7 @@ public class MainFrame extends JFrame {
         netAlbumNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netAlbumEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netAlbumPlayAllButton.setIconTextGap(5);
+        netAlbumPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netAlbumCountLabel.setInstantAlpha(0.5f);
@@ -11117,7 +11120,7 @@ public class MainFrame extends JFrame {
         netAlbumCountPanel.add(netAlbumRefreshButton);
         netAlbumCountPanel.add(netAlbumPageTextField);
         netAlbumCountPanel.add(netAlbumGoButton);
-        netAlbumCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netAlbumCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netAlbumCountPanel.setVisible(false);
         netAlbumLeftBox.add(netAlbumCountPanel);
     }
@@ -11627,9 +11630,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netAlbumClearHistorySearchButton.addActionListener(e -> netAlbumHistorySearchInnerPanel2.removeAll());
-        netAlbumClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netAlbumClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netAlbumClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
+        netAlbumClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
         netAlbumHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -11637,10 +11640,10 @@ public class MainFrame extends JFrame {
         netAlbumHistorySearchInnerPanel1.add(netAlbumHistorySearchLabel);
         netAlbumHistorySearchInnerPanel1.add(netAlbumClearHistorySearchButton);
         netAlbumHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netAlbumHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netAlbumHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netAlbumHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netAlbumHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netAlbumHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netAlbumHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netAlbumHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netAlbumHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -11662,12 +11665,12 @@ public class MainFrame extends JFrame {
         netAlbumKeywordsPanel.add(netAlbumHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netAlbumKeywordsPanel.setPreferredSize(d);
         netAlbumKeywordsPanelScrollPane.setPreferredSize(d);
 
         // 在线专辑最佳大小
-        netAlbumScrollPane.setPreferredSize(new Dimension(200, 600));
+        netAlbumScrollPane.setPreferredSize(new HDDimension(200, 600));
         netAlbumLeftBox.add(netAlbumScrollPane);
     }
 
@@ -12082,7 +12085,7 @@ public class MainFrame extends JFrame {
         netArtistClearInputButton.setVisible(false);
         netArtistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netArtistRefreshButton.setPreferredSize(dimension);
         netArtistStartPageButton.setPreferredSize(dimension);
         netArtistLastPageButton.setPreferredSize(dimension);
@@ -12090,16 +12093,16 @@ public class MainFrame extends JFrame {
         netArtistNextPageButton.setPreferredSize(dimension);
         netArtistEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netArtistBackwardButton.addMouseListener(new ButtonMouseListener(netArtistBackwardButton, THIS));
-        netArtistClearInputButton.addMouseListener(new ButtonMouseListener(netArtistClearInputButton, THIS));
-        netArtistSearchButton.addMouseListener(new ButtonMouseListener(netArtistSearchButton, THIS));
-        netArtistPlayAllButton.addMouseListener(new ButtonMouseListener(netArtistPlayAllButton, THIS));
-        netArtistRefreshButton.addMouseListener(new ButtonMouseListener(netArtistRefreshButton, THIS));
-        netArtistStartPageButton.addMouseListener(new ButtonMouseListener(netArtistStartPageButton, THIS));
-        netArtistLastPageButton.addMouseListener(new ButtonMouseListener(netArtistLastPageButton, THIS));
-        netArtistGoButton.addMouseListener(new ButtonMouseListener(netArtistGoButton, THIS));
-        netArtistNextPageButton.addMouseListener(new ButtonMouseListener(netArtistNextPageButton, THIS));
-        netArtistEndPageButton.addMouseListener(new ButtonMouseListener(netArtistEndPageButton, THIS));
+        netArtistBackwardButton.addMouseListener(new CustomButtonMouseListener(netArtistBackwardButton, THIS));
+        netArtistClearInputButton.addMouseListener(new CustomButtonMouseListener(netArtistClearInputButton, THIS));
+        netArtistSearchButton.addMouseListener(new CustomButtonMouseListener(netArtistSearchButton, THIS));
+        netArtistPlayAllButton.addMouseListener(new CustomButtonMouseListener(netArtistPlayAllButton, THIS));
+        netArtistRefreshButton.addMouseListener(new CustomButtonMouseListener(netArtistRefreshButton, THIS));
+        netArtistStartPageButton.addMouseListener(new CustomButtonMouseListener(netArtistStartPageButton, THIS));
+        netArtistLastPageButton.addMouseListener(new CustomButtonMouseListener(netArtistLastPageButton, THIS));
+        netArtistGoButton.addMouseListener(new CustomButtonMouseListener(netArtistGoButton, THIS));
+        netArtistNextPageButton.addMouseListener(new CustomButtonMouseListener(netArtistNextPageButton, THIS));
+        netArtistEndPageButton.addMouseListener(new CustomButtonMouseListener(netArtistEndPageButton, THIS));
         // 帮助提示
         netArtistBackwardButton.setToolTipText(BACKWARD_TIP);
         netArtistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -12112,7 +12115,7 @@ public class MainFrame extends JFrame {
         netArtistNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netArtistEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netArtistPlayAllButton.setIconTextGap(5);
+        netArtistPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netArtistCountLabel.setInstantAlpha(0.5f);
@@ -12141,7 +12144,7 @@ public class MainFrame extends JFrame {
         netArtistCountPanel.add(netArtistRefreshButton);
         netArtistCountPanel.add(netArtistPageTextField);
         netArtistCountPanel.add(netArtistGoButton);
-        netArtistCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netArtistCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netArtistCountPanel.setVisible(false);
         netArtistLeftBox.add(netArtistCountPanel);
     }
@@ -12876,9 +12879,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netArtistClearHistorySearchButton.addActionListener(e -> netArtistHistorySearchInnerPanel2.removeAll());
-        netArtistClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netArtistClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netArtistClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netArtistClearHistorySearchButton, THIS));
+        netArtistClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
         netArtistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -12886,10 +12889,10 @@ public class MainFrame extends JFrame {
         netArtistHistorySearchInnerPanel1.add(netArtistHistorySearchLabel);
         netArtistHistorySearchInnerPanel1.add(netArtistClearHistorySearchButton);
         netArtistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netArtistHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netArtistHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netArtistHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netArtistHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netArtistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netArtistHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netArtistHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netArtistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -12911,12 +12914,12 @@ public class MainFrame extends JFrame {
         netArtistKeywordsPanel.add(netArtistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netArtistKeywordsPanel.setPreferredSize(d);
         netArtistKeywordsPanelScrollPane.setPreferredSize(d);
 
         // 歌手最佳大小
-        netArtistScrollPane.setPreferredSize(new Dimension(200, 600));
+        netArtistScrollPane.setPreferredSize(new HDDimension(200, 600));
         netArtistLeftBox.add(netArtistScrollPane);
     }
 
@@ -13327,7 +13330,7 @@ public class MainFrame extends JFrame {
         netRadioSortTypeComboBox.setVisible(false);
         netRadioPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netRadioRefreshButton.setPreferredSize(dimension);
         netRadioStartPageButton.setPreferredSize(dimension);
         netRadioLastPageButton.setPreferredSize(dimension);
@@ -13335,16 +13338,16 @@ public class MainFrame extends JFrame {
         netRadioNextPageButton.setPreferredSize(dimension);
         netRadioEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netRadioBackwardButton.addMouseListener(new ButtonMouseListener(netRadioBackwardButton, THIS));
-        netRadioClearInputButton.addMouseListener(new ButtonMouseListener(netRadioClearInputButton, THIS));
-        netRadioSearchButton.addMouseListener(new ButtonMouseListener(netRadioSearchButton, THIS));
-        netRadioPlayAllButton.addMouseListener(new ButtonMouseListener(netRadioPlayAllButton, THIS));
-        netRadioRefreshButton.addMouseListener(new ButtonMouseListener(netRadioRefreshButton, THIS));
-        netRadioStartPageButton.addMouseListener(new ButtonMouseListener(netRadioStartPageButton, THIS));
-        netRadioLastPageButton.addMouseListener(new ButtonMouseListener(netRadioLastPageButton, THIS));
-        netRadioGoButton.addMouseListener(new ButtonMouseListener(netRadioGoButton, THIS));
-        netRadioNextPageButton.addMouseListener(new ButtonMouseListener(netRadioNextPageButton, THIS));
-        netRadioEndPageButton.addMouseListener(new ButtonMouseListener(netRadioEndPageButton, THIS));
+        netRadioBackwardButton.addMouseListener(new CustomButtonMouseListener(netRadioBackwardButton, THIS));
+        netRadioClearInputButton.addMouseListener(new CustomButtonMouseListener(netRadioClearInputButton, THIS));
+        netRadioSearchButton.addMouseListener(new CustomButtonMouseListener(netRadioSearchButton, THIS));
+        netRadioPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRadioPlayAllButton, THIS));
+        netRadioRefreshButton.addMouseListener(new CustomButtonMouseListener(netRadioRefreshButton, THIS));
+        netRadioStartPageButton.addMouseListener(new CustomButtonMouseListener(netRadioStartPageButton, THIS));
+        netRadioLastPageButton.addMouseListener(new CustomButtonMouseListener(netRadioLastPageButton, THIS));
+        netRadioGoButton.addMouseListener(new CustomButtonMouseListener(netRadioGoButton, THIS));
+        netRadioNextPageButton.addMouseListener(new CustomButtonMouseListener(netRadioNextPageButton, THIS));
+        netRadioEndPageButton.addMouseListener(new CustomButtonMouseListener(netRadioEndPageButton, THIS));
         // 帮助提示
         netRadioBackwardButton.setToolTipText(BACKWARD_TIP);
         netRadioClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -13357,7 +13360,7 @@ public class MainFrame extends JFrame {
         netRadioNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRadioEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netRadioPlayAllButton.setIconTextGap(5);
+        netRadioPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netRadioCountLabel.setInstantAlpha(0.5f);
@@ -13397,7 +13400,7 @@ public class MainFrame extends JFrame {
         netRadioCountPanel.add(netRadioRefreshButton);
         netRadioCountPanel.add(netRadioPageTextField);
         netRadioCountPanel.add(netRadioGoButton);
-        netRadioCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netRadioCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netRadioCountPanel.setVisible(false);
         netRadioLeftBox.add(netRadioCountPanel);
     }
@@ -14034,9 +14037,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netRadioClearHistorySearchButton.addActionListener(e -> netRadioHistorySearchInnerPanel2.removeAll());
-        netRadioClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netRadioClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netRadioClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netRadioClearHistorySearchButton, THIS));
+        netRadioClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
         netRadioHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -14044,10 +14047,10 @@ public class MainFrame extends JFrame {
         netRadioHistorySearchInnerPanel1.add(netRadioHistorySearchLabel);
         netRadioHistorySearchInnerPanel1.add(netRadioClearHistorySearchButton);
         netRadioHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netRadioHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netRadioHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netRadioHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netRadioHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netRadioHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netRadioHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netRadioHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netRadioHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -14069,12 +14072,12 @@ public class MainFrame extends JFrame {
         netRadioKeywordsPanel.add(netRadioHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netRadioKeywordsPanel.setPreferredSize(d);
         netRadioKeywordsPanelScrollPane.setPreferredSize(d);
 
         // 电台最佳大小
-        netRadioScrollPane.setPreferredSize(new Dimension(200, 600));
+        netRadioScrollPane.setPreferredSize(new HDDimension(200, 600));
         netRadioLeftBox.add(netRadioScrollPane);
     }
 
@@ -14331,7 +14334,7 @@ public class MainFrame extends JFrame {
             searchMvGoPage(destPage);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netMvRefreshButton.setPreferredSize(dimension);
         netMvStartPageButton.setPreferredSize(dimension);
         netMvLastPageButton.setPreferredSize(dimension);
@@ -14339,15 +14342,15 @@ public class MainFrame extends JFrame {
         netMvNextPageButton.setPreferredSize(dimension);
         netMvEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netMvBackwardButton.addMouseListener(new ButtonMouseListener(netMvBackwardButton, THIS));
-        netMvClearInputButton.addMouseListener(new ButtonMouseListener(netMvClearInputButton, THIS));
-        netMvSearchButton.addMouseListener(new ButtonMouseListener(netMvSearchButton, THIS));
-        netMvRefreshButton.addMouseListener(new ButtonMouseListener(netMvRefreshButton, THIS));
-        netMvStartPageButton.addMouseListener(new ButtonMouseListener(netMvStartPageButton, THIS));
-        netMvLastPageButton.addMouseListener(new ButtonMouseListener(netMvLastPageButton, THIS));
-        netMvGoButton.addMouseListener(new ButtonMouseListener(netMvGoButton, THIS));
-        netMvNextPageButton.addMouseListener(new ButtonMouseListener(netMvNextPageButton, THIS));
-        netMvEndPageButton.addMouseListener(new ButtonMouseListener(netMvEndPageButton, THIS));
+        netMvBackwardButton.addMouseListener(new CustomButtonMouseListener(netMvBackwardButton, THIS));
+        netMvClearInputButton.addMouseListener(new CustomButtonMouseListener(netMvClearInputButton, THIS));
+        netMvSearchButton.addMouseListener(new CustomButtonMouseListener(netMvSearchButton, THIS));
+        netMvRefreshButton.addMouseListener(new CustomButtonMouseListener(netMvRefreshButton, THIS));
+        netMvStartPageButton.addMouseListener(new CustomButtonMouseListener(netMvStartPageButton, THIS));
+        netMvLastPageButton.addMouseListener(new CustomButtonMouseListener(netMvLastPageButton, THIS));
+        netMvGoButton.addMouseListener(new CustomButtonMouseListener(netMvGoButton, THIS));
+        netMvNextPageButton.addMouseListener(new CustomButtonMouseListener(netMvNextPageButton, THIS));
+        netMvEndPageButton.addMouseListener(new CustomButtonMouseListener(netMvEndPageButton, THIS));
         // 不可见
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
@@ -14391,7 +14394,7 @@ public class MainFrame extends JFrame {
         netMvCountPanel.add(netMvRefreshButton);
         netMvCountPanel.add(netMvPageTextField);
         netMvCountPanel.add(netMvGoButton);
-        netMvCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMvCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMvCountPanel.setVisible(false);
         netMvLeftBox.add(netMvCountPanel);
     }
@@ -14806,9 +14809,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netMvClearHistorySearchButton.addActionListener(e -> netMvHistorySearchInnerPanel2.removeAll());
-        netMvClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netMvClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netMvClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netMvClearHistorySearchButton, THIS));
+        netMvClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
         netMvHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -14816,10 +14819,10 @@ public class MainFrame extends JFrame {
         netMvHistorySearchInnerPanel1.add(netMvHistorySearchLabel);
         netMvHistorySearchInnerPanel1.add(netMvClearHistorySearchButton);
         netMvHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMvHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netMvHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netMvHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netMvHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netMvHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netMvHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netMvHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMvHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -14841,12 +14844,12 @@ public class MainFrame extends JFrame {
         netMvKeywordsPanel.add(netMvHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netMvKeywordsPanel.setPreferredSize(d);
         netMvKeywordsPanelScrollPane.setPreferredSize(d);
 
         //  MV 最佳大小
-        netMvScrollPane.setPreferredSize(new Dimension(200, 600));
+        netMvScrollPane.setPreferredSize(new HDDimension(200, 600));
         netMvLeftBox.add(netMvScrollPane);
     }
 
@@ -15093,7 +15096,7 @@ public class MainFrame extends JFrame {
         // 按钮初始不可见
         netRankingPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netRankingRefreshButton.setPreferredSize(dimension);
         netRankingStartPageButton.setPreferredSize(dimension);
         netRankingLastPageButton.setPreferredSize(dimension);
@@ -15101,14 +15104,14 @@ public class MainFrame extends JFrame {
         netRankingNextPageButton.setPreferredSize(dimension);
         netRankingEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netRankingBackwardButton.addMouseListener(new ButtonMouseListener(netRankingBackwardButton, THIS));
-        netRankingPlayAllButton.addMouseListener(new ButtonMouseListener(netRankingPlayAllButton, THIS));
-        netRankingRefreshButton.addMouseListener(new ButtonMouseListener(netRankingRefreshButton, THIS));
-        netRankingStartPageButton.addMouseListener(new ButtonMouseListener(netRankingStartPageButton, THIS));
-        netRankingLastPageButton.addMouseListener(new ButtonMouseListener(netRankingLastPageButton, THIS));
-        netRankingGoButton.addMouseListener(new ButtonMouseListener(netRankingGoButton, THIS));
-        netRankingNextPageButton.addMouseListener(new ButtonMouseListener(netRankingNextPageButton, THIS));
-        netRankingEndPageButton.addMouseListener(new ButtonMouseListener(netRankingEndPageButton, THIS));
+        netRankingBackwardButton.addMouseListener(new CustomButtonMouseListener(netRankingBackwardButton, THIS));
+        netRankingPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRankingPlayAllButton, THIS));
+        netRankingRefreshButton.addMouseListener(new CustomButtonMouseListener(netRankingRefreshButton, THIS));
+        netRankingStartPageButton.addMouseListener(new CustomButtonMouseListener(netRankingStartPageButton, THIS));
+        netRankingLastPageButton.addMouseListener(new CustomButtonMouseListener(netRankingLastPageButton, THIS));
+        netRankingGoButton.addMouseListener(new CustomButtonMouseListener(netRankingGoButton, THIS));
+        netRankingNextPageButton.addMouseListener(new CustomButtonMouseListener(netRankingNextPageButton, THIS));
+        netRankingEndPageButton.addMouseListener(new CustomButtonMouseListener(netRankingEndPageButton, THIS));
         // 帮助提示
         netRankingBackwardButton.setToolTipText(BACKWARD_TIP);
         netRankingPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -15119,7 +15122,7 @@ public class MainFrame extends JFrame {
         netRankingNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRankingEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netRankingPlayAllButton.setIconTextGap(5);
+        netRankingPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netRankingCountLabel.setInstantAlpha(0.5f);
@@ -15147,7 +15150,7 @@ public class MainFrame extends JFrame {
         netRankingCountPanel.add(netRankingRefreshButton);
         netRankingCountPanel.add(netRankingPageTextField);
         netRankingCountPanel.add(netRankingGoButton);
-        netRankingCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netRankingCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netRankingCountPanel.setVisible(false);
         netRankingLeftBox.add(netRankingCountPanel);
     }
@@ -15422,7 +15425,7 @@ public class MainFrame extends JFrame {
         netRankingPopupMenu.add(netRankingCopyNameMenuItem);
 
         // 榜单最佳大小
-        netRankingScrollPane.setPreferredSize(new Dimension(200, 600));
+        netRankingScrollPane.setPreferredSize(new HDDimension(200, 600));
         netRankingLeftBox.add(netRankingScrollPane);
     }
 
@@ -15858,7 +15861,7 @@ public class MainFrame extends JFrame {
         netUserPlayAllButton.setVisible(false);
         netUserRecordTypeComboBox.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netUserRefreshButton.setPreferredSize(dimension);
         netUserStartPageButton.setPreferredSize(dimension);
         netUserLastPageButton.setPreferredSize(dimension);
@@ -15866,16 +15869,16 @@ public class MainFrame extends JFrame {
         netUserNextPageButton.setPreferredSize(dimension);
         netUserEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netUserBackwardButton.addMouseListener(new ButtonMouseListener(netUserBackwardButton, THIS));
-        netUserClearInputButton.addMouseListener(new ButtonMouseListener(netUserClearInputButton, THIS));
-        netUserSearchButton.addMouseListener(new ButtonMouseListener(netUserSearchButton, THIS));
-        netUserPlayAllButton.addMouseListener(new ButtonMouseListener(netUserPlayAllButton, THIS));
-        netUserRefreshButton.addMouseListener(new ButtonMouseListener(netUserRefreshButton, THIS));
-        netUserStartPageButton.addMouseListener(new ButtonMouseListener(netUserStartPageButton, THIS));
-        netUserLastPageButton.addMouseListener(new ButtonMouseListener(netUserLastPageButton, THIS));
-        netUserGoButton.addMouseListener(new ButtonMouseListener(netUserGoButton, THIS));
-        netUserNextPageButton.addMouseListener(new ButtonMouseListener(netUserNextPageButton, THIS));
-        netUserEndPageButton.addMouseListener(new ButtonMouseListener(netUserEndPageButton, THIS));
+        netUserBackwardButton.addMouseListener(new CustomButtonMouseListener(netUserBackwardButton, THIS));
+        netUserClearInputButton.addMouseListener(new CustomButtonMouseListener(netUserClearInputButton, THIS));
+        netUserSearchButton.addMouseListener(new CustomButtonMouseListener(netUserSearchButton, THIS));
+        netUserPlayAllButton.addMouseListener(new CustomButtonMouseListener(netUserPlayAllButton, THIS));
+        netUserRefreshButton.addMouseListener(new CustomButtonMouseListener(netUserRefreshButton, THIS));
+        netUserStartPageButton.addMouseListener(new CustomButtonMouseListener(netUserStartPageButton, THIS));
+        netUserLastPageButton.addMouseListener(new CustomButtonMouseListener(netUserLastPageButton, THIS));
+        netUserGoButton.addMouseListener(new CustomButtonMouseListener(netUserGoButton, THIS));
+        netUserNextPageButton.addMouseListener(new CustomButtonMouseListener(netUserNextPageButton, THIS));
+        netUserEndPageButton.addMouseListener(new CustomButtonMouseListener(netUserEndPageButton, THIS));
         // 帮助提示
         netUserBackwardButton.setToolTipText(BACKWARD_TIP);
         netUserClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -15888,7 +15891,7 @@ public class MainFrame extends JFrame {
         netUserNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netUserEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netUserPlayAllButton.setIconTextGap(5);
+        netUserPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         netUserCountLabel.setInstantAlpha(0.5f);
@@ -15918,7 +15921,7 @@ public class MainFrame extends JFrame {
         netUserCountPanel.add(netUserRefreshButton);
         netUserCountPanel.add(netUserPageTextField);
         netUserCountPanel.add(netUserGoButton);
-        netUserCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netUserCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netUserCountPanel.setVisible(false);
         netUserLeftBox.add(netUserCountPanel);
     }
@@ -16623,9 +16626,9 @@ public class MainFrame extends JFrame {
         // 搜索历史面板
         // 清空搜索历史按钮
         netUserClearHistorySearchButton.addActionListener(e -> netUserHistorySearchInnerPanel2.removeAll());
-        netUserClearHistorySearchButton.setPreferredSize(new Dimension(30, 30));
+        netUserClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netUserClearHistorySearchButton.addMouseListener(new ButtonMouseListener(netUserClearHistorySearchButton, THIS));
+        netUserClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
         netUserHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -16633,10 +16636,10 @@ public class MainFrame extends JFrame {
         netUserHistorySearchInnerPanel1.add(netUserHistorySearchLabel);
         netUserHistorySearchInnerPanel1.add(netUserClearHistorySearchButton);
         netUserHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netUserHistorySearchInnerPanel1.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        netUserHistorySearchInnerPanel1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netUserHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
+        netUserHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netUserHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
-        netUserHistorySearchInnerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        netUserHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netUserHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
             public void componentAdded(ContainerEvent e) {
@@ -16658,12 +16661,12 @@ public class MainFrame extends JFrame {
         netUserKeywordsPanel.add(netUserHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new Dimension(900, 500);
+        Dimension d = new HDDimension(900, 500);
         netUserKeywordsPanel.setPreferredSize(d);
         netUserKeywordsPanelScrollPane.setPreferredSize(d);
 
         // 用户最佳大小
-        netUserScrollPane.setPreferredSize(new Dimension(200, 600));
+        netUserScrollPane.setPreferredSize(new HDDimension(200, 600));
         netUserLeftBox.add(netUserScrollPane);
     }
 
@@ -16888,7 +16891,7 @@ public class MainFrame extends JFrame {
             getComments(currCommentResource, false);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netCommentRefreshButton.setPreferredSize(dimension);
         netCommentStartPageButton.setPreferredSize(dimension);
         netCommentLastPageButton.setPreferredSize(dimension);
@@ -16896,13 +16899,13 @@ public class MainFrame extends JFrame {
         netCommentNextPageButton.setPreferredSize(dimension);
         netCommentEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netCommentBackwardButton.addMouseListener(new ButtonMouseListener(netCommentBackwardButton, THIS));
-        netCommentRefreshButton.addMouseListener(new ButtonMouseListener(netCommentRefreshButton, THIS));
-        netCommentStartPageButton.addMouseListener(new ButtonMouseListener(netCommentStartPageButton, THIS));
-        netCommentLastPageButton.addMouseListener(new ButtonMouseListener(netCommentLastPageButton, THIS));
-        netCommentGoButton.addMouseListener(new ButtonMouseListener(netCommentGoButton, THIS));
-        netCommentNextPageButton.addMouseListener(new ButtonMouseListener(netCommentNextPageButton, THIS));
-        netCommentEndPageButton.addMouseListener(new ButtonMouseListener(netCommentEndPageButton, THIS));
+        netCommentBackwardButton.addMouseListener(new CustomButtonMouseListener(netCommentBackwardButton, THIS));
+        netCommentRefreshButton.addMouseListener(new CustomButtonMouseListener(netCommentRefreshButton, THIS));
+        netCommentStartPageButton.addMouseListener(new CustomButtonMouseListener(netCommentStartPageButton, THIS));
+        netCommentLastPageButton.addMouseListener(new CustomButtonMouseListener(netCommentLastPageButton, THIS));
+        netCommentGoButton.addMouseListener(new CustomButtonMouseListener(netCommentGoButton, THIS));
+        netCommentNextPageButton.addMouseListener(new CustomButtonMouseListener(netCommentNextPageButton, THIS));
+        netCommentEndPageButton.addMouseListener(new CustomButtonMouseListener(netCommentEndPageButton, THIS));
         // 帮助提示
         netCommentBackwardButton.setToolTipText(BACKWARD_TIP);
         netCommentRefreshButton.setToolTipText(REFRESH_TIP);
@@ -16915,7 +16918,7 @@ public class MainFrame extends JFrame {
         // 透明度
         netCommentCountLabel.setInstantAlpha(0.5f);
 
-        netCommentToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
+        netCommentToolBar.setBorder(new HDEmptyBorder(0, 37, 0, 0));
         netCommentToolBar.add(netCommentBackwardButton);
         netCommentToolBar.add(Box.createHorizontalGlue());
         netCommentToolBar.add(netCommentTitleLabel);
@@ -16932,7 +16935,7 @@ public class MainFrame extends JFrame {
         netCommentCountPanel.add(netCommentRefreshButton);
         netCommentCountPanel.add(netCommentPageTextField);
         netCommentCountPanel.add(netCommentGoButton);
-        netCommentCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netCommentCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netCommentCountPanel.setVisible(false);
         netCommentBox.add(netCommentCountPanel);
     }
@@ -17216,9 +17219,9 @@ public class MainFrame extends JFrame {
         netCommentPopupMenu.add(netCommentAlbumMenuItem);
 
         // 评论最佳大小
-        netCommentScrollPane.setPreferredSize(new Dimension(200, 600));
+        netCommentScrollPane.setPreferredSize(new HDDimension(200, 600));
         // 评论滚动速度
-        netCommentBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        netCommentBox.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         netCommentBox.add(netCommentScrollPane);
     }
 
@@ -17300,7 +17303,7 @@ public class MainFrame extends JFrame {
             getSheets(currSheetMusicInfo, false);
         });
         // 按钮大小限制
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netSheetRefreshButton.setPreferredSize(dimension);
         netSheetStartPageButton.setPreferredSize(dimension);
         netSheetLastPageButton.setPreferredSize(dimension);
@@ -17308,13 +17311,13 @@ public class MainFrame extends JFrame {
         netSheetNextPageButton.setPreferredSize(dimension);
         netSheetEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        netSheetBackwardButton.addMouseListener(new ButtonMouseListener(netSheetBackwardButton, THIS));
-        netSheetRefreshButton.addMouseListener(new ButtonMouseListener(netSheetRefreshButton, THIS));
-        netSheetStartPageButton.addMouseListener(new ButtonMouseListener(netSheetStartPageButton, THIS));
-        netSheetLastPageButton.addMouseListener(new ButtonMouseListener(netSheetLastPageButton, THIS));
-        netSheetGoButton.addMouseListener(new ButtonMouseListener(netSheetGoButton, THIS));
-        netSheetNextPageButton.addMouseListener(new ButtonMouseListener(netSheetNextPageButton, THIS));
-        netSheetEndPageButton.addMouseListener(new ButtonMouseListener(netSheetEndPageButton, THIS));
+        netSheetBackwardButton.addMouseListener(new CustomButtonMouseListener(netSheetBackwardButton, THIS));
+        netSheetRefreshButton.addMouseListener(new CustomButtonMouseListener(netSheetRefreshButton, THIS));
+        netSheetStartPageButton.addMouseListener(new CustomButtonMouseListener(netSheetStartPageButton, THIS));
+        netSheetLastPageButton.addMouseListener(new CustomButtonMouseListener(netSheetLastPageButton, THIS));
+        netSheetGoButton.addMouseListener(new CustomButtonMouseListener(netSheetGoButton, THIS));
+        netSheetNextPageButton.addMouseListener(new CustomButtonMouseListener(netSheetNextPageButton, THIS));
+        netSheetEndPageButton.addMouseListener(new CustomButtonMouseListener(netSheetEndPageButton, THIS));
         // 帮助提示
         netSheetBackwardButton.setToolTipText(BACKWARD_TIP);
         netSheetRefreshButton.setToolTipText(REFRESH_TIP);
@@ -17327,7 +17330,7 @@ public class MainFrame extends JFrame {
         // 透明度
         netSheetCountLabel.setInstantAlpha(0.5f);
 
-        netSheetToolBar.setBorder(BorderFactory.createEmptyBorder(0, 37, 0, 0));
+        netSheetToolBar.setBorder(new HDEmptyBorder(0, 37, 0, 0));
         netSheetToolBar.add(netSheetBackwardButton);
         netSheetToolBar.add(Box.createHorizontalGlue());
         netSheetToolBar.add(netSheetTitleLabel);
@@ -17343,7 +17346,7 @@ public class MainFrame extends JFrame {
         netSheetCountPanel.add(netSheetRefreshButton);
         netSheetCountPanel.add(netSheetPageTextField);
         netSheetCountPanel.add(netSheetGoButton);
-        netSheetCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        netSheetCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         netSheetCountPanel.setVisible(false);
         netSheetBox.add(netSheetCountPanel);
     }
@@ -17454,9 +17457,9 @@ public class MainFrame extends JFrame {
         netSheetPopupMenu.add(netSheetCopyNameMenuItem);
 
         // 乐谱最佳大小
-        netSheetScrollPane.setPreferredSize(new Dimension(200, 600));
+        netSheetScrollPane.setPreferredSize(new HDDimension(200, 600));
         // 乐谱滚动速度
-        netSheetBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        netSheetBox.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         netSheetBox.add(netSheetScrollPane);
     }
 
@@ -18837,7 +18840,7 @@ public class MainFrame extends JFrame {
         netRecommendSortTypeComboBox.setVisible(false);
         netRecommendPlayAllButton.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new Dimension(30, 30);
+        Dimension dimension = new HDDimension(30, 30);
         netRecommendRefreshButton.setPreferredSize(dimension);
         netRecommendStartPageButton.setPreferredSize(dimension);
         netRecommendLastPageButton.setPreferredSize(dimension);
@@ -18845,24 +18848,24 @@ public class MainFrame extends JFrame {
         netRecommendNextPageButton.setPreferredSize(dimension);
         netRecommendEndPageButton.setPreferredSize(dimension);
         // 按钮悬浮与点击效果
-        playlistRecommendButton.addMouseListener(new ButtonMouseListener(playlistRecommendButton, THIS));
-        highQualityPlaylistButton.addMouseListener(new ButtonMouseListener(highQualityPlaylistButton, THIS));
-        hotMusicButton.addMouseListener(new ButtonMouseListener(hotMusicButton, THIS));
-        newMusicButton.addMouseListener(new ButtonMouseListener(newMusicButton, THIS));
-        newAlbumRecommendButton.addMouseListener(new ButtonMouseListener(newAlbumRecommendButton, THIS));
-        artistListRecommendButton.addMouseListener(new ButtonMouseListener(artistListRecommendButton, THIS));
-        newRadioRecommendButton.addMouseListener(new ButtonMouseListener(newRadioRecommendButton, THIS));
-        hotRadioRecommendButton.addMouseListener(new ButtonMouseListener(hotRadioRecommendButton, THIS));
-        programRecommendButton.addMouseListener(new ButtonMouseListener(programRecommendButton, THIS));
-        mvRecommendButton.addMouseListener(new ButtonMouseListener(mvRecommendButton, THIS));
-        recommendBackwardButton.addMouseListener(new ButtonMouseListener(recommendBackwardButton, THIS));
-        netRecommendPlayAllButton.addMouseListener(new ButtonMouseListener(netRecommendPlayAllButton, THIS));
-        netRecommendRefreshButton.addMouseListener(new ButtonMouseListener(netRecommendRefreshButton, THIS));
-        netRecommendStartPageButton.addMouseListener(new ButtonMouseListener(netRecommendStartPageButton, THIS));
-        netRecommendLastPageButton.addMouseListener(new ButtonMouseListener(netRecommendLastPageButton, THIS));
-        netRecommendGoButton.addMouseListener(new ButtonMouseListener(netRecommendGoButton, THIS));
-        netRecommendNextPageButton.addMouseListener(new ButtonMouseListener(netRecommendNextPageButton, THIS));
-        netRecommendEndPageButton.addMouseListener(new ButtonMouseListener(netRecommendEndPageButton, THIS));
+        playlistRecommendButton.addMouseListener(new TabButtonMouseListener(playlistRecommendButton, THIS));
+        highQualityPlaylistButton.addMouseListener(new TabButtonMouseListener(highQualityPlaylistButton, THIS));
+        hotMusicButton.addMouseListener(new TabButtonMouseListener(hotMusicButton, THIS));
+        newMusicButton.addMouseListener(new TabButtonMouseListener(newMusicButton, THIS));
+        newAlbumRecommendButton.addMouseListener(new TabButtonMouseListener(newAlbumRecommendButton, THIS));
+        artistListRecommendButton.addMouseListener(new TabButtonMouseListener(artistListRecommendButton, THIS));
+        newRadioRecommendButton.addMouseListener(new TabButtonMouseListener(newRadioRecommendButton, THIS));
+        hotRadioRecommendButton.addMouseListener(new TabButtonMouseListener(hotRadioRecommendButton, THIS));
+        programRecommendButton.addMouseListener(new TabButtonMouseListener(programRecommendButton, THIS));
+        mvRecommendButton.addMouseListener(new TabButtonMouseListener(mvRecommendButton, THIS));
+        recommendBackwardButton.addMouseListener(new CustomButtonMouseListener(recommendBackwardButton, THIS));
+        netRecommendPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRecommendPlayAllButton, THIS));
+        netRecommendRefreshButton.addMouseListener(new CustomButtonMouseListener(netRecommendRefreshButton, THIS));
+        netRecommendStartPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendStartPageButton, THIS));
+        netRecommendLastPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendLastPageButton, THIS));
+        netRecommendGoButton.addMouseListener(new CustomButtonMouseListener(netRecommendGoButton, THIS));
+        netRecommendNextPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendNextPageButton, THIS));
+        netRecommendEndPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendEndPageButton, THIS));
         // 按钮字体
         Font font = Fonts.NORMAL_TITLE2;
         playlistRecommendButton.setFont(font);
@@ -18885,13 +18888,13 @@ public class MainFrame extends JFrame {
         netRecommendNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netRecommendEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netRecommendPlayAllButton.setIconTextGap(5);
+        netRecommendPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
         recommendCountLabel.setInstantAlpha(0.5f);
 
         // 按钮文字与图标的位置
-        int gap = 15;
+        int gap = ScaleUtil.scale(15);
         playlistRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         playlistRecommendButton.setIconTextGap(gap);
         highQualityPlaylistButton.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -18926,7 +18929,7 @@ public class MainFrame extends JFrame {
         recommendToolBar.add(programRecommendButton);
         recommendToolBar.add(mvRecommendButton);
 
-        recommendToolBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
+        recommendToolBar.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 50));
         recommendLeftBox.add(recommendToolBar);
 
         // 推荐歌单/专辑中歌曲的工具栏，暂时不放入
@@ -19014,7 +19017,7 @@ public class MainFrame extends JFrame {
         recommendCountPanel.add(netRecommendRefreshButton);
         recommendCountPanel.add(netRecommendPageTextField);
         recommendCountPanel.add(netRecommendGoButton);
-        recommendCountPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        recommendCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
         recommendCountPanel.setVisible(false);
         recommendLeftBox.add(recommendCountPanel);
     }
@@ -19503,7 +19506,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 最佳大小
-        itemRecommendScrollPane.setPreferredSize(new Dimension(200, 3000));
+        itemRecommendScrollPane.setPreferredSize(new HDDimension(200, 3000));
         recommendLeftBox.add(itemRecommendScrollPane);
     }
 
@@ -19521,12 +19524,12 @@ public class MainFrame extends JFrame {
     // 初始化下载工具条
     private void initDownloadToolBar() {
         // 按钮悬浮和点击效果
-        restartSelectedTasksButton.addMouseListener(new ButtonMouseListener(restartSelectedTasksButton, THIS));
-        cancelSelectedTasksButton.addMouseListener(new ButtonMouseListener(cancelSelectedTasksButton, THIS));
-        removeSelectedTasksButton.addMouseListener(new ButtonMouseListener(removeSelectedTasksButton, THIS));
-        restartAllTasksButton.addMouseListener(new ButtonMouseListener(restartAllTasksButton, THIS));
-        cancelAllTasksButton.addMouseListener(new ButtonMouseListener(cancelAllTasksButton, THIS));
-        removeAllTasksButton.addMouseListener(new ButtonMouseListener(removeAllTasksButton, THIS));
+        restartSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(restartSelectedTasksButton, THIS));
+        cancelSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(cancelSelectedTasksButton, THIS));
+        removeSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(removeSelectedTasksButton, THIS));
+        restartAllTasksButton.addMouseListener(new CustomButtonMouseListener(restartAllTasksButton, THIS));
+        cancelAllTasksButton.addMouseListener(new CustomButtonMouseListener(cancelAllTasksButton, THIS));
+        removeAllTasksButton.addMouseListener(new CustomButtonMouseListener(removeAllTasksButton, THIS));
 
         // 重新开始选中任务
         restartSelectedTasksButton.addActionListener(e -> restartTaskMenuItem.doClick());
@@ -19569,7 +19572,7 @@ public class MainFrame extends JFrame {
         });
 
         // 标签间距
-        taskCountLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        taskCountLabel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
         // 帮助提示
         restartSelectedTasksButton.setToolTipText(RESTART_SELECTED_TASKS_TIP);
         cancelSelectedTasksButton.setToolTipText(CANCEL_SELECTED_TASKS_TIP);
@@ -19772,9 +19775,9 @@ public class MainFrame extends JFrame {
 
         // 表头
         GridLayout layout = new GridLayout(1, 7);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         downloadHeaderPanel.setLayout(layout);
-        downloadHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        downloadHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
         downloadIconHeaderLabel.setInstantAlpha(alpha);
@@ -19804,19 +19807,19 @@ public class MainFrame extends JFrame {
         downloadListScrollPane.setColumnHeaderView(downloadHeaderPanel);
 
         // 最佳大小
-        downloadListScrollPane.setPreferredSize(new Dimension(600, 300));
+        downloadListScrollPane.setPreferredSize(new HDDimension(600, 300));
         downloadLeftBox.add(downloadListScrollPane);
     }
 
     // 初始化播放队列工具条
     private void initPlayQueueToolBar() {
         // 按钮悬浮和点击效果
-        playQueueRemoveToolButton.addMouseListener(new ButtonMouseListener(playQueueRemoveToolButton, THIS));
-        playQueueClearToolButton.addMouseListener(new ButtonMouseListener(playQueueClearToolButton, THIS));
-        playQueueDuplicateToolButton.addMouseListener(new ButtonMouseListener(playQueueDuplicateToolButton, THIS));
-        playQueueReverseToolButton.addMouseListener(new ButtonMouseListener(playQueueReverseToolButton, THIS));
-        playQueueMoveUpToolButton.addMouseListener(new ButtonMouseListener(playQueueMoveUpToolButton, THIS));
-        playQueueMoveDownToolButton.addMouseListener(new ButtonMouseListener(playQueueMoveDownToolButton, THIS));
+        playQueueRemoveToolButton.addMouseListener(new CustomButtonMouseListener(playQueueRemoveToolButton, THIS));
+        playQueueClearToolButton.addMouseListener(new CustomButtonMouseListener(playQueueClearToolButton, THIS));
+        playQueueDuplicateToolButton.addMouseListener(new CustomButtonMouseListener(playQueueDuplicateToolButton, THIS));
+        playQueueReverseToolButton.addMouseListener(new CustomButtonMouseListener(playQueueReverseToolButton, THIS));
+        playQueueMoveUpToolButton.addMouseListener(new CustomButtonMouseListener(playQueueMoveUpToolButton, THIS));
+        playQueueMoveDownToolButton.addMouseListener(new CustomButtonMouseListener(playQueueMoveDownToolButton, THIS));
 
         // 从播放队列删除
         playQueueRemoveToolButton.addActionListener(e -> {
@@ -20190,7 +20193,7 @@ public class MainFrame extends JFrame {
             playQueueRemoveToolButton.doClick();
         });
         // 标签间距
-        playQueueCountLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
+        playQueueCountLabel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
 
         playQueuePopupMenu.add(playQueuePlayMenuItem);
         playQueuePopupMenu.add(playQueueNextPlayMenuItem);
@@ -20213,9 +20216,9 @@ public class MainFrame extends JFrame {
 
         // 表头
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         playQueueHeaderPanel.setLayout(layout);
-        playQueueHeaderPanel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        playQueueHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
         playQueueSourceHeaderLabel.setInstantAlpha(alpha);
@@ -20238,7 +20241,7 @@ public class MainFrame extends JFrame {
         playQueueHeaderPanel.add(playQueueDurationHeaderLabel);
         playQueueScrollPane.setColumnHeaderView(playQueueHeaderPanel);
 
-        playQueueScrollPane.setPreferredSize(new Dimension(600, 300));
+        playQueueScrollPane.setPreferredSize(new HDDimension(600, 300));
         playQueueLeftBox.add(playQueueScrollPane);
     }
 
@@ -20401,8 +20404,8 @@ public class MainFrame extends JFrame {
         lrcScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int ph = lrcScrollPane.getHeight() / 2 + 20;
-                lrcList.setBorder(BorderFactory.createEmptyBorder(ph, 0, ph, 0));
+                int ph = lrcScrollPane.getHeight() / 2 + ScaleUtil.scale(20);
+                lrcList.setBorder(new EmptyBorder(ph, 0, ph, 0));
                 if (nextLrc == NextLrc.BAD_FORMAT) return;
                 currScrollVal = vs.getValue();
                 lrcScrollAnimation = true;
@@ -20583,7 +20586,7 @@ public class MainFrame extends JFrame {
                 if (bounds == null) return;
                 Insets insets = lrcScrollPane.getInsets();
                 int val = lrcScrollPane.getVBarValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
-                        + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / 20);
+                        + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / ScaleUtil.scale(20));
                 int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
                 lrcScrollPane.setVBarValue(nv);
                 if (nv == dVal || lrcScrollPane.getVBarValue() == val) lrcScrollAnimation = false;
@@ -20613,7 +20616,7 @@ public class MainFrame extends JFrame {
         currTimeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         currTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         int bw = 10;
-        currTimeLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, bw));
+        currTimeLabel.setBorder(new HDEmptyBorder(0, 0, 0, bw));
         currTimeLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20628,7 +20631,7 @@ public class MainFrame extends JFrame {
 
         // 时长
         durationLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        durationLabel.setBorder(BorderFactory.createEmptyBorder(0, bw, 0, 0));
+        durationLabel.setBorder(new HDEmptyBorder(0, bw, 0, 0));
         updateTimeLabel();
 
         timeBar.setMaximum(TIME_BAR_MAX);
@@ -20653,7 +20656,6 @@ public class MainFrame extends JFrame {
         progressBox.add(currTimeLabel);
         progressBox.add(timeBar);
         progressBox.add(durationLabel);
-//        progressBox.add(progressPanel);
         bottomBox.add(progressBox);
     }
 
@@ -20661,8 +20663,8 @@ public class MainFrame extends JFrame {
     private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
-        changePaneButton.setIconTextGap(10);
-        changePaneButton.setPreferredSize(new Dimension(280, 66));
+        changePaneButton.setIconTextGap(ScaleUtil.scale(10));
+        changePaneButton.setPreferredSize(new HDDimension(280, 66));
         changePaneButton.setText(NO_LRC_MSG);
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
@@ -20722,13 +20724,13 @@ public class MainFrame extends JFrame {
         // MV
         mvButton.setToolTipText(MV_TIP);
         mvButton.setEnabled(false);
-        mvButton.addMouseListener(new ButtonMouseListener(mvButton, THIS));
-        mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + 10, mvIcon.getIconHeight() + 10));
+        mvButton.addMouseListener(new CustomButtonMouseListener(mvButton, THIS));
+        mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + ScaleUtil.scale(10), mvIcon.getIconHeight() + ScaleUtil.scale(10)));
         mvButton.addActionListener(e -> playMv(MvCompSourceType.PLAYING));
         // 收藏
         collectButton.setEnabled(false);
-        collectButton.addMouseListener(new ButtonMouseListener(collectButton, THIS));
-        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + 10, collectIcon.getIconHeight() + 10));
+        collectButton.addMouseListener(new CustomButtonMouseListener(collectButton, THIS));
+        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + ScaleUtil.scale(10), collectIcon.getIconHeight() + ScaleUtil.scale(10)));
         collectButton.addActionListener(e -> {
             MusicResource resource = player.getMusicInfo();
             if (resource == null) resource = player.getAudioFile();
@@ -20756,14 +20758,14 @@ public class MainFrame extends JFrame {
         // 下载
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setEnabled(false);
-        downloadButton.addMouseListener(new ButtonMouseListener(downloadButton, THIS));
-        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + 10, downloadIcon.getIconHeight() + 10));
+        downloadButton.addMouseListener(new CustomButtonMouseListener(downloadButton, THIS));
+        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + ScaleUtil.scale(10), downloadIcon.getIconHeight() + ScaleUtil.scale(10)));
         downloadButton.addActionListener(e -> singleDownload(player.getMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
         commentButton.setEnabled(false);
-        commentButton.addMouseListener(new ButtonMouseListener(commentButton, THIS));
-        commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + 10, commentIcon.getIconHeight() + 10));
+        commentButton.addMouseListener(new CustomButtonMouseListener(commentButton, THIS));
+        commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + ScaleUtil.scale(10), commentIcon.getIconHeight() + ScaleUtil.scale(10)));
         commentButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPane != MusicPane.COMMENT || currCommentResource != musicInfo)
@@ -20772,24 +20774,24 @@ public class MainFrame extends JFrame {
         // 乐谱
         sheetButton.setToolTipText(SHEET_TIP);
         sheetButton.setEnabled(false);
-        sheetButton.addMouseListener(new ButtonMouseListener(sheetButton, THIS));
-        sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + 10, sheetIcon.getIconHeight() + 10));
+        sheetButton.addMouseListener(new CustomButtonMouseListener(sheetButton, THIS));
+        sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + ScaleUtil.scale(10), sheetIcon.getIconHeight() + ScaleUtil.scale(10)));
         sheetButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPane != MusicPane.SHEET || currSheetMusicInfo != musicInfo)
                 getSheets(musicInfo, currPane != MusicPane.SHEET);
         });
         lastButton.setToolTipText(LAST_TIP);
-        lastButton.addMouseListener(new ButtonMouseListener(lastButton, THIS));
-        lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth() + 10, lastIcon.getIconHeight() + 10));
+        lastButton.addMouseListener(new CustomButtonMouseListener(lastButton, THIS));
+        lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth() + ScaleUtil.scale(10), lastIcon.getIconHeight() + ScaleUtil.scale(10)));
         lastButton.addActionListener(e -> playLast());
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth() + 10, playIcon.getIconHeight() + 10));
-        playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, THIS));
+        playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth() + ScaleUtil.scale(10), playIcon.getIconHeight() + ScaleUtil.scale(10)));
+        playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
         nextButton.setToolTipText(NEXT_TIP);
-        nextButton.addMouseListener(new ButtonMouseListener(nextButton, THIS));
-        nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth() + 10, nextIcon.getIconHeight() + 10));
+        nextButton.addMouseListener(new CustomButtonMouseListener(nextButton, THIS));
+        nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth() + ScaleUtil.scale(10), nextIcon.getIconHeight() + ScaleUtil.scale(10)));
         nextButton.addActionListener(e -> {
             // 单曲循环和顺序播放，都播放下一首
             if (currPlayMode != PlayMode.SHUFFLE) {
@@ -20803,8 +20805,8 @@ public class MainFrame extends JFrame {
         });
         // 默认提示语为“列表循环”
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
-        playModeButton.addMouseListener(new ButtonMouseListener(playModeButton, THIS));
-        playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth() + 10, listCycleIcon.getIconHeight() + 10));
+        playModeButton.addMouseListener(new CustomButtonMouseListener(playModeButton, THIS));
+        playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth() + ScaleUtil.scale(10), listCycleIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -20837,11 +20839,11 @@ public class MainFrame extends JFrame {
         playModePopupMenu.add(shuffleMenuItem);
 
         backwardButton.setToolTipText(BACKW_TIP);
-        backwardButton.addMouseListener(new ButtonMouseListener(backwardButton, THIS));
-        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + 10, backwIcon.getIconHeight() + 10));
+        backwardButton.addMouseListener(new CustomButtonMouseListener(backwardButton, THIS));
+        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + ScaleUtil.scale(10), backwIcon.getIconHeight() + ScaleUtil.scale(10)));
         forwardButton.setToolTipText(FORW_TIP);
-        forwardButton.addMouseListener(new ButtonMouseListener(forwardButton, THIS));
-        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + 10, forwIcon.getIconHeight() + 10));
+        forwardButton.addMouseListener(new CustomButtonMouseListener(forwardButton, THIS));
+        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + ScaleUtil.scale(10), forwIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 快进快退
         backwardButton.addActionListener(e -> {
             double t = player.getCurrTimeSeconds() - forwardOrBackwardTime;
@@ -20855,8 +20857,8 @@ public class MainFrame extends JFrame {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.addMouseListener(new ButtonMouseListener(muteButton, THIS));
-        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + 10, muteIcon.getIconHeight() + 10));
+        muteButton.addMouseListener(new CustomButtonMouseListener(muteButton, THIS));
+        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + ScaleUtil.scale(10), muteIcon.getIconHeight() + ScaleUtil.scale(10)));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
@@ -20868,7 +20870,7 @@ public class MainFrame extends JFrame {
             player.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setPreferredSize(new Dimension(100, 20));
+        volumeSlider.setPreferredSize(new HDDimension(100, 20));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.setValue(DEFAULT_VOLUME);
         volumeSlider.addChangeListener(e -> {
@@ -20880,16 +20882,16 @@ public class MainFrame extends JFrame {
             }
         });
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.addMouseListener(new ButtonMouseListener(rateButton, THIS));
-        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + 10, rateIcon.getIconHeight() + 10));
+        rateButton.addMouseListener(new CustomButtonMouseListener(rateButton, THIS));
+        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + ScaleUtil.scale(10), rateIcon.getIconHeight() + ScaleUtil.scale(10)));
         rateButton.addActionListener(e -> {
             if (rateDialog == null) rateDialog = new RateDialog(THIS, null, rateButton);
             rateDialog.showDialog();
         });
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
-        switchSpectrumButton.addMouseListener(new ButtonMouseListener(switchSpectrumButton, THIS));
-        switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth() + 10, spectrumOnIcon.getIconHeight() + 10));
+        switchSpectrumButton.addMouseListener(new CustomButtonMouseListener(switchSpectrumButton, THIS));
+        switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth() + ScaleUtil.scale(10), spectrumOnIcon.getIconHeight() + ScaleUtil.scale(10)));
         switchSpectrumButton.addActionListener(e -> {
             if (showSpectrum = !showSpectrum) openSpectrum();
             else closeSpectrum();
@@ -20953,8 +20955,8 @@ public class MainFrame extends JFrame {
         });
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
-        blurButton.addMouseListener(new ButtonMouseListener(blurButton, THIS));
-        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth() + 10, cvBlurIcon.getIconHeight() + 10));
+        blurButton.addMouseListener(new CustomButtonMouseListener(blurButton, THIS));
+        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth() + ScaleUtil.scale(10), cvBlurIcon.getIconHeight() + ScaleUtil.scale(10)));
         blurButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20964,13 +20966,13 @@ public class MainFrame extends JFrame {
         });
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
-        soundEffectButton.addMouseListener(new ButtonMouseListener(soundEffectButton, THIS));
-        soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth() + 10, soundEffectIcon.getIconHeight() + 10));
+        soundEffectButton.addMouseListener(new CustomButtonMouseListener(soundEffectButton, THIS));
+        soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth() + ScaleUtil.scale(10), soundEffectIcon.getIconHeight() + ScaleUtil.scale(10)));
         soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
-        goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth() + 10, goToPlayQueueIcon.getIconHeight() + 10));
-        goToPlayQueueButton.addMouseListener(new ButtonMouseListener(goToPlayQueueButton, THIS));
+        goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth() + ScaleUtil.scale(10), goToPlayQueueIcon.getIconHeight() + ScaleUtil.scale(10)));
+        goToPlayQueueButton.addMouseListener(new CustomButtonMouseListener(goToPlayQueueButton, THIS));
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20988,8 +20990,8 @@ public class MainFrame extends JFrame {
         });
         // 桌面歌词开关
         desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
-        desktopLyricButton.addMouseListener(new ButtonMouseListener(desktopLyricButton, THIS));
-        desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth() + 10, desktopLyricOnIcon.getIconHeight() + 10));
+        desktopLyricButton.addMouseListener(new CustomButtonMouseListener(desktopLyricButton, THIS));
+        desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth() + ScaleUtil.scale(10), desktopLyricOnIcon.getIconHeight() + ScaleUtil.scale(10)));
         desktopLyricButton.addActionListener(e -> {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
@@ -21001,8 +21003,8 @@ public class MainFrame extends JFrame {
             }
         });
         // 歌词类型按钮
-        switchLrcTypeButton.addMouseListener(new ButtonMouseListener(switchLrcTypeButton, THIS));
-        switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth() + 10, originalIcon.getIconHeight() + 10));
+        switchLrcTypeButton.addMouseListener(new CustomButtonMouseListener(switchLrcTypeButton, THIS));
+        switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth() + ScaleUtil.scale(10), originalIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 歌词类型切换事件
         switchLrcTypeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -21044,9 +21046,9 @@ public class MainFrame extends JFrame {
 
         // 按钮水平隔开一段间距
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(0);
+        fl.setHgap(ScaleUtil.scale(0));
         controlPanel.setLayout(fl);
-        controlPanel.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 30));
+        controlPanel.setBorder(new HDEmptyBorder(2, 0, 0, 30));
         controlPanel.add(backwardButton);
         controlPanel.add(lastButton);
         controlPanel.add(playOrPauseButton);
@@ -21054,7 +21056,7 @@ public class MainFrame extends JFrame {
         controlPanel.add(forwardButton);
         controlPanel.add(playModeButton);
         fl = new FlowLayout();
-        fl.setHgap(0);
+        fl.setHgap(ScaleUtil.scale(0));
         volumePanel.setLayout(fl);
         volumePanel.add(muteButton);
         volumePanel.add(volumeSlider);
@@ -21066,9 +21068,9 @@ public class MainFrame extends JFrame {
         controlPanel.add(goToPlayQueueButton);
 
         fl = new FlowLayout();
-        fl.setHgap(0);
+        fl.setHgap(ScaleUtil.scale(0));
         changePanePanel.setLayout(fl);
-        changePanePanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+        changePanePanel.setBorder(new HDEmptyBorder(0, 20, 0, 0));
         changePanePanel.add(changePaneButton);
         changePanePanel.add(mvButton);
         changePanePanel.add(collectButton);
@@ -21077,9 +21079,9 @@ public class MainFrame extends JFrame {
         changePanePanel.add(sheetButton);
 
         fl = new FlowLayout();
-        fl.setHgap(0);
+        fl.setHgap(ScaleUtil.scale(0));
         controlLrcPanel.setLayout(fl);
-        controlLrcPanel.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
+        controlLrcPanel.setBorder(new HDEmptyBorder(16, 0, 0, 0));
         controlLrcPanel.add(desktopLyricButton);
         controlLrcPanel.add(switchLrcTypeButton);
 
@@ -21121,7 +21123,7 @@ public class MainFrame extends JFrame {
         // 设置当前播放时间标签的最佳大小，避免导致进度条长度发生变化！
         String t = durationLabel.getText().replaceAll("[1-9]", "0");
         FontMetrics m = durationLabel.getFontMetrics(globalFont);
-        Dimension d = new Dimension(m.stringWidth(t) + 40, durationLabel.getHeight());
+        Dimension d = new Dimension(m.stringWidth(t) + ScaleUtil.scale(40), durationLabel.getHeight());
         currTimeLabel.setPreferredSize(d);
         durationLabel.setPreferredSize(d);
     }
@@ -22171,7 +22173,7 @@ public class MainFrame extends JFrame {
 
         // 列表为空提示面板
         emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
-        emptyHintLabel.setIconTextGap(10);
+        emptyHintLabel.setIconTextGap(ScaleUtil.scale(10));
         emptyHintLabel.setForeground(textColor);
         emptyHintLabel.setInstantAlpha(0.5f);
 
@@ -23974,7 +23976,7 @@ public class MainFrame extends JFrame {
                             // 关键词按钮被移除时，屏蔽调整面板大小事件
                             if (!fb.isShowing()) return;
                             Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
-                            Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + 50);
+                            Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                             netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
                             netMusicSearchSuggestionInnerPanel2.invalidate();
@@ -24032,7 +24034,7 @@ public class MainFrame extends JFrame {
                             // 关键词按钮被移除时，屏蔽调整面板大小事件
                             if (!fb.isShowing()) return;
                             Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
-                            Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + 50);
+                            Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
                             netMusicHotSearchInnerPanel2.setMinimumSize(d);
                             netMusicHotSearchInnerPanel2.setPreferredSize(d);
                             netMusicHotSearchInnerPanel2.invalidate();

@@ -1,13 +1,16 @@
-package net.doge.ui.widget.dialog.factory;
+package net.doge.ui.widget.dialog.base;
 
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.ButtonMouseListener;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,22 +62,22 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         setTitle(HtmlUtil.removeHtmlLabel(title));
         titleLabel.setForeground(f.currUIStyle.getTextColor());
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        titleLabel.setPreferredSize(new Dimension(600, 30));
+        titleLabel.setPreferredSize(new HDDimension(600, 30));
         closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + 10, f.closeWindowIcon.getIconHeight() + 10));
+        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + ScaleUtil.scale(10), f.closeWindowIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
         // 鼠标事件
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
+        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, f));
         FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
-        windowCtrlPanel.setMinimumSize(new Dimension(40, 30));
+        windowCtrlPanel.setMinimumSize(new HDDimension(40, 30));
         windowCtrlPanel.add(closeButton);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
         topPanel.add(Box.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
-        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 15, 0, 15));
+        topPanel.setBorder(new HDEmptyBorder(5, 15, 0, 15));
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
 

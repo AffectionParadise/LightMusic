@@ -1,9 +1,9 @@
 package net.doge.ui;
 
+import net.doge.ui.core.resource.HDInsetsUIResource;
 import net.doge.util.core.LogUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.InsetsUIResource;
 
 public class UIPreProcessor {
     // 虚拟机图形参数
@@ -20,6 +20,7 @@ public class UIPreProcessor {
 //        System.setProperty("sun.java2d.d3d", "true");
 //        // 禁用 DirectDraw(在某些情况下可能有问题)
 //        System.setProperty("sun.java2d.noddraw", "true");
+
 //        // Swing 的事件调度线程(EDT)
 //        // 禁用新的线程调度策略，使用旧的 FIFO 策略
 //        System.setProperty("java.awt.EventQueue.class", "sun.awt.EventQueue");
@@ -29,7 +30,7 @@ public class UIPreProcessor {
 //        System.setProperty("sun.awt.noerasebackground", "true");
     }
 
-    // 统一 LAF 为 Metal，避免界面元素混乱
+    // 统一 LAF，避免界面元素混乱
     private static void initLAF() {
         if ("Metal".equals(UIManager.getLookAndFeel().getName())) return;
         try {
@@ -44,7 +45,7 @@ public class UIPreProcessor {
     private static void initUIManagerConfig() {
         // 列表不按照行块为单位滚动，提升动画流畅性
         UIManager.put("List.lockToPositionOnScroll", false);
-        UIManager.put("TabbedPane.tabInsets", new InsetsUIResource(0, 4, 0, 4));
+        UIManager.put("TabbedPane.tabInsets", new HDInsetsUIResource(0, 4, 0, 4));
     }
 
     public static void process() {

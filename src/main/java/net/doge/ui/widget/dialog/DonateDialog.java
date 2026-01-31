@@ -3,12 +3,14 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -70,13 +72,13 @@ public class DonateDialog extends AbstractTitledDialog {
         thankLabel.setInstantAlpha(0.8f);
 
         messagePanel.add(messageLabel);
-        messagePanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+        messagePanel.setBorder(new HDEmptyBorder(0, 0, 20, 0));
 
         weixinLabel.setVerticalTextPosition(SwingConstants.TOP);
         alipayLabel.setVerticalTextPosition(SwingConstants.TOP);
         weixinLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         alipayLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        final int gap = 15;
+        final int gap = ScaleUtil.scale(15);
         weixinLabel.setIconTextGap(gap);
         alipayLabel.setIconTextGap(gap);
         weixinLabel.setIcon(weixinIcon);
@@ -87,7 +89,7 @@ public class DonateDialog extends AbstractTitledDialog {
         cPanel.add(leftPanel);
         cPanel.add(rightPanel);
 
-        thankPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
+        thankPanel.setBorder(new HDEmptyBorder(15, 0, 0, 0));
         thankPanel.add(thankLabel);
 
         centerPanel.setLayout(new BorderLayout());
@@ -96,10 +98,10 @@ public class DonateDialog extends AbstractTitledDialog {
         centerPanel.add(thankPanel, BorderLayout.SOUTH);
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(20);
+        fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         buttonPanel.add(yes);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(15, 0, 10, 0));
 
         globalPanel.setLayout(new BorderLayout());
         globalPanel.add(centerPanel, BorderLayout.CENTER);

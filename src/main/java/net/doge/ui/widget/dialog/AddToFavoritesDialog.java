@@ -8,8 +8,10 @@ import net.doge.entity.service.LocalPlaylist;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.entity.ChoosableListItem;
@@ -18,6 +20,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +34,8 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class AddToFavoritesDialog extends AbstractTitledDialog {
+    private final int WIDTH = ScaleUtil.scale(600);
+    private final int HEIGHT = ScaleUtil.scale(500);
     private final String TIP_MSG = I18n.getText("addToFavoritesTip");
     private final String MULTI_TIP_MSG = I18n.getText("addMultiToFavoritesTip");
 
@@ -73,7 +78,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(600, 500);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -84,7 +89,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         initLocalPlaylists();
 
         bottomPanel.add(addButton);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        bottomPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         globalPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
@@ -101,7 +106,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
     // 组装界面
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        centerPanel.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
 
         Color textColor = f.currUIStyle.getTextColor();
@@ -109,7 +114,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         Color selectedColor = f.currUIStyle.getSelectedColor();
 
         // 添加标签
-        tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tipLabel.setBorder(new HDEmptyBorder(10, 10, 10, 10));
         tipLabel.setForeground(textColor);
         String name = null;
         if (firstResource instanceof AudioFile) {
@@ -166,8 +171,8 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         });
 
         // 添加右部按钮
-        rightBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        Dimension area = new Dimension(1, 10);
+        rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
+        Dimension area = new HDDimension(1, 10);
         rightBox.add(Box.createVerticalGlue());
         rightBox.add(newButton);
         rightBox.add(Box.createRigidArea(area));
@@ -222,7 +227,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         sp.setHBarUI(new ScrollBarUI(scrollBarColor));
         sp.setVBarUI(new ScrollBarUI(scrollBarColor));
-        sp.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 0));
+        sp.setBorder(new HDEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);

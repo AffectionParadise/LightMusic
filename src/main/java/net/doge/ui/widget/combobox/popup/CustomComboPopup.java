@@ -1,14 +1,16 @@
-package net.doge.ui.widget.combobox;
+package net.doge.ui.widget.combobox.popup;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboPopup;
 import java.awt.*;
 
@@ -17,9 +19,9 @@ public class CustomComboPopup extends BasicComboPopup {
     private MainFrame f;
 
     // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
+    private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
     // 阴影大小像素
-    private final int pixels = 10;
+    private final int pixels = ScaleUtil.scale(10);
 
     public CustomComboPopup(CustomComboBox comboBox, MainFrame f) {
         super(comboBox);
@@ -30,8 +32,7 @@ public class CustomComboPopup extends BasicComboPopup {
         setLightWeightPopupEnabled(false);
 
         // 阴影边框
-        Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-        setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+        setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
     }
 
     @Override
@@ -54,12 +55,13 @@ public class CustomComboPopup extends BasicComboPopup {
         Graphics2D g2d = GraphicsUtil.setup(g);
 
         g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
-        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 8, 8);
+        int arc = ScaleUtil.scale(8);
+        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, arc, arc);
 
         // 画边框阴影
         for (int i = 0; i < pixels; i++) {
             g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 8, 8);
+            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), arc, arc);
         }
     }
 

@@ -373,7 +373,8 @@ public class ImageUtil {
         BufferedImage img = createTransparentImage(w, h);
         Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
         g2d.setColor(color);
-        g2d.fillRoundRect(0, 0, w, h, 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(0, 0, w, h, arc, arc);
         g2d.dispose();
         return new ImageIcon(img);
     }

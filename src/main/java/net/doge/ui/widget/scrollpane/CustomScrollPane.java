@@ -1,7 +1,9 @@
 package net.doge.ui.widget.scrollpane;
 
 import lombok.Getter;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
@@ -9,7 +11,9 @@ import java.awt.*;
 
 public class CustomScrollPane extends JScrollPane {
     @Getter
-    private final int thickness = 10;
+    private final int thickness = ScaleUtil.scale(10);
+    // 单位滚动长度
+    private final int scrollAmount = ScaleUtil.scale(200);
 
     private Timer wheelScrollingTimer;
     private int scrollingFrom;
@@ -32,15 +36,13 @@ public class CustomScrollPane extends JScrollPane {
             int vValue = getVBarValue();
             if (vValue == scrollingTo) wheelScrollingTimer.stop();
 
-            int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / 20);
+            int gap = scrollingTo - scrollingFrom, piece = Math.max(1, Math.abs(gap) / ScaleUtil.scale(20));
             setVBarValue(gap > 0 ? Math.min(scrollingTo, vValue + piece) : Math.max(scrollingTo, vValue - piece));
 
             if (getVBarValue() == vValue) wheelScrollingTimer.stop();
         });
         setWheelScrollingEnabled(false);
         addMouseWheelListener(e -> {
-            // 单位滚动长度
-            final int scrollAmount = 200;
             scrollingFrom = getVBarValue();
             scrollingTo = e.getWheelRotation() > 0 ? Math.min(getVBarMax(), scrollingFrom + scrollAmount) : Math.max(getVBarMin(), scrollingFrom - scrollAmount);
             if (scrollingFrom == scrollingTo || wheelScrollingTimer.isRunning()) return;
@@ -54,7 +56,7 @@ public class CustomScrollPane extends JScrollPane {
         verticalScrollBar.setPreferredSize(new Dimension(thickness, 0));
 
         // 默认有黑边，不绘制边框
-        setBorder(BorderFactory.createEmptyBorder());
+        setBorder(new HDEmptyBorder());
     }
 
     public boolean setVBarValue(int value) {

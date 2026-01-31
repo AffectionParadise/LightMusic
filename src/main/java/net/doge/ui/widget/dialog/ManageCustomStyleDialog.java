@@ -5,9 +5,11 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleConstants;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.StyleListRenderer;
@@ -16,6 +18,7 @@ import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +32,8 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class ManageCustomStyleDialog extends AbstractTitledDialog {
+    private final int WIDTH = ScaleUtil.scale(890);
+    private final int HEIGHT = ScaleUtil.scale(720);
     private final String IMG_LOST_MSG = I18n.getText("bgImgLost");
     private final String EDIT_DENIED_MSG = I18n.getText("editDenied");
     private final String REMOVE_DENIED_MSG = I18n.getText("removeDenied");
@@ -72,7 +77,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(890, 720);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -96,7 +101,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
     // 组装界面
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        centerPanel.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
 
         Color textColor = f.currUIStyle.getTextColor();
@@ -105,7 +110,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         Color selectedColor = f.currUIStyle.getSelectedColor();
 
         // 添加标签
-        tipLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        tipLabel.setBorder(new HDEmptyBorder(10, 10, 10, 10));
         tipLabel.setForeground(textColor);
         tipPanel.add(tipLabel);
         customOnlyCheckBox.setSelected(f.customOnly);
@@ -254,8 +259,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             }
         });
         // 添加右部按钮
-        rightBox.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        Dimension area = new Dimension(1, 10);
+        rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
+        Dimension area = new HDDimension(1, 10);
         rightBox.add(Box.createVerticalGlue());
         rightBox.add(allSelectButton);
         rightBox.add(Box.createRigidArea(area));
@@ -317,7 +322,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         styleListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
         styleListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        styleListScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        styleListScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);

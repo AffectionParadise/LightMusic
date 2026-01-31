@@ -5,6 +5,7 @@ import net.doge.ui.MainFrame;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
@@ -49,7 +50,8 @@ public class ChangePaneButtonUI extends BasicButtonUI {
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, alpha);
         g2d.setColor(Colors.BLACK);
-        g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, arc, arc);
 
         // 画框图
         GraphicsUtil.srcOver(g2d, Math.min(1, alpha * 3));

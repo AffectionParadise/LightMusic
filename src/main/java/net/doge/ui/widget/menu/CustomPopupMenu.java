@@ -4,9 +4,10 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -18,16 +19,15 @@ public class CustomPopupMenu extends JPopupMenu {
     private MainFrame f;
 
     // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
+    private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
     // 阴影大小像素
-    private final int pixels = 10;
+    private final int pixels = ScaleUtil.scale(10);
 
     public CustomPopupMenu(MainFrame f) {
         this.f = f;
 
         // 阴影边框
-        Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-        setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+        setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
 
         setOpaque(false);
         setLightWeightPopupEnabled(false);
@@ -52,12 +52,13 @@ public class CustomPopupMenu extends JPopupMenu {
         Graphics2D g2d = GraphicsUtil.setup(g);
 
         g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
-        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, arc, arc);
 
         // 画边框阴影
         for (int i = 0; i < pixels; i++) {
             g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
+            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), arc, arc);
         }
     }
 

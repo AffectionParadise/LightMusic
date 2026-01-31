@@ -1,7 +1,7 @@
 package net.doge.ui.widget.button.listener;
 
 import net.doge.ui.MainFrame;
-import net.doge.ui.widget.button.CustomButton;
+import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.util.ui.ColorUtil;
 
@@ -14,11 +14,11 @@ import java.awt.event.MouseEvent;
  * @Date 2021/1/10
  */
 public class ChangePaneButtonMouseListener extends MouseAdapter {
-    private CustomButton b;
+    private ChangePaneButton b;
     private ChangePaneButtonUI ui;
     private MainFrame f;
 
-    public ChangePaneButtonMouseListener(CustomButton b, ChangePaneButtonUI ui, MainFrame f) {
+    public ChangePaneButtonMouseListener(ChangePaneButton b, ChangePaneButtonUI ui, MainFrame f) {
         this.b = b;
         this.ui = ui;
         this.f = f;

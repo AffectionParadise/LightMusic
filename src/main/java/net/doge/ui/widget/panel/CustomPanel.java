@@ -2,6 +2,7 @@ package net.doge.ui.widget.panel;
 
 import lombok.Setter;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,7 +56,8 @@ public class CustomPanel extends JPanel {
             // 画背景
             g2d.setColor(getForeground());
             GraphicsUtil.srcOver(g2d, bgAlpha);
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+            int arc = ScaleUtil.scale(8);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
             GraphicsUtil.srcOver(g2d);
         }
 

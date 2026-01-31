@@ -62,7 +62,7 @@ public class CustomRadioButtonMenuItem extends CustomMenuItem {
 //    }
 //
 //    private void createBorder() {
-//        setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 0));
+//        setBorder(new HDEmptyBorder(4, 5, 4, 0));
 //    }
 //
 //    @Override
@@ -71,7 +71,8 @@ public class CustomRadioButtonMenuItem extends CustomMenuItem {
 //        Graphics2D g2d = GraphicsUtil.setup(g);
 //        g2d.setColor(getForeground());
 //        GraphicsUtil.srcOver(g2d, alpha);
-//        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+//        int arc = ScaleUtil.scale(10);
+//        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
 //        GraphicsUtil.srcOver(g2d);
 //
 //        super.paintComponent(g);

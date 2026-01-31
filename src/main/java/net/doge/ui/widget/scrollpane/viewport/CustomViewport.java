@@ -4,6 +4,7 @@ import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ public class CustomViewport extends JViewport {
     private boolean edgeFaded;
     private BufferedImage maskImg;
 
-    private final int FADE_HEIGHT = 200;
+    private final int FADE_HEIGHT = ScaleUtil.scale(200);
 
     public CustomViewport() {
         setOpaque(false);

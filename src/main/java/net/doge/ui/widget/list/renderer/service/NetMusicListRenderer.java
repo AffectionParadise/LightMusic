@@ -8,6 +8,7 @@ import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.NetMusicInfo;
+import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.DurationUtil;
@@ -15,6 +16,7 @@ import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -64,7 +66,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        iconLabel.setIconTextGap(15);
+        iconLabel.setIconTextGap(ScaleUtil.scale(15));
         iconLabel.setHorizontalTextPosition(LEFT);
 
         artistLabel.setInstantAlpha(alpha);
@@ -72,7 +74,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         lrcMatchLabel.setInstantAlpha(alpha);
 
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         innerPanel.setLayout(layout);
 
         innerPanel.add(iconLabel);
@@ -106,7 +108,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         albumNameLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
 
-        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
         String source = HtmlUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
@@ -126,7 +128,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new Dimension(lw, Math.max(ph, 36));
+        Dimension d = new VerticalHDDimension(lw, Math.max(ph, 36));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
 
@@ -136,7 +138,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             lrcMatchLabel.setForeground(textColor);
             Dimension p = lrcMatchLabel.getPreferredSize();
             outerPanel.add(lrcMatchLabel, BorderLayout.SOUTH);
-            outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + 20));
+            outerPanel.setPreferredSize(new Dimension(d.width, d.height + ScaleUtil.scale(p.height + 20)));
         } else {
             // 移除多余的歌词显示
             outerPanel.remove(lrcMatchLabel);

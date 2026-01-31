@@ -1,7 +1,6 @@
 package net.doge.ui.widget.button.listener;
 
 import net.doge.ui.MainFrame;
-import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.TabButton;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -16,37 +15,35 @@ import java.awt.event.MouseEvent;
  * @Description 改变按钮样式的监听器
  * @Date 2021/1/10
  */
-public class ButtonMouseListener extends MouseAdapter {
-    private CustomButton b;
+public class TabButtonMouseListener extends MouseAdapter {
+    private TabButton b;
     private MainFrame f;
 
-    public ButtonMouseListener(CustomButton b, MainFrame f) {
+    public TabButtonMouseListener(TabButton b, MainFrame f) {
         this.b = b;
         this.f = f;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        if(!b.isEnabled()) return;
+        if (!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
         b.setForeground(btc);
-//        if (b instanceof TabButton) return;
         b.setDrawBg(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        if(!b.isEnabled()) return;
+        if (!b.isEnabled()) return;
         Color iconColor = f.currUIStyle.getIconColor();
         Color textColor = f.currUIStyle.getTextColor();
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), iconColor));
         b.setForeground(textColor);
-//        if (b instanceof TabButton) return;
-        b.setDrawBg(b instanceof TabButton && ((TabButton) b).isActive());
+        b.setDrawBg(b.isActive());
     }
 
     @Override

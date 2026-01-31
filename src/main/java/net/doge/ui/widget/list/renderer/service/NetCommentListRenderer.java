@@ -4,11 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.service.NetCommentInfo;
+import net.doge.ui.core.dimension.VerticalHDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +44,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 //    private CustomLabel contentLabel = new CustomLabel();
 //    private CustomLabel likeLabel = new CustomLabel();
 
-    private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.radius(ImageUtil.width(LMIconManager.getImage("list.profile"), ImageConstants.PROFILE_WIDTH), 0.1));
+    private static ImageIcon defaultProfile = new ImageIcon(ImageUtil.radius(ImageUtil.width(LMIconManager.getImage("list.profile"), ImageConstants.PROFILE_WIDTH), ScaleUtil.scale(0.1)));
 
     public NetCommentListRenderer() {
         init();
@@ -53,7 +56,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        outerPanel.setLayout(new BorderLayout(10, 0));
+        outerPanel.setLayout(new BorderLayout(ScaleUtil.scale(10), ScaleUtil.scale(0)));
         outerPanel.add(iconLabel, BorderLayout.WEST);
         outerPanel.add(textLabel, BorderLayout.CENTER);
 
@@ -62,7 +65,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         // 文字靠左上
         textLabel.setHorizontalAlignment(LEFT);
         textLabel.setVerticalAlignment(TOP);
-        textLabel.setIconTextGap(15);
+        textLabel.setIconTextGap(ScaleUtil.scale(15));
         textLabel.setInstantAlpha(0.8f);
 
         outerPanel.setInstantDrawBg(true);
@@ -78,17 +81,17 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         boolean sub = commentInfo.isSub();
         BufferedImage profile = commentInfo.getProfile();
 
-        int lw = list.getVisibleRect().width - 10;
+        int lw = list.getVisibleRect().width - ScaleUtil.scale(10);
 
         iconLabel.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
-        textLabel.setText(HtmlUtil.textToHtmlWithSpace(HtmlUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
+        textLabel.setText(HtmlUtil.textToHtmlWithSpace(HtmlUtil.wrapLineByWidth(commentInfo.toString(), lw - ScaleUtil.scale(sub ? 235 : 160))));
 
         // 缩进
-        outerPanel.setBorder(BorderFactory.createEmptyBorder(6, sub ? 120 : 45, 0, 0));
+        outerPanel.setBorder(new HDEmptyBorder(6, sub ? 120 : 45, 0, 0));
 
         Dimension ips = iconLabel.getPreferredSize();
         Dimension tps = textLabel.getPreferredSize();
-        outerPanel.setPreferredSize(new Dimension(lw, Math.max(ips.height, tps.height) + 12));
+        outerPanel.setPreferredSize(new VerticalHDDimension(lw, Math.max(ips.height, tps.height) + 12));
         list.setFixedCellWidth(lw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
@@ -127,7 +130,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 //        // 使图标靠上
 ////        label.setVerticalTextPosition(TOP);
 ////        label.setHorizontalAlignment(LEFT);
-////        label.setIconTextGap(15);
+////        label.setIconTextGap(ScaleUtil.scale(15));
 //
 //        outerPanel.setInstantDrawBg(true);
 //    }
@@ -153,11 +156,11 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 //        String likedCount = String.valueOf(commentInfo.getLikedCount());
 //
 ////        label.setText(StringUtil.textToHtmlWithSpace(StringUtil.wrapLineByWidth(commentInfo.toString(), lw - (sub ? 235 : 160))));
-////        label.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
+////        label.setBorder(new HDEmptyBorder(0, sub ? 120 : 45, 0, 0));
 ////        label.setFont(customFont);
 ////        label.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
 //
-//        outerPanel.setBorder(BorderFactory.createEmptyBorder(0, sub ? 120 : 45, 0, 0));
+//        outerPanel.setBorder(new HDEmptyBorder(0, sub ? 120 : 45, 0, 0));
 //
 //        iconLabel.setIcon(profile != null ? new ImageIcon(profile) : defaultProfile);
 //        nameLabel.setText(name);
@@ -167,7 +170,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 //
 //        centerPanel.revalidate();
 //        Dimension ps = centerPanel.getPreferredSize();
-//        outerPanel.setPreferredSize(new Dimension(ps.width, ps.height + 12));
+//        outerPanel.setPreferredSize(new HDDimension(ps.width, ps.height + 12));
 //        list.setFixedCellWidth(lw);
 //
 //        outerPanel.setDrawBg(isSelected || hoverIndex == index);

@@ -4,13 +4,16 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.VSliderUI;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +25,9 @@ import java.awt.event.ItemEvent;
  * @Date 2020/12/15
  */
 public class SoundEffectDialog extends AbstractTitledDialog {
+    private final int WIDTH = ScaleUtil.scale(400);
+    private final int HEIGHT = ScaleUtil.scale(200);
+
     private CustomPanel centerPanel = new CustomPanel();
 
     private CustomPanel soundEffectPanel = new CustomPanel();
@@ -88,7 +94,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setLocation(400, 200);
+        setLocation(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -149,8 +155,8 @@ public class SoundEffectDialog extends AbstractTitledDialog {
 
             // 滑动条
             s.setUI(new VSliderUI(s, sliderColor, sliderColor));
-            s.setPreferredSize(new Dimension(30, 300));
-            s.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+            s.setPreferredSize(new HDDimension(30, 300));
+            s.setBorder(new HDEmptyBorder(0, 0, 4, 0));
             s.setMinimum((int) EqualizerData.MIN_GAIN);
             s.setMaximum((int) EqualizerData.MAX_GAIN);
             s.setOrientation(SwingConstants.VERTICAL);
@@ -174,7 +180,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
             hz.setForeground(textColor);
 
             p.setLayout(new BorderLayout());
-            p.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+            p.setBorder(new HDEmptyBorder(10, 20, 10, 20));
             p.add(val, BorderLayout.NORTH);
             p.add(s, BorderLayout.CENTER);
             p.add(hz, BorderLayout.SOUTH);

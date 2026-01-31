@@ -5,6 +5,7 @@ import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,8 +14,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.GeneralPath;
 
 public class SpectrumPanel extends JPanel {
-    private final Stroke STROKE = new BasicStroke(3);
-    private final int SPACE = 90;
+    private final Stroke STROKE = new BasicStroke(ScaleUtil.scale(3));
+    private final int SPACE = ScaleUtil.scale(90);
 
     @Getter
     private boolean drawSpectrum;
@@ -50,8 +51,8 @@ public class SpectrumPanel extends JPanel {
         double[] specs = f.player.getSpecs();
         int pw = getWidth(), ph = getHeight();
         if (pw == 0 || ph == 0) return;
-        int barNum = SpectrumConstants.barNum, viewX = (pw - SpectrumConstants.BAR_WIDTH * barNum - SpectrumConstants.BAR_GAP * (barNum - 1)) / 2,
-                barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP;
+        int barNum = SpectrumConstants.barNum, barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP,
+                viewX = (pw - barWidth * barNum - barGap * (barNum - 1)) / 2;
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, f.specOpacity);
         Color spectrumColor = f.currUIStyle.getSpectrumColor();
@@ -68,14 +69,9 @@ public class SpectrumPanel extends JPanel {
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int sHeight = (int) specs[i];
-                    g2d.fillRoundRect(
-                            viewX + i * (barWidth + barGap),
-                            ph - sHeight,
-                            barWidth,
-                            sHeight,
-                            4, 4
-                    );
+                    int sHeight = (int) specs[i], arc = ScaleUtil.scale(4);
+                    g2d.fillRoundRect(viewX + i * (barWidth + barGap), ph - sHeight,
+                            barWidth, sHeight, arc, arc);
                 }
                 break;
             case SpectrumConstants.ABOVE:
@@ -83,14 +79,9 @@ public class SpectrumPanel extends JPanel {
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int sHeight = (int) specs[i];
-                    g2d.fillRoundRect(
-                            viewX + i * (barWidth + barGap),
-                            (ph - sHeight) / 2,
-                            barWidth,
-                            sHeight,
-                            4, 4
-                    );
+                    int sHeight = (int) specs[i], arc = ScaleUtil.scale(4);
+                    g2d.fillRoundRect(viewX + i * (barWidth + barGap), (ph - sHeight) / 2,
+                            barWidth, sHeight, arc, arc);
                 }
                 break;
             case SpectrumConstants.LINE:

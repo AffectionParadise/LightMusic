@@ -10,8 +10,10 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.exception.InvalidPackageFileException;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -24,7 +26,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
-import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 
@@ -93,7 +94,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         msgLabel.setForeground(textColor);
         percentLabel.setForeground(textColor);
         FontMetrics m = percentLabel.getFontMetrics(Fonts.NORMAL);
-        Dimension d = new Dimension(m.stringWidth("100%") + 2, m.getHeight());
+        Dimension d = new HDDimension(m.stringWidth("100%") + 2, m.getHeight());
         percentLabel.setPreferredSize(d);
 
         msgPanel.add(msgLabel);
@@ -101,7 +102,7 @@ public class UpdateDialog extends AbstractShadowDialog {
 
         // 进度条
         progressSlider.setUI(new MuteSliderUI(progressSlider, sliderColor));
-        progressSlider.setPreferredSize(new Dimension(300, 30));
+        progressSlider.setPreferredSize(new HDDimension(300, 30));
         progressSlider.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         progressSlider.setMaximum(1000);
         progressSlider.setValue(0);
@@ -116,7 +117,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         cancelButton.addActionListener(e -> close(true));
 
         centerPanel.add(progressPanel, BorderLayout.CENTER);
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        centerPanel.setBorder(new HDEmptyBorder(10, 20, 10, 20));
     }
 
     // 准备更新包

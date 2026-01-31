@@ -4,12 +4,14 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +24,8 @@ import java.awt.event.KeyEvent;
  * @Date 2020/12/15
  */
 public class EditLocalPlaylistDialog extends AbstractTitledDialog {
+    private final int WIDTH = ScaleUtil.scale(560);
+    private final int HEIGHT = ScaleUtil.scale(180);
     private final String NAME_NOT_NULL_MSG = I18n.getText("localPlaylistNameNotNullMsg");
 
     private CustomPanel centerPanel = new CustomPanel();
@@ -48,7 +52,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(560, 180);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -68,7 +72,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
@@ -108,7 +112,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
         });
         panel.add(textField);
 
-        panel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        panel.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         centerPanel.add(Box.createVerticalGlue());
         centerPanel.add(panel);
         centerPanel.add(Box.createVerticalGlue());

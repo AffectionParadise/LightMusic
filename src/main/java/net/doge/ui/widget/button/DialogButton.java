@@ -1,11 +1,13 @@
 package net.doge.ui.widget.button;
 
 import net.doge.constant.core.ui.core.Colors;
-import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.button.base.BaseButton;
 import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -18,7 +20,7 @@ import java.awt.event.MouseListener;
  * @Description 对话框中的按钮自定义 UI
  * @Date 2020/12/13
  */
-public class DialogButton extends JButton implements MouseListener {
+public class DialogButton extends BaseButton implements MouseListener {
     private Color foreColor;
     private Color foreColorBk;
     private Timer drawBgTimer;
@@ -26,7 +28,7 @@ public class DialogButton extends JButton implements MouseListener {
     private final float startAlpha = 0.2f;
     private final float destAlpha = 0.4f;
     private float alpha = startAlpha;
-    private static final Border BORDER = BorderFactory.createEmptyBorder(4, 16, 4, 16);
+    private static final Border BORDER = new HDEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
         this(null);
@@ -54,13 +56,7 @@ public class DialogButton extends JButton implements MouseListener {
 
     private void init() {
         addMouseListener(this);
-        setOpaque(false);
-        setContentAreaFilled(false);
-        setFocusable(false);
-        setFocusPainted(false);
         setBorder(BORDER);
-        setFont(Fonts.NORMAL);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         drawBgTimer = new Timer(2, e -> {
             if (entered) alpha = Math.min(destAlpha, alpha + 0.005f);
@@ -94,7 +90,8 @@ public class DialogButton extends JButton implements MouseListener {
         // 画背景
         g2d.setColor(foreColor);
         GraphicsUtil.srcOver(g2d, alpha);
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+        int arc = ScaleUtil.scale(8);
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);

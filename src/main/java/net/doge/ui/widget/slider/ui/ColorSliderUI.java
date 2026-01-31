@@ -1,7 +1,9 @@
 package net.doge.ui.widget.slider.ui;
 
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.dialog.ColorChooserDialog;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -26,7 +28,7 @@ public class ColorSliderUI extends BasicSliderUI {
 
     @Override
     protected Dimension getThumbSize() {
-        return new Dimension(12, 20);
+        return new HDDimension(12, 20);
     }
 
     /**
@@ -70,12 +72,9 @@ public class ColorSliderUI extends BasicSliderUI {
             GradientPaint paint = new GradientPaint(trackRect.x, trackRect.y, c1, trackRect.x + trackRect.width, trackRect.y, c2);
             g2d.setPaint(paint);
         }
-        g2d.fillRoundRect(
-                trackRect.x,
-                trackRect.y + 8,
-                trackRect.width,
-                trackRect.height - 16, 4, 4
-        );
+        int arc = ScaleUtil.scale(4);
+        g2d.fillRoundRect(trackRect.x, trackRect.y + ScaleUtil.scale(8),
+                trackRect.width, trackRect.height - ScaleUtil.scale(16), arc, arc);
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.doge.ui.widget.slider.ui;
 
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -50,7 +51,7 @@ public class MuteSliderUI extends BasicSliderUI {
         Graphics2D g2d = GraphicsUtil.setup(g);
 
         g2d.setColor(trackBgColor);
-        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + 7, height = trackRect.height - 14, arc = 6;
+        int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + ScaleUtil.scale(5), height = trackRect.height - ScaleUtil.scale(10), arc = ScaleUtil.scale(6);
         // 画未填充部分
         if (!rest) {
             GraphicsUtil.srcOver(g2d, 0.2f);
@@ -59,12 +60,7 @@ public class MuteSliderUI extends BasicSliderUI {
         // 画已填充部分
         g2d.setColor(trackColor);
         GraphicsUtil.srcOver(g2d, rest ? 0.5f : 1f);
-        g2d.fillRoundRect(
-                trackRect.x,
-                thy,
-                thumbRect.x - trackRect.x + thumbRect.width / 2,
-                height, arc, arc
-        );
+        g2d.fillRoundRect(trackRect.x, thy, thumbRect.x - trackRect.x + thumbRect.width / 2, height, arc, arc);
     }
 
     @Override

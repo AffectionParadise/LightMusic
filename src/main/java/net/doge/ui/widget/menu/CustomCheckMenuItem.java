@@ -1,7 +1,9 @@
 package net.doge.ui.widget.menu;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +73,7 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
     }
 
     private void createBorder() {
-        setBorder(BorderFactory.createEmptyBorder(4, 5, 4, 0));
+        setBorder(new HDEmptyBorder(4, 5, 4, 0));
     }
 
     @Override
@@ -80,7 +82,8 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
         // 画背景
         g2d.setColor(getForeground());
         GraphicsUtil.srcOver(g2d, alpha);
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);

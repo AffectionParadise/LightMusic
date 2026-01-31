@@ -10,6 +10,7 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.NetMusicInfo;
+import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.DurationUtil;
@@ -17,6 +18,7 @@ import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,14 +67,14 @@ public class MusicListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        iconLabel.setIconTextGap(15);
+        iconLabel.setIconTextGap(ScaleUtil.scale(15));
         iconLabel.setHorizontalTextPosition(LEFT);
 
         artistLabel.setInstantAlpha(alpha);
         albumNameLabel.setInstantAlpha(alpha);
 
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         outerPanel.setLayout(layout);
 
         outerPanel.add(iconLabel);
@@ -123,7 +125,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         albumNameLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
 
-        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String source = HtmlUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
@@ -148,7 +150,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new Dimension(lw, Math.max(ph + 10, 46));
+        Dimension d = new VerticalHDDimension(lw, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
         // 设置 list 元素宽度防止 outerPanel 设置最佳大小时不改变大小！
         list.setFixedCellWidth(lw);

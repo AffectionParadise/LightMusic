@@ -10,8 +10,9 @@ import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
@@ -22,6 +23,7 @@ import net.doge.util.lmdata.manager.LMStyleManager;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -41,10 +43,12 @@ import java.util.List;
  * @Date 2020/12/15
  */
 public class CustomStyleDialog extends AbstractTitledDialog implements DocumentListener {
-    private final int imgWidth = 150;
-    private final int imgHeight = 120;
-    private final int rectWidth = 170;
-    private final int rectHeight = 30;
+    private final int WIDTH = ScaleUtil.scale(960);
+    private final int HEIGHT = ScaleUtil.scale(750);
+    private final int imgWidth = ScaleUtil.scale(150);
+    private final int imgHeight = ScaleUtil.scale(120);
+    private final int rectWidth = ScaleUtil.scale(170);
+    private final int rectHeight = ScaleUtil.scale(30);
     private final String STYLE_NAME_NOT_NULL_MSG = I18n.getText("styleNameNotNullMsg");
     private final String STYLE_NAME_DUPLICATE_MSG = I18n.getText("styleNameDuplicateMsg");
     private final String IMG_FILE_NOT_EXIST_MSG = I18n.getText("imgFileNotExistMsg");
@@ -109,7 +113,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
     public void showDialog() {
         setResizable(false);
-        setSize(960, 750);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -172,7 +176,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
@@ -204,7 +208,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         results[10] = showedStyle.getSliderColor();
         results[11] = showedStyle.getSpectrumColor();
 
-        Border eb = BorderFactory.createEmptyBorder(0, 20, 0, 20);
+        Border eb = new HDEmptyBorder(0, 20, 0, 20);
 
         Color textColor = f.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
@@ -324,7 +328,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
         centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 
     @Override

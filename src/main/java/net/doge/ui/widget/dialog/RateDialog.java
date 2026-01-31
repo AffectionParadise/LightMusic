@@ -4,8 +4,10 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
-import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -84,7 +86,7 @@ public class RateDialog extends AbstractShadowDialog {
 
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
-        centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        centerPanel.setBorder(new HDEmptyBorder(10, 15, 10, 15));
 
         Color textColor = f.currUIStyle.getTextColor();
         Color sliderColor = f.currUIStyle.getSliderColor();
@@ -97,8 +99,8 @@ public class RateDialog extends AbstractShadowDialog {
         slider.setFont(Fonts.NORMAL);
         slider.setForeground(textColor);
         slider.setUI(new VSliderUI(slider, sliderColor, sliderColor));
-        slider.setPreferredSize(new Dimension(35, 500));
-        slider.setBorder(BorderFactory.createEmptyBorder(0, 0, 4, 0));
+        slider.setPreferredSize(new HDDimension(35, 500));
+        slider.setBorder(new HDEmptyBorder(0, 0, 4, 0));
         slider.setMinimum(MIN_VAL);
         slider.setMaximum(MAX_VAL);
         slider.setOrientation(SwingConstants.VERTICAL);

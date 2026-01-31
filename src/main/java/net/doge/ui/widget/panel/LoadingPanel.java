@@ -5,6 +5,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         setLayout(new GridLayout(1, 1));
 
         label.setFont(textFont);
-        label.setIconTextGap(20);
+        label.setIconTextGap(ScaleUtil.scale(20));
         add(label);
 
         // 显示时屏蔽底层组件的响应

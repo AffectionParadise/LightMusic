@@ -7,14 +7,16 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.core.lyric.Statement;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.ButtonMouseListener;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +30,8 @@ import java.awt.event.*;
 public class DesktopLyricDialog extends JDialog {
     private int width;
     private Font font = Fonts.NORMAL_HUGE;
-    private final int MIN_FONT_SIZE = Fonts.HUGE_SIZE - 20;
-    private final int MAX_FONT_SIZE = Fonts.HUGE_SIZE + 20;
+    private final int MIN_FONT_SIZE = Fonts.HUGE_SIZE - ScaleUtil.scale(20);
+    private final int MAX_FONT_SIZE = Fonts.HUGE_SIZE + ScaleUtil.scale(20);
     private Color bgColor;
     @Getter
     private Statement statement;
@@ -123,7 +125,7 @@ public class DesktopLyricDialog extends JDialog {
     private void updateSize() {
         FontMetrics metrics = tempLabel.getFontMetrics(font);
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + 100));
+        setSize(new Dimension(width = (int) (screenSize.width * 0.5), metrics.getHeight() + ScaleUtil.scale(100)));
     }
 
     // 更新位置
@@ -151,12 +153,12 @@ public class DesktopLyricDialog extends JDialog {
         tempLabel.setForeground(bgColor);
         tempLabel.setFont(font);
         updateLyric(new Statement(" "), 0);
-        lyricLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+        lyricLabel.setBorder(new HDEmptyBorder(20, 0, 0, 0));
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(10);
+        fl.setHgap(ScaleUtil.scale(10));
         buttonPanel.setLayout(fl);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
         buttonPanel.add(lock);
         buttonPanel.add(restore);
         buttonPanel.add(descendTrans);
@@ -316,45 +318,45 @@ public class DesktopLyricDialog extends JDialog {
             }
         });
 
-        lock.addMouseListener(new ButtonMouseListener(lock, f));
-        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth() + 10, lockIcon.getIconHeight() + 10));
+        lock.addMouseListener(new CustomButtonMouseListener(lock, f));
+        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth() + ScaleUtil.scale(10), lockIcon.getIconHeight() + ScaleUtil.scale(10)));
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
         });
         restore.setToolTipText(RESTORE_TIP);
-        restore.addMouseListener(new ButtonMouseListener(restore, f));
-        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth() + 10, restoreIcon.getIconHeight() + 10));
+        restore.addMouseListener(new CustomButtonMouseListener(restore, f));
+        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth() + ScaleUtil.scale(10), restoreIcon.getIconHeight() + ScaleUtil.scale(10)));
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
             hideUI();
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
-        descendTrans.addMouseListener(new ButtonMouseListener(descendTrans, f));
-        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth() + 10, descendTransIcon.getIconHeight() + 10));
+        descendTrans.addMouseListener(new CustomButtonMouseListener(descendTrans, f));
+        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth() + ScaleUtil.scale(10), descendTransIcon.getIconHeight() + ScaleUtil.scale(10)));
         descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
-        ascendTrans.addMouseListener(new ButtonMouseListener(ascendTrans, f));
-        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth() + 10, ascendTransIcon.getIconHeight() + 10));
+        ascendTrans.addMouseListener(new CustomButtonMouseListener(ascendTrans, f));
+        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth() + ScaleUtil.scale(10), ascendTransIcon.getIconHeight() + ScaleUtil.scale(10)));
         ascendTrans.addActionListener(e -> lyricLabel.increaseAlpha());
         decreaseFont.setToolTipText(DECREASE_FONT_TIP);
-        decreaseFont.addMouseListener(new ButtonMouseListener(decreaseFont, f));
-        decreaseFont.setPreferredSize(new Dimension(decreaseFontIcon.getIconWidth() + 10, decreaseFontIcon.getIconHeight() + 10));
+        decreaseFont.addMouseListener(new CustomButtonMouseListener(decreaseFont, f));
+        decreaseFont.setPreferredSize(new Dimension(decreaseFontIcon.getIconWidth() + ScaleUtil.scale(10), decreaseFontIcon.getIconHeight() + ScaleUtil.scale(10)));
         decreaseFont.addActionListener(e -> decreaseFont());
         increaseFont.setToolTipText(INCREASE_FONT_TIP);
-        increaseFont.addMouseListener(new ButtonMouseListener(increaseFont, f));
-        increaseFont.setPreferredSize(new Dimension(increaseFontIcon.getIconWidth() + 10, increaseFontIcon.getIconHeight() + 10));
+        increaseFont.addMouseListener(new CustomButtonMouseListener(increaseFont, f));
+        increaseFont.setPreferredSize(new Dimension(increaseFontIcon.getIconWidth() + ScaleUtil.scale(10), increaseFontIcon.getIconHeight() + ScaleUtil.scale(10)));
         increaseFont.addActionListener(e -> increaseFont());
-        onTop.addMouseListener(new ButtonMouseListener(onTop, f));
-        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth() + 10, onTopIcon.getIconHeight() + 10));
+        onTop.addMouseListener(new CustomButtonMouseListener(onTop, f));
+        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth() + ScaleUtil.scale(10), onTopIcon.getIconHeight() + ScaleUtil.scale(10)));
         onTop.addActionListener(e -> {
             setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
             updateOnTop();
         });
         close.setToolTipText(CLOSE_TIP);
-        close.addMouseListener(new ButtonMouseListener(close, f));
-        close.setPreferredSize(new Dimension(closeIcon.getIconWidth() + 10, closeIcon.getIconHeight() + 10));
+        close.addMouseListener(new CustomButtonMouseListener(close, f));
+        close.setPreferredSize(new Dimension(closeIcon.getIconWidth() + ScaleUtil.scale(10), closeIcon.getIconHeight() + ScaleUtil.scale(10)));
         close.addActionListener(e -> {
             f.desktopLyricButton.doClick();
         });
@@ -415,7 +417,8 @@ public class DesktopLyricDialog extends JDialog {
                 Graphics2D g2d = GraphicsUtil.setup(g);
                 g2d.setColor(Colors.BLACK);
                 GraphicsUtil.srcOver(g2d, drawBg ? 0.2f : 0.01f);
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
+                int arc = ScaleUtil.scale(8);
+                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
                 GraphicsUtil.srcOver(g2d);
             }
 

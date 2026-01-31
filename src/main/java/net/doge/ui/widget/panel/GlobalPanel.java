@@ -18,9 +18,9 @@ import java.awt.image.BufferedImage;
 @Data
 public class GlobalPanel extends JPanel {
 //    // 最大阴影透明度
-//    private final int TOP_OPACITY = 30;
+//    private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
 //    // 阴影大小像素
-//    protected final int pixels = 10;
+//    protected final int pixels = ScaleUtil.scale(10);
 
     private BufferedImage lImg;
     private BufferedImage bgImg;
@@ -76,8 +76,7 @@ public class GlobalPanel extends JPanel {
 
 //    public void initBorder() {
 //        // 阴影边框
-//        Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-//        setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+//        setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
 //    }
 
     // 组件滑入滑出替换

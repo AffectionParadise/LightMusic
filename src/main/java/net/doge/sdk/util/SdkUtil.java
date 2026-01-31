@@ -10,11 +10,15 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.StringJoiner;
 
 public class SdkUtil {
+    // 图片圆角
+    private static final double ARC = ScaleUtil.scale(0.1);
+
     /**
      * 获取艺术家数组
      *
@@ -104,7 +108,7 @@ public class SdkUtil {
     public static BufferedImage extractProfile(String imgUrl) {
         BufferedImage img = ImageUtil.width(imgUrl, ImageConstants.PROFILE_WIDTH);
         if (img == null) img = ImageUtil.width(ImageConstants.DEFAULT_IMG, ImageConstants.PROFILE_WIDTH);
-        return ImageUtil.radius(img, 0.1);
+        return ImageUtil.radius(img, ARC);
     }
 
     /**
@@ -119,7 +123,7 @@ public class SdkUtil {
         // 控制封面高度不超过阈值
         if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
             img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
-        return ImageUtil.radius(img, 0.1);
+        return ImageUtil.radius(img, ARC);
     }
 
     /**
@@ -134,7 +138,7 @@ public class SdkUtil {
         // 控制 MV 封面高度不超过阈值
         if (img.getHeight() > ImageConstants.MV_COVER_MAX_HEIGHT)
             img = ImageUtil.height(img, ImageConstants.MV_COVER_MAX_HEIGHT);
-        return ImageUtil.radius(img, 0.1);
+        return ImageUtil.radius(img, ARC);
     }
 
     /**

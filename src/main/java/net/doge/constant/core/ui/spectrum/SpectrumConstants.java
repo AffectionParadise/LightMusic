@@ -1,6 +1,7 @@
 package net.doge.constant.core.ui.spectrum;
 
 import net.doge.constant.core.lang.I18n;
+import net.doge.util.ui.ScaleUtil;
 
 /**
  * @Author Doge
@@ -44,11 +45,11 @@ public class SpectrumConstants {
     // 频谱条数量(由界面宽度决定)
     public static int barNum = 60;
     // 频谱每条宽度
-    public static final int BAR_WIDTH = 7;
-    // 频谱最大高度
+    public static final int BAR_WIDTH = ScaleUtil.scale(7);
+    // 频谱最大高度(逻辑长度)
     public static int barMaxHeight = 150;
     // 频谱条与条之间的间距
-    public static final int BAR_GAP = 3;
+    public static final int BAR_GAP = ScaleUtil.scale(3);
     // 频谱阈值
     public static final int THRESHOLD = -80;
 }

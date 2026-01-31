@@ -2,13 +2,15 @@ package net.doge.ui.widget.combobox.ui.base;
 
 import lombok.Getter;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.ButtonMouseListener;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.CustomComboPopup;
+import net.doge.ui.widget.combobox.popup.CustomComboPopup;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicComboBoxUI;
@@ -44,14 +46,14 @@ public class ComboBoxUI extends BasicComboBoxUI {
         arrowIcon = ImageUtil.dye(arrowIcon, iconColor);
 
         final int width = 170;
-        if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new Dimension(width, 30));
+        if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new HDDimension(width, 30));
 
         comboBox.setForeground(textColor);
     }
 
     public ComboBoxUI(CustomComboBox<?> comboBox, MainFrame f, int width) {
         this(comboBox, f);
-        comboBox.setPreferredSize(new Dimension(width, 30));
+        comboBox.setPreferredSize(new HDDimension(width, 30));
     }
 
 //    @Override
@@ -73,7 +75,8 @@ public class ComboBoxUI extends BasicComboBoxUI {
         Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(f.currUIStyle.getTextColor());
         GraphicsUtil.srcOver(g2d, comboBox.getAlpha());
-        g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
         GraphicsUtil.srcOver(g2d);
     }
 
@@ -81,7 +84,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
     protected JButton createArrowButton() {
         arrowButton = new CustomButton();
         arrowButton.setIcon(arrowIcon);
-        arrowButton.addMouseListener(new ButtonMouseListener(arrowButton, f));
+        arrowButton.addMouseListener(new CustomButtonMouseListener(arrowButton, f));
         arrowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

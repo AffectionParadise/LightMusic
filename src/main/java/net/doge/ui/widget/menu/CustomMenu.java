@@ -1,6 +1,8 @@
 package net.doge.ui.widget.menu;
 
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,7 +19,7 @@ public class CustomMenu extends JMenu {
     }
 
     private void createBorder() {
-        setBorder(BorderFactory.createEmptyBorder(8, 5, 8, 0));
+        setBorder(new HDEmptyBorder(8, 5, 8, 0));
     }
 
     @Override
@@ -27,7 +29,8 @@ public class CustomMenu extends JMenu {
             Graphics2D g2d = GraphicsUtil.setup(g);
             g2d.setColor(getForeground());
             GraphicsUtil.srcOver(g2d, 0.1f);
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
             GraphicsUtil.srcOver(g2d);
         }
 

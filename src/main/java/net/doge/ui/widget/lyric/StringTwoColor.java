@@ -11,6 +11,7 @@ import net.doge.util.core.RegexUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +73,7 @@ public class StringTwoColor {
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
         this.widthThreshold = widthThreshold;
-        this.shadowHOffset = isDesktopLyric ? 3 : 0;
+        this.shadowHOffset = ScaleUtil.scale(isDesktopLyric ? 3 : 0);
 
         // 获取字符串的宽（显示在屏幕上所占的像素 px）
         labelFont = label.getFont();
@@ -137,7 +138,7 @@ public class StringTwoColor {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         int dy = height - (int) fontSize;
-        if (!isDesktopLyric) dy += 5;
+        if (!isDesktopLyric) dy += ScaleUtil.scale(5);
 
         g1.setColor(c1);
         g2.setColor(ColorUtil.deriveAlphaColor(c2, 0.45f));
@@ -253,7 +254,7 @@ public class StringTwoColor {
     /**
      * 根据歌词时间计算比率
      *
-     * @param currTime  当前播放时间
+     * @param currTime      当前播放时间
      * @param lineStartTime 当行歌词起始时间
      * @return
      */

@@ -4,10 +4,11 @@ import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
-import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +69,7 @@ public class TipDialog extends AbstractShadowDialog {
     public void updateSize() {
         FontMetrics metrics = messageLabel.getFontMetrics(font);
         int sw = metrics.stringWidth(HtmlUtil.removeHtmlLabel(message)), sh = metrics.getHeight();
-        setSize(new Dimension(sw + 60 + 2 * pixels, sh + 40 + 2 * pixels));
+        setSize(new Dimension(sw + ScaleUtil.scale(60) + 2 * pixels, sh + ScaleUtil.scale(40) + 2 * pixels));
     }
 
     public void updateView(boolean resetLocation) {

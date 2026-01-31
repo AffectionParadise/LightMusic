@@ -2,6 +2,7 @@ package net.doge.ui.widget.label.ui;
 
 import lombok.Setter;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLabelUI;
@@ -28,7 +29,8 @@ public class LabelUI extends BasicLabelUI {
             // 画背景
             g2d.setColor(c.getForeground());
             GraphicsUtil.srcOver(g2d, 0.1f);
-            g2d.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), 10, 10);
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), arc, arc);
         }
         GraphicsUtil.srcOver(g2d, alpha);
         super.paint(g, c);

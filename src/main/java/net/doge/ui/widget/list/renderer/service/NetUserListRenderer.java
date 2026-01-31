@@ -13,6 +13,7 @@ import net.doge.util.core.LangUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,7 +55,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        avatarLabel.setIconTextGap(0);
+        avatarLabel.setIconTextGap(ScaleUtil.scale(0));
 
         genderLabel.setFont(tinyFont);
 //        birthdayLabel.setFont(tinyFont);
@@ -69,7 +70,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         fanLabel.setInstantAlpha(alpha);
         playlistCountLabel.setInstantAlpha(alpha);
 
-        int sh = 10;
+        int sh = ScaleUtil.scale(10);
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(avatarLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -106,7 +107,7 @@ public class NetUserListRenderer extends DefaultListCellRenderer {
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String gender = userInfo.hasGender() ? HtmlUtil.textToHtml(userInfo.getGender()) : "";

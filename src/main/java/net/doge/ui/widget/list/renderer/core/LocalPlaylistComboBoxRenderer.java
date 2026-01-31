@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class LocalPlaylistComboBoxRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        label.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
+        label.setBorder(new HDEmptyBorder(5, 0, 5, 0));
         label.setFont(customFont);
         label.setForeground(textColor);
         label.setBgColor(foreColor);

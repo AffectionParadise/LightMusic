@@ -8,6 +8,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.core.task.Task;
+import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -17,6 +18,7 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,7 +65,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 
     private void init() {
         GridLayout layout = new GridLayout(1, 5);
-        layout.setHgap(15);
+        layout.setHgap(ScaleUtil.scale(15));
         outerPanel.setLayout(layout);
 
         iconLabel.setInstantAlpha(alpha);
@@ -121,7 +123,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         percentLabel.setFont(customFont);
         statusLabel.setFont(customFont);
 
-        int lw = list.getVisibleRect().width - 10, maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
+        int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String type = HtmlUtil.textToHtml(TaskType.NAMES[task.getType()]);
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(task.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
         double percent = task.isProcessing() ? task.getPercent() : task.isFinished() ? 100 : 0;
@@ -140,7 +142,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         Dimension ps = nameLabel.getPreferredSize();
         Dimension ps2 = sizeLabel.getPreferredSize();
         int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new Dimension(lw, Math.max(ph + 10, 46));
+        Dimension d = new VerticalHDDimension(lw, Math.max(ph + 10, 46));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 

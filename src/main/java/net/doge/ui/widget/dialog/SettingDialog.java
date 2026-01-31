@@ -18,11 +18,14 @@ import net.doge.constant.core.ui.window.CloseWindowOptions;
 import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.core.ui.window.WindowState;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.dimension.VerticalHDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
@@ -38,6 +41,7 @@ import net.doge.util.os.FileUtil;
 import net.doge.util.os.KeyUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -56,6 +60,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date 2020/12/15
  */
 public class SettingDialog extends AbstractTitledDialog {
+    private final int WIDTH = ScaleUtil.scale(800);
+    private final int HEIGHT = ScaleUtil.scale(650);
     // 目录不存在提示
     private final String CATALOG_NOT_FOUND_MSG = I18n.getText("catalogNotFoundMsg");
 
@@ -220,7 +226,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
     public void showDialog() {
         setResizable(false);
-        setSize(800, 650);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -245,7 +251,7 @@ public class SettingDialog extends AbstractTitledDialog {
         buttonPanel.add(okButton);
         buttonPanel.add(applyButton);
         buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         setContentPane(globalPanel);
@@ -273,7 +279,7 @@ public class SettingDialog extends AbstractTitledDialog {
         playbackLabel.setHorizontalAlignment(SwingConstants.LEFT);
         hotKeyLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-        Border eb = BorderFactory.createEmptyBorder(0, 10, 0, 0);
+        Border eb = new HDEmptyBorder(0, 10, 0, 0);
         generalPanel.setBorder(eb);
         appearancePanel.setBorder(eb);
         downloadAndCachePanel.setBorder(eb);
@@ -327,7 +333,7 @@ public class SettingDialog extends AbstractTitledDialog {
         hoyKeyScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
 
         // 标签大小
-        Dimension d = new Dimension(120, 40);
+        Dimension d = new HDDimension(120, 40);
         generalPanel.setPreferredSize(d);
         appearancePanel.setPreferredSize(d);
         downloadAndCachePanel.setPreferredSize(d);
@@ -370,7 +376,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenPanel.setLayout(fl);
 
         // 最大尺寸
-        d = new Dimension(Integer.MAX_VALUE, 30);
+        d = new HDDimension(Integer.MAX_VALUE, 30);
         autoUpdatePanel.setMaximumSize(d);
         videoOnlyPanel.setMaximumSize(d);
         langPanel.setMaximumSize(d);
@@ -862,7 +868,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenPanel.add(videoFullScreenLabel);
         videoFullScreenPanel.add(videoFullScreenTextField);
 
-        int vGap = 10;
+        int vGap = ScaleUtil.scale(10);
         generalContentBox.add(autoUpdatePanel);
         generalContentBox.add(Box.createVerticalStrut(vGap));
         generalContentBox.add(videoOnlyPanel);
@@ -1032,8 +1038,8 @@ public class SettingDialog extends AbstractTitledDialog {
             return false;
         }
         SpectrumConstants.barMaxHeight = Integer.parseInt(text);
-        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, SpectrumConstants.barMaxHeight));
-        f.spectrumPanel.setMinimumSize(new Dimension(1, SpectrumConstants.barMaxHeight));
+        f.spectrumPanel.setPreferredSize(new VerticalHDDimension(f.spectrumPanel.getPreferredSize().width, SpectrumConstants.barMaxHeight));
+        f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
         f.spectrumPanel.revalidate();
 
         text = maxCacheSizeTextField.getText();

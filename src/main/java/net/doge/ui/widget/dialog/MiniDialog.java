@@ -3,13 +3,15 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.ButtonMouseListener;
-import net.doge.ui.widget.dialog.factory.AbstractMiniDialog;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
+import net.doge.ui.widget.dialog.base.AbstractMiniDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,10 +27,10 @@ import java.util.concurrent.Executors;
  * @Date 2020/12/15
  */
 public class MiniDialog extends AbstractMiniDialog {
-    private final int WIDTH = 460;
-    private final int HEIGHT = 76;
-    private final int offsetX = WIDTH - 6;
-    private final int offsetY = HEIGHT - 6;
+    private final int WIDTH = ScaleUtil.scale(460);
+    private final int HEIGHT = ScaleUtil.scale(76);
+    private final int offsetX = WIDTH - ScaleUtil.scale(6);
+    private final int offsetY = HEIGHT - ScaleUtil.scale(6);
     private final String CLOSE_TIP = I18n.getText("closeTip");
 
     // 关闭窗口图标
@@ -190,8 +192,8 @@ public class MiniDialog extends AbstractMiniDialog {
         infoLabel.setText(f.changePaneButton.getText());
         infoLabel.setIcon(f.changePaneButton.getIcon());
         infoLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
-        infoLabel.setIconTextGap(10);
-        infoLabel.setPreferredSize(new Dimension(240, 66));
+        infoLabel.setIconTextGap(ScaleUtil.scale(10));
+        infoLabel.setPreferredSize(new HDDimension(240, 66));
 
         // 提示
         playLastButton.setToolTipText(f.lastButton.getToolTipText());
@@ -200,10 +202,10 @@ public class MiniDialog extends AbstractMiniDialog {
         closeButton.setToolTipText(CLOSE_TIP);
 
         // 监听事件
-        playLastButton.addMouseListener(new ButtonMouseListener(playLastButton, f));
-        playOrPauseButton.addMouseListener(new ButtonMouseListener(playOrPauseButton, f));
-        playNextButton.addMouseListener(new ButtonMouseListener(playNextButton, f));
-        closeButton.addMouseListener(new ButtonMouseListener(closeButton, f));
+        playLastButton.addMouseListener(new CustomButtonMouseListener(playLastButton, f));
+        playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, f));
+        playNextButton.addMouseListener(new CustomButtonMouseListener(playNextButton, f));
+        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, f));
 
         // 图标
         playLastButton.setIcon(f.lastButton.getIcon());
@@ -212,10 +214,10 @@ public class MiniDialog extends AbstractMiniDialog {
         closeButton.setIcon(ImageUtil.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
         // 按钮大小
-        playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth() + 10, playLastButton.getIcon().getIconHeight() + 10));
-        playOrPauseButton.setPreferredSize(new Dimension(playOrPauseButton.getIcon().getIconWidth() + 10, playOrPauseButton.getIcon().getIconHeight() + 10));
-        playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth() + 10, playNextButton.getIcon().getIconHeight() + 10));
-        closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth() + 10, closeButton.getIcon().getIconHeight() + 10));
+        playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playLastButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
+        playOrPauseButton.setPreferredSize(new Dimension(playOrPauseButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playOrPauseButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
+        playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playNextButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
+        closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth() + ScaleUtil.scale(10), closeButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
 
         playLastButton.addActionListener(e -> f.lastButton.doClick());
         playNextButton.addActionListener(e -> f.nextButton.doClick());
@@ -229,7 +231,7 @@ public class MiniDialog extends AbstractMiniDialog {
         });
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(5);
+        fl.setHgap(ScaleUtil.scale(5));
         controlPanel.setLayout(fl);
 
         controlPanel.add(infoLabel);
@@ -238,7 +240,7 @@ public class MiniDialog extends AbstractMiniDialog {
         controlPanel.add(playNextButton);
         controlPanel.add(closeButton);
 
-//        controlPanel.setPreferredSize(new Dimension(300, 60));
+//        controlPanel.setPreferredSize(new HDDimension(300, 60));
 
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 

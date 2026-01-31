@@ -2,11 +2,10 @@ package net.doge.ui.widget.combobox.ui;
 
 import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;
 import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
-
-import java.awt.*;
 
 /**
  * @Author Doge
@@ -19,11 +18,11 @@ public class LocalPlaylistComboBoxUI extends ComboBoxUI {
         super(comboBox, f);
         // 下拉列表渲染
         comboBox.setRenderer(new LocalPlaylistComboBoxRenderer(f));
-        comboBox.setMaximumSize(new Dimension(170, 30));
+        comboBox.setMaximumSize(new HDDimension(170, 30));
     }
 
     public LocalPlaylistComboBoxUI(CustomComboBox<LocalPlaylist> comboBox, MainFrame f, int width) {
         this(comboBox, f);
-        comboBox.setPreferredSize(new Dimension(width, 30));
+        comboBox.setPreferredSize(new HDDimension(width, 30));
     }
 }

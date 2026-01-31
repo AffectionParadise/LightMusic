@@ -13,7 +13,8 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!--        <jfx.version>17.0.16</jfx.version>-->
+        <!--        <jfx.version>11.0.2</jfx.version>-->
+        <!--        <flatlaf.version>3.7</flatlaf.version>-->
         <jaudiotagger.version>3.0.1</jaudiotagger.version>
         <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.21</thumbnailator.version>
@@ -30,6 +31,13 @@
     </properties>
 
     <dependencies>
+        <!-- FlatLaf -->
+        <!--        <dependency>-->
+        <!--            <groupId>com.formdev</groupId>-->
+        <!--            <artifactId>flatlaf</artifactId>-->
+        <!--            <version>${flatlaf.version}</version>-->
+        <!--        </dependency>-->
+
         <!-- jdk 9 及以上需要引入 javafx 依赖 -->
         <!--        <dependency>-->
         <!--            <groupId>org.openjfx</groupId>-->

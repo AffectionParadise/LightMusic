@@ -3,9 +3,10 @@ package net.doge.ui.widget.dialog;
 import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
-import net.doge.ui.widget.dialog.factory.AbstractShadowDialog;
+import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
@@ -13,9 +14,11 @@ import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -24,8 +27,8 @@ import java.awt.*;
  * @Date 2021/1/5
  */
 public class ConfirmDialog extends AbstractShadowDialog {
-    private final int MAX_WIDTH = 900;
-    private final int MAX_HEIGHT = 600;
+    private final int MAX_WIDTH = ScaleUtil.scale(900);
+    private final int MAX_HEIGHT = ScaleUtil.scale(600);
 
     private DialogButton yes;
     private DialogButton no;
@@ -91,7 +94,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         checkBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
-        Border eb = BorderFactory.createEmptyBorder(0, 0, 20, 0);
+        Border eb = new HDEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
         int thickness = messageScrollPane.getThickness();
@@ -109,7 +112,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         FlowLayout fl = new FlowLayout();
-        fl.setHgap(20);
+        fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         if (StringUtil.notEmpty(yes.getPlainText())) buttonPanel.add(yes);
         if (StringUtil.notEmpty(no.getPlainText())) buttonPanel.add(no);
@@ -151,8 +154,8 @@ public class ConfirmDialog extends AbstractShadowDialog {
         if (wc) size.height += thickness;
         if (hc) size.width += thickness;
         boolean c = wc || hc;
-        int top = 30, left = c ? 35 : 55, bottom = 25, right = c ? 10 : 55;
-        globalPanel.setBorder(BorderFactory.createEmptyBorder(top, left, bottom, right));
+        int top = ScaleUtil.scale(30), left = ScaleUtil.scale(c ? 35 : 55), bottom = ScaleUtil.scale(25), right = ScaleUtil.scale(c ? 10 : 55);
+        globalPanel.setBorder(new EmptyBorder(top, left, bottom, right));
         if (c) {
             size.width += left + right;
             size.height += top + bottom;

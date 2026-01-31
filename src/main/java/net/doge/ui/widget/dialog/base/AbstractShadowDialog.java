@@ -1,4 +1,4 @@
-package net.doge.ui.widget.dialog.factory;
+package net.doge.ui.widget.dialog.base;
 
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
@@ -6,9 +6,10 @@ import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -19,9 +20,9 @@ import java.awt.image.BufferedImage;
  */
 public abstract class AbstractShadowDialog extends JDialog {
     // 最大阴影透明度
-    private final int TOP_OPACITY = 30;
+    private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
     // 阴影大小像素
-    protected final int pixels = 10;
+    protected final int pixels = ScaleUtil.scale(10);
 
     protected DialogPanel globalPanel = new DialogPanel();
 
@@ -85,7 +86,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         }
         if (f.darkerOn) img = ImageUtil.darker(img);
         // 设置圆角
-        img = ImageUtil.radius(img, 10);
+        img = ImageUtil.radius(img, ScaleUtil.scale(10));
         globalPanel.setBgImg(img);
         repaint();
     }
@@ -99,8 +100,7 @@ public abstract class AbstractShadowDialog extends JDialog {
 
         public void initBorder() {
             // 阴影边框
-            Border border = BorderFactory.createEmptyBorder(pixels, pixels, pixels, pixels);
-            setBorder(BorderFactory.createCompoundBorder(getBorder(), border));
+            setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
         }
 
         public void eraseBorder() {

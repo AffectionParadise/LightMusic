@@ -123,8 +123,8 @@
 //        int width = columns * charWidth + getInsets().left + getInsets().right + 8;
 //        int height = charHeight + getInsets().top + getInsets().bottom + 6;
 //
-//        setPreferredSize(new Dimension(width, height));
-//        setMinimumSize(new Dimension(charWidth * 5, height));
+//        setPreferredSize(new HDDimension(width, height));
+//        setMinimumSize(new HDDimension(charWidth * 5, height));
 //    }
 //
 //    // 更新垂直对齐方式

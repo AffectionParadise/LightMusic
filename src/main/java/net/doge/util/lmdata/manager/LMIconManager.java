@@ -5,6 +5,7 @@ import net.doge.constant.core.data.LMDataConstants;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -38,7 +39,7 @@ public class LMIconManager {
      * @return
      */
     public static BufferedImage getImage(String key) {
-        return ImageUtil.toImage(getBase64(key));
+        return ImageUtil.scale(ImageUtil.toImage(getBase64(key)), ScaleUtil.SCALE);
     }
 
     /**

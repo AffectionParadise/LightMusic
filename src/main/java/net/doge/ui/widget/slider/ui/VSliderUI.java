@@ -1,6 +1,8 @@
 package net.doge.ui.widget.slider.ui;
 
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicSliderUI;
@@ -24,7 +26,7 @@ public class VSliderUI extends BasicSliderUI {
 
     @Override
     protected Dimension getThumbSize() {
-        return new Dimension(20, 16);
+        return new HDDimension(20, 16);
     }
 
     /**
@@ -53,20 +55,13 @@ public class VSliderUI extends BasicSliderUI {
         // 画未填充部分
         g2d.setColor(trackColor);
         GraphicsUtil.srcOver(g2d, 0.3f);
-        g2d.fillRoundRect(
-                trackRect.x + 9,
-                trackRect.y,
-                trackRect.width - 14,
-                thumbRect.y - trackRect.y + thumbRect.height / 2, 6, 6
-        );
+        int arc = ScaleUtil.scale(6);
+        g2d.fillRoundRect(trackRect.x + ScaleUtil.scale(9), trackRect.y,
+                trackRect.width - ScaleUtil.scale(14), thumbRect.y - trackRect.y + thumbRect.height / 2, arc, arc);
         // 画已填充部分
         GraphicsUtil.srcOver(g2d);
-        g2d.fillRoundRect(
-                trackRect.x + 9,
-                thumbRect.y + thumbRect.height / 2,
-                trackRect.width - 14,
-                trackRect.height - thumbRect.y + trackRect.y - thumbRect.height / 2, 6, 6
-        );
+        g2d.fillRoundRect(trackRect.x + ScaleUtil.scale(9), thumbRect.y + thumbRect.height / 2,
+                trackRect.width - ScaleUtil.scale(14), trackRect.height - thumbRect.y + trackRect.y - thumbRect.height / 2, arc, arc);
     }
 
     @Override

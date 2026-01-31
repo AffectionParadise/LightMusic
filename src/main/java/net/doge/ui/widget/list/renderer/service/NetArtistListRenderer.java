@@ -12,6 +12,7 @@ import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +51,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
     }
 
     private void init() {
-        iconLabel.setIconTextGap(0);
+        iconLabel.setIconTextGap(ScaleUtil.scale(0));
 
         songNumLabel.setFont(tinyFont);
         albumNumLabel.setFont(tinyFont);
@@ -61,7 +62,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         albumNumLabel.setInstantAlpha(alpha);
         mvNumLabel.setInstantAlpha(alpha);
 
-        int sh = 10;
+        int sh = ScaleUtil.scale(10);
         outerPanel.add(Box.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
         outerPanel.add(Box.createVerticalStrut(sh));
@@ -93,7 +94,7 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);
 
-        int pw = RendererConstants.CELL_WIDTH, tw = pw - 20;
+        int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String songNum = artistInfo.hasSongNum() ? HtmlUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";

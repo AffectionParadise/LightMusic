@@ -1,6 +1,8 @@
 package net.doge.ui.widget.scrollpane.ui;
 
+import net.doge.ui.core.dimension.HDDimension;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicScrollBarUI;
@@ -36,7 +38,7 @@ public class ScrollBarUI extends BasicScrollBarUI {
     // 创建空按钮去掉滚动条上的按钮
     private JButton createZeroButton() {
         JButton button = new JButton();
-        button.setPreferredSize(new Dimension(0, 0));
+        button.setPreferredSize(new HDDimension(0, 0));
         button.setVisible(false);
         return button;
     }
@@ -65,7 +67,8 @@ public class ScrollBarUI extends BasicScrollBarUI {
         g2d.setColor(thumbColor);
         // 透明滚动条
         GraphicsUtil.srcOver(g2d, entered ? 0.6f : 0.3f);
-        g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, arc, arc);
     }
 
     /**

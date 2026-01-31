@@ -1,20 +1,21 @@
 package net.doge.ui.widget.button;
 
-import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.button.base.BaseButton;
 import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CustomButton extends JButton {
-    protected boolean drawBg;
-    protected Timer drawBgTimer;
-    protected float alpha;
-    protected final float destAlpha = 0.2f;
+public class CustomButton extends BaseButton {
+    private boolean drawBg;
+    private Timer drawBgTimer;
+    private float alpha;
+    private final float destAlpha = 0.2f;
 
     private static BufferedImage maskImg = LMIconManager.getImage("mask");
 
@@ -36,13 +37,6 @@ public class CustomButton extends JButton {
     }
 
     private void init() {
-        setOpaque(false);
-        setContentAreaFilled(false);
-        setFocusable(false);
-        setFocusPainted(false);
-        setFont(Fonts.NORMAL);
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
         drawBgTimer = new Timer(2, e -> {
             if (drawBg) alpha = Math.min(destAlpha, alpha + 0.005f);
             else alpha = Math.max(0, alpha - 0.005f);
@@ -79,28 +73,19 @@ public class CustomButton extends JButton {
 
     @Override
     public void paintComponent(Graphics g) {
-        if (!(this instanceof TabButton) && !(this instanceof ChangePaneButton)) {
-            Graphics2D g2d = GraphicsUtil.setup(g);
-            int w = getWidth(), h = getHeight();
-            // 画背景
+        Graphics2D g2d = GraphicsUtil.setup(g);
+        int w = getWidth(), h = getHeight();
+        // 画背景
+        GraphicsUtil.srcOver(g2d, alpha);
+        if (w / h >= 2) {
+            g2d.setColor(getForeground());
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(0, 0, w, h, arc, arc);
+        } else {
             BufferedImage img = ImageUtil.width(maskImg, w);
-
-            GraphicsUtil.srcOver(g2d, alpha);
-
-            if (w / h >= 2) {
-                g2d.setColor(getForeground());
-                g2d.fillRoundRect(0, 0, w, h, 10, 10);
-            } else {
-                g2d.drawImage(img, 0, 0, w, h, this);
-            }
-
-            GraphicsUtil.srcOver(g2d);
+            g2d.drawImage(img, 0, 0, w, h, this);
         }
+        GraphicsUtil.srcOver(g2d);
         super.paintComponent(g);
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
     }
 }

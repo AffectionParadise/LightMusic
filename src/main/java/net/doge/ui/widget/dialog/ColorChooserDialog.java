@@ -6,10 +6,12 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
-import net.doge.ui.widget.dialog.factory.AbstractTitledDialog;
+import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -19,6 +21,7 @@ import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -35,6 +38,9 @@ import java.awt.event.MouseEvent;
  * @Date 2020/12/15
  */
 public class ColorChooserDialog extends AbstractTitledDialog implements DocumentListener {
+    private final int WIDTH = ScaleUtil.scale(600);
+    private final int HEIGHT = ScaleUtil.scale(580);
+
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel cPanel = new CustomPanel();
     private CustomPanel leftPanel = new CustomPanel();
@@ -126,7 +132,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
     public void showDialog() {
         setResizable(false);
-        setSize(600, 580);
+        setSize(WIDTH, HEIGHT);
 
         globalPanel.setLayout(new BorderLayout());
 
@@ -148,7 +154,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     private void initView() {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
-        Dimension d = new Dimension(1, 10);
+        Dimension d = new HDDimension(1, 10);
         Box rBox = Box.createHorizontalBox();
         rBox.add(rlb);
         rBox.add(rSlider);
@@ -166,9 +172,9 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
         rightPanel.add(view);
 
-        d = new Dimension(10, 1);
+        d = new HDDimension(10, 1);
         tfPanel.setLayout(new BoxLayout(tfPanel, BoxLayout.X_AXIS));
-        tfPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        tfPanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
         tfPanel.add(modelComboBox);
         tfPanel.add(rLabel);
         tfPanel.add(rTextField);
@@ -185,19 +191,19 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         buttonPanel.add(ok);
         buttonPanel.add(cancel);
         buttonPanel.add(reset);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
 
         pPanel.add(preLabel);
         preBox.add(pPanel);
         preBox.add(prePanel);
 
         customPanel.add(customLabel);
-        customBox.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        customBox.setBorder(new HDEmptyBorder(20, 0, 20, 0));
         customBox.add(customPanel);
         customBox.add(cPanel);
 
         cPanel.setLayout(new BorderLayout());
-        cPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        cPanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
         cPanel.add(leftPanel, BorderLayout.CENTER);
         cPanel.add(rightPanel, BorderLayout.EAST);
         cPanel.add(tfPanel, BorderLayout.SOUTH);
@@ -214,13 +220,13 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         // 预设
         preLabel.setForeground(textColor);
         GridLayout gl = new GridLayout(3, 8);
-        gl.setHgap(15);
-        gl.setVgap(15);
+        gl.setHgap(ScaleUtil.scale(15));
+        gl.setVgap(ScaleUtil.scale(15));
         prePanel.setLayout(gl);
-        prePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        prePanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
         for (Color c : preColors) {
             CustomLabel l = new CustomLabel();
-            l.setIcon(ImageUtil.dyeCircle(50, c));
+            l.setIcon(ImageUtil.dyeCircle(ScaleUtil.scale(50), c));
             l.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             l.addMouseListener(new MouseAdapter() {
                 @Override
@@ -235,7 +241,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
 
         rlb.setForeground(textColor);
         rSlider.setUI(new ColorSliderUI(rSlider, this));
-        d = new Dimension(400, 12);
+        d = new HDDimension(400, 12);
         rSlider.setPreferredSize(d);
         rSlider.setMinimum(0);
         rSlider.addChangeListener(e -> {

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +67,8 @@ public class CustomLabel extends JLabel {
             // 画背景
             g2d.setColor(bgColor);
             GraphicsUtil.srcOver(g2d, 0.1f);
-            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         }
 
         GraphicsUtil.srcOver(g2d, alpha);

@@ -1,7 +1,9 @@
 package net.doge.ui.widget.menu;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -19,7 +21,7 @@ public class CustomMenuItem extends JMenuItem {
     private Timer drawBgTimer;
     private float alpha;
     private final float destAlpha = 0.1f;
-    private static final Border BORDER = BorderFactory.createEmptyBorder(6, 0, 6, -10);
+    private static final Border BORDER = new HDEmptyBorder(6, 0, 6, -10);
 
     public CustomMenuItem() {
         this(null);
@@ -33,7 +35,7 @@ public class CustomMenuItem extends JMenuItem {
     private void init() {
         setOpaque(false);
         setFont(Fonts.NORMAL);
-        setIconTextGap(10);
+        setIconTextGap(ScaleUtil.scale(10));
         setBorder(BORDER);
         initResponse();
     }
@@ -79,7 +81,8 @@ public class CustomMenuItem extends JMenuItem {
         // 画背景
         g2d.setColor(getForeground());
         GraphicsUtil.srcOver(g2d, alpha);
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
+        int arc = ScaleUtil.scale(10);
+        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         GraphicsUtil.srcOver(g2d);
 
         super.paintComponent(g);

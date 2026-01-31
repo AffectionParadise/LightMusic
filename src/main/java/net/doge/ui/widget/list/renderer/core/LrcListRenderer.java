@@ -8,9 +8,11 @@ import net.doge.ui.widget.label.ui.LabelUI;
 import net.doge.ui.widget.list.ui.ListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.util.core.HtmlUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
@@ -57,15 +59,15 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     private Timer fontTimer;
 //    private Map<Integer, Float> alphas = new HashMap<>();
 
-    private final int SPACE = 90;
-    private final int SPACE_UD = 25;
+    private final int SPACE = ScaleUtil.scale(90);
+    private final int SPACE_UD = ScaleUtil.scale(25);
     private final Border[] BORDERS = {
             // 居左
-            BorderFactory.createEmptyBorder(SPACE_UD, SPACE, SPACE_UD, 0),
+            new EmptyBorder(SPACE_UD, SPACE, SPACE_UD, 0),
             // 居中
-            BorderFactory.createEmptyBorder(SPACE_UD, 0, SPACE_UD, 0),
+            new EmptyBorder(SPACE_UD, 0, SPACE_UD, 0),
             // 局右
-            BorderFactory.createEmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
+            new EmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
     };
 
     public LrcListRenderer() {
@@ -179,7 +181,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        }
 //
 //        Dimension ps = lyricLabel.getPreferredSize();
-//        Dimension d = new Dimension(list.getVisibleRect().width - 10, Math.max(ps.height + 2, 10));
+//        Dimension d = new HDDimension(list.getVisibleRect().width - 10, Math.max(ps.height + 2, 10));
 //        outerPanel.setPreferredSize(d);
 //        list.setFixedCellWidth(list.getVisibleRect().width - 10);
 //
