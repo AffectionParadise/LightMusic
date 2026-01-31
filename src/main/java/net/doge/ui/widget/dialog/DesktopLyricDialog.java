@@ -7,6 +7,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.core.lyric.Statement;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
@@ -132,7 +133,7 @@ public class DesktopLyricDialog extends JDialog {
     private void updateLocation() {
         Insets insets = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - 15);
+        setLocation(dx = (screenSize.width - getWidth()) / 2, dy = screenSize.height - getHeight() - insets.bottom - ScaleUtil.scale(15));
     }
 
     public DesktopLyricDialog(MainFrame f) {
@@ -155,7 +156,7 @@ public class DesktopLyricDialog extends JDialog {
         updateLyric(new Statement(" "), 0);
         lyricLabel.setBorder(new HDEmptyBorder(20, 0, 0, 0));
 
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(10));
         buttonPanel.setLayout(fl);
         buttonPanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
@@ -373,7 +374,7 @@ public class DesktopLyricDialog extends JDialog {
     }
 
     public void updateFontSize(int fontSize) {
-        font = font.deriveFont((float) fontSize);
+        font = font.deriveFont((float) ScaleUtil.scale(fontSize));
         tempLabel.setFont(font);
         updateSize();
     }

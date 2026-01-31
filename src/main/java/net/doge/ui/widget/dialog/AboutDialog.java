@@ -4,6 +4,7 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -91,7 +92,7 @@ public class AboutDialog extends AbstractTitledDialog {
         centerPanel.add(websitePanel);
         centerPanel.add(mailPanel);
 
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         buttonPanel.add(yes);

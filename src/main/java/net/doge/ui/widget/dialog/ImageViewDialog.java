@@ -9,6 +9,7 @@ import net.doge.constant.core.media.Format;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
@@ -283,7 +284,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         saveImgButton.addActionListener(e -> saveImg());
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(5));
         bottomPanel.setLayout(fl);
         bottomPanel.add(scaleLabel);

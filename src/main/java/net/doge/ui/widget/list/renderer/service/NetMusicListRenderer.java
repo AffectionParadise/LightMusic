@@ -8,7 +8,6 @@ import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.DurationUtil;
@@ -128,7 +127,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new VerticalHDDimension(lw, Math.max(ph, 36));
+        Dimension d = new Dimension(lw, Math.max(ph, ScaleUtil.scale(36)));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
 
@@ -138,7 +137,7 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
             lrcMatchLabel.setForeground(textColor);
             Dimension p = lrcMatchLabel.getPreferredSize();
             outerPanel.add(lrcMatchLabel, BorderLayout.SOUTH);
-            outerPanel.setPreferredSize(new Dimension(d.width, d.height + ScaleUtil.scale(p.height + 20)));
+            outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + ScaleUtil.scale(20)));
         } else {
             // 移除多余的歌词显示
             outerPanel.remove(lrcMatchLabel);

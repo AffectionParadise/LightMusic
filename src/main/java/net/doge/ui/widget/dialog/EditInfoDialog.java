@@ -9,6 +9,7 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.MediaInfo;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -249,7 +250,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
-            CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
+            CustomPanel panel = new CustomPanel(new HDFlowLayout(HDFlowLayout.LEFT));
             panel.setBorder(b);
             // 添加标签
             labels[i].setForeground(textColor);

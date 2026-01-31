@@ -20,6 +20,7 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
@@ -545,7 +546,7 @@ public class VideoDialog extends AbstractTitledDialog {
         updateMenuItemStatus(selectedFobMenuItem);
         updateMenuItemIcon();
 
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(3));
         controlPanel.setLayout(fl);
         controlPanel.add(Box.createHorizontalGlue());
@@ -555,7 +556,7 @@ public class VideoDialog extends AbstractTitledDialog {
         controlPanel.add(playOrPauseButton);
         controlPanel.add(forwardButton);
 
-        fl = new FlowLayout();
+        fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
         volumePanel.setLayout(fl);
         volumePanel.add(muteButton);

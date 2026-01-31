@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -91,7 +90,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 
         Dimension ips = iconLabel.getPreferredSize();
         Dimension tps = textLabel.getPreferredSize();
-        outerPanel.setPreferredSize(new VerticalHDDimension(lw, Math.max(ips.height, tps.height) + 12));
+        outerPanel.setPreferredSize(new Dimension(lw, Math.max(ips.height, tps.height) + ScaleUtil.scale(12)));
         list.setFixedCellWidth(lw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);

@@ -19,7 +19,7 @@ import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.core.ui.window.WindowState;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
-import net.doge.ui.core.dimension.VerticalHDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
@@ -341,7 +341,7 @@ public class SettingDialog extends AbstractTitledDialog {
         hotKeyPanel.setPreferredSize(d);
 
         // 对齐
-        FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+        FlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
         autoUpdatePanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
         langPanel.setLayout(fl);
@@ -1038,7 +1038,7 @@ public class SettingDialog extends AbstractTitledDialog {
             return false;
         }
         SpectrumConstants.barMaxHeight = Integer.parseInt(text);
-        f.spectrumPanel.setPreferredSize(new VerticalHDDimension(f.spectrumPanel.getPreferredSize().width, SpectrumConstants.barMaxHeight));
+        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, ScaleUtil.scale(SpectrumConstants.barMaxHeight)));
         f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
         f.spectrumPanel.revalidate();
 

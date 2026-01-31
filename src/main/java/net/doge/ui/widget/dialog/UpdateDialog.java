@@ -11,6 +11,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.exception.InvalidPackageFileException;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
@@ -108,7 +109,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         progressSlider.setValue(0);
 
         // 进度面板
-        progressPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        progressPanel.setLayout(new HDFlowLayout(HDFlowLayout.LEFT, 10, 5));
         progressPanel.add(progressSlider);
         progressPanel.add(percentLabel);
         progressPanel.add(cancelButton);

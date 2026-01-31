@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog;
 import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
@@ -111,7 +112,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messageScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         if (StringUtil.notEmpty(yes.getPlainText())) buttonPanel.add(yes);

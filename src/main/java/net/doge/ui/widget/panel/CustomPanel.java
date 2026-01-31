@@ -1,6 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Setter;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -18,7 +19,7 @@ public class CustomPanel extends JPanel {
     private final float destBgAlpha = 0.1f;
 
     public CustomPanel() {
-        this(new FlowLayout());
+        this(new HDFlowLayout());
     }
 
     public CustomPanel(LayoutManager layoutManager) {

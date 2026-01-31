@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog.base;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
@@ -69,7 +70,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         closeButton.addActionListener(e -> close());
         // 鼠标事件
         closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, f));
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
+        FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new HDDimension(40, 30));
         windowCtrlPanel.add(closeButton);

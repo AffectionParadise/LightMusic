@@ -4,6 +4,7 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractMiniDialog;
@@ -230,7 +231,7 @@ public class MiniDialog extends AbstractMiniDialog {
             f.lrcScrollAnimation = true;
         });
 
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(5));
         controlPanel.setLayout(fl);
 

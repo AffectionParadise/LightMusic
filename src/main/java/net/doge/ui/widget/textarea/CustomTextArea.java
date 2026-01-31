@@ -30,7 +30,7 @@ public class CustomTextArea extends JTextArea {
         setLineWrap(true);
         setFont(Fonts.NORMAL);
         setMaximumSize(new HDDimension(3000, 30));
-        setMargin(new HDInsets(4, 6, 4, 6));
+        setMargin(new HDInsets(2, 6, 2, 6));
 
         addMouseListener(new MouseAdapter() {
             @Override

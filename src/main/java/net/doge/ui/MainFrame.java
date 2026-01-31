@@ -67,6 +67,7 @@ import net.doge.exception.NoCopyrightException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.CustomButton;
@@ -2544,11 +2545,12 @@ public class MainFrame extends JFrame {
                 globalExecutor.execute(() -> {
                     int w = getWidth(), h = getHeight();
                     // 窗口圆角
+                    double arc = ScaleUtil.scale(10);
                     SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
-                            : new RoundRectangle2D.Double(0, 0, w, h, 10, 10)));
+                            : new RoundRectangle2D.Double(0, 0, w, h, arc, arc)));
                     // 歌词面板
                     Dimension d = new Dimension((int) (w * 0.6), h);
-                    Dimension d2 = new Dimension((int) (w * 0.6), SpectrumConstants.barMaxHeight);
+                    Dimension d2 = new Dimension((int) (w * 0.6), ScaleUtil.scale(SpectrumConstants.barMaxHeight));
                     lrcScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
@@ -2901,7 +2903,7 @@ public class MainFrame extends JFrame {
         maximizeButton.addMouseListener(new CustomButtonMouseListener(maximizeButton, THIS));
         closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, THIS));
 
-        FlowLayout fl = new FlowLayout(FlowLayout.RIGHT);
+        FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         fl.setHgap(ScaleUtil.scale(14));
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setBorder(new HDEmptyBorder(3, 0, 0, 0));
@@ -4510,7 +4512,7 @@ public class MainFrame extends JFrame {
                 else if (btn == MouseEvent.BUTTON3) {
                     if (!e.isPopupTrigger()) return;
                     int h = trayPopupMenu.getHeight();
-                    trayPopupMenu.setLocation(e.getX(), e.getY() - (h == 0 ? 89 : h));
+                    trayPopupMenu.setLocation(e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(89) : h));
                     trayPopupMenu.setInvoker(trayPopupMenu);
                     trayPopupMenu.setVisible(true);
                     searchButton.requestFocus();
@@ -4718,7 +4720,7 @@ public class MainFrame extends JFrame {
         playQueuePanel.add(playQueueLabel);
 
         // 标签布局
-        FlowLayout fl = new FlowLayout(FlowLayout.LEFT);
+        FlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
         personalMusicPanel.setLayout(fl);
         netMusicPanel.setLayout(fl);
         netPlaylistPanel.setLayout(fl);
@@ -8578,10 +8580,10 @@ public class MainFrame extends JFrame {
 //        netMusicSearchSuggestionInnerPanel1.setVisible(false);
         netMusicSearchSuggestionInnerPanel1.add(netMusicSearchSuggestionLabel);
         netMusicSearchSuggestionInnerPanel1.add(netMusicRefreshSearchSuggestionButton);
-        netMusicSearchSuggestionInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicSearchSuggestionInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicSearchSuggestionInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMusicSearchSuggestionInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netMusicSearchSuggestionInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicSearchSuggestionInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicSearchSuggestionInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
 //        netMusicSearchSuggestionInnerPanel2.addContainerListener(new ContainerAdapter() {
 //            @Override
@@ -8614,10 +8616,10 @@ public class MainFrame extends JFrame {
 //        netMusicHotSearchInnerPanel1.setVisible(false);
         netMusicHotSearchInnerPanel1.add(netMusicHotSearchLabel);
         netMusicHotSearchInnerPanel1.add(netMusicRefreshHotSearchButton);
-        netMusicHotSearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicHotSearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicHotSearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMusicHotSearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netMusicHotSearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicHotSearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicHotSearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
 //        netMusicHotSearchInnerPanel2.addContainerListener(new ContainerAdapter() {
 //            @Override
@@ -8650,10 +8652,10 @@ public class MainFrame extends JFrame {
         netMusicHistorySearchInnerPanel1.setVisible(false);
         netMusicHistorySearchInnerPanel1.add(netMusicHistorySearchLabel);
         netMusicHistorySearchInnerPanel1.add(netMusicClearHistorySearchButton);
-        netMusicHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMusicHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netMusicHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMusicHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMusicHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMusicHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -10626,10 +10628,10 @@ public class MainFrame extends JFrame {
         netPlaylistHistorySearchInnerPanel1.setVisible(false);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistHistorySearchLabel);
         netPlaylistHistorySearchInnerPanel1.add(netPlaylistClearHistorySearchButton);
-        netPlaylistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netPlaylistHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netPlaylistHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netPlaylistHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netPlaylistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netPlaylistHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netPlaylistHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netPlaylistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -11639,10 +11641,10 @@ public class MainFrame extends JFrame {
         netAlbumHistorySearchInnerPanel1.setVisible(false);
         netAlbumHistorySearchInnerPanel1.add(netAlbumHistorySearchLabel);
         netAlbumHistorySearchInnerPanel1.add(netAlbumClearHistorySearchButton);
-        netAlbumHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netAlbumHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netAlbumHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netAlbumHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netAlbumHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netAlbumHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netAlbumHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netAlbumHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -12888,10 +12890,10 @@ public class MainFrame extends JFrame {
         netArtistHistorySearchInnerPanel1.setVisible(false);
         netArtistHistorySearchInnerPanel1.add(netArtistHistorySearchLabel);
         netArtistHistorySearchInnerPanel1.add(netArtistClearHistorySearchButton);
-        netArtistHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netArtistHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netArtistHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netArtistHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netArtistHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netArtistHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netArtistHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netArtistHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -14046,10 +14048,10 @@ public class MainFrame extends JFrame {
         netRadioHistorySearchInnerPanel1.setVisible(false);
         netRadioHistorySearchInnerPanel1.add(netRadioHistorySearchLabel);
         netRadioHistorySearchInnerPanel1.add(netRadioClearHistorySearchButton);
-        netRadioHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netRadioHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netRadioHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netRadioHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netRadioHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netRadioHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netRadioHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netRadioHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -14818,10 +14820,10 @@ public class MainFrame extends JFrame {
         netMvHistorySearchInnerPanel1.setVisible(false);
         netMvHistorySearchInnerPanel1.add(netMvHistorySearchLabel);
         netMvHistorySearchInnerPanel1.add(netMvClearHistorySearchButton);
-        netMvHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMvHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMvHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMvHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netMvHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netMvHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netMvHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netMvHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -16635,10 +16637,10 @@ public class MainFrame extends JFrame {
         netUserHistorySearchInnerPanel1.setVisible(false);
         netUserHistorySearchInnerPanel1.add(netUserHistorySearchLabel);
         netUserHistorySearchInnerPanel1.add(netUserClearHistorySearchButton);
-        netUserHistorySearchInnerPanel1.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netUserHistorySearchInnerPanel1.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netUserHistorySearchInnerPanel1.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netUserHistorySearchInnerPanel1.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netUserHistorySearchInnerPanel2.setLayout(new FlowLayout(FlowLayout.LEFT));
+        netUserHistorySearchInnerPanel2.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
         netUserHistorySearchInnerPanel2.setBorder(new HDEmptyBorder(0, 20, 0, 20));
         netUserHistorySearchInnerPanel2.addContainerListener(new ContainerAdapter() {
             @Override
@@ -20812,7 +20814,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = playModePopupMenu.getHeight();
-                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? 195 : h));
+                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(195) : h));
             }
         });
         // 播放模式弹出菜单
@@ -20961,7 +20963,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? 342 : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(342) : h));
             }
         });
         // 音效按钮
@@ -21010,7 +21012,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = lyricTypePopupMenu.getHeight();
-                lyricTypePopupMenu.show(switchLrcTypeButton, e.getX(), e.getY() - (h == 0 ? 161 : h));
+                lyricTypePopupMenu.show(switchLrcTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(161) : h));
             }
         });
         // 歌词类型弹出菜单
@@ -21045,7 +21047,7 @@ public class MainFrame extends JFrame {
         lyricTypePopupMenu.add(tradChineseMenuItem);
 
         // 按钮水平隔开一段间距
-        FlowLayout fl = new FlowLayout();
+        FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
         controlPanel.setLayout(fl);
         controlPanel.setBorder(new HDEmptyBorder(2, 0, 0, 30));
@@ -21055,7 +21057,7 @@ public class MainFrame extends JFrame {
         controlPanel.add(nextButton);
         controlPanel.add(forwardButton);
         controlPanel.add(playModeButton);
-        fl = new FlowLayout();
+        fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
         volumePanel.setLayout(fl);
         volumePanel.add(muteButton);
@@ -21067,7 +21069,7 @@ public class MainFrame extends JFrame {
         controlPanel.add(soundEffectButton);
         controlPanel.add(goToPlayQueueButton);
 
-        fl = new FlowLayout();
+        fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
         changePanePanel.setLayout(fl);
         changePanePanel.setBorder(new HDEmptyBorder(0, 20, 0, 0));
@@ -21078,7 +21080,7 @@ public class MainFrame extends JFrame {
         changePanePanel.add(commentButton);
         changePanePanel.add(sheetButton);
 
-        fl = new FlowLayout();
+        fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
         controlLrcPanel.setLayout(fl);
         controlLrcPanel.setBorder(new HDEmptyBorder(16, 0, 0, 0));

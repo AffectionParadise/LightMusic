@@ -8,7 +8,6 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.core.task.Task;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -142,7 +141,7 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         Dimension ps = nameLabel.getPreferredSize();
         Dimension ps2 = sizeLabel.getPreferredSize();
         int ph = Math.max(ps.height, ps2.height);
-        Dimension d = new VerticalHDDimension(lw, Math.max(ph + 10, 46));
+        Dimension d = new Dimension(lw, Math.max(ph + ScaleUtil.scale(10), ScaleUtil.scale(46)));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 

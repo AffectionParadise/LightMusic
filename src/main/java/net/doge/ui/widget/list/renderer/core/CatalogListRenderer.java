@@ -3,7 +3,6 @@ package net.doge.ui.widget.list.renderer.core;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -60,7 +59,7 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
         nameLabel.setText(name);
 
         Dimension ps = nameLabel.getPreferredSize();
-        Dimension d = new VerticalHDDimension(lw, Math.max(ps.height + 16, 46));
+        Dimension d = new Dimension(lw, Math.max(ps.height + ScaleUtil.scale(16), ScaleUtil.scale(46)));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 

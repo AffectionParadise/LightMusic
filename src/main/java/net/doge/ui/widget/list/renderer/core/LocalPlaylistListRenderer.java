@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.service.LocalPlaylist;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -63,7 +62,7 @@ public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
         nameLabel.setText(name);
 
         Dimension ps = nameLabel.getPreferredSize();
-        Dimension d = new VerticalHDDimension(lw, Math.max(ps.height + 16, 46));
+        Dimension d = new Dimension(lw, Math.max(ps.height + ScaleUtil.scale(16), ScaleUtil.scale(46)));
         outerPanel.setPreferredSize(d);
         list.setFixedCellWidth(lw);
 

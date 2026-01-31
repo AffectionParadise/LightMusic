@@ -10,7 +10,6 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.ui.core.dimension.VerticalHDDimension;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.DurationUtil;
@@ -150,7 +149,7 @@ public class MusicListRenderer extends DefaultListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new VerticalHDDimension(lw, Math.max(ph + 10, 46));
+        Dimension d = new Dimension(lw, Math.max(ph + ScaleUtil.scale(10), ScaleUtil.scale(46)));
         outerPanel.setPreferredSize(d);
         // 设置 list 元素宽度防止 outerPanel 设置最佳大小时不改变大小！
         list.setFixedCellWidth(lw);

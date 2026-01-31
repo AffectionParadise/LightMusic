@@ -10,6 +10,7 @@ import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -214,7 +215,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
-            CustomPanel panel = new CustomPanel(new FlowLayout(FlowLayout.LEFT));
+            CustomPanel panel = new CustomPanel(new HDFlowLayout(HDFlowLayout.LEFT));
             panel.setBorder(eb);
             // 添加标签
             labels[i].setForeground(textColor);
