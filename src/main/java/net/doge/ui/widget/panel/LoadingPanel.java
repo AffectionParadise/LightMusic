@@ -45,13 +45,13 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         // 显示和隐藏动画
         showTimer = new Timer(3, e -> {
             // 渐现渐隐效果
-            float alpha = label.getAlpha();
+            float alpha = label.getOpacity();
             if (closing) {
                 bgAlpha = Math.max(0, bgAlpha - 0.02f);
-                label.setInstantAlpha(Math.max(0, alpha - 0.028f));
+                label.setOpacity(Math.max(0, alpha - 0.028f));
             } else {
                 bgAlpha = Math.min(0.7f, bgAlpha + 0.02f);
-                label.setInstantAlpha(Math.min(1f, alpha + 0.028f));
+                label.setOpacity(Math.min(1f, alpha + 0.028f));
             }
             repaint();
             if (!closing && bgAlpha >= 0.7f) showTimer.stop();
@@ -73,7 +73,7 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
     public void start() {
         if (isShowing()) return;
 //        if (icon != null) icon.setAngle(0);
-        label.setInstantAlpha(0);
+        label.setOpacity(0);
         setVisible(true);
         closing = false;
         showTimer.start();

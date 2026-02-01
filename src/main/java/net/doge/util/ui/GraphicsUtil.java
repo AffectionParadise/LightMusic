@@ -36,18 +36,6 @@ public class GraphicsUtil {
     }
 
     /**
-     * 设置画笔不透明度
-     *
-     * @param g
-     * @return
-     */
-    public static Graphics2D srcOver(Graphics g, float alpha) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-        return g2d;
-    }
-
-    /**
      * 重置画笔不透明度
      *
      * @param g
@@ -56,6 +44,25 @@ public class GraphicsUtil {
     public static Graphics2D srcOver(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setComposite(AlphaComposite.SrcOver);
+        return g2d;
+    }
+
+    /**
+     * 设置画笔不透明度
+     *
+     * @param g
+     * @return
+     */
+    public static Graphics2D srcOver(Graphics g, float alpha) {
+        Graphics2D g2d = (Graphics2D) g;
+        // 父容器传过来的画笔可能带有冲突的参数，因此需要先混合！
+        float baseAlpha = 1f;
+        Composite c = g2d.getComposite();
+        if (c instanceof AlphaComposite) {
+            AlphaComposite ac = (AlphaComposite) g2d.getComposite();
+            if (ac.getRule() == AlphaComposite.SRC_OVER) baseAlpha = ac.getAlpha();
+        }
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, baseAlpha * alpha));
         return g2d;
     }
 }

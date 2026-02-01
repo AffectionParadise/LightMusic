@@ -65,9 +65,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
         textLabel.setHorizontalAlignment(LEFT);
         textLabel.setVerticalAlignment(TOP);
         textLabel.setIconTextGap(ScaleUtil.scale(15));
-        textLabel.setInstantAlpha(0.8f);
-
-        outerPanel.setInstantDrawBg(true);
+        textLabel.setOpacity(0.8f);
     }
 
     @Override
@@ -117,7 +115,7 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 //        likeLabel.setHorizontalAlignment(LEFT);
 //
 //        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-//        Component vs = Box.createVerticalStrut(3);
+//        Component vs = CustomBox.createVerticalStrut(3);
 //        centerPanel.add(nameLabel);
 //        centerPanel.add(vs);
 //        centerPanel.add(timeLabel);

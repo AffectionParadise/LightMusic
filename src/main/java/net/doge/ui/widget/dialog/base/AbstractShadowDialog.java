@@ -1,9 +1,11 @@
 package net.doge.ui.widget.dialog.base;
 
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -119,9 +121,11 @@ public abstract class AbstractShadowDialog extends JDialog {
             }
 
             // 画边框阴影
+            int step = TOP_OPACITY / pixels;
             for (int i = 0; i < pixels; i++) {
-                g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-                g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), 10, 10);
+                g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
+                int arc = ScaleUtil.scale(10);
+                g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
             }
         }
     }

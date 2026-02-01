@@ -72,9 +72,10 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     @Override
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {
+        // 画背景
         Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(f.currUIStyle.getTextColor());
-        GraphicsUtil.srcOver(g2d, comboBox.getAlpha());
+        GraphicsUtil.srcOver(g2d, comboBox.getBgAlpha());
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
         GraphicsUtil.srcOver(g2d);
@@ -88,14 +89,14 @@ public class ComboBoxUI extends BasicComboBoxUI {
         arrowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                comboBox.setEntered(true);
+                comboBox.transitionDrawBg(true);
                 comboBox.showPopup();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 if (comboBox.getBounds().contains(e.getPoint())) return;
-                comboBox.setEntered(false);
+                comboBox.transitionDrawBg(false);
             }
         });
         return arrowButton;

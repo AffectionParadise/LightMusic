@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.service.NetSheetInfo;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -64,33 +65,31 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
         pageSizeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        difficultyLabel.setInstantAlpha(alpha);
-        musicKeyLabel.setInstantAlpha(alpha);
-        playVersionLabel.setInstantAlpha(alpha);
-        chordNameLabel.setInstantAlpha(alpha);
-        bpmLabel.setInstantAlpha(alpha);
-        pageSizeLabel.setInstantAlpha(alpha);
+        difficultyLabel.setOpacity(alpha);
+        musicKeyLabel.setOpacity(alpha);
+        playVersionLabel.setOpacity(alpha);
+        chordNameLabel.setOpacity(alpha);
+        bpmLabel.setOpacity(alpha);
+        pageSizeLabel.setOpacity(alpha);
 
         int sh = ScaleUtil.scale(10);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(CustomBox.createVerticalGlue());
         outerPanel.add(difficultyLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(musicKeyLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(playVersionLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(chordNameLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(bpmLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(pageSizeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        outerPanel.setInstantDrawBg(true);
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
     }
 
     @Override

@@ -6,7 +6,7 @@ import net.doge.ui.widget.button.tooltip.CustomToolTip;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class BaseButton extends JButton {
+public class BaseButton extends JButton {
     public BaseButton() {
         this(null, null);
     }

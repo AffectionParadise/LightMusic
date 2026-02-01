@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.service.NetArtistInfo;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -58,24 +59,22 @@ public class NetArtistListRenderer extends DefaultListCellRenderer {
         mvNumLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        songNumLabel.setInstantAlpha(alpha);
-        albumNumLabel.setInstantAlpha(alpha);
-        mvNumLabel.setInstantAlpha(alpha);
+        songNumLabel.setOpacity(alpha);
+        albumNumLabel.setOpacity(alpha);
+        mvNumLabel.setOpacity(alpha);
 
         int sh = ScaleUtil.scale(10);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(CustomBox.createVerticalGlue());
         outerPanel.add(songNumLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(albumNumLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(mvNumLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        outerPanel.setInstantDrawBg(true);
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
     }
 
     @Override

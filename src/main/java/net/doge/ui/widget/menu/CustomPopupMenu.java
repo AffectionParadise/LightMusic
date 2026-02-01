@@ -2,6 +2,7 @@ package net.doge.ui.widget.menu;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -56,9 +57,10 @@ public class CustomPopupMenu extends JPopupMenu {
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, arc, arc);
 
         // 画边框阴影
+        int step = TOP_OPACITY / pixels;
         for (int i = 0; i < pixels; i++) {
-            g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), arc, arc);
+            g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
+            g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
         }
     }
 
@@ -69,6 +71,6 @@ public class CustomPopupMenu extends JPopupMenu {
 
     @Override
     public void addSeparator() {
-        add(new CustomSeparator(f));
+        add(new CustomSeparator());
     }
 }

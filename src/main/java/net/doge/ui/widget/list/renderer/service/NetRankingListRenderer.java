@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.service.NetRankingInfo;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -59,24 +60,22 @@ public class NetRankingListRenderer extends DefaultListCellRenderer {
         updateTimeLabel.setFont(tinyFont);
 
         float alpha = 0.5f;
-        playCountLabel.setInstantAlpha(alpha);
-        updateFreLabel.setInstantAlpha(alpha);
-        updateTimeLabel.setInstantAlpha(alpha);
+        playCountLabel.setOpacity(alpha);
+        updateFreLabel.setOpacity(alpha);
+        updateTimeLabel.setOpacity(alpha);
 
         int sh = ScaleUtil.scale(10);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(CustomBox.createVerticalGlue());
         outerPanel.add(playCountLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(updateFreLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(updateTimeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        outerPanel.setInstantDrawBg(true);
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
     }
 
     @Override

@@ -18,9 +18,10 @@ import java.awt.event.MouseEvent;
  */
 public class CustomMenuItem extends JMenuItem {
     private boolean drawBg;
+    private boolean drawBgIncreasing;
     private Timer drawBgTimer;
-    private float alpha;
-    private final float destAlpha = 0.1f;
+    private float bgAlpha;
+    private final float destBgAlpha = 0.1f;
     private static final Border BORDER = new HDEmptyBorder(6, 0, 6, -10);
 
     public CustomMenuItem() {
@@ -44,47 +45,52 @@ public class CustomMenuItem extends JMenuItem {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                setDrawBg(true);
+                transitionDrawBg(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                setDrawBg(false);
+                transitionDrawBg(false);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                setDrawBg(false);
+                transitionDrawBg(false);
             }
         });
 
-        addMouseWheelListener(e -> setDrawBg(false));
+        addMouseWheelListener(e -> transitionDrawBg(false));
 
         drawBgTimer = new Timer(2, e -> {
-            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else alpha = Math.max(0, alpha - 0.005f);
-            if (alpha <= 0 || alpha >= destAlpha) drawBgTimer.stop();
+            if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+            else bgAlpha = Math.max(0, bgAlpha - 0.005f);
+            if (bgAlpha >= destBgAlpha) drawBgTimer.stop();
+            else if (bgAlpha <= 0) {
+                drawBg = false;
+                drawBgTimer.stop();
+            }
             repaint();
         });
     }
 
-    private void setDrawBg(boolean drawBg) {
-        if (this.drawBg == drawBg) return;
-        this.drawBg = drawBg;
+    public void transitionDrawBg(boolean drawBgIncreasing) {
+        this.drawBg = true;
+        this.drawBgIncreasing = drawBgIncreasing;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
-        g2d.setColor(getForeground());
-        GraphicsUtil.srcOver(g2d, alpha);
-        int arc = ScaleUtil.scale(10);
-        g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
-        GraphicsUtil.srcOver(g2d);
-
+        if (drawBg) {
+            Graphics2D g2d = GraphicsUtil.setup(g);
+            g2d.setColor(getForeground());
+            GraphicsUtil.srcOver(g2d, bgAlpha);
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
+            GraphicsUtil.srcOver(g2d);
+        }
         super.paintComponent(g);
     }
 }

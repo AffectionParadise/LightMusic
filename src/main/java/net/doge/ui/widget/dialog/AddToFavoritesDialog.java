@@ -10,6 +10,7 @@ import net.doge.entity.service.base.MusicResource;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
@@ -51,9 +52,9 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
     private DialogButton addButton;
 
     // 底部盒子
-    private Box bottomBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox bottomBox = new CustomBox(BoxLayout.X_AXIS);
     // 右部按钮盒子
-    private Box rightBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox rightBox = new CustomBox(BoxLayout.Y_AXIS);
 
     private List<LocalPlaylist> playlists;
     private List<MusicResource> resources;
@@ -173,13 +174,13 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
         Dimension area = new HDDimension(1, 10);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(CustomBox.createVerticalGlue());
         rightBox.add(newButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(allSelectButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(nonSelectButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(CustomBox.createVerticalGlue());
         // 添加列表和右部按钮整体
         LocalPlaylistListRenderer r = new LocalPlaylistListRenderer();
         r.setForeColor(foreColor);

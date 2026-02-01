@@ -26,13 +26,13 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        ui.setDrawMask(true);
+        ui.transitionDrawMask(true);
         b.setUI(ui);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        ui.setDrawMask(false);
+        ui.transitionDrawMask(false);
         b.setUI(ui);
     }
 

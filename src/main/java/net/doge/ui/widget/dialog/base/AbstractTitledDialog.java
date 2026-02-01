@@ -5,6 +5,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
@@ -76,7 +77,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         windowCtrlPanel.add(closeButton);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(CustomBox.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
         topPanel.setBorder(new HDEmptyBorder(5, 15, 0, 15));
         globalPanel.add(topPanel, BorderLayout.NORTH);

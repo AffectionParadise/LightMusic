@@ -11,6 +11,7 @@ import net.doge.entity.service.MediaInfo;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
@@ -345,9 +346,9 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
             CustomPanel outer = new CustomPanel();
             outer.setLayout(new BoxLayout(outer, BoxLayout.Y_AXIS));
-            outer.add(Box.createVerticalGlue());
+            outer.add(CustomBox.createVerticalGlue());
             outer.add(panel);
-            outer.add(Box.createVerticalGlue());
+            outer.add(CustomBox.createVerticalGlue());
 
             centerPanel.add(outer);
         }

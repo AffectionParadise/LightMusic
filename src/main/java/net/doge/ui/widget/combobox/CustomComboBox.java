@@ -12,12 +12,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class CustomComboBox<T> extends JComboBox<T> {
-    private boolean entered;
+    private boolean drawBgIncreasing;
     protected Timer drawBgTimer;
-    protected final float startAlpha = 0.15f;
-    protected final float destAlpha = 0.3f;
+    protected final float startBgAlpha = 0.15f;
+    protected final float destBgAlpha = 0.3f;
     @Getter
-    protected float alpha = startAlpha;
+    protected float bgAlpha = startBgAlpha;
 
     public CustomComboBox() {
         setOpaque(false);
@@ -30,13 +30,13 @@ public class CustomComboBox<T> extends JComboBox<T> {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                setEntered(true);
+                transitionDrawBg(true);
                 showPopup();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                setEntered(false);
+                transitionDrawBg(false);
                 Point p = e.getPoint();
                 if (getBounds().contains(p) || getPopup().getBounds().contains(p) || getArrowButton().getBounds().contains(p))
                     return;
@@ -45,16 +45,15 @@ public class CustomComboBox<T> extends JComboBox<T> {
         });
 
         drawBgTimer = new Timer(2, e -> {
-            if (entered) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else alpha = Math.max(startAlpha, alpha - 0.005f);
-            if (alpha <= startAlpha || alpha >= destAlpha) drawBgTimer.stop();
+            if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+            else bgAlpha = Math.max(startBgAlpha, bgAlpha - 0.005f);
+            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) drawBgTimer.stop();
             repaint();
         });
     }
 
-    public void setEntered(boolean entered) {
-        if (this.entered == entered) return;
-        this.entered = entered;
+    public void transitionDrawBg(boolean drawBgIncreasing) {
+        this.drawBgIncreasing = drawBgIncreasing;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
     }

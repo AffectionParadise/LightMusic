@@ -40,7 +40,6 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.MvCompSourceType;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.constant.core.ui.pane.MusicPane;
-import net.doge.constant.core.ui.pane.SlideFrom;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.constant.core.ui.style.PreDefinedUIStyle;
 import net.doge.constant.core.ui.style.UIStyleConstants;
@@ -68,7 +67,9 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
+import net.doge.ui.widget.base.OpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.DialogButton;
@@ -2190,65 +2191,65 @@ public class MainFrame extends JFrame {
     private CustomPanel controlLrcPanel = new CustomPanel();
 
     // 顶部盒子
-    private Box topBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox topBox = new CustomBox(BoxLayout.X_AXIS);
     // 左部工具条和歌曲列表盒子
-    private Box leftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netPlaylistLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netAlbumLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netArtistLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netRadioLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netMvLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netRankingLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box netUserLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box recommendLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box collectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box downloadLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box playQueueLeftBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox leftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netPlaylistLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netAlbumLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netArtistLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netRadioLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netMvLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netRankingLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netUserLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox recommendLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox collectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox downloadLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox playQueueLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左部收藏列表盒子
-    private Box musicCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box playlistCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box albumCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box artistCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box radioCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box mvCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box rankingCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
-    private Box userCollectionLeftBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox musicCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox playlistCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox albumCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox artistCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox radioCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox mvCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox rankingCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox userCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     // 底部进度条和控制面板盒子
-    private Box bottomBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox bottomBox = new CustomBox(BoxLayout.Y_AXIS);
     // 进度条水平盒子
-    private Box progressBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox progressBox = new CustomBox(BoxLayout.X_AXIS);
     // 控制面板水平盒子
-    private Box controlBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox controlBox = new CustomBox(BoxLayout.X_AXIS);
     // 歌曲信息和歌词盒子
-    private Box infoAndLrcBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox infoAndLrcBox = new CustomBox(BoxLayout.X_AXIS);
     // 歌词和频谱盒子
-    private Box lrcAndSpecBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox lrcAndSpecBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左边专辑和标签盒子
-    private Box leftInfoBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox leftInfoBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左下标签纵向排列盒子
-    private Box leftBottomBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox leftBottomBox = new CustomBox(BoxLayout.Y_AXIS);
     // 列表盒子(除搜索工具框，下面所有部分)
-    private Box playlistListBox = new Box(BoxLayout.X_AXIS);
-    private Box albumListBox = new Box(BoxLayout.X_AXIS);
-    private Box artistListBox = new Box(BoxLayout.X_AXIS);
-    private Box radioListBox = new Box(BoxLayout.X_AXIS);
-    private Box rankingListBox = new Box(BoxLayout.X_AXIS);
-    private Box userListBox = new Box(BoxLayout.X_AXIS);
-    private Box recommendItemListBox = new Box(BoxLayout.X_AXIS);
-    private Box collectionItemListBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox playlistListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox albumListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox artistListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox radioListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox rankingListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox userListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox recommendItemListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox collectionItemListBox = new CustomBox(BoxLayout.X_AXIS);
     // 列表和数量标签盒子
-    private Box playlistListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box albumListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box artistListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box radioListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box rankingListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box userListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box recommendItemListCountBox = new Box(BoxLayout.Y_AXIS);
-    private Box collectionItemListCountBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox playlistListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox albumListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox artistListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox radioListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox rankingListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox userListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox recommendItemListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox collectionItemListCountBox = new CustomBox(BoxLayout.Y_AXIS);
 
     // 评论盒子
-    private Box netCommentBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox netCommentBox = new CustomBox(BoxLayout.Y_AXIS);
     // 评论列表
     private CustomList<NetCommentInfo> netCommentList = new CustomList<>();
     private CustomScrollPane netCommentScrollPane = new CustomScrollPane(netCommentList);
@@ -2295,7 +2296,7 @@ public class MainFrame extends JFrame {
     private NetResource currCommentResource;
 
     // 乐谱盒子
-    private Box netSheetBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox netSheetBox = new CustomBox(BoxLayout.Y_AXIS);
     // 乐谱列表
     private CustomList<NetSheetInfo> netSheetList = new CustomList<>();
     private CustomScrollPane netSheetScrollPane = new CustomScrollPane(netSheetList);
@@ -2429,14 +2430,23 @@ public class MainFrame extends JFrame {
     private CustomMenuItem openMainFrameMenuItem = new CustomMenuItem(I18n.getText("openMainFrame"));
     private CustomMenuItem exitMenuItem = new CustomMenuItem(I18n.getText("exit") + TITLE);
 
-    // 频谱/歌词/背景图切换/滚动条流畅动画 Timer
+    // 频谱动画
     private Timer spectrumTimer;
+    // 歌词动画
     private Timer lrcTimer;
     private Timer lrcDelayScrollTimer;
     public boolean lrcScrollAnimation;
+    // 滚动条动画
     public Timer swActionTimer;
     private boolean lrcScrollWaiting;
+    // 背景图切换动画
     private Timer globalPanelTimer;
+    // 切换面板动画
+    private boolean changePaneFadeOut;
+    private Component srcFadingComp;
+    private Component targetFadingComp;
+    private Timer changePaneFadingTimer;
+    // 搜索建议动画
     private Timer searchSuggestionTimer;
     private boolean searchSuggestionProcessing;
 
@@ -2779,7 +2789,7 @@ public class MainFrame extends JFrame {
         titleLabel.setText(TITLE);
         titleLabel.setIcon(titleIcon);
         titleLabel.setIconTextGap(ScaleUtil.scale(15));
-        titleLabel.setInstantAlpha(0.5f);
+        titleLabel.setOpacity(0.5f);
         titleLabel.setHorizontalTextPosition(SwingConstants.RIGHT);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.addMouseListener(new MouseAdapter() {
@@ -2823,7 +2833,7 @@ public class MainFrame extends JFrame {
             // 关闭频谱
             closeSpectrum();
             dispose();
-            miniButton.setDrawBg(false);
+            miniButton.transitionDrawBg(false);
             miniDialog = new MiniDialog(THIS);
             miniDialog.showDialog();
             miniButton.setIcon(ImageUtil.dye(miniIcon, currUIStyle.getIconColor()));
@@ -2918,7 +2928,7 @@ public class MainFrame extends JFrame {
         windowCtrlPanel.add(closeButton);
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.add(titleLabel);
-        topPanel.add(Box.createHorizontalGlue());
+        topPanel.add(CustomBox.createHorizontalGlue());
         topPanel.add(windowCtrlPanel);
         topBox.add(topPanel);
         topBox.setBorder(new HDEmptyBorder(10, 20, 10, 10));
@@ -4815,7 +4825,7 @@ public class MainFrame extends JFrame {
                         musicCollectionLeftBox.add(musicScrollPane);
                     }
                 } else {
-                    Box box = null;
+                    CustomBox box = null;
                     if (index == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (index == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
                     else if (index == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
@@ -5507,7 +5517,7 @@ public class MainFrame extends JFrame {
         collectionPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
         collectionBackwardButton.addActionListener(e -> {
-            collectionBackwardButton.setDrawBg(false);
+            collectionBackwardButton.transitionDrawBg(false);
             // 返回到歌单/专辑/歌手/电台
             // 先清空在线音乐列表
             ((DefaultListModel) netMusicList.getModel()).clear();
@@ -5620,11 +5630,11 @@ public class MainFrame extends JFrame {
         collectionPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        collectionCountLabel.setInstantAlpha(0.5f);
+        collectionCountLabel.setOpacity(0.5f);
 
         // 收藏歌单/专辑/歌手/电台/榜单中歌曲的工具栏，暂时不放入
         musicCollectionToolBar.add(collectionBackwardButton);
-        musicCollectionToolBar.add(Box.createHorizontalGlue());
+        musicCollectionToolBar.add(CustomBox.createHorizontalGlue());
 
         // 数量标签
         collectionCountPanel.add(collectionRecordTypeComboBox);
@@ -6360,17 +6370,17 @@ public class MainFrame extends JFrame {
 
         // 透明度
         float alpha = 0.5f;
-        artistLabel.setAlpha(alpha);
-        albumLabel.setAlpha(alpha);
+        artistLabel.transitionOpacity(alpha);
+        albumLabel.transitionOpacity(alpha);
         artistLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                artistLabel.setAlpha(1f);
+                artistLabel.transitionOpacity(1f);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                artistLabel.setAlpha(alpha);
+                artistLabel.transitionOpacity(alpha);
             }
 
             @Override
@@ -6378,7 +6388,7 @@ public class MainFrame extends JFrame {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     leftInfoPopupMenu.show(artistLabel, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
-                    artistLabel.setAlpha(alpha);
+                    artistLabel.transitionOpacity(alpha);
                     netMusicAuthorMenuItem.doClick();
                     changePaneButton.doClick();
                 }
@@ -6387,12 +6397,12 @@ public class MainFrame extends JFrame {
         albumLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                albumLabel.setAlpha(1f);
+                albumLabel.transitionOpacity(1f);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                albumLabel.setAlpha(alpha);
+                albumLabel.transitionOpacity(alpha);
             }
 
             @Override
@@ -6400,7 +6410,7 @@ public class MainFrame extends JFrame {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     leftInfoPopupMenu.show(albumLabel, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
-                    albumLabel.setAlpha(alpha);
+                    albumLabel.transitionOpacity(alpha);
                     netMusicAlbumMenuItem.doClick();
                     changePaneButton.doClick();
                 }
@@ -6408,19 +6418,19 @@ public class MainFrame extends JFrame {
         });
 
         // 添加左下的标签
-        leftBottomBox.add(Box.createVerticalGlue());
+        leftBottomBox.add(CustomBox.createVerticalGlue());
         leftBottomBox.add(songNameLabel);
-        leftBottomBox.add(Box.createVerticalGlue());
+        leftBottomBox.add(CustomBox.createVerticalGlue());
         leftBottomBox.add(artistLabel);
-        leftBottomBox.add(Box.createVerticalGlue());
+        leftBottomBox.add(CustomBox.createVerticalGlue());
         leftBottomBox.add(albumLabel);
-        leftBottomBox.add(Box.createVerticalGlue());
+        leftBottomBox.add(CustomBox.createVerticalGlue());
         // 专辑图片和下边所有标签整体
-        leftInfoBox.add(Box.createVerticalGlue());
+        leftInfoBox.add(CustomBox.createVerticalGlue());
         leftInfoBox.add(albumImageLabel);
-        leftInfoBox.add(Box.createVerticalGlue());
+        leftInfoBox.add(CustomBox.createVerticalGlue());
         leftInfoBox.add(leftBottomBox);
-        leftInfoBox.add(Box.createVerticalGlue());
+        leftInfoBox.add(CustomBox.createVerticalGlue());
         leftInfoBox.setBorder(new HDEmptyBorder(0, 30, 0, 0));
         infoAndLrcBox.add(leftInfoBox);
 
@@ -6503,7 +6513,7 @@ public class MainFrame extends JFrame {
             leftBox.remove(musicScrollPane);
 
             int index = collectionTabbedPane.getSelectedIndex();
-            Box box = null;
+            CustomBox box = null;
             DefaultListModel model = null;
             if (index == CollectionTabIndex.MUSIC) {
                 box = musicCollectionLeftBox;
@@ -6610,7 +6620,7 @@ public class MainFrame extends JFrame {
         // 标签左间距
         countLabel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
         // 透明度
-        countLabel.setInstantAlpha(0.5f);
+        countLabel.setOpacity(0.5f);
 
         // 下拉框事件
         localPlaylistComboBox.addItemListener(e -> {
@@ -7149,7 +7159,7 @@ public class MainFrame extends JFrame {
         musicToolBar.add(clearInputToolButton);
         musicToolBar.add(countLabel);
         // 加胶水让工具栏左对齐
-        musicToolBar.add(Box.createHorizontalGlue());
+        musicToolBar.add(CustomBox.createHorizontalGlue());
         leftBox.add(musicToolBar);
     }
 
@@ -7197,7 +7207,7 @@ public class MainFrame extends JFrame {
                     countLabel.setText(String.format(TOTAL_MSG, size));
                 }
 
-                Box box = null;
+                CustomBox box = null;
                 if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                 else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
                 else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
@@ -7249,7 +7259,7 @@ public class MainFrame extends JFrame {
                     countLabel.setText(String.format(TOTAL_MSG, size));
                 }
                 if (size == 0) {
-                    Box box = null;
+                    CustomBox box = null;
                     if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
@@ -7525,11 +7535,11 @@ public class MainFrame extends JFrame {
         musicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
-        musicSourceHeaderLabel.setInstantAlpha(alpha);
-        musicNameHeaderLabel.setInstantAlpha(alpha);
-        musicArtistHeaderLabel.setInstantAlpha(alpha);
-        musicAlbumHeaderLabel.setInstantAlpha(alpha);
-        musicDurationHeaderLabel.setInstantAlpha(alpha);
+        musicSourceHeaderLabel.setOpacity(alpha);
+        musicNameHeaderLabel.setOpacity(alpha);
+        musicArtistHeaderLabel.setOpacity(alpha);
+        musicAlbumHeaderLabel.setOpacity(alpha);
+        musicDurationHeaderLabel.setOpacity(alpha);
 
         Font tf = Fonts.NORMAL_TINY;
         musicSourceHeaderLabel.setFont(tf);
@@ -7847,7 +7857,7 @@ public class MainFrame extends JFrame {
         netMusicEndPageButton.setToolTipText(END_PAGE_TIP);
 
         // 透明度
-        netMusicCountLabel.setInstantAlpha(0.5f);
+        netMusicCountLabel.setOpacity(0.5f);
 
         // 回到关键词面板起始不可用
         netMusicBackwardButton.setEnabled(false);
@@ -8032,9 +8042,9 @@ public class MainFrame extends JFrame {
                     netMusicTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("similarTrackSuffix")));
                     netMusicToolBar.removeAll();
                     netMusicToolBar.add(netMusicBackwardButton);
-                    netMusicToolBar.add(Box.createHorizontalGlue());
+                    netMusicToolBar.add(CustomBox.createHorizontalGlue());
                     netMusicToolBar.add(netMusicTitleLabel);
-                    netMusicToolBar.add(Box.createHorizontalGlue());
+                    netMusicToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
                     netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
@@ -8099,9 +8109,9 @@ public class MainFrame extends JFrame {
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -8175,9 +8185,9 @@ public class MainFrame extends JFrame {
                         netUserTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         netUserToolBar.add(netUserTitleLabel);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -8224,9 +8234,9 @@ public class MainFrame extends JFrame {
                         netArtistTitleLabel.setText(HtmlUtil.textToHtml(currArtistMusicInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         netArtistToolBar.add(netArtistTitleLabel);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -8302,9 +8312,9 @@ public class MainFrame extends JFrame {
                         netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("radioSuffix")));
                         netRadioToolBar.removeAll();
                         netRadioToolBar.add(netRadioBackwardButton);
-                        netRadioToolBar.add(Box.createHorizontalGlue());
+                        netRadioToolBar.add(CustomBox.createHorizontalGlue());
                         netRadioToolBar.add(netRadioTitleLabel);
-                        netRadioToolBar.add(Box.createHorizontalGlue());
+                        netRadioToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                         netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -8352,9 +8362,9 @@ public class MainFrame extends JFrame {
                         netAlbumTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("albumSuffix")));
                         netAlbumToolBar.removeAll();
                         netAlbumToolBar.add(netAlbumBackwardButton);
-                        netAlbumToolBar.add(Box.createHorizontalGlue());
+                        netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                         netAlbumToolBar.add(netAlbumTitleLabel);
-                        netAlbumToolBar.add(Box.createHorizontalGlue());
+                        netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                         netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -8425,9 +8435,9 @@ public class MainFrame extends JFrame {
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("recRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -8497,9 +8507,9 @@ public class MainFrame extends JFrame {
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(musicInfo.toSimpleString() + I18n.getText("relatedMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     netMvToolBar.add(netMvTitleLabel);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
@@ -8701,11 +8711,11 @@ public class MainFrame extends JFrame {
         netMusicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
-        netMusicSourceHeaderLabel.setInstantAlpha(alpha);
-        netMusicNameHeaderLabel.setInstantAlpha(alpha);
-        netMusicArtistHeaderLabel.setInstantAlpha(alpha);
-        netMusicAlbumHeaderLabel.setInstantAlpha(alpha);
-        netMusicDurationHeaderLabel.setInstantAlpha(alpha);
+        netMusicSourceHeaderLabel.setOpacity(alpha);
+        netMusicNameHeaderLabel.setOpacity(alpha);
+        netMusicArtistHeaderLabel.setOpacity(alpha);
+        netMusicAlbumHeaderLabel.setOpacity(alpha);
+        netMusicDurationHeaderLabel.setOpacity(alpha);
 
         Font tf = Fonts.NORMAL_TINY;
         netMusicSourceHeaderLabel.setFont(tf);
@@ -8780,20 +8790,20 @@ public class MainFrame extends JFrame {
 
         // 透明度
         float alpha = 0.5f;
-        playlistTagLabel.setInstantAlpha(alpha);
-        playlistDescriptionLabel.setInstantAlpha(alpha);
-        artistTagLabel.setInstantAlpha(alpha);
-        artistDescriptionLabel.setInstantAlpha(alpha);
-        albumDescriptionLabel.setInstantAlpha(alpha);
-        radioTagLabel.setInstantAlpha(alpha);
-        radioDescriptionLabel.setInstantAlpha(alpha);
-        rankingDescriptionLabel.setInstantAlpha(alpha);
-        userTagLabel.setInstantAlpha(alpha);
-        userDescriptionLabel.setInstantAlpha(alpha);
-        recommendItemTagLabel.setInstantAlpha(alpha);
-        recommendItemDescriptionLabel.setInstantAlpha(alpha);
-        collectionItemTagLabel.setInstantAlpha(alpha);
-        collectionItemDescriptionLabel.setInstantAlpha(alpha);
+        playlistTagLabel.setOpacity(alpha);
+        playlistDescriptionLabel.setOpacity(alpha);
+        artistTagLabel.setOpacity(alpha);
+        artistDescriptionLabel.setOpacity(alpha);
+        albumDescriptionLabel.setOpacity(alpha);
+        radioTagLabel.setOpacity(alpha);
+        radioDescriptionLabel.setOpacity(alpha);
+        rankingDescriptionLabel.setOpacity(alpha);
+        userTagLabel.setOpacity(alpha);
+        userDescriptionLabel.setOpacity(alpha);
+        recommendItemTagLabel.setOpacity(alpha);
+        recommendItemDescriptionLabel.setOpacity(alpha);
+        collectionItemTagLabel.setOpacity(alpha);
+        collectionItemDescriptionLabel.setOpacity(alpha);
 
         // 字体
         Font font = Fonts.NORMAL_TITLE2;
@@ -9813,9 +9823,9 @@ public class MainFrame extends JFrame {
                     netPlaylistToolBar.add(netPlaylistSearchButton);
                     netPlaylistSourceComboBox.setVisible(true);
                 } else {
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                 }
                 // 更新歌单歌曲数量显示
 //                netCurrPlaylistLabel.setText("");
@@ -10098,7 +10108,7 @@ public class MainFrame extends JFrame {
         netPlaylistPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netPlaylistCountLabel.setInstantAlpha(0.5f);
+        netPlaylistCountLabel.setOpacity(0.5f);
 
         netPlaylistToolBar.add(netPlaylistBackwardButton);
         netPlaylistToolBar.add(netPlaylistIdCheckBox);
@@ -10227,7 +10237,7 @@ public class MainFrame extends JFrame {
                         // 删除工具栏的搜索
                         netPlaylistToolBar.removeAll();
                         netPlaylistToolBar.add(netPlaylistBackwardButton);
-                        netPlaylistToolBar.add(Box.createHorizontalGlue());
+                        netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
                         netMusicListForPlaylistModel.clear();
@@ -10411,9 +10421,9 @@ public class MainFrame extends JFrame {
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("similarPlaylistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -10479,9 +10489,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("creatorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -10548,9 +10558,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(playlistInfo.getName() + I18n.getText("collectorSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -10814,9 +10824,9 @@ public class MainFrame extends JFrame {
                     netAlbumToolBar.add(netAlbumSearchButton);
                     netAlbumSourceComboBox.setVisible(true);
                 } else {
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                 }
                 // 更新专辑歌曲数量显示
 //                netCurrAlbumLabel.setText("");
@@ -11096,7 +11106,7 @@ public class MainFrame extends JFrame {
         netAlbumPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netAlbumCountLabel.setInstantAlpha(0.5f);
+        netAlbumCountLabel.setOpacity(0.5f);
 
         netAlbumToolBar.add(netAlbumBackwardButton);
         netAlbumToolBar.add(netAlbumSearchTextField);
@@ -11222,7 +11232,7 @@ public class MainFrame extends JFrame {
                         netAlbumToolBar.remove(netAlbumClearInputButton);
                         netAlbumToolBar.remove(netAlbumSearchButton);
                         netAlbumToolBar.remove(netAlbumTitleLabel);
-                        netAlbumToolBar.add(Box.createHorizontalGlue());
+                        netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
                         netMusicListForAlbumModel.clear();
@@ -11408,9 +11418,9 @@ public class MainFrame extends JFrame {
                         netUserTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("authorSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         netUserToolBar.add(netUserTitleLabel);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -11457,9 +11467,9 @@ public class MainFrame extends JFrame {
                         netArtistTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         netArtistToolBar.add(netArtistTitleLabel);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -11526,9 +11536,9 @@ public class MainFrame extends JFrame {
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(albumInfo.getName() + I18n.getText("similarAlbumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -11838,9 +11848,9 @@ public class MainFrame extends JFrame {
                     netArtistToolBar.add(netArtistSearchButton);
                     netArtistSourceComboBox.setVisible(true);
                 } else {
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     netArtistToolBar.add(netArtistTitleLabel);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                 }
                 // 更新歌手歌曲数量显示
 //                netCurrArtistLabel.setText("");
@@ -12120,7 +12130,7 @@ public class MainFrame extends JFrame {
         netArtistPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netArtistCountLabel.setInstantAlpha(0.5f);
+        netArtistCountLabel.setOpacity(0.5f);
 
         netArtistToolBar.add(netArtistBackwardButton);
         netArtistToolBar.add(netArtistSearchTextField);
@@ -12250,7 +12260,7 @@ public class MainFrame extends JFrame {
                         netArtistToolBar.remove(netArtistClearInputButton);
                         netArtistToolBar.remove(netArtistSearchButton);
                         netArtistToolBar.remove(netArtistTitleLabel);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
                         netMusicListForArtistModel.clear();
@@ -12429,9 +12439,9 @@ public class MainFrame extends JFrame {
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -12499,9 +12509,9 @@ public class MainFrame extends JFrame {
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("mvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     netMvToolBar.add(netMvTitleLabel);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.setVisible(true);
@@ -12565,9 +12575,9 @@ public class MainFrame extends JFrame {
                     netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("similarArtistSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     netArtistToolBar.add(netArtistTitleLabel);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -12634,9 +12644,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -12703,9 +12713,9 @@ public class MainFrame extends JFrame {
                     netArtistTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("buddySuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     netArtistToolBar.add(netArtistTitleLabel);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -12771,9 +12781,9 @@ public class MainFrame extends JFrame {
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(artistInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -13082,9 +13092,9 @@ public class MainFrame extends JFrame {
                     netRadioSourceComboBox.setVisible(true);
                     netRadioSortTypeComboBox.setVisible(false);
                 } else {
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                 }
                 // 更新用户歌曲数量显示
 //                netCurrRadioLabel.setText("");
@@ -13365,7 +13375,7 @@ public class MainFrame extends JFrame {
         netRadioPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netRadioCountLabel.setInstantAlpha(0.5f);
+        netRadioCountLabel.setOpacity(0.5f);
 
         netRadioToolBar.add(netRadioBackwardButton);
         netRadioToolBar.add(netRadioSearchTextField);
@@ -13507,7 +13517,7 @@ public class MainFrame extends JFrame {
                         netRadioToolBar.remove(netRadioClearInputButton);
                         netRadioToolBar.remove(netRadioSearchButton);
                         netRadioToolBar.remove(netRadioTitleLabel);
-                        netRadioToolBar.add(Box.createHorizontalGlue());
+                        netRadioToolBar.add(CustomBox.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
                         netMusicListForRadioModel.clear();
@@ -13694,9 +13704,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("djSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -13763,9 +13773,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("subscriberSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -13832,9 +13842,9 @@ public class MainFrame extends JFrame {
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("similarRadioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -13900,9 +13910,9 @@ public class MainFrame extends JFrame {
                     netArtistTitleLabel.setText(HtmlUtil.textToHtml(radioInfo.getName() + I18n.getText("castSuffix")));
                     netArtistToolBar.removeAll();
                     netArtistToolBar.add(netArtistBackwardButton);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     netArtistToolBar.add(netArtistTitleLabel);
-                    netArtistToolBar.add(Box.createHorizontalGlue());
+                    netArtistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                     netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -14366,7 +14376,7 @@ public class MainFrame extends JFrame {
         netMvNextPageButton.setToolTipText(NEXT_PAGE_TIP);
         netMvEndPageButton.setToolTipText(END_PAGE_TIP);
         // 透明度
-        netMvCountLabel.setInstantAlpha(0.5f);
+        netMvCountLabel.setOpacity(0.5f);
         // 回到关键词面板起始不可用
         netMvBackwardButton.setEnabled(false);
         // 清除输入按钮初始不可见
@@ -14546,9 +14556,9 @@ public class MainFrame extends JFrame {
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("similarMvSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     netMvToolBar.add(netMvTitleLabel);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
@@ -14614,9 +14624,9 @@ public class MainFrame extends JFrame {
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("episodeSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     netMvToolBar.add(netMvTitleLabel);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
@@ -14683,9 +14693,9 @@ public class MainFrame extends JFrame {
                         netArtistTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.toSimpleString() + I18n.getText("artistSuffix")));
                         netArtistToolBar.removeAll();
                         netArtistToolBar.add(netArtistBackwardButton);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         netArtistToolBar.add(netArtistTitleLabel);
-                        netArtistToolBar.add(Box.createHorizontalGlue());
+                        netArtistToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
                         netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
@@ -14730,9 +14740,9 @@ public class MainFrame extends JFrame {
                         netUserTitleLabel.setText(HtmlUtil.textToHtml(mvInfo.getName() + I18n.getText("publisherSuffix")));
                         netUserToolBar.removeAll();
                         netUserToolBar.add(netUserBackwardButton);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         netUserToolBar.add(netUserTitleLabel);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         // 更新数量显示
                         netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                         netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -15127,10 +15137,10 @@ public class MainFrame extends JFrame {
         netRankingPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netRankingCountLabel.setInstantAlpha(0.5f);
+        netRankingCountLabel.setOpacity(0.5f);
 
         netRankingToolBar.add(netRankingBackwardButton);
-        netRankingToolBar.add(Box.createHorizontalGlue());
+        netRankingToolBar.add(CustomBox.createHorizontalGlue());
         netRankingLeftBox.add(netRankingToolBar);
 
         for (String name : NetMusicSource.NAMES) netRankingSourceComboBox.addItem(name);
@@ -15598,9 +15608,9 @@ public class MainFrame extends JFrame {
                     netUserToolBar.add(netUserSearchButton);
                     netUserSourceComboBox.setVisible(true);
                 } else {
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                 }
                 // 更新用户歌曲数量显示
 //                netCurrUserLabel.setText("");
@@ -15896,7 +15906,7 @@ public class MainFrame extends JFrame {
         netUserPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netUserCountLabel.setInstantAlpha(0.5f);
+        netUserCountLabel.setOpacity(0.5f);
 
         netUserToolBar.add(netUserBackwardButton);
         netUserToolBar.add(netUserSearchTextField);
@@ -16048,7 +16058,7 @@ public class MainFrame extends JFrame {
                         netUserToolBar.remove(netUserClearInputButton);
                         netUserToolBar.remove(netUserSearchButton);
                         netUserToolBar.remove(netUserTitleLabel);
-                        netUserToolBar.add(Box.createHorizontalGlue());
+                        netUserToolBar.add(CustomBox.createHorizontalGlue());
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
                         netMusicListForUserModel.clear();
@@ -16222,9 +16232,9 @@ public class MainFrame extends JFrame {
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -16288,9 +16298,9 @@ public class MainFrame extends JFrame {
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -16353,9 +16363,9 @@ public class MainFrame extends JFrame {
                     netRadioTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("radioSuffix")));
                     netRadioToolBar.removeAll();
                     netRadioToolBar.add(netRadioBackwardButton);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     netRadioToolBar.add(netRadioTitleLabel);
-                    netRadioToolBar.add(Box.createHorizontalGlue());
+                    netRadioToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
                     netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
@@ -16422,9 +16432,9 @@ public class MainFrame extends JFrame {
                     netMvTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("videoSuffix")));
                     netMvToolBar.removeAll();
                     netMvToolBar.add(netMvBackwardButton);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     netMvToolBar.add(netMvTitleLabel);
-                    netMvToolBar.add(Box.createHorizontalGlue());
+                    netMvToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
                     netMvCountPanel.add(netMvCountLabel, netMvCountPanel.getComponentIndex(netMvCountLabel));
@@ -16488,9 +16498,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("followSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -16555,9 +16565,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(HtmlUtil.textToHtml(userInfo.getName() + I18n.getText("fanSuffix")));
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -16809,7 +16819,7 @@ public class MainFrame extends JFrame {
         netCommentPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
-            netCommentBackwardButton.setDrawBg(false);
+            netCommentBackwardButton.transitionDrawBg(false);
             // 归还占有的空白提示面板
             if (emptyHintPanelParent != null) {
                 emptyHintPanelParent.add(emptyHintPanel);
@@ -16918,13 +16928,13 @@ public class MainFrame extends JFrame {
         netCommentEndPageButton.setToolTipText(END_PAGE_TIP);
 
         // 透明度
-        netCommentCountLabel.setInstantAlpha(0.5f);
+        netCommentCountLabel.setOpacity(0.5f);
 
         netCommentToolBar.setBorder(new HDEmptyBorder(0, 37, 0, 0));
         netCommentToolBar.add(netCommentBackwardButton);
-        netCommentToolBar.add(Box.createHorizontalGlue());
+        netCommentToolBar.add(CustomBox.createHorizontalGlue());
         netCommentToolBar.add(netCommentTitleLabel);
-        netCommentToolBar.add(Box.createHorizontalGlue());
+        netCommentToolBar.add(CustomBox.createHorizontalGlue());
         netCommentBox.add(netCommentToolBar);
 
         // 评论数量和当前歌曲标签
@@ -17029,9 +17039,9 @@ public class MainFrame extends JFrame {
                     netUserTitleLabel.setText(USER_COMMENTED);
                     netUserToolBar.removeAll();
                     netUserToolBar.add(netUserBackwardButton);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     netUserToolBar.add(netUserTitleLabel);
-                    netUserToolBar.add(Box.createHorizontalGlue());
+                    netUserToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
                     netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
@@ -17096,9 +17106,9 @@ public class MainFrame extends JFrame {
                     netPlaylistTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("playlistSuffix")));
                     netPlaylistToolBar.removeAll();
                     netPlaylistToolBar.add(netPlaylistBackwardButton);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     netPlaylistToolBar.add(netPlaylistTitleLabel);
-                    netPlaylistToolBar.add(Box.createHorizontalGlue());
+                    netPlaylistToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
                     netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
@@ -17162,9 +17172,9 @@ public class MainFrame extends JFrame {
                     netAlbumTitleLabel.setText(HtmlUtil.textToHtml(commentInfo.getUsername() + I18n.getText("albumSuffix")));
                     netAlbumToolBar.removeAll();
                     netAlbumToolBar.add(netAlbumBackwardButton);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     netAlbumToolBar.add(netAlbumTitleLabel);
-                    netAlbumToolBar.add(Box.createHorizontalGlue());
+                    netAlbumToolBar.add(CustomBox.createHorizontalGlue());
                     // 更新数量显示
                     netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
                     netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
@@ -17233,7 +17243,7 @@ public class MainFrame extends JFrame {
         netSheetPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
-            netSheetBackwardButton.setDrawBg(false);
+            netSheetBackwardButton.transitionDrawBg(false);
             // 归还占有的空白提示面板
             if (emptyHintPanelParent != null) {
                 emptyHintPanelParent.add(emptyHintPanel);
@@ -17330,13 +17340,13 @@ public class MainFrame extends JFrame {
         netSheetEndPageButton.setToolTipText(END_PAGE_TIP);
 
         // 透明度
-        netSheetCountLabel.setInstantAlpha(0.5f);
+        netSheetCountLabel.setOpacity(0.5f);
 
         netSheetToolBar.setBorder(new HDEmptyBorder(0, 37, 0, 0));
         netSheetToolBar.add(netSheetBackwardButton);
-        netSheetToolBar.add(Box.createHorizontalGlue());
+        netSheetToolBar.add(CustomBox.createHorizontalGlue());
         netSheetToolBar.add(netSheetTitleLabel);
-        netSheetToolBar.add(Box.createHorizontalGlue());
+        netSheetToolBar.add(CustomBox.createHorizontalGlue());
         netSheetBox.add(netSheetToolBar);
 
         // 乐谱数量和当前歌曲标签
@@ -18079,7 +18089,7 @@ public class MainFrame extends JFrame {
         netRecommendPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
         recommendBackwardButton.addActionListener(e -> {
-            recommendBackwardButton.setDrawBg(false);
+            recommendBackwardButton.transitionDrawBg(false);
             // 返回到歌单/专辑/歌手/电台
             // 先清空在线音乐列表
             ((DefaultListModel) netMusicList.getModel()).clear();
@@ -18893,7 +18903,7 @@ public class MainFrame extends JFrame {
         netRecommendPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        recommendCountLabel.setInstantAlpha(0.5f);
+        recommendCountLabel.setOpacity(0.5f);
 
         // 按钮文字与图标的位置
         int gap = ScaleUtil.scale(15);
@@ -18936,7 +18946,7 @@ public class MainFrame extends JFrame {
 
         // 推荐歌单/专辑中歌曲的工具栏，暂时不放入
         musicRecommendToolBar.add(recommendBackwardButton);
-        musicRecommendToolBar.add(Box.createHorizontalGlue());
+        musicRecommendToolBar.add(CustomBox.createHorizontalGlue());
 
         for (String name : NetMusicSource.NAMES) netRecommendSourceComboBox.addItem(name);
         netRecommendSourceComboBox.addItemListener(e -> {
@@ -19584,7 +19594,7 @@ public class MainFrame extends JFrame {
         removeAllTasksButton.setToolTipText(REMOVE_ALL_TASKS_TIP);
 
         // 透明度
-        taskCountLabel.setInstantAlpha(0.5f);
+        taskCountLabel.setOpacity(0.5f);
 
         downloadToolBar.add(restartSelectedTasksButton);
         downloadToolBar.add(restartAllTasksButton);
@@ -19594,7 +19604,7 @@ public class MainFrame extends JFrame {
         downloadToolBar.add(removeAllTasksButton);
         downloadToolBar.add(taskCountLabel);
         // 加胶水让工具栏左对齐
-        downloadToolBar.add(Box.createHorizontalGlue());
+        downloadToolBar.add(CustomBox.createHorizontalGlue());
         downloadLeftBox.add(downloadToolBar);
     }
 
@@ -19782,13 +19792,13 @@ public class MainFrame extends JFrame {
         downloadHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
-        downloadIconHeaderLabel.setInstantAlpha(alpha);
-        downloadNameHeaderLabel.setInstantAlpha(alpha);
-        downloadTypeHeaderLabel.setInstantAlpha(alpha);
-        downloadSizeHeaderLabel.setInstantAlpha(alpha);
-        downloadProgressHeaderLabel.setInstantAlpha(alpha);
-        downloadPercentHeaderLabel.setInstantAlpha(alpha);
-        downloadStatusHeaderLabel.setInstantAlpha(alpha);
+        downloadIconHeaderLabel.setOpacity(alpha);
+        downloadNameHeaderLabel.setOpacity(alpha);
+        downloadTypeHeaderLabel.setOpacity(alpha);
+        downloadSizeHeaderLabel.setOpacity(alpha);
+        downloadProgressHeaderLabel.setOpacity(alpha);
+        downloadPercentHeaderLabel.setOpacity(alpha);
+        downloadStatusHeaderLabel.setOpacity(alpha);
 
         Font tf = Fonts.NORMAL_TINY;
         downloadIconHeaderLabel.setFont(tf);
@@ -19929,7 +19939,7 @@ public class MainFrame extends JFrame {
         playQueueMoveDownToolButton.setToolTipText(MOVE_DOWN_TIP);
 
         // 透明度
-        playQueueCountLabel.setInstantAlpha(0.5f);
+        playQueueCountLabel.setOpacity(0.5f);
 
         playQueueToolBar.add(playQueueRemoveToolButton);
         playQueueToolBar.add(playQueueClearToolButton);
@@ -19939,7 +19949,7 @@ public class MainFrame extends JFrame {
         playQueueToolBar.add(playQueueMoveDownToolButton);
         playQueueToolBar.add(playQueueCountLabel);
         // 加胶水让工具栏左对齐
-        playQueueToolBar.add(Box.createHorizontalGlue());
+        playQueueToolBar.add(CustomBox.createHorizontalGlue());
         playQueueLeftBox.add(playQueueToolBar);
     }
 
@@ -20223,11 +20233,11 @@ public class MainFrame extends JFrame {
         playQueueHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
         float alpha = 0.5f;
-        playQueueSourceHeaderLabel.setInstantAlpha(alpha);
-        playQueueNameHeaderLabel.setInstantAlpha(alpha);
-        playQueueArtistHeaderLabel.setInstantAlpha(alpha);
-        playQueueAlbumHeaderLabel.setInstantAlpha(alpha);
-        playQueueDurationHeaderLabel.setInstantAlpha(alpha);
+        playQueueSourceHeaderLabel.setOpacity(alpha);
+        playQueueNameHeaderLabel.setOpacity(alpha);
+        playQueueArtistHeaderLabel.setOpacity(alpha);
+        playQueueAlbumHeaderLabel.setOpacity(alpha);
+        playQueueDurationHeaderLabel.setOpacity(alpha);
 
         Font tf = Fonts.NORMAL_TINY;
         playQueueSourceHeaderLabel.setFont(tf);
@@ -20603,8 +20613,28 @@ public class MainFrame extends JFrame {
             globalPanelExecutor.execute(() -> {
                 float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
                 globalPanel.setOpacity(opacity);
-                if (opacity >= 1) globalPanelTimer.stop();
+                if (opacity >= 1f) globalPanelTimer.stop();
             });
+        });
+        changePaneFadingTimer = new Timer(10, e -> {
+            // 淡出
+            if (changePaneFadeOut) {
+                OpacitySupported src = (OpacitySupported) srcFadingComp;
+                float opacity = Math.max(0, src.getOpacity() - 0.05f);
+                src.setOpacity(opacity);
+                if (opacity <= 0) {
+                    globalPanel.remove(srcFadingComp);
+                    globalPanel.add(targetFadingComp, BorderLayout.CENTER);
+                    changePaneFadeOut = false;
+                }
+            }
+            // 淡入
+            else {
+                OpacitySupported target = (OpacitySupported) targetFadingComp;
+                float opacity = Math.min(1, target.getOpacity() + 0.05f);
+                target.setOpacity(opacity);
+                if (opacity >= 1f) changePaneFadingTimer.stop();
+            }
         });
         searchSuggestionTimer = new Timer(100, e -> {
             globalExecutor.execute(() -> updateSearchSuggestion());
@@ -20661,6 +20691,17 @@ public class MainFrame extends JFrame {
         bottomBox.add(progressBox);
     }
 
+    // 淡入淡出切换组件动画
+    private void transitionChangePaneFading(Component src, Component target) {
+        if (changePaneFadingTimer.isRunning()) return;
+        srcFadingComp = src;
+        targetFadingComp = target;
+        changePaneFadeOut = true;
+        // 解决进入的组件动画期间大小不正确问题
+        target.setSize(src.getWidth(), src.getHeight());
+        changePaneFadingTimer.start();
+    }
+
     // 初始化控制面板
     private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
@@ -20671,24 +20712,28 @@ public class MainFrame extends JFrame {
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
             // 动画状态无响应
-            if (globalPanel.isSlideAnimating()) return;
+//            if (globalPanel.isSlideAnimating()) return;
+            if (changePaneFadingTimer.isRunning()) return;
             // 歌词页面切到列表
             if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) {
                 // 清空评论数据
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
                 if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
                 hideDetailButton.setVisible(false);
-                // 滑入动画之后处理
-                globalPanel.setOnAfterSlide(() -> {
-                    globalPanel.remove(infoAndLrcBox);
-                    globalPanel.remove(netCommentBox);
-                    globalPanel.remove(netSheetBox);
-                    globalPanel.add(tabbedPane, BorderLayout.CENTER);
-                    globalPanel.repaint();
-                });
-                globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
-                globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
-                globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
+//                // 滑入动画之后处理
+//                globalPanel.setOnAfterSlide(() -> {
+//                    globalPanel.remove(infoAndLrcBox);
+//                    globalPanel.remove(netCommentBox);
+//                    globalPanel.remove(netSheetBox);
+//                    globalPanel.add(tabbedPane, BorderLayout.CENTER);
+//                    globalPanel.repaint();
+//                });
+//                globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
+//                globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
+//                globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
+                if (infoAndLrcBox.isShowing()) transitionChangePaneFading(infoAndLrcBox, tabbedPane);
+                else if (netCommentBox.isShowing()) transitionChangePaneFading(netCommentBox, tabbedPane);
+                else if (netSheetBox.isShowing()) transitionChangePaneFading(netSheetBox, tabbedPane);
                 // 防止事件不起作用
                 globalPanel.requestFocus();
                 changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
@@ -20702,22 +20747,25 @@ public class MainFrame extends JFrame {
                 if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
                 if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
                 hideDetailButton.setVisible(true);
-                // 滑入动画之后处理
-                globalPanel.setOnAfterSlide(() -> {
-                    globalPanel.remove(tabbedPane);
-                    globalPanel.remove(netCommentBox);
-                    globalPanel.remove(netSheetBox);
-                    // 防止事件不起作用
-                    globalPanel.requestFocus();
-                    globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
-                    globalPanel.repaint();
-//                    updateLrcListViewFading();
-                    lrcScrollAnimation = true;
-                });
-                // 播放组件放置的滑入动画
-                globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
-                globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
-                globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
+//                // 滑入动画之后处理
+//                globalPanel.setOnAfterSlide(() -> {
+//                    globalPanel.remove(tabbedPane);
+//                    globalPanel.remove(netCommentBox);
+//                    globalPanel.remove(netSheetBox);
+//                    // 防止事件不起作用
+//                    globalPanel.requestFocus();
+//                    globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+//                    globalPanel.repaint();
+////                    updateLrcListViewFading();
+//                    lrcScrollAnimation = true;
+//                });
+//                // 播放组件放置的滑入动画
+//                globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
+//                globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
+//                globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
+                if (tabbedPane.isShowing()) transitionChangePaneFading(tabbedPane, infoAndLrcBox);
+                else if (netCommentBox.isShowing()) transitionChangePaneFading(netCommentBox, infoAndLrcBox);
+                else if (netSheetBox.isShowing()) transitionChangePaneFading(netSheetBox, infoAndLrcBox);
                 changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
                 currPane = MusicPane.LYRIC;
                 lastPane = -1;
@@ -21088,11 +21136,11 @@ public class MainFrame extends JFrame {
         controlLrcPanel.add(switchLrcTypeButton);
 
         controlBox.add(changePanePanel);
-        controlBox.add(Box.createHorizontalGlue());
+        controlBox.add(CustomBox.createHorizontalGlue());
         controlBox.add(controlPanel);
-        controlBox.add(Box.createHorizontalGlue());
+        controlBox.add(CustomBox.createHorizontalGlue());
         controlBox.add(controlLrcPanel);
-        controlBox.add(Box.createHorizontalGlue());
+        controlBox.add(CustomBox.createHorizontalGlue());
         bottomBox.add(controlBox);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
     }
@@ -22177,7 +22225,7 @@ public class MainFrame extends JFrame {
         emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
         emptyHintLabel.setIconTextGap(ScaleUtil.scale(10));
         emptyHintLabel.setForeground(textColor);
-        emptyHintLabel.setInstantAlpha(0.5f);
+        emptyHintLabel.setOpacity(0.5f);
 
         // 按钮被禁用时颜色
         netMusicBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), darkerIconColor));
@@ -22479,8 +22527,8 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(playQueuePopupMenu);
 
         // 工具栏消除边框和透明、选项卡面板透明
-        tabbedPane.setUI(new TabbedPaneUI());
-        collectionTabbedPane.setUI(new TabbedPaneUI());
+        tabbedPane.setUI(new TabbedPaneUI(tabbedPane));
+        collectionTabbedPane.setUI(new TabbedPaneUI(collectionTabbedPane));
 
         // 关键词面板
         netMusicSearchSuggestionLabel.setForeground(style.getTextColor());
@@ -23362,12 +23410,12 @@ public class MainFrame extends JFrame {
                 label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
                 label.setForeground(textColor);
                 panel.setForeground(selectedColor);
-                panel.setDrawBg(true);
+                panel.transitionDrawBg(true);
             } else {
                 label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
                 label.setForeground(textColor);
                 panel.setForeground(foreColor);
-                panel.setDrawBg(p != null && rect.contains(SwingUtilities.convertPoint(tabbedPane, p, panel)));
+                panel.transitionDrawBg(p != null && rect.contains(SwingUtilities.convertPoint(tabbedPane, p, panel)));
             }
         }
     }
@@ -23873,7 +23921,7 @@ public class MainFrame extends JFrame {
                 int size = collectionList.getModel().getSize();
                 countLabel.setText(String.format(TOTAL_MSG, size));
                 if (size != 0) {
-                    Box box = null;
+                    CustomBox box = null;
                     if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
@@ -23982,6 +24030,7 @@ public class MainFrame extends JFrame {
                             netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                             netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
                             netMusicSearchSuggestionInnerPanel2.invalidate();
+                            netMusicSearchSuggestionInnerPanel2.repaint();
                         }
                     });
                 }
@@ -24022,7 +24071,7 @@ public class MainFrame extends JFrame {
                         netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                         netLeftBox.add(netMusicScrollPane);
                         // 热搜词搜索后取消悬停状态
-                        finalB.setEntered(false);
+                        finalB.transitionDrawBg(false);
                     });
                     b.setForeColor(currUIStyle.getTextColor());
                     netMusicHotSearchInnerPanel2.add(b);
@@ -24040,6 +24089,7 @@ public class MainFrame extends JFrame {
                             netMusicHotSearchInnerPanel2.setMinimumSize(d);
                             netMusicHotSearchInnerPanel2.setPreferredSize(d);
                             netMusicHotSearchInnerPanel2.invalidate();
+                            netMusicHotSearchInnerPanel2.repaint();
                         }
                     });
                 }
@@ -24128,7 +24178,7 @@ public class MainFrame extends JFrame {
 
     // 隐藏界面
     private void hideWindow() {
-        closeButton.setDrawBg(false);
+        closeButton.transitionDrawBg(false);
         closeSpectrum();
         dispose();
     }

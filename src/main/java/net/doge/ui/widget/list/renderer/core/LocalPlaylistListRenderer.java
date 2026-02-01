@@ -41,8 +41,6 @@ public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
         outerPanel.setLayout(layout);
 
         outerPanel.add(nameLabel);
-
-        outerPanel.setInstantDrawBg(true);
     }
 
     @Override
@@ -52,7 +50,7 @@ public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(textColor);
-        nameLabel.setInstantAlpha(item.isSelected() ? 0.5f : 1f);
+        nameLabel.setOpacity(item.isSelected() ? 0.5f : 1f);
 
         nameLabel.setFont(customFont);
 

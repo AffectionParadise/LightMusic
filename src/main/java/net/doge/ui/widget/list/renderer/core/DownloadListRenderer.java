@@ -67,9 +67,9 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
         layout.setHgap(ScaleUtil.scale(15));
         outerPanel.setLayout(layout);
 
-        iconLabel.setInstantAlpha(alpha);
-        typeLabel.setInstantAlpha(alpha);
-        sizeLabel.setInstantAlpha(alpha);
+        iconLabel.setOpacity(alpha);
+        typeLabel.setOpacity(alpha);
+        sizeLabel.setOpacity(alpha);
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
@@ -78,8 +78,6 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 //        outerPanel.add(progressSlider);
         outerPanel.add(percentLabel);
         outerPanel.add(statusLabel);
-
-        outerPanel.setInstantDrawBg(true);
     }
 
     @Override
@@ -106,12 +104,12 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 
         // 已完成的任务透明显示
         if (task.isFinished()) {
-            percentLabel.setInstantAlpha(alpha);
-            statusLabel.setInstantAlpha(alpha);
+            percentLabel.setOpacity(alpha);
+            statusLabel.setOpacity(alpha);
             sliderUI.setRest(true);
         } else {
-            percentLabel.setInstantAlpha(1f);
-            statusLabel.setInstantAlpha(1f);
+            percentLabel.setOpacity(1f);
+            statusLabel.setOpacity(1f);
             sliderUI.setRest(false);
         }
 

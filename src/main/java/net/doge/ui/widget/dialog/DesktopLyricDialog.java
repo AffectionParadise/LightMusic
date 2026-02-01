@@ -380,7 +380,7 @@ public class DesktopLyricDialog extends JDialog {
     }
 
     public void setAlpha(float alpha) {
-        lyricLabel.setAlpha(alpha);
+        lyricLabel.transitionOpacity(alpha);
     }
 
     private class LyricLabel extends CustomLabel {
@@ -389,18 +389,18 @@ public class DesktopLyricDialog extends JDialog {
         private final float step = 0.1f;
 
         public void decreaseAlpha() {
-            setAlpha(alpha - step);
+            transitionOpacity(opacity - step);
         }
 
         public void increaseAlpha() {
-            setAlpha(alpha + step);
+            transitionOpacity(opacity + step);
         }
 
-        public void setAlpha(float alpha) {
-            if (alpha < min) alpha = min;
-            else if (alpha > max) alpha = max;
-            super.setAlpha(alpha);
-            f.desktopLyricAlpha = alpha;
+        public void transitionOpacity(float opacity) {
+            if (opacity < min) opacity = min;
+            else if (opacity > max) opacity = max;
+            super.transitionOpacity(opacity);
+            f.desktopLyricAlpha = opacity;
         }
     }
 
@@ -422,7 +422,6 @@ public class DesktopLyricDialog extends JDialog {
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
                 GraphicsUtil.srcOver(g2d);
             }
-
             super.paintComponent(g);
         }
     }

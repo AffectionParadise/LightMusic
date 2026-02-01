@@ -66,11 +66,11 @@ public class AboutDialog extends AbstractTitledDialog {
         mailLabel.setForeground(textColor);
 
         float alpha = 0.8f;
-        appLabel.setInstantAlpha(alpha);
-        editionLabel.setInstantAlpha(alpha);
-        technoLabel.setInstantAlpha(alpha);
-        websiteLabel.setInstantAlpha(alpha);
-        mailLabel.setInstantAlpha(alpha);
+        appLabel.setOpacity(alpha);
+        editionLabel.setOpacity(alpha);
+        technoLabel.setOpacity(alpha);
+        websiteLabel.setOpacity(alpha);
+        mailLabel.setOpacity(alpha);
 
         appPanel.add(appLabel);
         editionPanel.add(editionLabel);

@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -52,21 +53,19 @@ public class StyleListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(ScaleUtil.scale(0));
 
         float alpha = 0.5f;
-        typeLabel.setInstantAlpha(alpha);
+        typeLabel.setOpacity(alpha);
 //        inUseLabel.setInstantAlpha(alpha);
 
         int sh = ScaleUtil.scale(10);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(nameLabel);
-        outerPanel.add(Box.createVerticalGlue());
+        outerPanel.add(CustomBox.createVerticalGlue());
         outerPanel.add(typeLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(inUseLabel);
-        outerPanel.add(Box.createVerticalStrut(sh));
-
-        outerPanel.setInstantDrawBg(true);
+        outerPanel.add(CustomBox.createVerticalStrut(sh));
     }
 
     @Override

@@ -33,7 +33,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color bic = ColorUtil.brighter(iconColor);
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
         b.setForeground(btc);
-        b.setDrawBg(true);
+        b.transitionDrawBg(true);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color textColor = f.currUIStyle.getTextColor();
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), iconColor));
         b.setForeground(textColor);
-        b.setDrawBg(false);
+        b.transitionDrawBg(false);
     }
 
     @Override

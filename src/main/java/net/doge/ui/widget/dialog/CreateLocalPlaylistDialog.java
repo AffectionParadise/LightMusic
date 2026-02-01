@@ -5,6 +5,7 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
@@ -113,8 +114,8 @@ public class CreateLocalPlaylistDialog extends AbstractTitledDialog {
         panel.add(textField);
 
         panel.setBorder(new HDEmptyBorder(0, 20, 0, 20));
-        centerPanel.add(Box.createVerticalGlue());
+        centerPanel.add(CustomBox.createVerticalGlue());
         centerPanel.add(panel);
-        centerPanel.add(Box.createVerticalGlue());
+        centerPanel.add(CustomBox.createVerticalGlue());
     }
 }

@@ -15,11 +15,11 @@ import java.awt.*;
  */
 @Setter
 public class LabelUI extends BasicLabelUI {
-    private float alpha;
+    private float opacity;
     private boolean drawBg;
 
-    public LabelUI(float alpha) {
-        this.alpha = alpha;
+    public LabelUI(float opacity) {
+        this.opacity = opacity;
     }
 
     @Override
@@ -32,7 +32,7 @@ public class LabelUI extends BasicLabelUI {
             int arc = ScaleUtil.scale(10);
             g2d.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), arc, arc);
         }
-        GraphicsUtil.srcOver(g2d, alpha);
+        GraphicsUtil.srcOver(g2d, opacity);
         super.paint(g, c);
     }
 }

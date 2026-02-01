@@ -130,7 +130,18 @@ public class ColorUtil {
      * @return
      */
     public static Color deriveAlphaColor(Color color, float alpha) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) (255 * alpha));
+        return deriveAlphaColor(color, (int) (255 * alpha));
+    }
+
+    /**
+     * 获取具有透明度的 Color
+     *
+     * @param color
+     * @param alpha
+     * @return
+     */
+    public static Color deriveAlphaColor(Color color, int alpha) {
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
 
     /**

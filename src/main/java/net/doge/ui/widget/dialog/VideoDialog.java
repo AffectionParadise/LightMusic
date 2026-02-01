@@ -22,6 +22,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -147,7 +148,7 @@ public class VideoDialog extends AbstractTitledDialog {
     };
 
     // 底部盒子
-    private Box bottomBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox bottomBox = new CustomBox(BoxLayout.Y_AXIS);
 
     private boolean resized;
     private int tryTime;
@@ -549,7 +550,7 @@ public class VideoDialog extends AbstractTitledDialog {
         FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(3));
         controlPanel.setLayout(fl);
-        controlPanel.add(Box.createHorizontalGlue());
+        controlPanel.add(CustomBox.createHorizontalGlue());
         controlPanel.add(collectButton);
         controlPanel.add(downloadButton);
         controlPanel.add(backwardButton);
@@ -566,7 +567,7 @@ public class VideoDialog extends AbstractTitledDialog {
         controlPanel.add(rateButton);
         controlPanel.add(fobTimeButton);
         controlPanel.add(fullScreenButton);
-        controlPanel.add(Box.createHorizontalGlue());
+        controlPanel.add(CustomBox.createHorizontalGlue());
         bottomBox.add(controlPanel);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
     }

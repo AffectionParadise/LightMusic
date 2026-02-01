@@ -18,26 +18,31 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/13
  */
 public class ChangePaneButtonUI extends BasicButtonUI {
-    private boolean drawMask = false;
+    private boolean drawMask;
+    private boolean drawMaskIncreasing;
     protected Timer drawMaskTimer;
-    protected float alpha;
-    protected final float destAlpha = 0.3f;
+    protected float maskAlpha;
+    protected final float destMaskAlpha = 0.3f;
     public static BufferedImage frameImg = LMIconManager.getImage("control.frame");
 
     public ChangePaneButtonUI(MainFrame f) {
         frameImg = ImageUtil.dye(frameImg, f.currUIStyle.getIconColor());
 
         drawMaskTimer = new Timer(2, e -> {
-            if (drawMask) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else alpha = Math.max(0, alpha - 0.005f);
-            if (alpha <= 0 || alpha >= destAlpha) drawMaskTimer.stop();
+            if (drawMaskIncreasing) maskAlpha = Math.min(destMaskAlpha, maskAlpha + 0.005f);
+            else maskAlpha = Math.max(0, maskAlpha - 0.005f);
+            if (maskAlpha >= destMaskAlpha) drawMaskTimer.stop();
+            else if (maskAlpha <= 0) {
+                drawMask = false;
+                drawMaskTimer.stop();
+            }
             f.changePaneButton.repaint();
         });
     }
 
-    public void setDrawMask(boolean drawMask) {
-        if (this.drawMask == drawMask) return;
-        this.drawMask = drawMask;
+    public void transitionDrawMask(boolean drawMaskIncreasing) {
+        this.drawMask = true;
+        this.drawMaskIncreasing = drawMaskIncreasing;
         if (drawMaskTimer.isRunning()) return;
         drawMaskTimer.start();
     }
@@ -45,18 +50,17 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     @Override
     protected void paintIcon(Graphics g, JComponent c, Rectangle iconRect) {
         super.paintIcon(g, c, iconRect);
-
         // 画遮罩
-        Graphics2D g2d = GraphicsUtil.setup(g);
-        GraphicsUtil.srcOver(g2d, alpha);
-        g2d.setColor(Colors.BLACK);
-        int arc = ScaleUtil.scale(10);
-        g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, arc, arc);
-
-        // 画框图
-        GraphicsUtil.srcOver(g2d, Math.min(1, alpha * 3));
-        g2d.drawImage(frameImg, iconRect.x, iconRect.y, null);
-
-        GraphicsUtil.srcOver(g2d);
+        if (drawMask) {
+            Graphics2D g2d = GraphicsUtil.setup(g);
+            g2d.setColor(Colors.BLACK);
+            GraphicsUtil.srcOver(g2d, maskAlpha);
+            int arc = ScaleUtil.scale(10);
+            g2d.fillRoundRect(iconRect.x, iconRect.y, iconRect.width, iconRect.height, arc, arc);
+            // 画框图
+            GraphicsUtil.srcOver(g2d, Math.min(1f, maskAlpha * 3));
+            g2d.drawImage(frameImg, iconRect.x, iconRect.y, null);
+            GraphicsUtil.srcOver(g2d);
+        }
     }
 }

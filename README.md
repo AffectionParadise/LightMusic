@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://github.com/AffectionParadise/LightMusic/releases">
-        <img src="https://github.com/AffectionParadise/LightMusic/assets/70871914/cb364095-e139-4719-be55-ce75bc883c4b" alt="LightMusic">
+        <img width="200" height="200" alt="LightMusic" src="https://github.com/user-attachments/assets/a3376e7f-fed1-4b81-aac9-f0615e3d31b9" />
     </a>
 </p>
 

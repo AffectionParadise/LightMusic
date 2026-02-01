@@ -2,6 +2,7 @@ package net.doge.ui.widget.button.tooltip;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -46,9 +47,10 @@ public class CustomToolTip extends JToolTip {
         g2d.fillRoundRect(pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, arc, arc);
 
         // 画边框阴影
+        int step = TOP_OPACITY / pixels;
         for (int i = 0; i < pixels; i++) {
-            g2d.setColor(new Color(0, 0, 0, ((TOP_OPACITY / pixels) * i)));
-            g2d.drawRoundRect(i, i, getWidth() - ((i * 2) + 1), getHeight() - ((i * 2) + 1), arc, arc);
+            g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
+            g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
         }
 
         super.paintComponent(g);

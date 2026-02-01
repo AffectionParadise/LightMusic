@@ -7,6 +7,7 @@ import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -59,9 +60,9 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
     private DialogButton removeButton;
 
     // 底部盒子
-    private Box bottomBox = new Box(BoxLayout.X_AXIS);
+    private CustomBox bottomBox = new CustomBox(BoxLayout.X_AXIS);
     // 右部按钮盒子
-    private Box rightBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox rightBox = new CustomBox(BoxLayout.Y_AXIS);
 
     public ManageCustomStyleDialog(MainFrame f) {
         super(f, I18n.getText("manageStyleTitle"));
@@ -261,19 +262,19 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
         Dimension area = new HDDimension(1, 10);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(CustomBox.createVerticalGlue());
         rightBox.add(allSelectButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(nonSelectButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(applyButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(addButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(editButton);
-        rightBox.add(Box.createRigidArea(area));
+        rightBox.add(CustomBox.createRigidArea(area));
         rightBox.add(removeButton);
-        rightBox.add(Box.createVerticalGlue());
+        rightBox.add(CustomBox.createVerticalGlue());
         // 添加列表和右部按钮整体
         StyleListRenderer r = new StyleListRenderer(f);
         r.setForeColor(foreColor);

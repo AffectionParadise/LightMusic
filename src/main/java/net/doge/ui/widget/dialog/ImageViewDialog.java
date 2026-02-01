@@ -11,6 +11,7 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
@@ -111,7 +112,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     private CustomButton saveImgButton = new CustomButton(saveImgIcon);
 
     // 底部盒子
-    private Box bottomBox = new Box(BoxLayout.Y_AXIS);
+    private CustomBox bottomBox = new CustomBox(BoxLayout.Y_AXIS);
 
     private CommonResult<String> results;
     private List<String> cursors = new LinkedList<>();

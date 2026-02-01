@@ -14,10 +14,11 @@ public class CustomLabel extends JLabel {
     private boolean drawBg;
     @Setter
     private Color bgColor;
+    @Setter
     @Getter
-    protected float alpha = 1f;
-    private float destAlpha = 1f;
-    private Timer alphaTimer;
+    protected float opacity = 1f;
+    private float destOpacity = 1f;
+    private Timer opacityTimer;
 
     public CustomLabel() {
         this(null, null);
@@ -41,38 +42,31 @@ public class CustomLabel extends JLabel {
         setHorizontalAlignment(CENTER);
         setVerticalAlignment(CENTER);
 
-        alphaTimer = new Timer(0, e -> {
-            if (alpha < destAlpha) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else if (alpha > destAlpha) alpha = Math.max(destAlpha, alpha - 0.005f);
-            else alphaTimer.stop();
+        opacityTimer = new Timer(0, e -> {
+            if (opacity < destOpacity) opacity = Math.min(destOpacity, opacity + 0.005f);
+            else if (opacity > destOpacity) opacity = Math.max(destOpacity, opacity - 0.005f);
+            else opacityTimer.stop();
             repaint();
         });
     }
 
-    public void setAlpha(float alpha) {
-        this.destAlpha = alpha;
-        if (alphaTimer.isRunning()) return;
-        alphaTimer.start();
-    }
-
-    public void setInstantAlpha(float alpha) {
-        this.alpha = alpha;
+    public void transitionOpacity(float opacity) {
+        this.destOpacity = opacity;
+        if (opacityTimer.isRunning()) return;
+        opacityTimer.start();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2d = GraphicsUtil.setup(g);
-
+        // 画背景
         if (drawBg) {
-            // 画背景
+            Graphics2D g2d = GraphicsUtil.setup(g);
             g2d.setColor(bgColor);
             GraphicsUtil.srcOver(g2d, 0.1f);
             int arc = ScaleUtil.scale(10);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         }
-
-        GraphicsUtil.srcOver(g2d, alpha);
-
+        GraphicsUtil.srcOver(g, opacity);
         super.paintComponent(g);
     }
 }

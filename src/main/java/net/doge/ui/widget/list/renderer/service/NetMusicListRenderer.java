@@ -68,9 +68,9 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         iconLabel.setIconTextGap(ScaleUtil.scale(15));
         iconLabel.setHorizontalTextPosition(LEFT);
 
-        artistLabel.setInstantAlpha(alpha);
-        albumNameLabel.setInstantAlpha(alpha);
-        lrcMatchLabel.setInstantAlpha(alpha);
+        artistLabel.setOpacity(alpha);
+        albumNameLabel.setOpacity(alpha);
+        lrcMatchLabel.setOpacity(alpha);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(ScaleUtil.scale(15));
@@ -81,8 +81,6 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         innerPanel.add(artistLabel);
         innerPanel.add(albumNameLabel);
         innerPanel.add(durationLabel);
-
-        outerPanel.setInstantDrawBg(true);
     }
 
     @Override
@@ -92,12 +90,12 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
         // 播放中的文件图标不同
         if (player.loadedNetMusic(musicInfo)) {
             iconLabel.setIcon(playingIcon);
-            iconLabel.setInstantAlpha(1f);
+            iconLabel.setOpacity(1f);
         } else {
             if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
             else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
             else iconLabel.setIcon(musicIcon);
-            iconLabel.setInstantAlpha(alpha);
+            iconLabel.setOpacity(alpha);
         }
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);

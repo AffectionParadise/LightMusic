@@ -121,9 +121,9 @@ public class LrcListRenderer extends DefaultListCellRenderer {
         label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(labelUI);
-        if (index == row) labelUI.setAlpha(highlightMaxAlpha);
-        else if (index < row) labelUI.setAlpha(normalMinAlpha);
-        else labelUI.setAlpha(normalMaxAlpha);
+        if (index == row) labelUI.setOpacity(highlightMaxAlpha);
+        else if (index < row) labelUI.setOpacity(normalMinAlpha);
+        else labelUI.setOpacity(normalMaxAlpha);
 //        else labelUI.setAlpha(alphas.getOrDefault(index, normalMaxAlpha));
 
         // 高亮的行的样式

@@ -24,10 +24,10 @@ public class DialogButton extends BaseButton implements MouseListener {
     private Color foreColor;
     private Color foreColorBk;
     private Timer drawBgTimer;
-    private boolean entered;
-    private final float startAlpha = 0.2f;
-    private final float destAlpha = 0.4f;
-    private float alpha = startAlpha;
+    private boolean drawBgIncreasing;
+    private final float startBgAlpha = 0.2f;
+    private final float destBgAlpha = 0.4f;
+    private float bgAlpha = startBgAlpha;
     private static final Border BORDER = new HDEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
@@ -59,9 +59,9 @@ public class DialogButton extends BaseButton implements MouseListener {
         setBorder(BORDER);
 
         drawBgTimer = new Timer(2, e -> {
-            if (entered) alpha = Math.min(destAlpha, alpha + 0.005f);
-            else alpha = Math.max(startAlpha, alpha - 0.005f);
-            if (alpha <= startAlpha || alpha >= destAlpha) drawBgTimer.stop();
+            if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+            else bgAlpha = Math.max(startBgAlpha, bgAlpha - 0.005f);
+            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) drawBgTimer.stop();
             repaint();
         });
     }
@@ -89,7 +89,7 @@ public class DialogButton extends BaseButton implements MouseListener {
         Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
         g2d.setColor(foreColor);
-        GraphicsUtil.srcOver(g2d, alpha);
+        GraphicsUtil.srcOver(g2d, bgAlpha);
         int arc = ScaleUtil.scale(8);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         GraphicsUtil.srcOver(g2d);
@@ -140,9 +140,8 @@ public class DialogButton extends BaseButton implements MouseListener {
 //        }
     }
 
-    public void setEntered(boolean entered) {
-        if (this.entered == entered) return;
-        this.entered = entered;
+    public void transitionDrawBg(boolean drawBgIncreasing) {
+        this.drawBgIncreasing = drawBgIncreasing;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
     }
@@ -164,11 +163,11 @@ public class DialogButton extends BaseButton implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        setEntered(true);
+        transitionDrawBg(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        setEntered(false);
+        transitionDrawBg(false);
     }
 }

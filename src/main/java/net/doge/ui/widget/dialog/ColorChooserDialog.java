@@ -8,6 +8,7 @@ import net.doge.entity.core.color.HSV;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
@@ -49,13 +50,13 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     private CustomPanel buttonPanel = new CustomPanel();
 
     // 预定义颜色面板
-    private Box preBox = Box.createVerticalBox();
+    private CustomBox preBox = CustomBox.createVerticalBox();
     private CustomPanel prePanel = new CustomPanel();
     // 预设标签
     private CustomPanel pPanel = new CustomPanel();
     private CustomLabel preLabel = new CustomLabel(I18n.getText("presets"));
 
-    private Box customBox = Box.createVerticalBox();
+    private CustomBox customBox = CustomBox.createVerticalBox();
     // 自定义标签
     private CustomPanel customPanel = new CustomPanel();
     private CustomLabel customLabel = new CustomLabel(I18n.getText("custom"));
@@ -155,17 +156,17 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
         Dimension d = new HDDimension(1, 10);
-        Box rBox = Box.createHorizontalBox();
+        CustomBox rBox = CustomBox.createHorizontalBox();
         rBox.add(rlb);
         rBox.add(rSlider);
         leftPanel.add(rBox);
-        leftPanel.add(Box.createRigidArea(d));
-        Box gBox = Box.createHorizontalBox();
+        leftPanel.add(CustomBox.createRigidArea(d));
+        CustomBox gBox = CustomBox.createHorizontalBox();
         gBox.add(glb);
         gBox.add(gSlider);
         leftPanel.add(gBox);
-        leftPanel.add(Box.createRigidArea(d));
-        Box bBox = Box.createHorizontalBox();
+        leftPanel.add(CustomBox.createRigidArea(d));
+        CustomBox bBox = CustomBox.createHorizontalBox();
         bBox.add(blb);
         bBox.add(bSlider);
         leftPanel.add(bBox);
@@ -178,13 +179,13 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         tfPanel.add(modelComboBox);
         tfPanel.add(rLabel);
         tfPanel.add(rTextField);
-        tfPanel.add(Box.createRigidArea(d));
+        tfPanel.add(CustomBox.createRigidArea(d));
         tfPanel.add(gLabel);
         tfPanel.add(gTextField);
-        tfPanel.add(Box.createRigidArea(d));
+        tfPanel.add(CustomBox.createRigidArea(d));
         tfPanel.add(bLabel);
         tfPanel.add(bTextField);
-        tfPanel.add(Box.createRigidArea(d));
+        tfPanel.add(CustomBox.createRigidArea(d));
         tfPanel.add(hexLabel);
         tfPanel.add(hexTextField);
 
