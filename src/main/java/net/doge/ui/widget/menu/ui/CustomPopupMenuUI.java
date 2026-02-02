@@ -9,9 +9,9 @@ import java.awt.*;
  * @Description 弹出菜单元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class PopupMenuUI extends BasicPopupMenuUI {
+public class CustomPopupMenuUI extends BasicPopupMenuUI {
 
-    public PopupMenuUI() {
+    public CustomPopupMenuUI() {
 
     }
 

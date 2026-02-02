@@ -4,7 +4,7 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
@@ -46,8 +46,8 @@ public class CustomComboPopup extends BasicComboPopup {
     @Override
     protected JScrollPane createScroller() {
         CustomScrollPane sp = new CustomScrollPane(list);
-        sp.setHBarUI(new ScrollBarUI(scrollBarColor));
-        sp.setVBarUI(new ScrollBarUI(scrollBarColor));
+        sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         return sp;
     }
 

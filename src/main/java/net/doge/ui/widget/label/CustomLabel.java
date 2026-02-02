@@ -3,13 +3,15 @@ package net.doge.ui.widget.label;
 import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomLabel extends JLabel {
+public class CustomLabel extends JLabel implements ExtendedOpacitySupported {
     @Setter
     private boolean drawBg;
     @Setter
@@ -19,6 +21,8 @@ public class CustomLabel extends JLabel {
     protected float opacity = 1f;
     private float destOpacity = 1f;
     private Timer opacityTimer;
+    @Getter
+    private float extendedOpacity = 1f;
 
     public CustomLabel() {
         this(null, null);
@@ -57,16 +61,27 @@ public class CustomLabel extends JLabel {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = GraphicsUtil.setup(g);
             g2d.setColor(bgColor);
-            GraphicsUtil.srcOver(g2d, 0.1f);
+            GraphicsUtil.srcOver(g2d, extendedOpacity * 0.1f);
             int arc = ScaleUtil.scale(10);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         }
-        GraphicsUtil.srcOver(g, opacity);
+        GraphicsUtil.srcOver(g, extendedOpacity * opacity);
         super.paintComponent(g);
     }
 }

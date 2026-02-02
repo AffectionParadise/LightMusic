@@ -1,13 +1,16 @@
 package net.doge.ui.widget.button;
 
+import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.tooltip.CustomToolTip;
+import net.doge.ui.widget.tooltip.CustomToolTip;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,7 +23,7 @@ import java.awt.event.MouseListener;
  * @Description 对话框中的按钮自定义 UI
  * @Date 2020/12/13
  */
-public class DialogButton extends BaseButton implements MouseListener {
+public class DialogButton extends BaseButton implements MouseListener, ExtendedOpacitySupported {
     private Color foreColor;
     private Color foreColorBk;
     private Timer drawBgTimer;
@@ -28,6 +31,8 @@ public class DialogButton extends BaseButton implements MouseListener {
     private final float startBgAlpha = 0.2f;
     private final float destBgAlpha = 0.4f;
     private float bgAlpha = startBgAlpha;
+    @Getter
+    private float extendedOpacity = 1f;
     private static final Border BORDER = new HDEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
@@ -85,14 +90,25 @@ public class DialogButton extends BaseButton implements MouseListener {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
         g2d.setColor(foreColor);
-        GraphicsUtil.srcOver(g2d, bgAlpha);
+        GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
         int arc = ScaleUtil.scale(8);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
-        GraphicsUtil.srcOver(g2d);
+        GraphicsUtil.srcOver(g2d, extendedOpacity);
 
         super.paintComponent(g);
 

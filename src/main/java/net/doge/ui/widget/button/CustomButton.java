@@ -1,22 +1,27 @@
 package net.doge.ui.widget.button;
 
+import lombok.Getter;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.tooltip.CustomToolTip;
+import net.doge.ui.widget.tooltip.CustomToolTip;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class CustomButton extends BaseButton {
+public class CustomButton extends BaseButton implements ExtendedOpacitySupported {
     private boolean drawBg;
     private boolean drawBgIncreasing;
     private Timer drawBgTimer;
     private float bgAlpha;
     private final float destBgAlpha = 0.2f;
+    @Getter
+    private float extendedOpacity = 1f;
 
     private static BufferedImage maskImg = LMIconManager.getImage("mask");
 
@@ -77,12 +82,23 @@ public class CustomButton extends BaseButton {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = GraphicsUtil.setup(g);
             int w = getWidth(), h = getHeight();
-            GraphicsUtil.srcOver(g2d, bgAlpha);
+            GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
             if (w / h >= 2) {
                 g2d.setColor(getForeground());
                 int arc = ScaleUtil.scale(10);
@@ -91,7 +107,7 @@ public class CustomButton extends BaseButton {
                 BufferedImage img = ImageUtil.width(maskImg, w);
                 g2d.drawImage(img, 0, 0, w, h, this);
             }
-            GraphicsUtil.srcOver(g2d);
+            GraphicsUtil.srcOver(g2d, extendedOpacity);
         }
         super.paintComponent(g);
     }

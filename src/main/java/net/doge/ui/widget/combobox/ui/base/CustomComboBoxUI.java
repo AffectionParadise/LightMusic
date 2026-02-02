@@ -24,7 +24,7 @@ import java.awt.event.MouseEvent;
  * @Description 下拉框元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class ComboBoxUI extends BasicComboBoxUI {
+public class CustomComboBoxUI extends BasicComboBoxUI {
     protected CustomComboBox comboBox;
     @Getter
     protected CustomComboPopup popup;
@@ -36,7 +36,7 @@ public class ComboBoxUI extends BasicComboBoxUI {
 
     protected ImageIcon arrowIcon = LMIconManager.getIcon("toolbar.arrow");
 
-    public ComboBoxUI(CustomComboBox<?> comboBox, MainFrame f) {
+    public CustomComboBoxUI(CustomComboBox<?> comboBox, MainFrame f) {
         this.comboBox = comboBox;
         this.f = f;
 
@@ -51,34 +51,21 @@ public class ComboBoxUI extends BasicComboBoxUI {
         comboBox.setForeground(textColor);
     }
 
-    public ComboBoxUI(CustomComboBox<?> comboBox, MainFrame f, int width) {
+    public CustomComboBoxUI(CustomComboBox<?> comboBox, MainFrame f, int width) {
         this(comboBox, f);
         comboBox.setPreferredSize(new HDDimension(width, 30));
     }
-
-//    @Override
-//    public void paintCurrentValue(Graphics g, Rectangle bounds, boolean hasFocus) {
-//        // 画文字
-//        String text = (String) comboBox.getSelectedItem();
-//        if (text != null) {
-//            Graphics2D g2d = GraphicsUtil.setup(g);
-//            FontMetrics metrics = comboBox.getFontMetrics(font);
-//            int sw = metrics.stringWidth(text);
-//            int sh = metrics.getHeight();
-//            g2d.setColor(foreColor);
-//            g2d.drawString(text, (bounds.width - sw) / 2, (bounds.height - sh) / 2 + 16);
-//        }
-//    }
 
     @Override
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {
         // 画背景
         Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(f.currUIStyle.getTextColor());
-        GraphicsUtil.srcOver(g2d, comboBox.getBgAlpha());
+        float extendedOpacity = comboBox.getExtendedOpacity(), bgAlpha = comboBox.getBgAlpha();
+        GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(bounds.x, bounds.y, bounds.width, bounds.height, arc, arc);
-        GraphicsUtil.srcOver(g2d);
+        GraphicsUtil.srcOver(g2d, extendedOpacity);
     }
 
     @Override

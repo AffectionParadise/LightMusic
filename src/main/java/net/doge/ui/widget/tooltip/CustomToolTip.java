@@ -1,4 +1,4 @@
-package net.doge.ui.widget.button.tooltip;
+package net.doge.ui.widget.tooltip;
 
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;

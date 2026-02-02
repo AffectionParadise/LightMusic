@@ -16,7 +16,7 @@ import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.StyleListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -321,8 +321,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             }
         });
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        styleListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         styleListScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
@@ -374,8 +374,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         r.setSelectedColor(st.getSelectedColor());
         r.setTextColor(textColor);
 
-        styleListScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        styleListScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        styleListScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
 
         globalPanel.repaint();
     }

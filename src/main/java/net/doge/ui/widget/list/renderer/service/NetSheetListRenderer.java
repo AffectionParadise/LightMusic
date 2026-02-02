@@ -8,6 +8,7 @@ import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.service.NetSheetInfo;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
@@ -25,7 +26,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class NetSheetListRenderer extends DefaultListCellRenderer {
+public class NetSheetListRenderer extends CustomListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
@@ -134,6 +135,11 @@ public class NetSheetListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

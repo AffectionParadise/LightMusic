@@ -11,10 +11,10 @@ import java.awt.*;
  * @Description 列表自定义 UI
  * @Date 2020/12/13
  */
-public class ListUI extends BasicListUI {
+public class CustomListUI extends BasicListUI {
     private int highlightIndex;
 
-    public ListUI(int highlightIndex) {
+    public CustomListUI(int highlightIndex) {
         this.highlightIndex = highlightIndex;
     }
 

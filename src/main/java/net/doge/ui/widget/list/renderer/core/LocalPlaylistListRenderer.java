@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.entity.ChoosableListItem;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -20,7 +21,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
+public class LocalPlaylistListRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -66,6 +67,11 @@ public class LocalPlaylistListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

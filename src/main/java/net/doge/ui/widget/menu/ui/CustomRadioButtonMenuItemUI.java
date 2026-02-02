@@ -7,9 +7,9 @@ import java.awt.*;
  * @Description 单选菜单项元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class RadioButtonMenuItemUI extends MenuItemUI {
+public class CustomRadioButtonMenuItemUI extends CustomMenuItemUI {
 
-    public RadioButtonMenuItemUI(Color foreColor) {
+    public CustomRadioButtonMenuItemUI(Color foreColor) {
         super(foreColor);
     }
 //

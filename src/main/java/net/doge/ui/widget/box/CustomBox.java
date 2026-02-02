@@ -1,8 +1,9 @@
 package net.doge.ui.widget.box;
 
 import lombok.Getter;
-import net.doge.ui.widget.base.OpacitySupported;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,9 +13,9 @@ import java.awt.*;
  * @Description 自定义 Box
  * @Date 2020/12/13
  */
-public class CustomBox extends Box implements OpacitySupported {
+public class CustomBox extends Box implements ExtendedOpacitySupported {
     @Getter
-    private float opacity = 1f;
+    private float extendedOpacity = 1f;
 
     public CustomBox(int axis) {
         super(axis);
@@ -28,14 +29,20 @@ public class CustomBox extends Box implements OpacitySupported {
         return new CustomBox(BoxLayout.Y_AXIS);
     }
 
-    public void setOpacity(float opacity) {
-        this.opacity = opacity;
+    @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
         repaint();
     }
 
     @Override
-    protected void paintChildren(Graphics g) {
-        GraphicsUtil.srcOver(g, opacity);
-        super.paintChildren(g);
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        GraphicsUtil.srcOver(g, extendedOpacity);
+        super.paintComponent(g);
     }
 }

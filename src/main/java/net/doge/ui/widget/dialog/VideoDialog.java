@@ -29,10 +29,10 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.menu.CustomPopupMenu;
 import net.doge.ui.widget.menu.CustomRadioButtonMenuItem;
-import net.doge.ui.widget.menu.ui.MenuItemUI;
+import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
-import net.doge.ui.widget.slider.ui.SliderUI;
+import net.doge.ui.widget.slider.ui.TimeSliderUI;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
@@ -329,7 +329,7 @@ public class VideoDialog extends AbstractTitledDialog {
     private void initAgain() {
         initView();
         Color timeBarColor = f.currUIStyle.getTimeBarColor();
-        timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));
+        timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));
         playVideo();
     }
 
@@ -384,7 +384,7 @@ public class VideoDialog extends AbstractTitledDialog {
         timeBar.setMinimum(TIME_BAR_MIN);
         timeBar.setMaximum(TIME_BAR_MAX);
         timeBar.setValue(TIME_BAR_MIN);
-        timeBar.setUI(new SliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));      // 自定义进度条 UI
+        timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));      // 自定义进度条 UI
         // 拖动播放时间条
         timeBar.addMouseListener(new MouseAdapter() {
             @Override
@@ -450,7 +450,7 @@ public class VideoDialog extends AbstractTitledDialog {
             mp.setMute(isMute);
         });
         // 音量调节滑动条
-        volumeSlider.setUI(new SliderUI(volumeSlider, sliderColor, sliderColor, f, mp, false));
+        volumeSlider.setUI(new TimeSliderUI(volumeSlider, sliderColor, sliderColor, f, mp, false));
         volumeSlider.setPreferredSize(new HDDimension(100, 20));
         volumeSlider.setMaximum(MAX_VOLUME);
         volumeSlider.addChangeListener(e -> {
@@ -504,7 +504,7 @@ public class VideoDialog extends AbstractTitledDialog {
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
             Color textColor = f.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
-            menuItem.setUI(new MenuItemUI(textColor));
+            menuItem.setUI(new CustomMenuItemUI(textColor));
             int time = Integer.parseInt(menuItem.getText().replace(SECONDS, ""));
             if (time == f.videoForwardOrBackwardTime) selectedFobMenuItem = menuItem;
             menuItem.addActionListener(e -> {

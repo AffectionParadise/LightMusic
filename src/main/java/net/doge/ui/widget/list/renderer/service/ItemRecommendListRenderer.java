@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.doge.entity.service.*;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,12 +17,14 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemRecommendListRenderer extends DefaultListCellRenderer {
+public class ItemRecommendListRenderer extends CustomListCellRenderer {
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
     private Color iconColor;
     private int hoverIndex = -1;
+
+    private Component root;
 
     private NetPlaylistListRenderer playlistListRenderer = new NetPlaylistListRenderer();
     private NetAlbumListRenderer albumListRenderer = new NetAlbumListRenderer();
@@ -89,20 +92,25 @@ public class ItemRecommendListRenderer extends DefaultListCellRenderer {
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         if (value instanceof NetPlaylistInfo)
-            return playlistListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = playlistListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetAlbumInfo)
-            return albumListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = albumListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetArtistInfo)
-            return artistListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = artistListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetRadioInfo)
-            return radioListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = radioListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetMvInfo)
-            return mvListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = mvListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetRankingInfo)
-            return rankingListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = rankingListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetUserInfo)
-            return userListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            return root = userListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
         return this;
+    }
+
+    @Override
+    public Component getRootComponent() {
+        return root;
     }
 }

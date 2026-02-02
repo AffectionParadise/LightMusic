@@ -14,11 +14,11 @@ import java.awt.*;
  * @Date 2020/12/13
  */
 @Setter
-public class LabelUI extends BasicLabelUI {
+public class CustomLabelUI extends BasicLabelUI {
     private float opacity;
     private boolean drawBg;
 
-    public LabelUI(float opacity) {
+    public CustomLabelUI(float opacity) {
         this.opacity = opacity;
     }
 

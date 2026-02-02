@@ -9,6 +9,7 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.core.player.MusicPlayer;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
@@ -27,7 +28,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class NetMusicListRenderer extends DefaultListCellRenderer {
+public class NetMusicListRenderer extends CustomListCellRenderer {
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -146,6 +147,11 @@ public class NetMusicListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

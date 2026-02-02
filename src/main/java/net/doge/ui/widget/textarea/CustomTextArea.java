@@ -1,21 +1,26 @@
 package net.doge.ui.widget.textarea;
 
 import lombok.Data;
+import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.inset.HDInsets;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 @Data
-public class CustomTextArea extends JTextArea {
+public class CustomTextArea extends JTextArea implements ExtendedOpacitySupported {
     private boolean occupied;
+    @Getter
+    private float extendedOpacity = 1f;
 
     public CustomTextArea(int rows, int columns) {
         super(rows, columns);
@@ -83,6 +88,17 @@ public class CustomTextArea extends JTextArea {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
@@ -90,10 +106,10 @@ public class CustomTextArea extends JTextArea {
         // 画背景
         Color foreColor = getForeground();
         g2d.setColor(foreColor);
-        GraphicsUtil.srcOver(g2d, 0.2f);
+        GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
         int arc = ScaleUtil.scale(25);
         g2d.fillRoundRect(0, 0, w, h, arc, arc);
-        GraphicsUtil.srcOver(g2d);
+        GraphicsUtil.srcOver(g2d, extendedOpacity);
 
         super.paintComponent(g);
 

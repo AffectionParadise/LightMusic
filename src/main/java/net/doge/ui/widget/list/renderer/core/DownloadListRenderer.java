@@ -9,6 +9,7 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.core.task.Task;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
@@ -29,7 +30,7 @@ import java.awt.*;
  */
 @Data
 @AllArgsConstructor
-public class DownloadListRenderer extends DefaultListCellRenderer {
+public class DownloadListRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -145,6 +146,11 @@ public class DownloadListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || index == hoverIndex);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

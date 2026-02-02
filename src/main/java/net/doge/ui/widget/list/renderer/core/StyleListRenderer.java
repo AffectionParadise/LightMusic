@@ -8,6 +8,7 @@ import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
@@ -23,7 +24,7 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/7
  */
 @Data
-public class StyleListRenderer extends DefaultListCellRenderer {
+public class StyleListRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Font tinyFont = Fonts.NORMAL_TINY;
@@ -104,6 +105,11 @@ public class StyleListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

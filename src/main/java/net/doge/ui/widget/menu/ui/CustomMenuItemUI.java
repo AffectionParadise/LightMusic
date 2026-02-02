@@ -9,9 +9,9 @@ import java.awt.*;
  * @Description 菜单项元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class MenuItemUI extends BasicMenuItemUI {
+public class CustomMenuItemUI extends BasicMenuItemUI {
 
-    public MenuItemUI(Color foreColor) {
+    public CustomMenuItemUI(Color foreColor) {
         selectionForeground = foreColor;
     }
 

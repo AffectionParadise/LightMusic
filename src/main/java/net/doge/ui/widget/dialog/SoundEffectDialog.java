@@ -12,7 +12,7 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
-import net.doge.ui.widget.slider.ui.VSliderUI;
+import net.doge.ui.widget.slider.ui.VerticalSliderUI;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -154,7 +154,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
             CustomLabel hz = hzs[i];
 
             // 滑动条
-            s.setUI(new VSliderUI(s, sliderColor, sliderColor));
+            s.setUI(new VerticalSliderUI(s, sliderColor, sliderColor));
             s.setPreferredSize(new HDDimension(30, 300));
             s.setBorder(new HDEmptyBorder(0, 0, 4, 0));
             s.setMinimum((int) EqualizerData.MIN_GAIN);

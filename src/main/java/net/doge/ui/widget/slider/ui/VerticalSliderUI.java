@@ -14,11 +14,11 @@ import java.awt.event.MouseEvent;
  * @Description 垂直滑动条自定义 UI
  * @Date 2020/12/13
  */
-public class VSliderUI extends BasicSliderUI {
+public class VerticalSliderUI extends BasicSliderUI {
     private Color thumbColor;
     private Color trackColor;
 
-    public VSliderUI(JSlider slider, Color thumbColor, Color trackColor) {
+    public VerticalSliderUI(JSlider slider, Color thumbColor, Color trackColor) {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;

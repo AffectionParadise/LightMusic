@@ -1,12 +1,12 @@
 package net.doge.ui.widget.button.base;
 
 import net.doge.constant.core.ui.core.Fonts;
-import net.doge.ui.widget.button.tooltip.CustomToolTip;
+import net.doge.ui.widget.tooltip.CustomToolTip;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class BaseButton extends JButton {
+public abstract class BaseButton extends JButton {
     public BaseButton() {
         this(null, null);
     }

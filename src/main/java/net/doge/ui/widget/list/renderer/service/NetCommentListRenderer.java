@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
@@ -23,7 +24,7 @@ import java.awt.image.BufferedImage;
  */
 @Data
 @AllArgsConstructor
-public class NetCommentListRenderer extends DefaultListCellRenderer {
+public class NetCommentListRenderer extends CustomListCellRenderer {
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -93,6 +94,11 @@ public class NetCommentListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 

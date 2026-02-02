@@ -1,4 +1,4 @@
-package net.doge.ui.widget.tabbedpane;
+package net.doge.ui.widget.scrollpane.scrollbar;
 
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
@@ -8,25 +8,12 @@ import net.doge.util.ui.SwingUtil;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * @Author Doge
- * @Description 自定义标签页面板
- * @Date 2020/12/13
- */
-public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupported {
+public class CustomScrollBar extends JScrollBar implements ExtendedOpacitySupported {
     @Getter
     private float extendedOpacity = 1f;
 
-    public CustomTabbedPane(int tabPlacement) {
-        super(tabPlacement, SCROLL_TAB_LAYOUT);
-        setFocusable(false);
-    }
-
-    @Override
-    public void setTabComponentAt(int index, Component component) {
-        super.setTabComponentAt(index, component);
-        // 设置标签卡鼠标指针
-        component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    public CustomScrollBar(int orientation) {
+        super(orientation);
     }
 
     @Override

@@ -15,7 +15,7 @@ import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.CatalogListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.core.LogUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -219,8 +219,8 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(catalogList);
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        sp.setHBarUI(new ScrollBarUI(scrollBarColor));
-        sp.setVBarUI(new ScrollBarUI(scrollBarColor));
+        sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         sp.setBorder(new HDEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

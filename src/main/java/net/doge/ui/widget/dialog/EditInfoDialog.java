@@ -17,7 +17,7 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.textarea.CustomTextArea;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.core.DurationUtil;
@@ -270,8 +270,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 textField.setText((String) results[i]);
             } else if (components[i] instanceof CustomScrollPane) {
                 CustomScrollPane sp = (CustomScrollPane) components[i];
-                sp.setHBarUI(new ScrollBarUI(scrollBarColor));
-                sp.setVBarUI(new ScrollBarUI(scrollBarColor));
+                sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+                sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
                 sp.setBorder(new HDEmptyBorder(10, 0, 10, 0));
 
                 CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
@@ -353,8 +353,8 @@ public class EditInfoDialog extends AbstractTitledDialog {
             centerPanel.add(outer);
         }
 
-        centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        centerScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 }

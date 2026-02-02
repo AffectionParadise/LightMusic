@@ -4,7 +4,7 @@ import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
 import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
 
 /**
@@ -12,8 +12,7 @@ import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
  * @Description 下拉框元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class LocalPlaylistComboBoxUI extends ComboBoxUI {
-
+public class LocalPlaylistComboBoxUI extends CustomComboBoxUI {
     public LocalPlaylistComboBoxUI(CustomComboBox<LocalPlaylist> comboBox, MainFrame f) {
         super(comboBox, f);
         // 下拉列表渲染

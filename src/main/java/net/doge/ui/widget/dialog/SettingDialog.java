@@ -30,9 +30,9 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
-import net.doge.ui.widget.tabbedpane.ui.TabbedPaneUI;
+import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.util.collection.ListUtil;
@@ -305,7 +305,7 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.setTabComponentAt(3, playbackPanel);
         tabbedPane.setTabComponentAt(4, hotKeyPanel);
 
-        tabbedPane.setUI(new TabbedPaneUI(tabbedPane));
+        tabbedPane.setUI(new CustomTabbedPaneUI(tabbedPane));
         f.updateTabUI(tabbedPane, f.currUIStyle);
         tabbedPane.addMouseMotionListener(new MouseAdapter() {
             @Override
@@ -322,16 +322,16 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, f.currUIStyle));
 
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        generalScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        generalScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        playbackScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        playbackScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        generalScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        generalScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
+        appearanceScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        appearanceScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
+        downloadAndCacheScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        downloadAndCacheScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
+        playbackScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        playbackScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
+        hoyKeyScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        hoyKeyScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
 
         // 标签大小
         Dimension d = new HDDimension(120, 40);

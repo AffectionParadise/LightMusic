@@ -8,6 +8,7 @@ import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +21,7 @@ import java.awt.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LocalPlaylistComboBoxRenderer extends DefaultListCellRenderer {
+public class LocalPlaylistComboBoxRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     protected Font customFont = Fonts.NORMAL;
     protected Color textColor;
@@ -45,6 +46,11 @@ public class LocalPlaylistComboBoxRenderer extends DefaultListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         label.setDrawBg(isSelected);
         label.setText(((LocalPlaylist) value).getName());
+        return label;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return label;
     }
 }

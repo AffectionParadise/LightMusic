@@ -3,9 +3,11 @@ package net.doge.ui.widget.panel;
 import lombok.Getter;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +15,12 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.GeneralPath;
 
-public class SpectrumPanel extends JPanel {
+public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
     private final Stroke STROKE = new BasicStroke(ScaleUtil.scale(3));
     private final int SPACE = ScaleUtil.scale(90);
 
+    @Getter
+    private float extendedOpacity = 1f;
     @Getter
     private boolean drawSpectrum;
 
@@ -42,6 +46,17 @@ public class SpectrumPanel extends JPanel {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         if (drawSpectrum) paintSpectrum(g);
         super.paintComponent(g);
@@ -54,7 +69,7 @@ public class SpectrumPanel extends JPanel {
         int barNum = SpectrumConstants.barNum, barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP,
                 viewX = (pw - barWidth * barNum - barGap * (barNum - 1)) / 2;
         Graphics2D g2d = GraphicsUtil.setup(g);
-        GraphicsUtil.srcOver(g2d, f.specOpacity);
+        GraphicsUtil.srcOver(g2d, extendedOpacity * f.specOpacity);
         Color spectrumColor = f.currUIStyle.getSpectrumColor();
 
         // 频谱渐变

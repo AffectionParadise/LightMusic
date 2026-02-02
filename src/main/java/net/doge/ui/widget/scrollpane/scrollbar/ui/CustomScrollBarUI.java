@@ -1,6 +1,7 @@
-package net.doge.ui.widget.scrollpane.ui;
+package net.doge.ui.widget.scrollpane.scrollbar.ui;
 
 import net.doge.ui.core.dimension.HDDimension;
+import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -14,18 +15,17 @@ import java.awt.event.MouseEvent;
  * @Description 滚动条自定义 UI
  * @Date 2020/12/13
  */
-public class ScrollBarUI extends BasicScrollBarUI {
+public class CustomScrollBarUI extends BasicScrollBarUI {
     private boolean active;
     private boolean entered;
     private boolean adjusting;
     private Color thumbColor;
 
-    public ScrollBarUI(Color thumbColor) {
-        this.thumbColor = thumbColor;
-        this.active = true;
+    public CustomScrollBarUI(Color thumbColor) {
+        this(thumbColor, true);
     }
 
-    public ScrollBarUI(Color thumbColor, boolean active) {
+    public CustomScrollBarUI(Color thumbColor, boolean active) {
         this.thumbColor = thumbColor;
         this.active = active;
     }
@@ -63,10 +63,11 @@ public class ScrollBarUI extends BasicScrollBarUI {
     @Override
     protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
         if (!active) return;
+        CustomScrollBar sb = (CustomScrollBar) scrollbar;
         Graphics2D g2d = GraphicsUtil.setup(g);
         g2d.setColor(thumbColor);
         // 透明滚动条
-        GraphicsUtil.srcOver(g2d, entered ? 0.6f : 0.3f);
+        GraphicsUtil.srcOver(g2d, sb.getExtendedOpacity() * (entered ? 0.6f : 0.3f));
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, arc, arc);
     }

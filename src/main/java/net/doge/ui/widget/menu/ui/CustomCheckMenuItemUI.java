@@ -1,22 +1,22 @@
 package net.doge.ui.widget.menu.ui;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicMenuUI;
+import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
 
 /**
  * @Author Doge
- * @Description 列表元素标签自定义 UI
+ * @Description 菜单项元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class MenuUI extends BasicMenuUI {
+public class CustomCheckMenuItemUI extends BasicMenuItemUI {
 
-    public MenuUI(Color foreColor) {
+    public CustomCheckMenuItemUI(Color foreColor) {
         selectionForeground = foreColor;
     }
 
     @Override
     protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-
+//        super.paintBackground(g, menuItem, bgColor);
     }
 }

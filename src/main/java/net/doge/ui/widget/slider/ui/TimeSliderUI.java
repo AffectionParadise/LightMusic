@@ -22,7 +22,7 @@ import java.awt.event.MouseEvent;
  * @Description 播放时间条自定义 UI
  * @Date 2020/12/13
  */
-public class SliderUI extends BasicSliderUI {
+public class TimeSliderUI extends BasicSliderUI {
     private Color thumbColor;
     private Color trackColor;
     private Color trackBgColor;
@@ -41,7 +41,7 @@ public class SliderUI extends BasicSliderUI {
     private boolean drawThumb;
 
     // 音频播放器
-    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MusicPlayer player, boolean isTimeBar) {
+    public TimeSliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MusicPlayer player, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
 //        trackColor = Colors.HXH;
@@ -57,7 +57,7 @@ public class SliderUI extends BasicSliderUI {
     }
 
     // 视频播放器
-    public SliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MediaPlayer mp, boolean isTimeBar) {
+    public TimeSliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MediaPlayer mp, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
         this.trackColor = trackColor;

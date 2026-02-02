@@ -18,7 +18,7 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
@@ -328,8 +328,8 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        centerScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        centerScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        centerScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        centerScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 

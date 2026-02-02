@@ -11,7 +11,7 @@ import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ImageUtil;
@@ -108,8 +108,8 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
-        messageScrollPane.setHBarUI(new ScrollBarUI(scrollBarColor));
-        messageScrollPane.setVBarUI(new ScrollBarUI(scrollBarColor));
+        messageScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
+        messageScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         FlowLayout fl = new HDFlowLayout();

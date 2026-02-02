@@ -11,7 +11,7 @@ import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
-import net.doge.ui.widget.slider.ui.VSliderUI;
+import net.doge.ui.widget.slider.ui.VerticalSliderUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,7 +98,7 @@ public class RateDialog extends AbstractShadowDialog {
         // 滑动条
         slider.setFont(Fonts.NORMAL);
         slider.setForeground(textColor);
-        slider.setUI(new VSliderUI(slider, sliderColor, sliderColor));
+        slider.setUI(new VerticalSliderUI(slider, sliderColor, sliderColor));
         slider.setPreferredSize(new HDDimension(35, 500));
         slider.setBorder(new HDEmptyBorder(0, 0, 4, 0));
         slider.setMinimum(MIN_VAL);

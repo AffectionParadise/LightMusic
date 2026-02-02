@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -19,7 +20,7 @@ import java.io.File;
  */
 @Data
 @AllArgsConstructor
-public class CatalogListRenderer extends DefaultListCellRenderer {
+public class CatalogListRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;
     private Color foreColor;
@@ -63,6 +64,11 @@ public class CatalogListRenderer extends DefaultListCellRenderer {
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
 
+        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
         return outerPanel;
     }
 }

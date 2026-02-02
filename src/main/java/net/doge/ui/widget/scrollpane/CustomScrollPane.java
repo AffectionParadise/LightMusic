@@ -1,19 +1,25 @@
 package net.doge.ui.widget.scrollpane;
 
 import lombok.Getter;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
+import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
 
-public class CustomScrollPane extends JScrollPane {
+public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupported {
     @Getter
     private final int thickness = ScaleUtil.scale(10);
     // 单位滚动长度
     private final int scrollAmount = ScaleUtil.scale(200);
+    @Getter
+    private float extendedOpacity = 1f;
 
     private Timer wheelScrollingTimer;
     private int scrollingFrom;
@@ -104,5 +110,32 @@ public class CustomScrollPane extends JScrollPane {
 
     public Component getViewportView() {
         return viewport.getView();
+    }
+
+    @Override
+    public JScrollBar createHorizontalScrollBar() {
+        return new CustomScrollBar(CustomScrollBar.HORIZONTAL);
+    }
+
+    @Override
+    public JScrollBar createVerticalScrollBar() {
+        return new CustomScrollBar(CustomScrollBar.VERTICAL);
+    }
+
+    @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        GraphicsUtil.srcOver(g, extendedOpacity);
+        super.paintComponent(g);
     }
 }

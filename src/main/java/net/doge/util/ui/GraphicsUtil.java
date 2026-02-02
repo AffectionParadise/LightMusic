@@ -55,14 +55,7 @@ public class GraphicsUtil {
      */
     public static Graphics2D srcOver(Graphics g, float alpha) {
         Graphics2D g2d = (Graphics2D) g;
-        // 父容器传过来的画笔可能带有冲突的参数，因此需要先混合！
-        float baseAlpha = 1f;
-        Composite c = g2d.getComposite();
-        if (c instanceof AlphaComposite) {
-            AlphaComposite ac = (AlphaComposite) g2d.getComposite();
-            if (ac.getRule() == AlphaComposite.SRC_OVER) baseAlpha = ac.getAlpha();
-        }
-        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, baseAlpha * alpha));
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
         return g2d;
     }
 }

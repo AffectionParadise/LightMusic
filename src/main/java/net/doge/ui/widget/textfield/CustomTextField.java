@@ -1,21 +1,27 @@
 package net.doge.ui.widget.textfield;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.inset.HDInsets;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-@Data
-public class CustomTextField extends JTextField {
+public class CustomTextField extends JTextField implements ExtendedOpacitySupported {
+    @Getter
+    @Setter
     private boolean occupied;
+    @Getter
+    private float extendedOpacity = 1f;
 
     public CustomTextField(int length) {
         super(length);
@@ -57,14 +63,6 @@ public class CustomTextField extends JTextField {
         super.requestFocus();
     }
 
-    public boolean isOccupied() {
-        return occupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
-    }
-
     // 判断是否需要刷新
     private boolean needRefresh() {
         FocusListener[] fls = getFocusListeners();
@@ -83,16 +81,27 @@ public class CustomTextField extends JTextField {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
 
         // 画背景
         g2d.setColor(getForeground());
-        GraphicsUtil.srcOver(g2d, 0.2f);
+        GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
         int arc = ScaleUtil.scale(25);
         g2d.fillRoundRect(0, 0, w, h, arc, arc);
-        GraphicsUtil.srcOver(g2d);
+        GraphicsUtil.srcOver(g2d, extendedOpacity);
 
         super.paintComponent(g);
 

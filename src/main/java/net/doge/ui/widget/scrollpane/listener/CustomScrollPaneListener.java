@@ -2,7 +2,7 @@ package net.doge.ui.widget.scrollpane.listener;
 
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.ui.ScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,11 +12,11 @@ import java.awt.event.MouseEvent;
  * @Description 滚动条的监听器
  * @Date 2021/1/10
  */
-public class ScrollPaneListener extends MouseAdapter {
+public class CustomScrollPaneListener extends MouseAdapter {
     private CustomScrollPane sp;
     private MainFrame f;
 
-    public ScrollPaneListener(CustomScrollPane sp, MainFrame f) {
+    public CustomScrollPaneListener(CustomScrollPane sp, MainFrame f) {
         this.sp = sp;
         this.f = f;
         sp.getVerticalScrollBar().addMouseListener(this);
@@ -25,13 +25,13 @@ public class ScrollPaneListener extends MouseAdapter {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        ScrollBarUI ui = (ScrollBarUI) sp.getVBarUI();
+        CustomScrollBarUI ui = (CustomScrollBarUI) sp.getVBarUI();
         ui.setActive(true);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        ScrollBarUI ui = (ScrollBarUI) sp.getVBarUI();
+        CustomScrollBarUI ui = (CustomScrollBarUI) sp.getVBarUI();
         ui.setActive(false);
     }
 }

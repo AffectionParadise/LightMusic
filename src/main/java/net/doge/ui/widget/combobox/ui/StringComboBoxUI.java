@@ -3,7 +3,7 @@ package net.doge.ui.widget.combobox.ui;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.combobox.CustomComboBox;
-import net.doge.ui.widget.combobox.ui.base.ComboBoxUI;
+import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
 import net.doge.ui.widget.list.renderer.core.StringComboBoxRenderer;
 
 /**
@@ -11,7 +11,7 @@ import net.doge.ui.widget.list.renderer.core.StringComboBoxRenderer;
  * @Description 下拉框元素标签自定义 UI
  * @Date 2020/12/13
  */
-public class StringComboBoxUI extends ComboBoxUI {
+public class StringComboBoxUI extends CustomComboBoxUI {
 
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f) {
         super(comboBox, f);

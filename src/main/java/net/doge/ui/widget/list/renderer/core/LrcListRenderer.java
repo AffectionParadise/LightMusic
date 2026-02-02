@@ -4,8 +4,9 @@ import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.entity.core.lyric.Statement;
-import net.doge.ui.widget.label.ui.LabelUI;
-import net.doge.ui.widget.list.ui.ListUI;
+import net.doge.ui.widget.label.ui.CustomLabelUI;
+import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
+import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.StringTwoColor;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -21,7 +22,7 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-public class LrcListRenderer extends DefaultListCellRenderer {
+public class LrcListRenderer extends CustomListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL_TITLE;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
@@ -55,7 +56,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
     // 普通歌词最大最小透明度
     public final float normalMaxAlpha = 0.4f;
     public final float normalMinAlpha = 0.05f;
-    private LabelUI labelUI = new LabelUI(normalMaxAlpha);
+    private CustomLabelUI labelUI = new CustomLabelUI(normalMaxAlpha);
     private Timer fontTimer;
 //    private Map<Integer, Float> alphas = new HashMap<>();
 
@@ -146,7 +147,7 @@ public class LrcListRenderer extends DefaultListCellRenderer {
             label.setIcon(null);
         }
         // 设置 list 对应行的高度
-        ((ListUI) list.getUI()).setCellHeight(index, getPreferredSize().height);
+        ((CustomListUI) list.getUI()).setCellHeight(index, getPreferredSize().height);
 
         return label;
 
@@ -191,5 +192,10 @@ public class LrcListRenderer extends DefaultListCellRenderer {
 //        outerPanel.setDrawBg(drawBg && isSelected);
 //
 //        return outerPanel;
+    }
+
+    @Override
+    public Component getRootComponent() {
+        return null;
     }
 }

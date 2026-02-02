@@ -11,10 +11,10 @@ import java.awt.*;
  * @Description 选项卡面板自定义 UI
  * @Date 2020/12/13
  */
-public class TabbedPaneUI extends BasicTabbedPaneUI {
+public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
     private CustomTabbedPane tp;
 
-    public TabbedPaneUI(CustomTabbedPane tp) {
+    public CustomTabbedPaneUI(CustomTabbedPane tp) {
         this.tp = tp;
     }
 
