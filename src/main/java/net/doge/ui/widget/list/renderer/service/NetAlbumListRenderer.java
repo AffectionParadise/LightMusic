@@ -59,10 +59,10 @@ public class NetAlbumListRenderer extends CustomListCellRenderer {
         songNumLabel.setFont(tinyFont);
         publishTimeLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        artistLabel.setOpacity(alpha);
-        songNumLabel.setOpacity(alpha);
-        publishTimeLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        artistLabel.setOpacity(opacity);
+        songNumLabel.setOpacity(opacity);
+        publishTimeLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

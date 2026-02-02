@@ -45,17 +45,17 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         // 显示和隐藏动画
         showTimer = new Timer(3, e -> {
             // 渐现渐隐效果
-            float alpha = label.getOpacity();
+            float opacity = label.getOpacity();
             if (closing) {
-                bgAlpha = Math.max(0, bgAlpha - 0.02f);
-                label.setOpacity(Math.max(0, alpha - 0.028f));
+                bgAlpha = Math.max(0f, bgAlpha - 0.02f);
+                label.setOpacity(Math.max(0f, opacity - 0.028f));
             } else {
                 bgAlpha = Math.min(0.7f, bgAlpha + 0.02f);
-                label.setOpacity(Math.min(1f, alpha + 0.028f));
+                label.setOpacity(Math.min(1f, opacity + 0.028f));
             }
             repaint();
             if (!closing && bgAlpha >= 0.7f) showTimer.stop();
-            else if (closing && bgAlpha <= 0) {
+            else if (closing && bgAlpha <= 0f) {
                 setVisible(false);
                 showTimer.stop();
 //                rotationTimer.stop();

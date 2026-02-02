@@ -60,10 +60,10 @@ public class NetRankingListRenderer extends CustomListCellRenderer {
         updateFreLabel.setFont(tinyFont);
         updateTimeLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        playCountLabel.setOpacity(alpha);
-        updateFreLabel.setOpacity(alpha);
-        updateTimeLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        playCountLabel.setOpacity(opacity);
+        updateFreLabel.setOpacity(opacity);
+        updateTimeLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

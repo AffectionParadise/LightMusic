@@ -247,7 +247,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         Border b = new HDEmptyBorder(0, 20, 0, 20);
 
         Color textColor = f.currUIStyle.getTextColor();
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
         Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器

@@ -65,13 +65,13 @@ public class NetSheetListRenderer extends CustomListCellRenderer {
         bpmLabel.setFont(tinyFont);
         pageSizeLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        difficultyLabel.setOpacity(alpha);
-        musicKeyLabel.setOpacity(alpha);
-        playVersionLabel.setOpacity(alpha);
-        chordNameLabel.setOpacity(alpha);
-        bpmLabel.setOpacity(alpha);
-        pageSizeLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        difficultyLabel.setOpacity(opacity);
+        musicKeyLabel.setOpacity(opacity);
+        playVersionLabel.setOpacity(opacity);
+        chordNameLabel.setOpacity(opacity);
+        bpmLabel.setOpacity(opacity);
+        pageSizeLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

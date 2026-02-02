@@ -50,7 +50,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
     private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.programItem"), ImageConstants.SMALL_WIDTH));
     private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playingItem"), ImageConstants.SMALL_WIDTH));
 
-    private final float alpha = 0.7f;
+    private final float opacity = 0.7f;
 
     public NetMusicListRenderer(MusicPlayer player) {
         this.player = player;
@@ -69,9 +69,9 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
         iconLabel.setIconTextGap(ScaleUtil.scale(15));
         iconLabel.setHorizontalTextPosition(LEFT);
 
-        artistLabel.setOpacity(alpha);
-        albumNameLabel.setOpacity(alpha);
-        lrcMatchLabel.setOpacity(alpha);
+        artistLabel.setOpacity(opacity);
+        albumNameLabel.setOpacity(opacity);
+        lrcMatchLabel.setOpacity(opacity);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(ScaleUtil.scale(15));
@@ -96,7 +96,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
             if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
             else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
             else iconLabel.setIcon(musicIcon);
-            iconLabel.setOpacity(alpha);
+            iconLabel.setOpacity(opacity);
         }
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);

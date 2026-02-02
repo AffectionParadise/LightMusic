@@ -60,10 +60,10 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
         playCountLabel.setFont(tinyFont);
         trackCountLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        creatorLabel.setOpacity(alpha);
-        playCountLabel.setOpacity(alpha);
-        trackCountLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        creatorLabel.setOpacity(opacity);
+        playCountLabel.setOpacity(opacity);
+        trackCountLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

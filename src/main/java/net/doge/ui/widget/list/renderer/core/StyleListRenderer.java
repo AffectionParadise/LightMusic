@@ -53,9 +53,8 @@ public class StyleListRenderer extends CustomListCellRenderer {
     private void init() {
         iconLabel.setIconTextGap(ScaleUtil.scale(0));
 
-        float alpha = 0.5f;
-        typeLabel.setOpacity(alpha);
-//        inUseLabel.setInstantAlpha(alpha);
+        float opacity = 0.5f;
+        typeLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

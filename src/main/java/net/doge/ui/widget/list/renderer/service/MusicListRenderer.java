@@ -51,7 +51,7 @@ public class MusicListRenderer extends CustomListCellRenderer {
     private static ImageIcon programIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.programItem"), ImageConstants.SMALL_WIDTH));
     private static ImageIcon playingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playingItem"), ImageConstants.SMALL_WIDTH));
 
-    private final float alpha = 0.7f;
+    private final float opacity = 0.7f;
 
     public MusicListRenderer(MusicPlayer player) {
         this.player = player;
@@ -70,8 +70,8 @@ public class MusicListRenderer extends CustomListCellRenderer {
         iconLabel.setIconTextGap(ScaleUtil.scale(15));
         iconLabel.setHorizontalTextPosition(LEFT);
 
-        artistLabel.setOpacity(alpha);
-        albumNameLabel.setOpacity(alpha);
+        artistLabel.setOpacity(opacity);
+        albumNameLabel.setOpacity(opacity);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(ScaleUtil.scale(15));
@@ -101,7 +101,7 @@ public class MusicListRenderer extends CustomListCellRenderer {
                 iconLabel.setOpacity(1f);
             } else {
                 iconLabel.setIcon(musicIcon);
-                iconLabel.setOpacity(alpha);
+                iconLabel.setOpacity(opacity);
             }
         } else {
             // 播放中的文件图标不同
@@ -112,7 +112,7 @@ public class MusicListRenderer extends CustomListCellRenderer {
                 if (musicInfo.hasMv()) iconLabel.setIcon(musicMvIcon);
                 else if (musicInfo.isProgram()) iconLabel.setIcon(programIcon);
                 else iconLabel.setIcon(musicIcon);
-                iconLabel.setOpacity(alpha);
+                iconLabel.setOpacity(opacity);
             }
         }
 

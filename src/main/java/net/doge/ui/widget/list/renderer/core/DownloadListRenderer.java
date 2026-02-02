@@ -50,7 +50,7 @@ public class DownloadListRenderer extends CustomListCellRenderer {
 
     private static ImageIcon taskIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.taskItem"), ImageConstants.SMALL_WIDTH));
 
-    private final float alpha = 0.5f;
+    private final float opacity = 0.5f;
 
     public DownloadListRenderer() {
         init();
@@ -68,9 +68,9 @@ public class DownloadListRenderer extends CustomListCellRenderer {
         layout.setHgap(ScaleUtil.scale(15));
         outerPanel.setLayout(layout);
 
-        iconLabel.setOpacity(alpha);
-        typeLabel.setOpacity(alpha);
-        sizeLabel.setOpacity(alpha);
+        iconLabel.setOpacity(opacity);
+        typeLabel.setOpacity(opacity);
+        sizeLabel.setOpacity(opacity);
 
         outerPanel.add(iconLabel);
         outerPanel.add(nameLabel);
@@ -105,8 +105,8 @@ public class DownloadListRenderer extends CustomListCellRenderer {
 
         // 已完成的任务透明显示
         if (task.isFinished()) {
-            percentLabel.setOpacity(alpha);
-            statusLabel.setOpacity(alpha);
+            percentLabel.setOpacity(opacity);
+            statusLabel.setOpacity(opacity);
             sliderUI.setRest(true);
         } else {
             percentLabel.setOpacity(1f);

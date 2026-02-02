@@ -446,7 +446,8 @@ public class I18n {
 
         LANG_MAP.put("aboutTitle", new String[]{"关于", "Abouts"});
         LANG_MAP.put("version", new String[]{"版本：", "Version: "});
-        LANG_MAP.put("techno", new String[]{"基于 Swing 与 JavaFX (Java 8) 构建", "Built on Swing and JavaFX (Java 8)"});
+        LANG_MAP.put("jdkVersion", new String[]{"JDK 版本：", "JDK Version: "});
+        LANG_MAP.put("techno", new String[]{"基于 Swing 与 JavaFX 构建", "Built on Swing and JavaFX"});
         LANG_MAP.put("website", new String[]{"网址：", "Website: "});
         LANG_MAP.put("mail", new String[]{"邮箱：", "Mail: "});
 

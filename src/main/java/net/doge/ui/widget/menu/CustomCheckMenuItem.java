@@ -60,9 +60,9 @@ public class CustomCheckMenuItem extends JCheckBoxMenuItem {
 
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
-            else bgAlpha = Math.max(0, bgAlpha - 0.005f);
+            else bgAlpha = Math.max(0f, bgAlpha - 0.005f);
             if (bgAlpha >= destBgAlpha) drawBgTimer.stop();
-            else if (bgAlpha <= 0) {
+            else if (bgAlpha <= 0f) {
                 drawBg = false;
                 drawBgTimer.stop();
             }

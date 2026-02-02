@@ -123,7 +123,7 @@ public abstract class AbstractShadowDialog extends JDialog {
             // 画边框阴影
             int step = TOP_OPACITY / pixels;
             for (int i = 0; i < pixels; i++) {
-                g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
+                g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
                 int arc = ScaleUtil.scale(10);
                 g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
             }

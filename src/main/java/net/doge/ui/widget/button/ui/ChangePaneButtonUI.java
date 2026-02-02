@@ -30,9 +30,9 @@ public class ChangePaneButtonUI extends BasicButtonUI {
 
         drawMaskTimer = new Timer(2, e -> {
             if (drawMaskIncreasing) maskAlpha = Math.min(destMaskAlpha, maskAlpha + 0.005f);
-            else maskAlpha = Math.max(0, maskAlpha - 0.005f);
+            else maskAlpha = Math.max(0f, maskAlpha - 0.005f);
             if (maskAlpha >= destMaskAlpha) drawMaskTimer.stop();
-            else if (maskAlpha <= 0) {
+            else if (maskAlpha <= 0f) {
                 drawMask = false;
                 drawMaskTimer.stop();
             }

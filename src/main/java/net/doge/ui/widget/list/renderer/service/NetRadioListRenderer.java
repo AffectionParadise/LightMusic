@@ -64,11 +64,11 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
         playCountLabel.setFont(tinyFont);
 //        createTimeLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        dCustomLabel.setOpacity(alpha);
-        categoryLabel.setOpacity(alpha);
-        trackCountLabel.setOpacity(alpha);
-        playCountLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        dCustomLabel.setOpacity(opacity);
+        categoryLabel.setOpacity(opacity);
+        trackCountLabel.setOpacity(opacity);
+        playCountLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

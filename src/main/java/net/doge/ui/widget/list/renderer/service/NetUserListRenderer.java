@@ -66,11 +66,11 @@ public class NetUserListRenderer extends CustomListCellRenderer {
         fanLabel.setFont(tinyFont);
         playlistCountLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        genderLabel.setOpacity(alpha);
-        followLabel.setOpacity(alpha);
-        fanLabel.setOpacity(alpha);
-        playlistCountLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        genderLabel.setOpacity(opacity);
+        followLabel.setOpacity(opacity);
+        fanLabel.setOpacity(opacity);
+        playlistCountLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

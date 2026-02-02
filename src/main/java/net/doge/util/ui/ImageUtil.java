@@ -725,7 +725,7 @@ public class ImageUtil {
             }
         }
         int cn = s * s;
-        return best ? ColorUtil.deriveAlphaColor(ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn)), alpha)
+        return best ? ColorUtil.deriveAlpha(ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn)), alpha)
                 : new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
     }
 

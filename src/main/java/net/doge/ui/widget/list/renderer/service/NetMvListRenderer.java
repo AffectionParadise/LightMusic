@@ -63,11 +63,11 @@ public class NetMvListRenderer extends CustomListCellRenderer {
         playCountLabel.setFont(tinyFont);
         pubTimeLabel.setFont(tinyFont);
 
-        float alpha = 0.5f;
-        artistLabel.setOpacity(alpha);
-        durationLabel.setOpacity(alpha);
-        playCountLabel.setOpacity(alpha);
-        pubTimeLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        artistLabel.setOpacity(opacity);
+        durationLabel.setOpacity(opacity);
+        playCountLabel.setOpacity(opacity);
+        pubTimeLabel.setOpacity(opacity);
 
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));

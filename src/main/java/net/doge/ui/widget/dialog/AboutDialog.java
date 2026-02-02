@@ -31,8 +31,10 @@ public class AboutDialog extends AbstractTitledDialog {
     private CustomPanel centerPanel = new CustomPanel();
     private CustomPanel appPanel = new CustomPanel();
     private CustomLabel appLabel = new CustomLabel();
-    private CustomPanel editionPanel = new CustomPanel();
-    private CustomLabel editionLabel = new CustomLabel(I18n.getText("version") + SoftInfo.VERSION);
+    private CustomPanel versionPanel = new CustomPanel();
+    private CustomLabel versionLabel = new CustomLabel(I18n.getText("version") + SoftInfo.VERSION);
+    private CustomPanel jdkVersionPanel = new CustomPanel();
+    private CustomLabel jdkVersionLabel = new CustomLabel(I18n.getText("jdkVersion") + SoftInfo.JDK_VERSION);
     private CustomPanel technoPanel = new CustomPanel();
     private CustomLabel technoLabel = new CustomLabel(I18n.getText("techno"));
     private CustomPanel websitePanel = new CustomPanel();
@@ -60,34 +62,39 @@ public class AboutDialog extends AbstractTitledDialog {
         appLabel.setIconTextGap(ScaleUtil.scale(15));
 
         appLabel.setForeground(textColor);
-        editionLabel.setForeground(textColor);
+        versionLabel.setForeground(textColor);
+        jdkVersionLabel.setForeground(textColor);
         technoLabel.setForeground(textColor);
         websiteLabel.setForeground(textColor);
         mailLabel.setForeground(textColor);
 
-        float alpha = 0.8f;
-        appLabel.setOpacity(alpha);
-        editionLabel.setOpacity(alpha);
-        technoLabel.setOpacity(alpha);
-        websiteLabel.setOpacity(alpha);
-        mailLabel.setOpacity(alpha);
+        float opacity = 0.8f;
+        appLabel.setOpacity(opacity);
+        versionLabel.setOpacity(opacity);
+        jdkVersionLabel.setOpacity(opacity);
+        technoLabel.setOpacity(opacity);
+        websiteLabel.setOpacity(opacity);
+        mailLabel.setOpacity(opacity);
 
         appPanel.add(appLabel);
-        editionPanel.add(editionLabel);
+        versionPanel.add(versionLabel);
+        jdkVersionPanel.add(jdkVersionLabel);
         technoPanel.add(technoLabel);
         websitePanel.add(websiteLabel);
         mailPanel.add(mailLabel);
 
         Border eb = new HDEmptyBorder(0, 0, 10, 0);
         appPanel.setBorder(eb);
-        editionPanel.setBorder(eb);
+        versionPanel.setBorder(eb);
+        jdkVersionPanel.setBorder(eb);
         technoPanel.setBorder(eb);
         websitePanel.setBorder(eb);
         mailPanel.setBorder(eb);
 
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.add(appPanel);
-        centerPanel.add(editionPanel);
+        centerPanel.add(versionPanel);
+        centerPanel.add(jdkVersionPanel);
         centerPanel.add(technoPanel);
         centerPanel.add(websitePanel);
         centerPanel.add(mailPanel);

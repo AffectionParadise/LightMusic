@@ -93,7 +93,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
         CustomPanel panel = new CustomPanel();
 
         Color textColor = f.currUIStyle.getTextColor();
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
 
         label.setForeground(textColor);
         panel.add(label);

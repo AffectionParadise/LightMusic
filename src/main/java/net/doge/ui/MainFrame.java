@@ -6370,9 +6370,9 @@ public class MainFrame extends JFrame {
         songNameLabel.setFont(Fonts.NORMAL_TITLE);
 
         // 透明度
-        float alpha = 0.5f;
-        artistLabel.transitionOpacity(alpha);
-        albumLabel.transitionOpacity(alpha);
+        float opacity = 0.5f;
+        artistLabel.transitionOpacity(opacity);
+        albumLabel.transitionOpacity(opacity);
         artistLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -6381,7 +6381,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                artistLabel.transitionOpacity(alpha);
+                artistLabel.transitionOpacity(opacity);
             }
 
             @Override
@@ -6389,7 +6389,7 @@ public class MainFrame extends JFrame {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     leftInfoPopupMenu.show(artistLabel, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
-                    artistLabel.transitionOpacity(alpha);
+                    artistLabel.transitionOpacity(opacity);
                     netMusicAuthorMenuItem.doClick();
                     changePaneButton.doClick();
                 }
@@ -6403,7 +6403,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                albumLabel.transitionOpacity(alpha);
+                albumLabel.transitionOpacity(opacity);
             }
 
             @Override
@@ -6411,7 +6411,7 @@ public class MainFrame extends JFrame {
                 if (e.getButton() == MouseEvent.BUTTON3) {
                     leftInfoPopupMenu.show(albumLabel, e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
-                    albumLabel.transitionOpacity(alpha);
+                    albumLabel.transitionOpacity(opacity);
                     netMusicAlbumMenuItem.doClick();
                     changePaneButton.doClick();
                 }
@@ -7535,12 +7535,12 @@ public class MainFrame extends JFrame {
         musicHeaderPanel.setLayout(layout);
         musicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
-        float alpha = 0.5f;
-        musicSourceHeaderLabel.setOpacity(alpha);
-        musicNameHeaderLabel.setOpacity(alpha);
-        musicArtistHeaderLabel.setOpacity(alpha);
-        musicAlbumHeaderLabel.setOpacity(alpha);
-        musicDurationHeaderLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        musicSourceHeaderLabel.setOpacity(opacity);
+        musicNameHeaderLabel.setOpacity(opacity);
+        musicArtistHeaderLabel.setOpacity(opacity);
+        musicAlbumHeaderLabel.setOpacity(opacity);
+        musicDurationHeaderLabel.setOpacity(opacity);
 
         Font tf = Fonts.NORMAL_TINY;
         musicSourceHeaderLabel.setFont(tf);
@@ -8711,12 +8711,12 @@ public class MainFrame extends JFrame {
         netMusicHeaderPanel.setLayout(layout);
         netMusicHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
-        float alpha = 0.5f;
-        netMusicSourceHeaderLabel.setOpacity(alpha);
-        netMusicNameHeaderLabel.setOpacity(alpha);
-        netMusicArtistHeaderLabel.setOpacity(alpha);
-        netMusicAlbumHeaderLabel.setOpacity(alpha);
-        netMusicDurationHeaderLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        netMusicSourceHeaderLabel.setOpacity(opacity);
+        netMusicNameHeaderLabel.setOpacity(opacity);
+        netMusicArtistHeaderLabel.setOpacity(opacity);
+        netMusicAlbumHeaderLabel.setOpacity(opacity);
+        netMusicDurationHeaderLabel.setOpacity(opacity);
 
         Font tf = Fonts.NORMAL_TINY;
         netMusicSourceHeaderLabel.setFont(tf);
@@ -8790,21 +8790,21 @@ public class MainFrame extends JFrame {
         collectionItemDescriptionLabel.setIconTextGap(gap);
 
         // 透明度
-        float alpha = 0.5f;
-        playlistTagLabel.setOpacity(alpha);
-        playlistDescriptionLabel.setOpacity(alpha);
-        artistTagLabel.setOpacity(alpha);
-        artistDescriptionLabel.setOpacity(alpha);
-        albumDescriptionLabel.setOpacity(alpha);
-        radioTagLabel.setOpacity(alpha);
-        radioDescriptionLabel.setOpacity(alpha);
-        rankingDescriptionLabel.setOpacity(alpha);
-        userTagLabel.setOpacity(alpha);
-        userDescriptionLabel.setOpacity(alpha);
-        recommendItemTagLabel.setOpacity(alpha);
-        recommendItemDescriptionLabel.setOpacity(alpha);
-        collectionItemTagLabel.setOpacity(alpha);
-        collectionItemDescriptionLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        playlistTagLabel.setOpacity(opacity);
+        playlistDescriptionLabel.setOpacity(opacity);
+        artistTagLabel.setOpacity(opacity);
+        artistDescriptionLabel.setOpacity(opacity);
+        albumDescriptionLabel.setOpacity(opacity);
+        radioTagLabel.setOpacity(opacity);
+        radioDescriptionLabel.setOpacity(opacity);
+        rankingDescriptionLabel.setOpacity(opacity);
+        userTagLabel.setOpacity(opacity);
+        userDescriptionLabel.setOpacity(opacity);
+        recommendItemTagLabel.setOpacity(opacity);
+        recommendItemDescriptionLabel.setOpacity(opacity);
+        collectionItemTagLabel.setOpacity(opacity);
+        collectionItemDescriptionLabel.setOpacity(opacity);
 
         // 字体
         Font font = Fonts.NORMAL_TITLE2;
@@ -19792,14 +19792,14 @@ public class MainFrame extends JFrame {
         downloadHeaderPanel.setLayout(layout);
         downloadHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
-        float alpha = 0.5f;
-        downloadIconHeaderLabel.setOpacity(alpha);
-        downloadNameHeaderLabel.setOpacity(alpha);
-        downloadTypeHeaderLabel.setOpacity(alpha);
-        downloadSizeHeaderLabel.setOpacity(alpha);
-        downloadProgressHeaderLabel.setOpacity(alpha);
-        downloadPercentHeaderLabel.setOpacity(alpha);
-        downloadStatusHeaderLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        downloadIconHeaderLabel.setOpacity(opacity);
+        downloadNameHeaderLabel.setOpacity(opacity);
+        downloadTypeHeaderLabel.setOpacity(opacity);
+        downloadSizeHeaderLabel.setOpacity(opacity);
+        downloadProgressHeaderLabel.setOpacity(opacity);
+        downloadPercentHeaderLabel.setOpacity(opacity);
+        downloadStatusHeaderLabel.setOpacity(opacity);
 
         Font tf = Fonts.NORMAL_TINY;
         downloadIconHeaderLabel.setFont(tf);
@@ -20233,12 +20233,12 @@ public class MainFrame extends JFrame {
         playQueueHeaderPanel.setLayout(layout);
         playQueueHeaderPanel.setBorder(new HDEmptyBorder(5, 0, 5, 0));
 
-        float alpha = 0.5f;
-        playQueueSourceHeaderLabel.setOpacity(alpha);
-        playQueueNameHeaderLabel.setOpacity(alpha);
-        playQueueArtistHeaderLabel.setOpacity(alpha);
-        playQueueAlbumHeaderLabel.setOpacity(alpha);
-        playQueueDurationHeaderLabel.setOpacity(alpha);
+        float opacity = 0.5f;
+        playQueueSourceHeaderLabel.setOpacity(opacity);
+        playQueueNameHeaderLabel.setOpacity(opacity);
+        playQueueArtistHeaderLabel.setOpacity(opacity);
+        playQueueAlbumHeaderLabel.setOpacity(opacity);
+        playQueueDurationHeaderLabel.setOpacity(opacity);
 
         Font tf = Fonts.NORMAL_TINY;
         playQueueSourceHeaderLabel.setFont(tf);
@@ -20621,11 +20621,12 @@ public class MainFrame extends JFrame {
             // 淡出
             if (changePaneFadeOut) {
                 ExtendedOpacitySupported src = (ExtendedOpacitySupported) srcFadingComp;
-                float opacity = Math.max(0, src.getExtendedOpacity() - 0.05f);
+                float opacity = Math.max(0f, src.getExtendedOpacity() - 0.05f);
                 src.setTreeExtendedOpacity(opacity);
-                if (opacity <= 0) {
+                if (opacity <= 0f) {
                     globalPanel.remove(srcFadingComp);
                     globalPanel.add(targetFadingComp, BorderLayout.CENTER);
+                    globalPanel.revalidate();
                     // 淡出动画完成后恢复透明度
                     src.setTreeExtendedOpacity(1f);
                     changePaneFadeOut = false;
@@ -20634,7 +20635,7 @@ public class MainFrame extends JFrame {
             // 淡入
             else {
                 ExtendedOpacitySupported target = (ExtendedOpacitySupported) targetFadingComp;
-                float opacity = Math.min(1, target.getExtendedOpacity() + 0.05f);
+                float opacity = Math.min(1f, target.getExtendedOpacity() + 0.05f);
                 target.setTreeExtendedOpacity(opacity);
                 if (opacity >= 1f) {
                     changePaneFadingTimer.stop();
@@ -20703,8 +20704,10 @@ public class MainFrame extends JFrame {
         srcFadingComp = src;
         targetFadingComp = target;
         changePaneFadeOut = true;
+        ((ExtendedOpacitySupported) src).setTreeExtendedOpacity(1f);
+        ((ExtendedOpacitySupported) target).setTreeExtendedOpacity(0f);
         // 解决进入的组件动画期间大小不正确问题
-        target.setSize(src.getWidth(), src.getHeight());
+        target.setPreferredSize(src.getSize());
         changePaneFadingTimer.start();
     }
 
@@ -22206,7 +22209,7 @@ public class MainFrame extends JFrame {
         Color darkerIconColor = ColorUtil.darker(iconColor, 0.3f);
         Color textColor = style.getTextColor();
         Color darkerTextColor = ColorUtil.darker(textColor);
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(darkerTextColor, 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(darkerTextColor, 0.5f);
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
         Color scrollBarColor = style.getScrollBarColor();
@@ -22215,7 +22218,7 @@ public class MainFrame extends JFrame {
         Color highlightColor = style.getHighlightColor();
 
         // 托盘
-        trayIconImg.setImage(ImageUtil.dye(trayIcon, iconColor).getImage());
+//        trayIconImg.setImage(ImageUtil.dye(trayIcon, iconColor).getImage());
 
         // 标题栏
         titleLabel.setForeground(textColor);

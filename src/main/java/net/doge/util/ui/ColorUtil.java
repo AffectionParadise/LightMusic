@@ -129,8 +129,8 @@ public class ColorUtil {
      * @param alpha
      * @return
      */
-    public static Color deriveAlphaColor(Color color, float alpha) {
-        return deriveAlphaColor(color, (int) (255 * alpha));
+    public static Color deriveAlpha(Color color, float alpha) {
+        return deriveAlpha(color, (int) (255 * alpha));
     }
 
     /**
@@ -140,7 +140,7 @@ public class ColorUtil {
      * @param alpha
      * @return
      */
-    public static Color deriveAlphaColor(Color color, int alpha) {
+    public static Color deriveAlpha(Color color, int alpha) {
         return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
 

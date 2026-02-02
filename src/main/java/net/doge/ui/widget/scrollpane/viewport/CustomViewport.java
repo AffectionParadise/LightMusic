@@ -39,7 +39,7 @@ public class CustomViewport extends JViewport {
             super.paint(imgG2d);
             // 绘制渐隐遮罩
             imgG2d.setComposite(AlphaComposite.DstIn);
-            Color white = Colors.WHITE, transparent = ColorUtil.deriveAlphaColor(white, 0);
+            Color white = Colors.WHITE, transparent = ColorUtil.deriveAlpha(white, 0);
             float ratio = (float) FADE_HEIGHT / h;
             LinearGradientPaint fade = new LinearGradientPaint(0, 0, 0, h, new float[]{0, ratio, 1 - ratio, 1},
                     new Color[]{transparent, white, white, transparent});

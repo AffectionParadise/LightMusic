@@ -162,7 +162,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
         Color textColor = f.currUIStyle.getTextColor();
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
         Color iconColor = f.currUIStyle.getIconColor();
 
         // 标签

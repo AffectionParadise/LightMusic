@@ -216,7 +216,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         Color textColor = f.currUIStyle.getTextColor();
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
 
         // 预设
         preLabel.setForeground(textColor);

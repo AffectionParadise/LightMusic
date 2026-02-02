@@ -454,7 +454,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenLabel.setForeground(textColor);
 
         // 文本框
-        Color darkerTextAlphaColor = ColorUtil.deriveAlphaColor(ColorUtil.darker(textColor), 0.5f);
+        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
         specMaxHeightTextField.setForeground(textColor);
         specMaxHeightTextField.setCaretColor(textColor);
         specMaxHeightTextField.setSelectedTextColor(textColor);

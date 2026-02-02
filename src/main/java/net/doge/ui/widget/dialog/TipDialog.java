@@ -99,10 +99,10 @@ public class TipDialog extends AbstractShadowDialog {
         showTimer = new Timer(2, e -> {
             // 渐隐效果
             float opacity = getOpacity();
-            if (closing) opacity = Math.max(0, opacity - 0.02f);
-            else opacity = Math.min(1, opacity + 0.02f);
+            if (closing) opacity = Math.max(0f, opacity - 0.02f);
+            else opacity = Math.min(1f, opacity + 0.02f);
             setOpacity(opacity);
-            if (closing && opacity <= 0 || !closing && opacity >= 1) {
+            if (closing && opacity <= 0f || !closing && opacity >= 1f) {
                 showTimer.stop();
                 if (closing) {
                     f.currDialogs.remove(THIS);

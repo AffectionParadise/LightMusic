@@ -73,10 +73,10 @@ public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
         Color spectrumColor = f.currUIStyle.getSpectrumColor();
 
         // 频谱渐变
-        Color transparentColor = ColorUtil.deriveAlphaColor(spectrumColor, 0);
+        Color transparentColor = ColorUtil.deriveAlpha(spectrumColor, 0);
         GradientPaint groundGP = new GradientPaint(0, 0, spectrumColor, 0, ph, transparentColor);
         LinearGradientPaint aboveGP = new LinearGradientPaint(0, 0, 0, ph, new float[]{0, 0.5f, 1f},
-                new Color[]{spectrumColor, transparentColor, ColorUtil.deriveAlphaColor(spectrumColor, 0.3f)});
+                new Color[]{spectrumColor, transparentColor, ColorUtil.deriveAlpha(spectrumColor, 0.3f)});
 
         switch (f.currSpecStyle) {
             case SpectrumConstants.GROUND:

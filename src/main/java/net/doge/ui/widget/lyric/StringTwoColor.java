@@ -141,7 +141,7 @@ public class StringTwoColor {
         if (!isDesktopLyric) dy += ScaleUtil.scale(5);
 
         g1.setColor(c1);
-        g2.setColor(ColorUtil.deriveAlphaColor(c2, 0.45f));
+        g2.setColor(ColorUtil.deriveAlpha(c2, 0.45f));
 
         // 画字符串
         if (!isDesktopLyric) {

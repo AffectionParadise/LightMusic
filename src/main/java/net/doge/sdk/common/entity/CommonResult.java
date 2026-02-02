@@ -2,6 +2,11 @@ package net.doge.sdk.common.entity;
 
 import java.util.List;
 
+/**
+ * 分页请求数据封装
+ *
+ * @param <E>
+ */
 public class CommonResult<E> {
     public List<E> data;
     public Integer total;

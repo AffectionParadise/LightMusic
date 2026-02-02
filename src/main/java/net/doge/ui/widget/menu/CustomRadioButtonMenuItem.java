@@ -48,8 +48,8 @@ public class CustomRadioButtonMenuItem extends CustomMenuItem {
 //
 //        drawBgTimer = new Timer(2, e -> {
 //            if (drawBg) alpha = Math.min(destAlpha, alpha + 0.005f);
-//            else alpha = Math.max(0, alpha - 0.005f);
-//            if (alpha <= 0 || alpha >= destAlpha) drawBgTimer.stop();
+//            else alpha = Math.max(0f, alpha - 0.005f);
+//            if (alpha <= 0f || alpha >= destAlpha) drawBgTimer.stop();
 //            repaint();
 //        });
 //    }

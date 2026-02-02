@@ -1,5 +1,6 @@
 package net.doge.ui.widget.slider.ui;
 
+import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -49,17 +50,18 @@ public class MuteSliderUI extends BasicSliderUI {
     @Override
     public void paintTrack(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
-
+        CustomSlider sli = (CustomSlider) slider;
+        float extendedOpacity = sli.getExtendedOpacity();
         g2d.setColor(trackBgColor);
         int thx = Math.max(thumbRect.x, trackRect.x), thy = trackRect.y + ScaleUtil.scale(5), height = trackRect.height - ScaleUtil.scale(10), arc = ScaleUtil.scale(6);
         // 画未填充部分
         if (!rest) {
-            GraphicsUtil.srcOver(g2d, 0.2f);
+            GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
             g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         }
         // 画已填充部分
         g2d.setColor(trackColor);
-        GraphicsUtil.srcOver(g2d, rest ? 0.5f : 1f);
+        GraphicsUtil.srcOver(g2d, extendedOpacity * (rest ? 0.5f : 1f));
         g2d.fillRoundRect(trackRect.x, thy, thumbRect.x - trackRect.x + thumbRect.width / 2, height, arc, arc);
     }
 
