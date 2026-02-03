@@ -12,7 +12,7 @@ import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
-import net.doge.ui.widget.lyric.StringTwoColor;
+import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
@@ -39,7 +39,7 @@ public class DesktopLyricDialog extends JDialog {
     @Getter
     private double ratio;
     @Getter
-    private StringTwoColor stc;
+    private HighlightLyric highlightLyric;
 
     private MainFrame f;
     private UIStyle style;
@@ -113,11 +113,11 @@ public class DesktopLyricDialog extends JDialog {
         this.ratio = ratio;
 
         tempLabel.setText(plainLyric);
-        if (stc == null || !stc.getPlainLyric().equals(plainLyric) || !stc.getC1().equals(foreColor) || !stc.getC2().equals(bgColor)
-                || !stc.getLabelFont().equals(tempLabel.getFont()))
-            stc = new StringTwoColor(tempLabel, stmt, foreColor, bgColor, ratio, true, width);
-        else stc.setRatio(ratio);
-        lyricLabel.setIcon(stc.getImgIcon());
+        if (highlightLyric == null || !highlightLyric.getPlainLyric().equals(plainLyric) || !highlightLyric.getC1().equals(foreColor) || !highlightLyric.getC2().equals(bgColor)
+                || !highlightLyric.getLabelFont().equals(tempLabel.getFont()))
+            highlightLyric = new HighlightLyric(tempLabel, stmt, foreColor, bgColor, ratio, true, width);
+        else highlightLyric.setRatio(ratio);
+        lyricLabel.setIcon(highlightLyric.getImgIcon());
         // Icon 对象可能不变，一定要手动重绘刷新！
         mainPanel.repaint();
     }

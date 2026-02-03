@@ -7,7 +7,7 @@ import net.doge.entity.core.lyric.Statement;
 import net.doge.ui.widget.label.ui.CustomLabelUI;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.list.ui.CustomListUI;
-import net.doge.ui.widget.lyric.StringTwoColor;
+import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -35,7 +35,7 @@ public class LrcListRenderer extends CustomListCellRenderer {
     // 未走的歌词颜色
     private Color bgColor;
     // 高亮文字
-    private StringTwoColor stc;
+    private HighlightLyric hl;
     // 比例
     private double ratio;
     // 高亮行
@@ -130,11 +130,11 @@ public class LrcListRenderer extends CustomListCellRenderer {
         // 高亮的行的样式
         if (index == row) {
             label.setFont(highlightFont);
-            if (stc == null || stc.getWidthThreshold() != maxWidth || !stc.getLabelFont().equals(highlightFont)
-                    || !stc.getPlainLyric().equals(plainLyric) || !stc.getC1().equals(highlightColor) || !stc.getC2().equals(bgColor))
-                stc = new StringTwoColor(label, statement, highlightColor, bgColor, ratio, false, maxWidth);
-            else stc.setRatio(ratio);
-            label.setIcon(stc.getImgIcon());
+            if (hl == null || hl.getWidthThreshold() != maxWidth || !hl.getLabelFont().equals(highlightFont)
+                    || !hl.getPlainLyric().equals(plainLyric) || !hl.getC1().equals(highlightColor) || !hl.getC2().equals(bgColor))
+                hl = new HighlightLyric(label, statement, highlightColor, bgColor, ratio, false, maxWidth);
+            else hl.setRatio(ratio);
+            label.setIcon(hl.getImgIcon());
             label.setText("");
 //            labelUI.setDrawBg(index == hoverIndex);
         }

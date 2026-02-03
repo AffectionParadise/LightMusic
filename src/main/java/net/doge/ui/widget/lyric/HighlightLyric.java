@@ -20,7 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Data
-public class StringTwoColor {
+public class HighlightLyric {
     private int width;
     private int height;
     private String lyric;
@@ -61,7 +61,7 @@ public class StringTwoColor {
      * @param isDesktopLyric 是否是桌面歌词
      * @param widthThreshold 文字最大宽度
      */
-    public StringTwoColor(JLabel label, Statement stmt, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
+    public HighlightLyric(JLabel label, Statement stmt, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
         if (stmt.isEmpty()) return;
 
         this.lyric = stmt.getLyric();

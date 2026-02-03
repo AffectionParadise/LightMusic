@@ -5,7 +5,6 @@ import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
-import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
@@ -36,6 +35,8 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
 
     private void init() {
         setOpaque(false);
+        // 默认有黑边，不绘制边框
+        setBorder(new HDEmptyBorder());
 
         // 滚轮滚动动画
         wheelScrollingTimer = new Timer(0, e -> {
@@ -55,14 +56,8 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
             wheelScrollingTimer.start();
         });
 
-        horizontalScrollBar.setOpaque(false);
         horizontalScrollBar.setPreferredSize(new Dimension(0, thickness));
-
-        verticalScrollBar.setOpaque(false);
         verticalScrollBar.setPreferredSize(new Dimension(thickness, 0));
-
-        // 默认有黑边，不绘制边框
-        setBorder(new HDEmptyBorder());
     }
 
     public boolean setVBarValue(int value) {
@@ -131,11 +126,5 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
     @Override
     public void setTreeExtendedOpacity(float extendedOpacity) {
         SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        GraphicsUtil.srcOver(g, extendedOpacity);
-        super.paintComponent(g);
     }
 }

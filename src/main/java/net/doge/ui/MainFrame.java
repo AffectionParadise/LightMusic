@@ -39,7 +39,7 @@ import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.MvCompSourceType;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
-import net.doge.constant.core.ui.pane.MusicPane;
+import net.doge.constant.core.ui.pane.CenterPaneType;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.constant.core.ui.style.PreDefinedUIStyle;
 import net.doge.constant.core.ui.style.UIStyleConstants;
@@ -65,9 +65,10 @@ import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoCopyrightException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
+import net.doge.ui.core.animation.ComponentFadingAnimation;
+import net.doge.ui.core.animation.handler.ComponentChangeHandler;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
-import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.ChangePaneButton;
@@ -90,7 +91,7 @@ import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
 import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
 import net.doge.ui.widget.list.renderer.service.*;
 import net.doge.ui.widget.list.ui.CustomListUI;
-import net.doge.ui.widget.lyric.StringTwoColor;
+import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.menu.*;
 import net.doge.ui.widget.menu.ui.CustomCheckMenuItemUI;
 import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
@@ -121,10 +122,7 @@ import net.doge.util.os.DesktopUtil;
 import net.doge.util.os.FileUtil;
 import net.doge.util.os.KeyUtil;
 import net.doge.util.os.TerminalUtil;
-import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
-import net.doge.util.ui.ScaleUtil;
-import net.doge.util.ui.SpectrumUtil;
+import net.doge.util.ui.*;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -869,10 +867,10 @@ public class MainFrame extends JFrame {
     private int coverImageWidth = ScaleUtil.scale(200);
     // 切换面板按钮图片宽度
     private int changePaneImageWidth = ScaleUtil.scale(50);
-    // 当前面板
-    private int currPane = MusicPane.MUSIC;
-    // 上一个面板(评论跳转要用到)
-    private int lastPane;
+    // 当前面板类型
+    private int currPaneType = CenterPaneType.TAB;
+    // 上一个面板类型(评论跳转要用到)
+    private int lastPaneType;
 
     // 加载中图片
     private BufferedImage loadingImage = ImageUtil.width(LMIconManager.getImage("loadingImage"), coverImageWidth);
@@ -2442,11 +2440,7 @@ public class MainFrame extends JFrame {
     // 背景图切换动画
     private Timer globalPanelTimer;
     // 切换面板动画
-    private boolean changePaneFadeOut;
-    private Component srcFadingComp;
-    private Component targetFadingComp;
-    private Timer changePaneFadingTimer;
-    private Runnable onFadingStopped;
+    private ComponentFadingAnimation componentFadingAnimation;
     // 搜索建议动画
     private Timer searchSuggestionTimer;
     private boolean searchSuggestionProcessing;
@@ -8162,7 +8156,7 @@ public class MainFrame extends JFrame {
         // 查看歌手/作者
         netMusicAuthorMenuItem.addActionListener(e -> {
             NetMusicInfo musicInfo;
-            if (currPane == MusicPane.LYRIC) musicInfo = player.getMusicInfo();
+            if (currPaneType == CenterPaneType.LYRIC) musicInfo = player.getMusicInfo();
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
@@ -8288,7 +8282,7 @@ public class MainFrame extends JFrame {
         // 查看专辑/电台
         netMusicAlbumMenuItem.addActionListener(e -> {
             NetMusicInfo musicInfo;
-            if (currPane == MusicPane.LYRIC) musicInfo = player.getMusicInfo();
+            if (currPaneType == CenterPaneType.LYRIC) musicInfo = player.getMusicInfo();
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
@@ -16739,8 +16733,9 @@ public class MainFrame extends JFrame {
                     globalPanel.add(netCommentBox, BorderLayout.CENTER);
                     netCommentBox.repaint();
                     netSheetListModel.clear();
-                    if (currPane != MusicPane.SHEET) lastPane = currPane;
-                    currPane = MusicPane.COMMENT;
+                    if (currPaneType == CenterPaneType.TAB || currPaneType == CenterPaneType.LYRIC)
+                        lastPaneType = currPaneType;
+                    currPaneType = CenterPaneType.COMMENT;
                 }
             } catch (IORuntimeException ioRuntimeException) {
                 // 无网络连接
@@ -16798,8 +16793,9 @@ public class MainFrame extends JFrame {
                     globalPanel.add(netSheetBox, BorderLayout.CENTER);
                     netSheetBox.repaint();
                     netCommentListModel.clear();
-                    if (currPane != MusicPane.COMMENT) lastPane = currPane;
-                    currPane = MusicPane.SHEET;
+                    if (currPaneType == CenterPaneType.TAB || currPaneType == CenterPaneType.LYRIC)
+                        lastPaneType = currPaneType;
+                    currPaneType = CenterPaneType.SHEET;
                 }
             } catch (IORuntimeException ioRuntimeException) {
                 // 无网络连接
@@ -16820,23 +16816,16 @@ public class MainFrame extends JFrame {
         netCommentPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
-            netCommentBackwardButton.transitionDrawBg(false);
-            // 归还占有的空白提示面板
-            if (emptyHintPanelParent != null) {
-                emptyHintPanelParent.add(emptyHintPanel);
-                emptyHintPanelParent = null;
-            }
-            netCommentList.setModel(emptyListModel);
-            if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
-            globalPanel.remove(netCommentBox);
-            if (lastPane == MusicPane.MUSIC) {
-                globalPanel.add(tabbedPane, BorderLayout.CENTER);
-            } else if (lastPane == MusicPane.LYRIC) {
-                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
-                globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
-            }
-            globalPanel.repaint();
-            currPane = lastPane;
+            Runnable extraOperation = () -> {
+                netCommentBackwardButton.transitionDrawBg(false);
+                // 归还占有的空白提示面板
+                if (emptyHintPanelParent != null) {
+                    emptyHintPanelParent.add(emptyHintPanel);
+                    emptyHintPanelParent = null;
+                }
+            };
+            if (lastPaneType == CenterPaneType.TAB) toTabView(extraOperation);
+            else if (lastPaneType == CenterPaneType.LYRIC) toLyricView(extraOperation);
         });
         // 添加评论类型
         netCommentTypeComboBox.addItem(I18n.getText("hotComment"));
@@ -17078,7 +17067,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     netUserLeftBox.remove(userListBox);
                     netCommentBackwardButton.doClick();
-                    if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
+                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -17144,7 +17133,7 @@ public class MainFrame extends JFrame {
                     netPlaylistScrollPane.setVBarValue(0);
                     netPlaylistLeftBox.remove(playlistListBox);
                     netCommentBackwardButton.doClick();
-                    if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
+                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -17210,7 +17199,7 @@ public class MainFrame extends JFrame {
                     netAlbumScrollPane.setVBarValue(0);
                     netAlbumLeftBox.remove(albumListBox);
                     netCommentBackwardButton.doClick();
-                    if (currPane == MusicPane.LYRIC) changePaneButton.doClick();
+                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (IORuntimeException ioRuntimeException) {
                     // 无网络连接
@@ -17244,23 +17233,16 @@ public class MainFrame extends JFrame {
         netSheetPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
-            netSheetBackwardButton.transitionDrawBg(false);
-            // 归还占有的空白提示面板
-            if (emptyHintPanelParent != null) {
-                emptyHintPanelParent.add(emptyHintPanel);
-                emptyHintPanelParent = null;
-            }
-            netSheetList.setModel(emptyListModel);
-            if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
-            globalPanel.remove(netSheetBox);
-            if (lastPane == MusicPane.MUSIC) {
-                globalPanel.add(tabbedPane, BorderLayout.CENTER);
-            } else if (lastPane == MusicPane.LYRIC) {
-                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
-                globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
-            }
-            globalPanel.repaint();
-            currPane = lastPane;
+            Runnable extraOperation = () -> {
+                netSheetBackwardButton.transitionDrawBg(false);
+                // 归还占有的空白提示面板
+                if (emptyHintPanelParent != null) {
+                    emptyHintPanelParent.add(emptyHintPanel);
+                    emptyHintPanelParent = null;
+                }
+            };
+            if (lastPaneType == CenterPaneType.TAB) toTabView(extraOperation);
+            else if (lastPaneType == CenterPaneType.LYRIC) toLyricView(extraOperation);
         });
         // 刷新按钮事件
         netSheetRefreshButton.addActionListener(e -> {
@@ -20617,32 +20599,6 @@ public class MainFrame extends JFrame {
                 if (opacity >= 1f) globalPanelTimer.stop();
             });
         });
-        changePaneFadingTimer = new Timer(10, e -> {
-            // 淡出
-            if (changePaneFadeOut) {
-                ExtendedOpacitySupported src = (ExtendedOpacitySupported) srcFadingComp;
-                float opacity = Math.max(0f, src.getExtendedOpacity() - 0.05f);
-                src.setTreeExtendedOpacity(opacity);
-                if (opacity <= 0f) {
-                    globalPanel.remove(srcFadingComp);
-                    globalPanel.add(targetFadingComp, BorderLayout.CENTER);
-                    globalPanel.revalidate();
-                    // 淡出动画完成后恢复透明度
-                    src.setTreeExtendedOpacity(1f);
-                    changePaneFadeOut = false;
-                }
-            }
-            // 淡入
-            else {
-                ExtendedOpacitySupported target = (ExtendedOpacitySupported) targetFadingComp;
-                float opacity = Math.min(1f, target.getExtendedOpacity() + 0.05f);
-                target.setTreeExtendedOpacity(opacity);
-                if (opacity >= 1f) {
-                    changePaneFadingTimer.stop();
-                    if (onFadingStopped != null) onFadingStopped.run();
-                }
-            }
-        });
         searchSuggestionTimer = new Timer(100, e -> {
             globalExecutor.execute(() -> updateSearchSuggestion());
             searchSuggestionTimer.stop();
@@ -20698,33 +20654,29 @@ public class MainFrame extends JFrame {
         bottomBox.add(progressBox);
     }
 
-    // 淡入淡出切换组件动画
-    private void transitionChangePaneFading(Component src, Component target) {
-        if (changePaneFadingTimer.isRunning()) return;
-        srcFadingComp = src;
-        targetFadingComp = target;
-        changePaneFadeOut = true;
-        ((ExtendedOpacitySupported) src).setTreeExtendedOpacity(1f);
-        ((ExtendedOpacitySupported) target).setTreeExtendedOpacity(0f);
-        // 解决进入的组件动画期间大小不正确问题
-        target.setPreferredSize(src.getSize());
-        changePaneFadingTimer.start();
-    }
-
     // 切到标签面板
-    private void toTabView() {
-        //                // 滑入动画之后处理
-//                globalPanel.setOnAfterSlide(() -> {
-//                    globalPanel.remove(infoAndLrcBox);
-//                    globalPanel.remove(netCommentBox);
-//                    globalPanel.remove(netSheetBox);
-//                    globalPanel.add(tabbedPane, BorderLayout.CENTER);
-//                    globalPanel.repaint();
-//                });
-//                globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
-//                globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
-//                globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
-        onFadingStopped = () -> {
+    private void toTabView(Runnable extraOperation) {
+//        // 滑入动画之后处理
+//        globalPanel.setOnAfterSlide(() -> {
+//            globalPanel.remove(infoAndLrcBox);
+//            globalPanel.remove(netCommentBox);
+//            globalPanel.remove(netSheetBox);
+//            globalPanel.add(tabbedPane, BorderLayout.CENTER);
+//            globalPanel.repaint();
+//        });
+//        globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
+//        globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
+//        globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
+        currPaneType = CenterPaneType.TAB;
+        lastPaneType = -1;
+        Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
+        ComponentChangeHandler onFadingOutStopped = (s, t) -> {
+            if (extraOperation != null) extraOperation.run();
+
+            globalPanel.remove(s);
+            globalPanel.add(t, BorderLayout.CENTER);
+            globalPanel.revalidate();
+
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
@@ -20732,45 +20684,50 @@ public class MainFrame extends JFrame {
             // 防止事件不起作用
             globalPanel.requestFocus();
             changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
-            currPane = MusicPane.MUSIC;
-            lastPane = -1;
         };
-        if (infoAndLrcBox.isShowing()) transitionChangePaneFading(infoAndLrcBox, tabbedPane);
-        else if (netCommentBox.isShowing()) transitionChangePaneFading(netCommentBox, tabbedPane);
-        else if (netSheetBox.isShowing()) transitionChangePaneFading(netSheetBox, tabbedPane);
+        if (componentFadingAnimation != null) componentFadingAnimation.interrupt();
+        componentFadingAnimation = new ComponentFadingAnimation(src, tabbedPane, onFadingOutStopped);
+        componentFadingAnimation.transition();
     }
 
     // 切到歌词面板
-    private void toLyricView() {
-//                // 滑入动画之后处理
-//                globalPanel.setOnAfterSlide(() -> {
-//                    globalPanel.remove(tabbedPane);
-//                    globalPanel.remove(netCommentBox);
-//                    globalPanel.remove(netSheetBox);
-//                    // 防止事件不起作用
-//                    globalPanel.requestFocus();
-//                    globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
-//                    globalPanel.repaint();
-////                    updateLrcListViewFading();
-//                    lrcScrollAnimation = true;
-//                });
-//                // 播放组件放置的滑入动画
-//                globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
-//                globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
-//                globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
-        onFadingStopped = () -> {
+    private void toLyricView(Runnable extraOperation) {
+//        // 滑入动画之后处理
+//        globalPanel.setOnAfterSlide(() -> {
+//            globalPanel.remove(tabbedPane);
+//            globalPanel.remove(netCommentBox);
+//            globalPanel.remove(netSheetBox);
+//            // 防止事件不起作用
+//            globalPanel.requestFocus();
+//            globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+//            globalPanel.repaint();
+////          updateLrcListViewFading();
+//            lrcScrollAnimation = true;
+//        });
+//        // 播放组件放置的滑入动画
+//        globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
+//        globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
+//        globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
+        currPaneType = CenterPaneType.LYRIC;
+        lastPaneType = -1;
+        Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
+        ComponentChangeHandler onFadingOutStopped = (s, t) -> {
+            if (extraOperation != null) extraOperation.run();
+
+            globalPanel.remove(s);
+            globalPanel.add(t, BorderLayout.CENTER);
+            globalPanel.revalidate();
+
             if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
             hideDetailButton.setVisible(true);
             changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
-            currPane = MusicPane.LYRIC;
-            lastPane = -1;
         };
-        if (tabbedPane.isShowing()) transitionChangePaneFading(tabbedPane, infoAndLrcBox);
-        else if (netCommentBox.isShowing()) transitionChangePaneFading(netCommentBox, infoAndLrcBox);
-        else if (netSheetBox.isShowing()) transitionChangePaneFading(netSheetBox, infoAndLrcBox);
+        if (componentFadingAnimation != null) componentFadingAnimation.interrupt();
+        componentFadingAnimation = new ComponentFadingAnimation(src, infoAndLrcBox, onFadingOutStopped);
+        componentFadingAnimation.transition();
     }
 
     // 初始化控制面板
@@ -20784,11 +20741,10 @@ public class MainFrame extends JFrame {
         changePaneButton.addActionListener(e -> {
             // 动画状态无响应
 //            if (globalPanel.isSlideAnimating()) return;
-            if (changePaneFadingTimer.isRunning()) return;
             // 歌词页面切到列表
-            if (currPane == MusicPane.LYRIC || lastPane == MusicPane.LYRIC) toTabView();
+            if (currPaneType == CenterPaneType.LYRIC || lastPaneType == CenterPaneType.LYRIC) toTabView(null);
                 // 列表切到歌词页面
-            else if (currPane == MusicPane.MUSIC || lastPane == MusicPane.MUSIC) toLyricView();
+            else if (currPaneType == CenterPaneType.TAB || lastPaneType == CenterPaneType.TAB) toLyricView(null);
         });
         // MV
         mvButton.setToolTipText(MV_TIP);
@@ -20837,8 +20793,8 @@ public class MainFrame extends JFrame {
         commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + ScaleUtil.scale(10), commentIcon.getIconHeight() + ScaleUtil.scale(10)));
         commentButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
-            if (currPane != MusicPane.COMMENT || currCommentResource != musicInfo)
-                getComments(musicInfo, currPane != MusicPane.COMMENT);
+            if (currPaneType != CenterPaneType.COMMENT || currCommentResource != musicInfo)
+                getComments(musicInfo, currPaneType != CenterPaneType.COMMENT);
         });
         // 乐谱
         sheetButton.setToolTipText(SHEET_TIP);
@@ -20847,8 +20803,8 @@ public class MainFrame extends JFrame {
         sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + ScaleUtil.scale(10), sheetIcon.getIconHeight() + ScaleUtil.scale(10)));
         sheetButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
-            if (currPane != MusicPane.SHEET || currSheetMusicInfo != musicInfo)
-                getSheets(musicInfo, currPane != MusicPane.SHEET);
+            if (currPaneType != CenterPaneType.SHEET || currSheetMusicInfo != musicInfo)
+                getSheets(musicInfo, currPaneType != CenterPaneType.SHEET);
         });
         lastButton.setToolTipText(LAST_TIP);
         lastButton.addMouseListener(new CustomButtonMouseListener(lastButton, THIS));
@@ -21046,7 +21002,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 tabbedPane.setSelectedIndex(TabIndex.PLAY_QUEUE);
-                toTabView();
+                toTabView(null);
             }
         });
         // 桌面歌词开关
@@ -21595,11 +21551,11 @@ public class MainFrame extends JFrame {
 
     // 更新歌词比率
     private void updateOriginalRatio(double t) {
-        StringTwoColor stc = desktopLyricDialog.getStc();
+        HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
         double tempRatio = 0;
         if (nextLrc > 0) {
-            if (stc.isByWord()) {
-                tempRatio = stc.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+            if (hl.isByWord()) {
+                tempRatio = hl.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
             } else {
                 Statement ls = statements.get(nextLrc - 1), ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
                 tempRatio = (t - ls.getTime() + lrcOffset) /

@@ -1,11 +1,14 @@
 package net.doge.util.ui;
 
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.combobox.CustomComboBox;
+import net.doge.ui.widget.combobox.popup.CustomComboPopup;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @Author Doge
@@ -20,7 +23,7 @@ public class SwingUtil {
      * @param opacity
      */
     public static void setTreeExtendedOpacity(Component component, float opacity) {
-        LinkedList<Component> queue = new LinkedList<>();
+        Queue<Component> queue = new LinkedList<>();
         queue.offer(component);
         while (!queue.isEmpty()) {
             Component comp = queue.poll();
@@ -31,17 +34,38 @@ public class SwingUtil {
             // 遍历容器子组件
             if (comp instanceof Container) {
                 Container container = (Container) comp;
-                // JList 视图需要单独处理
+                for (Component com : container.getComponents()) queue.offer(com);
+                // JList 视图需要单独处理 CellRenderer 中的组件
                 if (container instanceof JList) {
                     JList list = (JList) comp;
                     ListCellRenderer renderer = list.getCellRenderer();
                     if (renderer instanceof CustomListCellRenderer) {
-                        container = (Container) ((CustomListCellRenderer) list.getCellRenderer()).getRootComponent();
+                        Component com = ((CustomListCellRenderer) renderer).getRootComponent();
+                        if (com != null) queue.offer(com);
                     }
                 }
-                if (container == null) continue;
-                for (Component com : container.getComponents()) queue.offer(com);
+                // CustomComboBox 视图需要单独处理 popup 中的组件
+                else if (container instanceof CustomComboBox) {
+                    CustomComboBox comboBox = (CustomComboBox) comp;
+                    CustomComboPopup popup = comboBox.getPopup();
+                    queue.offer(popup);
+                }
             }
         }
+    }
+
+    /**
+     * 获取 BorderLayout 容器的某个位置上的组件
+     *
+     * @param component
+     * @param constraints
+     */
+    public static Component getBorderLayoutComponent(JComponent component, Object constraints) {
+        LayoutManager layout = component.getLayout();
+        if (layout instanceof BorderLayout) {
+            BorderLayout borderLayout = (BorderLayout) layout;
+            return borderLayout.getLayoutComponent(constraints);
+        }
+        return null;
     }
 }

@@ -2,11 +2,9 @@ package net.doge.ui.widget.scrollpane.scrollbar;
 
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
-import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class CustomScrollBar extends JScrollBar implements ExtendedOpacitySupported {
     @Getter
@@ -14,6 +12,11 @@ public class CustomScrollBar extends JScrollBar implements ExtendedOpacitySuppor
 
     public CustomScrollBar(int orientation) {
         super(orientation);
+        init();
+    }
+
+    private void init() {
+        setOpaque(false);
     }
 
     @Override
@@ -25,11 +28,5 @@ public class CustomScrollBar extends JScrollBar implements ExtendedOpacitySuppor
     @Override
     public void setTreeExtendedOpacity(float extendedOpacity) {
         SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        GraphicsUtil.srcOver(g, extendedOpacity);
-        super.paintComponent(g);
     }
 }

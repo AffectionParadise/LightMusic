@@ -1,21 +1,23 @@
 package net.doge.ui.widget.combobox.popup;
 
+import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.MainFrame;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
-import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
-import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboPopup;
 import java.awt.*;
 
-public class CustomComboPopup extends BasicComboPopup {
+public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacitySupported {
+    @Getter
+    private float extendedOpacity = 1f;
+
     private Color scrollBarColor;
     private MainFrame f;
 
@@ -49,6 +51,17 @@ public class CustomComboPopup extends BasicComboPopup {
         sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
         sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         return sp;
+    }
+
+    @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
     }
 
     @Override
