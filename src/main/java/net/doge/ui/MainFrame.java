@@ -20667,6 +20667,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
+        if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.TAB;
         lastPaneType = -1;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
@@ -20685,7 +20686,6 @@ public class MainFrame extends JFrame {
             globalPanel.requestFocus();
             changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         };
-        if (componentFadingAnimation != null) componentFadingAnimation.interrupt();
         componentFadingAnimation = new ComponentFadingAnimation(src, tabbedPane, onFadingOutStopped);
         componentFadingAnimation.transition();
     }
@@ -20708,6 +20708,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
 //        globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
 //        globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
+        if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.LYRIC;
         lastPaneType = -1;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
@@ -20725,7 +20726,6 @@ public class MainFrame extends JFrame {
             hideDetailButton.setVisible(true);
             changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
         };
-        if (componentFadingAnimation != null) componentFadingAnimation.interrupt();
         componentFadingAnimation = new ComponentFadingAnimation(src, infoAndLrcBox, onFadingOutStopped);
         componentFadingAnimation.transition();
     }
@@ -21001,8 +21001,7 @@ public class MainFrame extends JFrame {
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                tabbedPane.setSelectedIndex(TabIndex.PLAY_QUEUE);
-                toTabView(null);
+                toTabView(() -> tabbedPane.setSelectedIndex(TabIndex.PLAY_QUEUE));
             }
         });
         // 桌面歌词开关

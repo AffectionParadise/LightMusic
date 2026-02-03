@@ -14,8 +14,6 @@ import java.awt.*;
 public class ComponentFadingAnimation {
     // 淡入淡出状态
     private boolean changePaneFadeOut;
-    // 是否被中断
-    private boolean interrupted;
     // 组件
     private Component srcFadingComp;
     private Component targetFadingComp;
@@ -41,7 +39,7 @@ public class ComponentFadingAnimation {
                 ExtendedOpacitySupported src = (ExtendedOpacitySupported) srcFadingComp;
                 float opacity = Math.max(0f, src.getExtendedOpacity() - 0.05f);
                 src.setTreeExtendedOpacity(opacity);
-                if (opacity <= 0f || interrupted) {
+                if (opacity <= 0f) {
                     // 淡出动画完成后恢复透明度
                     src.setTreeExtendedOpacity(1f);
                     changePaneFadeOut = false;
@@ -53,7 +51,7 @@ public class ComponentFadingAnimation {
                 ExtendedOpacitySupported target = (ExtendedOpacitySupported) targetFadingComp;
                 float opacity = Math.min(1f, target.getExtendedOpacity() + 0.05f);
                 target.setTreeExtendedOpacity(opacity);
-                if (opacity >= 1f || interrupted) {
+                if (opacity >= 1f) {
                     // 淡入动画完成后恢复透明度
                     target.setTreeExtendedOpacity(1f);
                     changePaneFadingTimer.stop();
@@ -66,16 +64,15 @@ public class ComponentFadingAnimation {
     // 执行淡入淡出切换组件动画
     public void transition() {
         if (changePaneFadingTimer.isRunning()) return;
-        ((ExtendedOpacitySupported) srcFadingComp).setTreeExtendedOpacity(1f);
-        ((ExtendedOpacitySupported) targetFadingComp).setTreeExtendedOpacity(0f);
-        changePaneFadeOut = true;
-        changePaneFadingTimer.start();
-    }
-
-    // 中断当前动画
-    public void interrupt() {
-        if (!isRunning()) return;
-        interrupted = true;
+        if (srcFadingComp == targetFadingComp) {
+            if (onFadingOutStopped != null) onFadingOutStopped.handle(srcFadingComp, targetFadingComp);
+            if (onFadingInStopped != null) onFadingInStopped.handle(srcFadingComp, targetFadingComp);
+        } else {
+            ((ExtendedOpacitySupported) srcFadingComp).setTreeExtendedOpacity(1f);
+            ((ExtendedOpacitySupported) targetFadingComp).setTreeExtendedOpacity(0f);
+            changePaneFadeOut = true;
+            changePaneFadingTimer.start();
+        }
     }
 
     // 是否正在执行动画
