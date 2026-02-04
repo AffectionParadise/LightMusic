@@ -113,7 +113,7 @@ public class ConfigConstants {
     // 是否桌面歌词置顶
     public static final String DESKTOP_LYRIC_ON_TOP = "desktopLyricOnTop";
     // 桌面歌词透明度
-    public static final String DESKTOP_LYRIC_ALPHA = "desktopLyricAlpha";
+    public static final String DESKTOP_LYRIC_OPACITY = "desktopLyricOpacity";
     // 桌面歌词字体大小
     public static final String DESKTOP_LYRIC_FONT_SIZE = "desktopLyricFontSize";
     // 音质

@@ -1,6 +1,7 @@
 package net.doge.ui.widget.button;
 
 import lombok.Getter;
+import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
 import net.doge.ui.widget.tooltip.CustomToolTip;
@@ -41,6 +42,9 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
     }
 
     private void init() {
+        setFont(Fonts.NORMAL_TITLE2);
+        setIconTextGap(ScaleUtil.scale(15));
+
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
             else bgAlpha = Math.max(0f, bgAlpha - 0.005f);

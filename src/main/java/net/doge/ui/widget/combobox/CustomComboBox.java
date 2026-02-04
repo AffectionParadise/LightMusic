@@ -86,9 +86,4 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
     public void setTreeExtendedOpacity(float extendedOpacity) {
         SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
     }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
-    }
 }

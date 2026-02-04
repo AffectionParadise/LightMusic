@@ -5,8 +5,8 @@ import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.core.dimension.HDDimension;
-import net.doge.ui.core.inset.HDInsets;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -17,6 +17,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class CustomTextField extends JTextField implements ExtendedOpacitySupported {
+    private static final HDEmptyBorder BORDER = new HDEmptyBorder(5, 10, 5, 10);
+
     @Getter
     @Setter
     private boolean occupied;
@@ -36,7 +38,7 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
         setHorizontalAlignment(CENTER);
         setFont(Fonts.NORMAL);
         setMaximumSize(new HDDimension(3000, 30));
-        setMargin(new HDInsets(2, 6, 2, 6));
+        setBorder(BORDER);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -99,7 +101,7 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
         // 画背景
         g2d.setColor(getForeground());
         GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
-        int arc = ScaleUtil.scale(25);
+        int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(0, 0, w, h, arc, arc);
         GraphicsUtil.srcOver(g2d, extendedOpacity);
 
@@ -147,10 +149,5 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
 //                break;
 //            }
 //        }
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
     }
 }

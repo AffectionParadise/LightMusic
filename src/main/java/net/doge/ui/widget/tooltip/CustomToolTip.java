@@ -55,9 +55,4 @@ public class CustomToolTip extends JToolTip {
 
         super.paintComponent(g);
     }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
-    }
 }

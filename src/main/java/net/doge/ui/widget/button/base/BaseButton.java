@@ -1,12 +1,15 @@
 package net.doge.ui.widget.button.base;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.tooltip.CustomToolTip;
 
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class BaseButton extends JButton {
+public class BaseButton extends JButton {
+    private static final HDEmptyBorder BORDER = new HDEmptyBorder(5, 5, 5, 5);
+
     public BaseButton() {
         this(null, null);
     }
@@ -26,6 +29,7 @@ public abstract class BaseButton extends JButton {
 
     private void init() {
         setOpaque(false);
+        setBorder(BORDER);
         setContentAreaFilled(false);
         setFocusable(false);
         setFocusPainted(false);
@@ -38,10 +42,5 @@ public abstract class BaseButton extends JButton {
         CustomToolTip toolTip = new CustomToolTip(this);
         toolTip.setVisible(false);
         return toolTip;
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
     }
 }

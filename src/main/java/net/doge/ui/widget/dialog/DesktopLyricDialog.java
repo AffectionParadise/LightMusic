@@ -320,14 +320,12 @@ public class DesktopLyricDialog extends JDialog {
         });
 
         lock.addMouseListener(new CustomButtonMouseListener(lock, f));
-        lock.setPreferredSize(new Dimension(lockIcon.getIconWidth() + ScaleUtil.scale(10), lockIcon.getIconHeight() + ScaleUtil.scale(10)));
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
         });
         restore.setToolTipText(RESTORE_TIP);
         restore.addMouseListener(new CustomButtonMouseListener(restore, f));
-        restore.setPreferredSize(new Dimension(restoreIcon.getIconWidth() + ScaleUtil.scale(10), restoreIcon.getIconHeight() + ScaleUtil.scale(10)));
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
@@ -335,29 +333,23 @@ public class DesktopLyricDialog extends JDialog {
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addMouseListener(new CustomButtonMouseListener(descendTrans, f));
-        descendTrans.setPreferredSize(new Dimension(descendTransIcon.getIconWidth() + ScaleUtil.scale(10), descendTransIcon.getIconHeight() + ScaleUtil.scale(10)));
         descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
         ascendTrans.addMouseListener(new CustomButtonMouseListener(ascendTrans, f));
-        ascendTrans.setPreferredSize(new Dimension(ascendTransIcon.getIconWidth() + ScaleUtil.scale(10), ascendTransIcon.getIconHeight() + ScaleUtil.scale(10)));
         ascendTrans.addActionListener(e -> lyricLabel.increaseAlpha());
         decreaseFont.setToolTipText(DECREASE_FONT_TIP);
         decreaseFont.addMouseListener(new CustomButtonMouseListener(decreaseFont, f));
-        decreaseFont.setPreferredSize(new Dimension(decreaseFontIcon.getIconWidth() + ScaleUtil.scale(10), decreaseFontIcon.getIconHeight() + ScaleUtil.scale(10)));
         decreaseFont.addActionListener(e -> decreaseFont());
         increaseFont.setToolTipText(INCREASE_FONT_TIP);
         increaseFont.addMouseListener(new CustomButtonMouseListener(increaseFont, f));
-        increaseFont.setPreferredSize(new Dimension(increaseFontIcon.getIconWidth() + ScaleUtil.scale(10), increaseFontIcon.getIconHeight() + ScaleUtil.scale(10)));
         increaseFont.addActionListener(e -> increaseFont());
         onTop.addMouseListener(new CustomButtonMouseListener(onTop, f));
-        onTop.setPreferredSize(new Dimension(onTopIcon.getIconWidth() + ScaleUtil.scale(10), onTopIcon.getIconHeight() + ScaleUtil.scale(10)));
         onTop.addActionListener(e -> {
             setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
             updateOnTop();
         });
         close.setToolTipText(CLOSE_TIP);
         close.addMouseListener(new CustomButtonMouseListener(close, f));
-        close.setPreferredSize(new Dimension(closeIcon.getIconWidth() + ScaleUtil.scale(10), closeIcon.getIconHeight() + ScaleUtil.scale(10)));
         close.addActionListener(e -> {
             f.desktopLyricButton.doClick();
         });
@@ -400,7 +392,7 @@ public class DesktopLyricDialog extends JDialog {
             if (opacity < min) opacity = min;
             else if (opacity > max) opacity = max;
             super.transitionOpacity(opacity);
-            f.desktopLyricAlpha = opacity;
+            f.desktopLyricOpacity = opacity;
         }
     }
 

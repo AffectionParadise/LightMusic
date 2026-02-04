@@ -104,6 +104,10 @@ public class MediaUtil {
         String genre = mediaInfo.getGenre();
         String lyrics = mediaInfo.getLyrics();
         String lyricist = mediaInfo.getLyricist();
+        String year = mediaInfo.getYear();
+        String rating = mediaInfo.getRating();
+        String bpm = mediaInfo.getBpm();
+        String key = mediaInfo.getKey();
         String comment = mediaInfo.getComment();
         String recordLabel = mediaInfo.getRecordLabel();
         String mood = mediaInfo.getMood();
@@ -124,6 +128,10 @@ public class MediaUtil {
             tag.setField(FieldKey.GENRE, genre);
             tag.setField(FieldKey.LYRICS, lyrics);
             tag.setField(FieldKey.LYRICIST, lyricist);
+            tag.setField(FieldKey.YEAR, year);
+            tag.setField(FieldKey.RATING, rating);
+            tag.setField(FieldKey.BPM, bpm);
+            tag.setField(FieldKey.KEY, key);
             tag.setField(FieldKey.COMMENT, comment);
             tag.setField(FieldKey.RECORD_LABEL, recordLabel);
             tag.setField(FieldKey.MOOD, mood);
@@ -211,6 +219,10 @@ public class MediaUtil {
             String genre = StringUtil.fixEncoding(tag.getFirst(FieldKey.GENRE));
             String lyrics = StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICS));
             String lyricist = StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICIST));
+            String year = StringUtil.fixEncoding(tag.getFirst(FieldKey.YEAR));
+            String rating = StringUtil.fixEncoding(tag.getFirst(FieldKey.RATING));
+            String bpm = StringUtil.fixEncoding(tag.getFirst(FieldKey.BPM));
+            String key = StringUtil.fixEncoding(tag.getFirst(FieldKey.KEY));
             String comment = StringUtil.fixEncoding(tag.getFirst(FieldKey.COMMENT));
             String recordLabel = StringUtil.fixEncoding(tag.getFirst(FieldKey.RECORD_LABEL));
             String mood = StringUtil.fixEncoding(tag.getFirst(FieldKey.MOOD));
@@ -223,6 +235,10 @@ public class MediaUtil {
             mediaInfo.setGenre(genre);
             mediaInfo.setLyrics(lyrics);
             mediaInfo.setLyricist(lyricist);
+            mediaInfo.setYear(year);
+            mediaInfo.setRating(rating);
+            mediaInfo.setBpm(bpm);
+            mediaInfo.setKey(key);
             mediaInfo.setComment(comment);
             mediaInfo.setRecordLabel(recordLabel);
             mediaInfo.setMood(mood);

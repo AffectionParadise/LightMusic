@@ -65,11 +65,6 @@ public class CustomPopupMenu extends JPopupMenu {
     }
 
     @Override
-    protected void paintBorder(Graphics g) {
-//        super.paintBorder(g);
-    }
-
-    @Override
     public void addSeparator() {
         add(new CustomSeparator());
     }

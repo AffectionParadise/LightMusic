@@ -858,7 +858,7 @@ public class MainFrame extends JFrame {
     // 桌面歌词是否置顶
     public boolean desktopLyricOnTop;
     // 桌面歌词透明度
-    public float desktopLyricAlpha;
+    public float desktopLyricOpacity;
     // 桌面歌词字体大小
     public int desktopLyricFontSize;
     // 专辑图片宽/高
@@ -2882,15 +2882,8 @@ public class MainFrame extends JFrame {
         // 隐藏详情暂时不可见
         hideDetailButton.setVisible(false);
         // 最佳大小
-        Dimension d = new Dimension(hideDetailIcon.getIconWidth() + ScaleUtil.scale(10), hideDetailIcon.getIconHeight() + ScaleUtil.scale(10));
-        hideDetailButton.setPreferredSize(d);
-        styleToolButton.setPreferredSize(d);
-        mainMenuButton.setPreferredSize(d);
+        Dimension d = new Dimension(splitIcon.getIconWidth() + ScaleUtil.scale(10), splitIcon.getIconHeight() + ScaleUtil.scale(10));
         splitLabel.setPreferredSize(d);
-        miniButton.setPreferredSize(d);
-        minimizeButton.setPreferredSize(d);
-        maximizeButton.setPreferredSize(d);
-        closeButton.setPreferredSize(d);
         // 悬浮提示
         hideDetailButton.setToolTipText(HIDE_DETAIL_TIP);
         styleToolButton.setToolTipText(STYLE_TIP);
@@ -3180,8 +3173,8 @@ public class MainFrame extends JFrame {
         desktopLyricOnTop = config.getBooleanValue(ConfigConstants.DESKTOP_LYRIC_ON_TOP, true);
         desktopLyricDialog.setAlwaysOnTop(desktopLyricOnTop);
         // 载入桌面歌词透明度
-        desktopLyricAlpha = config.containsKey(ConfigConstants.DESKTOP_LYRIC_ALPHA) ? config.getFloatValue(ConfigConstants.DESKTOP_LYRIC_ALPHA) : 1;
-        desktopLyricDialog.setAlpha(desktopLyricAlpha);
+        desktopLyricOpacity = config.containsKey(ConfigConstants.DESKTOP_LYRIC_OPACITY) ? config.getFloatValue(ConfigConstants.DESKTOP_LYRIC_OPACITY) : 1f;
+        desktopLyricDialog.setAlpha(desktopLyricOpacity);
         // 载入桌面歌词字体大小
         desktopLyricFontSize = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
         desktopLyricDialog.updateFontSize(desktopLyricFontSize);
@@ -4004,7 +3997,7 @@ public class MainFrame extends JFrame {
         // 存入是否桌面歌词置顶
         config.put(ConfigConstants.DESKTOP_LYRIC_ON_TOP, desktopLyricOnTop);
         // 存入桌面歌词透明度
-        config.put(ConfigConstants.DESKTOP_LYRIC_ALPHA, desktopLyricAlpha);
+        config.put(ConfigConstants.DESKTOP_LYRIC_OPACITY, desktopLyricOpacity);
         // 存入桌面歌词字体大小
         config.put(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, desktopLyricFontSize);
         // 存入音质
@@ -6571,20 +6564,6 @@ public class MainFrame extends JFrame {
         localMusicButton.addMouseListener(new TabButtonMouseListener(localMusicButton, THIS));
         historyButton.addMouseListener(new TabButtonMouseListener(historyButton, THIS));
         collectionButton.addMouseListener(new TabButtonMouseListener(collectionButton, THIS));
-        // 按钮字体
-        Font font = Fonts.NORMAL_TITLE2;
-        localMusicButton.setFont(font);
-        historyButton.setFont(font);
-        collectionButton.setFont(font);
-
-        // 按钮文字与图标的位置
-        int gap = ScaleUtil.scale(15);
-        localMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        localMusicButton.setIconTextGap(gap);
-        historyButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        historyButton.setIconTextGap(gap);
-        collectionButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        collectionButton.setIconTextGap(gap);
 
         // 推荐工具栏网格布局
         personalMusicToolBar.setLayout(new GridLayout(1, 3));
@@ -18861,18 +18840,6 @@ public class MainFrame extends JFrame {
         netRecommendGoButton.addMouseListener(new CustomButtonMouseListener(netRecommendGoButton, THIS));
         netRecommendNextPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendNextPageButton, THIS));
         netRecommendEndPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendEndPageButton, THIS));
-        // 按钮字体
-        Font font = Fonts.NORMAL_TITLE2;
-        playlistRecommendButton.setFont(font);
-        highQualityPlaylistButton.setFont(font);
-        hotMusicButton.setFont(font);
-        newMusicButton.setFont(font);
-        newAlbumRecommendButton.setFont(font);
-        artistListRecommendButton.setFont(font);
-        newRadioRecommendButton.setFont(font);
-        hotRadioRecommendButton.setFont(font);
-        programRecommendButton.setFont(font);
-        mvRecommendButton.setFont(font);
         // 提示语
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -18887,29 +18854,6 @@ public class MainFrame extends JFrame {
 
         // 透明度
         recommendCountLabel.setOpacity(0.5f);
-
-        // 按钮文字与图标的位置
-        int gap = ScaleUtil.scale(15);
-        playlistRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        playlistRecommendButton.setIconTextGap(gap);
-        highQualityPlaylistButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        highQualityPlaylistButton.setIconTextGap(gap);
-        hotMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        hotMusicButton.setIconTextGap(gap);
-        newMusicButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        newMusicButton.setIconTextGap(gap);
-        newAlbumRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        newAlbumRecommendButton.setIconTextGap(gap);
-        artistListRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        artistListRecommendButton.setIconTextGap(gap);
-        newRadioRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        newRadioRecommendButton.setIconTextGap(gap);
-        hotRadioRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        hotRadioRecommendButton.setIconTextGap(gap);
-        programRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        programRecommendButton.setIconTextGap(gap);
-        mvRecommendButton.setHorizontalTextPosition(SwingConstants.RIGHT);
-        mvRecommendButton.setIconTextGap(gap);
 
         // 推荐工具栏网格布局
         recommendToolBar.setLayout(new GridLayout(2, 5));
@@ -20750,12 +20694,10 @@ public class MainFrame extends JFrame {
         mvButton.setToolTipText(MV_TIP);
         mvButton.setEnabled(false);
         mvButton.addMouseListener(new CustomButtonMouseListener(mvButton, THIS));
-        mvButton.setPreferredSize(new Dimension(mvIcon.getIconWidth() + ScaleUtil.scale(10), mvIcon.getIconHeight() + ScaleUtil.scale(10)));
         mvButton.addActionListener(e -> playMv(MvCompSourceType.PLAYING));
         // 收藏
         collectButton.setEnabled(false);
         collectButton.addMouseListener(new CustomButtonMouseListener(collectButton, THIS));
-        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + ScaleUtil.scale(10), collectIcon.getIconHeight() + ScaleUtil.scale(10)));
         collectButton.addActionListener(e -> {
             MusicResource resource = player.getMusicInfo();
             if (resource == null) resource = player.getAudioFile();
@@ -20784,13 +20726,11 @@ public class MainFrame extends JFrame {
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setEnabled(false);
         downloadButton.addMouseListener(new CustomButtonMouseListener(downloadButton, THIS));
-        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + ScaleUtil.scale(10), downloadIcon.getIconHeight() + ScaleUtil.scale(10)));
         downloadButton.addActionListener(e -> singleDownload(player.getMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
         commentButton.setEnabled(false);
         commentButton.addMouseListener(new CustomButtonMouseListener(commentButton, THIS));
-        commentButton.setPreferredSize(new Dimension(commentIcon.getIconWidth() + ScaleUtil.scale(10), commentIcon.getIconHeight() + ScaleUtil.scale(10)));
         commentButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPaneType != CenterPaneType.COMMENT || currCommentResource != musicInfo)
@@ -20800,7 +20740,6 @@ public class MainFrame extends JFrame {
         sheetButton.setToolTipText(SHEET_TIP);
         sheetButton.setEnabled(false);
         sheetButton.addMouseListener(new CustomButtonMouseListener(sheetButton, THIS));
-        sheetButton.setPreferredSize(new Dimension(sheetIcon.getIconWidth() + ScaleUtil.scale(10), sheetIcon.getIconHeight() + ScaleUtil.scale(10)));
         sheetButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPaneType != CenterPaneType.SHEET || currSheetMusicInfo != musicInfo)
@@ -20808,15 +20747,12 @@ public class MainFrame extends JFrame {
         });
         lastButton.setToolTipText(LAST_TIP);
         lastButton.addMouseListener(new CustomButtonMouseListener(lastButton, THIS));
-        lastButton.setPreferredSize(new Dimension(lastIcon.getIconWidth() + ScaleUtil.scale(10), lastIcon.getIconHeight() + ScaleUtil.scale(10)));
         lastButton.addActionListener(e -> playLast());
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.setPreferredSize(new Dimension(playIcon.getIconWidth() + ScaleUtil.scale(10), playIcon.getIconHeight() + ScaleUtil.scale(10)));
         playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
         nextButton.setToolTipText(NEXT_TIP);
         nextButton.addMouseListener(new CustomButtonMouseListener(nextButton, THIS));
-        nextButton.setPreferredSize(new Dimension(nextIcon.getIconWidth() + ScaleUtil.scale(10), nextIcon.getIconHeight() + ScaleUtil.scale(10)));
         nextButton.addActionListener(e -> {
             // 单曲循环和顺序播放，都播放下一首
             if (currPlayMode != PlayMode.SHUFFLE) {
@@ -20831,7 +20767,6 @@ public class MainFrame extends JFrame {
         // 默认提示语为“列表循环”
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
         playModeButton.addMouseListener(new CustomButtonMouseListener(playModeButton, THIS));
-        playModeButton.setPreferredSize(new Dimension(listCycleIcon.getIconWidth() + ScaleUtil.scale(10), listCycleIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -20865,10 +20800,8 @@ public class MainFrame extends JFrame {
 
         backwardButton.setToolTipText(BACKW_TIP);
         backwardButton.addMouseListener(new CustomButtonMouseListener(backwardButton, THIS));
-        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + ScaleUtil.scale(10), backwIcon.getIconHeight() + ScaleUtil.scale(10)));
         forwardButton.setToolTipText(FORW_TIP);
         forwardButton.addMouseListener(new CustomButtonMouseListener(forwardButton, THIS));
-        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + ScaleUtil.scale(10), forwIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 快进快退
         backwardButton.addActionListener(e -> {
             double t = player.getCurrTimeSeconds() - forwardOrBackwardTime;
@@ -20883,7 +20816,6 @@ public class MainFrame extends JFrame {
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.addMouseListener(new CustomButtonMouseListener(muteButton, THIS));
-        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + ScaleUtil.scale(10), muteIcon.getIconHeight() + ScaleUtil.scale(10)));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
@@ -20908,7 +20840,6 @@ public class MainFrame extends JFrame {
         });
         rateButton.setToolTipText(RATE_TIP);
         rateButton.addMouseListener(new CustomButtonMouseListener(rateButton, THIS));
-        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + ScaleUtil.scale(10), rateIcon.getIconHeight() + ScaleUtil.scale(10)));
         rateButton.addActionListener(e -> {
             if (rateDialog == null) rateDialog = new RateDialog(THIS, null, rateButton);
             rateDialog.showDialog();
@@ -20916,7 +20847,6 @@ public class MainFrame extends JFrame {
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
         switchSpectrumButton.addMouseListener(new CustomButtonMouseListener(switchSpectrumButton, THIS));
-        switchSpectrumButton.setPreferredSize(new Dimension(spectrumOnIcon.getIconWidth() + ScaleUtil.scale(10), spectrumOnIcon.getIconHeight() + ScaleUtil.scale(10)));
         switchSpectrumButton.addActionListener(e -> {
             if (showSpectrum = !showSpectrum) openSpectrum();
             else closeSpectrum();
@@ -20981,7 +20911,6 @@ public class MainFrame extends JFrame {
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
         blurButton.addMouseListener(new CustomButtonMouseListener(blurButton, THIS));
-        blurButton.setPreferredSize(new Dimension(cvBlurIcon.getIconWidth() + ScaleUtil.scale(10), cvBlurIcon.getIconHeight() + ScaleUtil.scale(10)));
         blurButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20992,11 +20921,9 @@ public class MainFrame extends JFrame {
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
         soundEffectButton.addMouseListener(new CustomButtonMouseListener(soundEffectButton, THIS));
-        soundEffectButton.setPreferredSize(new Dimension(soundEffectIcon.getIconWidth() + ScaleUtil.scale(10), soundEffectIcon.getIconHeight() + ScaleUtil.scale(10)));
         soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
-        goToPlayQueueButton.setPreferredSize(new Dimension(goToPlayQueueIcon.getIconWidth() + ScaleUtil.scale(10), goToPlayQueueIcon.getIconHeight() + ScaleUtil.scale(10)));
         goToPlayQueueButton.addMouseListener(new CustomButtonMouseListener(goToPlayQueueButton, THIS));
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -21007,7 +20934,6 @@ public class MainFrame extends JFrame {
         // 桌面歌词开关
         desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
         desktopLyricButton.addMouseListener(new CustomButtonMouseListener(desktopLyricButton, THIS));
-        desktopLyricButton.setPreferredSize(new Dimension(desktopLyricOnIcon.getIconWidth() + ScaleUtil.scale(10), desktopLyricOnIcon.getIconHeight() + ScaleUtil.scale(10)));
         desktopLyricButton.addActionListener(e -> {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
@@ -21020,7 +20946,6 @@ public class MainFrame extends JFrame {
         });
         // 歌词类型按钮
         switchLrcTypeButton.addMouseListener(new CustomButtonMouseListener(switchLrcTypeButton, THIS));
-        switchLrcTypeButton.setPreferredSize(new Dimension(originalIcon.getIconWidth() + ScaleUtil.scale(10), originalIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 歌词类型切换事件
         switchLrcTypeButton.addMouseListener(new MouseAdapter() {
             @Override

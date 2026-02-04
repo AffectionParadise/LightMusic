@@ -81,11 +81,6 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
     }
 
     @Override
-    protected void paintBorder(Graphics g) {
-//        super.paintBorder(g);
-    }
-
-    @Override
     public void setVisible(boolean b) {
         super.setVisible(b);
         if (b) {

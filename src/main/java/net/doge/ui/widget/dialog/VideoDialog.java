@@ -414,7 +414,6 @@ public class VideoDialog extends AbstractTitledDialog {
 
         playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, iconColor));
-        playOrPauseButton.setPreferredSize(new Dimension(pauseIcon.getIconWidth() + ScaleUtil.scale(10), pauseIcon.getIconHeight() + ScaleUtil.scale(10)));
         playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, f));
         playOrPauseButton.addActionListener(e -> playOrPause());
 
@@ -422,7 +421,6 @@ public class VideoDialog extends AbstractTitledDialog {
         forwardButton.setToolTipText(FORWARD_TIP);
         forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
         forwardButton.addMouseListener(new CustomButtonMouseListener(forwardButton, f));
-        forwardButton.setPreferredSize(new Dimension(forwIcon.getIconWidth() + ScaleUtil.scale(10), forwIcon.getIconHeight() + ScaleUtil.scale(10)));
         forwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
@@ -430,7 +428,6 @@ public class VideoDialog extends AbstractTitledDialog {
         backwardButton.setToolTipText(BACKWARD_TIP);
         backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
         backwardButton.addMouseListener(new CustomButtonMouseListener(backwardButton, f));
-        backwardButton.setPreferredSize(new Dimension(backwIcon.getIconWidth() + ScaleUtil.scale(10), backwIcon.getIconHeight() + ScaleUtil.scale(10)));
         backwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().subtract(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
@@ -438,7 +435,6 @@ public class VideoDialog extends AbstractTitledDialog {
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));
         muteButton.addMouseListener(new CustomButtonMouseListener(muteButton, f));
-        muteButton.setPreferredSize(new Dimension(muteIcon.getIconWidth() + ScaleUtil.scale(10), muteIcon.getIconHeight() + ScaleUtil.scale(10)));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
@@ -464,7 +460,6 @@ public class VideoDialog extends AbstractTitledDialog {
         collectButton.setToolTipText(COLLECT_TIP);
         collectButton.setIcon(ImageUtil.dye(f.hasBeenCollected(mvInfo) ? hasCollectedIcon : collectIcon, iconColor));
         collectButton.addMouseListener(new CustomButtonMouseListener(collectButton, f));
-        collectButton.setPreferredSize(new Dimension(collectIcon.getIconWidth() + ScaleUtil.scale(10), collectIcon.getIconHeight() + ScaleUtil.scale(10)));
         collectButton.addActionListener(e -> {
             if (!f.hasBeenCollected(mvInfo)) {
                 // 加载 MV 基本信息
@@ -487,13 +482,11 @@ public class VideoDialog extends AbstractTitledDialog {
         downloadButton.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadButton.setDisabledIcon(ImageUtil.dye(downloadIcon, ColorUtil.darker(iconColor)));
         downloadButton.addMouseListener(new CustomButtonMouseListener(downloadButton, f));
-        downloadButton.setPreferredSize(new Dimension(downloadIcon.getIconWidth() + ScaleUtil.scale(10), downloadIcon.getIconHeight() + ScaleUtil.scale(10)));
         downloadButton.addActionListener(e -> downloadMv());
         rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
         rateButton.addMouseListener(new CustomButtonMouseListener(rateButton, f));
-        rateButton.setPreferredSize(new Dimension(rateIcon.getIconWidth() + ScaleUtil.scale(10), rateIcon.getIconHeight() + ScaleUtil.scale(10)));
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(f, this, rateButton);
             rd.showDialog();
@@ -519,7 +512,6 @@ public class VideoDialog extends AbstractTitledDialog {
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
         fobTimeButton.setIcon(ImageUtil.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
         fobTimeButton.addMouseListener(new CustomButtonMouseListener(fobTimeButton, f));
-        fobTimeButton.setPreferredSize(new Dimension(fobTimeIcon.getIconWidth() + ScaleUtil.scale(10), fobTimeIcon.getIconHeight() + ScaleUtil.scale(10)));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
         fobTimeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -531,7 +523,6 @@ public class VideoDialog extends AbstractTitledDialog {
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
         fullScreenButton.setIcon(ImageUtil.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
         fullScreenButton.addMouseListener(new CustomButtonMouseListener(fullScreenButton, f));
-        fullScreenButton.setPreferredSize(new Dimension(fullScreenIcon.getIconWidth() + ScaleUtil.scale(10), fullScreenIcon.getIconHeight() + ScaleUtil.scale(10)));
         fullScreenButton.addActionListener(e -> toFullScreen());
         jfxPanel.addMouseListener(new MouseAdapter() {
             @Override

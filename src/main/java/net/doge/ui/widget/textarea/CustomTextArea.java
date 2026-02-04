@@ -4,9 +4,8 @@ import lombok.Data;
 import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
-import net.doge.ui.core.dimension.HDDimension;
-import net.doge.ui.core.inset.HDInsets;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -18,6 +17,8 @@ import java.awt.event.*;
 
 @Data
 public class CustomTextArea extends JTextArea implements ExtendedOpacitySupported {
+    private static final HDEmptyBorder BORDER = new HDEmptyBorder(5, 10, 5, 10);
+
     private boolean occupied;
     @Getter
     private float extendedOpacity = 1f;
@@ -34,8 +35,7 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
         setFocusable(false);
         setLineWrap(true);
         setFont(Fonts.NORMAL);
-        setMaximumSize(new HDDimension(3000, 30));
-        setMargin(new HDInsets(2, 6, 2, 6));
+        setBorder(BORDER);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -107,7 +107,7 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
         Color foreColor = getForeground();
         g2d.setColor(foreColor);
         GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
-        int arc = ScaleUtil.scale(25);
+        int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(0, 0, w, h, arc, arc);
         GraphicsUtil.srcOver(g2d, extendedOpacity);
 
@@ -155,10 +155,5 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
 //                break;
 //            }
 //        }
-    }
-
-    @Override
-    protected void paintBorder(Graphics g) {
-
     }
 }

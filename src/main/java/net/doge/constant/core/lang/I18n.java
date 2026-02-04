@@ -514,6 +514,10 @@ public class I18n {
         LANG_MAP.put("fileGenre", new String[]{"流派：", "Genre: "});
         LANG_MAP.put("fileLyrics", new String[]{"歌词：", "Lyrics: "});
         LANG_MAP.put("fileLyricist", new String[]{"作词：", "Lyricist: "});
+        LANG_MAP.put("fileYear", new String[]{"年份：", "Year: "});
+        LANG_MAP.put("fileRating", new String[]{"评分：", "Rating: "});
+        LANG_MAP.put("fileBpm", new String[]{"BPM：", "BPM: "});
+        LANG_MAP.put("fileKey", new String[]{"调性：", "Key: "});
         LANG_MAP.put("fileComment", new String[]{"注释：", "Comment: "});
         LANG_MAP.put("fileRecordLabel", new String[]{"厂牌：", "Record label: "});
         LANG_MAP.put("fileMood", new String[]{"情绪：", "Mood: "});

@@ -13,7 +13,6 @@ import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -24,16 +23,17 @@ import java.awt.event.MouseListener;
  * @Date 2020/12/13
  */
 public class DialogButton extends BaseButton implements MouseListener, ExtendedOpacitySupported {
+    private static final HDEmptyBorder BORDER = new HDEmptyBorder(4, 15, 4, 15);
+
     private Color foreColor;
     private Color foreColorBk;
-    private Timer drawBgTimer;
     private boolean drawBgIncreasing;
+    private Timer drawBgTimer;
     private final float startBgAlpha = 0.2f;
     private final float destBgAlpha = 0.4f;
     private float bgAlpha = startBgAlpha;
     @Getter
     private float extendedOpacity = 1f;
-    private static final Border BORDER = new HDEmptyBorder(4, 16, 4, 16);
 
     public DialogButton() {
         this(null);

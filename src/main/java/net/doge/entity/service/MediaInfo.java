@@ -24,8 +24,16 @@ public class MediaInfo {
     private String lyrics;
     // 作词
     private String lyricist;
+    // 年份
+    private String year;
+    // 评分
+    private String rating;
     // 注释
     private String comment;
+    // BPM
+    private String bpm;
+    // 调
+    private String key;
     // 厂牌
     private String recordLabel;
     // 情绪

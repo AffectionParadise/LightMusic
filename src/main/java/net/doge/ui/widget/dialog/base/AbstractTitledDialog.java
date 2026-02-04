@@ -12,7 +12,6 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ImageUtil;
-import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +65,6 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new HDDimension(600, 30));
         closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
-        closeButton.setPreferredSize(new Dimension(f.closeWindowIcon.getIconWidth() + ScaleUtil.scale(10), f.closeWindowIcon.getIconHeight() + ScaleUtil.scale(10)));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
         // 鼠标事件

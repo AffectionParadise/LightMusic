@@ -70,6 +70,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomLabel(I18n.getText("fileGenre")),
             new CustomLabel(I18n.getText("fileLyrics")),
             new CustomLabel(I18n.getText("fileLyricist")),
+            new CustomLabel(I18n.getText("fileYear")),
+            new CustomLabel(I18n.getText("fileRating")),
+            new CustomLabel(I18n.getText("fileBpm")),
+            new CustomLabel(I18n.getText("fileKey")),
             new CustomLabel(I18n.getText("fileComment")),
             new CustomLabel(I18n.getText("fileRecordLabel")),
             new CustomLabel(I18n.getText("fileMood")),
@@ -97,6 +101,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
 //            comboBox,
             new CustomTextField(columns),
             new CustomScrollPane(new CustomTextArea(rows, columns)),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
+            new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
@@ -161,14 +169,18 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 mediaInfo.setGenre((String) results[11]);
                 mediaInfo.setLyrics((String) results[12]);
                 mediaInfo.setLyricist((String) results[13]);
-                mediaInfo.setComment((String) results[14]);
-                mediaInfo.setRecordLabel((String) results[15]);
-                mediaInfo.setMood((String) results[16]);
-                mediaInfo.setOccasion((String) results[17]);
-                mediaInfo.setLanguage((String) results[18]);
-                mediaInfo.setCountry((String) results[19]);
-                mediaInfo.setVersion((String) results[20]);
-                mediaInfo.setCopyright((String) results[21]);
+                mediaInfo.setYear((String) results[14]);
+                mediaInfo.setRating((String) results[15]);
+                mediaInfo.setBpm((String) results[16]);
+                mediaInfo.setKey((String) results[17]);
+                mediaInfo.setComment((String) results[18]);
+                mediaInfo.setRecordLabel((String) results[19]);
+                mediaInfo.setMood((String) results[20]);
+                mediaInfo.setOccasion((String) results[21]);
+                mediaInfo.setLanguage((String) results[22]);
+                mediaInfo.setCountry((String) results[23]);
+                mediaInfo.setVersion((String) results[24]);
+                mediaInfo.setCopyright((String) results[25]);
                 mediaInfo.setFormat(file.getFormat());
                 MediaUtil.writeAudioFileInfo(file, mediaInfo);
                 // 歌曲信息更改后重新填充
@@ -194,7 +206,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
     }
 
     private void initView() {
-        centerPanel.setLayout(new GridLayout(11, 2));
+        centerPanel.setLayout(new GridLayout(13, 2));
 
         // 获得传入的歌曲信息
         String fileName = HtmlUtil.wrapLineByWidth(file.getName(), ScaleUtil.scale(300));
@@ -212,6 +224,10 @@ public class EditInfoDialog extends AbstractTitledDialog {
         String genre = extraMediaInfo.getGenre();
         String lyrics = extraMediaInfo.getLyrics();
         String lyricist = extraMediaInfo.getLyricist();
+        String year = extraMediaInfo.getYear();
+        String rating = extraMediaInfo.getRating();
+        String bpm = extraMediaInfo.getBpm();
+        String key = extraMediaInfo.getKey();
         String comment = extraMediaInfo.getComment();
         String recordLabel = extraMediaInfo.getRecordLabel();
         String mood = extraMediaInfo.getMood();
@@ -235,14 +251,18 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[11] = genre;
         results[12] = lyrics;
         results[13] = lyricist;
-        results[14] = comment;
-        results[15] = recordLabel;
-        results[16] = mood;
-        results[17] = occasion;
-        results[18] = language;
-        results[19] = country;
-        results[20] = version;
-        results[21] = copyright;
+        results[14] = year;
+        results[15] = rating;
+        results[16] = bpm;
+        results[17] = key;
+        results[18] = comment;
+        results[19] = recordLabel;
+        results[20] = mood;
+        results[21] = occasion;
+        results[22] = language;
+        results[23] = country;
+        results[24] = version;
+        results[25] = copyright;
 
         Border b = new HDEmptyBorder(0, 20, 0, 20);
 

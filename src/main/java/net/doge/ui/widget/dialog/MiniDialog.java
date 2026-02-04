@@ -214,12 +214,6 @@ public class MiniDialog extends AbstractMiniDialog {
         playNextButton.setIcon(f.nextButton.getIcon());
         closeButton.setIcon(ImageUtil.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
 
-        // 按钮大小
-        playLastButton.setPreferredSize(new Dimension(playLastButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playLastButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
-        playOrPauseButton.setPreferredSize(new Dimension(playOrPauseButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playOrPauseButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
-        playNextButton.setPreferredSize(new Dimension(playNextButton.getIcon().getIconWidth() + ScaleUtil.scale(10), playNextButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
-        closeButton.setPreferredSize(new Dimension(closeButton.getIcon().getIconWidth() + ScaleUtil.scale(10), closeButton.getIcon().getIconHeight() + ScaleUtil.scale(10)));
-
         playLastButton.addActionListener(e -> f.lastButton.doClick());
         playNextButton.addActionListener(e -> f.nextButton.doClick());
         playOrPauseButton.addActionListener(e -> f.playOrPauseButton.doClick());

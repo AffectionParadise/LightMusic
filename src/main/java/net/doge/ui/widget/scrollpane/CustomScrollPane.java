@@ -36,7 +36,7 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
     private void init() {
         setOpaque(false);
         // 默认有黑边，不绘制边框
-        setBorder(new HDEmptyBorder());
+        setBorder(HDEmptyBorder.ZERO);
 
         // 滚轮滚动动画
         wheelScrollingTimer = new Timer(0, e -> {

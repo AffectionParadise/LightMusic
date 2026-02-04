@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
  * 适配 DPI 的高清边框
  */
 public class HDEmptyBorder extends EmptyBorder {
+    public static final HDEmptyBorder ZERO = new HDEmptyBorder();
+
     public HDEmptyBorder() {
         this(0, 0, 0, 0);
     }
