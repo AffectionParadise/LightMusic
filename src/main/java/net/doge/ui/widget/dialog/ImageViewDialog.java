@@ -7,13 +7,14 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -161,9 +162,10 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
 
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
-        Color iconColor = f.currUIStyle.getIconColor();
+        Color iconColor = style.getIconColor();
 
         // 标签
         imgLabel.setForeground(textColor);
@@ -173,30 +175,24 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         // 适应
         adaptButton.setToolTipText(ADAPT);
         adaptButton.setIcon(ImageUtil.dye((ImageIcon) adaptButton.getIcon(), iconColor));
-        adaptButton.addMouseListener(new CustomButtonMouseListener(adaptButton, f));
         adaptButton.addActionListener(e -> showImg(img));
         // 放大/缩小
         zoomInButton.setToolTipText(ZOOM_IN);
         zoomInButton.setIcon(ImageUtil.dye((ImageIcon) zoomInButton.getIcon(), iconColor));
-        zoomInButton.addMouseListener(new CustomButtonMouseListener(zoomInButton, f));
         zoomInButton.addActionListener(e -> showScaledImg(scale = Math.min(20f, scale + 0.1f)));
         zoomOutButton.setToolTipText(ZOOM_OUT);
         zoomOutButton.setIcon(ImageUtil.dye((ImageIcon) zoomOutButton.getIcon(), iconColor));
-        zoomOutButton.addMouseListener(new CustomButtonMouseListener(zoomOutButton, f));
         zoomOutButton.addActionListener(e -> showScaledImg(scale = Math.max(0.1f, scale - 0.1f)));
         // 逆时针/顺时针旋转
         leftRotateButton.setToolTipText(LEFT_ROTATE);
         leftRotateButton.setIcon(ImageUtil.dye((ImageIcon) leftRotateButton.getIcon(), iconColor));
-        leftRotateButton.addMouseListener(new CustomButtonMouseListener(leftRotateButton, f));
         leftRotateButton.addActionListener(e -> showRotatedImg(-90));
         rightRotateButton.setToolTipText(RIGHT_ROTATE);
         rightRotateButton.setIcon(ImageUtil.dye((ImageIcon) rightRotateButton.getIcon(), iconColor));
-        rightRotateButton.addMouseListener(new CustomButtonMouseListener(rightRotateButton, f));
         rightRotateButton.addActionListener(e -> showRotatedImg(90));
         // 上/下一张按钮
         lastImgButton.setToolTipText(LAST_IMG);
         lastImgButton.setIcon(ImageUtil.dye((ImageIcon) lastImgButton.getIcon(), iconColor));
-        lastImgButton.addMouseListener(new CustomButtonMouseListener(lastImgButton, f));
         lastImgButton.addActionListener(e -> {
             if (p == 1) {
                 new TipDialog(f, FIRST_PAGE_MSG, true).showDialog();
@@ -206,7 +202,6 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         });
         nextImgButton.setToolTipText(NEXT_IMG);
         nextImgButton.setIcon(ImageUtil.dye((ImageIcon) nextImgButton.getIcon(), iconColor));
-        nextImgButton.addMouseListener(new CustomButtonMouseListener(nextImgButton, f));
         nextImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
@@ -218,7 +213,6 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         // 第一张/最后一张按钮
         firstImgButton.setToolTipText(FIRST_IMG);
         firstImgButton.setIcon(ImageUtil.dye((ImageIcon) firstImgButton.getIcon(), iconColor));
-        firstImgButton.addMouseListener(new CustomButtonMouseListener(firstImgButton, f));
         firstImgButton.addActionListener(e -> {
             if (p == 1) {
                 new TipDialog(f, FIRST_PAGE_MSG, true).showDialog();
@@ -228,7 +222,6 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         });
         lstImgButton.setToolTipText(LST_IMG);
         lstImgButton.setIcon(ImageUtil.dye((ImageIcon) lstImgButton.getIcon(), iconColor));
-        lstImgButton.addMouseListener(new CustomButtonMouseListener(lstImgButton, f));
         lstImgButton.addActionListener(e -> {
             if (results == null) return;
             if (p >= results.total) {
@@ -253,7 +246,6 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         // 跳页按钮
         goButton.setToolTipText(GO_TIP);
         goButton.setIcon(ImageUtil.dye((ImageIcon) goButton.getIcon(), iconColor));
-        goButton.addMouseListener(new CustomButtonMouseListener(goButton, f));
         goButton.addActionListener(e -> {
             if (results == null) return;
             String text = pageTextField.getText();
@@ -270,7 +262,6 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         // 保存图片
         saveImgButton.setToolTipText(SAVE_IMG);
         saveImgButton.setIcon(ImageUtil.dye((ImageIcon) saveImgButton.getIcon(), iconColor));
-        saveImgButton.addMouseListener(new CustomButtonMouseListener(saveImgButton, f));
         saveImgButton.addActionListener(e -> saveImg());
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);

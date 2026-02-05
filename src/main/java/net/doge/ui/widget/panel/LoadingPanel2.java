@@ -132,7 +132,7 @@
 //            // 自定义字体
 //            TextLayout layout = new TextLayout(text, font, context);
 //            Rectangle2D bounds = layout.getBounds();
-//            g2.setColor(f.currUIStyle.getTextColor());
+//            g2.setColor(UIStyleStorage.currUIStyle.getTextColor());
 //            layout.draw(g2, (float) (width - bounds.getWidth()) / 2,
 //                    (float) (maxY + layout.getLeading() + 2 * layout.getAscent()));
 //        }

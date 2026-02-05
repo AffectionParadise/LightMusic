@@ -1,8 +1,6 @@
 package net.doge.ui.widget.list.renderer.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.entity.service.*;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 
@@ -15,8 +13,6 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ItemRecommendListRenderer extends CustomListCellRenderer {
     private Color foreColor;
     private Color selectedColor;

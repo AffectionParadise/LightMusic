@@ -24,6 +24,10 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
     private float extendedOpacity = 1f;
 
     public CustomComboBox() {
+        init();
+    }
+
+    private void init() {
         setOpaque(false);
         setFocusable(false);
         setLightWeightPopupEnabled(false);

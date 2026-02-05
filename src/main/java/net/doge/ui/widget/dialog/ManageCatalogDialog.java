@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -15,7 +17,6 @@ import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.CatalogListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.core.LogUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -61,7 +62,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         super(f, I18n.getText("manageCatalogTitle"));
         this.catalogs = f.catalogs;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         allSelectButton = new DialogButton(I18n.getText("dialogAll"), textColor);
         nonSelectButton = new DialogButton(I18n.getText("dialogInvert"), textColor);
         locateButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
@@ -98,9 +99,10 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         centerPanel.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color foreColor = f.currUIStyle.getForeColor();
-        Color selectedColor = f.currUIStyle.getSelectedColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color foreColor = style.getForeColor();
+        Color selectedColor = style.getSelectedColor();
 
         // 添加标签
         tipLabel.setBorder(new HDEmptyBorder(10, 10, 10, 10));
@@ -218,9 +220,6 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(catalogList);
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         sp.setBorder(new HDEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

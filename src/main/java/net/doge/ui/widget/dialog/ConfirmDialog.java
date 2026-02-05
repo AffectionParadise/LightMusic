@@ -2,6 +2,8 @@ package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -11,7 +13,6 @@ import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ImageUtil;
@@ -70,7 +71,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
         super(f);
         this.message = message;
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         yes = new DialogButton(yesText, textColor);
         no = new DialogButton(noText, textColor);
         cancel = new DialogButton(cancelText, textColor);
@@ -83,9 +84,9 @@ public class ConfirmDialog extends AbstractShadowDialog {
     }
 
     public void showDialog() {
-        Color textColor = f.currUIStyle.getTextColor();
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
 
         // Dialog 背景透明
         setUndecorated(true);
@@ -108,8 +109,6 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messageLabel.setForeground(textColor);
         messagePanel.add(messageLabel);
         messagePanel.setBorder(eb);
-        messageScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        messageScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         FlowLayout fl = new HDFlowLayout();

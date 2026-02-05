@@ -32,7 +32,10 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
 
     public LoadingPanel(MainFrame f) {
         this.f = f;
+        init();
+    }
 
+    private void init() {
         setLayout(new GridLayout(1, 1));
 
         label.setFont(textFont);
@@ -101,13 +104,10 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
-
         int pw = getWidth(), ph = getHeight();
-
         // 画背景
         g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg(), bgAlpha, false));
         g2d.fillRect(0, 0, pw, ph);
-
         super.paintComponent(g);
     }
 

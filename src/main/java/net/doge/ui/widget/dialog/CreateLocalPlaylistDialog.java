@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog;
 import lombok.Getter;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.box.CustomBox;
@@ -47,7 +48,7 @@ public class CreateLocalPlaylistDialog extends AbstractTitledDialog {
     public CreateLocalPlaylistDialog(MainFrame f) {
         super(f, I18n.getText("createLocalPlaylist"));
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(I18n.getText("save"), textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
     }
@@ -93,7 +94,7 @@ public class CreateLocalPlaylistDialog extends AbstractTitledDialog {
 
         CustomPanel panel = new CustomPanel();
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
 
         label.setForeground(textColor);

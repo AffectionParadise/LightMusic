@@ -2,7 +2,9 @@ package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.tab.PersonalMusicTabIndex;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.LocalPlaylist;
 import net.doge.entity.service.NetMusicInfo;
@@ -19,7 +21,6 @@ import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.list.renderer.core.LocalPlaylistListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -70,7 +71,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         this.resources = resources;
         firstResource = resources.get(0);
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         newButton = new DialogButton(I18n.getText("dialogNew"), textColor);
         allSelectButton = new DialogButton(I18n.getText("dialogAll"), textColor);
         nonSelectButton = new DialogButton(I18n.getText("dialogInvert"), textColor);
@@ -110,9 +111,10 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         centerPanel.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color foreColor = f.currUIStyle.getForeColor();
-        Color selectedColor = f.currUIStyle.getSelectedColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color foreColor = style.getForeColor();
+        Color selectedColor = style.getSelectedColor();
 
         // 添加标签
         tipLabel.setBorder(new HDEmptyBorder(10, 10, 10, 10));
@@ -225,9 +227,6 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！
         CustomScrollPane sp = new CustomScrollPane(localPlaylistList);
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         sp.setBorder(new HDEmptyBorder(0, 10, 10, 0));
         bottomBox.add(sp);
         bottomBox.add(rightBox);

@@ -8,6 +8,8 @@ import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.exception.InvalidPackageFileException;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
@@ -59,7 +61,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         super(f);
         this.keyMD5 = keyMD5;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
     }
 
@@ -88,8 +90,9 @@ public class UpdateDialog extends AbstractShadowDialog {
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color sliderColor = f.currUIStyle.getSliderColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color sliderColor = style.getSliderColor();
 
         // 信息面板
         msgLabel.setForeground(textColor);

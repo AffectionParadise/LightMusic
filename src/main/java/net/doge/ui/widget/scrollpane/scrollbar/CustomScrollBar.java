@@ -2,6 +2,7 @@ package net.doge.ui.widget.scrollpane.scrollbar;
 
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
@@ -17,6 +18,10 @@ public class CustomScrollBar extends JScrollBar implements ExtendedOpacitySuppor
 
     private void init() {
         setOpaque(false);
+    }
+
+    public void setActive(boolean active) {
+        ((CustomScrollBarUI) getUI()).setActive(active);
     }
 
     @Override

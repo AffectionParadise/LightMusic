@@ -14,8 +14,10 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.util.MusicServerUtil;
 import net.doge.ui.MainFrame;
@@ -24,7 +26,6 @@ import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.menu.CustomPopupMenu;
@@ -291,7 +292,7 @@ public class VideoDialog extends AbstractTitledDialog {
         mp.setOnEndOfMedia(() -> {
             mp.seek(Duration.seconds(0));
             mp.pause();
-            playOrPauseButton.setIcon(ImageUtil.dye(playIcon, f.currUIStyle.getIconColor()));
+            playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
             timeBar.setValue(0);
         });
         mp.setOnError(() -> {
@@ -328,7 +329,7 @@ public class VideoDialog extends AbstractTitledDialog {
     // 出错时重新初始化
     private void initAgain() {
         initView();
-        Color timeBarColor = f.currUIStyle.getTimeBarColor();
+        Color timeBarColor = UIStyleStorage.currUIStyle.getTimeBarColor();
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, f, mp, true));
         playVideo();
     }
@@ -354,8 +355,9 @@ public class VideoDialog extends AbstractTitledDialog {
 
     // 进度条
     private void initTimeBar() {
-        Color textColor = f.currUIStyle.getTextColor();
-        Color timeBarColor = f.currUIStyle.getTimeBarColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color timeBarColor = style.getTimeBarColor();
 
         currTimeLabel.setForeground(textColor);
         durationLabel.setForeground(textColor);
@@ -409,32 +411,28 @@ public class VideoDialog extends AbstractTitledDialog {
 
     // 控制面板
     private void initControlPanel() {
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color sliderColor = f.currUIStyle.getSliderColor();
+        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
+        Color sliderColor = UIStyleStorage.currUIStyle.getSliderColor();
 
         playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, iconColor));
-        playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, f));
         playOrPauseButton.addActionListener(e -> playOrPause());
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
         forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
-        forwardButton.addMouseListener(new CustomButtonMouseListener(forwardButton, f));
         forwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
         backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
-        backwardButton.addMouseListener(new CustomButtonMouseListener(backwardButton, f));
         backwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().subtract(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));
-        muteButton.addMouseListener(new CustomButtonMouseListener(muteButton, f));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
@@ -459,7 +457,6 @@ public class VideoDialog extends AbstractTitledDialog {
         // 收藏
         collectButton.setToolTipText(COLLECT_TIP);
         collectButton.setIcon(ImageUtil.dye(f.hasBeenCollected(mvInfo) ? hasCollectedIcon : collectIcon, iconColor));
-        collectButton.addMouseListener(new CustomButtonMouseListener(collectButton, f));
         collectButton.addActionListener(e -> {
             if (!f.hasBeenCollected(mvInfo)) {
                 // 加载 MV 基本信息
@@ -481,12 +478,10 @@ public class VideoDialog extends AbstractTitledDialog {
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadButton.setDisabledIcon(ImageUtil.dye(downloadIcon, ColorUtil.darker(iconColor)));
-        downloadButton.addMouseListener(new CustomButtonMouseListener(downloadButton, f));
         downloadButton.addActionListener(e -> downloadMv());
         rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
         rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
-        rateButton.addMouseListener(new CustomButtonMouseListener(rateButton, f));
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(f, this, rateButton);
             rd.showDialog();
@@ -495,7 +490,7 @@ public class VideoDialog extends AbstractTitledDialog {
         fobTimePopupMenu = new CustomPopupMenu(f);
         CustomRadioButtonMenuItem selectedFobMenuItem = null;
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
-            Color textColor = f.currUIStyle.getTextColor();
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
             menuItem.setUI(new CustomMenuItemUI(textColor));
             int time = Integer.parseInt(menuItem.getText().replace(SECONDS, ""));
@@ -511,7 +506,6 @@ public class VideoDialog extends AbstractTitledDialog {
         fobTimeButton.setForeground(iconColor);
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
         fobTimeButton.setIcon(ImageUtil.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
-        fobTimeButton.addMouseListener(new CustomButtonMouseListener(fobTimeButton, f));
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
         fobTimeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -522,7 +516,6 @@ public class VideoDialog extends AbstractTitledDialog {
         fullScreenButton.setForeground(iconColor);
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
         fullScreenButton.setIcon(ImageUtil.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
-        fullScreenButton.addMouseListener(new CustomButtonMouseListener(fullScreenButton, f));
         fullScreenButton.addActionListener(e -> toFullScreen());
         jfxPanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -591,7 +584,7 @@ public class VideoDialog extends AbstractTitledDialog {
         volumeSlider.setValue(f.volumeSlider.getValue());
         mp.setRate(f.currVideoRate);
         mp.play();
-        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, f.currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
     }
 
@@ -599,12 +592,12 @@ public class VideoDialog extends AbstractTitledDialog {
         switch (mp.getStatus()) {
             case PLAYING:
                 mp.pause();
-                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, f.currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 break;
             case PAUSED:
                 mp.play();
-                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, f.currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 break;
             case READY:
@@ -626,7 +619,7 @@ public class VideoDialog extends AbstractTitledDialog {
     // 改变所有单选菜单项图标
     private void updateMenuItemIcon() {
         Component[] components = fobTimePopupMenu.getComponents();
-        Color iconColor = f.currUIStyle.getIconColor();
+        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
         for (Component c : components) {
             CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
             if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, iconColor));

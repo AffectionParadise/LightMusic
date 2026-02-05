@@ -4,6 +4,7 @@ import lombok.Data;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.list.RendererConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.box.CustomBox;
@@ -93,7 +94,7 @@ public class StyleListRenderer extends CustomListCellRenderer {
         String source = "<html></html>";
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(style.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
         String type = HtmlUtil.textToHtml(style.isCustom() ? CUSTOM : PRESET);
-        String inUse = HtmlUtil.textToHtml(f.currUIStyle == style ? IN_USE : "");
+        String inUse = HtmlUtil.textToHtml(UIStyleStorage.currUIStyle == style ? IN_USE : "");
 
         iconLabel.setText(source);
         nameLabel.setText(name);

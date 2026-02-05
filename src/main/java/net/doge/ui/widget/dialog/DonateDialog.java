@@ -2,6 +2,7 @@ package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -54,12 +55,12 @@ public class DonateDialog extends AbstractTitledDialog {
     public DonateDialog(MainFrame f) {
         super(f, I18n.getText("donateTitle"));
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         yes = new DialogButton(I18n.getText("ok"), textColor);
     }
 
     public void showDialog() {
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
 
         // Dialog 背景透明
         setUndecorated(true);

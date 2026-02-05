@@ -1,6 +1,5 @@
 package net.doge.ui.widget.list.renderer.core;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
@@ -19,7 +18,6 @@ import java.io.File;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
 public class CatalogListRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     private Font customFont = Fonts.NORMAL;

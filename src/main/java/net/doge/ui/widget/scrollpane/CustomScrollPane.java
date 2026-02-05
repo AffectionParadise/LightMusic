@@ -2,14 +2,13 @@ package net.doge.ui.widget.scrollpane;
 
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
-import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
+import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.plaf.ScrollBarUI;
 import java.awt.*;
 
 public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupported {
@@ -36,7 +35,7 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
     private void init() {
         setOpaque(false);
         // 默认有黑边，不绘制边框
-        setBorder(HDEmptyBorder.ZERO);
+        setBorder(null);
 
         // 滚轮滚动动画
         wheelScrollingTimer = new Timer(0, e -> {
@@ -57,7 +56,9 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
         });
 
         horizontalScrollBar.setPreferredSize(new Dimension(0, thickness));
+        horizontalScrollBar.setUI(new CustomScrollBarUI());
         verticalScrollBar.setPreferredSize(new Dimension(thickness, 0));
+        verticalScrollBar.setUI(new CustomScrollBarUI());
     }
 
     public boolean setVBarValue(int value) {
@@ -74,28 +75,28 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
         return verticalScrollBar.getValue();
     }
 
-    public int getVBarMax() {
-        return verticalScrollBar.getMaximum();
+    public CustomScrollBar getHBar() {
+        return (CustomScrollBar) horizontalScrollBar;
+    }
+
+    public CustomScrollBar getVBar() {
+        return (CustomScrollBar) verticalScrollBar;
     }
 
     public int getVBarMin() {
         return verticalScrollBar.getMinimum();
     }
 
-    public void setHBarUI(ScrollBarUI ui) {
-        horizontalScrollBar.setUI(ui);
+    public int getVBarMax() {
+        return verticalScrollBar.getMaximum();
     }
 
-    public ScrollBarUI getHBarUI() {
-        return horizontalScrollBar.getUI();
+    public void setHBarActive(boolean active) {
+        ((CustomScrollBar) horizontalScrollBar).setActive(active);
     }
 
-    public void setVBarUI(ScrollBarUI ui) {
-        verticalScrollBar.setUI(ui);
-    }
-
-    public ScrollBarUI getVBarUI() {
-        return verticalScrollBar.getUI();
+    public void setVBarActive(boolean active) {
+        ((CustomScrollBar) verticalScrollBar).setActive(active);
     }
 
     @Override

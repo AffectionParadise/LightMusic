@@ -5,7 +5,6 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.tooltip.CustomToolTip;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
@@ -80,13 +79,6 @@ public class DialogButton extends BaseButton implements MouseListener, ExtendedO
 
     public String getPlainText() {
         return HtmlUtil.removeHtmlLabel(getText());
-    }
-
-    @Override
-    public JToolTip createToolTip() {
-        CustomToolTip tooltip = new CustomToolTip(this);
-        tooltip.setVisible(false);
-        return tooltip;
     }
 
     @Override

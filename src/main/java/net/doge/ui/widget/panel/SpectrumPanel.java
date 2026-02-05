@@ -2,6 +2,7 @@ package net.doge.ui.widget.panel;
 
 import lombok.Getter;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.ColorUtil;
@@ -28,7 +29,10 @@ public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
 
     public SpectrumPanel(MainFrame f) {
         this.f = f;
+        init();
+    }
 
+    private void init() {
         setOpaque(false);
 
         addComponentListener(new ComponentAdapter() {
@@ -70,7 +74,7 @@ public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
                 viewX = (pw - barWidth * barNum - barGap * (barNum - 1)) / 2;
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, extendedOpacity * f.specOpacity);
-        Color spectrumColor = f.currUIStyle.getSpectrumColor();
+        Color spectrumColor = UIStyleStorage.currUIStyle.getSpectrumColor();
 
         // 频谱渐变
         Color transparentColor = ColorUtil.deriveAlpha(spectrumColor, 0);

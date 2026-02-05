@@ -3,6 +3,8 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -118,8 +120,9 @@ public class SoundEffectDialog extends AbstractTitledDialog {
     private void initView() {
         centerPanel.setLayout(new BorderLayout());
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color sliderColor = f.currUIStyle.getSliderColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color sliderColor = style.getSliderColor();
 
         // 音效选择面板
         soundEffectLabel.setForeground(textColor);

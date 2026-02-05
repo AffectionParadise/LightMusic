@@ -14,6 +14,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.window.CloseWindowOptions;
 import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.core.ui.window.WindowState;
@@ -30,7 +31,6 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
@@ -219,7 +219,7 @@ public class SettingDialog extends AbstractTitledDialog {
     public SettingDialog(MainFrame f) {
         super(f, I18n.getText("settingTitle"));
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(I18n.getText("save"), textColor);
         applyButton = new DialogButton(I18n.getText("dialogApply"), textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
@@ -293,11 +293,11 @@ public class SettingDialog extends AbstractTitledDialog {
         playbackPanel.add(playbackLabel, BorderLayout.CENTER);
         hotKeyPanel.add(hotKeyLabel, BorderLayout.CENTER);
 
-        tabbedPane.addTab(null, null, generalScrollPane);
-        tabbedPane.addTab(null, null, appearanceScrollPane);
-        tabbedPane.addTab(null, null, downloadAndCacheScrollPane);
-        tabbedPane.addTab(null, null, playbackScrollPane);
-        tabbedPane.addTab(null, null, hoyKeyScrollPane);
+        tabbedPane.add(generalScrollPane);
+        tabbedPane.add(appearanceScrollPane);
+        tabbedPane.add(downloadAndCacheScrollPane);
+        tabbedPane.add(playbackScrollPane);
+        tabbedPane.add(hoyKeyScrollPane);
 
         tabbedPane.setTabComponentAt(0, generalPanel);
         tabbedPane.setTabComponentAt(1, appearancePanel);
@@ -306,32 +306,7 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.setTabComponentAt(4, hotKeyPanel);
 
         tabbedPane.setUI(new CustomTabbedPaneUI(tabbedPane));
-        f.updateTabUI(tabbedPane, f.currUIStyle);
-        tabbedPane.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                f.updateTabUI(tabbedPane, f.currUIStyle, e.getPoint());
-            }
-        });
-        tabbedPane.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseExited(MouseEvent e) {
-                f.updateTabUI(tabbedPane, f.currUIStyle);
-            }
-        });
-        tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, f.currUIStyle));
-
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        generalScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        generalScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        appearanceScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        downloadAndCacheScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        playbackScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        playbackScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        hoyKeyScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
+        tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, UIStyleStorage.currUIStyle));
 
         // 标签大小
         Dimension d = new HDDimension(120, 40);
@@ -412,7 +387,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenPanel.setMaximumSize(d);
 
         // 字体颜色
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         generalLabel.setForeground(textColor);
         appearanceLabel.setForeground(textColor);
         downloadAndCacheLabel.setForeground(textColor);
@@ -744,7 +719,7 @@ public class SettingDialog extends AbstractTitledDialog {
         });
 
         // 复选框图标
-        Color iconColor = f.currUIStyle.getIconColor();
+        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
         ImageIcon icon = ImageUtil.dye(f.uncheckedIcon, iconColor);
         ImageIcon selectedIcon = ImageUtil.dye(f.checkedIcon, iconColor);
         autoUpdateCheckBox.setIcon(icon);

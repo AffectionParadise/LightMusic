@@ -1,10 +1,10 @@
-package net.doge.ui.widget.list.renderer.core;
+package net.doge.ui.widget.combobox.renderer;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.core.ui.core.Fonts;
-import net.doge.ui.MainFrame;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
+import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
@@ -18,33 +18,27 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class StringComboBoxRenderer extends CustomListCellRenderer {
+public class LocalPlaylistComboBoxRenderer extends CustomListCellRenderer {
     // 属性不能用 font，不然重复！
     protected Font customFont = Fonts.NORMAL;
-    protected Color textColor;
-    protected Color foreColor;
     protected CustomLabel label = new CustomLabel();
 
-    public StringComboBoxRenderer(MainFrame f) {
-        textColor = f.currUIStyle.getTextColor();
-        foreColor = f.currUIStyle.getForeColor();
-
+    public LocalPlaylistComboBoxRenderer() {
         init();
     }
 
     private void init() {
         label.setBorder(new HDEmptyBorder(5, 0, 5, 0));
         label.setFont(customFont);
-        label.setForeground(textColor);
-        label.setBgColor(foreColor);
+        UIStyle style = UIStyleStorage.currUIStyle;
+        label.setForeground(style.getTextColor());
+        label.setBgColor(style.getForeColor());
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         label.setDrawBg(isSelected);
-        label.setText((String) value);
+        label.setText(((LocalPlaylist) value).getName());
         return label;
     }
 

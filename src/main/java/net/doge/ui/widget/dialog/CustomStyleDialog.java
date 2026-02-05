@@ -8,6 +8,7 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
@@ -18,7 +19,6 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
@@ -107,7 +107,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         super(f, I18n.getText("customStyleTitle"));
         this.showedStyle = showedStyle;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(okButtonText, textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
         pureColor = new DialogButton(I18n.getText("solidColor"), textColor);
@@ -130,7 +130,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 return;
             }
             // 主题名称不重复
-            List<UIStyle> styles = f.styles;
+            List<UIStyle> styles = UIStyleStorage.styles;
             boolean isAdd = okButton.getPlainText().contains(I18n.getText("addStyle"));
             for (UIStyle style : styles) {
                 // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
@@ -212,7 +212,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
         Border eb = new HDEmptyBorder(0, 20, 0, 20);
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
@@ -327,9 +327,6 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         });
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        centerScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        centerScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 

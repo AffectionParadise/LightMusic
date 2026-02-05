@@ -1,7 +1,8 @@
 package net.doge.ui.widget.button.ui;
 
 import net.doge.constant.core.ui.core.Colors;
-import net.doge.ui.MainFrame;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
@@ -25,8 +26,8 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     protected final float destMaskAlpha = 0.3f;
     public static BufferedImage frameImg = LMIconManager.getImage("control.frame");
 
-    public ChangePaneButtonUI(MainFrame f) {
-        frameImg = ImageUtil.dye(frameImg, f.currUIStyle.getIconColor());
+    public ChangePaneButtonUI(ChangePaneButton button) {
+        frameImg = ImageUtil.dye(frameImg, UIStyleStorage.currUIStyle.getIconColor());
 
         drawMaskTimer = new Timer(2, e -> {
             if (drawMaskIncreasing) maskAlpha = Math.min(destMaskAlpha, maskAlpha + 0.005f);
@@ -36,7 +37,7 @@ public class ChangePaneButtonUI extends BasicButtonUI {
                 drawMask = false;
                 drawMaskTimer.stop();
             }
-            f.changePaneButton.repaint();
+            button.repaint();
         });
     }
 

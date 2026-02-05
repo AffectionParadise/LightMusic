@@ -4,8 +4,8 @@ import net.doge.entity.service.LocalPlaylist;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.combobox.CustomComboBox;
+import net.doge.ui.widget.combobox.renderer.LocalPlaylistComboBoxRenderer;
 import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
-import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
 
 /**
  * @Author Doge
@@ -14,14 +14,13 @@ import net.doge.ui.widget.list.renderer.core.LocalPlaylistComboBoxRenderer;
  */
 public class LocalPlaylistComboBoxUI extends CustomComboBoxUI {
     public LocalPlaylistComboBoxUI(CustomComboBox<LocalPlaylist> comboBox, MainFrame f) {
-        super(comboBox, f);
-        // 下拉列表渲染
-        comboBox.setRenderer(new LocalPlaylistComboBoxRenderer(f));
-        comboBox.setMaximumSize(new HDDimension(170, 30));
+        this(comboBox, f, 170);
     }
 
     public LocalPlaylistComboBoxUI(CustomComboBox<LocalPlaylist> comboBox, MainFrame f, int width) {
-        this(comboBox, f);
-        comboBox.setPreferredSize(new HDDimension(width, 30));
+        super(comboBox, f, width);
+        // 下拉列表渲染
+        comboBox.setRenderer(new LocalPlaylistComboBoxRenderer());
+        comboBox.setMaximumSize(new HDDimension(width, 30));
     }
 }

@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
@@ -80,7 +81,7 @@ public class TipDialog extends AbstractShadowDialog {
 
     private void initView() {
         // 设置主题色
-        themeColor = f.currUIStyle.getTextColor();
+        themeColor = UIStyleStorage.currUIStyle.getTextColor();
         setUndecorated(true);
         // Dialog 背景透明
         setBackground(Colors.TRANSPARENT);

@@ -6,6 +6,8 @@ import javafx.stage.FileChooser;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.MediaInfo;
 import net.doge.ui.MainFrame;
@@ -17,7 +19,6 @@ import net.doge.ui.widget.dialog.base.AbstractTitledDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.ui.widget.textarea.CustomTextArea;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.core.DurationUtil;
@@ -129,7 +130,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         super(f, I18n.getText("editInfoTitle"));
         this.file = file;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(I18n.getText("save"), textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
 
@@ -266,9 +267,9 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
         Border b = new HDEmptyBorder(0, 20, 0, 20);
 
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
         for (int i = 0, size = labels.length; i < size; i++) {
             // 左对齐容器
             CustomPanel panel = new CustomPanel(new HDFlowLayout(HDFlowLayout.LEFT));
@@ -290,8 +291,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
                 textField.setText((String) results[i]);
             } else if (components[i] instanceof CustomScrollPane) {
                 CustomScrollPane sp = (CustomScrollPane) components[i];
-                sp.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-                sp.setVBarUI(new CustomScrollBarUI(scrollBarColor));
                 sp.setBorder(new HDEmptyBorder(10, 0, 10, 0));
 
                 CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
@@ -372,9 +371,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
 
             centerPanel.add(outer);
         }
-
-        centerScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        centerScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
     }
 }

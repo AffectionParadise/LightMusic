@@ -1,8 +1,6 @@
 package net.doge.ui.widget.list.renderer.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
@@ -29,8 +27,6 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class MusicListRenderer extends CustomListCellRenderer {
     private Color foreColor;
     private Color selectedColor;

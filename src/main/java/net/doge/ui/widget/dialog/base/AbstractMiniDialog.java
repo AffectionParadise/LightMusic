@@ -2,6 +2,7 @@ package net.doge.ui.widget.dialog.base;
 
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.panel.GlobalPanel;
@@ -45,7 +46,7 @@ public abstract class AbstractMiniDialog extends JDialog {
             if (img == null) img = ImageConstants.DEFAULT_IMG;
             if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
         } else {
-            UIStyle style = f.currUIStyle;
+            UIStyle style = UIStyleStorage.currUIStyle;
             img = style.getImg();
         }
         doBlur(img);

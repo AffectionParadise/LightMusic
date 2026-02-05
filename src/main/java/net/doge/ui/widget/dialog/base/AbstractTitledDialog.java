@@ -1,13 +1,14 @@
 package net.doge.ui.widget.dialog.base;
 
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.HtmlUtil;
@@ -61,14 +62,17 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(title);
         setTitle(HtmlUtil.removeHtmlLabel(title));
-        titleLabel.setForeground(f.currUIStyle.getTextColor());
+
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
+
+        titleLabel.setForeground(textColor);
         titleLabel.setHorizontalAlignment(SwingConstants.LEFT);
         titleLabel.setPreferredSize(new HDDimension(600, 30));
-        closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, f.currUIStyle.getIconColor()));
+        closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, iconColor));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
-        // 鼠标事件
-        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, f));
         FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new HDDimension(40, 30));

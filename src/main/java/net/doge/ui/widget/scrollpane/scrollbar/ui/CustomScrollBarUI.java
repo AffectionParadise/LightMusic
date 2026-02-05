@@ -1,5 +1,6 @@
 package net.doge.ui.widget.scrollpane.scrollbar.ui;
 
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.util.ui.GraphicsUtil;
@@ -17,16 +18,14 @@ import java.awt.event.MouseEvent;
  */
 public class CustomScrollBarUI extends BasicScrollBarUI {
     private boolean active;
-    private boolean entered;
+    private boolean highlighted;
     private boolean adjusting;
-    private Color thumbColor;
 
-    public CustomScrollBarUI(Color thumbColor) {
-        this(thumbColor, true);
+    public CustomScrollBarUI() {
+        this(true);
     }
 
-    public CustomScrollBarUI(Color thumbColor, boolean active) {
-        this.thumbColor = thumbColor;
+    public CustomScrollBarUI(boolean active) {
         this.active = active;
     }
 
@@ -65,9 +64,9 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
         if (!active) return;
         CustomScrollBar sb = (CustomScrollBar) scrollbar;
         Graphics2D g2d = GraphicsUtil.setup(g);
-        g2d.setColor(thumbColor);
+        g2d.setColor(UIStyleStorage.currUIStyle.getScrollBarColor());
         // 透明滚动条
-        GraphicsUtil.srcOver(g2d, sb.getExtendedOpacity() * (entered ? 0.6f : 0.3f));
+        GraphicsUtil.srcOver(g2d, sb.getExtendedOpacity() * (highlighted ? 0.6f : 0.3f));
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height, arc, arc);
     }
@@ -94,13 +93,13 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
         return new TrackListener() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                entered = true;
+                highlighted = true;
                 super.mouseEntered(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (!adjusting) entered = false;
+                if (!adjusting) highlighted = false;
                 super.mouseExited(e);
             }
 
@@ -112,14 +111,14 @@ public class CustomScrollBarUI extends BasicScrollBarUI {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (!thumbRect.contains(e.getPoint())) entered = false;
+                if (!thumbRect.contains(e.getPoint())) highlighted = false;
                 adjusting = false;
                 super.mouseReleased(e);
             }
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                entered = thumbRect.contains(e.getPoint());
+                highlighted = thumbRect.contains(e.getPoint());
                 super.mouseMoved(e);
             }
         };

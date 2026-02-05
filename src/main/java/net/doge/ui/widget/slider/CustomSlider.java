@@ -12,6 +12,10 @@ public class CustomSlider extends JSlider implements ExtendedOpacitySupported {
     private float extendedOpacity = 1f;
 
     public CustomSlider() {
+        init();
+    }
+
+    private void init() {
         setOpaque(false);
         setFocusable(false);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

@@ -2,11 +2,12 @@ package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.dialog.base.AbstractMiniDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -187,8 +188,12 @@ public class MiniDialog extends AbstractMiniDialog {
 
     // 初始化界面
     private void initView() {
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
+
         // 颜色
-        infoLabel.setForeground(f.currUIStyle.getTextColor());
+        infoLabel.setForeground(textColor);
         // 正在播放的音乐信息
         infoLabel.setText(f.changePaneButton.getText());
         infoLabel.setIcon(f.changePaneButton.getIcon());
@@ -202,17 +207,11 @@ public class MiniDialog extends AbstractMiniDialog {
         playNextButton.setToolTipText(f.nextButton.getToolTipText());
         closeButton.setToolTipText(CLOSE_TIP);
 
-        // 监听事件
-        playLastButton.addMouseListener(new CustomButtonMouseListener(playLastButton, f));
-        playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, f));
-        playNextButton.addMouseListener(new CustomButtonMouseListener(playNextButton, f));
-        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, f));
-
         // 图标
         playLastButton.setIcon(f.lastButton.getIcon());
         playOrPauseButton.setIcon(f.playOrPauseButton.getIcon());
         playNextButton.setIcon(f.nextButton.getIcon());
-        closeButton.setIcon(ImageUtil.dye(closeMiniIcon, f.currUIStyle.getIconColor()));
+        closeButton.setIcon(ImageUtil.dye(closeMiniIcon, iconColor));
 
         playLastButton.addActionListener(e -> f.lastButton.doClick());
         playNextButton.addActionListener(e -> f.nextButton.doClick());

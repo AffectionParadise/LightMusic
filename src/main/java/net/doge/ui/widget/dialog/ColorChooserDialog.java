@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog;
 import lombok.Getter;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
 import net.doge.ui.MainFrame;
@@ -39,7 +40,7 @@ import java.awt.event.MouseEvent;
  * @Date 2020/12/15
  */
 public class ColorChooserDialog extends AbstractTitledDialog implements DocumentListener {
-    private final int WIDTH = ScaleUtil.scale(600);
+    private final int WIDTH = ScaleUtil.scale(650);
     private final int HEIGHT = ScaleUtil.scale(580);
 
     private CustomPanel centerPanel = new CustomPanel();
@@ -125,7 +126,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         this.nl = hsl.l;
         this.source = color;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         ok = new DialogButton(I18n.getText("ok"), textColor);
         cancel = new DialogButton(I18n.getText("cancel"), textColor);
         reset = new DialogButton(I18n.getText("reset"), textColor);
@@ -215,7 +216,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
 
         // 预设

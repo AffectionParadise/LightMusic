@@ -1,6 +1,7 @@
 package net.doge.ui.widget.button.listener;
 
-import net.doge.ui.MainFrame;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.widget.button.TabButton;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -17,18 +18,17 @@ import java.awt.event.MouseEvent;
  */
 public class TabButtonMouseListener extends MouseAdapter {
     private TabButton b;
-    private MainFrame f;
 
-    public TabButtonMouseListener(TabButton b, MainFrame f) {
+    public TabButtonMouseListener(TabButton b) {
         this.b = b;
-        this.f = f;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
         if (!b.isEnabled()) return;
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
+        Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
@@ -39,8 +39,9 @@ public class TabButtonMouseListener extends MouseAdapter {
     @Override
     public void mouseExited(MouseEvent e) {
         if (!b.isEnabled()) return;
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
+        Color textColor = style.getTextColor();
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), iconColor));
         b.setForeground(textColor);
         b.transitionDrawBg(b.isActive());
@@ -49,8 +50,9 @@ public class TabButtonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
+        Color textColor = style.getTextColor();
         Color dtc = ColorUtil.darker(textColor);
         Color dic = ColorUtil.darker(iconColor);
         if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), dic));
@@ -59,8 +61,9 @@ public class TabButtonMouseListener extends MouseAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color textColor = f.currUIStyle.getTextColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
+        Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());

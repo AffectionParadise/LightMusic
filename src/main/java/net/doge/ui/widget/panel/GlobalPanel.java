@@ -36,6 +36,10 @@ public class GlobalPanel extends JPanel {
 //    private Runnable onAfterSlide;
 
     public GlobalPanel() {
+        init();
+    }
+
+    private void init() {
         setOpaque(false);
 //        initBorder();
     }
@@ -169,7 +173,7 @@ public class GlobalPanel extends JPanel {
 //        for (int i = 0; i < pixels; i++) {
 //            g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
 //            int arc = ScaleUtil.scale(10);
-//            g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
+//            g2d.drawRoundRect(i, i, pw - (i * 2 + 1), ph - (i * 2 + 1), arc, arc);
 //        }
 
         GraphicsUtil.srcOver(g2d);

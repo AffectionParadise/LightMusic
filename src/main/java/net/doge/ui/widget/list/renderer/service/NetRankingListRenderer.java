@@ -1,6 +1,5 @@
 package net.doge.ui.widget.list.renderer.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
@@ -26,7 +25,6 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-@AllArgsConstructor
 public class NetRankingListRenderer extends CustomListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;

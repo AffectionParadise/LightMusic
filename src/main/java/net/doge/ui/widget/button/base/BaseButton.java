@@ -39,7 +39,7 @@ public class BaseButton extends JButton {
 
     @Override
     public JToolTip createToolTip() {
-        CustomToolTip toolTip = new CustomToolTip(this);
+        CustomToolTip toolTip = new CustomToolTip();
         toolTip.setVisible(false);
         return toolTip;
     }

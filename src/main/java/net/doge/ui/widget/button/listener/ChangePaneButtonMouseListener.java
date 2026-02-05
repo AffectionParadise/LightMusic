@@ -1,6 +1,6 @@
 package net.doge.ui.widget.button.listener;
 
-import net.doge.ui.MainFrame;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.util.ui.ColorUtil;
@@ -15,23 +15,21 @@ import java.awt.event.MouseEvent;
  */
 public class ChangePaneButtonMouseListener extends MouseAdapter {
     private ChangePaneButton b;
-    private ChangePaneButtonUI ui;
-    private MainFrame f;
 
-    public ChangePaneButtonMouseListener(ChangePaneButton b, ChangePaneButtonUI ui, MainFrame f) {
+    public ChangePaneButtonMouseListener(ChangePaneButton b) {
         this.b = b;
-        this.ui = ui;
-        this.f = f;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
+        ChangePaneButtonUI ui = (ChangePaneButtonUI) b.getUI();
         ui.transitionDrawMask(true);
         b.setUI(ui);
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
+        ChangePaneButtonUI ui = (ChangePaneButtonUI) b.getUI();
         ui.transitionDrawMask(false);
         b.setUI(ui);
     }
@@ -39,11 +37,11 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
-        b.setForeground(ColorUtil.darker(f.currUIStyle.getTextColor()));
+        b.setForeground(ColorUtil.darker(UIStyleStorage.currUIStyle.getTextColor()));
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        b.setForeground(f.currUIStyle.getTextColor());
+        b.setForeground(UIStyleStorage.currUIStyle.getTextColor());
     }
 }

@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog.base;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.util.ui.ColorUtil;
@@ -47,7 +48,7 @@ public abstract class AbstractShadowDialog extends JDialog {
             if (img == null) img = ImageConstants.DEFAULT_IMG;
             if (f.blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
         } else {
-            UIStyle style = f.currUIStyle;
+            UIStyle style = UIStyleStorage.currUIStyle;
             img = style.getImg();
         }
         doBlur(img);
@@ -115,9 +116,12 @@ public abstract class AbstractShadowDialog extends JDialog {
 
         protected void paintComponent(Graphics g) {
             Graphics2D g2d = GraphicsUtil.setup(g);
+
+            int w = getWidth(), h = getHeight();
+
             if (bgImg != null) {
 //            GraphicsUtil.srcOver(g2d, 0.8f);
-                g2d.drawImage(bgImg, pixels, pixels, getWidth() - 2 * pixels, getHeight() - 2 * pixels, this);
+                g2d.drawImage(bgImg, pixels, pixels, w - 2 * pixels, h - 2 * pixels, this);
             }
 
             // 画边框阴影
@@ -125,7 +129,7 @@ public abstract class AbstractShadowDialog extends JDialog {
             for (int i = 0; i < pixels; i++) {
                 g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
                 int arc = ScaleUtil.scale(10);
-                g2d.drawRoundRect(i, i, getWidth() - (i * 2 + 1), getHeight() - (i * 2 + 1), arc, arc);
+                g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
             }
         }
     }

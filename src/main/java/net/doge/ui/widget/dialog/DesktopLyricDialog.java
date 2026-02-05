@@ -4,13 +4,13 @@ import lombok.Getter;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.lyric.Statement;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -42,7 +42,6 @@ public class DesktopLyricDialog extends JDialog {
     private HighlightLyric highlightLyric;
 
     private MainFrame f;
-    private UIStyle style;
     private Color foreColor;
     private CustomPanel lyricPanel = new CustomPanel();
     public LyricLabel lyricLabel = new LyricLabel();
@@ -138,7 +137,8 @@ public class DesktopLyricDialog extends JDialog {
 
     public DesktopLyricDialog(MainFrame f) {
         this.f = f;
-        this.style = f.currUIStyle;
+
+        UIStyle style = UIStyleStorage.currUIStyle;
         foreColor = style.getHighlightColor();
 
         setTitle(I18n.getText("desktopLyricTitle"));
@@ -147,7 +147,7 @@ public class DesktopLyricDialog extends JDialog {
         updateLocation();
 
         // 设置主题色
-        bgColor = f.currUIStyle.getLrcColor();
+        bgColor = style.getLrcColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSPARENT);
@@ -204,19 +204,19 @@ public class DesktopLyricDialog extends JDialog {
 
     // 更新样式
     public void updateStyle() {
-        UIStyle st = f.currUIStyle;
-        Color bc = st.getIconColor();
+        UIStyle st = UIStyleStorage.currUIStyle;
+        Color iconColor = st.getIconColor();
 
-        unlockIcon = ImageUtil.dye(unlockIcon, bc);
-        lockIcon = ImageUtil.dye(lockIcon, bc);
-        restoreIcon = ImageUtil.dye(restoreIcon, bc);
-        descendTransIcon = ImageUtil.dye(descendTransIcon, bc);
-        ascendTransIcon = ImageUtil.dye(ascendTransIcon, bc);
-        decreaseFontIcon = ImageUtil.dye(decreaseFontIcon, bc);
-        increaseFontIcon = ImageUtil.dye(increaseFontIcon, bc);
-        onTopIcon = ImageUtil.dye(onTopIcon, bc);
-        cancelOnTopIcon = ImageUtil.dye(cancelOnTopIcon, bc);
-        closeIcon = ImageUtil.dye(closeIcon, bc);
+        unlockIcon = ImageUtil.dye(unlockIcon, iconColor);
+        lockIcon = ImageUtil.dye(lockIcon, iconColor);
+        restoreIcon = ImageUtil.dye(restoreIcon, iconColor);
+        descendTransIcon = ImageUtil.dye(descendTransIcon, iconColor);
+        ascendTransIcon = ImageUtil.dye(ascendTransIcon, iconColor);
+        decreaseFontIcon = ImageUtil.dye(decreaseFontIcon, iconColor);
+        increaseFontIcon = ImageUtil.dye(increaseFontIcon, iconColor);
+        onTopIcon = ImageUtil.dye(onTopIcon, iconColor);
+        cancelOnTopIcon = ImageUtil.dye(cancelOnTopIcon, iconColor);
+        closeIcon = ImageUtil.dye(closeIcon, iconColor);
 
         restore.setIcon(restoreIcon);
         descendTrans.setIcon(descendTransIcon);
@@ -319,37 +319,29 @@ public class DesktopLyricDialog extends JDialog {
             }
         });
 
-        lock.addMouseListener(new CustomButtonMouseListener(lock, f));
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
         });
         restore.setToolTipText(RESTORE_TIP);
-        restore.addMouseListener(new CustomButtonMouseListener(restore, f));
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
             hideUI();
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
-        descendTrans.addMouseListener(new CustomButtonMouseListener(descendTrans, f));
         descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
         ascendTrans.setToolTipText(ASCEND_TRANS_TIP);
-        ascendTrans.addMouseListener(new CustomButtonMouseListener(ascendTrans, f));
         ascendTrans.addActionListener(e -> lyricLabel.increaseAlpha());
         decreaseFont.setToolTipText(DECREASE_FONT_TIP);
-        decreaseFont.addMouseListener(new CustomButtonMouseListener(decreaseFont, f));
         decreaseFont.addActionListener(e -> decreaseFont());
         increaseFont.setToolTipText(INCREASE_FONT_TIP);
-        increaseFont.addMouseListener(new CustomButtonMouseListener(increaseFont, f));
         increaseFont.addActionListener(e -> increaseFont());
-        onTop.addMouseListener(new CustomButtonMouseListener(onTop, f));
         onTop.addActionListener(e -> {
             setAlwaysOnTop(f.desktopLyricOnTop = !f.desktopLyricOnTop);
             updateOnTop();
         });
         close.setToolTipText(CLOSE_TIP);
-        close.addMouseListener(new CustomButtonMouseListener(close, f));
         close.addActionListener(e -> {
             f.desktopLyricButton.doClick();
         });

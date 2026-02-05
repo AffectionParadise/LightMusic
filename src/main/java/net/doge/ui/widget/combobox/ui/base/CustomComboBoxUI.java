@@ -1,10 +1,11 @@
 package net.doge.ui.widget.combobox.ui.base;
 
 import lombok.Getter;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.button.CustomButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.popup.CustomComboPopup;
 import net.doge.util.lmdata.manager.LMIconManager;
@@ -31,28 +32,22 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
     @Getter
     protected CustomButton arrowButton;
     protected MainFrame f;
-    protected Color textColor;
-    protected Color iconColor;
-
     protected ImageIcon arrowIcon = LMIconManager.getIcon("toolbar.arrow");
 
     public CustomComboBoxUI(CustomComboBox<?> comboBox, MainFrame f) {
-        this.comboBox = comboBox;
-        this.f = f;
-
-        textColor = f.currUIStyle.getTextColor();
-        iconColor = f.currUIStyle.getIconColor();
-
-        arrowIcon = ImageUtil.dye(arrowIcon, iconColor);
-
-        final int width = 170;
-        if (comboBox.getPreferredSize().width < width) comboBox.setPreferredSize(new HDDimension(width, 30));
-
-        comboBox.setForeground(textColor);
+        this(comboBox, f, 170);
     }
 
     public CustomComboBoxUI(CustomComboBox<?> comboBox, MainFrame f, int width) {
-        this(comboBox, f);
+        this.comboBox = comboBox;
+        this.f = f;
+
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
+
+        comboBox.setForeground(textColor);
+        arrowIcon = ImageUtil.dye(arrowIcon, iconColor);
         comboBox.setPreferredSize(new HDDimension(width, 30));
     }
 
@@ -60,7 +55,7 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
     public void paintCurrentValueBackground(Graphics g, Rectangle bounds, boolean hasFocus) {
         // 画背景
         Graphics2D g2d = GraphicsUtil.setup(g);
-        g2d.setColor(f.currUIStyle.getTextColor());
+        g2d.setColor(UIStyleStorage.currUIStyle.getTextColor());
         float extendedOpacity = comboBox.getExtendedOpacity(), bgAlpha = comboBox.getBgAlpha();
         GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
         int arc = ScaleUtil.scale(10);
@@ -70,9 +65,7 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
 
     @Override
     protected JButton createArrowButton() {
-        arrowButton = new CustomButton();
-        arrowButton.setIcon(arrowIcon);
-        arrowButton.addMouseListener(new CustomButtonMouseListener(arrowButton, f));
+        arrowButton = new CustomButton(arrowIcon);
         arrowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

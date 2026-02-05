@@ -1,12 +1,16 @@
 package net.doge.ui.widget.tabbedpane;
 
 import lombok.Getter;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @Author Doge
@@ -19,6 +23,10 @@ public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupp
 
     public CustomTabbedPane(int tabPlacement) {
         super(tabPlacement, SCROLL_TAB_LAYOUT);
+        init();
+    }
+
+    private void init() {
         setFocusable(false);
     }
 
@@ -27,6 +35,35 @@ public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupp
         super.setTabComponentAt(index, component);
         // 设置标签卡鼠标指针
         component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        // 注册鼠标事件
+        if (!(component instanceof CustomPanel)) return;
+        CustomPanel panel = (CustomPanel) component;
+        // 第一个 Tab 默认选中样式
+        if (index == 0) {
+            panel.setForeground(UIStyleStorage.currUIStyle.getSelectedColor());
+            panel.setDrawBg(true);
+        }
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (getSelectedIndex() == index) return;
+                panel.setForeground(UIStyleStorage.currUIStyle.getForeColor());
+                panel.transitionDrawBg(true);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (getSelectedIndex() == index) return;
+                panel.transitionDrawBg(false);
+            }
+
+            // Panel 本身的鼠标事件会覆盖 TabbedPane 的，因此手动触发选择
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (getSelectedIndex() == index) return;
+                setSelectedIndex(index);
+            }
+        });
     }
 
     @Override

@@ -1,10 +1,9 @@
 package net.doge.ui.widget.combobox.ui;
 
 import net.doge.ui.MainFrame;
-import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.combobox.CustomComboBox;
+import net.doge.ui.widget.combobox.renderer.StringComboBoxRenderer;
 import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
-import net.doge.ui.widget.list.renderer.core.StringComboBoxRenderer;
 
 /**
  * @Author Doge
@@ -12,15 +11,13 @@ import net.doge.ui.widget.list.renderer.core.StringComboBoxRenderer;
  * @Date 2020/12/13
  */
 public class StringComboBoxUI extends CustomComboBoxUI {
-
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f) {
-        super(comboBox, f);
-        // 下拉列表渲染
-        comboBox.setRenderer(new StringComboBoxRenderer(f));
+        this(comboBox, f, 170);
     }
 
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f, int width) {
-        this(comboBox, f);
-        comboBox.setPreferredSize(new HDDimension(width, 30));
+        super(comboBox, f, width);
+        // 下拉列表渲染
+        comboBox.setRenderer(new StringComboBoxRenderer());
     }
 }

@@ -3,7 +3,7 @@ package net.doge.ui.widget.button;
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.tooltip.CustomToolTip;
+import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
@@ -43,6 +43,8 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
     }
 
     private void init() {
+        addMouseListener(new CustomButtonMouseListener(this));
+
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
             else bgAlpha = Math.max(0f, bgAlpha - 0.005f);
@@ -60,13 +62,6 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
         this.drawBgIncreasing = drawBgIncreasing;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
-    }
-
-    @Override
-    public JToolTip createToolTip() {
-        CustomToolTip toolTip = new CustomToolTip(this);
-        toolTip.setVisible(false);
-        return toolTip;
     }
 
     @Override

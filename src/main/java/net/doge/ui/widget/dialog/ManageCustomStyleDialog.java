@@ -3,6 +3,7 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
@@ -16,7 +17,6 @@ import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.StyleListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -67,7 +67,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
     public ManageCustomStyleDialog(MainFrame f) {
         super(f, I18n.getText("manageStyleTitle"));
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         allSelectButton = new DialogButton(I18n.getText("dialogAll"), textColor);
         nonSelectButton = new DialogButton(I18n.getText("dialogInvert"), textColor);
         applyButton = new DialogButton(I18n.getText("dialogApply"), textColor);
@@ -105,10 +105,11 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         centerPanel.setBorder(new HDEmptyBorder(0, 10, 0, 10));
         globalPanel.add(centerPanel, BorderLayout.CENTER);
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color iconColor = f.currUIStyle.getIconColor();
-        Color foreColor = f.currUIStyle.getForeColor();
-        Color selectedColor = f.currUIStyle.getSelectedColor();
+        UIStyle currUIStyle = UIStyleStorage.currUIStyle;
+        Color textColor = currUIStyle.getTextColor();
+        Color iconColor = currUIStyle.getIconColor();
+        Color foreColor = currUIStyle.getForeColor();
+        Color selectedColor = currUIStyle.getSelectedColor();
 
         // 添加标签
         tipLabel.setBorder(new HDEmptyBorder(10, 10, 10, 10));
@@ -152,7 +153,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 添加事件
         addButton.addActionListener(e -> {
             UIStyle value = styleList.getSelectedValue();
-            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, I18n.getText("addStyle"), value != null ? value : f.currUIStyle);
+            CustomStyleDialog customStyleDialog = new CustomStyleDialog(f, I18n.getText("addStyle"), value != null ? value : currUIStyle);
             customStyleDialog.showDialog();
             if (customStyleDialog.isConfirmed()) {
                 // 创建自定义样式并更换
@@ -169,7 +170,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
                 else customStyle.setImgKey((String) results[1]);
                 // 添加主题菜单项、按钮组，但不切换主题
-                f.styles.add(customStyle);
+                UIStyleStorage.styles.add(customStyle);
                 // 最后别忘了到列表中添加
                 styleListModel.addElement(customStyle);
             }
@@ -186,8 +187,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
             d.showDialog();
             if (d.getResponse() == JOptionPane.YES_OPTION) {
                 List<UIStyle> selectedStyles = styleList.getSelectedValuesList();
-                List<UIStyle> styles = f.styles;
-                UIStyle currUIStyle = f.currUIStyle;
+                List<UIStyle> styles = UIStyleStorage.styles;
                 selectedStyles.forEach(style -> {
                     // 删除正在使用的样式，先换回默认样式，再删除
                     if (style == currUIStyle) {
@@ -243,7 +243,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 selectedStyle.setSliderColor((Color) results[10]);
                 selectedStyle.setSpectrumColor((Color) results[11]);
                 // 若编辑的样式正在使用，则更换
-                if (f.currUIStyle == selectedStyle) {
+                if (currUIStyle == selectedStyle) {
                     if (selectedStyle.hasImg()) {
                         SwingUtilities.invokeLater(() -> {
                             f.changeUIStyle(selectedStyle);
@@ -320,9 +320,6 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 }
             }
         });
-        Color scrollBarColor = f.currUIStyle.getScrollBarColor();
-        styleListScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
         styleListScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
         bottomBox.add(styleListScrollPane);
         bottomBox.add(rightBox);
@@ -331,7 +328,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
 
     // 初始化数据
     private void initStyles() {
-        List<UIStyle> styles = f.styles;
+        List<UIStyle> styles = UIStyleStorage.styles;
         styleList.setModel(emptyListModel);
         styleListModel.clear();
         if (f.customOnly) {
@@ -352,10 +349,9 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
 
     // 主题更换时更新窗口主题
     private void updateStyle() {
-        UIStyle st = f.currUIStyle;
-        Color textColor = st.getTextColor();
-        Color iconColor = st.getIconColor();
-        Color scrollBarColor = st.getScrollBarColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color iconColor = style.getIconColor();
 
         titleLabel.setForeground(textColor);
         closeButton.setIcon(ImageUtil.dye((ImageIcon) closeButton.getIcon(), iconColor));
@@ -370,12 +366,9 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         editButton.setForeColor(textColor);
         removeButton.setForeColor(textColor);
         StyleListRenderer r = (StyleListRenderer) styleList.getCellRenderer();
-        r.setForeColor(st.getForeColor());
-        r.setSelectedColor(st.getSelectedColor());
+        r.setForeColor(style.getForeColor());
+        r.setSelectedColor(style.getSelectedColor());
         r.setTextColor(textColor);
-
-        styleListScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        styleListScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
 
         globalPanel.repaint();
     }

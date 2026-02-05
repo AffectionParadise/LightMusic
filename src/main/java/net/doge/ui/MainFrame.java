@@ -41,8 +41,8 @@ import net.doge.constant.core.ui.list.MvCompSourceType;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.constant.core.ui.pane.CenterPaneType;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
-import net.doge.constant.core.ui.style.PreDefinedUIStyle;
 import net.doge.constant.core.ui.style.UIStyleConstants;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.tab.CollectionTabIndex;
 import net.doge.constant.core.ui.tab.PersonalMusicTabIndex;
 import net.doge.constant.core.ui.tab.RecommendTabIndex;
@@ -76,8 +76,6 @@ import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.button.TabButton;
 import net.doge.ui.widget.button.listener.ChangePaneButtonMouseListener;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
-import net.doge.ui.widget.button.listener.TabButtonMouseListener;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
@@ -92,10 +90,12 @@ import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
 import net.doge.ui.widget.list.renderer.service.*;
 import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
-import net.doge.ui.widget.menu.*;
+import net.doge.ui.widget.menu.CustomCheckMenuItem;
+import net.doge.ui.widget.menu.CustomMenuItem;
+import net.doge.ui.widget.menu.CustomPopupMenu;
+import net.doge.ui.widget.menu.CustomRadioButtonMenuItem;
 import net.doge.ui.widget.menu.ui.CustomCheckMenuItemUI;
 import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
-import net.doge.ui.widget.menu.ui.CustomMenuUI;
 import net.doge.ui.widget.menu.ui.CustomRadioButtonMenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.panel.GlobalPanel;
@@ -103,7 +103,7 @@ import net.doge.ui.widget.panel.LoadingPanel;
 import net.doge.ui.widget.panel.SpectrumPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.listener.CustomScrollPaneListener;
-import net.doge.ui.widget.scrollpane.scrollbar.ui.CustomScrollBarUI;
+import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.TimeSliderUI;
@@ -728,13 +728,6 @@ public class MainFrame extends JFrame {
 
     // 当前包含的所有歌曲目录
     public List<File> catalogs = new LinkedList<>();
-    // 所有界面主题
-    public List<UIStyle> styles = new LinkedList<>();
-
-    // 添加界面主题
-    {
-        styles.addAll(Arrays.asList(PreDefinedUIStyle.STYLES));
-    }
 
     public boolean autoUpdate;
     public int windowState = WindowState.NORMAL;
@@ -877,9 +870,6 @@ public class MainFrame extends JFrame {
 
     // 全局字体
     private Font globalFont = Fonts.NORMAL;
-
-    // 当前主界面主题
-    public UIStyle currUIStyle = styles.get(0);
 
     public MusicPlayer player = new MusicPlayer(THIS);
 
@@ -2831,7 +2821,7 @@ public class MainFrame extends JFrame {
             miniButton.transitionDrawBg(false);
             miniDialog = new MiniDialog(THIS);
             miniDialog.showDialog();
-            miniButton.setIcon(ImageUtil.dye(miniIcon, currUIStyle.getIconColor()));
+            miniButton.setIcon(ImageUtil.dye(miniIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 最小化
         minimizeButton.addActionListener(e -> {
@@ -2842,7 +2832,7 @@ public class MainFrame extends JFrame {
         maximizeButton.addActionListener(e -> {
             if (windowState == NORMAL) {
                 windowState = WindowState.MAXIMIZED;
-                maximizeButton.setIcon(ImageUtil.dye(restoreIcon, currUIStyle.getIconColor()));
+                maximizeButton.setIcon(ImageUtil.dye(restoreIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 // 取消桌面歌词显示
                 desktopLyricDialog.setVisible(false);
                 // 不覆盖任务栏
@@ -2851,7 +2841,7 @@ public class MainFrame extends JFrame {
                 setBounds(0, 0, screenSize.width, screenSize.height - insets.bottom);
             } else {
                 windowState = WindowState.NORMAL;
-                maximizeButton.setIcon(ImageUtil.dye(maximizeIcon, currUIStyle.getIconColor()));
+                maximizeButton.setIcon(ImageUtil.dye(maximizeIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 // 如果开启桌面歌词，恢复桌面歌词显示
                 desktopLyricDialog.setVisible(showDesktopLyric);
                 // 恢复窗口大小
@@ -2892,14 +2882,6 @@ public class MainFrame extends JFrame {
         minimizeButton.setToolTipText(MINIMIZE_WINDOW_TIP);
         maximizeButton.setToolTipText(MAXIMIZE_WINDOW_TIP);
         closeButton.setToolTipText(CLOSE_WINDOW_TIP);
-        // 鼠标事件
-        hideDetailButton.addMouseListener(new CustomButtonMouseListener(hideDetailButton, THIS));
-        styleToolButton.addMouseListener(new CustomButtonMouseListener(styleToolButton, THIS));
-        mainMenuButton.addMouseListener(new CustomButtonMouseListener(mainMenuButton, THIS));
-        miniButton.addMouseListener(new CustomButtonMouseListener(miniButton, THIS));
-        minimizeButton.addMouseListener(new CustomButtonMouseListener(minimizeButton, THIS));
-        maximizeButton.addMouseListener(new CustomButtonMouseListener(maximizeButton, THIS));
-        closeButton.addMouseListener(new CustomButtonMouseListener(closeButton, THIS));
 
         FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         fl.setHgap(ScaleUtil.scale(14));
@@ -3043,7 +3025,7 @@ public class MainFrame extends JFrame {
                         ColorUtil.hexToColor(styleObject.getString("sliderColor")),
                         ColorUtil.hexToColor(styleObject.getString("spectrumColor"))
                 );
-                styles.add(style);
+                UIStyleStorage.styles.add(style);
             }
         }
         // 载入是否启用快捷键
@@ -3133,7 +3115,7 @@ public class MainFrame extends JFrame {
         GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
-        switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
+        switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否高斯模糊
         gsOn = config.getBooleanValue(ConfigConstants.GS_ON, true);
         // 载入是否暗化
@@ -3149,7 +3131,7 @@ public class MainFrame extends JFrame {
                 : blurType == BlurConstants.MC ? mcBlurIcon
                 : blurType == BlurConstants.LG ? lgBlurIcon
                 : blurType == BlurConstants.FBM ? fbmBlurIcon
-                : blurOffIcon, currUIStyle.getIconColor()));
+                : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         isAutoDownloadLrc = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
 //        // 载入是否添加逐字时间轴
@@ -3159,7 +3141,7 @@ public class MainFrame extends JFrame {
         currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
         // 载入频谱透明渐变
         specGradient = config.getBooleanValue(ConfigConstants.SPEC_GRADIENT, true);
-        spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+        spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.6f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
@@ -3183,7 +3165,7 @@ public class MainFrame extends JFrame {
         // 载入是否显示桌面歌词
         showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true);
         if (showDesktopLyric) desktopLyricDialog.setVisible(true);
-        else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
+        else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入播放模式
         switch (config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
             case PlayMode.DISABLED:
@@ -3223,7 +3205,7 @@ public class MainFrame extends JFrame {
         volumeSlider.setValue(config.getIntValue(ConfigConstants.VOLUME, DEFAULT_VOLUME));
         // 载入是否静音
         isMute = config.getBooleanValue(ConfigConstants.MUTE, false);
-        if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
+        if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入音效
         currSoundEffect = config.getIntValue(ConfigConstants.SOUND_EFFECT, 0);
         // 载入均衡数据
@@ -3239,19 +3221,19 @@ public class MainFrame extends JFrame {
         currLrcType = config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
         switch (currLrcType) {
             case LyricType.ORIGINAL:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
                 break;
             case LyricType.TRANSLATION:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
                 break;
             case LyricType.ROMA:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(ROMA_TIP);
                 break;
             case LyricType.TRADITIONAL_CN:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
+                switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
                 break;
         }
@@ -3442,7 +3424,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netMusicHistorySearchInnerPanel2.add(b);
             }
             netMusicKeywordsPanel.repaint();
@@ -3472,7 +3454,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netPlaylistHistorySearchInnerPanel2.add(b);
             }
             netPlaylistKeywordsPanel.repaint();
@@ -3502,7 +3484,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netAlbumHistorySearchInnerPanel2.add(b);
             }
             netAlbumKeywordsPanel.repaint();
@@ -3532,7 +3514,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netArtistHistorySearchInnerPanel2.add(b);
             }
             netArtistKeywordsPanel.repaint();
@@ -3562,7 +3544,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netRadioHistorySearchInnerPanel2.add(b);
             }
             netRadioKeywordsPanel.repaint();
@@ -3592,7 +3574,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netMvHistorySearchInnerPanel2.add(b);
             }
             netMvKeywordsPanel.repaint();
@@ -3622,14 +3604,14 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netUserHistorySearchInnerPanel2.add(b);
             }
         }
 
         // 载入上次选的主题
         int styleIndex = config.getIntValue(ConfigConstants.CURR_UI_STYLE, 0);
-        changeUIStyle(styles.get(styleIndex));
+        changeUIStyle(UIStyleStorage.styles.get(styleIndex));
 
         return JsonUtil.notEmpty(config);
     }
@@ -3882,7 +3864,7 @@ public class MainFrame extends JFrame {
         JSONObject config = new JSONObject();
         // 存入自定义主题
         JSONArray styleArray = new JSONArray();
-        for (UIStyle style : styles) {
+        for (UIStyle style : UIStyleStorage.styles) {
             if (!style.isCustom()) continue;
             JSONObject styleObject = new JSONObject();
             styleObject.put("name", style.getName());
@@ -3902,7 +3884,7 @@ public class MainFrame extends JFrame {
         }
         config.put(ConfigConstants.CUSTOM_UI_STYLES, styleArray);
         // 当前 UI 主题索引
-        config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.indexOf(styles, currUIStyle));
+        config.put(ConfigConstants.CURR_UI_STYLE, ListUtil.indexOf(UIStyleStorage.styles, UIStyleStorage.currUIStyle));
         // 存入快捷键
         config.put(ConfigConstants.KEY_ENABLED, keyEnabled);
         config.put(ConfigConstants.PLAY_OR_PAUSE_KEYS, KeyUtil.keysToJsonArray(playOrPauseKeys));
@@ -4733,18 +4715,18 @@ public class MainFrame extends JFrame {
         playQueuePanel.setLayout(fl);
 
         // 添加标签对应的内容
-        tabbedPane.addTab(null, null, leftBox);
-        tabbedPane.addTab(null, null, recommendLeftBox);
-        tabbedPane.addTab(null, null, netRankingLeftBox);
-        tabbedPane.addTab(null, null, netLeftBox);
-        tabbedPane.addTab(null, null, netPlaylistLeftBox);
-        tabbedPane.addTab(null, null, netAlbumLeftBox);
-        tabbedPane.addTab(null, null, netArtistLeftBox);
-        tabbedPane.addTab(null, null, netRadioLeftBox);
-        tabbedPane.addTab(null, null, netMvLeftBox);
-        tabbedPane.addTab(null, null, netUserLeftBox);
-        tabbedPane.addTab(null, null, downloadLeftBox);
-        tabbedPane.addTab(null, null, playQueueLeftBox);
+        tabbedPane.add(leftBox);
+        tabbedPane.add(recommendLeftBox);
+        tabbedPane.add(netRankingLeftBox);
+        tabbedPane.add(netLeftBox);
+        tabbedPane.add(netPlaylistLeftBox);
+        tabbedPane.add(netAlbumLeftBox);
+        tabbedPane.add(netArtistLeftBox);
+        tabbedPane.add(netRadioLeftBox);
+        tabbedPane.add(netMvLeftBox);
+        tabbedPane.add(netUserLeftBox);
+        tabbedPane.add(downloadLeftBox);
+        tabbedPane.add(playQueueLeftBox);
         // 自定义标签面板
         tabbedPane.setTabComponentAt(TabIndex.PERSONAL, personalMusicPanel);
         tabbedPane.setTabComponentAt(TabIndex.RECOMMEND, recommendPanel);
@@ -4759,23 +4741,10 @@ public class MainFrame extends JFrame {
         tabbedPane.setTabComponentAt(TabIndex.DOWNLOAD_MANAGEMENT, downloadManagementPanel);
         tabbedPane.setTabComponentAt(TabIndex.PLAY_QUEUE, playQueuePanel);
 
-        tabbedPane.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                updateTabUI(tabbedPane, currUIStyle, e.getPoint());
-            }
-        });
-        tabbedPane.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseExited(MouseEvent e) {
-                updateTabUI(tabbedPane, currUIStyle);
-            }
-        });
         // 改变歌曲列表状态
         tabbedPane.addChangeListener(e -> {
+            updateTabUI(tabbedPane, UIStyleStorage.currUIStyle);
             int selectedIndex = tabbedPane.getSelectedIndex();
-            // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
-            updateTabUI(tabbedPane, currUIStyle);
             // 个人音乐
             if (selectedIndex == TabIndex.PERSONAL) {
                 int index = collectionTabbedPane.getSelectedIndex();
@@ -5142,14 +5111,14 @@ public class MainFrame extends JFrame {
         userCollectionPanel.add(userCollectionLabel);
 
         // 添加标签对应的内容
-        collectionTabbedPane.addTab(null, null, musicCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, playlistCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, rankingCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, albumCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, artistCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, radioCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, mvCollectionLeftBox);
-        collectionTabbedPane.addTab(null, null, userCollectionLeftBox);
+        collectionTabbedPane.add(musicCollectionLeftBox);
+        collectionTabbedPane.add(playlistCollectionLeftBox);
+        collectionTabbedPane.add(rankingCollectionLeftBox);
+        collectionTabbedPane.add(albumCollectionLeftBox);
+        collectionTabbedPane.add(artistCollectionLeftBox);
+        collectionTabbedPane.add(radioCollectionLeftBox);
+        collectionTabbedPane.add(mvCollectionLeftBox);
+        collectionTabbedPane.add(userCollectionLeftBox);
 
         // 自定义标签面板
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.MUSIC, musicCollectionPanel);
@@ -5161,23 +5130,10 @@ public class MainFrame extends JFrame {
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.MV, mvCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.USER, userCollectionPanel);
 
-        collectionTabbedPane.addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                updateTabUI(collectionTabbedPane, currUIStyle, e.getPoint());
-            }
-        });
-        collectionTabbedPane.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseExited(MouseEvent e) {
-                updateTabUI(collectionTabbedPane, currUIStyle);
-            }
-        });
         // 改变收藏列表状态
         collectionTabbedPane.addChangeListener(e -> {
+            updateTabUI(collectionTabbedPane, UIStyleStorage.currUIStyle);
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
-            // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
-            updateTabUI(collectionTabbedPane, currUIStyle);
             if (selectedIndex == CollectionTabIndex.MUSIC) {
                 musicList.setModel(collectionModel);
                 int size = collectionModel.size();
@@ -5500,7 +5456,7 @@ public class MainFrame extends JFrame {
     // 初始化收藏工具条
     private void initCollectionToolBar() {
 //        collectionPageTextField.addFocusListener(
-//                new JTextFieldHintListener(collectionPageTextField, "", currUIStyle.getForeColor()));
+//                new JTextFieldHintListener(collectionPageTextField, "", UIStyleStorage.currUIStyle.getForeColor()));
         // 只能输入数字
         collectionPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
@@ -5596,15 +5552,6 @@ public class MainFrame extends JFrame {
         collectionGoButton.setPreferredSize(dimension);
         collectionNextPageButton.setPreferredSize(dimension);
         collectionEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        collectionBackwardButton.addMouseListener(new CustomButtonMouseListener(collectionBackwardButton, THIS));
-        collectionPlayAllButton.addMouseListener(new CustomButtonMouseListener(collectionPlayAllButton, THIS));
-        collectionRefreshButton.addMouseListener(new CustomButtonMouseListener(collectionRefreshButton, THIS));
-        collectionStartPageButton.addMouseListener(new CustomButtonMouseListener(collectionStartPageButton, THIS));
-        collectionLastPageButton.addMouseListener(new CustomButtonMouseListener(collectionLastPageButton, THIS));
-        collectionGoButton.addMouseListener(new CustomButtonMouseListener(collectionGoButton, THIS));
-        collectionNextPageButton.addMouseListener(new CustomButtonMouseListener(collectionNextPageButton, THIS));
-        collectionEndPageButton.addMouseListener(new CustomButtonMouseListener(collectionEndPageButton, THIS));
         // 提示语
         collectionBackwardButton.setToolTipText(BACKWARD_TIP);
         collectionPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -5698,7 +5645,7 @@ public class MainFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5789,7 +5736,7 @@ public class MainFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -5877,7 +5824,7 @@ public class MainFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -5968,7 +5915,7 @@ public class MainFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText(LOADING_MSG);
@@ -6062,7 +6009,7 @@ public class MainFrame extends JFrame {
                     NetRankingInfo rankingInfo = (NetRankingInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
                         collectionItemTagLabel.setText("");
@@ -6151,7 +6098,7 @@ public class MainFrame extends JFrame {
                     NetUserInfo userInfo = (NetUserInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         ImageIcon icon = new ImageIcon(coverImg);
                         collectionItemCoverAndNameLabel.setIcon(icon);
                         collectionItemCoverAndNameLabel.setText(LOADING_MSG);
@@ -6289,37 +6236,37 @@ public class MainFrame extends JFrame {
                         }
                         int selectedIndex = collectionTabbedPane.getSelectedIndex();
                         if (selectedIndex == CollectionTabIndex.PLAYLIST) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netPlaylistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ALBUM) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netAlbumPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.ARTIST) {
-                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netArtistPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RADIO) {
-                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netRadioPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.MV) {
-                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.RANKING) {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
-                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netUserPopupMenu.show(collectionList, e.getX(), e.getY());
@@ -6560,10 +6507,6 @@ public class MainFrame extends JFrame {
                 countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
             else countLabel.setText(String.format(TOTAL_MSG, collectionList.getModel().getSize()));
         });
-        // 按钮悬浮和点击效果
-        localMusicButton.addMouseListener(new TabButtonMouseListener(localMusicButton, THIS));
-        historyButton.addMouseListener(new TabButtonMouseListener(historyButton, THIS));
-        collectionButton.addMouseListener(new TabButtonMouseListener(collectionButton, THIS));
 
         // 推荐工具栏网格布局
         personalMusicToolBar.setLayout(new GridLayout(1, 3));
@@ -6578,19 +6521,6 @@ public class MainFrame extends JFrame {
 
     // 初始化本地音乐工具栏
     private void initMusicToolBar() {
-        // 按钮悬浮和点击效果
-        localPlaylistToolButton.addMouseListener(new CustomButtonMouseListener(localPlaylistToolButton, THIS));
-        addToolButton.addMouseListener(new CustomButtonMouseListener(addToolButton, THIS));
-        reimportToolButton.addMouseListener(new CustomButtonMouseListener(reimportToolButton, THIS));
-        manageCatalogToolButton.addMouseListener(new CustomButtonMouseListener(manageCatalogToolButton, THIS));
-        removeToolButton.addMouseListener(new CustomButtonMouseListener(removeToolButton, THIS));
-        clearToolButton.addMouseListener(new CustomButtonMouseListener(clearToolButton, THIS));
-        duplicateToolButton.addMouseListener(new CustomButtonMouseListener(duplicateToolButton, THIS));
-        reverseToolButton.addMouseListener(new CustomButtonMouseListener(reverseToolButton, THIS));
-        sortToolButton.addMouseListener(new CustomButtonMouseListener(sortToolButton, THIS));
-        moveUpToolButton.addMouseListener(new CustomButtonMouseListener(moveUpToolButton, THIS));
-        moveDownToolButton.addMouseListener(new CustomButtonMouseListener(moveDownToolButton, THIS));
-        clearInputToolButton.addMouseListener(new CustomButtonMouseListener(clearInputToolButton, THIS));
         // 标签左间距
         countLabel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
         // 透明度
@@ -6782,7 +6712,7 @@ public class MainFrame extends JFrame {
                 for (MusicResource resource : selectedValues) {
                     // 改变取消收藏状态
                     if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && player.loadedMusicResource(resource) && hasBeenCollected(resource))
-                        collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
                     model.removeElement(resource);
                     if (model == filterModel) {
                         if (currPersonalMusicTab == PersonalMusicTabIndex.LOCAL_MUSIC)
@@ -6845,10 +6775,10 @@ public class MainFrame extends JFrame {
                         historyModel.clear();
                     else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION) {
                         collectionModel.clear();
-                        collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+                        collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
                     }
                 } else if (model == collectionModel) {
-                    collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+                    collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 }
             } else {
                 DefaultListModel<NetResource> model = (DefaultListModel<NetResource>) collectionList.getModel();
@@ -7080,7 +7010,7 @@ public class MainFrame extends JFrame {
         stylePopupMenu.add(manageStyleMenuItem);
         stylePopupMenu.add(styleCustomMenuItem);
         // 个人音乐筛选框
-        filterTextField.addFocusListener(new TextFieldHintListener(filterTextField, I18n.getText("filterByKeyword"), currUIStyle.getForeColor()));
+        filterTextField.addFocusListener(new TextFieldHintListener(filterTextField, I18n.getText("filterByKeyword"), UIStyleStorage.currUIStyle.getForeColor()));
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -7331,10 +7261,10 @@ public class MainFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
-                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -7357,10 +7287,10 @@ public class MainFrame extends JFrame {
                             relatedMvMenuItem.setEnabled(ins);
                             playMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
-                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             locateFileMenuItem.setEnabled(!ins);
@@ -7409,7 +7339,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(resource)) continue;
 //                    collectionModel.add(0, resource);
 //                    if (player.loadedMusicResource(resource))
-//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                }
 //                if (needRefresh) musicList.setModel(model);
 //                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -7420,7 +7350,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(resource)) {
 //                        collectionModel.removeElement(resource);
 //                        if (player.loadedMusicResource(resource))
-//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                    }
 //                });
 //                if (needRefresh) musicList.setModel(model);
@@ -7591,7 +7521,7 @@ public class MainFrame extends JFrame {
 
     // 初始化在线音乐工具栏
     private void initNetMusicToolBar() {
-        searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", currUIStyle.getForeColor()));
+        searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", UIStyleStorage.currUIStyle.getForeColor()));
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -7668,7 +7598,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netMusicCurrKeyword, HistorySearchType.NET_MUSIC);
                 netMusicHistorySearchInnerPanel2.add(b, 0);
@@ -7809,16 +7739,6 @@ public class MainFrame extends JFrame {
         netMusicGoButton.setPreferredSize(dimension);
         netMusicNextPageButton.setPreferredSize(dimension);
         netMusicEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netMusicBackwardButton.addMouseListener(new CustomButtonMouseListener(netMusicBackwardButton, THIS));
-        netMusicClearInputButton.addMouseListener(new CustomButtonMouseListener(netMusicClearInputButton, THIS));
-        searchButton.addMouseListener(new CustomButtonMouseListener(searchButton, THIS));
-        netMusicRefreshButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshButton, THIS));
-        netMusicStartPageButton.addMouseListener(new CustomButtonMouseListener(netMusicStartPageButton, THIS));
-        netMusicLastPageButton.addMouseListener(new CustomButtonMouseListener(netMusicLastPageButton, THIS));
-        netMusicGoButton.addMouseListener(new CustomButtonMouseListener(netMusicGoButton, THIS));
-        netMusicNextPageButton.addMouseListener(new CustomButtonMouseListener(netMusicNextPageButton, THIS));
-        netMusicEndPageButton.addMouseListener(new CustomButtonMouseListener(netMusicEndPageButton, THIS));
         // 帮助提示
         netMusicBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -7916,10 +7836,10 @@ public class MainFrame extends JFrame {
                         NetMusicInfo musicInfo = netMusicList.getSelectedValue();
                         netMusicPlayMvMenuItem.setEnabled(musicInfo.hasMv());
                         if (hasBeenCollected(musicInfo)) {
-                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netMusicCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netMusicCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -7946,7 +7866,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(musicInfo)) continue;
 //                    collectionModel.add(0, musicInfo);
 //                    if (player.loadedMusicResource(musicInfo))
-//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                }
 //                if (needRefresh) musicList.setModel(model);
 //                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -7957,7 +7877,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(musicInfo)) {
 //                        collectionModel.removeElement(musicInfo);
 //                        if (player.loadedMusicResource(musicInfo))
-//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                    }
 //                });
 //                if (needRefresh) musicList.setModel(model);
@@ -8556,7 +8476,6 @@ public class MainFrame extends JFrame {
         netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.execute(() -> updateSearchSuggestion()));
         netMusicRefreshSearchSuggestionButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
-        netMusicRefreshSearchSuggestionButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshSearchSuggestionButton, THIS));
 
         Font font = Fonts.NORMAL_TITLE2;
         netMusicSearchSuggestionLabel.setFont(font);
@@ -8593,7 +8512,6 @@ public class MainFrame extends JFrame {
         netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.execute(() -> updateHotSearch()));
         netMusicRefreshHotSearchButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
-        netMusicRefreshHotSearchButton.addMouseListener(new CustomButtonMouseListener(netMusicRefreshHotSearchButton, THIS));
 
         netMusicHotSearchLabel.setFont(font);
 
@@ -8629,7 +8547,6 @@ public class MainFrame extends JFrame {
         netMusicClearHistorySearchButton.addActionListener(e -> netMusicHistorySearchInnerPanel2.removeAll());
         netMusicClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netMusicClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netMusicClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netMusicClearHistorySearchButton, THIS));
 
         netMusicHistorySearchLabel.setFont(font);
 
@@ -8795,19 +8712,19 @@ public class MainFrame extends JFrame {
 //            @Override
 //            public void mouseReleased(MouseEvent e) {
 //                if (playlistDescriptionScrollPane.getViewport().contains(e.getPoint())) return;
-//                ((ScrollBarUI) vs.getUI()).setActive(false);
+//                ((ScrollBarUI) vs.setActive(false);
 //            }
 //        });
         playlistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) playlistDescriptionScrollPane.getVBarUI()).setActive(true);
+                playlistDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
 //                if (vs.getValueIsAdjusting()) return;
-                ((CustomScrollBarUI) playlistDescriptionScrollPane.getVBarUI()).setActive(false);
+                playlistDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -8847,12 +8764,12 @@ public class MainFrame extends JFrame {
         albumCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) albumDescriptionScrollPane.getVBarUI()).setActive(true);
+                albumDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) albumDescriptionScrollPane.getVBarUI()).setActive(false);
+                albumDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -8892,12 +8809,12 @@ public class MainFrame extends JFrame {
         artistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) artistDescriptionScrollPane.getVBarUI()).setActive(true);
+                artistDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) artistDescriptionScrollPane.getVBarUI()).setActive(false);
+                artistDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -8937,12 +8854,12 @@ public class MainFrame extends JFrame {
         radioCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) radioDescriptionScrollPane.getVBarUI()).setActive(true);
+                radioDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) radioDescriptionScrollPane.getVBarUI()).setActive(false);
+                radioDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -8982,12 +8899,12 @@ public class MainFrame extends JFrame {
         rankingCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) rankingDescriptionScrollPane.getVBarUI()).setActive(true);
+                rankingDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) rankingDescriptionScrollPane.getVBarUI()).setActive(false);
+                rankingDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9027,12 +8944,12 @@ public class MainFrame extends JFrame {
         userCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(true);
+                userDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(false);
+                userDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9072,12 +8989,12 @@ public class MainFrame extends JFrame {
         userDescriptionLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(true);
+                userDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) userDescriptionScrollPane.getVBarUI()).setActive(false);
+                userDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9117,12 +9034,12 @@ public class MainFrame extends JFrame {
         recommendItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) recommendItemDescriptionScrollPane.getVBarUI()).setActive(true);
+                recommendItemDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) recommendItemDescriptionScrollPane.getVBarUI()).setActive(false);
+                recommendItemDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9176,12 +9093,12 @@ public class MainFrame extends JFrame {
         collectionItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(true);
+                collectionItemDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(false);
+                collectionItemDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9241,12 +9158,12 @@ public class MainFrame extends JFrame {
         collectionItemDescriptionLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(true);
+                collectionItemDescriptionScrollPane.setVBarActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) collectionItemDescriptionScrollPane.getVBarUI()).setActive(false);
+                collectionItemDescriptionScrollPane.setVBarActive(false);
             }
 
             @Override
@@ -9366,14 +9283,14 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionOuterPanel.setMaximumSize(size);
         collectionItemDescriptionOuterPanel.setMaximumSize(size);
         // 滚动条监听器
-        playlistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(playlistDescriptionScrollPane, THIS));
-        albumDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(albumDescriptionScrollPane, THIS));
-        artistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(artistDescriptionScrollPane, THIS));
-        radioDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(radioDescriptionScrollPane, THIS));
-        rankingDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(rankingDescriptionScrollPane, THIS));
-        userDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(userDescriptionScrollPane, THIS));
-        recommendItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(recommendItemDescriptionScrollPane, THIS));
-        collectionItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(collectionItemDescriptionScrollPane, THIS));
+        playlistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(playlistDescriptionScrollPane));
+        albumDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(albumDescriptionScrollPane));
+        artistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(artistDescriptionScrollPane));
+        radioDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(radioDescriptionScrollPane));
+        rankingDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(rankingDescriptionScrollPane));
+        userDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(userDescriptionScrollPane));
+        recommendItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(recommendItemDescriptionScrollPane));
+        collectionItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(collectionItemDescriptionScrollPane));
         // 水平滚动条
         playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -9542,15 +9459,6 @@ public class MainFrame extends JFrame {
             menuItem.doClick();
             switchDescriptionCollectionStatus(collectionItemDescriptionCollectionButton);
         });
-        // 描述收藏按钮鼠标事件
-        playlistDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(playlistDescriptionCollectionButton, THIS));
-        albumDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(albumDescriptionCollectionButton, THIS));
-        artistDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(artistDescriptionCollectionButton, THIS));
-        radioDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(radioDescriptionCollectionButton, THIS));
-        rankingDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(rankingDescriptionCollectionButton, THIS));
-        userDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(userDescriptionCollectionButton, THIS));
-        recommendItemDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(recommendItemDescriptionCollectionButton, THIS));
-        collectionItemDescriptionCollectionButton.addMouseListener(new CustomButtonMouseListener(collectionItemDescriptionCollectionButton, THIS));
         // 描述收藏按钮面板
         playlistDescriptionCollectionPanel.add(playlistDescriptionCollectionButton);
         albumDescriptionCollectionPanel.add(albumDescriptionCollectionButton);
@@ -9621,11 +9529,11 @@ public class MainFrame extends JFrame {
     // 切换描述收藏按钮状态
     private void switchDescriptionCollectionStatus(CustomButton btn) {
         if (btn.getText().equals(COLLECT_TIP)) {
-            btn.setIcon(ImageUtil.dye(collectedItemIcon, currUIStyle.getIconColor()));
+            btn.setIcon(ImageUtil.dye(collectedItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
             btn.setText(COLLECTED_TIP);
             btn.setToolTipText(COLLECTED_TIP);
         } else {
-            btn.setIcon(ImageUtil.dye(collectItemIcon, currUIStyle.getIconColor()));
+            btn.setIcon(ImageUtil.dye(collectItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
             btn.setText(COLLECT_TIP);
             btn.setToolTipText(COLLECTED_TIP);
         }
@@ -9634,11 +9542,11 @@ public class MainFrame extends JFrame {
     // 检查描述收藏按钮状态
     private void checkDescriptionCollectionStatus(CustomButton btn, NetResource resource) {
         if (hasBeenCollected(resource)) {
-            btn.setIcon(ImageUtil.dye(collectedItemIcon, currUIStyle.getIconColor()));
+            btn.setIcon(ImageUtil.dye(collectedItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
             btn.setText(COLLECTED_TIP);
             btn.setToolTipText(COLLECTED_TIP);
         } else {
-            btn.setIcon(ImageUtil.dye(collectItemIcon, currUIStyle.getIconColor()));
+            btn.setIcon(ImageUtil.dye(collectItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
             btn.setText(COLLECT_TIP);
             btn.setToolTipText(COLLECTED_TIP);
         }
@@ -9749,7 +9657,7 @@ public class MainFrame extends JFrame {
 
     // 初始化在线歌单工具栏
     private void initNetPlaylistToolBar() {
-        netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", currUIStyle.getForeColor()));
+        netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", UIStyleStorage.currUIStyle.getForeColor()));
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -9857,7 +9765,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netPlaylistCurrKeyword, HistorySearchType.NET_PLAYLIST);
                 netPlaylistHistorySearchInnerPanel2.add(b, 0);
@@ -10056,17 +9964,6 @@ public class MainFrame extends JFrame {
         netPlaylistGoButton.setPreferredSize(dimension);
         netPlaylistNextPageButton.setPreferredSize(dimension);
         netPlaylistEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netPlaylistBackwardButton.addMouseListener(new CustomButtonMouseListener(netPlaylistBackwardButton, THIS));
-        netPlaylistClearInputButton.addMouseListener(new CustomButtonMouseListener(netPlaylistClearInputButton, THIS));
-        netPlaylistSearchButton.addMouseListener(new CustomButtonMouseListener(netPlaylistSearchButton, THIS));
-        netPlaylistPlayAllButton.addMouseListener(new CustomButtonMouseListener(netPlaylistPlayAllButton, THIS));
-        netPlaylistRefreshButton.addMouseListener(new CustomButtonMouseListener(netPlaylistRefreshButton, THIS));
-        netPlaylistStartPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistStartPageButton, THIS));
-        netPlaylistLastPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistLastPageButton, THIS));
-        netPlaylistGoButton.addMouseListener(new CustomButtonMouseListener(netPlaylistGoButton, THIS));
-        netPlaylistNextPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistNextPageButton, THIS));
-        netPlaylistEndPageButton.addMouseListener(new CustomButtonMouseListener(netPlaylistEndPageButton, THIS));
         // 帮助提示
         netPlaylistBackwardButton.setToolTipText(BACKWARD_TIP);
         netPlaylistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -10157,7 +10054,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     playlistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     playlistCoverAndNameLabel.setText(LOADING_MSG);
                     playlistTagLabel.setText(LOADING_MSG);
@@ -10280,10 +10177,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netPlaylistList.isSelectedIndex(index)) netPlaylistList.setSelectedIndex(index);
                         if (hasBeenCollected(netPlaylistList.getSelectedValue())) {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netPlaylistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netPlaylistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -10605,7 +10502,6 @@ public class MainFrame extends JFrame {
         netPlaylistClearHistorySearchButton.addActionListener(e -> netPlaylistHistorySearchInnerPanel2.removeAll());
         netPlaylistClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netPlaylistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netPlaylistClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netPlaylistClearHistorySearchButton, THIS));
 
         netPlaylistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -10752,7 +10648,7 @@ public class MainFrame extends JFrame {
 
     // 初始化在线专辑工具栏
     private void initNetAlbumToolBar() {
-        netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", currUIStyle.getForeColor()));
+        netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", UIStyleStorage.currUIStyle.getForeColor()));
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -10857,7 +10753,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netAlbumCurrKeyword, HistorySearchType.NET_ALBUM);
                 netAlbumHistorySearchInnerPanel2.add(b, 0);
@@ -11054,17 +10950,6 @@ public class MainFrame extends JFrame {
         netAlbumGoButton.setPreferredSize(dimension);
         netAlbumNextPageButton.setPreferredSize(dimension);
         netAlbumEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netAlbumBackwardButton.addMouseListener(new CustomButtonMouseListener(netAlbumBackwardButton, THIS));
-        netAlbumClearInputButton.addMouseListener(new CustomButtonMouseListener(netAlbumClearInputButton, THIS));
-        netAlbumSearchButton.addMouseListener(new CustomButtonMouseListener(netAlbumSearchButton, THIS));
-        netAlbumPlayAllButton.addMouseListener(new CustomButtonMouseListener(netAlbumPlayAllButton, THIS));
-        netAlbumRefreshButton.addMouseListener(new CustomButtonMouseListener(netAlbumRefreshButton, THIS));
-        netAlbumStartPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumStartPageButton, THIS));
-        netAlbumLastPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumLastPageButton, THIS));
-        netAlbumGoButton.addMouseListener(new CustomButtonMouseListener(netAlbumGoButton, THIS));
-        netAlbumNextPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumNextPageButton, THIS));
-        netAlbumEndPageButton.addMouseListener(new CustomButtonMouseListener(netAlbumEndPageButton, THIS));
         // 帮助提示
         netAlbumBackwardButton.setToolTipText(BACKWARD_TIP);
         netAlbumClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -11154,7 +11039,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     albumCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     albumCoverAndNameLabel.setText(LOADING_MSG);
                     albumDescriptionLabel.setText(LOADING_MSG);
@@ -11275,10 +11160,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netAlbumList.isSelectedIndex(index)) netAlbumList.setSelectedIndex(index);
                         if (hasBeenCollected(netAlbumList.getSelectedValue())) {
-                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netAlbumCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netAlbumCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -11618,7 +11503,6 @@ public class MainFrame extends JFrame {
         netAlbumClearHistorySearchButton.addActionListener(e -> netAlbumHistorySearchInnerPanel2.removeAll());
         netAlbumClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netAlbumClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netAlbumClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netAlbumClearHistorySearchButton, THIS));
 
         netAlbumHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -11769,7 +11653,7 @@ public class MainFrame extends JFrame {
 
     // 初始化歌手工具栏
     private void initNetArtistToolBar() {
-        netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", currUIStyle.getForeColor()));
+        netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", UIStyleStorage.currUIStyle.getForeColor()));
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -11881,7 +11765,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netArtistCurrKeyword, HistorySearchType.NET_ARTIST);
                 netArtistHistorySearchInnerPanel2.add(b, 0);
@@ -12078,17 +11962,6 @@ public class MainFrame extends JFrame {
         netArtistGoButton.setPreferredSize(dimension);
         netArtistNextPageButton.setPreferredSize(dimension);
         netArtistEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netArtistBackwardButton.addMouseListener(new CustomButtonMouseListener(netArtistBackwardButton, THIS));
-        netArtistClearInputButton.addMouseListener(new CustomButtonMouseListener(netArtistClearInputButton, THIS));
-        netArtistSearchButton.addMouseListener(new CustomButtonMouseListener(netArtistSearchButton, THIS));
-        netArtistPlayAllButton.addMouseListener(new CustomButtonMouseListener(netArtistPlayAllButton, THIS));
-        netArtistRefreshButton.addMouseListener(new CustomButtonMouseListener(netArtistRefreshButton, THIS));
-        netArtistStartPageButton.addMouseListener(new CustomButtonMouseListener(netArtistStartPageButton, THIS));
-        netArtistLastPageButton.addMouseListener(new CustomButtonMouseListener(netArtistLastPageButton, THIS));
-        netArtistGoButton.addMouseListener(new CustomButtonMouseListener(netArtistGoButton, THIS));
-        netArtistNextPageButton.addMouseListener(new CustomButtonMouseListener(netArtistNextPageButton, THIS));
-        netArtistEndPageButton.addMouseListener(new CustomButtonMouseListener(netArtistEndPageButton, THIS));
         // 帮助提示
         netArtistBackwardButton.setToolTipText(BACKWARD_TIP);
         netArtistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -12178,7 +12051,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     artistCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     artistCoverAndNameLabel.setText(LOADING_MSG);
                     artistTagLabel.setText(LOADING_MSG);
@@ -12303,10 +12176,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netArtistList.isSelectedIndex(index)) netArtistList.setSelectedIndex(index);
                         if (hasBeenCollected(netArtistList.getSelectedValue())) {
-                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netArtistCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netArtistCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -12867,7 +12740,6 @@ public class MainFrame extends JFrame {
         netArtistClearHistorySearchButton.addActionListener(e -> netArtistHistorySearchInnerPanel2.removeAll());
         netArtistClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netArtistClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netArtistClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netArtistClearHistorySearchButton, THIS));
 
         netArtistHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -13014,7 +12886,7 @@ public class MainFrame extends JFrame {
 
     // 初始化电台工具栏
     private void initNetRadioToolBar() {
-        netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", currUIStyle.getForeColor()));
+        netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", UIStyleStorage.currUIStyle.getForeColor()));
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -13125,7 +12997,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netRadioCurrKeyword, HistorySearchType.NET_RADIO);
                 netRadioHistorySearchInnerPanel2.add(b, 0);
@@ -13323,17 +13195,6 @@ public class MainFrame extends JFrame {
         netRadioGoButton.setPreferredSize(dimension);
         netRadioNextPageButton.setPreferredSize(dimension);
         netRadioEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netRadioBackwardButton.addMouseListener(new CustomButtonMouseListener(netRadioBackwardButton, THIS));
-        netRadioClearInputButton.addMouseListener(new CustomButtonMouseListener(netRadioClearInputButton, THIS));
-        netRadioSearchButton.addMouseListener(new CustomButtonMouseListener(netRadioSearchButton, THIS));
-        netRadioPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRadioPlayAllButton, THIS));
-        netRadioRefreshButton.addMouseListener(new CustomButtonMouseListener(netRadioRefreshButton, THIS));
-        netRadioStartPageButton.addMouseListener(new CustomButtonMouseListener(netRadioStartPageButton, THIS));
-        netRadioLastPageButton.addMouseListener(new CustomButtonMouseListener(netRadioLastPageButton, THIS));
-        netRadioGoButton.addMouseListener(new CustomButtonMouseListener(netRadioGoButton, THIS));
-        netRadioNextPageButton.addMouseListener(new CustomButtonMouseListener(netRadioNextPageButton, THIS));
-        netRadioEndPageButton.addMouseListener(new CustomButtonMouseListener(netRadioEndPageButton, THIS));
         // 帮助提示
         netRadioBackwardButton.setToolTipText(BACKWARD_TIP);
         netRadioClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -13434,7 +13295,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     radioCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     radioCoverAndNameLabel.setText(LOADING_MSG);
                     radioTagLabel.setText(LOADING_MSG);
@@ -13561,10 +13422,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRadioList.isSelectedIndex(index)) netRadioList.setSelectedIndex(index);
                         if (hasBeenCollected(netRadioList.getSelectedValue())) {
-                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netRadioCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRadioCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -14025,7 +13886,6 @@ public class MainFrame extends JFrame {
         netRadioClearHistorySearchButton.addActionListener(e -> netRadioHistorySearchInnerPanel2.removeAll());
         netRadioClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netRadioClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netRadioClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netRadioClearHistorySearchButton, THIS));
 
         netRadioHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -14147,7 +14007,7 @@ public class MainFrame extends JFrame {
             netMvBackwardButton.setEnabled(false);
             netMvLeftBox.repaint();
         });
-        netMvSearchTextField.addFocusListener(new TextFieldHintListener(netMvSearchTextField, "MV", currUIStyle.getForeColor()));
+        netMvSearchTextField.addFocusListener(new TextFieldHintListener(netMvSearchTextField, "MV", UIStyleStorage.currUIStyle.getForeColor()));
         netMvSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -14198,7 +14058,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netMvCurrKeyword, HistorySearchType.NET_MV);
                 netMvHistorySearchInnerPanel2.add(b, 0);
@@ -14327,16 +14187,6 @@ public class MainFrame extends JFrame {
         netMvGoButton.setPreferredSize(dimension);
         netMvNextPageButton.setPreferredSize(dimension);
         netMvEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netMvBackwardButton.addMouseListener(new CustomButtonMouseListener(netMvBackwardButton, THIS));
-        netMvClearInputButton.addMouseListener(new CustomButtonMouseListener(netMvClearInputButton, THIS));
-        netMvSearchButton.addMouseListener(new CustomButtonMouseListener(netMvSearchButton, THIS));
-        netMvRefreshButton.addMouseListener(new CustomButtonMouseListener(netMvRefreshButton, THIS));
-        netMvStartPageButton.addMouseListener(new CustomButtonMouseListener(netMvStartPageButton, THIS));
-        netMvLastPageButton.addMouseListener(new CustomButtonMouseListener(netMvLastPageButton, THIS));
-        netMvGoButton.addMouseListener(new CustomButtonMouseListener(netMvGoButton, THIS));
-        netMvNextPageButton.addMouseListener(new CustomButtonMouseListener(netMvNextPageButton, THIS));
-        netMvEndPageButton.addMouseListener(new CustomButtonMouseListener(netMvEndPageButton, THIS));
         // 不可见
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
@@ -14454,10 +14304,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netMvList.isSelectedIndex(index)) netMvList.setSelectedIndex(index);
                         if (hasBeenCollected(netMvList.getSelectedValue())) {
-                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netMvCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -14797,7 +14647,6 @@ public class MainFrame extends JFrame {
         netMvClearHistorySearchButton.addActionListener(e -> netMvHistorySearchInnerPanel2.removeAll());
         netMvClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netMvClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netMvClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netMvClearHistorySearchButton, THIS));
 
         netMvHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -15089,15 +14938,6 @@ public class MainFrame extends JFrame {
         netRankingGoButton.setPreferredSize(dimension);
         netRankingNextPageButton.setPreferredSize(dimension);
         netRankingEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netRankingBackwardButton.addMouseListener(new CustomButtonMouseListener(netRankingBackwardButton, THIS));
-        netRankingPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRankingPlayAllButton, THIS));
-        netRankingRefreshButton.addMouseListener(new CustomButtonMouseListener(netRankingRefreshButton, THIS));
-        netRankingStartPageButton.addMouseListener(new CustomButtonMouseListener(netRankingStartPageButton, THIS));
-        netRankingLastPageButton.addMouseListener(new CustomButtonMouseListener(netRankingLastPageButton, THIS));
-        netRankingGoButton.addMouseListener(new CustomButtonMouseListener(netRankingGoButton, THIS));
-        netRankingNextPageButton.addMouseListener(new CustomButtonMouseListener(netRankingNextPageButton, THIS));
-        netRankingEndPageButton.addMouseListener(new CustomButtonMouseListener(netRankingEndPageButton, THIS));
         // 帮助提示
         netRankingBackwardButton.setToolTipText(BACKWARD_TIP);
         netRankingPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -15184,7 +15024,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                     rankingCoverAndNameLabel.setText(LOADING_MSG);
                     rankingDescriptionLabel.setText(LOADING_MSG);
@@ -15300,10 +15140,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
                         if (hasBeenCollected(netRankingList.getSelectedValue())) {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -15529,7 +15369,7 @@ public class MainFrame extends JFrame {
 
     // 初始化用户工具栏
     private void initNetUserToolBar() {
-        netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", currUIStyle.getForeColor()));
+        netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", UIStyleStorage.currUIStyle.getForeColor()));
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -15641,7 +15481,7 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(currUIStyle.getTextColor());
+                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netUserCurrKeyword, HistorySearchType.NET_USER);
                 netUserHistorySearchInnerPanel2.add(b, 0);
@@ -15854,17 +15694,6 @@ public class MainFrame extends JFrame {
         netUserGoButton.setPreferredSize(dimension);
         netUserNextPageButton.setPreferredSize(dimension);
         netUserEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netUserBackwardButton.addMouseListener(new CustomButtonMouseListener(netUserBackwardButton, THIS));
-        netUserClearInputButton.addMouseListener(new CustomButtonMouseListener(netUserClearInputButton, THIS));
-        netUserSearchButton.addMouseListener(new CustomButtonMouseListener(netUserSearchButton, THIS));
-        netUserPlayAllButton.addMouseListener(new CustomButtonMouseListener(netUserPlayAllButton, THIS));
-        netUserRefreshButton.addMouseListener(new CustomButtonMouseListener(netUserRefreshButton, THIS));
-        netUserStartPageButton.addMouseListener(new CustomButtonMouseListener(netUserStartPageButton, THIS));
-        netUserLastPageButton.addMouseListener(new CustomButtonMouseListener(netUserLastPageButton, THIS));
-        netUserGoButton.addMouseListener(new CustomButtonMouseListener(netUserGoButton, THIS));
-        netUserNextPageButton.addMouseListener(new CustomButtonMouseListener(netUserNextPageButton, THIS));
-        netUserEndPageButton.addMouseListener(new CustomButtonMouseListener(netUserEndPageButton, THIS));
         // 帮助提示
         netUserBackwardButton.setToolTipText(BACKWARD_TIP);
         netUserClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -15955,7 +15784,7 @@ public class MainFrame extends JFrame {
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                    BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                     ImageIcon icon = new ImageIcon(coverImg);
                     userCoverAndNameLabel.setIcon(icon);
                     userCoverAndNameLabel.setText(LOADING_MSG);
@@ -16101,10 +15930,10 @@ public class MainFrame extends JFrame {
                         if (index == -1) return;
                         if (!netUserList.isSelectedIndex(index)) netUserList.setSelectedIndex(index);
                         if (hasBeenCollected(netUserList.getSelectedValue())) {
-                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netUserCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                            netUserCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
@@ -16614,7 +16443,6 @@ public class MainFrame extends JFrame {
         netUserClearHistorySearchButton.addActionListener(e -> netUserHistorySearchInnerPanel2.removeAll());
         netUserClearHistorySearchButton.setPreferredSize(new HDDimension(30, 30));
         netUserClearHistorySearchButton.setToolTipText(CLEAR_HISTORY_SEARCH_TIP);
-        netUserClearHistorySearchButton.addMouseListener(new CustomButtonMouseListener(netUserClearHistorySearchButton, THIS));
 
         netUserHistorySearchLabel.setFont(Fonts.NORMAL_TITLE2);
 
@@ -16879,14 +16707,6 @@ public class MainFrame extends JFrame {
         netCommentGoButton.setPreferredSize(dimension);
         netCommentNextPageButton.setPreferredSize(dimension);
         netCommentEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netCommentBackwardButton.addMouseListener(new CustomButtonMouseListener(netCommentBackwardButton, THIS));
-        netCommentRefreshButton.addMouseListener(new CustomButtonMouseListener(netCommentRefreshButton, THIS));
-        netCommentStartPageButton.addMouseListener(new CustomButtonMouseListener(netCommentStartPageButton, THIS));
-        netCommentLastPageButton.addMouseListener(new CustomButtonMouseListener(netCommentLastPageButton, THIS));
-        netCommentGoButton.addMouseListener(new CustomButtonMouseListener(netCommentGoButton, THIS));
-        netCommentNextPageButton.addMouseListener(new CustomButtonMouseListener(netCommentNextPageButton, THIS));
-        netCommentEndPageButton.addMouseListener(new CustomButtonMouseListener(netCommentEndPageButton, THIS));
         // 帮助提示
         netCommentBackwardButton.setToolTipText(BACKWARD_TIP);
         netCommentRefreshButton.setToolTipText(REFRESH_TIP);
@@ -17284,14 +17104,6 @@ public class MainFrame extends JFrame {
         netSheetGoButton.setPreferredSize(dimension);
         netSheetNextPageButton.setPreferredSize(dimension);
         netSheetEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        netSheetBackwardButton.addMouseListener(new CustomButtonMouseListener(netSheetBackwardButton, THIS));
-        netSheetRefreshButton.addMouseListener(new CustomButtonMouseListener(netSheetRefreshButton, THIS));
-        netSheetStartPageButton.addMouseListener(new CustomButtonMouseListener(netSheetStartPageButton, THIS));
-        netSheetLastPageButton.addMouseListener(new CustomButtonMouseListener(netSheetLastPageButton, THIS));
-        netSheetGoButton.addMouseListener(new CustomButtonMouseListener(netSheetGoButton, THIS));
-        netSheetNextPageButton.addMouseListener(new CustomButtonMouseListener(netSheetNextPageButton, THIS));
-        netSheetEndPageButton.addMouseListener(new CustomButtonMouseListener(netSheetEndPageButton, THIS));
         // 帮助提示
         netSheetBackwardButton.setToolTipText(BACKWARD_TIP);
         netSheetRefreshButton.setToolTipText(REFRESH_TIP);
@@ -18821,25 +18633,6 @@ public class MainFrame extends JFrame {
         netRecommendGoButton.setPreferredSize(dimension);
         netRecommendNextPageButton.setPreferredSize(dimension);
         netRecommendEndPageButton.setPreferredSize(dimension);
-        // 按钮悬浮与点击效果
-        playlistRecommendButton.addMouseListener(new TabButtonMouseListener(playlistRecommendButton, THIS));
-        highQualityPlaylistButton.addMouseListener(new TabButtonMouseListener(highQualityPlaylistButton, THIS));
-        hotMusicButton.addMouseListener(new TabButtonMouseListener(hotMusicButton, THIS));
-        newMusicButton.addMouseListener(new TabButtonMouseListener(newMusicButton, THIS));
-        newAlbumRecommendButton.addMouseListener(new TabButtonMouseListener(newAlbumRecommendButton, THIS));
-        artistListRecommendButton.addMouseListener(new TabButtonMouseListener(artistListRecommendButton, THIS));
-        newRadioRecommendButton.addMouseListener(new TabButtonMouseListener(newRadioRecommendButton, THIS));
-        hotRadioRecommendButton.addMouseListener(new TabButtonMouseListener(hotRadioRecommendButton, THIS));
-        programRecommendButton.addMouseListener(new TabButtonMouseListener(programRecommendButton, THIS));
-        mvRecommendButton.addMouseListener(new TabButtonMouseListener(mvRecommendButton, THIS));
-        recommendBackwardButton.addMouseListener(new CustomButtonMouseListener(recommendBackwardButton, THIS));
-        netRecommendPlayAllButton.addMouseListener(new CustomButtonMouseListener(netRecommendPlayAllButton, THIS));
-        netRecommendRefreshButton.addMouseListener(new CustomButtonMouseListener(netRecommendRefreshButton, THIS));
-        netRecommendStartPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendStartPageButton, THIS));
-        netRecommendLastPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendLastPageButton, THIS));
-        netRecommendGoButton.addMouseListener(new CustomButtonMouseListener(netRecommendGoButton, THIS));
-        netRecommendNextPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendNextPageButton, THIS));
-        netRecommendEndPageButton.addMouseListener(new CustomButtonMouseListener(netRecommendEndPageButton, THIS));
         // 提示语
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -19009,7 +18802,7 @@ public class MainFrame extends JFrame {
                     NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -19103,7 +18896,7 @@ public class MainFrame extends JFrame {
                     NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText("");
@@ -19194,7 +18987,7 @@ public class MainFrame extends JFrame {
                     NetArtistInfo artistInfo = (NetArtistInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -19288,7 +19081,7 @@ public class MainFrame extends JFrame {
                     NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
-                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, currUIStyle.getIconColor()));
+                        BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
                         recommendItemCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
                         recommendItemCoverAndNameLabel.setText(LOADING_MSG);
                         recommendItemTagLabel.setText(LOADING_MSG);
@@ -19421,10 +19214,10 @@ public class MainFrame extends JFrame {
                     else if (resource instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
                     else if (resource instanceof NetMvInfo) menuItem = netMvCollectMenuItem;
                     if (hasBeenCollected(resource)) {
-                        menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                        menuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                         menuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                     } else {
-                        menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                        menuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                         menuItem.setText(COLLECT_MENU_ITEM_TEXT);
                     }
 
@@ -19462,14 +19255,6 @@ public class MainFrame extends JFrame {
 
     // 初始化下载工具条
     private void initDownloadToolBar() {
-        // 按钮悬浮和点击效果
-        restartSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(restartSelectedTasksButton, THIS));
-        cancelSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(cancelSelectedTasksButton, THIS));
-        removeSelectedTasksButton.addMouseListener(new CustomButtonMouseListener(removeSelectedTasksButton, THIS));
-        restartAllTasksButton.addMouseListener(new CustomButtonMouseListener(restartAllTasksButton, THIS));
-        cancelAllTasksButton.addMouseListener(new CustomButtonMouseListener(cancelAllTasksButton, THIS));
-        removeAllTasksButton.addMouseListener(new CustomButtonMouseListener(removeAllTasksButton, THIS));
-
         // 重新开始选中任务
         restartSelectedTasksButton.addActionListener(e -> restartTaskMenuItem.doClick());
         // 取消选中任务
@@ -19752,14 +19537,6 @@ public class MainFrame extends JFrame {
 
     // 初始化播放队列工具条
     private void initPlayQueueToolBar() {
-        // 按钮悬浮和点击效果
-        playQueueRemoveToolButton.addMouseListener(new CustomButtonMouseListener(playQueueRemoveToolButton, THIS));
-        playQueueClearToolButton.addMouseListener(new CustomButtonMouseListener(playQueueClearToolButton, THIS));
-        playQueueDuplicateToolButton.addMouseListener(new CustomButtonMouseListener(playQueueDuplicateToolButton, THIS));
-        playQueueReverseToolButton.addMouseListener(new CustomButtonMouseListener(playQueueReverseToolButton, THIS));
-        playQueueMoveUpToolButton.addMouseListener(new CustomButtonMouseListener(playQueueMoveUpToolButton, THIS));
-        playQueueMoveDownToolButton.addMouseListener(new CustomButtonMouseListener(playQueueMoveDownToolButton, THIS));
-
         // 从播放队列删除
         playQueueRemoveToolButton.addActionListener(e -> {
             List<MusicResource> selectedValues = playQueue.getSelectedValuesList();
@@ -19974,10 +19751,10 @@ public class MainFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -20000,10 +19777,10 @@ public class MainFrame extends JFrame {
                             playQueueRelatedMvMenuItem.setEnabled(ins);
                             playQueuePlayMvMenuItem.setEnabled(ins);
                             if (hasBeenCollected(first)) {
-                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                             } else {
-                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, currUIStyle.getIconColor()));
+                                playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
                             playQueueLocateFileMenuItem.setEnabled(!ins);
@@ -20037,7 +19814,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(resource)) continue;
 //                    collectionModel.add(0, resource);
 //                    if (player.loadedMusicResource(resource))
-//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                        collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                }
 //                if (needRefresh) musicList.setModel(model);
 //                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
@@ -20048,7 +19825,7 @@ public class MainFrame extends JFrame {
 //                    if (hasBeenCollected(resource)) {
 //                        collectionModel.removeElement(resource);
 //                        if (player.loadedMusicResource(resource))
-//                            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                            collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                    }
 //                });
 //                if (needRefresh) musicList.setModel(model);
@@ -20276,17 +20053,17 @@ public class MainFrame extends JFrame {
 //        }
 
         // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
-        JScrollBar vs = lrcScrollPane.getVerticalScrollBar();
+        CustomScrollBar vb = lrcScrollPane.getVBar();
         swActionTimer = new Timer(2500, e -> {
             swActionTimer.stop();
             if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
-            ((CustomScrollBarUI) vs.getUI()).setActive(false);
+            vb.setActive(false);
             lrcScrollWaiting = false;
         });
         Runnable swAction = () -> {
             if (swActionTimer.isRunning()) swActionTimer.stop();
-            currScrollVal = vs.getValue();
-            ((CustomScrollBarUI) vs.getUI()).setActive(true);
+            currScrollVal = vb.getValue();
+            vb.setActive(true);
             lrcScrollWaiting = true;
             swActionTimer.start();
         };
@@ -20346,7 +20123,7 @@ public class MainFrame extends JFrame {
                 int ph = lrcScrollPane.getHeight() / 2 + ScaleUtil.scale(20);
                 lrcList.setBorder(new EmptyBorder(ph, 0, ph, 0));
                 if (nextLrc == NextLrc.BAD_FORMAT) return;
-                currScrollVal = vs.getValue();
+                currScrollVal = vb.getValue();
                 lrcScrollAnimation = true;
             }
         });
@@ -20366,13 +20143,13 @@ public class MainFrame extends JFrame {
                 dragFrom.x = p.x;
                 // 拖动时超出滚动条范围后不再叠加参数
                 dragFrom.y = ok ? p.y + yOffset : p.y;
-                ((CustomScrollBarUI) vs.getUI()).setActive(true);
+                vb.setActive(true);
             }
         });
         // 歌词面板滚轮滚动触发延时动画
         lrcScrollPane.addMouseWheelListener(e -> swAction.run());
         // 滚动条拖拽时停止延时动画
-        vs.addMouseMotionListener(new MouseMotionAdapter() {
+        vb.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 swActionTimer.stop();
@@ -20381,27 +20158,27 @@ public class MainFrame extends JFrame {
             }
         });
         // 滚动条显示/隐藏，松开时触发延时动画
-        vs.addMouseListener(new MouseAdapter() {
+        vb.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ((CustomScrollBarUI) vs.getUI()).setActive(true);
+                vb.setActive(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ((CustomScrollBarUI) vs.getUI()).setActive(vs.getValueIsAdjusting() || lrcScrollWaiting);
+                vb.setActive(vb.getValueIsAdjusting() || lrcScrollWaiting);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                ((CustomScrollBarUI) vs.getUI()).setActive(vs.getVisibleRect().contains(e.getPoint()));
+                vb.setActive(vb.getVisibleRect().contains(e.getPoint()));
                 swAction.run();
             }
         });
         // 频谱右键菜单
         spectrumGradientMenuItem.addActionListener(e -> {
             specGradient = !specGradient;
-            spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         spectrumPopupMenu.add(spectrumGradientMenuItem);
         spectrumPopupMenu.addSeparator();
@@ -20439,6 +20216,7 @@ public class MainFrame extends JFrame {
         // 初始不可见
         spectrumPanel.setVisible(false);
         lrcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        lrcScrollPane.setVBarActive(false);
         lrcAndSpecBox.add(lrcScrollPane);
         lrcAndSpecBox.add(spectrumPanel);
         infoAndLrcBox.add(lrcAndSpecBox);
@@ -20693,44 +20471,40 @@ public class MainFrame extends JFrame {
         // MV
         mvButton.setToolTipText(MV_TIP);
         mvButton.setEnabled(false);
-        mvButton.addMouseListener(new CustomButtonMouseListener(mvButton, THIS));
         mvButton.addActionListener(e -> playMv(MvCompSourceType.PLAYING));
         // 收藏
         collectButton.setEnabled(false);
-        collectButton.addMouseListener(new CustomButtonMouseListener(collectButton, THIS));
         collectButton.addActionListener(e -> {
             MusicResource resource = player.getMusicInfo();
             if (resource == null) resource = player.getAudioFile();
 //            if (!hasBeenCollected(resource)) {
 //                collectionModel.add(0, resource);
-//                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+//                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                collectButton.setToolTipText(COLLECTED_TIP);
 //                new TipDialog(THIS, COLLECT_SUCCESS_MSG).showDialog();
 //            } else {
 //                collectionModel.removeElement(resource);
-//                collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+//                collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
 //                collectButton.setToolTipText(COLLECT_TIP);
 //                new TipDialog(THIS, CANCEL_COLLECTION_SUCCESS_MSG).showDialog();
 //            }
             AddToFavoritesDialog d = new AddToFavoritesDialog(THIS, resource);
             d.showDialog();
             if (hasBeenCollected(resource)) {
-                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+                collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECTED_TIP);
             } else {
-                collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+                collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 collectButton.setToolTipText(COLLECT_TIP);
             }
         });
         // 下载
         downloadButton.setToolTipText(DOWNLOAD_TIP);
         downloadButton.setEnabled(false);
-        downloadButton.addMouseListener(new CustomButtonMouseListener(downloadButton, THIS));
         downloadButton.addActionListener(e -> singleDownload(player.getMusicInfo()));
         // 评论
         commentButton.setToolTipText(COMMENT_TIP);
         commentButton.setEnabled(false);
-        commentButton.addMouseListener(new CustomButtonMouseListener(commentButton, THIS));
         commentButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPaneType != CenterPaneType.COMMENT || currCommentResource != musicInfo)
@@ -20739,20 +20513,16 @@ public class MainFrame extends JFrame {
         // 乐谱
         sheetButton.setToolTipText(SHEET_TIP);
         sheetButton.setEnabled(false);
-        sheetButton.addMouseListener(new CustomButtonMouseListener(sheetButton, THIS));
         sheetButton.addActionListener(e -> {
             NetMusicInfo musicInfo = player.getMusicInfo();
             if (currPaneType != CenterPaneType.SHEET || currSheetMusicInfo != musicInfo)
                 getSheets(musicInfo, currPaneType != CenterPaneType.SHEET);
         });
         lastButton.setToolTipText(LAST_TIP);
-        lastButton.addMouseListener(new CustomButtonMouseListener(lastButton, THIS));
         lastButton.addActionListener(e -> playLast());
         playOrPauseButton.setToolTipText(PLAY_TIP);
-        playOrPauseButton.addMouseListener(new CustomButtonMouseListener(playOrPauseButton, THIS));
         playOrPauseButton.addActionListener(e -> playOrPause());
         nextButton.setToolTipText(NEXT_TIP);
-        nextButton.addMouseListener(new CustomButtonMouseListener(nextButton, THIS));
         nextButton.addActionListener(e -> {
             // 单曲循环和顺序播放，都播放下一首
             if (currPlayMode != PlayMode.SHUFFLE) {
@@ -20766,7 +20536,6 @@ public class MainFrame extends JFrame {
         });
         // 默认提示语为“列表循环”
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
-        playModeButton.addMouseListener(new CustomButtonMouseListener(playModeButton, THIS));
         // 播放模式切换事件
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -20799,9 +20568,7 @@ public class MainFrame extends JFrame {
         playModePopupMenu.add(shuffleMenuItem);
 
         backwardButton.setToolTipText(BACKW_TIP);
-        backwardButton.addMouseListener(new CustomButtonMouseListener(backwardButton, THIS));
         forwardButton.setToolTipText(FORW_TIP);
-        forwardButton.addMouseListener(new CustomButtonMouseListener(forwardButton, THIS));
         // 快进快退
         backwardButton.addActionListener(e -> {
             double t = player.getCurrTimeSeconds() - forwardOrBackwardTime;
@@ -20815,14 +20582,13 @@ public class MainFrame extends JFrame {
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
-        muteButton.addMouseListener(new CustomButtonMouseListener(muteButton, THIS));
         muteButton.addActionListener(e -> {
             if (isMute = !isMute) {
                 muteButton.setToolTipText(MUTE_TIP);
-                muteButton.setIcon(ImageUtil.dye(muteIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(muteIcon, UIStyleStorage.currUIStyle.getIconColor()));
             } else {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtil.dye(soundIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(soundIcon, UIStyleStorage.currUIStyle.getIconColor()));
             }
             player.setMute(isMute);
         });
@@ -20834,23 +20600,21 @@ public class MainFrame extends JFrame {
             player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
             if (isMute) {
                 muteButton.setToolTipText(SOUND_TIP);
-                muteButton.setIcon(ImageUtil.dye(soundIcon, currUIStyle.getIconColor()));
+                muteButton.setIcon(ImageUtil.dye(soundIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 player.setMute(isMute = false);
             }
         });
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.addMouseListener(new CustomButtonMouseListener(rateButton, THIS));
         rateButton.addActionListener(e -> {
             if (rateDialog == null) rateDialog = new RateDialog(THIS, null, rateButton);
             rateDialog.showDialog();
         });
         // 频谱开关按钮
         switchSpectrumButton.setToolTipText(SWITCH_SPECTRUM_TIP);
-        switchSpectrumButton.addMouseListener(new CustomButtonMouseListener(switchSpectrumButton, THIS));
         switchSpectrumButton.addActionListener(e -> {
             if (showSpectrum = !showSpectrum) openSpectrum();
             else closeSpectrum();
-            switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, currUIStyle.getIconColor()));
+            switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊菜单
         blurPopupMenu.add(gsMenuItem);
@@ -20866,51 +20630,50 @@ public class MainFrame extends JFrame {
         gsMenuItem.addActionListener(e -> {
             gsOn = !gsOn;
             doBlur();
-            gsMenuItem.setIcon(gsOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            gsMenuItem.setIcon(gsOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         darkerMenuItem.addActionListener(e -> {
             darkerOn = !darkerOn;
             doBlur();
-            darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         maskMenuItem.addActionListener(e -> {
             maskOn = !maskOn;
             doBlur();
-            maskMenuItem.setIcon(maskOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            maskMenuItem.setIcon(maskOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         grooveMenuItem.addActionListener(e -> {
             globalPanel.setGrooveOn(grooveOn = !grooveOn);
             doBlur();
-            grooveMenuItem.setIcon(grooveOn ? ImageUtil.dye(tickIcon, currUIStyle.getIconColor()) : null);
+            grooveMenuItem.setIcon(grooveOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurConstants.OFF;
             doBlur();
-            blurButton.setIcon(ImageUtil.dye(blurOffIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         cvBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.CV;
             doBlur();
-            blurButton.setIcon(ImageUtil.dye(cvBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(cvBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         mcBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.MC;
             doBlur();
-            blurButton.setIcon(ImageUtil.dye(mcBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(mcBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         lgBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.LG;
             doBlur();
-            blurButton.setIcon(ImageUtil.dye(lgBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(lgBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         fbmBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.FBM;
             doBlur();
-            blurButton.setIcon(ImageUtil.dye(fbmBlurIcon, currUIStyle.getIconColor()));
+            blurButton.setIcon(ImageUtil.dye(fbmBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊按钮
         blurButton.setToolTipText(SWITCH_BLUR_TIP);
-        blurButton.addMouseListener(new CustomButtonMouseListener(blurButton, THIS));
         blurButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20920,11 +20683,9 @@ public class MainFrame extends JFrame {
         });
         // 音效按钮
         soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
-        soundEffectButton.addMouseListener(new CustomButtonMouseListener(soundEffectButton, THIS));
         soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
-        goToPlayQueueButton.addMouseListener(new CustomButtonMouseListener(goToPlayQueueButton, THIS));
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
@@ -20933,19 +20694,17 @@ public class MainFrame extends JFrame {
         });
         // 桌面歌词开关
         desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
-        desktopLyricButton.addMouseListener(new CustomButtonMouseListener(desktopLyricButton, THIS));
         desktopLyricButton.addActionListener(e -> {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
                 desktopLyricDialog.setVisible(windowState != WindowState.MAXIMIZED);
-                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOnIcon, currUIStyle.getIconColor()));
+                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOnIcon, UIStyleStorage.currUIStyle.getIconColor()));
             } else {
                 desktopLyricDialog.setVisible(false);
-                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, currUIStyle.getIconColor()));
+                desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
             }
         });
         // 歌词类型按钮
-        switchLrcTypeButton.addMouseListener(new CustomButtonMouseListener(switchLrcTypeButton, THIS));
         // 歌词类型切换事件
         switchLrcTypeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -20958,25 +20717,25 @@ public class MainFrame extends JFrame {
         originalLrcMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.ORIGINAL) return;
             loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ORIGINAL, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
         });
         translationMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.TRANSLATION) return;
             loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRANSLATION, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
         });
         romaMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.ROMA) return;
             loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ROMA, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(ROMA_TIP);
         });
         tradChineseMenuItem.addActionListener(e -> {
             if (currLrcType == LyricType.TRADITIONAL_CN) return;
             loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRADITIONAL_CN, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, currUIStyle.getIconColor()));
+            switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
             switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
         });
 
@@ -21078,7 +20837,7 @@ public class MainFrame extends JFrame {
         if (!timeElapsedMode) currTimeLabel.setText(player.getDurationString());
         updateTimeLabel();
         // 重置为“播放”
-        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -21109,10 +20868,10 @@ public class MainFrame extends JFrame {
         commentButton.setEnabled(isNetMusic);
         sheetButton.setEnabled(isNetMusic);
         if (isNetMusic && hasBeenCollected(musicInfo) || hasBeenCollected(file)) {
-            collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, currUIStyle.getIconColor()));
+            collectButton.setIcon(ImageUtil.dye(hasCollectedIcon, UIStyleStorage.currUIStyle.getIconColor()));
             collectButton.setToolTipText(COLLECTED_TIP);
         } else {
-            collectButton.setIcon(ImageUtil.dye(collectIcon, currUIStyle.getIconColor()));
+            collectButton.setIcon(ImageUtil.dye(collectIcon, UIStyleStorage.currUIStyle.getIconColor()));
             collectButton.setToolTipText(COLLECT_TIP);
         }
 
@@ -21141,7 +20900,7 @@ public class MainFrame extends JFrame {
         // 重置总时间
         durationLabel.setText(DEFAULT_TIME);
         // 重置为“播放”
-        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         // 重置播放进度条
         timeBar.setValue(0);
@@ -21498,7 +21257,7 @@ public class MainFrame extends JFrame {
         if (replay) player.replay();
         else if (!player.play()) return;
         // 开始播放，若播放成功则更新 UI
-        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PAUSE_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -21831,7 +21590,7 @@ public class MainFrame extends JFrame {
 
     // 改变到播完暂停
     private void changeToDisabled(boolean showDialog) {
-        playModeButton.setIcon(ImageUtil.dye(playModeDisabledIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(playModeDisabledIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playModeButton.setToolTipText(PLAY_MODE_DISABLED_TIP);
         currPlayMode = PlayMode.DISABLED;
         if (showDialog) new TipDialog(THIS, CHANGE_DISABLED_MSG).showDialog();
@@ -21839,7 +21598,7 @@ public class MainFrame extends JFrame {
 
     // 改变到单曲循环
     private void changeToSingle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtil.dye(singleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(singleIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SINGLE_TIP);
         currPlayMode = PlayMode.SINGLE;
         if (showDialog) new TipDialog(THIS, CHANGE_SINGLE_MSG).showDialog();
@@ -21847,7 +21606,7 @@ public class MainFrame extends JFrame {
 
     // 改变到顺序播放
     private void changeToSequence(boolean showDialog) {
-        playModeButton.setIcon(ImageUtil.dye(sequenceIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(sequenceIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SEQUENCE_TIP);
         currPlayMode = PlayMode.SEQUENCE;
         if (showDialog) new TipDialog(THIS, CHANGE_SEQUENCE_MSG).showDialog();
@@ -21855,7 +21614,7 @@ public class MainFrame extends JFrame {
 
     // 改变到列表循环
     private void changeToListCycle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtil.dye(listCycleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(listCycleIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playModeButton.setToolTipText(LIST_CYCLE_TIP);
         currPlayMode = PlayMode.LIST_CYCLE;
         if (showDialog) new TipDialog(THIS, CHANGE_LIST_CYCLE_MSG).showDialog();
@@ -21863,7 +21622,7 @@ public class MainFrame extends JFrame {
 
     // 变为随机播放
     private void changeToShuffle(boolean showDialog) {
-        playModeButton.setIcon(ImageUtil.dye(shuffleIcon, currUIStyle.getIconColor()));
+        playModeButton.setIcon(ImageUtil.dye(shuffleIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playModeButton.setToolTipText(SHUFFLE_TIP);
         currPlayMode = PlayMode.SHUFFLE;
         if (showDialog) new TipDialog(THIS, CHANGE_SHUFFLE_MSG).showDialog();
@@ -22025,7 +21784,7 @@ public class MainFrame extends JFrame {
 
     // 改变所有单选菜单项图标
     private void updateMenuItemIcon(CustomPopupMenu popupMenu) {
-        Color iconColor = currUIStyle.getIconColor();
+        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
             if (c instanceof CustomRadioButtonMenuItem) {
@@ -22056,7 +21815,7 @@ public class MainFrame extends JFrame {
 
     // 更新菜单项样式
     private void updateMenuItemStyle(CustomPopupMenu popupMenu) {
-        Color textColor = currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         Component[] components = popupMenu.getComponents();
         for (Component c : components) {
             c.setForeground(textColor);
@@ -22069,9 +21828,6 @@ public class MainFrame extends JFrame {
             } else if (c instanceof CustomCheckMenuItem) {
                 CustomCheckMenuItem menuItem = (CustomCheckMenuItem) c;
                 menuItem.setUI(new CustomCheckMenuItemUI(textColor));
-            } else if (c instanceof CustomMenu) {
-                CustomMenu menu = (CustomMenu) c;
-                menu.setUI(new CustomMenuUI(textColor));
             }
         }
     }
@@ -22079,11 +21835,11 @@ public class MainFrame extends JFrame {
     // 改变 UI 主题
     public void changeUIStyle(UIStyle style) {
         if (!style.hasImg()) {
-            changeUIStyle(styles.get(0));
+            changeUIStyle(UIStyleStorage.styles.get(0));
             return;
         }
 
-        currUIStyle = style;
+        UIStyleStorage.currUIStyle = style;
 
         Color iconColor = style.getIconColor();
         Color darkerIconColor = ColorUtil.darker(iconColor, 0.3f);
@@ -22329,7 +22085,7 @@ public class MainFrame extends JFrame {
         browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
-        if (specGradient) spectrumGradientMenuItem.setIcon(ImageUtil.dye(tickIcon, currUIStyle.getIconColor()));
+        if (specGradient) spectrumGradientMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
         spectrumOpacityMenuItem.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
@@ -22705,7 +22461,7 @@ public class MainFrame extends JFrame {
         historyButton.setForeground(textColor);
         collectionButton.setForeground(textColor);
         // 工具栏下拉框
-        localPlaylistComboBox.setUI(new LocalPlaylistComboBoxUI(localPlaylistComboBox, THIS, 170));
+        localPlaylistComboBox.setUI(new LocalPlaylistComboBoxUI(localPlaylistComboBox, THIS));
         // 工具栏按钮颜色
         localMusicButton.setIcon(ImageUtil.dye((ImageIcon) localMusicButton.getIcon(), iconColor));
         historyButton.setIcon(ImageUtil.dye((ImageIcon) historyButton.getIcon(), iconColor));
@@ -23000,31 +22756,6 @@ public class MainFrame extends JFrame {
         playQueue.setCellRenderer(tabbedPane.getSelectedIndex() == TabIndex.PLAY_QUEUE ? playQueueRenderer : null);
         this.playQueueRenderer = playQueueRenderer;
 
-        // 歌单/专辑/歌手/电台/榜单描述
-        playlistDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        playlistDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        albumDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        albumDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        artistDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        artistDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        radioDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        radioDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        rankingDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        rankingDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        userDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        userDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        recommendItemDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        recommendItemDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
-        collectionItemDescriptionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor, false));
-        collectionItemDescriptionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
-
         // 描述收藏按钮
         playlistDescriptionCollectionButton.setForeground(textColor);
         albumDescriptionCollectionButton.setForeground(textColor);
@@ -23095,73 +22826,6 @@ public class MainFrame extends JFrame {
         downloadPercentHeaderLabel.setForeground(textColor);
         downloadStatusHeaderLabel.setForeground(textColor);
 
-        // 滚动面板消除边框、自定义样式
-        musicScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        musicScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 关键词面板列表滚动面板消除边框、自定义样式
-        netMusicKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netMusicKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线音乐列表滚动面板消除边框、自定义样式
-        netMusicScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netMusicScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 歌单关键词面板列表滚动面板消除边框、自定义样式
-        netPlaylistKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netPlaylistKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线歌单滚动面板消除边框、自定义样式
-        netPlaylistScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netPlaylistScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 专辑关键词面板列表滚动面板消除边框、自定义样式
-        netAlbumKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netAlbumKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线专辑滚动面板消除边框、自定义样式
-        netAlbumScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netAlbumScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 歌手关键词面板列表滚动面板消除边框、自定义样式
-        netArtistKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netArtistKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线歌手滚动面板消除边框、自定义样式
-        netArtistScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netArtistScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 电台关键词面板列表滚动面板消除边框、自定义样式
-        netRadioKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netRadioKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线电台滚动面板消除边框、自定义样式
-        netRadioScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netRadioScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // MV 关键词面板列表滚动面板消除边框、自定义样式
-        netMvKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netMvKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线 MV 滚动面板消除边框、自定义样式
-        netMvScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netMvScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 榜单滚动面板消除边框、自定义样式
-        netRankingScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netRankingScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 用户关键词面板列表滚动面板消除边框、自定义样式
-        netUserKeywordsPanelScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netUserKeywordsPanelScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 在线用户滚动面板消除边框、自定义样式
-        netUserScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netUserScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 评论滚动面板消除边框、自定义样式
-        netCommentScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netCommentScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 乐谱滚动面板消除边框、自定义样式
-        netSheetScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        netSheetScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 推荐滚动面板消除边框、自定义样式
-        itemRecommendScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        itemRecommendScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 收藏滚动面板消除边框、自定义样式
-        collectionScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        collectionScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 下载滚动面板消除边框、自定义样式
-        downloadListScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        downloadListScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-        // 播放队列滚动面板消除边框、自定义样式
-        playQueueScrollPane.setHBarUI(new CustomScrollBarUI(scrollBarColor));
-        playQueueScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor));
-
         // 歌词高亮显示
         LrcListRenderer lrcListRenderer = new LrcListRenderer();
         lrcListRenderer.setRow(row);
@@ -23170,8 +22834,6 @@ public class MainFrame extends JFrame {
         lrcListRenderer.setHighlightColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
         lrcList.setUI(new CustomListUI(-1));  // 歌词禁用字体透明，需要用到自定义 List
-
-        lrcScrollPane.setVBarUI(new CustomScrollBarUI(scrollBarColor, false));
 
         // 进度条和控制面板透明
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
@@ -23184,9 +22846,8 @@ public class MainFrame extends JFrame {
         durationLabel.setForeground(textColor);
 
         changePaneButton.setForeground(textColor);
-        ChangePaneButtonUI cui = new ChangePaneButtonUI(THIS);
-        changePaneButton.setUI(cui);
-        changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton, cui, THIS));
+        changePaneButton.setUI(new ChangePaneButtonUI(changePaneButton));
+        changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton));
 
         mvButton.setIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), iconColor));
         collectButton.setIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), iconColor));
@@ -23262,7 +22923,7 @@ public class MainFrame extends JFrame {
 
     // 打开自定义主题弹窗
     private void customStyle() {
-        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, I18n.getText("addAndApplyStyle"), currUIStyle);
+        CustomStyleDialog customStyleDialog = new CustomStyleDialog(THIS, I18n.getText("addAndApplyStyle"), UIStyleStorage.currUIStyle);
         customStyleDialog.showDialog();
         if (!customStyleDialog.isConfirmed()) return;
         // 创建自定义样式并更换
@@ -23277,37 +22938,28 @@ public class MainFrame extends JFrame {
         if (results[1] instanceof Color) customStyle.setBgColor((Color) results[1]);
         else customStyle.setImgKey((String) results[1]);
         // 添加主题菜单项、按钮组，并切换主题
-        styles.add(customStyle);
+        UIStyleStorage.styles.add(customStyle);
         customStyle.setInvokeLater(() -> changeUIStyle(customStyle));
     }
 
-    public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
-        updateTabUI(tabbedPane, style, null);
-    }
-
     // 更新 Tab 的主题
-    public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style, Point p) {
+    public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
         Color textColor = style.getTextColor();
         Color iconColor = style.getIconColor();
-        Color foreColor = style.getForeColor();
-        Color selectedColor = style.getSelectedColor();
 
         int index = tabbedPane.getSelectedIndex();
         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
             CustomPanel panel = (CustomPanel) tabbedPane.getTabComponentAt(i);
-            CustomLabel label = (CustomLabel) panel.getComponent(0);
-            Rectangle rect = panel.getVisibleRect();
             if (i == index) {
-                label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
-                label.setForeground(textColor);
-                panel.setForeground(selectedColor);
+                panel.setForeground(UIStyleStorage.currUIStyle.getSelectedColor());
                 panel.transitionDrawBg(true);
             } else {
-                label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
-                label.setForeground(textColor);
-                panel.setForeground(foreColor);
-                panel.transitionDrawBg(p != null && rect.contains(SwingUtilities.convertPoint(tabbedPane, p, panel)));
+                // 淡出其他未选中的 Panel 背景
+                panel.transitionDrawBg(false);
             }
+            CustomLabel label = (CustomLabel) panel.getComponent(0);
+            label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
+            label.setForeground(textColor);
         }
     }
 
@@ -23327,7 +22979,7 @@ public class MainFrame extends JFrame {
             // 暂停状态
             case PlayerStatus.PAUSED:
                 player.play();
-                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
                 if (miniDialog != null) {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -23343,7 +22995,7 @@ public class MainFrame extends JFrame {
                     player.setVolume((float) volumeSlider.getValue() / MAX_VOLUME);
                 });
                 timeline.play();
-                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
+                playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PLAY_TIP);
                 if (miniDialog != null) {
                     miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -23362,7 +23014,7 @@ public class MainFrame extends JFrame {
     private void stopPlayback() {
         updateTitle(STOPPED);
         player.stop();
-        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, currUIStyle.getIconColor()));
+        playOrPauseButton.setIcon(ImageUtil.dye(playIcon, UIStyleStorage.currUIStyle.getIconColor()));
         playOrPauseButton.setToolTipText(PLAY_TIP);
         if (miniDialog != null) {
             miniDialog.playOrPauseButton.setIcon(playOrPauseButton.getIcon());
@@ -23722,7 +23374,7 @@ public class MainFrame extends JFrame {
                 img = player.getMetaMusicInfo().getAlbumImage();
                 if (img == null) img = ImageConstants.DEFAULT_IMG;
                 if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
-            } else img = currUIStyle.getImg();
+            } else img = UIStyleStorage.currUIStyle.getImg();
 
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
@@ -23905,7 +23557,7 @@ public class MainFrame extends JFrame {
                         netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                         netLeftBox.add(netMusicScrollPane);
                     });
-                    b.setForeColor(currUIStyle.getTextColor());
+                    b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                     netMusicSearchSuggestionInnerPanel2.add(b);
                 }
                 // 调整面板大小
@@ -23964,7 +23616,7 @@ public class MainFrame extends JFrame {
                         // 热搜词搜索后取消悬停状态
                         finalB.transitionDrawBg(false);
                     });
-                    b.setForeColor(currUIStyle.getTextColor());
+                    b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                     netMusicHotSearchInnerPanel2.add(b);
                 }
                 // 调整面板大小

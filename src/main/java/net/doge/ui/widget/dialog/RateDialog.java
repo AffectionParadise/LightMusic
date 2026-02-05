@@ -3,6 +3,8 @@ package net.doge.ui.widget.dialog;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -42,7 +44,7 @@ public class RateDialog extends AbstractShadowDialog {
         this.d = d;
         this.comp = comp;
 
-        Color textColor = f.currUIStyle.getTextColor();
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         reset = new DialogButton(I18n.getText("reset"), textColor);
     }
 
@@ -88,8 +90,9 @@ public class RateDialog extends AbstractShadowDialog {
         centerPanel.setLayout(new BorderLayout());
         centerPanel.setBorder(new HDEmptyBorder(10, 15, 10, 15));
 
-        Color textColor = f.currUIStyle.getTextColor();
-        Color sliderColor = f.currUIStyle.getSliderColor();
+        UIStyle style = UIStyleStorage.currUIStyle;
+        Color textColor = style.getTextColor();
+        Color sliderColor = style.getSliderColor();
 
         // 标签
         valLabel.setForeground(textColor);
