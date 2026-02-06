@@ -41,7 +41,6 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.os.FileUtil;
 import net.doge.util.os.KeyUtil;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -719,21 +718,12 @@ public class SettingDialog extends AbstractTitledDialog {
         });
 
         // 复选框图标
-        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
-        ImageIcon icon = ImageUtil.dye(f.uncheckedIcon, iconColor);
-        ImageIcon selectedIcon = ImageUtil.dye(f.checkedIcon, iconColor);
-        autoUpdateCheckBox.setIcon(icon);
-        autoUpdateCheckBox.setSelectedIcon(selectedIcon);
-        videoOnlyCheckBox.setIcon(icon);
-        videoOnlyCheckBox.setSelectedIcon(selectedIcon);
-        showTabTextCheckBox.setIcon(icon);
-        showTabTextCheckBox.setSelectedIcon(selectedIcon);
-        autoDownloadLrcCheckBox.setIcon(icon);
-        autoDownloadLrcCheckBox.setSelectedIcon(selectedIcon);
-//        verbatimTimelineCheckBox.setIcon(icon);
-//        verbatimTimelineCheckBox.setSelectedIcon(selectedIcon);
-        enableKeyCheckBox.setIcon(icon);
-        enableKeyCheckBox.setSelectedIcon(selectedIcon);
+        autoUpdateCheckBox.updateIconStyle();
+        videoOnlyCheckBox.updateIconStyle();
+        showTabTextCheckBox.updateIconStyle();
+        autoDownloadLrcCheckBox.updateIconStyle();
+//        verbatimTimelineCheckBox.updateIconStyle();
+        enableKeyCheckBox.updateIconStyle();
 
         autoUpdatePanel.add(autoUpdateCheckBox);
 

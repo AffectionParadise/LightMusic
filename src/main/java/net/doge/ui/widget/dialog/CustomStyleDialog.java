@@ -77,7 +77,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
 
     private final Component[] components = {
             new CustomTextField(15),
-            new DialogButton(I18n.getText("browseImg")),
+            new DialogButton(I18n.getText("browseImg"), UIStyleStorage.currUIStyle.getTextColor()),
             new CustomLabel(),
             new CustomLabel(),
             new CustomLabel(),
@@ -235,7 +235,6 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 document.addDocumentListener(this);
             } else if (components[i] instanceof DialogButton) {
                 DialogButton component = (DialogButton) components[i];
-                component.setForeColor(textColor);
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {

@@ -1,6 +1,8 @@
 package net.doge.ui.widget.menu.ui;
 
-import javax.swing.*;
+import net.doge.constant.core.ui.core.Colors;
+import net.doge.constant.core.ui.style.UIStyleStorage;
+
 import javax.swing.plaf.basic.BasicMenuItemUI;
 import java.awt.*;
 
@@ -10,13 +12,9 @@ import java.awt.*;
  * @Date 2020/12/13
  */
 public class CustomMenuItemUI extends BasicMenuItemUI {
-
-    public CustomMenuItemUI(Color foreColor) {
-        selectionForeground = foreColor;
-    }
-
-    @Override
-    protected void paintBackground(Graphics g, JMenuItem menuItem, Color bgColor) {
-//        super.paintBackground(g, menuItem, bgColor);
+    public CustomMenuItemUI() {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        selectionForeground = textColor;
+        selectionBackground = Colors.TRANSPARENT;
     }
 }

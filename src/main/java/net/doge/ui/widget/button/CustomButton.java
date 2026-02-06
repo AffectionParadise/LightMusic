@@ -23,6 +23,7 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
     @Getter
     private float extendedOpacity = 1f;
 
+    private static Color maskColor;
     private static BufferedImage maskImg = LMIconManager.getImage("mask");
 
     public CustomButton() {
@@ -72,8 +73,11 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
 
     @Override
     public void setForeground(Color fg) {
-        maskImg = ImageUtil.dye(maskImg, fg);
         super.setForeground(fg);
+        // 更新遮罩颜色
+        if (maskColor != null && maskColor.equals(fg)) return;
+        maskImg = ImageUtil.dye(maskImg, fg);
+        maskColor = fg;
     }
 
     @Override
@@ -94,7 +98,7 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
             Graphics2D g2d = GraphicsUtil.setup(g);
             int w = getWidth(), h = getHeight();
             GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
-            if (w / h >= 2) {
+            if (w / h >= 3) {
                 g2d.setColor(getForeground());
                 int arc = ScaleUtil.scale(10);
                 g2d.fillRoundRect(0, 0, w, h, arc, arc);

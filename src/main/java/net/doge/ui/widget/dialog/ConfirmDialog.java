@@ -15,7 +15,6 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -71,6 +70,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
         super(f);
         this.message = message;
+
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         yes = new DialogButton(yesText, textColor);
         no = new DialogButton(noText, textColor);
@@ -86,14 +86,12 @@ public class ConfirmDialog extends AbstractShadowDialog {
     public void showDialog() {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
-        Color iconColor = style.getIconColor();
 
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSPARENT);
         checkBox.setForeground(textColor);
-        checkBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
-        checkBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
+        checkBox.updateIconStyle();
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
         Border eb = new HDEmptyBorder(0, 0, 20, 0);

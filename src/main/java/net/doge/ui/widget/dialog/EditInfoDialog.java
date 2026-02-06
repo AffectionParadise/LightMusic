@@ -98,7 +98,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
             new CustomTextField(columns),
             new CustomTextField(columns),
             new CustomTextField(columns),
-            new DialogButton(I18n.getText("browseImg")),
+            new DialogButton(I18n.getText("browseImg"), UIStyleStorage.currUIStyle.getTextColor()),
 //            comboBox,
             new CustomTextField(columns),
             new CustomScrollPane(new CustomTextArea(rows, columns)),
@@ -335,7 +335,6 @@ public class EditInfoDialog extends AbstractTitledDialog {
                     else label.setIcon(new ImageIcon(ImageUtil.height(image, imgHeight)));
                 }
                 DialogButton dialogButton = (DialogButton) components[i];
-                dialogButton.setForeColor(textColor);
                 // 图片文件选择
                 dialogButton.addActionListener(e -> {
                     FileChooser fileChooser = new FileChooser();

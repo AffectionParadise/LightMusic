@@ -18,7 +18,6 @@ import net.doge.ui.widget.list.renderer.core.StyleListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.os.FileUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -107,7 +106,6 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
 
         UIStyle currUIStyle = UIStyleStorage.currUIStyle;
         Color textColor = currUIStyle.getTextColor();
-        Color iconColor = currUIStyle.getIconColor();
         Color foreColor = currUIStyle.getForeColor();
         Color selectedColor = currUIStyle.getSelectedColor();
 
@@ -118,8 +116,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         customOnlyCheckBox.setSelected(f.customOnly);
         customOnlyCheckBox.setForeground(textColor);
         customOnlyCheckBox.setHorizontalAlignment(SwingConstants.CENTER);
-        customOnlyCheckBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
+        customOnlyCheckBox.updateIconStyle();
         customOnlyCheckBox.addActionListener(e -> {
             f.customOnly = customOnlyCheckBox.isSelected();
             initStyles();
@@ -351,20 +348,19 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
     private void updateStyle() {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
-        Color iconColor = style.getIconColor();
 
         titleLabel.setForeground(textColor);
-        closeButton.setIcon(ImageUtil.dye((ImageIcon) closeButton.getIcon(), iconColor));
+        closeButton.updateIconStyle();
         tipLabel.setForeground(textColor);
         customOnlyCheckBox.setForeground(textColor);
-        customOnlyCheckBox.setIcon(ImageUtil.dye(f.uncheckedIcon, iconColor));
-        customOnlyCheckBox.setSelectedIcon(ImageUtil.dye(f.checkedIcon, iconColor));
-        allSelectButton.setForeColor(textColor);
-        nonSelectButton.setForeColor(textColor);
-        applyButton.setForeColor(textColor);
-        addButton.setForeColor(textColor);
-        editButton.setForeColor(textColor);
-        removeButton.setForeColor(textColor);
+        customOnlyCheckBox.updateIconStyle();
+        allSelectButton.setForeground(textColor);
+        nonSelectButton.setForeground(textColor);
+        applyButton.setForeground(textColor);
+        addButton.setForeground(textColor);
+        editButton.setForeground(textColor);
+        removeButton.setForeground(textColor);
+
         StyleListRenderer r = (StyleListRenderer) styleList.getCellRenderer();
         r.setForeColor(style.getForeColor());
         r.setSelectedColor(style.getSelectedColor());

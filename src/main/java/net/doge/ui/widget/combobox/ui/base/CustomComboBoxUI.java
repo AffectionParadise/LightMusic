@@ -69,14 +69,14 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
         arrowButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                comboBox.transitionDrawBg(true);
+                comboBox.transitionHighlightBg(true);
                 comboBox.showPopup();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 if (comboBox.getBounds().contains(e.getPoint())) return;
-                comboBox.transitionDrawBg(false);
+                comboBox.transitionHighlightBg(false);
             }
         });
         return arrowButton;

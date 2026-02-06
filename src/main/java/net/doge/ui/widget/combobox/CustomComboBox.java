@@ -14,8 +14,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySupported {
-    private boolean drawBgIncreasing;
-    protected Timer drawBgTimer;
+    private boolean highlightBgIncreasing;
+    protected Timer highlightBgTimer;
     protected final float startBgAlpha = 0.15f;
     protected final float destBgAlpha = 0.3f;
     @Getter
@@ -38,13 +38,13 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                transitionDrawBg(true);
+                transitionHighlightBg(true);
                 showPopup();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                transitionDrawBg(false);
+                transitionHighlightBg(false);
                 Point p = e.getPoint();
                 if (getBounds().contains(p) || getPopup().getBounds().contains(p) || getArrowButton().getBounds().contains(p))
                     return;
@@ -52,18 +52,18 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
             }
         });
 
-        drawBgTimer = new Timer(2, e -> {
-            if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+        highlightBgTimer = new Timer(2, e -> {
+            if (highlightBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
             else bgAlpha = Math.max(startBgAlpha, bgAlpha - 0.005f);
-            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) drawBgTimer.stop();
+            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) highlightBgTimer.stop();
             repaint();
         });
     }
 
-    public void transitionDrawBg(boolean drawBgIncreasing) {
-        this.drawBgIncreasing = drawBgIncreasing;
-        if (drawBgTimer.isRunning()) return;
-        drawBgTimer.start();
+    public void transitionHighlightBg(boolean drawBgIncreasing) {
+        this.highlightBgIncreasing = drawBgIncreasing;
+        if (highlightBgTimer.isRunning()) return;
+        highlightBgTimer.start();
     }
 
     public CustomButton getArrowButton() {

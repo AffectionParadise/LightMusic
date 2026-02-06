@@ -84,8 +84,6 @@ public class VideoDialog extends AbstractTitledDialog {
     private final String CANCEL_COLLECTION_SUCCESS_MSG = I18n.getText("cancelCollectionSuccessMsg");
     private final String ERROR_MSG = I18n.getText("videoErrorMsg");
 
-    // 选定点图标
-    private ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
     // 播放图标
     private ImageIcon playIcon = LMIconManager.getIcon("control.play");
     // 暂停图标
@@ -420,13 +418,13 @@ public class VideoDialog extends AbstractTitledDialog {
 
         // 快进
         forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
+        forwardButton.updateIconStyle();
         forwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
-        backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
+        backwardButton.updateIconStyle();
         backwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().subtract(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
@@ -481,7 +479,7 @@ public class VideoDialog extends AbstractTitledDialog {
         downloadButton.addActionListener(e -> downloadMv());
         rateButton.setForeground(iconColor);
         rateButton.setToolTipText(RATE_TIP);
-        rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
+        rateButton.updateIconStyle();
         rateButton.addActionListener(e -> {
             RateDialog rd = new RateDialog(f, this, rateButton);
             rd.showDialog();
@@ -492,20 +490,19 @@ public class VideoDialog extends AbstractTitledDialog {
         for (CustomRadioButtonMenuItem menuItem : fobTimeMenuItems) {
             Color textColor = UIStyleStorage.currUIStyle.getTextColor();
             menuItem.setForeground(textColor);
-            menuItem.setUI(new CustomMenuItemUI(textColor));
+            menuItem.setUI(new CustomMenuItemUI());
             int time = Integer.parseInt(menuItem.getText().replace(SECONDS, ""));
             if (time == f.videoForwardOrBackwardTime) selectedFobMenuItem = menuItem;
             menuItem.addActionListener(e -> {
                 f.videoForwardOrBackwardTime = time;
                 updateMenuItemStatus(menuItem);
-                updateMenuItemIcon();
             });
             fobButtonGroup.add(menuItem);
             fobTimePopupMenu.add(menuItem);
         }
         fobTimeButton.setForeground(iconColor);
         fobTimeButton.setToolTipText(FOB_TIME_TIP);
-        fobTimeButton.setIcon(ImageUtil.dye((ImageIcon) fobTimeButton.getIcon(), iconColor));
+        fobTimeButton.updateIconStyle();
         fobTimeButton.setComponentPopupMenu(fobTimePopupMenu);
         fobTimeButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -515,7 +512,7 @@ public class VideoDialog extends AbstractTitledDialog {
         });
         fullScreenButton.setForeground(iconColor);
         fullScreenButton.setToolTipText(FULL_SCREEN_TIP);
-        fullScreenButton.setIcon(ImageUtil.dye((ImageIcon) fullScreenButton.getIcon(), iconColor));
+        fullScreenButton.updateIconStyle();
         fullScreenButton.addActionListener(e -> toFullScreen());
         jfxPanel.addMouseListener(new MouseAdapter() {
             @Override
@@ -529,7 +526,6 @@ public class VideoDialog extends AbstractTitledDialog {
         });
 
         updateMenuItemStatus(selectedFobMenuItem);
-        updateMenuItemIcon();
 
         FlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(3));
@@ -614,16 +610,5 @@ public class VideoDialog extends AbstractTitledDialog {
     // 更新单选菜单项状态
     private void updateMenuItemStatus(CustomRadioButtonMenuItem menuItem) {
         fobButtonGroup.forEach(mi -> mi.setSelected(mi == menuItem));
-    }
-
-    // 改变所有单选菜单项图标
-    private void updateMenuItemIcon() {
-        Component[] components = fobTimePopupMenu.getComponents();
-        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
-        for (Component c : components) {
-            CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-            if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, iconColor));
-            else mi.setIcon(null);
-        }
     }
 }

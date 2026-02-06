@@ -33,18 +33,12 @@ public class TimeSliderUI extends BasicSliderUI {
     private TipDialog dialog;
     private TipDialog lrcDialog;
 
-//    private int bufferedGap;
-//    private int currBufferedWidth;
-//    private int originBufferedWidth;
-//    private Timer bufferTimer;
-
     private boolean drawThumb;
 
     // 音频播放器
     public TimeSliderUI(JSlider slider, Color thumbColor, Color trackColor, MainFrame f, MusicPlayer player, boolean isTimeBar) {
         super(slider);
         this.thumbColor = thumbColor;
-//        trackColor = Colors.HXH;
         this.trackColor = trackColor;
         this.trackBgColor = ColorUtil.darker(trackColor);
         this.f = f;
@@ -52,8 +46,6 @@ public class TimeSliderUI extends BasicSliderUI {
         dialog = new TipDialog(f, 0);
         if (isTimeBar) lrcDialog = new TipDialog(f, 0);
         this.isTimeBar = isTimeBar;
-
-//        initTimer();
     }
 
     // 视频播放器
@@ -67,30 +59,7 @@ public class TimeSliderUI extends BasicSliderUI {
         dialog = new TipDialog(f, 0);
         dialog.setAlwaysOnTop(true);
         this.isTimeBar = isTimeBar;
-
-//        initTimer();
     }
-
-//    // 初始化动画 Timer
-//    private void initTimer() {
-//        bufferTimer = new Timer(0, e -> {
-//            if (currBufferedWidth < originBufferedWidth)
-//                currBufferedWidth = Math.min(currBufferedWidth + bufferedGap, originBufferedWidth);
-//            else if (currBufferedWidth > originBufferedWidth)
-//                currBufferedWidth = Math.max(currBufferedWidth - bufferedGap, originBufferedWidth);
-//            else bufferTimer.stop();
-//            slider.repaint();
-//        });
-//    }
-
-//    // 更新缓冲长度
-//    public void updateBufferedWidth() {
-//        originBufferedWidth = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
-//                : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
-//        bufferedGap = 1;
-//        if (!bufferTimer.isRunning()) bufferTimer.start();
-//    }
-
 
     @Override
     protected Dimension getThumbSize() {

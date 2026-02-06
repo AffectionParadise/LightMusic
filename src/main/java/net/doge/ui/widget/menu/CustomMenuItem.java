@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
 
 /**
  * @Author Doge
- * @Description 菜单自定义 UI
+ * @Description 自定义菜单项
  * @Date 2020/12/13
  */
 public class CustomMenuItem extends JMenuItem {

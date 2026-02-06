@@ -9,18 +9,18 @@ import java.awt.*;
 
 /**
  * @Author Doge
- * @Description 自定义单选菜单项
+ * @Description 自定义勾选菜单项
  * @Date 2020/12/13
  */
-public class CustomRadioButtonMenuItem extends CustomMenuItem {
-    // 选定点图标
-    private static ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
+public class CustomCheckBoxMenuItem extends CustomMenuItem {
+    // 选定勾图标
+    private static ImageIcon tickIcon = LMIconManager.getIcon("menu.tick");
 
-    public CustomRadioButtonMenuItem() {
+    public CustomCheckBoxMenuItem() {
         this(null);
     }
 
-    public CustomRadioButtonMenuItem(String text) {
+    public CustomCheckBoxMenuItem(String text) {
         super(text);
     }
 
@@ -33,7 +33,7 @@ public class CustomRadioButtonMenuItem extends CustomMenuItem {
     public void updateIconStyle() {
         if (isSelected()) {
             Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
-            setIcon(ImageUtil.dye(dotIcon, iconColor));
+            setIcon(ImageUtil.dye(tickIcon, iconColor));
         } else setIcon(null);
     }
 }

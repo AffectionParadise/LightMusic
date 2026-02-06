@@ -7,7 +7,7 @@ import java.awt.*;
 
 /**
  * @Author Doge
- * @Description 菜单分隔符自定义 UI
+ * @Description 自定义菜单分隔符
  * @Date 2020/12/13
  */
 public class CustomSeparator extends JSeparator {

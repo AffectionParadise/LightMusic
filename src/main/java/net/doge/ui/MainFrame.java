@@ -34,6 +34,7 @@ import net.doge.constant.core.player.PlayMode;
 import net.doge.constant.core.player.PlayerStatus;
 import net.doge.constant.core.sort.SortMethod;
 import net.doge.constant.core.task.TaskType;
+import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
@@ -75,7 +76,6 @@ import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.button.DialogButton;
 import net.doge.ui.widget.button.TabButton;
-import net.doge.ui.widget.button.listener.ChangePaneButtonMouseListener;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 import net.doge.ui.widget.checkbox.CustomCheckBox;
 import net.doge.ui.widget.combobox.CustomComboBox;
@@ -90,13 +90,11 @@ import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
 import net.doge.ui.widget.list.renderer.service.*;
 import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
-import net.doge.ui.widget.menu.CustomCheckMenuItem;
+import net.doge.ui.widget.menu.CustomCheckBoxMenuItem;
 import net.doge.ui.widget.menu.CustomMenuItem;
 import net.doge.ui.widget.menu.CustomPopupMenu;
 import net.doge.ui.widget.menu.CustomRadioButtonMenuItem;
-import net.doge.ui.widget.menu.ui.CustomCheckMenuItemUI;
 import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
-import net.doge.ui.widget.menu.ui.CustomRadioButtonMenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.panel.GlobalPanel;
 import net.doge.ui.widget.panel.LoadingPanel;
@@ -386,13 +384,6 @@ public class MainFrame extends JFrame {
     private ImageIcon aboutIcon = LMIconManager.getIcon("menu.about");
     // 列表为空提示图标
     private ImageIcon emptyHintIcon = LMIconManager.getIcon("emptyHint");
-    // 选定点图标(单选时)
-    private ImageIcon dotIcon = LMIconManager.getIcon("menu.dot");
-    // 选定勾图标
-    private ImageIcon tickIcon = LMIconManager.getIcon("menu.tick");
-    // 复选框图标
-    public ImageIcon uncheckedIcon = LMIconManager.getIcon("dialog.unchecked");
-    public ImageIcon checkedIcon = LMIconManager.getIcon("dialog.checked");
     // 添加歌曲文件图标
     private ImageIcon fileIcon = LMIconManager.getIcon("menu.file");
     // 添加文件夹图标
@@ -932,7 +923,7 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
     private List<CustomRadioButtonMenuItem> spectrumStyleButtonGroup = new LinkedList<>();
     public boolean specGradient;
-    private CustomMenuItem spectrumGradientMenuItem = new CustomMenuItem(I18n.getText("specGradientMsg"));
+    private CustomCheckBoxMenuItem spectrumGradientMenuItem = new CustomCheckBoxMenuItem(I18n.getText("specGradientMsg"));
     private final String SPEC_OPACITY_MSG = I18n.getText("specOpacityMsg");
     public float specOpacity;
     private CustomMenuItem spectrumOpacityMenuItem = new CustomMenuItem();
@@ -1005,10 +996,10 @@ public class MainFrame extends JFrame {
 
     // 模糊模式右键菜单
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem gsMenuItem = new CustomMenuItem(I18n.getText("gs"));
-    private CustomMenuItem darkerMenuItem = new CustomMenuItem(I18n.getText("darker"));
-    private CustomMenuItem maskMenuItem = new CustomMenuItem(I18n.getText("mask"));
-    private CustomMenuItem grooveMenuItem = new CustomMenuItem(I18n.getText("groove"));
+    private CustomCheckBoxMenuItem gsMenuItem = new CustomCheckBoxMenuItem(I18n.getText("gs"));
+    private CustomCheckBoxMenuItem darkerMenuItem = new CustomCheckBoxMenuItem(I18n.getText("darker"));
+    private CustomCheckBoxMenuItem maskMenuItem = new CustomCheckBoxMenuItem(I18n.getText("mask"));
+    private CustomCheckBoxMenuItem grooveMenuItem = new CustomCheckBoxMenuItem(I18n.getText("groove"));
     private CustomMenuItem blurOffMenuItem = new CustomMenuItem(I18n.getText("blurOff"));
     private CustomMenuItem cvBlurMenuItem = new CustomMenuItem(I18n.getText("cvBlur"));
     private CustomMenuItem mcBlurMenuItem = new CustomMenuItem(I18n.getText("mcBlur"));
@@ -3118,13 +3109,17 @@ public class MainFrame extends JFrame {
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否高斯模糊
         gsOn = config.getBooleanValue(ConfigConstants.GS_ON, true);
+        gsMenuItem.setSelected(gsOn);
         // 载入是否暗化
         darkerOn = config.getBooleanValue(ConfigConstants.DARKER_ON, true);
+        darkerMenuItem.setSelected(darkerOn);
         // 载入是否朦胧遮罩
         maskOn = config.getBooleanValue(ConfigConstants.MASK_ON, false);
+        maskMenuItem.setSelected(maskOn);
         // 载入是否律动
         grooveOn = config.getBooleanValue(ConfigConstants.GROOVE_ON, false);
         globalPanel.setGrooveOn(grooveOn);
+        grooveMenuItem.setSelected(grooveOn);
         // 载入模糊类型
         blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.CV);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
@@ -3141,7 +3136,7 @@ public class MainFrame extends JFrame {
         currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
         // 载入频谱透明渐变
         specGradient = config.getBooleanValue(ConfigConstants.SPEC_GRADIENT, true);
-        spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
+        spectrumGradientMenuItem.setSelected(specGradient);
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.6f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
@@ -3400,12 +3395,13 @@ public class MainFrame extends JFrame {
         // 载入选项卡
         tabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
 
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         // 载入在线音乐搜索历史关键词
         JSONArray historySearchJsonArray = config.getJSONArray(ConfigConstants.NET_MUSIC_HISTORY_SEARCH);
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
                     searchTextField.setText(keyword);
@@ -3424,7 +3420,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netMusicHistorySearchInnerPanel2.add(b);
             }
             netMusicKeywordsPanel.repaint();
@@ -3435,7 +3430,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
                     netPlaylistSearchTextField.setText(keyword);
@@ -3454,7 +3449,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netPlaylistHistorySearchInnerPanel2.add(b);
             }
             netPlaylistKeywordsPanel.repaint();
@@ -3465,7 +3459,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
                     netAlbumSearchTextField.setText(keyword);
@@ -3484,7 +3478,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netAlbumHistorySearchInnerPanel2.add(b);
             }
             netAlbumKeywordsPanel.repaint();
@@ -3495,7 +3488,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
                     netArtistSearchTextField.setText(keyword);
@@ -3514,7 +3507,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netArtistHistorySearchInnerPanel2.add(b);
             }
             netArtistKeywordsPanel.repaint();
@@ -3525,7 +3517,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
                     netRadioSearchTextField.setText(keyword);
@@ -3544,7 +3536,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netRadioHistorySearchInnerPanel2.add(b);
             }
             netRadioKeywordsPanel.repaint();
@@ -3555,7 +3546,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
                     netMvSearchTextField.setText(keyword);
@@ -3574,7 +3565,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netMvHistorySearchInnerPanel2.add(b);
             }
             netMvKeywordsPanel.repaint();
@@ -3585,7 +3575,7 @@ public class MainFrame extends JFrame {
         if (JsonUtil.notEmpty(historySearchJsonArray)) {
             for (int i = 0, len = historySearchJsonArray.size(); i < len; i++) {
                 String keyword = historySearchJsonArray.getString(i);
-                DialogButton b = new DialogButton(keyword, true);
+                DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
                     netUserSearchTextField.setText(keyword);
@@ -3604,7 +3594,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 netUserHistorySearchInnerPanel2.add(b);
             }
         }
@@ -6860,73 +6849,61 @@ public class MainFrame extends JFrame {
         // 升序
         ascendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, ascendingMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.ASCENDING);
         });
         // 降序
         descendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, descendingMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod, currSortOrder = SortMethod.DESCENDING);
         });
         // 按曲名/文件名混合排序
         sortBySongNameAndFileNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameAndFileNameMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_AND_FILE_NAME, currSortOrder);
         });
         // 按曲名排序
         sortBySongNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SONG_NAME, currSortOrder);
         });
         // 按艺术家排序
         sortByArtistNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByArtistNameMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ARTIST_NAME, currSortOrder);
         });
         // 按专辑排序
         sortByAlbumNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByAlbumNameMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_ALBUM_NAME, currSortOrder);
         });
         // 按文件名排序
         sortByFileNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByFileNameMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_FILE_NAME, currSortOrder);
         });
         // 按时长排序
         sortByTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByTimeMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_TIME, currSortOrder);
         });
         // 按创建时间排序
         sortByCreationTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByCreationTimeMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_CREATION_TIME, currSortOrder);
         });
         // 按修改时间排序
         sortByLastModifiedTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByLastModifiedTimeMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_MODIFIED_TIME, currSortOrder);
         });
         // 按访问时间排序
         sortByLastAccessTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByLastAccessTimeMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_LAST_ACCESS_TIME, currSortOrder);
         });
         // 按大小排序
         sortBySizeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySizeMenuItem);
-            updateMenuItemIcon(sortPopupMenu);
             sortFiles(currSortMethod = SortMethod.BY_SIZE, currSortOrder);
         });
 
@@ -7579,7 +7556,8 @@ public class MainFrame extends JFrame {
             netMusicCurrKeyword = searchTextField.getText().trim();
             if (!netMusicCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netMusicCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netMusicCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     searchTextField.requestFocus();
                     searchTextField.setText(b.getPlainText());
@@ -7598,7 +7576,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netMusicCurrKeyword, HistorySearchType.NET_MUSIC);
                 netMusicHistorySearchInnerPanel2.add(b, 0);
@@ -9746,7 +9723,8 @@ public class MainFrame extends JFrame {
             netPlaylistCurrKeyword = netPlaylistSearchTextField.getText().trim();
             if (!netPlaylistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netPlaylistCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netPlaylistCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netPlaylistSearchTextField.requestFocus();
                     netPlaylistSearchTextField.setText(b.getPlainText());
@@ -9765,7 +9743,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netPlaylistCurrKeyword, HistorySearchType.NET_PLAYLIST);
                 netPlaylistHistorySearchInnerPanel2.add(b, 0);
@@ -10734,7 +10711,8 @@ public class MainFrame extends JFrame {
             netAlbumCurrKeyword = netAlbumSearchTextField.getText().trim();
             if (!netAlbumCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netAlbumCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netAlbumCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netAlbumSearchTextField.requestFocus();
                     netAlbumSearchTextField.setText(b.getPlainText());
@@ -10753,7 +10731,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netAlbumCurrKeyword, HistorySearchType.NET_ALBUM);
                 netAlbumHistorySearchInnerPanel2.add(b, 0);
@@ -11746,7 +11723,8 @@ public class MainFrame extends JFrame {
             netArtistCurrKeyword = netArtistSearchTextField.getText().trim();
             if (!netArtistCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netArtistCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netArtistCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netArtistSearchTextField.requestFocus();
                     netArtistSearchTextField.setText(b.getPlainText());
@@ -11765,7 +11743,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netArtistCurrKeyword, HistorySearchType.NET_ARTIST);
                 netArtistHistorySearchInnerPanel2.add(b, 0);
@@ -12978,7 +12955,8 @@ public class MainFrame extends JFrame {
             netRadioCurrKeyword = netRadioSearchTextField.getText().trim();
             if (!netRadioCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netRadioCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netRadioCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netRadioSearchTextField.requestFocus();
                     netRadioSearchTextField.setText(b.getPlainText());
@@ -12997,7 +12975,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netRadioCurrKeyword, HistorySearchType.NET_RADIO);
                 netRadioHistorySearchInnerPanel2.add(b, 0);
@@ -14039,7 +14016,8 @@ public class MainFrame extends JFrame {
             netMvCurrKeyword = netMvSearchTextField.getText().trim();
             if (!netMvCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netMvCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netMvCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netMvSearchTextField.requestFocus();
                     netMvSearchTextField.setText(b.getPlainText());
@@ -14058,7 +14036,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netMvCurrKeyword, HistorySearchType.NET_MV);
                 netMvHistorySearchInnerPanel2.add(b, 0);
@@ -15462,7 +15439,8 @@ public class MainFrame extends JFrame {
             netUserCurrKeyword = netUserSearchTextField.getText().trim();
             if (!netUserCurrKeyword.isEmpty()) {
                 // 关键词加入搜索历史
-                DialogButton b = new DialogButton(netUserCurrKeyword, true);
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+                DialogButton b = new DialogButton(netUserCurrKeyword, textColor, true);
                 b.addActionListener(event -> {
                     netUserSearchTextField.requestFocus();
                     netUserSearchTextField.setText(b.getPlainText());
@@ -15481,7 +15459,6 @@ public class MainFrame extends JFrame {
                     }
                 });
                 b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                 // 先删除重复的关键词
                 removeKeywordInHistorySearch(netUserCurrKeyword, HistorySearchType.NET_USER);
                 netUserHistorySearchInnerPanel2.add(b, 0);
@@ -20176,10 +20153,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 频谱右键菜单
-        spectrumGradientMenuItem.addActionListener(e -> {
-            specGradient = !specGradient;
-            spectrumGradientMenuItem.setIcon(specGradient ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
-        });
+        spectrumGradientMenuItem.addActionListener(e -> spectrumGradientMenuItem.setSelected(specGradient = !specGradient));
         spectrumPopupMenu.add(spectrumGradientMenuItem);
         spectrumPopupMenu.addSeparator();
         spectrumOpacityMenuItem.setEnabled(false);
@@ -20201,7 +20175,6 @@ public class MainFrame extends JFrame {
             mi.addActionListener(e -> {
                 currSpecStyle = finalI;
                 updateMenuItemStatus(spectrumStyleButtonGroup, mi);
-                updateMenuItemIcon(spectrumPopupMenu);
             });
             spectrumStyleButtonGroup.add(mi);
             spectrumPopupMenu.add(mi);
@@ -20628,24 +20601,21 @@ public class MainFrame extends JFrame {
         blurPopupMenu.add(lgBlurMenuItem);
         blurPopupMenu.add(fbmBlurMenuItem);
         gsMenuItem.addActionListener(e -> {
-            gsOn = !gsOn;
+            gsMenuItem.setSelected(gsOn = !gsOn);
             doBlur();
-            gsMenuItem.setIcon(gsOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         darkerMenuItem.addActionListener(e -> {
-            darkerOn = !darkerOn;
+            darkerMenuItem.setSelected(darkerOn = !darkerOn);
             doBlur();
-            darkerMenuItem.setIcon(darkerOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         maskMenuItem.addActionListener(e -> {
-            maskOn = !maskOn;
+            maskMenuItem.setSelected(maskOn = !maskOn);
             doBlur();
-            maskMenuItem.setIcon(maskOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         grooveMenuItem.addActionListener(e -> {
             globalPanel.setGrooveOn(grooveOn = !grooveOn);
+            grooveMenuItem.setSelected(grooveOn);
             doBlur();
-            grooveMenuItem.setIcon(grooveOn ? ImageUtil.dye(tickIcon, UIStyleStorage.currUIStyle.getIconColor()) : null);
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurConstants.OFF;
@@ -21782,34 +21752,21 @@ public class MainFrame extends JFrame {
         buttonGroup.forEach(mi -> mi.setSelected(mi == menuItem));
     }
 
-    // 改变所有单选菜单项图标
-    private void updateMenuItemIcon(CustomPopupMenu popupMenu) {
-        Color iconColor = UIStyleStorage.currUIStyle.getIconColor();
-        Component[] components = popupMenu.getComponents();
-        for (Component c : components) {
-            if (c instanceof CustomRadioButtonMenuItem) {
-                CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtil.dye(dotIcon, iconColor));
-                else mi.setIcon(null);
-            } else if (c instanceof CustomCheckMenuItem) {
-                CustomCheckMenuItem mi = (CustomCheckMenuItem) c;
-                if (mi.isSelected()) mi.setIcon(ImageUtil.dye(tickIcon, iconColor));
-                else mi.setIcon(null);
-            }
-        }
-    }
-
     // 改变所有作为标签按钮样式
     private void updateTabButtonStyle() {
         Component[] components = personalMusicToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
             TabButton b = (TabButton) components[i];
-            b.setActive(currPersonalMusicTab == i);
+            boolean active = currPersonalMusicTab == i;
+            b.setActive(active);
+            b.transitionOpacity(active ? 0.5f : 1f);
         }
         components = recommendToolBar.getComponents();
         for (int i = 0, len = components.length; i < len; i++) {
             TabButton b = (TabButton) components[i];
-            b.setActive(currRecommendTab == i);
+            boolean active = currRecommendTab == i;
+            b.setActive(active);
+            b.transitionOpacity(active ? 0.5f : 1f);
         }
     }
 
@@ -21821,13 +21778,14 @@ public class MainFrame extends JFrame {
             c.setForeground(textColor);
             if (c instanceof CustomMenuItem) {
                 CustomMenuItem menuItem = (CustomMenuItem) c;
-                menuItem.setUI(new CustomMenuItemUI(textColor));
-            } else if (c instanceof CustomRadioButtonMenuItem) {
-                CustomRadioButtonMenuItem menuItem = (CustomRadioButtonMenuItem) c;
-                menuItem.setUI(new CustomRadioButtonMenuItemUI(textColor));
-            } else if (c instanceof CustomCheckMenuItem) {
-                CustomCheckMenuItem menuItem = (CustomCheckMenuItem) c;
-                menuItem.setUI(new CustomCheckMenuItemUI(textColor));
+                menuItem.setUI(new CustomMenuItemUI());
+                if (c instanceof CustomRadioButtonMenuItem) {
+                    CustomRadioButtonMenuItem mi = (CustomRadioButtonMenuItem) menuItem;
+                    mi.updateIconStyle();
+                } else if (c instanceof CustomCheckBoxMenuItem) {
+                    CustomCheckBoxMenuItem mi = (CustomCheckBoxMenuItem) menuItem;
+                    mi.updateIconStyle();
+                }
             }
         }
     }
@@ -21848,7 +21806,6 @@ public class MainFrame extends JFrame {
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(darkerTextColor, 0.5f);
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
-        Color scrollBarColor = style.getScrollBarColor();
         Color timeBarColor = style.getTimeBarColor();
         Color lrcColor = style.getLrcColor();
         Color highlightColor = style.getHighlightColor();
@@ -21858,15 +21815,15 @@ public class MainFrame extends JFrame {
 
         // 标题栏
         titleLabel.setForeground(textColor);
-        titleLabel.setIcon(ImageUtil.dye((ImageIcon) titleLabel.getIcon(), iconColor));
-        hideDetailButton.setIcon(ImageUtil.dye((ImageIcon) hideDetailButton.getIcon(), iconColor));
-        styleToolButton.setIcon(ImageUtil.dye((ImageIcon) styleToolButton.getIcon(), iconColor));
-        mainMenuButton.setIcon(ImageUtil.dye((ImageIcon) mainMenuButton.getIcon(), iconColor));
-        splitLabel.setIcon(ImageUtil.dye((ImageIcon) splitLabel.getIcon(), iconColor));
-        miniButton.setIcon(ImageUtil.dye((ImageIcon) miniButton.getIcon(), iconColor));
-        minimizeButton.setIcon(ImageUtil.dye((ImageIcon) minimizeButton.getIcon(), iconColor));
-        maximizeButton.setIcon(ImageUtil.dye((ImageIcon) maximizeButton.getIcon(), iconColor));
-        closeButton.setIcon(ImageUtil.dye((ImageIcon) closeButton.getIcon(), iconColor));
+        titleLabel.updateIconStyle();
+        hideDetailButton.updateIconStyle();
+        styleToolButton.updateIconStyle();
+        mainMenuButton.updateIconStyle();
+        splitLabel.updateIconStyle();
+        miniButton.updateIconStyle();
+        minimizeButton.updateIconStyle();
+        maximizeButton.updateIconStyle();
+        closeButton.updateIconStyle();
 
         // 列表为空提示面板
         emptyHintLabel.setIcon(ImageUtil.dye(emptyHintIcon, iconColor));
@@ -21928,10 +21885,6 @@ public class MainFrame extends JFrame {
         listCycleMenuItem.setIcon(ImageUtil.dye(listCycleIcon, iconColor));
         shuffleMenuItem.setIcon(ImageUtil.dye(shuffleIcon, iconColor));
 
-        if (gsOn) gsMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
-        if (darkerOn) darkerMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
-        if (maskOn) maskMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
-        if (grooveOn) grooveMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
         blurOffMenuItem.setIcon(ImageUtil.dye(blurOffIcon, iconColor));
         cvBlurMenuItem.setIcon(ImageUtil.dye(cvBlurIcon, iconColor));
         mcBlurMenuItem.setIcon(ImageUtil.dye(mcBlurIcon, iconColor));
@@ -22085,7 +22038,6 @@ public class MainFrame extends JFrame {
         browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
         downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
         downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
-        if (specGradient) spectrumGradientMenuItem.setIcon(ImageUtil.dye(tickIcon, iconColor));
         spectrumOpacityMenuItem.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
@@ -22179,93 +22131,93 @@ public class MainFrame extends JFrame {
 
         // 关键词面板
         netMusicSearchSuggestionLabel.setForeground(style.getTextColor());
-        netMusicRefreshSearchSuggestionButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshSearchSuggestionButton.getIcon(), iconColor));
+        netMusicRefreshSearchSuggestionButton.updateIconStyle();
 
         netMusicHotSearchLabel.setForeground(style.getTextColor());
-        netMusicRefreshHotSearchButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshHotSearchButton.getIcon(), iconColor));
+        netMusicRefreshHotSearchButton.updateIconStyle();
 
         netMusicHistorySearchLabel.setForeground(style.getTextColor());
-        netMusicClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netMusicClearHistorySearchButton.getIcon(), iconColor));
+        netMusicClearHistorySearchButton.updateIconStyle();
 
         netPlaylistHistorySearchLabel.setForeground(style.getTextColor());
-        netPlaylistClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistClearHistorySearchButton.getIcon(), iconColor));
+        netPlaylistClearHistorySearchButton.updateIconStyle();
 
         netAlbumHistorySearchLabel.setForeground(style.getTextColor());
-        netAlbumClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumClearHistorySearchButton.getIcon(), iconColor));
+        netAlbumClearHistorySearchButton.updateIconStyle();
 
         netArtistHistorySearchLabel.setForeground(style.getTextColor());
-        netArtistClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netArtistClearHistorySearchButton.getIcon(), iconColor));
+        netArtistClearHistorySearchButton.updateIconStyle();
 
         netRadioHistorySearchLabel.setForeground(style.getTextColor());
-        netRadioClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearHistorySearchButton.getIcon(), iconColor));
+        netRadioClearHistorySearchButton.updateIconStyle();
 
         netMvHistorySearchLabel.setForeground(style.getTextColor());
-        netMvClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netMvClearHistorySearchButton.getIcon(), iconColor));
+        netMvClearHistorySearchButton.updateIconStyle();
 
         netUserHistorySearchLabel.setForeground(style.getTextColor());
-        netUserClearHistorySearchButton.setIcon(ImageUtil.dye((ImageIcon) netUserClearHistorySearchButton.getIcon(), iconColor));
+        netUserClearHistorySearchButton.updateIconStyle();
 
         Component[] components = netMusicSearchSuggestionInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netMusicHotSearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netMusicHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netPlaylistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netAlbumHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netArtistHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netRadioHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netMvHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         components = netUserHistorySearchInnerPanel2.getComponents();
         for (Component c : components) {
             if (c instanceof DialogButton) {
                 DialogButton b = (DialogButton) c;
-                b.setForeColor(textColor);
+                b.setForeground(textColor);
             }
         }
         // 筛选框透明
@@ -22301,8 +22253,7 @@ public class MainFrame extends JFrame {
         netMusicPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
-        netPlaylistIdCheckBox.setIcon(ImageUtil.dye(uncheckedIcon, iconColor));
-        netPlaylistIdCheckBox.setSelectedIcon(ImageUtil.dye(checkedIcon, iconColor));
+        netPlaylistIdCheckBox.updateIconStyle();
         focusListeners = netPlaylistSearchTextField.getFocusListeners();
         for (FocusListener focusListener : focusListeners) {
             if (focusListener instanceof TextFieldHintListener) {
@@ -22463,165 +22414,165 @@ public class MainFrame extends JFrame {
         // 工具栏下拉框
         localPlaylistComboBox.setUI(new LocalPlaylistComboBoxUI(localPlaylistComboBox, THIS));
         // 工具栏按钮颜色
-        localMusicButton.setIcon(ImageUtil.dye((ImageIcon) localMusicButton.getIcon(), iconColor));
-        historyButton.setIcon(ImageUtil.dye((ImageIcon) historyButton.getIcon(), iconColor));
-        collectionButton.setIcon(ImageUtil.dye((ImageIcon) collectionButton.getIcon(), iconColor));
-        localPlaylistToolButton.setIcon(ImageUtil.dye((ImageIcon) localPlaylistToolButton.getIcon(), iconColor));
-        addToolButton.setIcon(ImageUtil.dye((ImageIcon) addToolButton.getIcon(), iconColor));
-        reimportToolButton.setIcon(ImageUtil.dye((ImageIcon) reimportToolButton.getIcon(), iconColor));
-        manageCatalogToolButton.setIcon(ImageUtil.dye((ImageIcon) manageCatalogToolButton.getIcon(), iconColor));
-        removeToolButton.setIcon(ImageUtil.dye((ImageIcon) removeToolButton.getIcon(), iconColor));
-        clearToolButton.setIcon(ImageUtil.dye((ImageIcon) clearToolButton.getIcon(), iconColor));
-        duplicateToolButton.setIcon(ImageUtil.dye((ImageIcon) duplicateToolButton.getIcon(), iconColor));
-        reverseToolButton.setIcon(ImageUtil.dye((ImageIcon) reverseToolButton.getIcon(), iconColor));
-        sortToolButton.setIcon(ImageUtil.dye((ImageIcon) sortToolButton.getIcon(), iconColor));
-        moveUpToolButton.setIcon(ImageUtil.dye((ImageIcon) moveUpToolButton.getIcon(), iconColor));
-        moveDownToolButton.setIcon(ImageUtil.dye((ImageIcon) moveDownToolButton.getIcon(), iconColor));
-        clearInputToolButton.setIcon(ImageUtil.dye((ImageIcon) clearInputToolButton.getIcon(), iconColor));
+        localMusicButton.updateIconStyle();
+        historyButton.updateIconStyle();
+        collectionButton.updateIconStyle();
+        localPlaylistToolButton.updateIconStyle();
+        addToolButton.updateIconStyle();
+        reimportToolButton.updateIconStyle();
+        manageCatalogToolButton.updateIconStyle();
+        removeToolButton.updateIconStyle();
+        clearToolButton.updateIconStyle();
+        duplicateToolButton.updateIconStyle();
+        reverseToolButton.updateIconStyle();
+        sortToolButton.updateIconStyle();
+        moveUpToolButton.updateIconStyle();
+        moveDownToolButton.updateIconStyle();
+        clearInputToolButton.updateIconStyle();
         // 在线音乐搜索栏按钮颜色
-        netMusicBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netMusicBackwardButton.getIcon(), iconColor));
-        netMusicClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netMusicClearInputButton.getIcon(), iconColor));
-        searchButton.setIcon(ImageUtil.dye((ImageIcon) searchButton.getIcon(), iconColor));
-        netMusicRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netMusicRefreshButton.getIcon(), iconColor));
-        netMusicStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicStartPageButton.getIcon(), iconColor));
-        netMusicLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicLastPageButton.getIcon(), iconColor));
-        netMusicGoButton.setIcon(ImageUtil.dye((ImageIcon) netMusicGoButton.getIcon(), iconColor));
-        netMusicNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicNextPageButton.getIcon(), iconColor));
-        netMusicEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netMusicEndPageButton.getIcon(), iconColor));
+        netMusicBackwardButton.updateIconStyle();
+        netMusicClearInputButton.updateIconStyle();
+        searchButton.updateIconStyle();
+        netMusicRefreshButton.updateIconStyle();
+        netMusicStartPageButton.updateIconStyle();
+        netMusicLastPageButton.updateIconStyle();
+        netMusicGoButton.updateIconStyle();
+        netMusicNextPageButton.updateIconStyle();
+        netMusicEndPageButton.updateIconStyle();
         // 歌单搜索栏按钮颜色
-        netPlaylistBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistBackwardButton.getIcon(), iconColor));
-        netPlaylistClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistClearInputButton.getIcon(), iconColor));
-        netPlaylistSearchButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistSearchButton.getIcon(), iconColor));
-        netPlaylistPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistPlayAllButton.getIcon(), iconColor));
-        netPlaylistRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistRefreshButton.getIcon(), iconColor));
-        netPlaylistStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistStartPageButton.getIcon(), iconColor));
-        netPlaylistLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistLastPageButton.getIcon(), iconColor));
-        netPlaylistGoButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistGoButton.getIcon(), iconColor));
-        netPlaylistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistNextPageButton.getIcon(), iconColor));
-        netPlaylistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netPlaylistEndPageButton.getIcon(), iconColor));
+        netPlaylistBackwardButton.updateIconStyle();
+        netPlaylistClearInputButton.updateIconStyle();
+        netPlaylistSearchButton.updateIconStyle();
+        netPlaylistPlayAllButton.updateIconStyle();
+        netPlaylistRefreshButton.updateIconStyle();
+        netPlaylistStartPageButton.updateIconStyle();
+        netPlaylistLastPageButton.updateIconStyle();
+        netPlaylistGoButton.updateIconStyle();
+        netPlaylistNextPageButton.updateIconStyle();
+        netPlaylistEndPageButton.updateIconStyle();
         // 专辑搜索栏按钮颜色
-        netAlbumBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumBackwardButton.getIcon(), iconColor));
-        netAlbumClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumClearInputButton.getIcon(), iconColor));
-        netAlbumSearchButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumSearchButton.getIcon(), iconColor));
-        netAlbumPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumPlayAllButton.getIcon(), iconColor));
-        netAlbumRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumRefreshButton.getIcon(), iconColor));
-        netAlbumStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumStartPageButton.getIcon(), iconColor));
-        netAlbumLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumLastPageButton.getIcon(), iconColor));
-        netAlbumGoButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumGoButton.getIcon(), iconColor));
-        netAlbumNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumNextPageButton.getIcon(), iconColor));
-        netAlbumEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netAlbumEndPageButton.getIcon(), iconColor));
+        netAlbumBackwardButton.updateIconStyle();
+        netAlbumClearInputButton.updateIconStyle();
+        netAlbumSearchButton.updateIconStyle();
+        netAlbumPlayAllButton.updateIconStyle();
+        netAlbumRefreshButton.updateIconStyle();
+        netAlbumStartPageButton.updateIconStyle();
+        netAlbumLastPageButton.updateIconStyle();
+        netAlbumGoButton.updateIconStyle();
+        netAlbumNextPageButton.updateIconStyle();
+        netAlbumEndPageButton.updateIconStyle();
         // 歌手搜索栏按钮颜色
-        netArtistBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), iconColor));
-        netArtistClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netArtistClearInputButton.getIcon(), iconColor));
-        netArtistSearchButton.setIcon(ImageUtil.dye((ImageIcon) netArtistSearchButton.getIcon(), iconColor));
-        netArtistPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netArtistPlayAllButton.getIcon(), iconColor));
-        netArtistRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netArtistRefreshButton.getIcon(), iconColor));
-        netArtistStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistStartPageButton.getIcon(), iconColor));
-        netArtistLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistLastPageButton.getIcon(), iconColor));
-        netArtistGoButton.setIcon(ImageUtil.dye((ImageIcon) netArtistGoButton.getIcon(), iconColor));
-        netArtistNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistNextPageButton.getIcon(), iconColor));
-        netArtistEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netArtistEndPageButton.getIcon(), iconColor));
+        netArtistBackwardButton.updateIconStyle();
+        netArtistClearInputButton.updateIconStyle();
+        netArtistSearchButton.updateIconStyle();
+        netArtistPlayAllButton.updateIconStyle();
+        netArtistRefreshButton.updateIconStyle();
+        netArtistStartPageButton.updateIconStyle();
+        netArtistLastPageButton.updateIconStyle();
+        netArtistGoButton.updateIconStyle();
+        netArtistNextPageButton.updateIconStyle();
+        netArtistEndPageButton.updateIconStyle();
         // 电台搜索栏按钮颜色
         netRadioSortTypeComboBox.setUI(new StringComboBoxUI(netRadioSortTypeComboBox, THIS));
-        netRadioBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), iconColor));
-        netRadioClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netRadioClearInputButton.getIcon(), iconColor));
-        netRadioSearchButton.setIcon(ImageUtil.dye((ImageIcon) netRadioSearchButton.getIcon(), iconColor));
-        netRadioPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRadioPlayAllButton.getIcon(), iconColor));
-        netRadioRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRadioRefreshButton.getIcon(), iconColor));
-        netRadioStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioStartPageButton.getIcon(), iconColor));
-        netRadioLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioLastPageButton.getIcon(), iconColor));
-        netRadioGoButton.setIcon(ImageUtil.dye((ImageIcon) netRadioGoButton.getIcon(), iconColor));
-        netRadioNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioNextPageButton.getIcon(), iconColor));
-        netRadioEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRadioEndPageButton.getIcon(), iconColor));
+        netRadioBackwardButton.updateIconStyle();
+        netRadioClearInputButton.updateIconStyle();
+        netRadioSearchButton.updateIconStyle();
+        netRadioPlayAllButton.updateIconStyle();
+        netRadioRefreshButton.updateIconStyle();
+        netRadioStartPageButton.updateIconStyle();
+        netRadioLastPageButton.updateIconStyle();
+        netRadioGoButton.updateIconStyle();
+        netRadioNextPageButton.updateIconStyle();
+        netRadioEndPageButton.updateIconStyle();
         // MV 搜索栏按钮颜色
         netMvSortTypeComboBox.setUI(new StringComboBoxUI(netMvSortTypeComboBox, THIS));
-        netMvBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), iconColor));
-        netMvClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netMvClearInputButton.getIcon(), iconColor));
-        netMvSearchButton.setIcon(ImageUtil.dye((ImageIcon) netMvSearchButton.getIcon(), iconColor));
-        netMvRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netMvRefreshButton.getIcon(), iconColor));
-        netMvStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvStartPageButton.getIcon(), iconColor));
-        netMvLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvLastPageButton.getIcon(), iconColor));
-        netMvGoButton.setIcon(ImageUtil.dye((ImageIcon) netMvGoButton.getIcon(), iconColor));
-        netMvNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvNextPageButton.getIcon(), iconColor));
-        netMvEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netMvEndPageButton.getIcon(), iconColor));
+        netMvBackwardButton.updateIconStyle();
+        netMvClearInputButton.updateIconStyle();
+        netMvSearchButton.updateIconStyle();
+        netMvRefreshButton.updateIconStyle();
+        netMvStartPageButton.updateIconStyle();
+        netMvLastPageButton.updateIconStyle();
+        netMvGoButton.updateIconStyle();
+        netMvNextPageButton.updateIconStyle();
+        netMvEndPageButton.updateIconStyle();
         // 榜单搜索栏按钮颜色
-        netRankingBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), iconColor));
-        netRankingPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRankingPlayAllButton.getIcon(), iconColor));
-        netRankingRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRankingRefreshButton.getIcon(), iconColor));
-        netRankingStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingStartPageButton.getIcon(), iconColor));
-        netRankingLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingLastPageButton.getIcon(), iconColor));
-        netRankingGoButton.setIcon(ImageUtil.dye((ImageIcon) netRankingGoButton.getIcon(), iconColor));
-        netRankingNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingNextPageButton.getIcon(), iconColor));
-        netRankingEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRankingEndPageButton.getIcon(), iconColor));
+        netRankingBackwardButton.updateIconStyle();
+        netRankingPlayAllButton.updateIconStyle();
+        netRankingRefreshButton.updateIconStyle();
+        netRankingStartPageButton.updateIconStyle();
+        netRankingLastPageButton.updateIconStyle();
+        netRankingGoButton.updateIconStyle();
+        netRankingNextPageButton.updateIconStyle();
+        netRankingEndPageButton.updateIconStyle();
         // 用户搜索栏按钮颜色
-        netUserBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), iconColor));
-        netUserClearInputButton.setIcon(ImageUtil.dye((ImageIcon) netUserClearInputButton.getIcon(), iconColor));
-        netUserSearchButton.setIcon(ImageUtil.dye((ImageIcon) netUserSearchButton.getIcon(), iconColor));
-        netUserPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netUserPlayAllButton.getIcon(), iconColor));
-        netUserRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netUserRefreshButton.getIcon(), iconColor));
-        netUserStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserStartPageButton.getIcon(), iconColor));
-        netUserLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserLastPageButton.getIcon(), iconColor));
-        netUserGoButton.setIcon(ImageUtil.dye((ImageIcon) netUserGoButton.getIcon(), iconColor));
-        netUserNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserNextPageButton.getIcon(), iconColor));
-        netUserEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netUserEndPageButton.getIcon(), iconColor));
+        netUserBackwardButton.updateIconStyle();
+        netUserClearInputButton.updateIconStyle();
+        netUserSearchButton.updateIconStyle();
+        netUserPlayAllButton.updateIconStyle();
+        netUserRefreshButton.updateIconStyle();
+        netUserStartPageButton.updateIconStyle();
+        netUserLastPageButton.updateIconStyle();
+        netUserGoButton.updateIconStyle();
+        netUserNextPageButton.updateIconStyle();
+        netUserEndPageButton.updateIconStyle();
         // 评论栏按钮颜色
-        netCommentBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netCommentBackwardButton.getIcon(), iconColor));
-        netCommentRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netCommentRefreshButton.getIcon(), iconColor));
-        netCommentStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentStartPageButton.getIcon(), iconColor));
-        netCommentLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentLastPageButton.getIcon(), iconColor));
-        netCommentGoButton.setIcon(ImageUtil.dye((ImageIcon) netCommentGoButton.getIcon(), iconColor));
-        netCommentNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentNextPageButton.getIcon(), iconColor));
-        netCommentEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netCommentEndPageButton.getIcon(), iconColor));
+        netCommentBackwardButton.updateIconStyle();
+        netCommentRefreshButton.updateIconStyle();
+        netCommentStartPageButton.updateIconStyle();
+        netCommentLastPageButton.updateIconStyle();
+        netCommentGoButton.updateIconStyle();
+        netCommentNextPageButton.updateIconStyle();
+        netCommentEndPageButton.updateIconStyle();
         // 乐谱栏按钮颜色
-        netSheetBackwardButton.setIcon(ImageUtil.dye((ImageIcon) netSheetBackwardButton.getIcon(), iconColor));
-        netSheetRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netSheetRefreshButton.getIcon(), iconColor));
-        netSheetStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetStartPageButton.getIcon(), iconColor));
-        netSheetLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetLastPageButton.getIcon(), iconColor));
-        netSheetGoButton.setIcon(ImageUtil.dye((ImageIcon) netSheetGoButton.getIcon(), iconColor));
-        netSheetNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetNextPageButton.getIcon(), iconColor));
-        netSheetEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netSheetEndPageButton.getIcon(), iconColor));
+        netSheetBackwardButton.updateIconStyle();
+        netSheetRefreshButton.updateIconStyle();
+        netSheetStartPageButton.updateIconStyle();
+        netSheetLastPageButton.updateIconStyle();
+        netSheetGoButton.updateIconStyle();
+        netSheetNextPageButton.updateIconStyle();
+        netSheetEndPageButton.updateIconStyle();
         // 推荐工具栏按钮颜色
-        playlistRecommendButton.setIcon(ImageUtil.dye((ImageIcon) playlistRecommendButton.getIcon(), iconColor));
-        highQualityPlaylistButton.setIcon(ImageUtil.dye((ImageIcon) highQualityPlaylistButton.getIcon(), iconColor));
-        hotMusicButton.setIcon(ImageUtil.dye((ImageIcon) hotMusicButton.getIcon(), iconColor));
-        newMusicButton.setIcon(ImageUtil.dye((ImageIcon) newMusicButton.getIcon(), iconColor));
-        newAlbumRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newAlbumRecommendButton.getIcon(), iconColor));
-        artistListRecommendButton.setIcon(ImageUtil.dye((ImageIcon) artistListRecommendButton.getIcon(), iconColor));
-        newRadioRecommendButton.setIcon(ImageUtil.dye((ImageIcon) newRadioRecommendButton.getIcon(), iconColor));
-        hotRadioRecommendButton.setIcon(ImageUtil.dye((ImageIcon) hotRadioRecommendButton.getIcon(), iconColor));
-        programRecommendButton.setIcon(ImageUtil.dye((ImageIcon) programRecommendButton.getIcon(), iconColor));
-        mvRecommendButton.setIcon(ImageUtil.dye((ImageIcon) mvRecommendButton.getIcon(), iconColor));
-        recommendBackwardButton.setIcon(ImageUtil.dye((ImageIcon) recommendBackwardButton.getIcon(), iconColor));
-        netRecommendPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendPlayAllButton.getIcon(), iconColor));
-        netRecommendRefreshButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendRefreshButton.getIcon(), iconColor));
-        netRecommendStartPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendStartPageButton.getIcon(), iconColor));
-        netRecommendLastPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendLastPageButton.getIcon(), iconColor));
-        netRecommendGoButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendGoButton.getIcon(), iconColor));
-        netRecommendNextPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendNextPageButton.getIcon(), iconColor));
-        netRecommendEndPageButton.setIcon(ImageUtil.dye((ImageIcon) netRecommendEndPageButton.getIcon(), iconColor));
+        playlistRecommendButton.updateIconStyle();
+        highQualityPlaylistButton.updateIconStyle();
+        hotMusicButton.updateIconStyle();
+        newMusicButton.updateIconStyle();
+        newAlbumRecommendButton.updateIconStyle();
+        artistListRecommendButton.updateIconStyle();
+        newRadioRecommendButton.updateIconStyle();
+        hotRadioRecommendButton.updateIconStyle();
+        programRecommendButton.updateIconStyle();
+        mvRecommendButton.updateIconStyle();
+        recommendBackwardButton.updateIconStyle();
+        netRecommendPlayAllButton.updateIconStyle();
+        netRecommendRefreshButton.updateIconStyle();
+        netRecommendStartPageButton.updateIconStyle();
+        netRecommendLastPageButton.updateIconStyle();
+        netRecommendGoButton.updateIconStyle();
+        netRecommendNextPageButton.updateIconStyle();
+        netRecommendEndPageButton.updateIconStyle();
         // 收藏工具栏按钮颜色
-        collectionBackwardButton.setIcon(ImageUtil.dye((ImageIcon) collectionBackwardButton.getIcon(), iconColor));
-        collectionPlayAllButton.setIcon(ImageUtil.dye((ImageIcon) collectionPlayAllButton.getIcon(), iconColor));
-        collectionRefreshButton.setIcon(ImageUtil.dye((ImageIcon) collectionRefreshButton.getIcon(), iconColor));
-        collectionStartPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionStartPageButton.getIcon(), iconColor));
-        collectionLastPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionLastPageButton.getIcon(), iconColor));
-        collectionGoButton.setIcon(ImageUtil.dye((ImageIcon) collectionGoButton.getIcon(), iconColor));
-        collectionNextPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionNextPageButton.getIcon(), iconColor));
-        collectionEndPageButton.setIcon(ImageUtil.dye((ImageIcon) collectionEndPageButton.getIcon(), iconColor));
+        collectionBackwardButton.updateIconStyle();
+        collectionPlayAllButton.updateIconStyle();
+        collectionRefreshButton.updateIconStyle();
+        collectionStartPageButton.updateIconStyle();
+        collectionLastPageButton.updateIconStyle();
+        collectionGoButton.updateIconStyle();
+        collectionNextPageButton.updateIconStyle();
+        collectionEndPageButton.updateIconStyle();
         // 下载工具栏按钮颜色
-        restartSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) restartSelectedTasksButton.getIcon(), iconColor));
-        cancelSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) cancelSelectedTasksButton.getIcon(), iconColor));
-        removeSelectedTasksButton.setIcon(ImageUtil.dye((ImageIcon) removeSelectedTasksButton.getIcon(), iconColor));
-        restartAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) restartAllTasksButton.getIcon(), iconColor));
-        cancelAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) cancelAllTasksButton.getIcon(), iconColor));
-        removeAllTasksButton.setIcon(ImageUtil.dye((ImageIcon) removeAllTasksButton.getIcon(), iconColor));
+        restartSelectedTasksButton.updateIconStyle();
+        cancelSelectedTasksButton.updateIconStyle();
+        removeSelectedTasksButton.updateIconStyle();
+        restartAllTasksButton.updateIconStyle();
+        cancelAllTasksButton.updateIconStyle();
+        removeAllTasksButton.updateIconStyle();
         // 播放队列工具栏按钮颜色
-        playQueueRemoveToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueRemoveToolButton.getIcon(), iconColor));
-        playQueueClearToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueClearToolButton.getIcon(), iconColor));
-        playQueueDuplicateToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueDuplicateToolButton.getIcon(), iconColor));
-        playQueueReverseToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueReverseToolButton.getIcon(), iconColor));
-        playQueueMoveUpToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueMoveUpToolButton.getIcon(), iconColor));
-        playQueueMoveDownToolButton.setIcon(ImageUtil.dye((ImageIcon) playQueueMoveDownToolButton.getIcon(), iconColor));
+        playQueueRemoveToolButton.updateIconStyle();
+        playQueueClearToolButton.updateIconStyle();
+        playQueueDuplicateToolButton.updateIconStyle();
+        playQueueReverseToolButton.updateIconStyle();
+        playQueueMoveUpToolButton.updateIconStyle();
+        playQueueMoveDownToolButton.updateIconStyle();
 
         // 工具栏下面的标签颜色
         countLabel.setForeground(textColor);
@@ -22766,14 +22717,14 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionCollectionButton.setForeground(textColor);
         collectionItemDescriptionCollectionButton.setForeground(textColor);
 
-        playlistDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) playlistDescriptionCollectionButton.getIcon(), iconColor));
-        albumDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) albumDescriptionCollectionButton.getIcon(), iconColor));
-        artistDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) artistDescriptionCollectionButton.getIcon(), iconColor));
-        radioDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) radioDescriptionCollectionButton.getIcon(), iconColor));
-        rankingDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) rankingDescriptionCollectionButton.getIcon(), iconColor));
-        userDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) userDescriptionCollectionButton.getIcon(), iconColor));
-        recommendItemDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) recommendItemDescriptionCollectionButton.getIcon(), iconColor));
-        collectionItemDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) collectionItemDescriptionCollectionButton.getIcon(), iconColor));
+        playlistDescriptionCollectionButton.setIcon(ImageUtil.dye((ImageIcon) playlistDescriptionCollectionButton.getIcon(), Colors.BLACK));
+        albumDescriptionCollectionButton.updateIconStyle();
+        artistDescriptionCollectionButton.updateIconStyle();
+        radioDescriptionCollectionButton.updateIconStyle();
+        rankingDescriptionCollectionButton.updateIconStyle();
+        userDescriptionCollectionButton.updateIconStyle();
+        recommendItemDescriptionCollectionButton.updateIconStyle();
+        collectionItemDescriptionCollectionButton.updateIconStyle();
 
         playlistCoverAndNameLabel.setForeground(textColor);
         albumCoverAndNameLabel.setForeground(textColor);
@@ -22847,16 +22798,15 @@ public class MainFrame extends JFrame {
 
         changePaneButton.setForeground(textColor);
         changePaneButton.setUI(new ChangePaneButtonUI(changePaneButton));
-        changePaneButton.addMouseListener(new ChangePaneButtonMouseListener(changePaneButton));
 
-        mvButton.setIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), iconColor));
-        collectButton.setIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), iconColor));
-        downloadButton.setIcon(ImageUtil.dye((ImageIcon) downloadButton.getIcon(), iconColor));
-        commentButton.setIcon(ImageUtil.dye((ImageIcon) commentButton.getIcon(), iconColor));
-        sheetButton.setIcon(ImageUtil.dye((ImageIcon) sheetButton.getIcon(), iconColor));
-        lastButton.setIcon(ImageUtil.dye((ImageIcon) lastButton.getIcon(), iconColor));
-        playOrPauseButton.setIcon(ImageUtil.dye((ImageIcon) playOrPauseButton.getIcon(), iconColor));
-        nextButton.setIcon(ImageUtil.dye((ImageIcon) nextButton.getIcon(), iconColor));
+        mvButton.updateIconStyle();
+        collectButton.updateIconStyle();
+        downloadButton.updateIconStyle();
+        commentButton.updateIconStyle();
+        sheetButton.updateIconStyle();
+        lastButton.updateIconStyle();
+        playOrPauseButton.updateIconStyle();
+        nextButton.updateIconStyle();
         // 迷你窗口样式改变
 //        if (miniDialog != null) {
 //            miniDialog.infoLabel.setForeground(textColor);
@@ -22865,17 +22815,17 @@ public class MainFrame extends JFrame {
 //            miniDialog.playNextButton.setIcon(nextButton.getIcon());
 //            miniDialog.closeButton.setIcon(closeButton.getIcon());
 //        }
-        playModeButton.setIcon(ImageUtil.dye((ImageIcon) playModeButton.getIcon(), iconColor));
-        backwardButton.setIcon(ImageUtil.dye((ImageIcon) backwardButton.getIcon(), iconColor));
-        forwardButton.setIcon(ImageUtil.dye((ImageIcon) forwardButton.getIcon(), iconColor));
-        muteButton.setIcon(ImageUtil.dye((ImageIcon) muteButton.getIcon(), iconColor));
-        rateButton.setIcon(ImageUtil.dye((ImageIcon) rateButton.getIcon(), iconColor));
-        switchSpectrumButton.setIcon(ImageUtil.dye((ImageIcon) switchSpectrumButton.getIcon(), iconColor));
-        blurButton.setIcon(ImageUtil.dye((ImageIcon) blurButton.getIcon(), iconColor));
-        soundEffectButton.setIcon(ImageUtil.dye((ImageIcon) soundEffectButton.getIcon(), iconColor));
-        goToPlayQueueButton.setIcon(ImageUtil.dye((ImageIcon) goToPlayQueueButton.getIcon(), iconColor));
-        desktopLyricButton.setIcon(ImageUtil.dye((ImageIcon) desktopLyricButton.getIcon(), iconColor));
-        switchLrcTypeButton.setIcon(ImageUtil.dye((ImageIcon) switchLrcTypeButton.getIcon(), iconColor));
+        playModeButton.updateIconStyle();
+        backwardButton.updateIconStyle();
+        forwardButton.updateIconStyle();
+        muteButton.updateIconStyle();
+        rateButton.updateIconStyle();
+        switchSpectrumButton.updateIconStyle();
+        blurButton.updateIconStyle();
+        soundEffectButton.updateIconStyle();
+        goToPlayQueueButton.updateIconStyle();
+        desktopLyricButton.updateIconStyle();
+        switchLrcTypeButton.updateIconStyle();
         volumeSlider.setUI(new TimeSliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
 //        // 按钮图标颜色
@@ -22903,9 +22853,7 @@ public class MainFrame extends JFrame {
         loading.setIcon(ImageUtil.dye(loadingIcon, iconColor));
         loading.setForeColor(textColor);
 
-        // 更新单选菜单项和标签按钮样式
-        updateMenuItemIcon(sortPopupMenu);
-        updateMenuItemIcon(spectrumPopupMenu);
+        // 更新标签按钮样式
         updateTabButtonStyle();
 
         // 根据选项卡选择的情况设置选项卡文字 + 图标颜色
@@ -22950,15 +22898,17 @@ public class MainFrame extends JFrame {
         int index = tabbedPane.getSelectedIndex();
         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {
             CustomPanel panel = (CustomPanel) tabbedPane.getTabComponentAt(i);
+            CustomLabel label = (CustomLabel) panel.getComponent(0);
             if (i == index) {
                 panel.setForeground(UIStyleStorage.currUIStyle.getSelectedColor());
                 panel.transitionDrawBg(true);
+                label.transitionOpacity(0.5f);
             } else {
                 // 淡出其他未选中的 Panel 背景
                 panel.transitionDrawBg(false);
+                label.transitionOpacity(1f);
             }
-            CustomLabel label = (CustomLabel) panel.getComponent(0);
-            label.setIcon(ImageUtil.dye((ImageIcon) label.getIcon(), iconColor));
+            label.updateIconStyle();
             label.setForeground(textColor);
         }
     }
@@ -23546,9 +23496,10 @@ public class MainFrame extends JFrame {
                     netMusicSearchSuggestionPanel.setVisible(false);
                 }
                 netMusicSearchSuggestionInnerPanel2.removeAll();
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
                 DialogButton b = null;
                 for (String keyword : suggestions) {
-                    b = new DialogButton(keyword, true);
+                    b = new DialogButton(keyword, textColor, true);
                     b.addActionListener(event -> {
                         searchTextField.requestFocus();
                         searchTextField.setText(keyword);
@@ -23557,7 +23508,6 @@ public class MainFrame extends JFrame {
                         netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                         netLeftBox.add(netMusicScrollPane);
                     });
-                    b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                     netMusicSearchSuggestionInnerPanel2.add(b);
                 }
                 // 调整面板大小
@@ -23602,9 +23552,10 @@ public class MainFrame extends JFrame {
                     netMusicHotSearchPanel.setVisible(true);
                 }
                 netMusicHotSearchInnerPanel2.removeAll();
+                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
                 DialogButton b = null;
                 for (String keyword : hotSearch) {
-                    b = new DialogButton(keyword, true);
+                    b = new DialogButton(keyword, textColor, true);
                     DialogButton finalB = b;
                     b.addActionListener(event -> {
                         searchTextField.requestFocus();
@@ -23614,9 +23565,8 @@ public class MainFrame extends JFrame {
                         netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                         netLeftBox.add(netMusicScrollPane);
                         // 热搜词搜索后取消悬停状态
-                        finalB.transitionDrawBg(false);
+                        finalB.transitionHighlightBg(false);
                     });
-                    b.setForeColor(UIStyleStorage.currUIStyle.getTextColor());
                     netMusicHotSearchInnerPanel2.add(b);
                 }
                 // 调整面板大小

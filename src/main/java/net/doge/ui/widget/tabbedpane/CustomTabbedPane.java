@@ -3,6 +3,7 @@ package net.doge.ui.widget.tabbedpane;
 import lombok.Getter;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.SwingUtil;
@@ -42,6 +43,8 @@ public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupp
         if (index == 0) {
             panel.setForeground(UIStyleStorage.currUIStyle.getSelectedColor());
             panel.setDrawBg(true);
+            CustomLabel label = (CustomLabel) panel.getComponent(0);
+            label.setOpacity(0.5f);
         }
         panel.addMouseListener(new MouseAdapter() {
             @Override

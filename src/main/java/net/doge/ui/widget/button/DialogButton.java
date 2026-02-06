@@ -1,33 +1,28 @@
 package net.doge.ui.widget.button;
 
 import lombok.Getter;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.base.BaseButton;
+import net.doge.ui.widget.button.listener.DialogButtonMouseListener;
 import net.doge.util.core.HtmlUtil;
-import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * @Author Doge
  * @Description 对话框中的按钮自定义 UI
  * @Date 2020/12/13
  */
-public class DialogButton extends BaseButton implements MouseListener, ExtendedOpacitySupported {
+public class DialogButton extends BaseButton implements ExtendedOpacitySupported {
     private static final HDEmptyBorder BORDER = new HDEmptyBorder(4, 15, 4, 15);
 
-    private Color foreColor;
-    private Color foreColorBk;
-    private boolean drawBgIncreasing;
-    private Timer drawBgTimer;
+    private boolean highlightBgIncreasing;
+    private Timer highlightBgTimer;
     private final float startBgAlpha = 0.2f;
     private final float destBgAlpha = 0.4f;
     private float bgAlpha = startBgAlpha;
@@ -35,46 +30,40 @@ public class DialogButton extends BaseButton implements MouseListener, ExtendedO
     private float extendedOpacity = 1f;
 
     public DialogButton() {
-        this(null);
+        this(null, null);
     }
 
-    public DialogButton(String text) {
-        this(text, Colors.WHITE);
-    }
-
-    public DialogButton(String text, Color foreColor) {
-        this(text, foreColor, false);
-    }
-
-    // 关键词按钮，需显示多种字符
-    public DialogButton(String text, boolean htmlMode) {
-        this(text, Colors.WHITE, htmlMode);
+    public DialogButton(String text, Color foreground) {
+        this(text, foreground, false);
     }
 
     // 常规按钮
-    public DialogButton(String text, Color foreColor, boolean htmlMode) {
+    public DialogButton(String text, Color foreground, boolean htmlMode) {
         super(htmlMode ? HtmlUtil.textToHtml(text) : text);
-        setForeColor(foreColor);
+        setForeground(foreground);
         init();
     }
 
     private void init() {
-        addMouseListener(this);
+        addMouseListener(new DialogButtonMouseListener(this));
         setBorder(BORDER);
 
-        drawBgTimer = new Timer(2, e -> {
-            if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
+        highlightBgTimer = new Timer(2, e -> {
+            if (highlightBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
             else bgAlpha = Math.max(startBgAlpha, bgAlpha - 0.005f);
-            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) drawBgTimer.stop();
+            if (bgAlpha <= startBgAlpha || bgAlpha >= destBgAlpha) highlightBgTimer.stop();
             repaint();
         });
     }
 
-    public void setForeColor(Color foreColor) {
-        setForeground(foreColor);
-        this.foreColor = foreColor;
-        this.foreColorBk = foreColor;
-        repaint();
+    public void transitionHighlightBg(boolean drawBgIncreasing) {
+        this.highlightBgIncreasing = drawBgIncreasing;
+        if (highlightBgTimer.isRunning()) return;
+        highlightBgTimer.start();
+    }
+
+    public void setHighlightBg(boolean highlightBg) {
+        bgAlpha = highlightBg ? destBgAlpha : startBgAlpha;
     }
 
     public String getPlainText() {
@@ -96,7 +85,7 @@ public class DialogButton extends BaseButton implements MouseListener, ExtendedO
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         // 画背景
-        g2d.setColor(foreColor);
+        g2d.setColor(getForeground());
         GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
         int arc = ScaleUtil.scale(8);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
@@ -146,36 +135,5 @@ public class DialogButton extends BaseButton implements MouseListener, ExtendedO
 //                    break;
 //            }
 //        }
-    }
-
-    public void transitionDrawBg(boolean drawBgIncreasing) {
-        this.drawBgIncreasing = drawBgIncreasing;
-        if (drawBgTimer.isRunning()) return;
-        drawBgTimer.start();
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        foreColor = ColorUtil.darker(foreColor);
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        foreColor = foreColorBk;
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        transitionDrawBg(true);
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        transitionDrawBg(false);
     }
 }

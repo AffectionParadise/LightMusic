@@ -3,21 +3,20 @@ package net.doge.ui.widget.panel;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.panel.listener.LoadingPanelMouseListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 /**
  * @Author Doge
  * @Description loading 面板
  * @Date 2020/12/21
  */
-public class LoadingPanel extends CustomPanel implements MouseListener {
+public class LoadingPanel extends CustomPanel {
     private final Font textFont = Fonts.NORMAL_BIG;
 
     //    private RotatableIcon icon;
@@ -43,7 +42,7 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         add(label);
 
         // 显示时屏蔽底层组件的响应
-        addMouseListener(this);
+        addMouseListener(new LoadingPanelMouseListener());
 
         // 显示和隐藏动画
         showTimer = new Timer(3, e -> {
@@ -109,30 +108,5 @@ public class LoadingPanel extends CustomPanel implements MouseListener {
         g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg(), bgAlpha, false));
         g2d.fillRect(0, 0, pw, ph);
         super.paintComponent(g);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }

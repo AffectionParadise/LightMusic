@@ -44,12 +44,11 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
     // 父窗口
     public EditLocalPlaylistDialog(MainFrame f, LocalPlaylist playlist) {
         super(f, I18n.getText("editLocalPlaylist"));
+        this.playlist = playlist;
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(I18n.getText("save"), textColor);
         cancelButton = new DialogButton(I18n.getText("cancel"), textColor);
-
-        this.playlist = playlist;
     }
 
     public void showDialog() {

@@ -13,7 +13,7 @@ import java.awt.*;
 
 /**
  * @Author Doge
- * @Description 菜单自定义 UI
+ * @Description 自定义弹出菜单
  * @Date 2020/12/13
  */
 public class CustomPopupMenu extends JPopupMenu {

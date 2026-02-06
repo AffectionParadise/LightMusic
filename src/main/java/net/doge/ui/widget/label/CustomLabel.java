@@ -3,8 +3,10 @@ package net.doge.ui.widget.label;
 import lombok.Getter;
 import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
@@ -58,6 +60,13 @@ public class CustomLabel extends JLabel implements ExtendedOpacitySupported {
         this.destOpacity = opacity;
         if (opacityTimer.isRunning()) return;
         opacityTimer.start();
+    }
+
+    // 根据主题色更新图标
+    public void updateIconStyle() {
+        Icon icon = getIcon();
+        if (icon == null) return;
+        setIcon(ImageUtil.dye((ImageIcon) icon, UIStyleStorage.currUIStyle.getIconColor()));
     }
 
     @Override

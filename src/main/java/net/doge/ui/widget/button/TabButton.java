@@ -1,6 +1,7 @@
 package net.doge.ui.widget.button;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
@@ -18,6 +19,11 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
     private Timer drawBgTimer;
     private float bgAlpha;
     private final float destBgAlpha = 0.2f;
+    @Setter
+    @Getter
+    protected float opacity = 1f;
+    private float destOpacity = 1f;
+    private Timer opacityTimer;
     @Getter
     private float extendedOpacity = 1f;
 
@@ -56,6 +62,12 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
             }
             repaint();
         });
+        opacityTimer = new Timer(0, e -> {
+            if (opacity < destOpacity) opacity = Math.min(destOpacity, opacity + 0.005f);
+            else if (opacity > destOpacity) opacity = Math.max(destOpacity, opacity - 0.005f);
+            else opacityTimer.stop();
+            repaint();
+        });
     }
 
     public void transitionDrawBg(boolean drawBgIncreasing) {
@@ -63,6 +75,12 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
         this.drawBgIncreasing = drawBgIncreasing;
         if (drawBgTimer.isRunning()) return;
         drawBgTimer.start();
+    }
+
+    public void transitionOpacity(float opacity) {
+        this.destOpacity = opacity;
+        if (opacityTimer.isRunning()) return;
+        opacityTimer.start();
     }
 
     @Override
@@ -96,8 +114,8 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
             GraphicsUtil.srcOver(g2d, extendedOpacity * (active ? 0.1f : bgAlpha));
             int arc = ScaleUtil.scale(10);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
-            GraphicsUtil.srcOver(g2d, extendedOpacity);
         }
+        GraphicsUtil.srcOver(g, extendedOpacity * opacity);
         super.paintComponent(g);
     }
 }

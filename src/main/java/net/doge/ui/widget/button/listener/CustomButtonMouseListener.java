@@ -4,9 +4,7 @@ import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -31,7 +29,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
+        b.updateIconColor(bic);
         b.setForeground(btc);
         b.transitionDrawBg(true);
     }
@@ -40,9 +38,8 @@ public class CustomButtonMouseListener extends MouseAdapter {
     public void mouseExited(MouseEvent e) {
         if (!b.isEnabled()) return;
         UIStyle style = UIStyleStorage.currUIStyle;
-        Color iconColor = style.getIconColor();
         Color textColor = style.getTextColor();
-        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), iconColor));
+        b.updateIconStyle();
         b.setForeground(textColor);
         b.transitionDrawBg(false);
     }
@@ -55,7 +52,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color textColor = style.getTextColor();
         Color dtc = ColorUtil.darker(textColor);
         Color dic = ColorUtil.darker(iconColor);
-        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), dic));
+        b.updateIconColor(dic);
         b.setForeground(dtc);
     }
 
@@ -67,7 +64,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
-        if (b.getIcon() != null) b.setIcon(ImageUtil.dye((ImageIcon) b.getIcon(), bic));
+        b.updateIconColor(c ? bic : iconColor);
         b.setForeground(c ? btc : textColor);
     }
 }
