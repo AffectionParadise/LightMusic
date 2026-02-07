@@ -26,7 +26,8 @@ import java.awt.event.MouseEvent;
  * @Date 2020/12/13
  */
 public class CustomComboBoxUI extends BasicComboBoxUI {
-    protected CustomComboBox comboBox;
+    // 此处不要用父类的变量，因为需要初始化，避免 null 异常
+    protected CustomComboBox<?> comboBox;
     @Getter
     protected CustomComboPopup popup;
     @Getter
@@ -75,7 +76,9 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (comboBox.getBounds().contains(e.getPoint())) return;
+                // 将侧边箭头按钮的相对坐标转为 Combobox 整体坐标
+                Point p = SwingUtilities.convertPoint((Component) e.getSource(), e.getPoint(), comboBox);
+                if (comboBox.contains(p)) return;
                 comboBox.transitionHighlightBg(false);
             }
         });
@@ -97,7 +100,7 @@ public class CustomComboBoxUI extends BasicComboBoxUI {
             }
 
             private void validateHiding(MouseEvent e) {
-                if (popup.getBounds().contains(e.getPoint())) return;
+                if (popup.contains(e.getPoint())) return;
                 comboBox.hidePopup();
             }
         });

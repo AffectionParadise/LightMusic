@@ -39,7 +39,6 @@ public class ColorSliderUI extends BasicSliderUI {
     @Override
     public void paintThumb(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
-
         GraphicsUtil.srcOver(g2d);
         g2d.setColor(d.makeColorFromRgb(d.r, d.g, d.b));
         g2d.fillOval(thumbRect.x, thumbRect.y + (thumbRect.height - thumbRect.width) / 2, thumbRect.width, thumbRect.width);

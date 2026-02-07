@@ -300,7 +300,7 @@ public class DesktopLyricDialog extends JDialog {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (mainPanel.getVisibleRect().contains(e.getPoint())) return;
+                if (mainPanel.contains(e.getPoint())) return;
                 hideUI();
             }
         });

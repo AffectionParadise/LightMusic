@@ -46,7 +46,7 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
             public void mouseExited(MouseEvent e) {
                 transitionHighlightBg(false);
                 Point p = e.getPoint();
-                if (getBounds().contains(p) || getPopup().getBounds().contains(p) || getArrowButton().getBounds().contains(p))
+                if (contains(p) || getPopup().contains(p) || getArrowButton().contains(p))
                     return;
                 hidePopup();
             }

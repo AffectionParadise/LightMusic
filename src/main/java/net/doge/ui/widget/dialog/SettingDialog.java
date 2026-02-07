@@ -304,7 +304,7 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.setTabComponentAt(3, playbackPanel);
         tabbedPane.setTabComponentAt(4, hotKeyPanel);
 
-        tabbedPane.setUI(new CustomTabbedPaneUI(tabbedPane));
+        tabbedPane.setUI(new CustomTabbedPaneUI());
         tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, UIStyleStorage.currUIStyle));
 
         // 标签大小

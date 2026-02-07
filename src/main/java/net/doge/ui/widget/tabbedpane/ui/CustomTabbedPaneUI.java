@@ -1,7 +1,5 @@
 package net.doge.ui.widget.tabbedpane.ui;
 
-import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
-
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
@@ -12,12 +10,6 @@ import java.awt.*;
  * @Date 2020/12/13
  */
 public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
-    private CustomTabbedPane tp;
-
-    public CustomTabbedPaneUI(CustomTabbedPane tp) {
-        this.tp = tp;
-    }
-
     @Override
     public void paint(Graphics g, JComponent c) {
         try {

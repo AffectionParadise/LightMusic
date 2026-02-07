@@ -20314,7 +20314,11 @@ public class MainFrame extends JFrame {
             hideDetailButton.setVisible(true);
             changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
         };
-        componentFadingAnimation = new ComponentFadingAnimation(src, infoAndLrcBox, onFadingOutStopped);
+        // 有时切换到歌词面板，歌词自动滚动失败，在动画结束后再试
+        ComponentChangeHandler onFadingInStopped = (s, t) -> {
+            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+        };
+        componentFadingAnimation = new ComponentFadingAnimation(src, infoAndLrcBox, onFadingOutStopped, onFadingInStopped);
         componentFadingAnimation.transition();
     }
 
@@ -22019,8 +22023,8 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(playQueuePopupMenu);
 
         // 工具栏消除边框和透明、选项卡面板透明
-        tabbedPane.setUI(new CustomTabbedPaneUI(tabbedPane));
-        collectionTabbedPane.setUI(new CustomTabbedPaneUI(collectionTabbedPane));
+        tabbedPane.setUI(new CustomTabbedPaneUI());
+        collectionTabbedPane.setUI(new CustomTabbedPaneUI());
 
         // 关键词面板
         netMusicSearchSuggestionLabel.setForeground(textColor);

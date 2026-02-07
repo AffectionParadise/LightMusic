@@ -63,7 +63,7 @@ public class TabButtonMouseAdapter extends MouseAdapter {
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         Color bic = ColorUtil.brighter(iconColor);
-        boolean c = b.getVisibleRect().contains(e.getPoint());
+        boolean c = b.contains(e.getPoint());
         b.updateIconColor(c ? bic : iconColor);
         b.setForeground(c ? btc : textColor);
     }
