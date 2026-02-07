@@ -1,27 +1,33 @@
 package net.doge.ui.widget.textfield;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
+import net.doge.util.core.StringUtil;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class CustomTextField extends JTextField implements ExtendedOpacitySupported {
     private static final HDEmptyBorder BORDER = new HDEmptyBorder(5, 10, 5, 10);
 
+    // 是否在占位状态
     @Getter
-    @Setter
-    private boolean occupied;
+    private boolean hintHolding;
+    private TextFieldHintListener hintListener;
     @Getter
     private float extendedOpacity = 1f;
 
@@ -44,42 +50,64 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
             @Override
             public void mousePressed(MouseEvent e) {
                 requestFocus();
-                getCaret().setVisible(true);
+                setCaretVisible(true);
             }
         });
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 setFocusable(false);
-                getCaret().setVisible(false);
+                setCaretVisible(false);
                 repaint();
             }
         });
+    }
+
+    public void updateStyle() {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        if (hintHolding) {
+            Color darkerTextColor = ColorUtil.darker(textColor);
+            setForeground(darkerTextColor);
+        } else setForeground(textColor);
     }
 
     // 需要焦点时，先设置可聚焦的
     @Override
     public void requestFocus() {
         setFocusable(true);
-        setOccupied(true);
         super.requestFocus();
     }
 
-    // 判断是否需要刷新
-    private boolean needRefresh() {
-        FocusListener[] fls = getFocusListeners();
-        for (FocusListener fl : fls) {
-            if (fl instanceof TextFieldHintListener) return false;
-        }
-        return true;
+    // 设置占位文本，如果不为空，默认开启占位监听器
+    public void setHintText(String hintText) {
+        removeFocusListener(hintListener);
+        if (StringUtil.notEmpty(hintText)) {
+            addFocusListener(hintListener = new TextFieldHintListener(this, hintText));
+            hintListener.toHintHoldingStatus();
+        } else hintListener = null;
+    }
+
+    public void setHintHolding(boolean hintHolding) {
+        this.hintHolding = hintHolding;
+        updateStyle();
     }
 
     @Override
     public void setText(String t) {
+        setText(t, true);
+    }
+
+    // 设置文本后决定是否中断占位属性
+    public void setText(String t, boolean breakHint) {
         super.setText(t);
+        if (breakHint && hintHolding) setHintHolding(false);
         // 解决设置文本后不刷新的问题
-        if (!needRefresh()) return;
+        if (hintListener != null) return;
         revalidate();
+    }
+
+    public void setCaretVisible(boolean visible) {
+        getCaret().setVisible(visible);
     }
 
     @Override

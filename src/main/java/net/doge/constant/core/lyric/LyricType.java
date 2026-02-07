@@ -1,20 +1,31 @@
 package net.doge.constant.core.lyric;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * @Author Doge
  * @Description 歌词类型
  * @Date 2020/12/7
  */
-public class LyricType {
+@Getter
+@AllArgsConstructor
+public enum LyricType {
     // 原歌词
-    public static final int ORIGINAL = 0;
+    ORIGINAL(0),
     // 翻译
-    public static final int TRANSLATION = 1;
-    // 繁体
-    public static final int TRADITIONAL_CN = 2;
+    TRANSLATION(1),
     // 罗马音
-    public static final int ROMA = 3;
+    ROMA(2),
+    // 繁体
+    TRADITIONAL_CN(3);
 
-    // 歌词文件是否添加逐字时间轴
-//    public static boolean verbatimTimeline = false;
+    private int index;
+
+    public static LyricType fromIndex(int index) {
+        for (LyricType type : values()) {
+            if (type.index == index) return type;
+        }
+        return null;
+    }
 }

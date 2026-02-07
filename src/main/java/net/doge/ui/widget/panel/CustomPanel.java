@@ -3,6 +3,7 @@ package net.doge.ui.widget.panel;
 import lombok.Getter;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
@@ -10,7 +11,7 @@ import net.doge.util.ui.SwingUtil;
 import javax.swing.*;
 import java.awt.*;
 
-public class CustomPanel extends JPanel implements ExtendedOpacitySupported {
+public class CustomPanel extends BasePanel implements ExtendedOpacitySupported {
     private boolean drawBg;
     private boolean drawBgIncreasing;
     private Timer drawBgTimer;
@@ -30,8 +31,6 @@ public class CustomPanel extends JPanel implements ExtendedOpacitySupported {
     }
 
     private void init() {
-        setOpaque(false);
-
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
             else bgAlpha = Math.max(0f, bgAlpha - 0.005f);
@@ -79,13 +78,5 @@ public class CustomPanel extends JPanel implements ExtendedOpacitySupported {
             GraphicsUtil.srcOver(g2d, extendedOpacity);
         }
         super.paintComponent(g);
-    }
-
-    // 返回组件索引，找不到返回 -1
-    public int getComponentIndex(Component comp) {
-        Component[] components = getComponents();
-        for (int i = 0, len = components.length; i < len; i++)
-            if (components[i] == comp) return i;
-        return -1;
     }
 }

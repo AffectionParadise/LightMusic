@@ -31,8 +31,8 @@ import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.player.PlayMode;
-import net.doge.constant.core.player.PlayerStatus;
 import net.doge.constant.core.sort.SortMethod;
+import net.doge.constant.core.sort.SortOrder;
 import net.doge.constant.core.task.TaskType;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
@@ -100,7 +100,7 @@ import net.doge.ui.widget.panel.GlobalPanel;
 import net.doge.ui.widget.panel.LoadingPanel;
 import net.doge.ui.widget.panel.SpectrumPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.listener.CustomScrollPaneListener;
+import net.doge.ui.widget.scrollpane.listener.CustomScrollPaneAdapter;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -109,7 +109,6 @@ import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
-import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
@@ -721,7 +720,7 @@ public class MainFrame extends JFrame {
     public List<File> catalogs = new LinkedList<>();
 
     public boolean autoUpdate;
-    public int windowState = WindowState.NORMAL;
+    public WindowState windowState = WindowState.NORMAL;
     // 关闭窗口操作
     public int currCloseWindowOption;
     public int windowSize;
@@ -744,21 +743,21 @@ public class MainFrame extends JFrame {
     // 最大缓存大小(MB，超出后自动清理)
     public long maxCacheSize;
     // 当前排序方式
-    private int currSortMethod = -1;
+    private SortMethod currSortMethod;
     // 当前排序顺序
-    private int currSortOrder;
+    private SortOrder currSortOrder;
     // 当前播放曲目的索引
     private int currSong;
     // 播放失败后重试次数
     private int retry = 0;
     // 当前播放模式
-    private int currPlayMode;
+    private PlayMode currPlayMode;
     // 随机播放序列
     private List<Integer> shuffleList = new LinkedList<>();
     // 当前随机播放索引
     private int shuffleIndex;
     // 当前歌词类型
-    private int currLrcType;
+    private LyricType currLrcType;
     // 歌词显示比率(源)
     private double originalRatio;
     // 搜索每页大小
@@ -852,9 +851,9 @@ public class MainFrame extends JFrame {
     // 切换面板按钮图片宽度
     private int changePaneImageWidth = ScaleUtil.scale(50);
     // 当前面板类型
-    private int currPaneType = CenterPaneType.TAB;
+    private CenterPaneType currPaneType = CenterPaneType.TAB;
     // 上一个面板类型(评论跳转要用到)
-    private int lastPaneType;
+    private CenterPaneType lastPaneType;
 
     // 加载中图片
     private BufferedImage loadingImage = ImageUtil.width(LMIconManager.getImage("loadingImage"), coverImageWidth);
@@ -2821,7 +2820,7 @@ public class MainFrame extends JFrame {
         });
         // 最大化
         maximizeButton.addActionListener(e -> {
-            if (windowState == NORMAL) {
+            if (windowState == WindowState.NORMAL) {
                 windowState = WindowState.MAXIMIZED;
                 maximizeButton.setIcon(ImageUtil.dye(restoreIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 // 取消桌面歌词显示
@@ -3162,20 +3161,20 @@ public class MainFrame extends JFrame {
         if (showDesktopLyric) desktopLyricDialog.setVisible(true);
         else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入播放模式
-        switch (config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE)) {
-            case PlayMode.DISABLED:
+        switch (PlayMode.fromCode(config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE.getCode()))) {
+            case DISABLED:
                 changeToDisabled(false);
                 break;
-            case PlayMode.SEQUENCE:
+            case SEQUENCE:
                 changeToSequence(false);
                 break;
-            case PlayMode.LIST_CYCLE:
+            case LIST_CYCLE:
                 changeToListCycle(false);
                 break;
-            case PlayMode.SINGLE:
+            case SINGLE:
                 changeToSingle(false);
                 break;
-            case PlayMode.SHUFFLE:
+            case SHUFFLE:
                 changeToShuffle(false);
                 break;
         }
@@ -3213,29 +3212,29 @@ public class MainFrame extends JFrame {
         miniX = config.getIntValue(ConfigConstants.MINIX, -0x3f3f3f3f);
         miniY = config.getIntValue(ConfigConstants.MINIY, -0x3f3f3f3f);
         // 载入歌词类型
-        currLrcType = config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL);
+        currLrcType = LyricType.fromIndex(config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL.getIndex()));
         switch (currLrcType) {
-            case LyricType.ORIGINAL:
+            case ORIGINAL:
                 switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
                 break;
-            case LyricType.TRANSLATION:
+            case TRANSLATION:
                 switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
                 break;
-            case LyricType.ROMA:
+            case ROMA:
                 switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(ROMA_TIP);
                 break;
-            case LyricType.TRADITIONAL_CN:
+            case TRADITIONAL_CN:
                 switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
                 break;
         }
 
         // 载入排序顺序
-        currSortOrder = config.getIntValue(ConfigConstants.SORT_ORDER, SortMethod.ASCENDING);
-        updateMenuItemStatus(sortOrderButtonGroup, sortOrderButtonGroup.get(currSortOrder));
+        currSortOrder = SortOrder.fromIndex(config.getIntValue(ConfigConstants.SORT_ORDER, SortOrder.ASCENDING.getIndex()));
+        updateMenuItemStatus(sortOrderButtonGroup, sortOrderButtonGroup.get(currSortOrder.getIndex()));
 
         // 载入歌曲目录
         JSONArray catalogJsonArray = config.getJSONArray(ConfigConstants.CATALOGS);
@@ -3935,7 +3934,7 @@ public class MainFrame extends JFrame {
         // 存入同时下载的最大任务数
         config.put(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, ((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize());
         // 存入当前播放模式
-        config.put(ConfigConstants.PLAY_MODE, currPlayMode);
+        config.put(ConfigConstants.PLAY_MODE, currPlayMode.getCode());
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
         // 存入是否高斯模糊
@@ -3999,9 +3998,9 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.MINIX, miniX);
         config.put(ConfigConstants.MINIY, miniY);
         // 存入歌词类型
-        config.put(ConfigConstants.LYRIC_TYPE, currLrcType);
+        config.put(ConfigConstants.LYRIC_TYPE, currLrcType.getIndex());
         // 存入排序顺序
-        config.put(ConfigConstants.SORT_ORDER, currSortOrder);
+        config.put(ConfigConstants.SORT_ORDER, currSortOrder.getIndex());
         // 存入当前所有歌曲目录
         JSONArray catalogJsonArray = new JSONArray();
         for (int i = 0, len = catalogs.size(); i < len; i++) {
@@ -4789,7 +4788,7 @@ public class MainFrame extends JFrame {
                     }
                 }
 
-                if (filterTextField.isOccupied()) filterPersonalMusic();
+                if (!filterTextField.isHintHolding()) filterPersonalMusic();
 
                 if (collectionBackwardButton.isShowing()) {
                     if (index == CollectionTabIndex.PLAYLIST) {
@@ -5285,7 +5284,7 @@ public class MainFrame extends JFrame {
             localPlaylistComboBox.setVisible(selectedIndex == CollectionTabIndex.MUSIC);
             localPlaylistToolButton.setVisible(selectedIndex == CollectionTabIndex.MUSIC);
             // 切换收藏标签页后筛选
-            if (filterTextField.isOccupied()) filterPersonalMusic();
+            if (!filterTextField.isHintHolding()) filterPersonalMusic();
         });
     }
 
@@ -6396,7 +6395,7 @@ public class MainFrame extends JFrame {
             sortToolButton.setVisible(true);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.isOccupied()) filterPersonalMusic();
+            if (!filterTextField.isHintHolding()) filterPersonalMusic();
             else musicList.setModel(musicListModel);
             musicScrollPane.setVBarValue(0);
             countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
@@ -6421,7 +6420,7 @@ public class MainFrame extends JFrame {
             sortToolButton.setVisible(false);
             leftBox.repaint();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.isOccupied()) filterPersonalMusic();
+            if (!filterTextField.isHintHolding()) filterPersonalMusic();
             else musicList.setModel(historyModel);
             musicScrollPane.setVBarValue(0);
             countLabel.setText(String.format(TOTAL_MSG, musicList.getModel().getSize()));
@@ -6488,7 +6487,7 @@ public class MainFrame extends JFrame {
 
             int selectedIndex = collectionTabbedPane.getSelectedIndex();
             // 筛选框活跃状态时进行筛选
-            if (filterTextField.isOccupied()) filterPersonalMusic();
+            if (!filterTextField.isHintHolding()) filterPersonalMusic();
             else musicList.setModel(collectionModel);
             musicScrollPane.setVBarValue(0);
 
@@ -6528,7 +6527,7 @@ public class MainFrame extends JFrame {
                 DefaultListModel<MusicResource> newModel = currLocalPlaylist.getMusicListModel();
                 musicListModel = newModel;
                 // 筛选框活跃状态时进行筛选
-                if (filterTextField.isOccupied()) filterPersonalMusic();
+                if (!filterTextField.isHintHolding()) filterPersonalMusic();
                 else {
                     musicList.setModel(musicListModel);
                     if (!musicListModel.isEmpty()) {
@@ -6550,7 +6549,7 @@ public class MainFrame extends JFrame {
                 DefaultListModel<MusicResource> newModel = currCollectionPlaylist.getMusicListModel();
                 collectionModel = newModel;
                 // 筛选框活跃状态时进行筛选
-                if (filterTextField.isOccupied()) filterPersonalMusic();
+                if (!filterTextField.isHintHolding()) filterPersonalMusic();
                 else {
                     musicList.setModel(collectionModel);
                     if (!collectionModel.isEmpty()) {
@@ -6849,12 +6848,12 @@ public class MainFrame extends JFrame {
         // 升序
         ascendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, ascendingMenuItem);
-            sortFiles(currSortMethod, currSortOrder = SortMethod.ASCENDING);
+            sortFiles(currSortMethod, currSortOrder = SortOrder.ASCENDING);
         });
         // 降序
         descendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, descendingMenuItem);
-            sortFiles(currSortMethod, currSortOrder = SortMethod.DESCENDING);
+            sortFiles(currSortMethod, currSortOrder = SortOrder.DESCENDING);
         });
         // 按曲名/文件名混合排序
         sortBySongNameAndFileNameMenuItem.addActionListener(e -> {
@@ -6884,7 +6883,7 @@ public class MainFrame extends JFrame {
         // 按时长排序
         sortByTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByTimeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_TIME, currSortOrder);
+            sortFiles(currSortMethod = SortMethod.BY_DURATION, currSortOrder);
         });
         // 按创建时间排序
         sortByCreationTimeMenuItem.addActionListener(e -> {
@@ -6987,11 +6986,11 @@ public class MainFrame extends JFrame {
         stylePopupMenu.add(manageStyleMenuItem);
         stylePopupMenu.add(styleCustomMenuItem);
         // 个人音乐筛选框
-        filterTextField.addFocusListener(new TextFieldHintListener(filterTextField, I18n.getText("filterByKeyword"), UIStyleStorage.currUIStyle.getForeColor()));
+        filterTextField.setHintText(I18n.getText("filterByKeyword"));
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (filterTextField.isOccupied()) {
+                if (!filterTextField.isHintHolding()) {
                     clearInputToolButton.setVisible(true);
                     filterPersonalMusic();
                 }
@@ -7498,11 +7497,11 @@ public class MainFrame extends JFrame {
 
     // 初始化在线音乐工具栏
     private void initNetMusicToolBar() {
-        searchTextField.addFocusListener(new TextFieldHintListener(searchTextField, "单曲/歌手/专辑/歌词/节目", UIStyleStorage.currUIStyle.getForeColor()));
+        searchTextField.setHintText("单曲/歌手/专辑/歌词/节目");
         searchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (searchTextField.isOccupied()) netMusicClearInputButton.setVisible(true);
+                if (!searchTextField.isHintHolding()) netMusicClearInputButton.setVisible(true);
                 updateSearchSug();
             }
 
@@ -9260,14 +9259,14 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionOuterPanel.setMaximumSize(size);
         collectionItemDescriptionOuterPanel.setMaximumSize(size);
         // 滚动条监听器
-        playlistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(playlistDescriptionScrollPane));
-        albumDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(albumDescriptionScrollPane));
-        artistDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(artistDescriptionScrollPane));
-        radioDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(radioDescriptionScrollPane));
-        rankingDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(rankingDescriptionScrollPane));
-        userDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(userDescriptionScrollPane));
-        recommendItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(recommendItemDescriptionScrollPane));
-        collectionItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneListener(collectionItemDescriptionScrollPane));
+        playlistDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(playlistDescriptionScrollPane));
+        albumDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(albumDescriptionScrollPane));
+        artistDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(artistDescriptionScrollPane));
+        radioDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(radioDescriptionScrollPane));
+        rankingDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(rankingDescriptionScrollPane));
+        userDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(userDescriptionScrollPane));
+        recommendItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(recommendItemDescriptionScrollPane));
+        collectionItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(collectionItemDescriptionScrollPane));
         // 水平滚动条
         playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -9634,11 +9633,11 @@ public class MainFrame extends JFrame {
 
     // 初始化在线歌单工具栏
     private void initNetPlaylistToolBar() {
-        netPlaylistSearchTextField.addFocusListener(new TextFieldHintListener(netPlaylistSearchTextField, "歌单", UIStyleStorage.currUIStyle.getForeColor()));
+        netPlaylistSearchTextField.setHintText("歌单");
         netPlaylistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netPlaylistSearchTextField.isOccupied()) netPlaylistClearInputButton.setVisible(true);
+                if (!netPlaylistSearchTextField.isHintHolding()) netPlaylistClearInputButton.setVisible(true);
             }
 
             @Override
@@ -10625,11 +10624,11 @@ public class MainFrame extends JFrame {
 
     // 初始化在线专辑工具栏
     private void initNetAlbumToolBar() {
-        netAlbumSearchTextField.addFocusListener(new TextFieldHintListener(netAlbumSearchTextField, "专辑", UIStyleStorage.currUIStyle.getForeColor()));
+        netAlbumSearchTextField.setHintText("专辑");
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netAlbumSearchTextField.isOccupied()) {
+                if (!netAlbumSearchTextField.isHintHolding()) {
                     netAlbumClearInputButton.setVisible(true);
                 }
             }
@@ -11630,11 +11629,11 @@ public class MainFrame extends JFrame {
 
     // 初始化歌手工具栏
     private void initNetArtistToolBar() {
-        netArtistSearchTextField.addFocusListener(new TextFieldHintListener(netArtistSearchTextField, "歌手", UIStyleStorage.currUIStyle.getForeColor()));
+        netArtistSearchTextField.setHintText("歌手");
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netArtistSearchTextField.isOccupied()) {
+                if (!netArtistSearchTextField.isHintHolding()) {
                     netArtistClearInputButton.setVisible(true);
                 }
             }
@@ -12863,11 +12862,11 @@ public class MainFrame extends JFrame {
 
     // 初始化电台工具栏
     private void initNetRadioToolBar() {
-        netRadioSearchTextField.addFocusListener(new TextFieldHintListener(netRadioSearchTextField, "电台", UIStyleStorage.currUIStyle.getForeColor()));
+        netRadioSearchTextField.setHintText("电台");
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netRadioSearchTextField.isOccupied()) {
+                if (!netRadioSearchTextField.isHintHolding()) {
                     netRadioClearInputButton.setVisible(true);
                 }
             }
@@ -13984,11 +13983,11 @@ public class MainFrame extends JFrame {
             netMvBackwardButton.setEnabled(false);
             netMvLeftBox.repaint();
         });
-        netMvSearchTextField.addFocusListener(new TextFieldHintListener(netMvSearchTextField, "MV", UIStyleStorage.currUIStyle.getForeColor()));
+        netMvSearchTextField.setHintText("MV");
         netMvSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netMvSearchTextField.isOccupied()) {
+                if (!netMvSearchTextField.isHintHolding()) {
                     netMvClearInputButton.setVisible(true);
                 }
             }
@@ -15346,11 +15345,11 @@ public class MainFrame extends JFrame {
 
     // 初始化用户工具栏
     private void initNetUserToolBar() {
-        netUserSearchTextField.addFocusListener(new TextFieldHintListener(netUserSearchTextField, "用户", UIStyleStorage.currUIStyle.getForeColor()));
+        netUserSearchTextField.setHintText("用户");
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (netUserSearchTextField.isOccupied()) {
+                if (!netUserSearchTextField.isHintHolding()) {
                     netUserClearInputButton.setVisible(true);
                 }
             }
@@ -20364,7 +20363,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
         if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.TAB;
-        lastPaneType = -1;
+        lastPaneType = null;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
         ComponentChangeHandler onFadingOutStopped = (s, t) -> {
             if (extraOperation != null) extraOperation.run();
@@ -20405,7 +20404,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
         if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.LYRIC;
-        lastPaneType = -1;
+        lastPaneType = null;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
         ComponentChangeHandler onFadingOutStopped = (s, t) -> {
             if (extraOperation != null) extraOperation.run();
@@ -20950,7 +20949,7 @@ public class MainFrame extends JFrame {
     }
 
     // 加载歌词
-    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, int lyricType, boolean reload) {
+    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, LyricType lyricType, boolean reload) {
         if (player.isEmpty()) return;
         clearLrc();
 
@@ -20984,8 +20983,8 @@ public class MainFrame extends JFrame {
         else {
             switch (lyricType) {
                 // 歌词
-                case LyricType.ORIGINAL:
-                case LyricType.TRADITIONAL_CN:
+                case ORIGINAL:
+                case TRADITIONAL_CN:
                     if (musicInfo.hasLrc()) {
                         String lrc = musicInfo.getLrc();
                         lrcData = new LrcData(lrc);
@@ -21000,7 +20999,7 @@ public class MainFrame extends JFrame {
                     } else state = NO_LRC;
                     break;
                 // 翻译
-                case LyricType.TRANSLATION:
+                case TRANSLATION:
                     if (musicInfo.hasTrans()) {
                         String trans = musicInfo.getTrans();
                         lrcData = new LrcData(trans);
@@ -21016,7 +21015,7 @@ public class MainFrame extends JFrame {
                     }
                     break;
                 // 罗马音
-                case LyricType.ROMA:
+                case ROMA:
                     if (musicInfo.hasRoma()) {
                         String roma = musicInfo.getRoma();
                         lrcData = new LrcData(roma);
@@ -21179,22 +21178,22 @@ public class MainFrame extends JFrame {
         // 播放结束
         mp.setOnEndOfMedia(() -> {
             switch (currPlayMode) {
-                case PlayMode.DISABLED:
+                case DISABLED:
                     stopPlayback();
                     break;
-                case PlayMode.SINGLE:
+                case SINGLE:
                     playLoaded(true);
                     seekLrc(0);
                     break;
-                case PlayMode.SEQUENCE:
+                case SEQUENCE:
                     if (currSong < playQueueModel.size() - 1) playNext();
                         // 播放完后卸载文件
                     else unload();
                     break;
-                case PlayMode.LIST_CYCLE:
+                case LIST_CYCLE:
                     playNext();
                     break;
-                case PlayMode.SHUFFLE:
+                case SHUFFLE:
                     // 播放下一个随机
                     playNextShuffle();
                     break;
@@ -21599,7 +21598,7 @@ public class MainFrame extends JFrame {
     }
 
     // 列表排序
-    private void sortFiles(int method, int order) {
+    private void sortFiles(SortMethod method, SortOrder order) {
         DefaultListModel model = (DefaultListModel) musicList.getModel();
         List<Object> list = Collections.list(model.elements());
         if (method == SortMethod.BY_SONG_AND_FILE_NAME) {
@@ -21614,7 +21613,7 @@ public class MainFrame extends JFrame {
                         AudioFile f2 = (AudioFile) o2;
                         s2 = f2.toString();
                     } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
+                    return order == SortOrder.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21628,7 +21627,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getSongName();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
+                    return order == SortOrder.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21642,7 +21641,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getArtist();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getArtist();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
-                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
+                    return order == SortOrder.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21656,7 +21655,7 @@ public class MainFrame extends JFrame {
                     else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getAlbumName();
                     if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getAlbum();
                     else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
-                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
+                    return order == SortOrder.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                 }
@@ -21670,7 +21669,7 @@ public class MainFrame extends JFrame {
                 if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getName();
                 else if (o2 instanceof NetMusicInfo) s2 = o2.toString();
                 try {
-                    return order == SortMethod.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
+                    return order == SortOrder.ASCENDING ? LangUtil.compare(s1, s2) : LangUtil.compare(s2, s1);
                 } catch (BadHanyuPinyinOutputFormatCombination e) {
                     LogUtil.error(e);
                     return 0;
@@ -21678,7 +21677,7 @@ public class MainFrame extends JFrame {
             });
         }
         // 按时长排序只支持本地音乐
-        else if (method == SortMethod.BY_TIME && model == musicListModel) {
+        else if (method == SortMethod.BY_DURATION && model == musicListModel) {
             Collections.sort(list, (o1, o2) -> {
                 double d1;
                 double d2;
@@ -21689,7 +21688,7 @@ public class MainFrame extends JFrame {
                     LogUtil.error(e);
                     return 0;
                 }
-                return order == SortMethod.ASCENDING ? Double.compare(d1, d2) : Double.compare(d2, d1);
+                return order == SortOrder.ASCENDING ? Double.compare(d1, d2) : Double.compare(d2, d1);
             });
         }
         // 按修改时间排序只支持本地音乐
@@ -21697,7 +21696,7 @@ public class MainFrame extends JFrame {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = ((File) o1).lastModified();
                 long t2 = ((File) o2).lastModified();
-                return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
+                return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
         // 按创建时间排序只支持本地音乐
@@ -21705,7 +21704,7 @@ public class MainFrame extends JFrame {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = FileUtil.getCreationTime((File) o1);
                 long t2 = FileUtil.getCreationTime((File) o2);
-                return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
+                return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
         // 按访问时间排序只支持本地音乐
@@ -21713,7 +21712,7 @@ public class MainFrame extends JFrame {
             Collections.sort(list, (o1, o2) -> {
                 long t1 = FileUtil.getAccessTime((File) o1);
                 long t2 = FileUtil.getAccessTime((File) o2);
-                return order == SortMethod.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
+                return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
             });
         }
         // 文件大小排序只支持本地音乐
@@ -21721,7 +21720,7 @@ public class MainFrame extends JFrame {
             Collections.sort(list, (o1, o2) -> {
                 long l1 = ((File) o1).length();
                 long l2 = ((File) o2).length();
-                return order == SortMethod.ASCENDING ? Long.compare(l1, l2) : Long.compare(l2, l1);
+                return order == SortOrder.ASCENDING ? Long.compare(l1, l2) : Long.compare(l2, l1);
             });
         }
         musicList.setModel(emptyListModel);
@@ -22221,26 +22220,14 @@ public class MainFrame extends JFrame {
             }
         }
         // 筛选框透明
-        FocusListener[] focusListeners = filterTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        filterTextField.setForeground(filterTextField.isOccupied() ? textColor : darkerTextColor);
+        filterTextField.updateStyle();
+        filterTextField.setForeground(!filterTextField.isHintHolding() ? textColor : darkerTextColor);
         filterTextField.setCaretColor(textColor);
         filterTextField.setSelectedTextColor(textColor);
         filterTextField.setSelectionColor(darkerTextAlphaColor);
         // 在线音乐搜索栏透明
-        focusListeners = searchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        searchTextField.setForeground(searchTextField.isOccupied() ? textColor : darkerTextColor);
+        searchTextField.updateStyle();
+        searchTextField.setForeground(!searchTextField.isHintHolding() ? textColor : darkerTextColor);
         searchTextField.setCaretColor(textColor);
         searchTextField.setSelectedTextColor(textColor);
         searchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22254,14 +22241,8 @@ public class MainFrame extends JFrame {
         // 歌单搜索栏透明
         netPlaylistIdCheckBox.setForeground(textColor);
         netPlaylistIdCheckBox.updateIconStyle();
-        focusListeners = netPlaylistSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netPlaylistSearchTextField.setForeground(netPlaylistSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netPlaylistSearchTextField.updateStyle();
+        netPlaylistSearchTextField.setForeground(!netPlaylistSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netPlaylistSearchTextField.setCaretColor(textColor);
         netPlaylistSearchTextField.setSelectedTextColor(textColor);
         netPlaylistSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22272,14 +22253,8 @@ public class MainFrame extends JFrame {
         netPlaylistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netPlaylistPlayAllButton.setForeground(textColor);
         // 专辑搜索栏透明
-        focusListeners = netAlbumSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netAlbumSearchTextField.setForeground(netAlbumSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netAlbumSearchTextField.updateStyle();
+        netAlbumSearchTextField.setForeground(!netAlbumSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netAlbumSearchTextField.setCaretColor(textColor);
         netAlbumSearchTextField.setSelectedTextColor(textColor);
         netAlbumSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22290,14 +22265,8 @@ public class MainFrame extends JFrame {
         netAlbumPageTextField.setSelectionColor(darkerTextAlphaColor);
         netAlbumPlayAllButton.setForeground(textColor);
         // 歌手搜索栏透明
-        focusListeners = netArtistSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netArtistSearchTextField.setForeground(netArtistSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netArtistSearchTextField.updateStyle();
+        netArtistSearchTextField.setForeground(!netArtistSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netArtistSearchTextField.setCaretColor(textColor);
         netArtistSearchTextField.setSelectedTextColor(textColor);
         netArtistSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22308,14 +22277,8 @@ public class MainFrame extends JFrame {
         netArtistPageTextField.setSelectionColor(darkerTextAlphaColor);
         netArtistPlayAllButton.setForeground(textColor);
         // 电台搜索栏透明
-        focusListeners = netRadioSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netRadioSearchTextField.setForeground(netRadioSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netRadioSearchTextField.updateStyle();
+        netRadioSearchTextField.setForeground(!netRadioSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netRadioSearchTextField.setCaretColor(textColor);
         netRadioSearchTextField.setSelectedTextColor(textColor);
         netRadioSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22326,14 +22289,8 @@ public class MainFrame extends JFrame {
         netRadioPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRadioPlayAllButton.setForeground(textColor);
         // MV 搜索栏透明
-        focusListeners = netMvSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netMvSearchTextField.setForeground(netMvSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netMvSearchTextField.updateStyle();
+        netMvSearchTextField.setForeground(!netMvSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netMvSearchTextField.setCaretColor(textColor);
         netMvSearchTextField.setSelectedTextColor(textColor);
         netMvSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22349,14 +22306,8 @@ public class MainFrame extends JFrame {
         netRankingPageTextField.setSelectionColor(darkerTextAlphaColor);
         netRankingPlayAllButton.setForeground(textColor);
         // 用户搜索栏透明
-        focusListeners = netUserSearchTextField.getFocusListeners();
-        for (FocusListener focusListener : focusListeners) {
-            if (focusListener instanceof TextFieldHintListener) {
-                ((TextFieldHintListener) focusListener).setInputColor(textColor);
-                ((TextFieldHintListener) focusListener).setPlaceholderColor(darkerTextColor);
-            }
-        }
-        netUserSearchTextField.setForeground(netUserSearchTextField.isOccupied() ? textColor : darkerTextColor);
+        netUserSearchTextField.updateStyle();
+        netUserSearchTextField.setForeground(!netUserSearchTextField.isHintHolding() ? textColor : darkerTextColor);
         netUserSearchTextField.setCaretColor(textColor);
         netUserSearchTextField.setSelectedTextColor(textColor);
         netUserSearchTextField.setSelectionColor(darkerTextAlphaColor);
@@ -22784,7 +22735,7 @@ public class MainFrame extends JFrame {
         lrcListRenderer.setBgColor(lrcColor);
         lrcListRenderer.setHighlightColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
-        lrcList.setUI(new CustomListUI(-1));  // 歌词禁用字体透明，需要用到自定义 List
+        lrcList.setUI(new CustomListUI());
 
         // 进度条和控制面板透明
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
@@ -22851,7 +22802,7 @@ public class MainFrame extends JFrame {
 
         // 加载中图标
         loading.setIcon(ImageUtil.dye(loadingIcon, iconColor));
-        loading.setForeColor(textColor);
+        loading.setForeground(textColor);
 
         // 更新标签按钮样式
         updateTabButtonStyle();
@@ -22917,17 +22868,17 @@ public class MainFrame extends JFrame {
     public void playOrPause() {
         switch (player.getStatus()) {
             // 空状态，载入选择的音乐并播放
-            case PlayerStatus.EMPTY:
+            case EMPTY:
                 // 播放队列没有选中并且有歌曲在队列时自动选中第一首播放
                 if (playQueue.getSelectedIndex() == -1 && !playQueueModel.isEmpty()) playQueue.setSelectedIndex(0);
                 playExecutor.execute(() -> playSelected(playQueue, false));
                 break;
             // 就绪状态
-            case PlayerStatus.LOADED:
+            case LOADED:
                 playLoaded(false);
                 break;
             // 暂停状态
-            case PlayerStatus.PAUSED:
+            case PAUSED:
                 player.play();
                 playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 playOrPauseButton.setToolTipText(PAUSE_TIP);
@@ -22937,7 +22888,7 @@ public class MainFrame extends JFrame {
                 }
                 break;
             // 播放状态
-            case PlayerStatus.PLAYING:
+            case PLAYING:
                 // 淡出式暂停
                 Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.25), new KeyValue(player.getMp().volumeProperty(), 0)));
                 timeline.setOnFinished(event -> {
@@ -22953,7 +22904,7 @@ public class MainFrame extends JFrame {
                 }
                 break;
             // 停止状态
-            case PlayerStatus.STOPPED:
+            case STOPPED:
                 playLoaded(true);
                 seekLrc(0);
                 break;
@@ -23076,7 +23027,7 @@ public class MainFrame extends JFrame {
     }
 
     // 播放 MV
-    private void playMv(int mvType) {
+    private void playMv(MvCompSourceType mvType) {
         // 播放下载列表的 MV
         if (mvType == MvCompSourceType.DOWNLOAD_LIST) {
             Task task = downloadList.getSelectedValue();
@@ -23461,7 +23412,7 @@ public class MainFrame extends JFrame {
     }
 
     // 从搜索历史删除关键词
-    private void removeKeywordInHistorySearch(String keyword, int type) {
+    private void removeKeywordInHistorySearch(String keyword, HistorySearchType type) {
         CustomPanel p = null;
         if (type == HistorySearchType.NET_MUSIC) p = netMusicHistorySearchInnerPanel2;
         else if (type == HistorySearchType.NET_PLAYLIST) p = netPlaylistHistorySearchInnerPanel2;

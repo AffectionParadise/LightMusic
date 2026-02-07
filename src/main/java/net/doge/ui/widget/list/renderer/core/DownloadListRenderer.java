@@ -3,7 +3,6 @@ package net.doge.ui.widget.list.renderer.core;
 import lombok.Data;
 import net.doge.constant.core.task.TaskStatus;
 import net.doge.constant.core.task.TaskType;
-import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
 import net.doge.entity.core.task.Task;
@@ -29,8 +28,6 @@ import java.awt.*;
  */
 @Data
 public class DownloadListRenderer extends CustomListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -111,13 +108,6 @@ public class DownloadListRenderer extends CustomListCellRenderer {
             statusLabel.setOpacity(1f);
             sliderUI.setRest(false);
         }
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        typeLabel.setFont(customFont);
-        sizeLabel.setFont(customFont);
-        percentLabel.setFont(customFont);
-        statusLabel.setFont(customFont);
 
         int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String type = HtmlUtil.textToHtml(TaskType.NAMES[task.getType()]);

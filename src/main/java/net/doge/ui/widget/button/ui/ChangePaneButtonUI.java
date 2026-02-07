@@ -24,7 +24,7 @@ public class ChangePaneButtonUI extends BasicButtonUI {
     protected Timer drawMaskTimer;
     protected float maskAlpha;
     protected final float destMaskAlpha = 0.3f;
-    public static BufferedImage frameImg = LMIconManager.getImage("control.frame");
+    private static BufferedImage frameImg = LMIconManager.getImage("control.frame");
 
     public ChangePaneButtonUI(ChangePaneButton button) {
         frameImg = ImageUtil.dye(frameImg, UIStyleStorage.currUIStyle.getIconColor());

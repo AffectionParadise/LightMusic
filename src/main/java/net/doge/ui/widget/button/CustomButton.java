@@ -3,7 +3,7 @@ package net.doge.ui.widget.button;
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.listener.CustomButtonMouseListener;
+import net.doge.ui.widget.button.listener.CustomButtonMouseAdapter;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
@@ -44,7 +44,7 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
     }
 
     private void init() {
-        addMouseListener(new CustomButtonMouseListener(this));
+        addMouseListener(new CustomButtonMouseAdapter(this));
 
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);
@@ -98,7 +98,7 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
             Graphics2D g2d = GraphicsUtil.setup(g);
             int w = getWidth(), h = getHeight();
             GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
-            if (w / h >= 3) {
+            if (w - h >= ScaleUtil.scale(10)) {
                 g2d.setColor(getForeground());
                 int arc = ScaleUtil.scale(10);
                 g2d.fillRoundRect(0, 0, w, h, arc, arc);

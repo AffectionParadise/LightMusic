@@ -691,7 +691,7 @@ public class ImageUtil {
      * @return
      */
     public static Color getAvgColor(BufferedImage img) {
-        return getAvgColor(img, 1f, false);
+        return getAvgColor(img, false);
     }
 
     /**
@@ -701,7 +701,7 @@ public class ImageUtil {
      * @return
      */
     public static Color getBestAvgColor(BufferedImage img) {
-        return getAvgColor(img, 1f, true);
+        return getAvgColor(img, true);
     }
 
     /**
@@ -710,7 +710,7 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static Color getAvgColor(BufferedImage img, float alpha, boolean best) {
+    public static Color getAvgColor(BufferedImage img, boolean best) {
         int w = img.getWidth(), h = img.getHeight();
         List<Float> dots = new LinkedList<>();
         for (float i = 0; i < 1; i += 0.05f) dots.add(i);
@@ -725,8 +725,8 @@ public class ImageUtil {
             }
         }
         int cn = s * s;
-        return best ? ColorUtil.deriveAlpha(ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn)), alpha)
-                : new Color(R / cn, G / cn, B / cn, (int) (255 * alpha));
+        return best ? ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn))
+                : new Color(R / cn, G / cn, B / cn);
     }
 
     /**

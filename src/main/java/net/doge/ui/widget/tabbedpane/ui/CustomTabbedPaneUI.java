@@ -27,24 +27,18 @@ public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
         }
     }
 
-    //
-//    @Override
-//    protected void paintTab(Graphics g, int tabPlacement, Rectangle[] rects, int tabIndex, Rectangle iconRect, Rectangle textRect) {
-//        super.paintTab(g, tabPlacement, rects, tabIndex, iconRect, textRect);
-//    }
-
     @Override
     protected void paintTabBorder(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-//        super.paintTabBorder(g, tabPlacement, tabIndex, x, y, w, h, isSelected);
+        // 不绘制标签边框
     }
 
     @Override
     protected void paintTabBackground(Graphics g, int tabPlacement, int tabIndex, int x, int y, int w, int h, boolean isSelected) {
-//        super.paintTabBackground(g, tabPlacement, tabIndex, x, y, w, h, isSelected);
+        // 不绘制标签背景
     }
 
     @Override
     protected void paintContentBorder(Graphics g, int tabPlacement, int selectedIndex) {
-//        super.paintContentBorder(g, tabPlacement, selectedIndex);
+        // 不绘制内容背景
     }
 }

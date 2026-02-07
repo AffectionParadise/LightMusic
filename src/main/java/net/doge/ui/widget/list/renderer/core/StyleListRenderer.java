@@ -26,9 +26,7 @@ import java.awt.image.BufferedImage;
  */
 @Data
 public class StyleListRenderer extends CustomListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
-    private Font tinyFont = Fonts.NORMAL_TINY;
+    private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -57,6 +55,9 @@ public class StyleListRenderer extends CustomListCellRenderer {
         float opacity = 0.5f;
         typeLabel.setOpacity(opacity);
 
+        typeLabel.setFont(tinyFont);
+        inUseLabel.setFont(tinyFont);
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -81,11 +82,6 @@ public class StyleListRenderer extends CustomListCellRenderer {
         nameLabel.setForeground(textColor);
         typeLabel.setForeground(textColor);
         inUseLabel.setForeground(textColor);
-
-        iconLabel.setFont(customFont);
-        nameLabel.setFont(customFont);
-        typeLabel.setFont(tinyFont);
-        inUseLabel.setFont(tinyFont);
 
         BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
         outerPanel.setLayout(layout);

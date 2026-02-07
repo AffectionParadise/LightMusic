@@ -5,15 +5,15 @@ package net.doge.constant.core.player;
  * @Description 播放器状态
  * @Date 2020/12/7
  */
-public class PlayerStatus {
+public enum PlayerStatus {
     // 空
-    public static final int EMPTY = 100;
+    EMPTY,
     // 就绪
-    public static final int LOADED = 200;
+    LOADED,
     // 播放中
-    public static final int PLAYING = 300;
+    PLAYING,
     // 暂停中
-    public static final int PAUSED = 400;
+    PAUSED,
     // 已停止
-    public static final int STOPPED = 500;
+    STOPPED
 }

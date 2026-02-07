@@ -1,7 +1,7 @@
 package net.doge.ui.widget.button;
 
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.listener.ChangePaneButtonMouseListener;
+import net.doge.ui.widget.button.listener.ChangePaneButtonMouseAdapter;
 import net.doge.ui.widget.button.ui.ChangePaneButtonUI;
 
 public class ChangePaneButton extends BaseButton {
@@ -10,7 +10,7 @@ public class ChangePaneButton extends BaseButton {
     }
 
     private void init() {
-        addMouseListener(new ChangePaneButtonMouseListener(this));
+        addMouseListener(new ChangePaneButtonMouseAdapter(this));
     }
 
     public void transitionDrawMask(boolean drawMaskIncreasing) {

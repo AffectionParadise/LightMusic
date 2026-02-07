@@ -6,20 +6,21 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
-import net.doge.ui.widget.textfield.listener.TextFieldHintListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @Data
 public class CustomTextArea extends JTextArea implements ExtendedOpacitySupported {
     private static final HDEmptyBorder BORDER = new HDEmptyBorder(5, 10, 5, 10);
 
-    private boolean occupied;
     @Getter
     private float extendedOpacity = 1f;
 
@@ -41,14 +42,14 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
             @Override
             public void mousePressed(MouseEvent e) {
                 requestFocus();
-                getCaret().setVisible(true);
+                setCaretVisible(true);
             }
         });
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 setFocusable(false);
-                getCaret().setVisible(false);
+                setCaretVisible(false);
                 repaint();
             }
         });
@@ -58,33 +59,18 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
     @Override
     public void requestFocus() {
         setFocusable(true);
-        setOccupied(true);
         super.requestFocus();
-    }
-
-    public boolean isOccupied() {
-        return occupied;
-    }
-
-    public void setOccupied(boolean occupied) {
-        this.occupied = occupied;
-    }
-
-    // 判断是否需要刷新
-    private boolean needRefresh() {
-        FocusListener[] fls = getFocusListeners();
-        for (FocusListener fl : fls) {
-            if (fl instanceof TextFieldHintListener) return false;
-        }
-        return true;
     }
 
     @Override
     public void setText(String t) {
         super.setText(t);
         // 解决设置文本后不刷新的问题
-        if (!needRefresh()) return;
         revalidate();
+    }
+
+    public void setCaretVisible(boolean visible) {
+        getCaret().setVisible(visible);
     }
 
     @Override

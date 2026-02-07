@@ -2,7 +2,7 @@ package net.doge.ui.widget.button.listener;
 
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
-import net.doge.ui.widget.button.CustomButton;
+import net.doge.ui.widget.button.TabButton;
 import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
@@ -14,10 +14,10 @@ import java.awt.event.MouseEvent;
  * @Description 改变按钮样式的监听器
  * @Date 2021/1/10
  */
-public class CustomButtonMouseListener extends MouseAdapter {
-    private CustomButton b;
+public class TabButtonMouseAdapter extends MouseAdapter {
+    private TabButton b;
 
-    public CustomButtonMouseListener(CustomButton b) {
+    public TabButtonMouseAdapter(TabButton b) {
         this.b = b;
     }
 
@@ -41,7 +41,7 @@ public class CustomButtonMouseListener extends MouseAdapter {
         Color textColor = style.getTextColor();
         b.updateIconStyle();
         b.setForeground(textColor);
-        b.transitionDrawBg(false);
+        b.transitionDrawBg(b.isActive());
     }
 
     @Override

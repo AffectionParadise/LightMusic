@@ -5,12 +5,12 @@ package net.doge.constant.core.data;
  * @Description 搜索历史类型
  * @Date 2020/12/7
  */
-public class HistorySearchType {
-    public static final int NET_MUSIC = 0;
-    public static final int NET_PLAYLIST = 1;
-    public static final int NET_ALBUM = 2;
-    public static final int NET_ARTIST = 3;
-    public static final int NET_RADIO = 4;
-    public static final int NET_MV = 5;
-    public static final int NET_USER = 6;
+public enum HistorySearchType {
+    NET_MUSIC,
+    NET_PLAYLIST,
+    NET_ALBUM,
+    NET_ARTIST,
+    NET_RADIO,
+    NET_MV,
+    NET_USER
 }

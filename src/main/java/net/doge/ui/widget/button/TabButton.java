@@ -5,7 +5,7 @@ import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.listener.TabButtonMouseListener;
+import net.doge.ui.widget.button.listener.TabButtonMouseAdapter;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
@@ -50,7 +50,7 @@ public class TabButton extends BaseButton implements ExtendedOpacitySupported {
     private void init() {
         setFont(Fonts.NORMAL_TITLE2);
         setIconTextGap(ScaleUtil.scale(15));
-        addMouseListener(new TabButtonMouseListener(this));
+        addMouseListener(new TabButtonMouseAdapter(this));
 
         drawBgTimer = new Timer(2, e -> {
             if (drawBgIncreasing) bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.005f);

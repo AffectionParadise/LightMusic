@@ -12,7 +12,6 @@ public class LimitedDocument extends PlainDocument {
     private int max;
     private boolean numberRequired;
     private boolean ranged;
-
     // 长度限制
     private int lengthLimit;
     private boolean lengthLimited;

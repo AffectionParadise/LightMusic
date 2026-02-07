@@ -2,7 +2,7 @@ package net.doge.ui.widget.button.listener;
 
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
-import net.doge.ui.widget.button.DialogButton;
+import net.doge.ui.widget.button.ChangePaneButton;
 import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
@@ -14,10 +14,10 @@ import java.awt.event.MouseEvent;
  * @Description 改变按钮样式的监听器
  * @Date 2021/1/10
  */
-public class DialogButtonMouseListener extends MouseAdapter {
-    private DialogButton b;
+public class ChangePaneButtonMouseAdapter extends MouseAdapter {
+    private ChangePaneButton b;
 
-    public DialogButtonMouseListener(DialogButton b) {
+    public ChangePaneButtonMouseAdapter(ChangePaneButton b) {
         this.b = b;
     }
 
@@ -28,7 +28,7 @@ public class DialogButtonMouseListener extends MouseAdapter {
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         b.setForeground(btc);
-        b.transitionHighlightBg(true);
+        b.transitionDrawMask(true);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class DialogButtonMouseListener extends MouseAdapter {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
         b.setForeground(textColor);
-        b.transitionHighlightBg(false);
+        b.transitionDrawMask(false);
     }
 
     @Override
@@ -46,7 +46,6 @@ public class DialogButtonMouseListener extends MouseAdapter {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
         Color dtc = ColorUtil.darker(textColor);
-        b.setHighlightBg(false);
         b.setForeground(dtc);
     }
 
@@ -56,7 +55,6 @@ public class DialogButtonMouseListener extends MouseAdapter {
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
-        b.setHighlightBg(c);
         b.setForeground(c ? btc : textColor);
     }
 }

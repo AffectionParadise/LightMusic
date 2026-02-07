@@ -2,7 +2,7 @@ package net.doge.ui.widget.button.listener;
 
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
-import net.doge.ui.widget.button.ChangePaneButton;
+import net.doge.ui.widget.button.CustomButton;
 import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
@@ -14,10 +14,10 @@ import java.awt.event.MouseEvent;
  * @Description 改变按钮样式的监听器
  * @Date 2021/1/10
  */
-public class ChangePaneButtonMouseListener extends MouseAdapter {
-    private ChangePaneButton b;
+public class CustomButtonMouseAdapter extends MouseAdapter {
+    private CustomButton b;
 
-    public ChangePaneButtonMouseListener(ChangePaneButton b) {
+    public CustomButtonMouseAdapter(CustomButton b) {
         this.b = b;
     }
 
@@ -25,10 +25,13 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
     public void mouseEntered(MouseEvent e) {
         if (!b.isEnabled()) return;
         UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
+        Color bic = ColorUtil.brighter(iconColor);
+        b.updateIconColor(bic);
         b.setForeground(btc);
-        b.transitionDrawMask(true);
+        b.transitionDrawBg(true);
     }
 
     @Override
@@ -36,25 +39,32 @@ public class ChangePaneButtonMouseListener extends MouseAdapter {
         if (!b.isEnabled()) return;
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
+        b.updateIconStyle();
         b.setForeground(textColor);
-        b.transitionDrawMask(false);
+        b.transitionDrawBg(false);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         if (e.getButton() != MouseEvent.BUTTON1) return;
         UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
         Color textColor = style.getTextColor();
         Color dtc = ColorUtil.darker(textColor);
+        Color dic = ColorUtil.darker(iconColor);
+        b.updateIconColor(dic);
         b.setForeground(dtc);
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         UIStyle style = UIStyleStorage.currUIStyle;
+        Color iconColor = style.getIconColor();
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
+        Color bic = ColorUtil.brighter(iconColor);
         boolean c = b.getVisibleRect().contains(e.getPoint());
+        b.updateIconColor(c ? bic : iconColor);
         b.setForeground(c ? btc : textColor);
     }
 }

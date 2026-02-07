@@ -3,6 +3,7 @@ package net.doge.ui.widget.panel;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.ui.widget.panel.listener.LoadingPanelMouseListener;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
@@ -16,7 +17,7 @@ import java.awt.*;
  * @Description loading 面板
  * @Date 2020/12/21
  */
-public class LoadingPanel extends CustomPanel {
+public class LoadingPanel extends BasePanel {
     private final Font textFont = Fonts.NORMAL_BIG;
 
     //    private RotatableIcon icon;
@@ -24,6 +25,7 @@ public class LoadingPanel extends CustomPanel {
 
     private boolean closing;
     private float bgAlpha;
+    private final float destBgAlpha = 0.7f;
     private Timer showTimer;
     //    private Timer rotationTimer;
 
@@ -51,17 +53,17 @@ public class LoadingPanel extends CustomPanel {
             if (closing) {
                 bgAlpha = Math.max(0f, bgAlpha - 0.02f);
                 label.setOpacity(Math.max(0f, opacity - 0.028f));
+                if (bgAlpha <= 0f) {
+                    setVisible(false);
+                    showTimer.stop();
+//                rotationTimer.stop();
+                }
             } else {
-                bgAlpha = Math.min(0.7f, bgAlpha + 0.02f);
+                bgAlpha = Math.min(destBgAlpha, bgAlpha + 0.02f);
                 label.setOpacity(Math.min(1f, opacity + 0.028f));
+                if (bgAlpha >= destBgAlpha) showTimer.stop();
             }
             repaint();
-            if (!closing && bgAlpha >= 0.7f) showTimer.stop();
-            else if (closing && bgAlpha <= 0f) {
-                setVisible(false);
-                showTimer.stop();
-//                rotationTimer.stop();
-            }
         });
 //        // 图标旋转动画
 //        rotationTimer = new Timer(60, e -> {
@@ -92,11 +94,13 @@ public class LoadingPanel extends CustomPanel {
         label.setText(text);
     }
 
-    public void setForeColor(Color color) {
-        label.setForeground(color);
+    @Override
+    public void setForeground(Color fg) {
+        super.setForeground(fg);
+        if (label != null) label.setForeground(fg);
     }
 
-    public void setIcon(ImageIcon icon) {
+    public void setIcon(Icon icon) {
         label.setIcon(icon);
     }
 
@@ -105,7 +109,8 @@ public class LoadingPanel extends CustomPanel {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int pw = getWidth(), ph = getHeight();
         // 画背景
-        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg(), bgAlpha, false));
+        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
+        GraphicsUtil.srcOver(g2d, bgAlpha);
         g2d.fillRect(0, 0, pw, ph);
         super.paintComponent(g);
     }

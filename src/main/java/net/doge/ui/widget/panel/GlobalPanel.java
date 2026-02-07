@@ -1,6 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Data;
+import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 
@@ -15,7 +16,7 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/12
  */
 @Data
-public class GlobalPanel extends JPanel {
+public class GlobalPanel extends BasePanel {
 //    // 最大阴影透明度
 //    private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
 //    // 阴影大小像素
@@ -36,13 +37,12 @@ public class GlobalPanel extends JPanel {
 //    private Runnable onAfterSlide;
 
     public GlobalPanel() {
-        init();
+//        init();
     }
 
-    private void init() {
-        setOpaque(false);
+//    private void init() {
 //        initBorder();
-    }
+//    }
 
     public void setBgImg(BufferedImage bgImg) {
         lImg = this.bgImg;
@@ -127,12 +127,18 @@ public class GlobalPanel extends JPanel {
 //        slideTimer.start();
 //    }
 
-    // 返回组件索引，找不到返回 -1
-    public int getComponentIndex(Component comp) {
-        Component[] components = getComponents();
-        for (int i = 0, len = components.length; i < len; i++)
-            if (components[i] == comp) return i;
-        return -1;
+    // 画出旋转后的图像
+    private void paintRotatedImg(Graphics2D g2d, BufferedImage img) {
+        // 保存原始变换状态
+        AffineTransform originalTransform = g2d.getTransform();
+        // 面板中心
+        int cx = getWidth() / 2, cy = getHeight() / 2;
+        // 旋转
+        g2d.rotate(Math.toRadians(angle), cx, cy);
+        // 绘制图像（坐标需调整为以中心点为基准）
+        g2d.drawImage(img, cx - img.getWidth() / 2, cy - img.getHeight() / 2, this);
+        // 恢复原始变换（重要！）
+        g2d.setTransform(originalTransform);
     }
 
     @Override
@@ -177,19 +183,5 @@ public class GlobalPanel extends JPanel {
 //        }
 
         GraphicsUtil.srcOver(g2d);
-    }
-
-    // 画出旋转后的图像
-    private void paintRotatedImg(Graphics2D g2d, BufferedImage img) {
-        // 保存原始变换状态
-        AffineTransform originalTransform = g2d.getTransform();
-        // 面板中心
-        int cx = getWidth() / 2, cy = getHeight() / 2;
-        // 旋转
-        g2d.rotate(Math.toRadians(angle), cx, cy);
-        // 绘制图像（坐标需调整为以中心点为基准）
-        g2d.drawImage(img, cx - img.getWidth() / 2, cy - img.getHeight() / 2, this);
-        // 恢复原始变换（重要！）
-        g2d.setTransform(originalTransform);
     }
 }

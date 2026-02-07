@@ -43,7 +43,7 @@ public class MusicPlayer {
     // 载入的在线音乐信息，如果是本地音乐则为 null
     private NetMusicInfo musicInfo;
     // 当前播放器状态
-    private int status;
+    private PlayerStatus status;
     // 播放器
     private MediaPlayer mp;
 

@@ -27,6 +27,7 @@ public class SwingUtil {
         queue.offer(component);
         while (!queue.isEmpty()) {
             Component comp = queue.poll();
+            if (comp == null) continue;
             // 设置组件透明度
             if (comp instanceof ExtendedOpacitySupported) {
                 ((ExtendedOpacitySupported) comp).setExtendedOpacity(opacity);
@@ -41,7 +42,7 @@ public class SwingUtil {
                     ListCellRenderer renderer = list.getCellRenderer();
                     if (renderer instanceof CustomListCellRenderer) {
                         Component com = ((CustomListCellRenderer) renderer).getRootComponent();
-                        if (com != null) queue.offer(com);
+                        queue.offer(com);
                     }
                 }
                 // CustomComboBox 视图需要单独处理 popup 中的组件

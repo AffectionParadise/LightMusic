@@ -1,22 +1,43 @@
 package net.doge.constant.core.sort;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 /**
  * @Author Doge
  * @Description 排序方式
  * @Date 2020/12/11
  */
-public class SortMethod {
-    public static final int ASCENDING = 0;
-    public static final int DESCENDING = 1;
+@Getter
+@AllArgsConstructor
+public enum SortMethod {
+    // 曲名和文件名混合
+    BY_SONG_AND_FILE_NAME(50),
+    // 曲名
+    BY_SONG_NAME(100),
+    // 艺术家
+    BY_ARTIST_NAME(200),
+    // 专辑
+    BY_ALBUM_NAME(300),
+    // 文件名
+    BY_FILE_NAME(400),
+    // 时长
+    BY_DURATION(500),
+    // 创建时间
+    BY_CREATION_TIME(600),
+    // 修改时间
+    BY_LAST_MODIFIED_TIME(700),
+    // 访问时间
+    BY_LAST_ACCESS_TIME(800),
+    // 大小
+    BY_SIZE(900);
 
-    public static final int BY_SONG_AND_FILE_NAME = 50;
-    public static final int BY_SONG_NAME = 100;
-    public static final int BY_ARTIST_NAME = 200;
-    public static final int BY_ALBUM_NAME = 300;
-    public static final int BY_FILE_NAME = 400;
-    public static final int BY_TIME = 500;
-    public static final int BY_CREATION_TIME = 600;
-    public static final int BY_LAST_MODIFIED_TIME = 700;
-    public static final int BY_LAST_ACCESS_TIME = 800;
-    public static final int BY_SIZE = 900;
+    private int code;
+
+    public static SortMethod fromCode(int code) {
+        for (SortMethod sortMethod : values()) {
+            if (sortMethod.code == code) return sortMethod;
+        }
+        return null;
+    }
 }

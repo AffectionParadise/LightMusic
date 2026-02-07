@@ -4,7 +4,7 @@ import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.base.BaseButton;
-import net.doge.ui.widget.button.listener.DialogButtonMouseListener;
+import net.doge.ui.widget.button.listener.DialogButtonMouseAdapter;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -45,7 +45,7 @@ public class DialogButton extends BaseButton implements ExtendedOpacitySupported
     }
 
     private void init() {
-        addMouseListener(new DialogButtonMouseListener(this));
+        addMouseListener(new DialogButtonMouseAdapter(this));
         setBorder(BORDER);
 
         highlightBgTimer = new Timer(2, e -> {

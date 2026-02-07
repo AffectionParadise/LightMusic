@@ -1,7 +1,6 @@
 package net.doge.ui.widget.list.renderer.core;
 
 import lombok.Data;
-import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -19,8 +18,6 @@ import java.io.File;
  */
 @Data
 public class CatalogListRenderer extends CustomListCellRenderer {
-    // 属性不能用 font，不然重复！
-    private Font customFont = Fonts.NORMAL;
     private Color foreColor;
     private Color selectedColor;
     private Color textColor;
@@ -47,8 +44,6 @@ public class CatalogListRenderer extends CustomListCellRenderer {
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         nameLabel.setForeground(textColor);
-
-        nameLabel.setFont(customFont);
 
         int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (outerPanel.getComponentCount() - 1) * ((GridLayout) outerPanel.getLayout()).getHgap()) / outerPanel.getComponentCount();
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(file.getAbsolutePath(), maxWidth));

@@ -10,10 +10,10 @@ import java.awt.event.MouseEvent;
  * @Description 滚动条的监听器
  * @Date 2021/1/10
  */
-public class CustomScrollPaneListener extends MouseAdapter {
+public class CustomScrollPaneAdapter extends MouseAdapter {
     private CustomScrollPane sp;
 
-    public CustomScrollPaneListener(CustomScrollPane sp) {
+    public CustomScrollPaneAdapter(CustomScrollPane sp) {
         this.sp = sp;
 
         sp.getVBar().addMouseListener(this);
