@@ -83,6 +83,10 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
         return (CustomScrollBar) verticalScrollBar;
     }
 
+    public boolean isVBarAdjusting() {
+        return verticalScrollBar.getValueIsAdjusting();
+    }
+
     public int getVBarMin() {
         return verticalScrollBar.getMinimum();
     }

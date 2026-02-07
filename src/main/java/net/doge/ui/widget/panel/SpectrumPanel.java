@@ -5,18 +5,18 @@ import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.geom.GeneralPath;
 
-public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
+public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported {
     private final Stroke STROKE = new BasicStroke(ScaleUtil.scale(3));
     private final int SPACE = ScaleUtil.scale(90);
 
@@ -33,8 +33,6 @@ public class SpectrumPanel extends JPanel implements ExtendedOpacitySupported {
     }
 
     private void init() {
-        setOpaque(false);
-
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {

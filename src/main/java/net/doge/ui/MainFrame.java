@@ -100,7 +100,7 @@ import net.doge.ui.widget.panel.GlobalPanel;
 import net.doge.ui.widget.panel.LoadingPanel;
 import net.doge.ui.widget.panel.SpectrumPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.ui.widget.scrollpane.listener.CustomScrollPaneAdapter;
+import net.doge.ui.widget.scrollpane.listener.ScrollPaneBarActiveAdapter;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
 import net.doge.ui.widget.scrollpane.viewport.CustomViewport;
 import net.doge.ui.widget.slider.CustomSlider;
@@ -8682,27 +8682,9 @@ public class MainFrame extends JFrame {
         userCoverAndNameLabel.setFont(font);
         recommendItemCoverAndNameLabel.setFont(font);
         collectionItemCoverAndNameLabel.setFont(font);
-        // 显示大图
-//        JScrollBar vs = playlistDescriptionScrollPane.getVerticalScrollBar();
-//        vs.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseReleased(MouseEvent e) {
-//                if (playlistDescriptionScrollPane.getViewport().contains(e.getPoint())) return;
-//                ((ScrollBarUI) vs.setActive(false);
-//            }
-//        });
+
+        // 双击显示大图
         playlistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                playlistDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-//                if (vs.getValueIsAdjusting()) return;
-                playlistDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -8739,16 +8721,6 @@ public class MainFrame extends JFrame {
         });
         albumCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                albumDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                albumDescriptionScrollPane.setVBarActive(false);
-            }
-
-            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetAlbumInfo albumInfo = netAlbumList.getSelectedValue();
@@ -8783,16 +8755,6 @@ public class MainFrame extends JFrame {
             }
         });
         artistCoverAndNameLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                artistDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                artistDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -8829,16 +8791,6 @@ public class MainFrame extends JFrame {
         });
         radioCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                radioDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                radioDescriptionScrollPane.setVBarActive(false);
-            }
-
-            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetRadioInfo radioInfo = netRadioList.getSelectedValue();
@@ -8873,16 +8825,6 @@ public class MainFrame extends JFrame {
             }
         });
         rankingCoverAndNameLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                rankingDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                rankingDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -8919,16 +8861,6 @@ public class MainFrame extends JFrame {
         });
         userCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                userDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                userDescriptionScrollPane.setVBarActive(false);
-            }
-
-            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetUserInfo userInfo = netUserList.getSelectedValue();
@@ -8964,16 +8896,6 @@ public class MainFrame extends JFrame {
         });
         userDescriptionLabel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                userDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                userDescriptionScrollPane.setVBarActive(false);
-            }
-
-            @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
                 NetUserInfo userInfo = netUserList.getSelectedValue();
@@ -9008,16 +8930,6 @@ public class MainFrame extends JFrame {
             }
         });
         recommendItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                recommendItemDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                recommendItemDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -9067,16 +8979,6 @@ public class MainFrame extends JFrame {
             }
         });
         collectionItemCoverAndNameLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                collectionItemDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                collectionItemDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -9132,16 +9034,6 @@ public class MainFrame extends JFrame {
             }
         });
         collectionItemDescriptionLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                collectionItemDescriptionScrollPane.setVBarActive(true);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                collectionItemDescriptionScrollPane.setVBarActive(false);
-            }
-
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
@@ -9258,24 +9150,7 @@ public class MainFrame extends JFrame {
         userDescriptionOuterPanel.setMaximumSize(size);
         recommendItemDescriptionOuterPanel.setMaximumSize(size);
         collectionItemDescriptionOuterPanel.setMaximumSize(size);
-        // 滚动条监听器
-        playlistDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(playlistDescriptionScrollPane));
-        albumDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(albumDescriptionScrollPane));
-        artistDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(artistDescriptionScrollPane));
-        radioDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(radioDescriptionScrollPane));
-        rankingDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(rankingDescriptionScrollPane));
-        userDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(userDescriptionScrollPane));
-        recommendItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(recommendItemDescriptionScrollPane));
-        collectionItemDescriptionScrollPane.addMouseListener(new CustomScrollPaneAdapter(collectionItemDescriptionScrollPane));
-        // 水平滚动条
-        playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        artistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        radioDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        userDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
         // 描述面板更新
         playlistDescriptionPanel.setLayout(new BoxLayout(playlistDescriptionPanel, BoxLayout.Y_AXIS));
         albumDescriptionPanel.setLayout(new BoxLayout(albumDescriptionPanel, BoxLayout.Y_AXIS));
@@ -9386,6 +9261,25 @@ public class MainFrame extends JFrame {
             if (l.getText().isEmpty()) return;
             copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
+
+        // 滚动条监听器
+        playlistDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(playlistDescriptionScrollPane));
+        albumDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(albumDescriptionScrollPane));
+        artistDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(artistDescriptionScrollPane));
+        radioDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(radioDescriptionScrollPane));
+        rankingDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(rankingDescriptionScrollPane));
+        userDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(userDescriptionScrollPane));
+        recommendItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(recommendItemDescriptionScrollPane));
+        collectionItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(collectionItemDescriptionScrollPane));
+        // 水平滚动条
+        playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        artistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        radioDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        userDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         // 描述收藏按钮
         playlistDescriptionCollectionButton.addActionListener(e -> {
@@ -22129,31 +22023,31 @@ public class MainFrame extends JFrame {
         collectionTabbedPane.setUI(new CustomTabbedPaneUI(collectionTabbedPane));
 
         // 关键词面板
-        netMusicSearchSuggestionLabel.setForeground(style.getTextColor());
+        netMusicSearchSuggestionLabel.setForeground(textColor);
         netMusicRefreshSearchSuggestionButton.updateIconStyle();
 
-        netMusicHotSearchLabel.setForeground(style.getTextColor());
+        netMusicHotSearchLabel.setForeground(textColor);
         netMusicRefreshHotSearchButton.updateIconStyle();
 
-        netMusicHistorySearchLabel.setForeground(style.getTextColor());
+        netMusicHistorySearchLabel.setForeground(textColor);
         netMusicClearHistorySearchButton.updateIconStyle();
 
-        netPlaylistHistorySearchLabel.setForeground(style.getTextColor());
+        netPlaylistHistorySearchLabel.setForeground(textColor);
         netPlaylistClearHistorySearchButton.updateIconStyle();
 
-        netAlbumHistorySearchLabel.setForeground(style.getTextColor());
+        netAlbumHistorySearchLabel.setForeground(textColor);
         netAlbumClearHistorySearchButton.updateIconStyle();
 
-        netArtistHistorySearchLabel.setForeground(style.getTextColor());
+        netArtistHistorySearchLabel.setForeground(textColor);
         netArtistClearHistorySearchButton.updateIconStyle();
 
-        netRadioHistorySearchLabel.setForeground(style.getTextColor());
+        netRadioHistorySearchLabel.setForeground(textColor);
         netRadioClearHistorySearchButton.updateIconStyle();
 
-        netMvHistorySearchLabel.setForeground(style.getTextColor());
+        netMvHistorySearchLabel.setForeground(textColor);
         netMvClearHistorySearchButton.updateIconStyle();
 
-        netUserHistorySearchLabel.setForeground(style.getTextColor());
+        netUserHistorySearchLabel.setForeground(textColor);
         netUserClearHistorySearchButton.updateIconStyle();
 
         Component[] components = netMusicSearchSuggestionInnerPanel2.getComponents();
@@ -22731,7 +22625,6 @@ public class MainFrame extends JFrame {
         // 歌词高亮显示
         LrcListRenderer lrcListRenderer = new LrcListRenderer();
         lrcListRenderer.setRow(row);
-        lrcListRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         lrcListRenderer.setBgColor(lrcColor);
         lrcListRenderer.setHighlightColor(highlightColor);
         lrcList.setCellRenderer(lrcListRenderer);
@@ -22779,16 +22672,6 @@ public class MainFrame extends JFrame {
         switchLrcTypeButton.updateIconStyle();
         volumeSlider.setUI(new TimeSliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
-//        // 按钮图标颜色
-//        if (!player.loadedMusic() || player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == ImageConstants.DEFAULT_IMG || player.getMetaMusicInfo().getAlbumImage() == null)) {
-//            changePaneButton.setIcon(ImageUtil.dye(new ImageIcon(
-//                    ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)), iconColor));
-//        }
-//        // 默认专辑图颜色
-//        if (player.loadedMusic() && (player.getMetaMusicInfo().getAlbumImage() == ImageConstants.DEFAULT_IMG || player.getMetaMusicInfo().getAlbumImage() == null)) {
-//            BufferedImage albumImage = ImageUtil.borderShadow(ImageUtil.dye(ImageUtil.setRadius(ImageUtil.width(ImageConstants.DEFAULT_IMG, albumImageWidth), LARGE_ARC), iconColor));
-//            albumImageLabel.setIcon(new ImageIcon(albumImage));
-//        }
         // 其他标签颜色
         songNameLabel.setForeground(textColor);
         artistLabel.setForeground(textColor);
@@ -22844,7 +22727,6 @@ public class MainFrame extends JFrame {
     // 更新 Tab 的主题
     public void updateTabUI(CustomTabbedPane tabbedPane, UIStyle style) {
         Color textColor = style.getTextColor();
-        Color iconColor = style.getIconColor();
 
         int index = tabbedPane.getSelectedIndex();
         for (int i = 0, size = tabbedPane.getTabCount(); i < size; i++) {

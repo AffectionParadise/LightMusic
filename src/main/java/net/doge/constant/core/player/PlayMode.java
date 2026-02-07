@@ -12,15 +12,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PlayMode {
     // 播完暂停
-    DISABLED(101),
+    DISABLED(100),
     // 单曲循环
-    SINGLE(102),
+    SINGLE(101),
     // 顺序播放
-    SEQUENCE(103),
+    SEQUENCE(102),
     // 列表循环
-    LIST_CYCLE(104),
+    LIST_CYCLE(103),
     // 随机播放
-    SHUFFLE(105);
+    SHUFFLE(104);
 
     private int code;
 
