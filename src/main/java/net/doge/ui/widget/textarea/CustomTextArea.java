@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
@@ -67,6 +68,11 @@ public class CustomTextArea extends JTextArea implements ExtendedOpacitySupporte
         super.setText(t);
         // 解决设置文本后不刷新的问题
         revalidate();
+    }
+
+    // 是否为空文本
+    public boolean isTextEmpty() {
+        return StringUtil.isEmpty(getText());
     }
 
     public void setCaretVisible(boolean visible) {

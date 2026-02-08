@@ -2424,6 +2424,8 @@ public class MainFrame extends JFrame {
     // 搜索建议动画
     private Timer searchSuggestionTimer;
     private boolean searchSuggestionProcessing;
+    // 热搜处理状态
+    private boolean hotSearchProcessing;
 
     private int row;
     private int currScrollVal;
@@ -4830,8 +4832,10 @@ public class MainFrame extends JFrame {
                 if (netMusicListModel.isEmpty() && netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
                     netLeftBox.remove(netMusicScrollPane);
                     netLeftBox.add(netMusicKeywordsPanelScrollPane);
+                    hotSearchProcessing = true;
                     globalExecutor.execute(() -> updateHotSearch());
                 } else if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
+                    hotSearchProcessing = true;
                     globalExecutor.execute(() -> updateHotSearch());
                 } else if (!netMusicListModel.isEmpty()) {
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
@@ -6998,7 +7002,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (filterTextField.getText().isEmpty()) clearInputToolButton.setVisible(false);
+                if (filterTextField.isTextEmpty()) clearInputToolButton.setVisible(false);
                 filterPersonalMusic();
             }
 
@@ -7507,7 +7511,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (searchTextField.getText().isEmpty()) netMusicClearInputButton.setVisible(false);
+                if (searchTextField.isTextEmpty()) netMusicClearInputButton.setVisible(false);
                 updateSearchSug();
             }
 
@@ -7517,7 +7521,7 @@ public class MainFrame extends JFrame {
             }
 
             private void updateSearchSug() {
-                if (!searchTextField.getText().isEmpty() && searchSuggestionProcessing) return;
+                if (!searchTextField.isTextEmpty() && searchSuggestionProcessing) return;
                 searchSuggestionProcessing = true;
                 searchSuggestionTimer.start();
             }
@@ -8449,7 +8453,11 @@ public class MainFrame extends JFrame {
 
         // 搜索建议面板
         // 刷新搜索建议按钮
-        netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.execute(() -> updateSearchSuggestion()));
+        netMusicRefreshSearchSuggestionButton.addActionListener(e -> globalExecutor.execute(() -> {
+            if (searchSuggestionProcessing) return;
+            searchSuggestionProcessing = true;
+            updateSearchSuggestion();
+        }));
         netMusicRefreshSearchSuggestionButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshSearchSuggestionButton.setToolTipText(REFRESH_TIP);
 
@@ -8485,7 +8493,11 @@ public class MainFrame extends JFrame {
 
         // 热搜面板
         // 刷新热门搜索按钮
-        netMusicRefreshHotSearchButton.addActionListener(e -> globalExecutor.execute(() -> updateHotSearch()));
+        netMusicRefreshHotSearchButton.addActionListener(e -> {
+            if (hotSearchProcessing) return;
+            hotSearchProcessing = true;
+            globalExecutor.execute(() -> updateHotSearch());
+        });
         netMusicRefreshHotSearchButton.setPreferredSize(new HDDimension(30, 30));
         netMusicRefreshHotSearchButton.setToolTipText(REFRESH_TIP);
 
@@ -9244,7 +9256,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_RADIO) l = radioTagLabel;
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
-            if (l == null || l.getText().isEmpty()) return;
+            if (l == null || l.isTextEmpty()) return;
             copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
         copyDescMenuItem.addActionListener(e -> {
@@ -9258,7 +9270,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_RANKING) l = rankingDescriptionLabel;
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
-            if (l.getText().isEmpty()) return;
+            if (l.isTextEmpty()) return;
             copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
         });
 
@@ -9536,7 +9548,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netPlaylistSearchTextField.getText().isEmpty()) netPlaylistClearInputButton.setVisible(false);
+                if (netPlaylistSearchTextField.isTextEmpty()) netPlaylistClearInputButton.setVisible(false);
             }
 
             @Override
@@ -10529,7 +10541,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netAlbumSearchTextField.getText().isEmpty()) netAlbumClearInputButton.setVisible(false);
+                if (netAlbumSearchTextField.isTextEmpty()) netAlbumClearInputButton.setVisible(false);
             }
 
             @Override
@@ -11534,7 +11546,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netArtistSearchTextField.getText().isEmpty()) netArtistClearInputButton.setVisible(false);
+                if (netArtistSearchTextField.isTextEmpty()) netArtistClearInputButton.setVisible(false);
             }
 
             @Override
@@ -12767,7 +12779,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netRadioSearchTextField.getText().isEmpty()) netRadioClearInputButton.setVisible(false);
+                if (netRadioSearchTextField.isTextEmpty()) netRadioClearInputButton.setVisible(false);
             }
 
             @Override
@@ -13888,7 +13900,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netMvSearchTextField.getText().isEmpty()) netMvClearInputButton.setVisible(false);
+                if (netMvSearchTextField.isTextEmpty()) netMvClearInputButton.setVisible(false);
             }
 
             @Override
@@ -15250,7 +15262,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (netUserSearchTextField.getText().isEmpty()) netUserClearInputButton.setVisible(false);
+                if (netUserSearchTextField.isTextEmpty()) netUserClearInputButton.setVisible(false);
             }
 
             @Override
@@ -23318,122 +23330,121 @@ public class MainFrame extends JFrame {
     }
 
     // 加载搜索建议
-    private void updateSearchSuggestion() {
-        synchronized (netMusicSearchSuggestionInnerPanel2) {
-            try {
-                String part = searchTextField.getText();
-                Set<String> suggestions = MusicServerUtil.getSearchSuggestion(part);
-                if (!suggestions.isEmpty()) {
-                    if (!netMusicSearchSuggestionPanel.isShowing()) {
-                        // 显示 “搜索建议” 面板
-                        netMusicSearchSuggestionPanel.setVisible(true);
-                    }
-                } else {
-                    // 没有结果时隐藏 “搜索建议” 面板
-                    netMusicSearchSuggestionPanel.setVisible(false);
+    private synchronized void updateSearchSuggestion() {
+        try {
+            String part = searchTextField.getText();
+            Set<String> suggestions = MusicServerUtil.getSearchSuggestion(part);
+            if (!suggestions.isEmpty()) {
+                if (!netMusicSearchSuggestionPanel.isShowing()) {
+                    // 显示 “搜索建议” 面板
+                    netMusicSearchSuggestionPanel.setVisible(true);
                 }
-                netMusicSearchSuggestionInnerPanel2.removeAll();
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = null;
-                for (String keyword : suggestions) {
-                    b = new DialogButton(keyword, textColor, true);
-                    b.addActionListener(event -> {
-                        searchTextField.requestFocus();
-                        searchTextField.setText(keyword);
-                        netMusicClearInputButton.setVisible(true);
-                        searchButton.doClick();
-                        netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                        netLeftBox.add(netMusicScrollPane);
-                    });
-                    netMusicSearchSuggestionInnerPanel2.add(b);
-                }
-                // 调整面板大小
-                if (b != null) {
-                    DialogButton fb = b;
-                    b.addComponentListener(new ComponentAdapter() {
-                        @Override
-                        public void componentMoved(ComponentEvent e) {
-                            // 关键词按钮被移除时，屏蔽调整面板大小事件
-                            if (!fb.isShowing()) return;
-                            Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
-                            Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
-                            netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
-                            netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
-                            netMusicSearchSuggestionInnerPanel2.invalidate();
-                            netMusicSearchSuggestionInnerPanel2.repaint();
-                        }
-                    });
-                }
-                netMusicSearchSuggestionPanel.repaint();
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } else {
+                // 没有结果时隐藏 “搜索建议” 面板
+                netMusicSearchSuggestionPanel.setVisible(false);
             }
+            netMusicSearchSuggestionInnerPanel2.removeAll();
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = null;
+            for (String keyword : suggestions) {
+                b = new DialogButton(keyword, textColor, true);
+                b.addActionListener(event -> {
+                    searchTextField.requestFocus();
+                    searchTextField.setText(keyword);
+                    netMusicClearInputButton.setVisible(true);
+                    searchButton.doClick();
+                    netLeftBox.remove(netMusicKeywordsPanelScrollPane);
+                    netLeftBox.add(netMusicScrollPane);
+                });
+                netMusicSearchSuggestionInnerPanel2.add(b);
+            }
+            // 调整面板大小
+            if (b != null) {
+                DialogButton fb = b;
+                b.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentMoved(ComponentEvent e) {
+                        // 关键词按钮被移除时，屏蔽调整面板大小事件
+                        if (!fb.isShowing()) return;
+                        Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicSearchSuggestionInnerPanel2);
+                        Dimension d = new Dimension(netMusicSearchSuggestionInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
+                        netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
+                        netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
+                        netMusicSearchSuggestionInnerPanel2.invalidate();
+                        netMusicSearchSuggestionInnerPanel2.repaint();
+                    }
+                });
+            }
+            netMusicSearchSuggestionPanel.repaint();
+        } catch (IORuntimeException ioRuntimeException) {
+            // 无网络连接
+            new TipDialog(THIS, NO_NET_MSG).showDialog();
+        } catch (HttpException httpException) {
+            // 请求超时
+            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+        } catch (JSONException jsonException) {
+            // 接口异常
+            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+        } finally {
+            searchSuggestionProcessing = false;
         }
-        searchSuggestionProcessing = false;
     }
 
     // 加载热搜词
-    private void updateHotSearch() {
-        synchronized (netMusicHotSearchInnerPanel2) {
-            try {
-                Set<String> hotSearch = MusicServerUtil.getHotSearch();
-                // 显示 “热门搜索” 面板
-                if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
-                    netMusicHotSearchPanel.setVisible(true);
-                }
-                netMusicHotSearchInnerPanel2.removeAll();
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = null;
-                for (String keyword : hotSearch) {
-                    b = new DialogButton(keyword, textColor, true);
-                    DialogButton finalB = b;
-                    b.addActionListener(event -> {
-                        searchTextField.requestFocus();
-                        searchTextField.setText(keyword);
-                        netMusicClearInputButton.setVisible(true);
-                        searchButton.doClick();
-                        netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                        netLeftBox.add(netMusicScrollPane);
-                        // 热搜词搜索后取消悬停状态
-                        finalB.transitionHighlightBg(false);
-                    });
-                    netMusicHotSearchInnerPanel2.add(b);
-                }
-                // 调整面板大小
-                if (b != null) {
-                    DialogButton fb = b;
-                    b.addComponentListener(new ComponentAdapter() {
-                        @Override
-                        public void componentMoved(ComponentEvent e) {
-                            // 关键词按钮被移除时，屏蔽调整面板大小事件
-                            if (!fb.isShowing()) return;
-                            Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
-                            Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
-                            netMusicHotSearchInnerPanel2.setMinimumSize(d);
-                            netMusicHotSearchInnerPanel2.setPreferredSize(d);
-                            netMusicHotSearchInnerPanel2.invalidate();
-                            netMusicHotSearchInnerPanel2.repaint();
-                        }
-                    });
-                }
-                netMusicHotSearchPanel.repaint();
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+    private synchronized void updateHotSearch() {
+        try {
+            Set<String> hotSearch = MusicServerUtil.getHotSearch();
+            // 显示 “热门搜索” 面板
+            if (!hotSearch.isEmpty() && !netMusicHotSearchPanel.isShowing()) {
+                netMusicHotSearchPanel.setVisible(true);
             }
+            netMusicHotSearchInnerPanel2.removeAll();
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = null;
+            for (String keyword : hotSearch) {
+                b = new DialogButton(keyword, textColor, true);
+                DialogButton finalB = b;
+                b.addActionListener(event -> {
+                    searchTextField.requestFocus();
+                    searchTextField.setText(keyword);
+                    netMusicClearInputButton.setVisible(true);
+                    searchButton.doClick();
+                    netLeftBox.remove(netMusicKeywordsPanelScrollPane);
+                    netLeftBox.add(netMusicScrollPane);
+                    // 热搜词搜索后取消悬停状态
+                    finalB.transitionHighlightBg(false);
+                });
+                netMusicHotSearchInnerPanel2.add(b);
+            }
+            // 调整面板大小
+            if (b != null) {
+                DialogButton fb = b;
+                b.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentMoved(ComponentEvent e) {
+                        // 关键词按钮被移除时，屏蔽调整面板大小事件
+                        if (!fb.isShowing()) return;
+                        Point p = SwingUtilities.convertPoint(fb, 0, 0, netMusicHotSearchInnerPanel2);
+                        Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
+                        netMusicHotSearchInnerPanel2.setMinimumSize(d);
+                        netMusicHotSearchInnerPanel2.setPreferredSize(d);
+                        netMusicHotSearchInnerPanel2.invalidate();
+                        netMusicHotSearchInnerPanel2.repaint();
+                    }
+                });
+            }
+            netMusicHotSearchPanel.repaint();
+        } catch (IORuntimeException ioRuntimeException) {
+            // 无网络连接
+            new TipDialog(THIS, NO_NET_MSG).showDialog();
+        } catch (HttpException httpException) {
+            // 请求超时
+            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
+        } catch (JSONException jsonException) {
+            // 接口异常
+            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+        } finally {
+            hotSearchProcessing = false;
         }
     }
 

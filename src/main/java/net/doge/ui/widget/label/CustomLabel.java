@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -67,6 +68,11 @@ public class CustomLabel extends JLabel implements ExtendedOpacitySupported {
         Icon icon = getIcon();
         if (icon == null) return;
         setIcon(ImageUtil.dye((ImageIcon) icon, UIStyleStorage.currUIStyle.getIconColor()));
+    }
+
+    // 是否为空文本
+    public boolean isTextEmpty() {
+        return StringUtil.isEmpty(getText());
     }
 
     @Override

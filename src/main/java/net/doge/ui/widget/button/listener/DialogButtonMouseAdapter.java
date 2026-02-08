@@ -55,7 +55,7 @@ public class DialogButtonMouseAdapter extends MouseAdapter {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
         Color btc = ColorUtil.brighter(textColor);
-        boolean c = b.contains(e.getPoint());
+        boolean c = b.getVisibleRect().contains(e.getPoint());
         b.setHighlightBg(c);
         b.setForeground(c ? btc : textColor);
     }

@@ -106,6 +106,11 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
         revalidate();
     }
 
+    // 是否为空文本
+    public boolean isTextEmpty() {
+        return StringUtil.isEmpty(getText());
+    }
+
     public void setCaretVisible(boolean visible) {
         getCaret().setVisible(visible);
     }
