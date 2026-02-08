@@ -11,7 +11,7 @@ import java.awt.*;
  * 处理组件淡入淡出的动画类
  */
 @Data
-public class ComponentFadingAnimation {
+public class ComponentChangeFadingAnimation {
     // 淡入淡出状态
     private boolean changePaneFadeOut;
     // 组件
@@ -23,11 +23,11 @@ public class ComponentFadingAnimation {
     private ComponentChangeHandler onFadingOutStopped;
     private ComponentChangeHandler onFadingInStopped;
 
-    public ComponentFadingAnimation(Component srcFadingComp, Component targetFadingComp, ComponentChangeHandler onFadingOutStopped) {
+    public ComponentChangeFadingAnimation(Component srcFadingComp, Component targetFadingComp, ComponentChangeHandler onFadingOutStopped) {
         this(srcFadingComp, targetFadingComp, onFadingOutStopped, null);
     }
 
-    public ComponentFadingAnimation(Component srcFadingComp, Component targetFadingComp, ComponentChangeHandler onFadingOutStopped, ComponentChangeHandler onFadingInStopped) {
+    public ComponentChangeFadingAnimation(Component srcFadingComp, Component targetFadingComp, ComponentChangeHandler onFadingOutStopped, ComponentChangeHandler onFadingInStopped) {
         this.srcFadingComp = srcFadingComp;
         this.targetFadingComp = targetFadingComp;
         this.onFadingOutStopped = onFadingOutStopped;

@@ -1,9 +1,12 @@
 package net.doge.ui.widget.menu;
 
+import lombok.Getter;
 import net.doge.constant.core.ui.core.Fonts;
+import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -16,12 +19,14 @@ import java.awt.event.MouseEvent;
  * @Description 自定义菜单项
  * @Date 2020/12/13
  */
-public class CustomMenuItem extends JMenuItem {
+public class CustomMenuItem extends JMenuItem implements ExtendedOpacitySupported {
     private boolean drawBg;
     private boolean drawBgIncreasing;
     private Timer drawBgTimer;
     private float bgAlpha;
     private final float destBgAlpha = 0.1f;
+    @Getter
+    private float extendedOpacity = 1f;
     private static final Border BORDER = new HDEmptyBorder(6, 0, 6, -10);
 
     public CustomMenuItem() {
@@ -81,16 +86,27 @@ public class CustomMenuItem extends JMenuItem {
     }
 
     @Override
+    public void setExtendedOpacity(float extendedOpacity) {
+        this.extendedOpacity = extendedOpacity;
+        repaint();
+    }
+
+    @Override
+    public void setTreeExtendedOpacity(float extendedOpacity) {
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         // 画背景
         if (drawBg) {
             Graphics2D g2d = GraphicsUtil.setup(g);
             g2d.setColor(getForeground());
-            GraphicsUtil.srcOver(g2d, bgAlpha);
+            GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
             int arc = ScaleUtil.scale(10);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
-            GraphicsUtil.srcOver(g2d);
         }
+        GraphicsUtil.srcOver(g, extendedOpacity);
         super.paintComponent(g);
     }
 }

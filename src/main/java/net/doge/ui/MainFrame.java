@@ -66,7 +66,7 @@ import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoCopyrightException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
-import net.doge.ui.core.animation.ComponentFadingAnimation;
+import net.doge.ui.core.animation.ComponentChangeFadingAnimation;
 import net.doge.ui.core.animation.handler.ComponentChangeHandler;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
@@ -2420,7 +2420,7 @@ public class MainFrame extends JFrame {
     // 背景图切换动画
     private Timer globalPanelTimer;
     // 切换面板动画
-    private ComponentFadingAnimation componentFadingAnimation;
+    private ComponentChangeFadingAnimation componentChangeFadingAnimation;
     // 搜索建议动画
     private Timer searchSuggestionTimer;
     private boolean searchSuggestionProcessing;
@@ -20267,7 +20267,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
-        if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
+        if (componentChangeFadingAnimation != null && componentChangeFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.TAB;
         lastPaneType = null;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
@@ -20286,8 +20286,8 @@ public class MainFrame extends JFrame {
             globalPanel.requestFocus();
             changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         };
-        componentFadingAnimation = new ComponentFadingAnimation(src, tabbedPane, onFadingOutStopped);
-        componentFadingAnimation.transition();
+        componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, tabbedPane, onFadingOutStopped);
+        componentChangeFadingAnimation.transition();
     }
 
     // 切到歌词面板
@@ -20308,7 +20308,7 @@ public class MainFrame extends JFrame {
 //        globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
 //        globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
 //        globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
-        if (componentFadingAnimation != null && componentFadingAnimation.isRunning()) return;
+        if (componentChangeFadingAnimation != null && componentChangeFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.LYRIC;
         lastPaneType = null;
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
@@ -20330,8 +20330,8 @@ public class MainFrame extends JFrame {
         ComponentChangeHandler onFadingInStopped = (s, t) -> {
             if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
         };
-        componentFadingAnimation = new ComponentFadingAnimation(src, infoAndLrcBox, onFadingOutStopped, onFadingInStopped);
-        componentFadingAnimation.transition();
+        componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, infoAndLrcBox, onFadingOutStopped, onFadingInStopped);
+        componentChangeFadingAnimation.transition();
     }
 
     // 初始化控制面板

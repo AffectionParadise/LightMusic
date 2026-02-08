@@ -17,6 +17,7 @@ import java.awt.*;
 public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacitySupported {
     @Getter
     private float extendedOpacity = 1f;
+    private Timer fadingInTimer;
 
     private MainFrame f;
 
@@ -35,6 +36,24 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
         setLightWeightPopupEnabled(false);
         // 阴影边框
         setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
+
+        fadingInTimer = new Timer(10, e -> {
+            // 淡入
+            float opacity = Math.min(1f, extendedOpacity + 0.05f);
+            setTreeExtendedOpacity(opacity);
+            if (opacity >= 1f) {
+                // 淡入动画完成后恢复透明度
+                setTreeExtendedOpacity(1f);
+                fadingInTimer.stop();
+            }
+        });
+    }
+
+    // 淡入
+    public void fadeIn() {
+        setTreeExtendedOpacity(0f);
+        if (fadingInTimer.isRunning()) return;
+        fadingInTimer.start();
     }
 
     @Override
@@ -55,25 +74,8 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
 
     @Override
     public void setTreeExtendedOpacity(float extendedOpacity) {
-        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2d = GraphicsUtil.setup(g);
-
-        int w = getWidth(), h = getHeight();
-
-        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
-        int arc = ScaleUtil.scale(8);
-        g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);
-
-        // 画边框阴影
-        int step = TOP_OPACITY / pixels;
-        for (int i = 0; i < pixels; i++) {
-            g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
-            g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
-        }
+        // ComboPopup 的透明度会影响 ComboBox 的选中项，因此从 ComboBox 开始更新
+        SwingUtil.setTreeExtendedOpacity(comboBox, extendedOpacity);
     }
 
     @Override
@@ -83,10 +85,29 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
             // 使 JPopupMenu 对应的 Window 透明！
             Window w = SwingUtilities.getWindowAncestor(this);
             w.setVisible(false);
-            w.setBackground(Colors.BLACK);
             w.setBackground(Colors.TRANSPARENT);
+            fadeIn();
             w.setVisible(true);
         }
         f.currPopup = b ? this : null;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2d = GraphicsUtil.setup(g);
+
+        int w = getWidth(), h = getHeight();
+
+        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
+        GraphicsUtil.srcOver(g2d, extendedOpacity);
+        int arc = ScaleUtil.scale(8);
+        g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);
+
+        // 画边框阴影
+        int step = TOP_OPACITY / pixels;
+        for (int i = 0; i < pixels; i++) {
+            g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
+            g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
+        }
     }
 }

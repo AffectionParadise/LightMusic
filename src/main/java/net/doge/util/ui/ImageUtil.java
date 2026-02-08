@@ -44,16 +44,16 @@ public class ImageUtil {
     private static final int SHADOW_THICKNESS = 30;
 
     static {
-        fbmFilter.setLacunarity(0.45f);
-        fbmFilter.setH(5);
+        fbmFilter.setLacunarity(0.35f);
+        fbmFilter.setH(5f);
         fbmFilter.setBasisType(FBMFilter.RIDGED);
 
-        shadowFilter.setRadius(20);
-        shadowFilter.setDistance(0);
+        shadowFilter.setRadius(20f);
+        shadowFilter.setDistance(0f);
         shadowFilter.setOpacity(0.65f);
 
         borderShadowFilter.setRadius(SHADOW_THICKNESS);
-        borderShadowFilter.setDistance(0);
+        borderShadowFilter.setDistance(0f);
         borderShadowFilter.setOpacity(0.65f);
     }
 
@@ -323,26 +323,6 @@ public class ImageUtil {
         return outputImg;
     }
 
-//    /**
-//     * 生成关于某个颜色的调色板 ImageIcon
-//     *
-//     * @param h
-//     * @return
-//     */
-//    public static ImageIcon palette(float h, int width) {
-//        final int height = 100;
-//        BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-//        Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
-//        for (int i = 0; i < height; i++) {
-//            GradientPaint paint = new GradientPaint(0, i, ColorUtils.hsvToColor(h, 0, height - i),
-//                    width - 1, i, ColorUtils.hsvToColor(h, 100, height - i));
-//            g2d.setPaint(paint);
-//            g2d.drawLine(0, i, width - 1, i);
-//        }
-//        g2d.dispose();
-//        return new ImageIcon(img);
-//    }
-
     /**
      * 返回纯色指定宽高的矩形 BufferedImage
      *
@@ -403,7 +383,6 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage radius(BufferedImage img, double arc) {
-        if (img == null) return null;
         return radius(img, (int) (img.getWidth() * arc));
     }
 
