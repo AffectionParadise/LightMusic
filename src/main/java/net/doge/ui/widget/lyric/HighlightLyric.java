@@ -43,11 +43,23 @@ public class HighlightLyric {
     private BufferedImage buffImg2;
     private ImageIcon imgIcon;
 
-    private FontMetrics[] metricsBig = new FontMetrics[Fonts.TYPES_BIG.size()];
-    private FontMetrics[] metricsHuge = new FontMetrics[Fonts.TYPES_HUGE.size()];
+    private FontMetrics[] metricsArray;
 
+    // 最小上浮动画时间
+    private final int minDropDuration = 500;
+    // 最最大简单上浮动画时间
+    private final int maxSimpleDropDuration = 1000;
+    // 起始/结束位移
+    private final int startDrop = ScaleUtil.scale(2);
+    private final double interpolarX = 0.7;
+    private final int topDrop = ScaleUtil.scale(-1);
+    private final int destDrop = ScaleUtil.scale(0);
+    // 每个字(也有可能是一段)的下坠高度
+    private List<Integer> wordDropList = new LinkedList<>();
     // 每个字(也有可能是一段)的宽度
     private List<Integer> wordWidthList = new LinkedList<>();
+    // 字(也有可能是一段)宽度前缀和
+    private List<Integer> wordWidthPrefixSumExcludedList = new LinkedList<>();
     // 每个字(也有可能是一段)相对当行的起始时间
     private List<Integer> wordStartList = new LinkedList<>();
     // 每个字(也有可能是一段)的持续时间
@@ -64,34 +76,42 @@ public class HighlightLyric {
     public HighlightLyric(JLabel label, Statement stmt, Color c1, Color c2, double ratio, boolean isDesktopLyric, int widthThreshold) {
         if (stmt.isEmpty()) return;
 
-        this.lyric = stmt.getLyric();
-        this.plainLyric = stmt.getPlainLyric();
-
-        if (RegexUtil.contains(LyricPattern.PAIR, lyric)) isByWord = true;
-
         this.c1 = c1;
         this.c2 = c2;
         this.isDesktopLyric = isDesktopLyric;
         this.widthThreshold = widthThreshold;
         this.shadowHOffset = ScaleUtil.scale(isDesktopLyric ? 3 : 0);
 
+        this.lyric = stmt.getLyric();
+        this.plainLyric = stmt.getPlainLyric();
+
+        // 是否为逐字歌词
+        if (RegexUtil.contains(LyricPattern.PAIR, lyric)) isByWord = true;
+
         // 获取字符串的宽（显示在屏幕上所占的像素 px）
         labelFont = label.getFont();
         float fontSize = labelFont.getSize();
 
+        // 初始化 Metrics
         FontMetrics metrics = label.getFontMetrics(labelFont);
-        for (int i = 0, len = metricsBig.length; i < len; i++)
-            metricsBig[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i).deriveFont(fontSize));
-        for (int i = 0, len = metricsHuge.length; i < len; i++)
-            metricsHuge[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i).deriveFont(fontSize));
+        if (isDesktopLyric) {
+            metricsArray = new FontMetrics[Fonts.TYPES_HUGE.size()];
+            for (int i = 0, len = metricsArray.length; i < len; i++)
+                metricsArray[i] = label.getFontMetrics(Fonts.TYPES_HUGE.get(i).deriveFont(fontSize));
+        } else {
+            metricsArray = new FontMetrics[Fonts.TYPES_BIG.size()];
+            for (int i = 0, len = metricsArray.length; i < len; i++)
+                metricsArray[i] = label.getFontMetrics(Fonts.TYPES_BIG.get(i).deriveFont(fontSize));
+        }
 
+        // 初始化每段时间数据，非逐字歌词需要等待 EndTime 传入后再更新
         if (isByWord) {
             List<String> startList = RegexUtil.findAllGroup1(LyricPattern.START, lyric);
             for (String startStr : startList) wordStartList.add(Integer.parseInt(startStr));
             List<String> durationList = RegexUtil.findAllGroup1(LyricPattern.DURATION, lyric);
             for (String durationStr : durationList) wordDurationList.add(Integer.parseInt(durationStr));
-            initWordWidthList(lyric);
         }
+        initWordWidthList(lyric);
 
         // 计算宽度
         for (int i = 0, len = plainLyric.length(); i < len; i++) {
@@ -99,17 +119,17 @@ public class HighlightLyric {
             char[] chars = Character.toChars(codePoint);
             String str = new String(chars);
 
-            if (!isDesktopLyric) {
-                for (int j = 0, l = metricsBig.length; j < l; j++) {
-                    if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
-                    width += metricsBig[j].stringWidth(str);
+            if (isDesktopLyric) {
+                for (int j = 0, l = metricsArray.length; j < l; j++) {
+                    if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
+                    width += metricsArray[j].stringWidth(str);
                     i += chars.length - 1;
                     break;
                 }
             } else {
-                for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                    if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
-                    width += metricsHuge[j].stringWidth(str);
+                for (int j = 0, l = metricsArray.length; j < l; j++) {
+                    if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
+                    width += metricsArray[j].stringWidth(str);
                     i += chars.length - 1;
                     break;
                 }
@@ -144,37 +164,14 @@ public class HighlightLyric {
         g2.setColor(ColorUtil.deriveAlpha(c2, 0.45f));
 
         // 画字符串
-        if (!isDesktopLyric) {
-            int widthDrawn = 0;
-            for (int i = 0, len = plainLyric.length(); i < len; i++) {
-                int codePoint = plainLyric.codePointAt(i);
-                char[] chars = Character.toChars(codePoint);
-                String str = new String(chars);
-
-                for (int j = 0, l = metricsBig.length; j < l; j++) {
-                    Font font = Fonts.TYPES_BIG.get(j);
-                    if (!font.canDisplay(codePoint)) continue;
-                    Font nf = font.deriveFont(fontSize);
-                    g1.setFont(nf);
-                    g2.setFont(nf);
-                    g1.drawString(str, widthDrawn, dy);
-                    g2.drawString(str, widthDrawn, dy);
-                    int strWidth = metricsBig[j].stringWidth(str);
-                    widthDrawn += strWidth;
-                    i += chars.length - 1;
-                    break;
-                }
-            }
-            // 文字阴影
-//            buffImg1 = ImageUtil.shadow(buffImg1, c1);
-        } else {
+        if (isDesktopLyric) {
             int widthDrawn = shadowHOffset;
             for (int i = 0, len = plainLyric.length(); i < len; i++) {
                 int codePoint = plainLyric.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
 
-                for (int j = 0, l = metricsHuge.length; j < l; j++) {
+                for (int j = 0, l = metricsArray.length; j < l; j++) {
                     Font font = Fonts.TYPES_HUGE.get(j);
                     if (!font.canDisplay(codePoint)) continue;
 //                        Shape shape = font.createGlyphVector(metricsHuge[j].getFontRenderContext(), str).getOutline();
@@ -202,7 +199,7 @@ public class HighlightLyric {
                     g2.setFont(nf);
                     g1.drawString(str, widthDrawn, dy);
                     g2.drawString(str, widthDrawn, dy);
-                    int strWidth = metricsHuge[j].stringWidth(str);
+                    int strWidth = metricsArray[j].stringWidth(str);
                     widthDrawn += strWidth;
                     i += chars.length - 1;
                     break;
@@ -212,6 +209,29 @@ public class HighlightLyric {
             // 文字阴影
             buffImg1 = ImageUtil.shadow(buffImg1, c1);
 //            buffImg2 = ImageUtil.shadow(buffImg2, c2);
+        } else {
+            int widthDrawn = 0;
+            for (int i = 0, len = plainLyric.length(); i < len; i++) {
+                int codePoint = plainLyric.codePointAt(i);
+                char[] chars = Character.toChars(codePoint);
+                String str = new String(chars);
+
+                for (int j = 0, l = metricsArray.length; j < l; j++) {
+                    Font font = Fonts.TYPES_BIG.get(j);
+                    if (!font.canDisplay(codePoint)) continue;
+                    Font nf = font.deriveFont(fontSize);
+                    g1.setFont(nf);
+                    g2.setFont(nf);
+                    g1.drawString(str, widthDrawn, dy);
+                    g2.drawString(str, widthDrawn, dy);
+                    int strWidth = metricsArray[j].stringWidth(str);
+                    widthDrawn += strWidth;
+                    i += chars.length - 1;
+                    break;
+                }
+            }
+            // 文字阴影
+//            buffImg1 = ImageUtil.shadow(buffImg1, c1);
         }
 
         g1.dispose();
@@ -222,32 +242,39 @@ public class HighlightLyric {
     }
 
     private void initWordWidthList(String lyric) {
-        String[] sp = ArrayUtil.removeFirstEmpty(lyric.split(LyricPattern.PAIR, -1));
+        // 非逐字歌词直接分割成单个字符
+        String[] sp = ArrayUtil.removeFirstEmpty(isByWord ? lyric.split(LyricPattern.PAIR, -1) : lyric.split(""));
+        // 计算每段的宽度
+        int sum = 0;
         for (String partStr : sp) {
-            // 计算每段的宽度
+            // 计算宽度前缀和
+            wordWidthPrefixSumExcludedList.add(sum);
             int w = 0;
             for (int i = 0, len = partStr.length(); i < len; i++) {
                 int codePoint = partStr.codePointAt(i);
                 char[] chars = Character.toChars(codePoint);
                 String str = new String(chars);
 
-                if (!isDesktopLyric) {
-                    for (int j = 0, l = metricsBig.length; j < l; j++) {
-                        if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
-                        w += metricsBig[j].stringWidth(str);
+                if (isDesktopLyric) {
+                    for (int j = 0, l = metricsArray.length; j < l; j++) {
+                        if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
+                        w += metricsArray[j].stringWidth(str);
                         i += chars.length - 1;
                         break;
                     }
                 } else {
-                    for (int j = 0, l = metricsHuge.length; j < l; j++) {
-                        if (!Fonts.TYPES_HUGE.get(j).canDisplay(codePoint)) continue;
-                        w += metricsHuge[j].stringWidth(str);
+                    for (int j = 0, l = metricsArray.length; j < l; j++) {
+                        if (!Fonts.TYPES_BIG.get(j).canDisplay(codePoint)) continue;
+                        w += metricsArray[j].stringWidth(str);
                         i += chars.length - 1;
                         break;
                     }
                 }
             }
+            sum += w;
             wordWidthList.add(w);
+            // 初始化每段文字下坠高度
+            wordDropList.add(startDrop);
         }
     }
 
@@ -258,36 +285,115 @@ public class HighlightLyric {
      * @param lineStartTime 当行歌词起始时间
      * @return
      */
-    public double calcRatio(double currTime, double lineStartTime) {
-        int currTimeMs = (int) (currTime * 1000);
-        int lineStartTimeMs = (int) (lineStartTime * 1000);
-
+    public double computeRatio(double currTime, double lineStartTime) {
+        int currTimeMs = (int) (currTime * 1000), lineStartTimeMs = (int) (lineStartTime * 1000);
         int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
 
         int wordStartIndex = ListUtil.biSearchLeft(wordStartList, lineCurrTimeMs);
         if (wordStartIndex < 0) return 0;
-//        wStartIndex = wordStartIndex;
         int wordStart = wordStartList.get(wordStartIndex);
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         // 部分情况有 NAN 值
         if (wordRatio != wordRatio) wordRatio = 1;
-//        wRatio = wordRatio;
-        double currWidth = ListUtil.rangeSum(wordWidthList, 0, wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
+        double currWidth = wordWidthPrefixSumExcludedList.get(wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
         int totalWidth = width - 2 * shadowHOffset;
         // 防止整句比率超出
         double ratio = Math.min(1, currWidth / totalWidth);
         return ratio;
     }
 
-//    private double wRatio;
-//    private int wStartIndex;
-//
-//    private int getWordOffsetY(int x1, int x2, double wRatio) {
-//        double h = 10, x = x1 + (x2 - x1) * wRatio, c = (double) (x1 + x2) / 2;
-//        if (x >= x1 && x <= c) return (int) (2 * h / (x2 - x1) * (x - x1));
-//        else return (int) (2 * h / (x2 - x1) * (x2 - x));
-//    }
+    // 更新普通歌词 DropList
+    public void updateNormalWordDropList(double currTime, double lineStartTime, double lineEndTime) {
+        int lineStartTimeMs = (int) (lineStartTime * 1000), lineEndTimeMs = (int) (lineEndTime * 1000);
+        int lineDurationMs = lineEndTimeMs - lineStartTimeMs;
+        // 如果每段起始/持续时间未初始化
+        if (wordStartList.isEmpty()) {
+            int totalWidth = width - 2 * shadowHOffset;
+            for (int i = 0, len = wordWidthList.size(); i < len; i++) {
+                int wordWidth = wordWidthList.get(i);
+                int wordStart = lineDurationMs * wordWidthPrefixSumExcludedList.get(i) / totalWidth;
+                int wordDuration = lineDurationMs * wordWidth / totalWidth;
+                wordStartList.add(wordStart);
+                wordDurationList.add(wordDuration);
+            }
+        }
+        updateWordDropList(currTime, lineStartTime);
+    }
+
+    // 更新逐字歌词 DropList
+    public void updateWordDropList(double currTime, double lineStartTime) {
+        int currTimeMs = (int) (currTime * 1000), lineStartTimeMs = (int) (lineStartTime * 1000);
+        int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
+        for (int i = 0, len = wordStartList.size(); i < len; i++) {
+            int wordStart = wordStartList.get(i);
+            int wordDuration = wordDurationList.get(i);
+            // Drop 动画进度，控制在 0-1 之间
+            double progress = Math.max(0, Math.min(1, (double) (lineCurrTimeMs - wordStart) / Math.max(minDropDuration, wordDuration)));
+            // 超出最大简单动画时间，使用复杂曲线动画
+            wordDropList.set(i, computeWordDrop(progress, wordDuration >= maxSimpleDropDuration));
+        }
+    }
+
+    // 根据进度计算 Drop
+    private int computeWordDrop(double progress, boolean useComplexCurve) {
+        if (useComplexCurve)
+            return (int) cubicThroughThreePoints(progress, startDrop, interpolarX, topDrop, destDrop);
+        return (int) (startDrop + (destDrop - startDrop) * progress);
+    }
+
+    /**
+     * 单段三次多项式，通过三个点 (0,a), (t1,c), (1,b)
+     * 设 f(t) = At³ + Bt² + Ct + D
+     */
+    private double cubicThroughThreePoints(double t, double a, double t1, double c, double b) {
+        // 解方程组：
+        // 1. f(0) = a  => D = a
+        // 2. f(t1) = c => At1³ + Bt1² + Ct1 + a = c
+        // 3. f(1) = b  => A + B + C + a = b
+        // 4. 添加平滑条件：f'(t1) = (b - a) / 1 （匀速倾向）
+
+        // 计算系数
+        double t1_2 = t1 * t1, t1_3 = t1_2 * t1;
+        // 使用矩阵求解，这里直接给出解：
+        double denom = t1_3 - t1_2;
+        // 如果 t1=0 或 t1=1，需要特殊处理
+        if (Math.abs(denom) < 1e-10) {
+            // 退化为线性插值
+            return a + (b - a) * t;
+        }
+        double A = (b - a - (c - a) / t1) / (1 - 2 * t1 + t1_2);
+        double B = (c - a) / t1 - A * t1_2;
+        double C = (b - a) - A - B;
+        double D = a;
+        return A * t * t * t + B * t * t + C * t + D;
+    }
+
+    // 画 buffImg1 作为左侧，带 Drop
+    private void paintBuffImg1WithDrop(Graphics2D g2d, int t) {
+        for (int i = 0, len = wordDropList.size(); i < len; i++) {
+            Integer wordDrop = wordDropList.get(i);
+            Integer wordWidth = wordWidthList.get(i);
+            int prefix = wordWidthPrefixSumExcludedList.get(i);
+            int dx1 = shadowHOffset + prefix, dy1 = wordDrop, dx2 = Math.min(shadowHOffset + prefix + wordWidth, t + fadeWidth), dy2 = height + wordDrop;
+            if (dx1 > t + fadeWidth) break;
+            int sx1 = dx1, sy1 = 0, sx2 = dx2, sy2 = height;
+            g2d.drawImage(buffImg1, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+        }
+    }
+
+    // 画 buffImg2 作为右侧，带 Drop
+    private void paintBuffImg2WithDrop(Graphics2D g2d, int t) {
+        for (int i = wordDropList.size() - 1; i >= 0; i--) {
+            Integer wordDrop = wordDropList.get(i);
+            Integer wordWidth = wordWidthList.get(i);
+            int prefix = wordWidthPrefixSumExcludedList.get(i);
+            int dx1 = Math.max(t, shadowHOffset + prefix), dy1 = wordDrop, dx2 = shadowHOffset + prefix + wordWidth, dy2 = height + wordDrop;
+            if (dx2 < t) break;
+            int sx1 = dx1, sy1 = 0, sx2 = dx2, sy2 = height;
+            g2d.drawImage(buffImg2, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+        }
+    }
 
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
@@ -299,13 +405,10 @@ public class HighlightLyric {
         Graphics2D g2d = GraphicsUtil.setup(buffImg.createGraphics());
 
         if (ratio > 0) {
-//            if (wStartIndex - 1 >= 0) {
-//                int x1 = wordDurationList.get(wStartIndex - 1) + shadowHOffset, x2 = wordDurationList.get(wStartIndex) + shadowHOffset;
-//                g2d.translate(0, -getWordOffsetY(x1, x2, wRatio));
-//            }
             // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
             GraphicsUtil.srcOver(g2d);
-            g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
+            paintBuffImg1WithDrop(g2d, t);
+//            g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
 
             // 创建渐变覆盖层（使用黑色到透明的渐变，然后使用 DST_OUT）
             GradientPaint fadeOverlay = new GradientPaint(t, 0, Colors.TRANSPARENT, t + fadeWidth, 0, Colors.BLACK, false);
@@ -318,7 +421,8 @@ public class HighlightLyric {
             g2d.setComposite(AlphaComposite.DstOver);
         }
         // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
-        g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
+        paintBuffImg2WithDrop(g2d, t);
+//        g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
         g2d.dispose();
 
         cropImg();

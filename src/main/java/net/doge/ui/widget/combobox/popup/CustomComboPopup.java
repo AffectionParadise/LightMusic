@@ -39,7 +39,7 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
 
         fadingInTimer = new Timer(10, e -> {
             // 淡入
-            float opacity = Math.min(1f, extendedOpacity + 0.05f);
+            float opacity = Math.min(1f, extendedOpacity + 0.1f);
             setTreeExtendedOpacity(opacity);
             if (opacity >= 1f) {
                 // 淡入动画完成后恢复透明度

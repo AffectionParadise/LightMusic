@@ -9283,6 +9283,15 @@ public class MainFrame extends JFrame {
         userDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(userDescriptionScrollPane));
         recommendItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(recommendItemDescriptionScrollPane));
         collectionItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(collectionItemDescriptionScrollPane));
+        // 默认不显示滚动条
+        playlistDescriptionScrollPane.setVBarActive(false);
+        albumDescriptionScrollPane.setVBarActive(false);
+        artistDescriptionScrollPane.setVBarActive(false);
+        radioDescriptionScrollPane.setVBarActive(false);
+        rankingDescriptionScrollPane.setVBarActive(false);
+        userDescriptionScrollPane.setVBarActive(false);
+        recommendItemDescriptionScrollPane.setVBarActive(false);
+        collectionItemDescriptionScrollPane.setVBarActive(false);
         // 水平滚动条
         playlistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -21077,6 +21086,7 @@ public class MainFrame extends JFrame {
                     wrapped = true;
                 }
                 if (wrapped) return;
+                updateDrop(currTimeSeconds);
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
                     originalRatio = 1;
@@ -21111,19 +21121,44 @@ public class MainFrame extends JFrame {
         });
     }
 
+    // 更新 Drop
+    private void updateDrop(double t) {
+        if (nextLrc <= 0) return;
+        Statement ls = statements.get(nextLrc - 1);
+        double lineStartTime = ls.getTime();
+        HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
+        HighlightLyric rhl = ((LrcListRenderer) lrcList.getCellRenderer()).getHl();
+        // 逐字歌词
+        if (hl.isByWord()) {
+            hl.updateWordDropList(t, lineStartTime - lrcOffset);
+            rhl.updateWordDropList(t, lineStartTime - lrcOffset);
+        }
+        // 非逐字歌词
+        else {
+            Statement ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
+            double lineEndTime = ls.hasEndTime() ? ls.getEndTime() - lrcOffset
+                    : ns != null ? ns.getTime() - lrcOffset
+                    : player.getDurationSeconds();
+            hl.updateNormalWordDropList(t, lineStartTime - lrcOffset, lineEndTime);
+            rhl.updateNormalWordDropList(t, lineStartTime - lrcOffset, lineEndTime);
+        }
+    }
+
     // 更新歌词比率
     private void updateOriginalRatio(double t) {
         HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
         double tempRatio = 0;
         if (nextLrc > 0) {
+            Statement ls = statements.get(nextLrc - 1);
+            double lineStartTime = ls.getTime();
             if (hl.isByWord()) {
-                tempRatio = hl.calcRatio(t, statements.get(nextLrc - 1).getTime() - lrcOffset);
+                tempRatio = hl.computeRatio(t, lineStartTime - lrcOffset);
             } else {
-                Statement ls = statements.get(nextLrc - 1), ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
-                tempRatio = (t - ls.getTime() + lrcOffset) /
+                Statement ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
+                tempRatio = (t - lineStartTime + lrcOffset) /
                         ((ls.hasEndTime() ? ls.getEndTime() - lrcOffset
                                 : (ns != null ? ns.getTime() - lrcOffset
-                                : player.getDurationSeconds())) - ls.getTime() + lrcOffset);
+                                : player.getDurationSeconds())) - lineStartTime + lrcOffset);
             }
         }
         originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
