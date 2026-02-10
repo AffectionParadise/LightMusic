@@ -22,7 +22,7 @@ import java.awt.*;
  * @Date 2020/12/7
  */
 @Data
-public class LrcListRenderer extends CustomListCellRenderer {
+public class LyricListRenderer extends CustomListCellRenderer {
     private final Font defaultFont = Fonts.NORMAL_TITLE;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
@@ -71,7 +71,7 @@ public class LrcListRenderer extends CustomListCellRenderer {
             new EmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
     };
 
-    public LrcListRenderer() {
+    public LyricListRenderer() {
         createFontAnimation();
         fontTimer = new Timer(10, e -> {
             // 高亮行字体增大

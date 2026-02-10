@@ -127,8 +127,10 @@ public class QqLyricHero {
 
     // 从 qrc 的 xml 格式中解析歌词
     private String parseQrcXml(String xmlStr) {
-        Document doc = Jsoup.parse(xmlStr);
-        String lyric = doc.select("Lyric_1").attr("LyricContent");
+        // 用 Jsoup 有时解析错误，使用正则匹配取代
+        String lyric = RegexUtil.getGroup1("LyricContent=\"(.*)\"", xmlStr);
+//        Document doc = Jsoup.parse(xmlStr);
+//        String lyric = doc.select("Lyric_1").attr("LyricContent");
         String[] lsp = lyric.split("\n");
         StringBuilder sb = new StringBuilder();
         for (String l : lsp) {

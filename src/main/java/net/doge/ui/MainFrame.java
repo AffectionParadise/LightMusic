@@ -52,7 +52,7 @@ import net.doge.constant.core.ui.window.CloseWindowOptions;
 import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.core.ui.window.WindowState;
 import net.doge.constant.service.NetMusicSource;
-import net.doge.entity.core.lyric.LrcData;
+import net.doge.entity.core.lyric.LyricData;
 import net.doge.entity.core.lyric.Statement;
 import net.doge.entity.core.player.MetaMusicInfo;
 import net.doge.entity.core.player.MusicPlayer;
@@ -86,7 +86,7 @@ import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
-import net.doge.ui.widget.list.renderer.core.LrcListRenderer;
+import net.doge.ui.widget.list.renderer.core.LyricListRenderer;
 import net.doge.ui.widget.list.renderer.service.*;
 import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
@@ -20137,6 +20137,24 @@ public class MainFrame extends JFrame {
 //        }
 //    }
 
+    // 更新歌词下坠动画
+    private void updateWordDropAnimation(HighlightLyric hl, int piece) {
+        if (hl == null) return;
+        List<Integer> wordDropList = hl.wordDropList;
+        List<Integer> wordDropOriginList = hl.wordDropOriginList;
+        List<Integer> wordDropGapList = hl.wordDropGapList;
+        for (int i = 0, len = wordDropList.size(); i < len; i++) {
+            int wordDrop = wordDropList.get(i);
+            int wordDropOrigin = wordDropOriginList.get(i);
+            int wordDropGap = wordDropGapList.get(i);
+            int step = Math.max(1, wordDropGap / piece);
+            if (wordDrop < wordDropOrigin)
+                wordDropList.set(i, wordDrop + Math.min(step, wordDropOrigin - wordDrop));
+            else if (wordDrop > wordDropOrigin)
+                wordDropList.set(i, wordDrop - Math.min(step, wordDrop - wordDropOrigin));
+        }
+    }
+
     private int lrcTimerFrame;
 
     // 初始化动画 Timer
@@ -20147,30 +20165,30 @@ public class MainFrame extends JFrame {
                 double[] specs = player.specs;
                 double[] specsOrigin = player.specsOrigin;
                 double[] specsGap = player.specsGap;
-//                double avg = 0;
                 for (int i = 0, len = SpectrumConstants.barNum; i < len; i++) {
+                    double step = Math.max(1, specsGap[i] / specPiece);
                     if (specs[i] < specsOrigin[i])
-                        specs[i] += Math.min(specsGap[i] / specPiece, specsOrigin[i] - specs[i]);
+                        specs[i] += Math.min(step, specsOrigin[i] - specs[i]);
                     else if (specs[i] > specsOrigin[i])
-                        specs[i] -= Math.min(specsGap[i] / specPiece, specs[i] - specsOrigin[i]);
-//                    avg += specs[i];
+                        specs[i] -= Math.min(step, specs[i] - specsOrigin[i]);
                 }
-//                avg /= SpectrumConstants.barNum;
-//                if (grooveOn) globalPanel.setScale(1 + 0.5f * (float) (avg / SpectrumConstants.barMaxHeight));
-//                else lrcAndSpecBox.repaint();
                 lrcAndSpecBox.repaint();
             });
         });
         final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
         lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
             lrcExecutor.execute(() -> {
-                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+                LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+                // 更新歌词动画比率
                 if (nextLrc >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
                     double or = originalRatio;
                     if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LRC_PIECE + currRatio;
                     renderer.setRatio(ratio);
                     desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
+                    // 更新歌词上动画
+                    updateWordDropAnimation(desktopLyricDialog.getHighlightLyric(), LRC_PIECE);
+                    updateWordDropAnimation(renderer.getHl(), LRC_PIECE);
                 } else {
                     renderer.setRatio(0);
                     desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
@@ -20862,7 +20880,7 @@ public class MainFrame extends JFrame {
         originalRatio = 0;
         lrcScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
-        LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+        LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
         lrcList.setModel(lrcListModel);
     }
@@ -20872,7 +20890,7 @@ public class MainFrame extends JFrame {
         if (player.isEmpty()) return;
         clearLrc();
 
-        LrcData lrcData = null;
+        LyricData lyricData = null;
         final int BAD_FORMAT = 0, NO_LRC = 1;
         int state = -1;
         boolean isFile = musicInfo == null;
@@ -20883,14 +20901,14 @@ public class MainFrame extends JFrame {
             boolean exists = lrcFile.exists();
             String embeddedLyric = null;
             // 从歌词文件读取歌词，若不存在，读取内嵌歌词
-            lrcData = exists ? new LrcData(lrcFile) : new LrcData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
+            lyricData = exists ? new LyricData(lrcFile) : new LyricData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
             // 首次读取为空，说明歌词格式不正确或者歌词为空
-            if (lrcData.isEmpty()) {
-                statements = exists ? new LrcData(lrcFile, true).getStatements()
-                        : new LrcData(embeddedLyric, true).getStatements();
+            if (lyricData.isEmpty()) {
+                statements = exists ? new LyricData(lrcFile, true).getStatements()
+                        : new LyricData(embeddedLyric, true).getStatements();
                 // 再次读取为空，说明歌词为空
                 state = statements.isEmpty() ? NO_LRC : BAD_FORMAT;
-            } else statements = lrcData.getStatements();
+            } else statements = lyricData.getStatements();
             // 繁体转换
             if (lyricType == LyricType.TRADITIONAL_CN)
                 for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
@@ -20906,11 +20924,11 @@ public class MainFrame extends JFrame {
                 case TRADITIONAL_CN:
                     if (musicInfo.hasLrc()) {
                         String lrc = musicInfo.getLrc();
-                        lrcData = new LrcData(lrc);
-                        if (lrcData.isEmpty()) {
-                            statements = new LrcData(lrc, true).getStatements();
+                        lyricData = new LyricData(lrc);
+                        if (lyricData.isEmpty()) {
+                            statements = new LyricData(lrc, true).getStatements();
                             state = BAD_FORMAT;
-                        } else statements = lrcData.getStatements();
+                        } else statements = lyricData.getStatements();
                         // 繁体转换
                         if (lyricType == LyricType.TRADITIONAL_CN)
                             for (Statement stmt : statements)
@@ -20921,11 +20939,11 @@ public class MainFrame extends JFrame {
                 case TRANSLATION:
                     if (musicInfo.hasTrans()) {
                         String trans = musicInfo.getTrans();
-                        lrcData = new LrcData(trans);
-                        if (lrcData.isEmpty()) {
-                            statements = new LrcData(trans, true).getStatements();
+                        lyricData = new LyricData(trans);
+                        if (lyricData.isEmpty()) {
+                            statements = new LyricData(trans, true).getStatements();
                             state = BAD_FORMAT;
-                        } else statements = lrcData.getStatements();
+                        } else statements = lyricData.getStatements();
                     }
                     // 无翻译时，加载原歌词
                     else {
@@ -20937,26 +20955,26 @@ public class MainFrame extends JFrame {
                 case ROMA:
                     if (musicInfo.hasRoma()) {
                         String roma = musicInfo.getRoma();
-                        lrcData = new LrcData(roma);
-                        if (lrcData.isEmpty()) {
-                            statements = new LrcData(roma, true).getStatements();
+                        lyricData = new LyricData(roma);
+                        if (lyricData.isEmpty()) {
+                            statements = new LyricData(roma, true).getStatements();
                             state = BAD_FORMAT;
-                        } else statements = lrcData.getStatements();
+                        } else statements = lyricData.getStatements();
                     }
                     // 无罗马音时，使用原歌词进行转换
                     else if (musicInfo.hasLrc()) {
                         String lrc = musicInfo.getLrc();
-                        lrcData = new LrcData(lrc);
-                        if (lrcData.isEmpty()) {
-                            statements = new LrcData(lrc, true).getStatements();
+                        lyricData = new LyricData(lrc);
+                        if (lyricData.isEmpty()) {
+                            statements = new LyricData(lrc, true).getStatements();
                             state = BAD_FORMAT;
-                        } else statements = lrcData.getStatements();
+                        } else statements = lyricData.getStatements();
                         for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
                     } else state = NO_LRC;
                     break;
             }
         }
-        lrcStr = lrcData == null ? "" : lrcData.getLrcStr();
+        lrcStr = lyricData == null ? "" : lyricData.getLrcStr();
         if (StringUtil.isEmpty(LrcUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
 
         if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
@@ -20971,7 +20989,7 @@ public class MainFrame extends JFrame {
         originalRatio = 0;
         lrcScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
-        LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+        LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
         renderer.setRow(row);
         lrcList.setModel(lrcListModel);
         lrcScrollAnimation = true;
@@ -21079,14 +21097,14 @@ public class MainFrame extends JFrame {
                         currScrollVal = lrcScrollPane.getVBarValue();
                         if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
                     }
-                    LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+                    LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
                     renderer.setRow(row);
                     nextLrc++;
                     originalRatio = 0;
                     wrapped = true;
                 }
                 if (wrapped) return;
-                updateDrop(currTimeSeconds);
+                updateOriginalDrop(currTimeSeconds);
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
                 if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
                     originalRatio = 1;
@@ -21121,17 +21139,17 @@ public class MainFrame extends JFrame {
         });
     }
 
-    // 更新 Drop
-    private void updateDrop(double t) {
+    // 更新 OriginalDrop
+    private void updateOriginalDrop(double t) {
         if (nextLrc <= 0) return;
         Statement ls = statements.get(nextLrc - 1);
         double lineStartTime = ls.getTime();
         HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
-        HighlightLyric rhl = ((LrcListRenderer) lrcList.getCellRenderer()).getHl();
+        HighlightLyric rhl = ((LyricListRenderer) lrcList.getCellRenderer()).getHl();
         // 逐字歌词
         if (hl.isByWord()) {
-            hl.updateWordDropList(t, lineStartTime - lrcOffset);
-            rhl.updateWordDropList(t, lineStartTime - lrcOffset);
+            hl.updateWordDropOriginList(t, lineStartTime - lrcOffset);
+            rhl.updateWordDropOriginList(t, lineStartTime - lrcOffset);
         }
         // 非逐字歌词
         else {
@@ -21139,8 +21157,8 @@ public class MainFrame extends JFrame {
             double lineEndTime = ls.hasEndTime() ? ls.getEndTime() - lrcOffset
                     : ns != null ? ns.getTime() - lrcOffset
                     : player.getDurationSeconds();
-            hl.updateNormalWordDropList(t, lineStartTime - lrcOffset, lineEndTime);
-            rhl.updateNormalWordDropList(t, lineStartTime - lrcOffset, lineEndTime);
+            hl.updateNormalWordDropOriginList(t, lineStartTime - lrcOffset, lineEndTime);
+            rhl.updateNormalWordDropOriginList(t, lineStartTime - lrcOffset, lineEndTime);
         }
     }
 
@@ -22674,11 +22692,11 @@ public class MainFrame extends JFrame {
         downloadStatusHeaderLabel.setForeground(textColor);
 
         // 歌词高亮显示
-        LrcListRenderer lrcListRenderer = new LrcListRenderer();
-        lrcListRenderer.setRow(row);
-        lrcListRenderer.setBgColor(lrcColor);
-        lrcListRenderer.setHighlightColor(highlightColor);
-        lrcList.setCellRenderer(lrcListRenderer);
+        LyricListRenderer lyricListRenderer = new LyricListRenderer();
+        lyricListRenderer.setRow(row);
+        lyricListRenderer.setBgColor(lrcColor);
+        lyricListRenderer.setHighlightColor(highlightColor);
+        lrcList.setCellRenderer(lyricListRenderer);
         lrcList.setUI(new CustomListUI());
 
         // 进度条和控制面板透明
@@ -23166,7 +23184,7 @@ public class MainFrame extends JFrame {
                 currScrollVal = lrcScrollPane.getVBarValue();
                 lrcScrollAnimation = true;
             }
-            LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+            LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
             renderer.setRow(row);
             updateOriginalRatio(t);
             break;

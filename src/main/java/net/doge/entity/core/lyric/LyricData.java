@@ -19,7 +19,7 @@ import java.util.List;
  * @Date 2020/12/7
  */
 @Data
-public class LrcData {
+public class LyricData {
     // 歌词
     private List<Statement> statements = new LinkedList<>();
     // lrc 文件内容
@@ -32,19 +32,19 @@ public class LrcData {
         return statements.isEmpty();
     }
 
-    public LrcData(File lrcFile) {
+    public LyricData(File lrcFile) {
         this(lrcFile, false);
     }
 
-    public LrcData(File lrcFile, boolean badFormat) {
+    public LyricData(File lrcFile, boolean badFormat) {
         this(FileUtil.readStr(lrcFile, FileUtil.getCharsetName(lrcFile)), badFormat);
     }
 
-    public LrcData(String lrcStr) {
+    public LyricData(String lrcStr) {
         this(lrcStr, false);
     }
 
-    public LrcData(String lrcStr, boolean badFormat) {
+    public LyricData(String lrcStr, boolean badFormat) {
         initData(lrcStr, badFormat);
     }
 

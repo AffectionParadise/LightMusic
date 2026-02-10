@@ -46,16 +46,18 @@ public class HighlightLyric {
     private FontMetrics[] metricsArray;
 
     // 最小上浮动画时间
-    private final int minDropDuration = 500;
+    private final int minDropDuration = 100;
     // 最最大简单上浮动画时间
     private final int maxSimpleDropDuration = 1000;
-    // 起始/结束位移
-    private final int startDrop = ScaleUtil.scale(2);
-    private final double interpolarX = 0.7;
-    private final int topDrop = ScaleUtil.scale(-1);
+    // 起始/经过/结束位移
+    private final int startDrop = ScaleUtil.scale(3);
+    private final double interpolarX = 0.2;
+    private final int topDrop = ScaleUtil.scale(-2);
     private final int destDrop = ScaleUtil.scale(0);
     // 每个字(也有可能是一段)的下坠高度
-    private List<Integer> wordDropList = new LinkedList<>();
+    public List<Integer> wordDropList = new LinkedList<>();
+    public List<Integer> wordDropOriginList = new LinkedList<>();
+    public List<Integer> wordDropGapList = new LinkedList<>();
     // 每个字(也有可能是一段)的宽度
     private List<Integer> wordWidthList = new LinkedList<>();
     // 字(也有可能是一段)宽度前缀和
@@ -274,7 +276,9 @@ public class HighlightLyric {
             sum += w;
             wordWidthList.add(w);
             // 初始化每段文字下坠高度
+            wordDropOriginList.add(startDrop);
             wordDropList.add(startDrop);
+            wordDropGapList.add(0);
         }
     }
 
@@ -303,8 +307,8 @@ public class HighlightLyric {
         return ratio;
     }
 
-    // 更新普通歌词 DropList
-    public void updateNormalWordDropList(double currTime, double lineStartTime, double lineEndTime) {
+    // 更新普通歌词 DropOriginList
+    public void updateNormalWordDropOriginList(double currTime, double lineStartTime, double lineEndTime) {
         int lineStartTimeMs = (int) (lineStartTime * 1000), lineEndTimeMs = (int) (lineEndTime * 1000);
         int lineDurationMs = lineEndTimeMs - lineStartTimeMs;
         // 如果每段起始/持续时间未初始化
@@ -318,11 +322,11 @@ public class HighlightLyric {
                 wordDurationList.add(wordDuration);
             }
         }
-        updateWordDropList(currTime, lineStartTime);
+        updateWordDropOriginList(currTime, lineStartTime);
     }
 
-    // 更新逐字歌词 DropList
-    public void updateWordDropList(double currTime, double lineStartTime) {
+    // 更新逐字歌词 DropOriginList
+    public void updateWordDropOriginList(double currTime, double lineStartTime) {
         int currTimeMs = (int) (currTime * 1000), lineStartTimeMs = (int) (lineStartTime * 1000);
         int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
         for (int i = 0, len = wordStartList.size(); i < len; i++) {
@@ -330,43 +334,34 @@ public class HighlightLyric {
             int wordDuration = wordDurationList.get(i);
             // Drop 动画进度，控制在 0-1 之间
             double progress = Math.max(0, Math.min(1, (double) (lineCurrTimeMs - wordStart) / Math.max(minDropDuration, wordDuration)));
-            // 超出最大简单动画时间，使用复杂曲线动画
-            wordDropList.set(i, computeWordDrop(progress, wordDuration >= maxSimpleDropDuration));
+            // 超出最大简单动画时间，使用曲线动画
+            int wordDropOrigin = computeWordDrop(progress, wordDuration >= maxSimpleDropDuration);
+            wordDropOriginList.set(i, wordDropOrigin);
+            wordDropGapList.set(i, Math.abs(wordDropOrigin - wordDropList.get(i)));
         }
     }
 
     // 根据进度计算 Drop
-    private int computeWordDrop(double progress, boolean useComplexCurve) {
-        if (useComplexCurve)
-            return (int) cubicThroughThreePoints(progress, startDrop, interpolarX, topDrop, destDrop);
+    private int computeWordDrop(double progress, boolean useCurve) {
+        if (useCurve)
+            return (int) curve(progress, startDrop, interpolarX, topDrop, destDrop);
         return (int) (startDrop + (destDrop - startDrop) * progress);
     }
 
-    /**
-     * 单段三次多项式，通过三个点 (0,a), (t1,c), (1,b)
-     * 设 f(t) = At³ + Bt² + Ct + D
-     */
-    private double cubicThroughThreePoints(double t, double a, double t1, double c, double b) {
-        // 解方程组：
-        // 1. f(0) = a  => D = a
-        // 2. f(t1) = c => At1³ + Bt1² + Ct1 + a = c
-        // 3. f(1) = b  => A + B + C + a = b
-        // 4. 添加平滑条件：f'(t1) = (b - a) / 1 （匀速倾向）
-
-        // 计算系数
-        double t1_2 = t1 * t1, t1_3 = t1_2 * t1;
-        // 使用矩阵求解，这里直接给出解：
-        double denom = t1_3 - t1_2;
-        // 如果 t1=0 或 t1=1，需要特殊处理
-        if (Math.abs(denom) < 1e-10) {
-            // 退化为线性插值
-            return a + (b - a) * t;
+    // 曲线函数
+    private double curve(double t, double a, double t1, double c, double b) {
+        // 使用正弦函数实现平滑的缓入缓出
+        if (t <= t1) {
+            // 第一段：正弦缓入
+            double u = t / t1;
+            double sin_factor = Math.sin(u * Math.PI / 2);
+            return a + (c - a) * sin_factor;
+        } else {
+            // 第二段：正弦缓出
+            double v = (t - t1) / (1 - t1);
+            double sin_factor = Math.sin((1 - v) * Math.PI / 2);
+            return b + (c - b) * sin_factor;
         }
-        double A = (b - a - (c - a) / t1) / (1 - 2 * t1 + t1_2);
-        double B = (c - a) / t1 - A * t1_2;
-        double C = (b - a) - A - B;
-        double D = a;
-        return A * t * t * t + B * t * t + C * t + D;
     }
 
     // 画 buffImg1 作为左侧，带 Drop
