@@ -55,9 +55,9 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     // 专辑 id
     private String albumId;
     // 歌词
-    private String lrc;
+    private String lyric;
     // 歌词匹配
-    private String lrcMatch;
+    private String lyricMatch;
     // 歌词翻译
     private String trans;
     // 罗马音歌词
@@ -82,7 +82,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     // 判断歌曲信息是否完整
     public boolean isIntegrated() {
-        return hasUrl() && hasLrc() && hasAlbumImage();
+        return hasUrl() && hasLyric() && hasAlbumImage();
     }
 
     // 判断当前音质是否为设置的音质
@@ -139,12 +139,12 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     // 判断歌词是否完整
-    public boolean isLrcIntegrated() {
-        return hasLrc();
+    public boolean isLyricIntegrated() {
+        return hasLyric();
     }
 
-    public boolean hasLrc() {
-        return StringUtil.notEmpty(lrc);
+    public boolean hasLyric() {
+        return StringUtil.notEmpty(lyric);
     }
 
     public boolean hasTrans() {
@@ -155,8 +155,8 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return StringUtil.notEmpty(roma);
     }
 
-    public boolean hasLrcMatch() {
-        return StringUtil.notEmpty(lrcMatch);
+    public boolean hasLyricMatch() {
+        return StringUtil.notEmpty(lyricMatch);
     }
 
     public boolean hasDuration() {
@@ -176,8 +176,8 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     // 歌词文件内容
-    public String getLrcFileText() {
-        return hasLrc() ? lrc.replaceAll(LyricPattern.PAIR, "") : lrc;
+    public String getLyricFileText() {
+        return hasLyric() ? lyric.replaceAll(LyricPattern.PAIR, "") : lyric;
     }
 
     @Override
@@ -207,11 +207,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return FileUtil.filterFileName(toSimpleString() + "." + format);
     }
 
-    public String toLrcFileName() {
+    public String toLyricFileName() {
         return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + ".lrc");
     }
 
-    public String toSimpleLrcFileName() {
+    public String toSimpleLyricFileName() {
         return FileUtil.filterFileName(toSimpleString() + ".lrc");
     }
 

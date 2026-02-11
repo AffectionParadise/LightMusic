@@ -27,12 +27,12 @@ public class KgLyricHero {
     private final String SEARCH_LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
     private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
 
-    public void fillLrc(NetMusicInfo musicInfo) {
+    public void fillLyric(NetMusicInfo musicInfo) {
         String hash = musicInfo.getHash();
         String name = musicInfo.getName();
         double duration = musicInfo.getDuration();
 
-        String lrcId, accessKey;
+        String lyricId, accessKey;
 
         // 搜索歌词
         String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, UrlUtil.encodeAll(name), hash, duration))
@@ -47,23 +47,23 @@ public class KgLyricHero {
             JSONArray candidates = data.getJSONArray("candidates");
             if (JsonUtil.isEmpty(candidates)) return;
             JSONObject info = candidates.getJSONObject(0);
-            lrcId = info.getString("id");
+            lyricId = info.getString("id");
             accessKey = info.getString("accesskey");
         } else {
-            lrcId = RegexUtil.getGroup1("\"id\":\"(\\d+)\"", lBody);
+            lyricId = RegexUtil.getGroup1("\"id\":\"(\\d+)\"", lBody);
             accessKey = RegexUtil.getGroup1("\"accesskey\":\"([0-9A-Z]+)\"", lBody);
         }
-        if (StringUtil.isEmpty(lrcId) || StringUtil.isEmpty(accessKey)) return;
+        if (StringUtil.isEmpty(lyricId) || StringUtil.isEmpty(accessKey)) return;
 
         // 获取歌词
-        String lrcBody = HttpRequest.get(String.format(LYRIC_KG_API, lrcId, accessKey))
+        String lyricBody = HttpRequest.get(String.format(LYRIC_KG_API, lyricId, accessKey))
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
                 .executeAsync()
                 .body();
-        JSONObject lrcData = JSONObject.parseObject(lrcBody);
-        String content = lrcData.getString("content");
+        JSONObject lyricData = JSONObject.parseObject(lyricBody);
+        String content = lyricData.getString("content");
         if (StringUtil.isEmpty(content)) return;
 
         // 解密
@@ -123,12 +123,12 @@ public class KgLyricHero {
                 // 行起始时间
                 String lineStartStr = RegexUtil.getGroup1(lineTimeExp, l);
                 int lineStart = Integer.parseInt(lineStartStr);
-                String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
-                sb.append(lrcTime);
+                String lyricTime = DurationUtil.formatToLyricTime((double) lineStart / 1000);
+                sb.append(lyricTime);
                 sb.append(l.replaceFirst(lineTimeExp, "").replaceAll("<-?(\\d+),(\\d+),\\d+>", LyricPattern.PAIR_REP));
             } else sb.append(l);
             sb.append("\n");
         }
-        musicInfo.setLrc(sb.toString());
+        musicInfo.setLyric(sb.toString());
     }
 }

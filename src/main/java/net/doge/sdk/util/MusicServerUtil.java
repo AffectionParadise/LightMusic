@@ -784,7 +784,7 @@ public class MusicServerUtil {
     /**
      * 根据为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
      */
-    public static void fillLrc(NetMusicInfo musicInfo) {
-        MusicInfoReq.getInstance().fillLrc(musicInfo);
+    public static void fillLyric(NetMusicInfo musicInfo) {
+        MusicInfoReq.getInstance().fillLyric(musicInfo);
     }
 }

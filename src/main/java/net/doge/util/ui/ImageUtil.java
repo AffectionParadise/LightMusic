@@ -30,8 +30,10 @@ import java.util.List;
  * @Date 2020/12/9
  */
 public class ImageUtil {
-    // 毛玻璃(高斯模糊)过滤器
+    // 高斯模糊过滤器
     private static final GaussianFilter gaussianFilter = new GaussianFilter();
+    // 旋转过滤器
+    private static final TwirlFilter twirlFilter = new TwirlFilter();
     // 分析布朗运动过滤器
     private static final FBMFilter fbmFilter = new FBMFilter();
     // 对比度过滤器
@@ -609,7 +611,21 @@ public class ImageUtil {
     }
 
     /**
-     * 对 BufferedImage 进行毛玻璃化(高斯模糊)处理，用于专辑背景
+     * 生成流体图
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage fluidImage(BufferedImage img) {
+        if (img == null) return null;
+        twirlFilter.setAngle((float) Math.toRadians(RandomUtil.randomInt(10, 350)));
+        twirlFilter.setRadius((float) img.getWidth() / 2);
+        return twirlFilter.filter(img, null);
+    }
+
+
+    /**
+     * 对 BufferedImage 进行高斯模糊处理，用于歌曲封面
      *
      * @param img
      * @return
@@ -713,11 +729,11 @@ public class ImageUtil {
      *
      * @return
      */
-    public static BufferedImage toFbmImage(BufferedImage img, int w, int h) {
+    public static BufferedImage fbmImage(BufferedImage img, int w, int h) {
         List<MMCQ.ThemeColor> themeColors = ColorUtil.getThemeColors(img);
         int ca = ColorUtil.makeBestColor(themeColors.get(0).getRgb()).getRGB();
         int cb = ColorUtil.makeBestColor(themeColors.size() > 1 ? themeColors.get(1).getRgb() : Colors.THEME.getRGB()).getRGB();
-        fbmFilter.setAngle(RandomUtil.randomInt(360));
+        fbmFilter.setAngle((float) Math.toRadians(RandomUtil.randomInt(360)));
         fbmFilter.setColormap(new LinearColormap(cb, ca));
         return fbmFilter.filter(createTransparentImage(w, h), null);
     }
@@ -727,7 +743,7 @@ public class ImageUtil {
      *
      * @return
      */
-    public static BufferedImage toGradientImage(BufferedImage img, int w, int h) {
+    public static BufferedImage gradientImage(BufferedImage img, int w, int h) {
         Color mc = ColorUtil.getBestColor(img);
         double l = ColorUtil.calculateLuminance(mc.getRGB());
         if (l >= 0.25) {

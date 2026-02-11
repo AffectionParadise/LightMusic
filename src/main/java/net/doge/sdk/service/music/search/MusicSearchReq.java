@@ -173,15 +173,15 @@ public class MusicSearchReq {
                         else if (JsonUtil.notEmpty(songJson.getJSONObject("h"))) qualityType = AudioQuality.HQ;
                         else if (JsonUtil.notEmpty(songJson.getJSONObject("m"))) qualityType = AudioQuality.MQ;
                         else if (JsonUtil.notEmpty(songJson.getJSONObject("l"))) qualityType = AudioQuality.LQ;
-//                        String lrcMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
+//                        String lyricMatch = songJson.getJSONObject("lyrics").getString("txt").replace("\n", " / ");
                         JSONArray lyrics = songJson.getJSONArray("lyrics");
-                        String lrcMatch = null;
+                        String lyricMatch = null;
                         if (JsonUtil.notEmpty(lyrics)) {
                             StringJoiner sj = new StringJoiner(" / ");
                             for (int j = 0, size = lyrics.size(); j < size; j++) {
                                 sj.add(lyrics.getString(j));
                             }
-                            lrcMatch = HtmlUtil.removeHtmlLabel(sj.toString());
+                            lyricMatch = HtmlUtil.removeHtmlLabel(sj.toString());
                         }
 
                         NetMusicInfo musicInfo = new NetMusicInfo();
@@ -194,7 +194,7 @@ public class MusicSearchReq {
                         musicInfo.setDuration(duration);
                         musicInfo.setMvId(mvId);
                         musicInfo.setQualityType(qualityType);
-                        musicInfo.setLrcMatch(lrcMatch);
+                        musicInfo.setLyricMatch(lyricMatch);
 
                         r.add(musicInfo);
                     }
@@ -416,7 +416,7 @@ public class MusicSearchReq {
 //                if (songJson.getLong("sqfilesize") != 0) qualityType = AudioQuality.SQ;
 //                else if (songJson.getLong("320filesize") != 0) qualityType = AudioQuality.HQ;
 //                else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
-//                String lrcMatch = songJson.getString("lyric");
+//                String lyricMatch = songJson.getString("lyric");
 //
 //                NetMusicInfo musicInfo = new NetMusicInfo();
 //                musicInfo.setSource(NetMusicSource.KG);
@@ -429,7 +429,7 @@ public class MusicSearchReq {
 //                musicInfo.setDuration(duration);
 //                musicInfo.setMvId(mvId);
 //                musicInfo.setQualityType(qualityType);
-//                musicInfo.setLrcMatch(lrcMatch);
+//                musicInfo.setLyricMatch(lyricMatch);
 //
 //                r.add(musicInfo);
 //            }
@@ -465,7 +465,7 @@ public class MusicSearchReq {
                 if (songJson.getLong("SQSize") != 0) qualityType = AudioQuality.SQ;
                 else if (songJson.getLong("320Size") != 0) qualityType = AudioQuality.HQ;
                 else if (songJson.getLong("FileSize") != 0) qualityType = AudioQuality.LQ;
-                String lrcMatch = songJson.getString("Lyric");
+                String lyricMatch = songJson.getString("Lyric");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.KG);
@@ -479,7 +479,7 @@ public class MusicSearchReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
                 musicInfo.setQualityType(qualityType);
-                musicInfo.setLrcMatch(lrcMatch);
+                musicInfo.setLyricMatch(lyricMatch);
 
                 r.add(musicInfo);
             }
@@ -567,7 +567,7 @@ public class MusicSearchReq {
                 else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
                 else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
                 else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-                String lrcMatch = songJson.getString("content").replace("\n", " / ");
+                String lyricMatch = songJson.getString("content").replace("\n", " / ");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
                 musicInfo.setSource(NetMusicSource.QQ);
@@ -580,7 +580,7 @@ public class MusicSearchReq {
                 musicInfo.setDuration(duration);
                 musicInfo.setMvId(mvId);
                 musicInfo.setQualityType(qualityType);
-                musicInfo.setLrcMatch(lrcMatch);
+                musicInfo.setLyricMatch(lyricMatch);
 
                 r.add(musicInfo);
             }
@@ -847,7 +847,7 @@ public class MusicSearchReq {
                         else if ("PQ".equals(formatType)) qualityType = AudioQuality.LQ;
                         if (qualityType != AudioQuality.UNKNOWN) break;
                     }
-                    String lrcMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
+                    String lyricMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
                     musicInfo.setSource(NetMusicSource.MG);
@@ -860,7 +860,7 @@ public class MusicSearchReq {
                     musicInfo.setDuration(duration);
                     musicInfo.setMvId(mvId);
                     musicInfo.setQualityType(qualityType);
-                    musicInfo.setLrcMatch(lrcMatch);
+                    musicInfo.setLyricMatch(lyricMatch);
 
                     r.add(musicInfo);
                 }
@@ -1206,7 +1206,6 @@ public class MusicSearchReq {
             }
         });
         res.addAll(ListUtil.joinAll(rl));
-
 
         return new CommonResult<>(res, total.get());
     }

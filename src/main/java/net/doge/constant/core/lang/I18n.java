@@ -29,9 +29,9 @@ public class I18n {
 //        LANG_MAP.put("albumName", new String[]{"专辑名：", "Album: "});
 
         LANG_MAP.put("paginationMsg", new String[]{"第 %s 页，共 %s 页", "Page %s of %s"});
-        LANG_MAP.put("lrcLoadingMsg", new String[]{"加载歌词中......", "Loading lyric..."});
-        LANG_MAP.put("noLrcMsg", new String[]{"尽情享受音乐的世界", "Enjoy the world of music to the fullest"});
-        LANG_MAP.put("badFormatLrcMsg", new String[]{"该歌词不支持滚动", "The lyrics do not support scrolling"});
+        LANG_MAP.put("lyricLoadingMsg", new String[]{"加载歌词中......", "Loading lyric..."});
+        LANG_MAP.put("noLyricMsg", new String[]{"尽情享受音乐的世界", "Enjoy the world of music to the fullest"});
+        LANG_MAP.put("badFormatLyricMsg", new String[]{"该歌词不支持滚动", "The lyrics do not support scrolling"});
         LANG_MAP.put("loadingMsg", new String[]{"加载中，客官请稍等......", "Loading, please wait..."});
         LANG_MAP.put("loadFailed", new String[]{"数据加载失败", "Data load failed"});
         LANG_MAP.put("askDisposeMsg", new String[]{"你希望隐藏到托盘还是退出程序？", "Do you want to hide into the tray or exit the program?"});
@@ -203,13 +203,13 @@ public class I18n {
         LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
         LANG_MAP.put("soundEffectTip", new String[]{"音效", "Sound effect"});
         LANG_MAP.put("sheetTip", new String[]{"乐谱", "Sheet"});
-        LANG_MAP.put("originalLrcTip", new String[]{"原歌词", "Original lyric"});
+        LANG_MAP.put("originalLyricTip", new String[]{"原歌词", "Original lyric"});
         LANG_MAP.put("translationTip", new String[]{"翻译", "Translation"});
         LANG_MAP.put("romaTip", new String[]{"罗马音", "Roma"});
         LANG_MAP.put("tradChineseTip", new String[]{"繁体", "Traditional Chinese"});
         LANG_MAP.put("menuTip", new String[]{"主菜单", "Main menu"});
         LANG_MAP.put("goToPlayQueueTip", new String[]{"转到播放队列", "Go to playback queue"});
-        LANG_MAP.put("desktopLrcTip", new String[]{"桌面歌词", "Desktop lyric"});
+        LANG_MAP.put("desktopLyricTip", new String[]{"桌面歌词", "Desktop lyric"});
         LANG_MAP.put("localPlaylistTip", new String[]{"收藏夹管理", "Manage favorites"});
         LANG_MAP.put("addTip", new String[]{"添加歌曲文件", "Add tracks"});
         LANG_MAP.put("reimportTip", new String[]{"重新从歌曲目录导入歌曲", "Re-import tracks"});
@@ -263,12 +263,12 @@ public class I18n {
         LANG_MAP.put("specGradientMsg", new String[]{"频谱透明渐变", "Spectrum transparent gradient"});
         LANG_MAP.put("specOpacityMsg", new String[]{"当前频谱透明度：%d%%", "Current spectrum view opacity: %d%%"});
 
-        LANG_MAP.put("copy", new String[]{"复制这句歌词", "Copy lyric"});
-        LANG_MAP.put("locateLrc", new String[]{"定位歌词时间", "Seek to lyric time"});
-        LANG_MAP.put("browseLrc", new String[]{"查看歌词文件", "View lyric file"});
-        LANG_MAP.put("downloadLrc", new String[]{"下载歌词文件", "Download lyric file"});
+        LANG_MAP.put("copyLyric", new String[]{"复制这句歌词", "Copy lyric"});
+        LANG_MAP.put("locateLyric", new String[]{"定位歌词时间", "Seek to lyric time"});
+        LANG_MAP.put("browseLyric", new String[]{"查看歌词文件", "View lyric file"});
+        LANG_MAP.put("downloadLyric", new String[]{"下载歌词文件", "Download lyric file"});
 
-        LANG_MAP.put("lrcOffsetMsg", new String[]{"当前歌词偏移：%.1f s", "Current lyric offset: %.1f s"});
+        LANG_MAP.put("lyricOffsetMsg", new String[]{"当前歌词偏移：%.1f s", "Current lyric offset: %.1f s"});
         LANG_MAP.put("reset", new String[]{"重置", "Reset"});
 
         LANG_MAP.put("playModeDisabled", new String[]{"播完暂停", "Pause after playback"});
@@ -277,11 +277,12 @@ public class I18n {
         LANG_MAP.put("listCycle", new String[]{"列表循环", "Loop all"});
         LANG_MAP.put("shuffle", new String[]{"随机播放", "Shuffle"});
 
-        LANG_MAP.put("originalLrc", new String[]{"原歌词", "Original lyric"});
+        LANG_MAP.put("originalLyric", new String[]{"原歌词", "Original lyric"});
         LANG_MAP.put("translation", new String[]{"翻译", "Translation"});
         LANG_MAP.put("roma", new String[]{"罗马音", "Roma"});
         LANG_MAP.put("tradChinese", new String[]{"繁体", "Traditional Chinese"});
 
+        LANG_MAP.put("fluid", new String[]{"旋转流体", "Fluid"});
         LANG_MAP.put("gs", new String[]{"高斯模糊", "Gaussian blur"});
         LANG_MAP.put("darker", new String[]{"暗角滤镜", "Darker mode"});
         LANG_MAP.put("mask", new String[]{"朦胧遮罩", "Mask"});
@@ -585,14 +586,14 @@ public class I18n {
         LANG_MAP.put("closeOption", new String[]{"关闭主界面时：", "Closing option: "});
         LANG_MAP.put("windowSize", new String[]{"窗口大小：", "Window size: "});
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});
-        LANG_MAP.put("lrcAlignment", new String[]{"歌词对齐方式：", "Lyric alignment: "});
+        LANG_MAP.put("lyricAlignment", new String[]{"歌词对齐方式：", "Lyric alignment: "});
         LANG_MAP.put("left", new String[]{"居左", "Left"});
         LANG_MAP.put("center", new String[]{"居中", "Center"});
         LANG_MAP.put("right", new String[]{"居右", "Right"});
         LANG_MAP.put("specMaxHeight", new String[]{"频谱最大高度(≤%s像素)：", "Max spectrum view height(≤%s pixels): "});
         LANG_MAP.put("gsFactor", new String[]{"高斯模糊半径（半径越大越模糊）：", "Gaussian blur radius(Bigger radius, blurrier): "});
         LANG_MAP.put("darkerFactor", new String[]{"暗角滤镜因子（因子越小越暗）：", "Darker mode factor(Smaller factor, darker): "});
-        LANG_MAP.put("autoDownloadLrc", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});
+        LANG_MAP.put("autoDownloadLyric", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});
 //        LANG_MAP.put("verbatimTimeline", new String[]{"歌词文件添加逐字时间轴", "Lyric files add verbatim timelines"});
         LANG_MAP.put("musicDown", new String[]{"歌曲下载路径：", "Track download path: "});
         LANG_MAP.put("mvDown", new String[]{"MV 下载路径：", "MV download path: "});

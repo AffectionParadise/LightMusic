@@ -95,7 +95,7 @@ public class AudioFile extends File implements MusicResource {
                 + (StringUtil.notEmpty(artist) ? " " + artist.replace("、", " ") : "");
     }
 
-    public File toLrcFile() {
+    public File toLyricFile() {
         return new File(FileUtil.getPathWithoutSuffix(this) + ".lrc");
     }
 }

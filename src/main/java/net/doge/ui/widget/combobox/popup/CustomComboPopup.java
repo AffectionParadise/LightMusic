@@ -85,6 +85,7 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
             // 使 JPopupMenu 对应的 Window 透明！
             Window w = SwingUtilities.getWindowAncestor(this);
             w.setVisible(false);
+            w.setBackground(Colors.BLACK);
             w.setBackground(Colors.TRANSPARENT);
             fadeIn();
             w.setVisible(true);

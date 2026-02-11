@@ -31,7 +31,7 @@ public class TimeSliderUI extends BasicSliderUI {
     private MusicPlayer player;
     private MediaPlayer mp;
     private TipDialog dialog;
-    private TipDialog lrcDialog;
+    private TipDialog lyricDialog;
 
     private boolean drawThumb;
 
@@ -44,7 +44,7 @@ public class TimeSliderUI extends BasicSliderUI {
         this.f = f;
         this.player = player;
         dialog = new TipDialog(f, 0);
-        if (isTimeBar) lrcDialog = new TipDialog(f, 0);
+        if (isTimeBar) lyricDialog = new TipDialog(f, 0);
         this.isTimeBar = isTimeBar;
     }
 
@@ -124,19 +124,20 @@ public class TimeSliderUI extends BasicSliderUI {
                     String dStr = isMusic ? player.getDurationString() : DurationUtil.format(mp.getMedia().getDuration().toSeconds());
                     double dSec = isMusic ? player.getDurationSeconds() : mp.getMedia().getDuration().toSeconds();
                     double cSec = (double) slider.getValue() / slider.getMaximum() * dSec;
-                    String lrc = isMusic ? f.getTimeLrc(cSec) : "";
+                    String lyric = isMusic ? f.getTimeLyric(cSec) : "";
                     dialog.setMessage(String.format("%s / %s", DurationUtil.format(cSec), dStr));
-                    if (lrcDialog != null) {
-                        lrcDialog.setMessage(HtmlUtil.textToHtml(lrc));
-                        lrcDialog.updateSize();
+                    if (lyricDialog != null) {
+                        lyricDialog.setMessage(HtmlUtil.textToHtml(lyric));
+                        lyricDialog.updateSize();
                         // 将把手坐标转为屏幕上的坐标，确定歌词对话框位置
                         Point p = new Point(thumbRect.x, thumbRect.y);
                         SwingUtilities.convertPointToScreen(p, slider);
-                        lrcDialog.setLocation(p.x - lrcDialog.getWidth() / 2 + thumbRect.width / 2, p.y - lrcDialog.getHeight() - 5);
+                        lyricDialog.setLocation(p.x - lyricDialog.getWidth() / 2 + thumbRect.width / 2, p.y - lyricDialog.getHeight() - 5);
                     }
                 } else dialog.setMessage(I18n.getText("volume") + slider.getValue());
                 if (!dialog.isShowing()) dialog.showDialog();
-                if (lrcDialog != null && lrcDialog.notEmpty() && !lrcDialog.isShowing()) lrcDialog.showDialog(false);
+                if (lyricDialog != null && lyricDialog.notEmpty() && !lyricDialog.isShowing())
+                    lyricDialog.showDialog(false);
             }
 
             @Override
@@ -158,7 +159,7 @@ public class TimeSliderUI extends BasicSliderUI {
                     slider.repaint();
                 }
                 if (dialog.isShowing()) dialog.close();
-                if (lrcDialog != null && lrcDialog.notEmpty() && lrcDialog.isShowing()) lrcDialog.close();
+                if (lyricDialog != null && lyricDialog.notEmpty() && lyricDialog.isShowing()) lyricDialog.close();
             }
 
             @Override

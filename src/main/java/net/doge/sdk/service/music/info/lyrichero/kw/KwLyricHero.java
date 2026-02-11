@@ -28,7 +28,7 @@ public class KwLyricHero {
 //    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
     private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
 
-    public void fillLrc(NetMusicInfo musicInfo) {
+    public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
         // 请求参数加密
@@ -56,27 +56,27 @@ public class KwLyricHero {
         if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
-        byte[] lrcData = CryptoUtil.decompress(nBytes);
+        byte[] lyricData = CryptoUtil.decompress(nBytes);
         // 无 lrcx 参数时，此处直接获得 lrc 歌词
-//        String lrcStr = new String(lrcData, Charset.forName("gb18030"));
-        String lrcDataStr = new String(lrcData, StandardCharsets.UTF_8);
-        byte[] lrcBytes = CryptoUtil.base64DecodeToBytes(lrcDataStr);
-        int lrcLen = lrcBytes.length;
-        output = new byte[lrcLen];
+//        String lyricStr = new String(lyricData, Charset.forName("gb18030"));
+        String lyricDataStr = new String(lyricData, StandardCharsets.UTF_8);
+        byte[] lyricBytes = CryptoUtil.base64DecodeToBytes(lyricDataStr);
+        int lyricLen = lyricBytes.length;
+        output = new byte[lyricLen];
         i = 0;
-        while (i < lrcLen) {
+        while (i < lyricLen) {
             int j = 0;
-            while (j < keyLen && i < lrcLen) {
-                output[i] = (byte) (lrcBytes[i] ^ keyBytes[j]);
+            while (j < keyLen && i < lyricLen) {
+                output[i] = (byte) (lyricBytes[i] ^ keyBytes[j]);
                 i++;
                 j++;
             }
         }
-        String lrcStr = new String(output, Charset.forName("gb18030"));
+        String lyricStr = new String(output, Charset.forName("gb18030"));
 
         // 解析酷我的偏移值
         int offset = 1, offset2 = 1;
-        String kuwoValStr = RegexUtil.getGroup1("\\[kuwo:(\\d+)\\]", lrcStr);
+        String kuwoValStr = RegexUtil.getGroup1("\\[kuwo:(\\d+)\\]", lyricStr);
         if (StringUtil.notEmpty(kuwoValStr)) {
             int kuwoVal = Integer.parseInt(kuwoValStr, 8);
             offset = kuwoVal / 10;
@@ -84,7 +84,7 @@ public class KwLyricHero {
         }
         // 解析逐字歌词
         String lineTimeExp = "\\[\\d+:\\d+(?:[.:]\\d+)?\\]";
-        String[] lsp = lrcStr.split("\n");
+        String[] lsp = lyricStr.split("\n");
         StringBuilder sb = new StringBuilder();
         for (String l : lsp) {
             List<String> s1List = RegexUtil.findAllGroup1("<(\\d+),-?\\d+>", l);
@@ -106,10 +106,10 @@ public class KwLyricHero {
             }
             sb.append("\n");
         }
-        lrcStr = sb.toString();
+        lyricStr = sb.toString();
 
         // 分离歌词和翻译
-        String[] sp = lrcStr.split("\n");
+        String[] sp = lyricStr.split("\n");
         sb = new StringBuilder();
         boolean hasTrans = false;
         int s = sp.length;
@@ -128,7 +128,7 @@ public class KwLyricHero {
             if (!time.equals(nextTime)) sb.append(sentence).append("\n");
             else hasTrans = true;
         }
-        musicInfo.setLrc(sb.toString());
+        musicInfo.setLyric(sb.toString());
 
         sb = new StringBuilder();
         hasTrans = false;
@@ -151,30 +151,30 @@ public class KwLyricHero {
         // 去除翻译中无用的逐字时间轴
         musicInfo.setTrans(sb.toString().replaceAll("<\\d+,-?\\d+>", ""));
 
-//            String lrcBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
+//            String lyricBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
 //                    .executeAsync()
 //                    .body();
-//            JSONObject data = JSONObject.parseObject(lrcBody).getJSONObject("data");
+//            JSONObject data = JSONObject.parseObject(lyricBody).getJSONObject("data");
 //            if (JsonUtil.isEmpty(data)) {
-//                musicInfo.setLrc(null);
+//                musicInfo.setLyric(null);
 //                musicInfo.setTrans(null);
 //                return;
 //            }
 //            // 酷我歌词返回的是数组，需要先处理成字符串！
-//            // lrclist 可能是数组也可能为 null ！
-//            JSONArray lrcArray = data.getJSONArray("lrclist");
-//            if (JsonUtil.notEmpty(lrcArray)) {
+//            // lyriclist 可能是数组也可能为 null ！
+//            JSONArray lyricArray = data.getJSONArray("lyriclist");
+//            if (JsonUtil.notEmpty(lyricArray)) {
 //                StringBuilder sb = new StringBuilder();
 //                boolean hasTrans = false;
-//                for (int i = 0, len = lrcArray.size(); i < len; i++) {
-//                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
-//                    JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
+//                for (int i = 0, len = lyricArray.size(); i < len; i++) {
+//                    JSONObject sentenceJson = lyricArray.getJSONObject(i);
+//                    JSONObject nextSentenceJson = i + 1 < len ? lyricArray.getJSONObject(i + 1) : null;
 //                    // 歌词中带有翻译时，最后一句是翻译直接跳过
 //                    if (hasTrans && JsonUtil.isEmpty(nextSentenceJson)) break;
-//                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+//                    String time = TimeUtil.formatToLyricTime(sentenceJson.getDouble("time"));
 //                    String nextTime = null;
 //                    if (JsonUtil.notEmpty(nextSentenceJson))
-//                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+//                        nextTime = TimeUtil.formatToLyricTime(nextSentenceJson.getDouble("time"));
 //                    // 歌词中带有翻译，有多个 time 相同的歌词时取不重复的第二个
 //                    if (!time.equals(nextTime)) {
 //                        sb.append(time);
@@ -183,22 +183,22 @@ public class KwLyricHero {
 //                        sb.append("\n");
 //                    } else hasTrans = true;
 //                }
-//                musicInfo.setLrc(sb.toString());
-//            } else musicInfo.setLrc(null);
+//                musicInfo.setLyric(sb.toString());
+//            } else musicInfo.setLyric(null);
 //
 //            // 酷我歌词返回的是数组，需要先处理成字符串！
-//            // lrclist 可能是数组也可能为 null ！
-//            if (JsonUtil.notEmpty(lrcArray)) {
+//            // lyriclist 可能是数组也可能为 null ！
+//            if (JsonUtil.notEmpty(lyricArray)) {
 //                StringBuilder sb = new StringBuilder();
 //                boolean hasTrans = false;
 //                String lastTime = null;
-//                for (int i = 0, len = lrcArray.size(); i < len; i++) {
-//                    JSONObject sentenceJson = lrcArray.getJSONObject(i);
-//                    JSONObject nextSentenceJson = i + 1 < len ? lrcArray.getJSONObject(i + 1) : null;
-//                    String time = TimeUtil.formatToLrcTime(sentenceJson.getDouble("time"));
+//                for (int i = 0, len = lyricArray.size(); i < len; i++) {
+//                    JSONObject sentenceJson = lyricArray.getJSONObject(i);
+//                    JSONObject nextSentenceJson = i + 1 < len ? lyricArray.getJSONObject(i + 1) : null;
+//                    String time = TimeUtil.formatToLyricTime(sentenceJson.getDouble("time"));
 //                    String nextTime = null;
 //                    if (JsonUtil.notEmpty(nextSentenceJson))
-//                        nextTime = TimeUtil.formatToLrcTime(nextSentenceJson.getDouble("time"));
+//                        nextTime = TimeUtil.formatToLyricTime(nextSentenceJson.getDouble("time"));
 //                    // 歌词中带有翻译，有多个 time 相同的歌词时取重复的第一个；最后一句也是翻译
 //                    if (hasTrans && nextTime == null || time.equals(nextTime)) {
 //                        sb.append(lastTime);

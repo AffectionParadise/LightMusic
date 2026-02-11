@@ -51,7 +51,7 @@ public class HighlightLyric {
     private final int maxSimpleDropDuration = 1000;
     // 起始/经过/结束位移
     private final int startDrop = ScaleUtil.scale(3);
-    private final double interpolarX = 0.2;
+    private final double interpolarX = 0.5;
     private final int topDrop = ScaleUtil.scale(-2);
     private final int destDrop = ScaleUtil.scale(0);
     // 每个字(也有可能是一段)的下坠高度
@@ -367,8 +367,8 @@ public class HighlightLyric {
     // 画 buffImg1 作为左侧，带 Drop
     private void paintBuffImg1WithDrop(Graphics2D g2d, int t) {
         for (int i = 0, len = wordDropList.size(); i < len; i++) {
-            Integer wordDrop = wordDropList.get(i);
-            Integer wordWidth = wordWidthList.get(i);
+            int wordDrop = wordDropList.get(i);
+            int wordWidth = wordWidthList.get(i);
             int prefix = wordWidthPrefixSumExcludedList.get(i);
             int dx1 = shadowHOffset + prefix, dy1 = wordDrop, dx2 = Math.min(shadowHOffset + prefix + wordWidth, t + fadeWidth), dy2 = height + wordDrop;
             if (dx1 > t + fadeWidth) break;
@@ -380,8 +380,8 @@ public class HighlightLyric {
     // 画 buffImg2 作为右侧，带 Drop
     private void paintBuffImg2WithDrop(Graphics2D g2d, int t) {
         for (int i = wordDropList.size() - 1; i >= 0; i--) {
-            Integer wordDrop = wordDropList.get(i);
-            Integer wordWidth = wordWidthList.get(i);
+            int wordDrop = wordDropList.get(i);
+            int wordWidth = wordWidthList.get(i);
             int prefix = wordWidthPrefixSumExcludedList.get(i);
             int dx1 = Math.max(t, shadowHOffset + prefix), dy1 = wordDrop, dx2 = shadowHOffset + prefix + wordWidth, dy2 = height + wordDrop;
             if (dx2 < t) break;

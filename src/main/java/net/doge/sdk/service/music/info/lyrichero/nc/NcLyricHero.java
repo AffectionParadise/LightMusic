@@ -31,24 +31,24 @@ public class NcLyricHero {
     // 歌词 API
     private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
 
-    public void fillLrc(NetMusicInfo musicInfo) {
+    public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/lyric/v1");
-        String lrcBody = SdkCommon.ncRequest(Method.POST, LYRIC_API,
+        String lyricBody = SdkCommon.ncRequest(Method.POST, LYRIC_API,
                         String.format("{\"id\":\"%s\",\"cp\":false,\"tv\":0,\"lv\":0,\"rv\":0,\"kv\":0,\"yv\":0,\"ytv\":0,\"yrv\":0}", id), options)
                 .executeAsync()
                 .body();
-        JSONObject lrcJson = JSONObject.parseObject(lrcBody);
-        JSONObject lrc = lrcJson.getJSONObject("lrc");
-        JSONObject yrc = lrcJson.getJSONObject("yrc");
-        JSONObject tLrc = lrcJson.getJSONObject("tlyric");
-        JSONObject romaLrc = lrcJson.getJSONObject("romalrc");
+        JSONObject lyricJson = JSONObject.parseObject(lyricBody);
+        JSONObject lrcJson = lyricJson.getJSONObject("lrc");
+        JSONObject yrcJson = lyricJson.getJSONObject("yrc");
+        JSONObject tLrcJson = lyricJson.getJSONObject("tlyric");
+        JSONObject romaLrcJson = lyricJson.getJSONObject("romalrc");
         // 逐字歌词
-        if (JsonUtil.notEmpty(yrc)) {
+        if (JsonUtil.notEmpty(yrcJson)) {
             // 网易云歌词中包含部分 json 数据需要解析
-            String lyric = yrc.getString("lyric");
-            if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
+            String lyric = yrcJson.getString("lyric");
+            if (StringUtil.isEmpty(lyric)) musicInfo.setLyric("");
             else {
                 String[] lsp = lyric.split("\n");
                 StringBuilder sb = new StringBuilder();
@@ -56,7 +56,7 @@ public class NcLyricHero {
                     if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
-                        if (t != null) sb.append(DurationUtil.formatToLrcTime(t / 1000));
+                        if (t != null) sb.append(DurationUtil.formatToLyricTime(t / 1000));
                         JSONArray cArray = obj.getJSONArray("c");
                         for (int i = 0, s = cArray.size(); i < s; i++)
                             sb.append(cArray.getJSONObject(i).getString("tx"));
@@ -65,8 +65,8 @@ public class NcLyricHero {
                         String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
                         if (StringUtil.notEmpty(lineStartStr)) {
                             int lineStart = Integer.parseInt(lineStartStr);
-                            String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
-                            sb.append(lrcTime);
+                            String lyricTime = DurationUtil.formatToLyricTime((double) lineStart / 1000);
+                            sb.append(lyricTime);
 
                             List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+,\\d+\\)", l);
                             List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+),\\d+\\)", l);
@@ -81,14 +81,14 @@ public class NcLyricHero {
                     }
                     sb.append("\n");
                 }
-                musicInfo.setLrc(sb.toString());
+                musicInfo.setLyric(sb.toString());
             }
         }
         // lrc 歌词
-        if (!musicInfo.hasLrc() && JsonUtil.notEmpty(lrc)) {
+        if (!musicInfo.hasLyric() && JsonUtil.notEmpty(lrcJson)) {
             // 网易云歌词中包含部分 json 数据需要解析
-            String lyric = lrc.getString("lyric");
-            if (StringUtil.isEmpty(lyric)) musicInfo.setLrc("");
+            String lyric = lrcJson.getString("lyric");
+            if (StringUtil.isEmpty(lyric)) musicInfo.setLyric("");
             else {
                 String[] lsp = lyric.split("\n");
                 StringBuilder sb = new StringBuilder();
@@ -96,17 +96,17 @@ public class NcLyricHero {
                     if (JsonUtil.isValidObject(l)) {
                         JSONObject obj = JSONObject.parseObject(l);
                         Double t = obj.getDouble("t");
-                        if (t != null) sb.append(DurationUtil.formatToLrcTime(t / 1000));
+                        if (t != null) sb.append(DurationUtil.formatToLyricTime(t / 1000));
                         JSONArray cArray = obj.getJSONArray("c");
                         for (int i = 0, s = cArray.size(); i < s; i++)
                             sb.append(cArray.getJSONObject(i).getString("tx"));
                     } else sb.append(l);
                     sb.append("\n");
                 }
-                musicInfo.setLrc(sb.toString());
+                musicInfo.setLyric(sb.toString());
             }
         }
-        if (JsonUtil.notEmpty(tLrc)) musicInfo.setTrans(tLrc.getString("lyric"));
-        if (JsonUtil.notEmpty(romaLrc)) musicInfo.setRoma(romaLrc.getString("lyric"));
+        if (JsonUtil.notEmpty(tLrcJson)) musicInfo.setTrans(tLrcJson.getString("lyric"));
+        if (JsonUtil.notEmpty(romaLrcJson)) musicInfo.setRoma(romaLrcJson.getString("lyric"));
     }
 }

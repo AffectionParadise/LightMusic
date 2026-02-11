@@ -180,7 +180,7 @@ public class Task {
             // 先补全音乐信息、url
             MusicServerUtil.fillMusicInfo(musicInfo);
             MusicServerUtil.fillMusicUrl(musicInfo);
-            MusicServerUtil.fillLrc(musicInfo);
+            MusicServerUtil.fillLyric(musicInfo);
             url = musicInfo.getUrl();
             dest = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
         } else if (type == TaskType.MV) {

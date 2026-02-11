@@ -23,7 +23,7 @@ import net.doge.constant.core.data.HistorySearchType;
 import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.lyric.LyricType;
-import net.doge.constant.core.lyric.NextLrc;
+import net.doge.constant.core.lyric.NextLyric;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.media.Format;
 import net.doge.constant.core.media.VideoQuality;
@@ -182,12 +182,12 @@ public class MainFrame extends JFrame {
     //    private final double WIN_ARC = ScaleUtil.scale(0.01);
     private final String PAGINATION_MSG = I18n.getText("paginationMsg");
     private final String TOTAL_MSG = I18n.getText("totalMsg");
-    private final String LRC_LOADING_MSG = I18n.getText("lrcLoadingMsg");
-    private final Statement LRC_LOADING_STMT = new Statement(LRC_LOADING_MSG);
-    private final String NO_LRC_MSG = I18n.getText("noLrcMsg");
-    private final Statement NO_LRC_STMT = new Statement(NO_LRC_MSG);
-    private final String BAD_FORMAT_LRC_MSG = I18n.getText("badFormatLrcMsg");
-    private final Statement BAD_FORMAT_LRC_STMT = new Statement(BAD_FORMAT_LRC_MSG);
+    private final String LYRIC_LOADING_MSG = I18n.getText("lyricLoadingMsg");
+    private final Statement LYRIC_LOADING_STMT = new Statement(LYRIC_LOADING_MSG);
+    private final String NO_LYRIC_MSG = I18n.getText("noLyricMsg");
+    private final Statement NO_LYRIC_STMT = new Statement(NO_LYRIC_MSG);
+    private final String BAD_FORMAT_LYRIC_MSG = I18n.getText("badFormatLyricMsg");
+    private final Statement BAD_FORMAT_LYRIC_STMT = new Statement(BAD_FORMAT_LYRIC_MSG);
     private final String LOADING_MSG = I18n.getText("loadingMsg");
     private final String LOAD_FAILED = I18n.getText("loadFailed");
     private final String ASK_DISPOSE_MSG = I18n.getText("askDisposeMsg");
@@ -450,9 +450,9 @@ public class MainFrame extends JFrame {
     // 转到播放队列图标
     private ImageIcon goToPlayQueueIcon = LMIconManager.getIcon("control.goToPlayQueue");
     // 开启桌面歌词图标
-    private ImageIcon desktopLyricOnIcon = LMIconManager.getIcon("control.lrcOn");
+    private ImageIcon desktopLyricOnIcon = LMIconManager.getIcon("control.lyricOn");
     // 关闭桌面歌词图标
-    private ImageIcon desktopLyricOffIcon = LMIconManager.getIcon("control.lrcOff");
+    private ImageIcon desktopLyricOffIcon = LMIconManager.getIcon("control.lyricOff");
     // 繁体中文图标
     private ImageIcon tradChineseIcon = LMIconManager.getIcon("control.traditionalChinese");
     // 罗马音图标
@@ -621,13 +621,13 @@ public class MainFrame extends JFrame {
     // 删除菜单项图标
     private ImageIcon removeMenuItemIcon = LMIconManager.getIcon("menu.remove");
     // 定位歌词时间菜单项图标
-    private ImageIcon locateLrcMenuItemIcon = LMIconManager.getIcon("menu.locateLrc");
+    private ImageIcon locateLyricMenuItemIcon = LMIconManager.getIcon("menu.locateLyric");
     // 查看歌词文件菜单项图标
-    private ImageIcon browseLrcMenuItemIcon = LMIconManager.getIcon("menu.browseLrc");
+    private ImageIcon browseLyricMenuItemIcon = LMIconManager.getIcon("menu.browseLyric");
     // 频谱透明度菜单项图标
     private ImageIcon spectrumOpacityMenuItemIcon = LMIconManager.getIcon("menu.spectrumOpacity");
     // 歌词偏移菜单项图标
-    private ImageIcon lrcOffsetMenuItemIcon = LMIconManager.getIcon("menu.lrcOffset");
+    private ImageIcon lyricOffsetMenuItemIcon = LMIconManager.getIcon("menu.lyricOffset");
     // 导出专辑图片菜单项图标
     private ImageIcon saveAlbumImgMenuItemIcon = LMIconManager.getIcon("menu.saveAlbumImg");
     // 查看海报菜单项图标
@@ -674,13 +674,13 @@ public class MainFrame extends JFrame {
     private final String SWITCH_BLUR_TIP = I18n.getText("switchBlurTip");
     private final String SOUND_EFFECT_TIP = I18n.getText("soundEffectTip");
     private final String SHEET_TIP = I18n.getText("sheetTip");
-    private final String ORIGINAL_LRC_TIP = I18n.getText("originalLrcTip");
+    private final String ORIGINAL_LYRIC_TIP = I18n.getText("originalLyricTip");
     private final String TRANSLATION_TIP = I18n.getText("translationTip");
     private final String ROMA_TIP = I18n.getText("romaTip");
     private final String TRAD_CHINESE_TIP = I18n.getText("tradChineseTip");
     private final String MENU_TIP = I18n.getText("menuTip");
     private final String GO_TO_PLAY_QUEUE_TIP = I18n.getText("goToPlayQueueTip");
-    private final String DESKTOP_LRC_TIP = I18n.getText("desktopLrcTip");
+    private final String DESKTOP_LYRIC_TIP = I18n.getText("desktopLyricTip");
     private final String LOCAL_PLAYLIST_TIP = I18n.getText("localPlaylistTip");
     private final String ADD_TIP = I18n.getText("addTip");
     private final String REIMPORT_TIP = I18n.getText("reimportTip");
@@ -757,7 +757,7 @@ public class MainFrame extends JFrame {
     // 当前随机播放索引
     private int shuffleIndex;
     // 当前歌词类型
-    private LyricType currLrcType;
+    private LyricType currLyricType;
     // 歌词显示比率(源)
     private double originalRatio;
     // 搜索每页大小
@@ -818,6 +818,8 @@ public class MainFrame extends JFrame {
     private int preRecommendTab;
     // 是否静音
     public boolean isMute;
+    // 是否旋转流体
+    public boolean fluidOn;
     // 是否高斯模糊
     public boolean gsOn;
     // 是否朦胧遮罩
@@ -831,7 +833,7 @@ public class MainFrame extends JFrame {
     // 是否显示频谱
     public boolean showSpectrum;
     // 是否自动下载歌词
-    public boolean isAutoDownloadLrc;
+    public boolean autoDownloadLyric;
     // 是否显示桌面歌词
     public boolean showDesktopLyric;
     // 是否锁定桌面歌词
@@ -914,9 +916,9 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu stylePopupMenu = new CustomPopupMenu(THIS);
 
     // 歌词列表
-    private CustomList<Statement> lrcList = new CustomList<>();
-    private CustomScrollPane lrcScrollPane = new CustomScrollPane(lrcList);
-    private DefaultListModel<Statement> lrcListModel = new DefaultListModel<>();
+    private CustomList<Statement> lyricList = new CustomList<>();
+    private CustomScrollPane lyricScrollPane = new CustomScrollPane(lyricList);
+    private DefaultListModel<Statement> lyricListModel = new DefaultListModel<>();
     // 频谱面板
     public SpectrumPanel spectrumPanel = new SpectrumPanel(THIS);
     private CustomPopupMenu spectrumPopupMenu = new CustomPopupMenu(THIS);
@@ -933,17 +935,17 @@ public class MainFrame extends JFrame {
             new CustomMenuItem("-20%")
     };
     // 歌词右键弹出菜单
-    private CustomPopupMenu lrcPopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem copyMenuItem = new CustomMenuItem(I18n.getText("copy"));
-    private CustomMenuItem locateLrcMenuItem = new CustomMenuItem(I18n.getText("locateLrc"));
-    private CustomMenuItem browseLrcMenuItem = new CustomMenuItem(I18n.getText("browseLrc"));
-    private CustomMenuItem downloadLrcMenuItem = new CustomMenuItem(I18n.getText("downloadLrc"));
-    private double lrcOffset;
-    private final double lrcOffsetRadius = 5;
-    private final String LRC_OFFSET_MSG = I18n.getText("lrcOffsetMsg");
+    private CustomPopupMenu lyricPopupMenu = new CustomPopupMenu(THIS);
+    private CustomMenuItem copyLyricMenuItem = new CustomMenuItem(I18n.getText("copyLyric"));
+    private CustomMenuItem locateLyricMenuItem = new CustomMenuItem(I18n.getText("locateLyric"));
+    private CustomMenuItem browseLyricMenuItem = new CustomMenuItem(I18n.getText("browseLyric"));
+    private CustomMenuItem downloadLyricMenuItem = new CustomMenuItem(I18n.getText("downloadLyric"));
+    private double lyricOffset;
+    private final double lyricOffsetRadius = 5;
+    private final String LYRIC_OFFSET_MSG = I18n.getText("lyricOffsetMsg");
     private final String RESET = I18n.getText("reset");
-    private CustomMenuItem currLrcOffsetMenuItem = new CustomMenuItem();
-    private CustomMenuItem[] calcLrcOffsetMenuItems = {
+    private CustomMenuItem currLyricOffsetMenuItem = new CustomMenuItem();
+    private CustomMenuItem[] calcLyricOffsetMenuItems = {
             new CustomMenuItem("+0.5 s"),
             new CustomMenuItem("+0.1 s"),
             new CustomMenuItem(RESET),
@@ -952,8 +954,8 @@ public class MainFrame extends JFrame {
     };
     // 歌词
     private List<Statement> statements;
-    private String lrcStr;
-    private int nextLrc = NextLrc.NOT_EXISTS;
+    private String lyricStr;
+    private int nextLyric = NextLyric.NOT_EXISTS;
 
     public ChangePaneButton changePaneButton = new ChangePaneButton();
     private CustomButton mvButton = new CustomButton(mvIcon);
@@ -977,10 +979,10 @@ public class MainFrame extends JFrame {
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
     public CustomButton desktopLyricButton = new CustomButton(desktopLyricOnIcon);
-    private CustomButton switchLrcTypeButton = new CustomButton(originalIcon);
+    private CustomButton switchLyricTypeButton = new CustomButton(originalIcon);
     // 歌词类型右键菜单
     private CustomPopupMenu lyricTypePopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem originalLrcMenuItem = new CustomMenuItem(I18n.getText("originalLrc"));
+    private CustomMenuItem originalLyricMenuItem = new CustomMenuItem(I18n.getText("originalLyric"));
     private CustomMenuItem translationMenuItem = new CustomMenuItem(I18n.getText("translation"));
     private CustomMenuItem romaMenuItem = new CustomMenuItem(I18n.getText("roma"));
     private CustomMenuItem tradChineseMenuItem = new CustomMenuItem(I18n.getText("tradChinese"));
@@ -995,6 +997,7 @@ public class MainFrame extends JFrame {
 
     // 模糊模式右键菜单
     private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
+    private CustomCheckBoxMenuItem fluidMenuItem = new CustomCheckBoxMenuItem(I18n.getText("fluid"));
     private CustomCheckBoxMenuItem gsMenuItem = new CustomCheckBoxMenuItem(I18n.getText("gs"));
     private CustomCheckBoxMenuItem darkerMenuItem = new CustomCheckBoxMenuItem(I18n.getText("darker"));
     private CustomCheckBoxMenuItem maskMenuItem = new CustomCheckBoxMenuItem(I18n.getText("mask"));
@@ -1073,7 +1076,7 @@ public class MainFrame extends JFrame {
 
     // 空 ListModel，用于其他 ListModel 的 clear 时暂时显示，防止卡顿
     private DefaultListModel emptyListModel = new DefaultListModel<>();
-    private DefaultListModel emptyLrcListModel = new DefaultListModel<>();
+    private DefaultListModel emptyLyricListModel = new DefaultListModel<>();
 
     // 列表为空提示面板
     private CustomPanel emptyHintPanel = new CustomPanel();
@@ -2166,7 +2169,7 @@ public class MainFrame extends JFrame {
     // 控制面板 Panel
     private CustomPanel controlPanel = new CustomPanel();
     // 歌词控制面板 Panel
-    private CustomPanel controlLrcPanel = new CustomPanel();
+    private CustomPanel controlLyricPanel = new CustomPanel();
 
     // 顶部盒子
     private CustomBox topBox = new CustomBox(BoxLayout.X_AXIS);
@@ -2200,9 +2203,9 @@ public class MainFrame extends JFrame {
     // 控制面板水平盒子
     private CustomBox controlBox = new CustomBox(BoxLayout.X_AXIS);
     // 歌曲信息和歌词盒子
-    private CustomBox infoAndLrcBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox infoAndLyricBox = new CustomBox(BoxLayout.X_AXIS);
     // 歌词和频谱盒子
-    private CustomBox lrcAndSpecBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox lyricAndSpecBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左边专辑和标签盒子
     private CustomBox leftInfoBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左下标签纵向排列盒子
@@ -2411,12 +2414,12 @@ public class MainFrame extends JFrame {
     // 频谱动画
     private Timer spectrumTimer;
     // 歌词动画
-    private Timer lrcTimer;
-    private Timer lrcDelayScrollTimer;
-    public boolean lrcScrollAnimation;
+    private Timer lyricTimer;
+    private Timer lyricDelayScrollTimer;
+    public boolean lyricScrollAnimation;
     // 滚动条动画
     public Timer swActionTimer;
-    private boolean lrcScrollWaiting;
+    private boolean lyricScrollWaiting;
     // 背景图切换动画
     private Timer globalPanelTimer;
     // 切换面板动画
@@ -2434,7 +2437,7 @@ public class MainFrame extends JFrame {
     private ExecutorService spectrumExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService blurExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService playExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService lrcExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService lyricExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
 
     // 其他需要多线程的操作提交给该线程池
@@ -2509,7 +2512,7 @@ public class MainFrame extends JFrame {
                 // 清除由于失去焦点未出队的按键，避免快捷键失效
                 currKeys.clear();
                 if (windowState == WindowState.MAXIMIZED) desktopLyricDialog.setVisible(false);
-                if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+                if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             }
 
             @Override
@@ -2538,7 +2541,7 @@ public class MainFrame extends JFrame {
                     // 歌词面板
                     Dimension d = new Dimension((int) (w * 0.6), h);
                     Dimension d2 = new Dimension((int) (w * 0.6), ScaleUtil.scale(SpectrumConstants.barMaxHeight));
-                    lrcScrollPane.setPreferredSize(d);
+                    lyricScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
                     currTimeLabel.revalidate();
@@ -2718,7 +2721,7 @@ public class MainFrame extends JFrame {
         initPlayQueue();
 
         // 初始化歌词列表
-        initLrcList();
+        initLyricList();
 
         // 初始化动画 Timer
         initTimer();
@@ -3070,7 +3073,7 @@ public class MainFrame extends JFrame {
         showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
         updateTabSize();
         // 载入歌词对齐方式
-        LyricAlignment.lrcAlignmentIndex = config.getIntValue(ConfigConstants.LRC_ALIGNMENT, LyricAlignment.lrcAlignmentIndex);
+        LyricAlignment.lyricAlignmentIndex = config.getIntValue(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 载入频谱最大高度
         SpectrumConstants.barMaxHeight = config.getIntValue(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
         spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
@@ -3108,6 +3111,9 @@ public class MainFrame extends JFrame {
         // 载入是否显示频谱
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
+        // 载入是否旋转流体
+        fluidOn = config.getBooleanValue(ConfigConstants.FLUID_ON, true);
+        fluidMenuItem.setSelected(fluidOn);
         // 载入是否高斯模糊
         gsOn = config.getBooleanValue(ConfigConstants.GS_ON, true);
         gsMenuItem.setSelected(gsOn);
@@ -3129,12 +3135,12 @@ public class MainFrame extends JFrame {
                 : blurType == BlurConstants.FBM ? fbmBlurIcon
                 : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
-        isAutoDownloadLrc = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
+        autoDownloadLyric = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
 //        // 载入是否添加逐字时间轴
 //        LyricType.verbatimTimeline = config.getBooleanValue(ConfigConstants.VERBATIM_TIMELINE, LyricType.verbatimTimeline);
         // 载入歌词偏移
-        lrcOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
-        currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
+        lyricOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
+        currLyricOffsetMenuItem.setText(String.format(LYRIC_OFFSET_MSG, lyricOffset).replace(".0", ""));
         // 载入频谱透明渐变
         specGradient = config.getBooleanValue(ConfigConstants.SPEC_GRADIENT, true);
         spectrumGradientMenuItem.setSelected(specGradient);
@@ -3157,7 +3163,7 @@ public class MainFrame extends JFrame {
         desktopLyricFontSize = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_FONT_SIZE, Fonts.HUGE_SIZE);
         desktopLyricDialog.updateFontSize(desktopLyricFontSize);
         // 初始化桌面歌词
-        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
+        desktopLyricDialog.updateLyric(NO_LYRIC_STMT, 0);
         // 载入是否显示桌面歌词
         showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true);
         if (showDesktopLyric) desktopLyricDialog.setVisible(true);
@@ -3214,23 +3220,23 @@ public class MainFrame extends JFrame {
         miniX = config.getIntValue(ConfigConstants.MINIX, -0x3f3f3f3f);
         miniY = config.getIntValue(ConfigConstants.MINIY, -0x3f3f3f3f);
         // 载入歌词类型
-        currLrcType = LyricType.fromIndex(config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL.getIndex()));
-        switch (currLrcType) {
+        currLyricType = LyricType.fromIndex(config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL.getIndex()));
+        switch (currLyricType) {
             case ORIGINAL:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
+                switchLyricTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                switchLyricTypeButton.setToolTipText(ORIGINAL_LYRIC_TIP);
                 break;
             case TRANSLATION:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
+                switchLyricTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                switchLyricTypeButton.setToolTipText(TRANSLATION_TIP);
                 break;
             case ROMA:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                switchLrcTypeButton.setToolTipText(ROMA_TIP);
+                switchLyricTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                switchLyricTypeButton.setToolTipText(ROMA_TIP);
                 break;
             case TRADITIONAL_CN:
-                switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
+                switchLyricTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                switchLyricTypeButton.setToolTipText(TRAD_CHINESE_TIP);
                 break;
         }
 
@@ -3313,12 +3319,12 @@ public class MainFrame extends JFrame {
 
                     task.setInvokeLater(() -> {
                         String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
+                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
                         // 写入歌曲信息
                         MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                         // 自动下载歌词
-                        if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
-                            FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
+                        if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
+                            FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -3912,7 +3918,7 @@ public class MainFrame extends JFrame {
         // 存入是否显示侧边栏文字
         config.put(ConfigConstants.SHOW_TAB_TEXT, showTabText);
         // 存入歌词对齐方式
-        config.put(ConfigConstants.LRC_ALIGNMENT, LyricAlignment.lrcAlignmentIndex);
+        config.put(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 存入频谱最大高度
         config.put(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
         // 存入高斯模糊因子
@@ -3939,6 +3945,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.PLAY_MODE, currPlayMode.getCode());
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
+        // 存入是否旋转流体
+        config.put(ConfigConstants.FLUID_ON, fluidOn);
         // 存入是否高斯模糊
         config.put(ConfigConstants.GS_ON, gsOn);
         // 存入是否暗化
@@ -3950,11 +3958,11 @@ public class MainFrame extends JFrame {
         // 存入模糊类型
         config.put(ConfigConstants.BLUR_TYPE, blurType);
         // 存入是否自动下载歌词
-        config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, isAutoDownloadLrc);
+        config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, autoDownloadLyric);
 //        // 存入是否添加逐字时间轴
 //        config.put(ConfigConstants.VERBATIM_TIMELINE, LyricType.verbatimTimeline);
         // 存入歌词偏移
-        config.put(ConfigConstants.LYRIC_OFFSET, lrcOffset);
+        config.put(ConfigConstants.LYRIC_OFFSET, lyricOffset);
         // 存入频谱透明渐变
         config.put(ConfigConstants.SPEC_GRADIENT, specGradient);
         // 存入频谱透明度
@@ -4000,7 +4008,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.MINIX, miniX);
         config.put(ConfigConstants.MINIY, miniY);
         // 存入歌词类型
-        config.put(ConfigConstants.LYRIC_TYPE, currLrcType.getIndex());
+        config.put(ConfigConstants.LYRIC_TYPE, currLyricType.getIndex());
         // 存入排序顺序
         config.put(ConfigConstants.SORT_ORDER, currSortOrder.getIndex());
         // 存入当前所有歌曲目录
@@ -6359,7 +6367,7 @@ public class MainFrame extends JFrame {
         leftInfoBox.add(leftBottomBox);
         leftInfoBox.add(CustomBox.createVerticalGlue());
         leftInfoBox.setBorder(new HDEmptyBorder(0, 30, 0, 0));
-        infoAndLrcBox.add(leftInfoBox);
+        infoAndLyricBox.add(leftInfoBox);
 
         // 列表为空提示
         emptyHintPanel.setLayout(new BorderLayout());
@@ -16425,7 +16433,7 @@ public class MainFrame extends JFrame {
                 netCommentScrollPane.setVBarValue(0);
                 if (first) {
                     // 删除 Tab 面板、歌词面板、乐谱面板，加入评论面板
-                    globalPanel.remove(infoAndLrcBox);
+                    globalPanel.remove(infoAndLyricBox);
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netSheetBox);
                     globalPanel.add(netCommentBox, BorderLayout.CENTER);
@@ -16485,7 +16493,7 @@ public class MainFrame extends JFrame {
                 netSheetScrollPane.setVBarValue(0);
                 if (first) {
                     // 删除 Tab 面板、歌词面板、评论面板，加入乐谱面板
-                    globalPanel.remove(infoAndLrcBox);
+                    globalPanel.remove(infoAndLyricBox);
                     globalPanel.remove(tabbedPane);
                     globalPanel.remove(netCommentBox);
                     globalPanel.add(netSheetBox, BorderLayout.CENTER);
@@ -19372,7 +19380,7 @@ public class MainFrame extends JFrame {
                 // 删除歌词文件
                 if (task.isMusic()) {
                     NetMusicInfo musicInfo = (NetMusicInfo) task.getResource();
-                    FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName());
+                    FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
                 }
                 FileUtil.delete(task.getDest());
             }
@@ -19852,32 +19860,32 @@ public class MainFrame extends JFrame {
         playQueueLeftBox.add(playQueueScrollPane);
     }
 
-    private boolean lrcListDragged;
+    private boolean lyricListDragged;
 
     // 初始化歌词列表
-    private void initLrcList() {
+    private void initLyricList() {
         // 复制歌词
-        copyMenuItem.addActionListener(e -> {
-            Statement stmt = lrcList.getSelectedValue();
+        copyLyricMenuItem.addActionListener(e -> {
+            Statement stmt = lyricList.getSelectedValue();
             if (stmt == null) return;
             copyToClipboard(stmt.toString());
         });
         // 定位歌词时间
-        locateLrcMenuItem.addActionListener(e -> {
-            Statement stmt = lrcList.getSelectedValue();
+        locateLyricMenuItem.addActionListener(e -> {
+            Statement stmt = lyricList.getSelectedValue();
             if (stmt == null) return;
-            double t = stmt.getTime() - lrcOffset;
+            double t = stmt.getTime() - lyricOffset;
             player.seek(t);
-            seekLrc(t);
+            seekLyric(t);
         });
         // 查看歌词文件
-        browseLrcMenuItem.addActionListener(e -> {
-            String lrcPath = "";
+        browseLyricMenuItem.addActionListener(e -> {
+            String lrcPath;
             // 在线音乐先将歌词存为临时文件再查看
             if (player.loadedNetMusic()) {
                 NetMusicInfo musicInfo = player.getMusicInfo();
-                lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLrcFileName()).getAbsolutePath();
-                FileUtil.writeStr(lrcStr, lrcPath);
+                lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLyricFileName()).getAbsolutePath();
+                FileUtil.writeStr(lyricStr, lrcPath);
             }
             // 本地音乐直接打开 lrc 文件
             else {
@@ -19888,108 +19896,108 @@ public class MainFrame extends JFrame {
             DesktopUtil.edit(lrcPath);
         });
         // 下载歌词文件
-        downloadLrcMenuItem.addActionListener(e -> downloadLrc(player.getMusicInfo()));
-        currLrcOffsetMenuItem.setEnabled(false);
+        downloadLyricMenuItem.addActionListener(e -> downloadLyric(player.getMusicInfo()));
+        currLyricOffsetMenuItem.setEnabled(false);
 
-        lrcPopupMenu.add(locateLrcMenuItem);
-        lrcPopupMenu.add(copyMenuItem);
-        lrcPopupMenu.add(browseLrcMenuItem);
-        lrcPopupMenu.add(downloadLrcMenuItem);
-        lrcPopupMenu.addSeparator();
-        lrcPopupMenu.add(currLrcOffsetMenuItem);
+        lyricPopupMenu.add(locateLyricMenuItem);
+        lyricPopupMenu.add(copyLyricMenuItem);
+        lyricPopupMenu.add(browseLyricMenuItem);
+        lyricPopupMenu.add(downloadLyricMenuItem);
+        lyricPopupMenu.addSeparator();
+        lyricPopupMenu.add(currLyricOffsetMenuItem);
 
-        for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
+        for (CustomMenuItem mi : calcLyricOffsetMenuItems) {
             mi.addActionListener(e -> {
                 String text = mi.getText();
-                if (RESET.equals(text)) lrcOffset = 0;
-                else lrcOffset += Double.parseDouble(text.replaceFirst(" s", ""));
-                if (lrcOffset > lrcOffsetRadius) lrcOffset = lrcOffsetRadius;
-                else if (lrcOffset < -lrcOffsetRadius) lrcOffset = -lrcOffsetRadius;
-                currLrcOffsetMenuItem.setText(String.format(LRC_OFFSET_MSG, lrcOffset).replace(".0", ""));
-                if (nextLrc >= 0) seekLrc(player.getCurrTimeSeconds());
+                if (RESET.equals(text)) lyricOffset = 0;
+                else lyricOffset += Double.parseDouble(text.replaceFirst(" s", ""));
+                if (lyricOffset > lyricOffsetRadius) lyricOffset = lyricOffsetRadius;
+                else if (lyricOffset < -lyricOffsetRadius) lyricOffset = -lyricOffsetRadius;
+                currLyricOffsetMenuItem.setText(String.format(LYRIC_OFFSET_MSG, lyricOffset).replace(".0", ""));
+                if (nextLyric >= 0) seekLyric(player.getCurrTimeSeconds());
             });
-            lrcPopupMenu.add(mi);
+            lyricPopupMenu.add(mi);
         }
 
         // 焦点(不画焦点框)
-        lrcList.setFocusable(false);
-        lrcList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        lyricList.setFocusable(false);
+        lyricList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // 悬停框
-//        lrcList.addMouseMotionListener(new MouseAdapter() {
+//        lyricList.addMouseMotionListener(new MouseAdapter() {
 //            @Override
 //            public void mouseMoved(MouseEvent e) {
-//                int index = lrcList.locationToIndex(e.getPoint());
-//                Rectangle bounds = lrcList.getCellBounds(index, index);
+//                int index = lyricList.locationToIndex(e.getPoint());
+//                Rectangle bounds = lyricList.getCellBounds(index, index);
 //                if (bounds == null) return;
 //                setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
 //            }
 //
 //            private void setHoverIndex(int index) {
-//                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+//                LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
 //                if (renderer == null) return;
 //                int hoverIndex = renderer.getHoverIndex();
 //                if (hoverIndex == index) return;
 //                renderer.setHoverIndex(index);
-//                lrcList.repaint();
+//                lyricList.repaint();
 //            }
 //        });
-//        lrcList.addMouseListener(new MouseAdapter() {
+//        lyricList.addMouseListener(new MouseAdapter() {
 //            @Override
 //            public void mouseExited(MouseEvent e) {
-//                LrcListRenderer renderer = (LrcListRenderer) lrcList.getCellRenderer();
+//                LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
 //                if (renderer == null) return;
 //                renderer.setHoverIndex(-1);
-//                lrcList.repaint();
+//                lyricList.repaint();
 //            }
 //        }
 
         // 滚动条调整事件（鼠标滚轮滑动、滚动条拖动）
-        CustomScrollBar vb = lrcScrollPane.getVBar();
+        CustomScrollBar vb = lyricScrollPane.getVBar();
         swActionTimer = new Timer(2500, e -> {
             swActionTimer.stop();
-            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             vb.setActive(false);
-            lrcScrollWaiting = false;
+            lyricScrollWaiting = false;
         });
         Runnable swAction = () -> {
             if (swActionTimer.isRunning()) swActionTimer.stop();
             currScrollVal = vb.getValue();
             vb.setActive(true);
-            lrcScrollWaiting = true;
+            lyricScrollWaiting = true;
             swActionTimer.start();
         };
         // 歌词面板拖动时上下滚动
         Point dragFrom = new Point();
 
         // 右键弹出菜单
-        lrcList.addMouseListener(new MouseAdapter() {
+        lyricList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (lrcList.getModel().getSize() == 0) return;
-                    int index = lrcList.locationToIndex(e.getPoint());
+                    if (lyricList.getModel().getSize() == 0) return;
+                    int index = lyricList.locationToIndex(e.getPoint());
                     if (index == -1) return;
-                    lrcList.setSelectedIndex(index);
-                    String plainLyric = lrcListModel.get(index).getPlainLyric();
+                    lyricList.setSelectedIndex(index);
+                    String plainLyric = lyricListModel.get(index).getPlainLyric();
                     if (plainLyric.trim().isEmpty()) return;
                     // 歌曲有歌词时才能查看
-                    locateLrcMenuItem.setEnabled(nextLrc >= 0);
-                    browseLrcMenuItem.setEnabled(nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
+                    locateLyricMenuItem.setEnabled(nextLyric >= 0);
+                    browseLyricMenuItem.setEnabled(nextLyric != NextLyric.NOT_EXISTS && nextLyric != NextLyric.LOADING);
                     // 只允许下载在线音乐的歌词
-                    downloadLrcMenuItem.setEnabled(player.loadedNetMusic() && nextLrc != NextLrc.NOT_EXISTS && nextLrc != NextLrc.LOADING);
+                    downloadLyricMenuItem.setEnabled(player.loadedNetMusic() && nextLyric != NextLyric.NOT_EXISTS && nextLyric != NextLyric.LOADING);
 
-                    lrcPopupMenu.show(lrcList, e.getX(), e.getY());
+                    lyricPopupMenu.show(lyricList, e.getX(), e.getY());
                 }
                 // 双击定位歌词时间
                 else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-                    String plainLyric = lrcList.getSelectedValue().getPlainLyric();
+                    String plainLyric = lyricList.getSelectedValue().getPlainLyric();
                     if (plainLyric.trim().isEmpty()) return;
-                    if (nextLrc >= 0) locateLrcMenuItem.doClick();
+                    if (nextLyric >= 0) locateLyricMenuItem.doClick();
                 }
                 // 拖拽释放启动歌词滚动延时动画
-                if (lrcListDragged) {
+                if (lyricListDragged) {
                     swAction.run();
-                    lrcListDragged = false;
+                    lyricListDragged = false;
                 }
             }
 
@@ -20001,36 +20009,36 @@ public class MainFrame extends JFrame {
             }
         });
         // 绑定数据 Model
-        lrcList.setModel(lrcListModel);
+        lyricList.setModel(lyricListModel);
 
-        CustomViewport vp = (CustomViewport) lrcScrollPane.getViewport();
+        CustomViewport vp = (CustomViewport) lyricScrollPane.getViewport();
         // 歌词面板上下边缘渐隐效果
         vp.setEdgeFaded(true);
-//        vp.addChangeListener(e -> updateLrcListViewFading());
+//        vp.addChangeListener(e -> updateLyricListViewFading());
         // 歌词面板大小变化后调整歌词列表占位高度，对齐高亮歌词
-        lrcScrollPane.addComponentListener(new ComponentAdapter() {
+        lyricScrollPane.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int ph = lrcScrollPane.getHeight() / 2 + ScaleUtil.scale(20);
-                lrcList.setBorder(new EmptyBorder(ph, 0, ph, 0));
-                if (nextLrc == NextLrc.BAD_FORMAT) return;
+                int ph = lyricScrollPane.getHeight() / 2 + ScaleUtil.scale(20);
+                lyricList.setBorder(new EmptyBorder(ph, 0, ph, 0));
+                if (nextLyric == NextLyric.BAD_FORMAT) return;
                 currScrollVal = vb.getValue();
-                lrcScrollAnimation = true;
+                lyricScrollAnimation = true;
             }
         });
         // 歌词列表左键上下拖拽上下滚动时停止延时动画
-        lrcList.addMouseMotionListener(new MouseMotionAdapter() {
+        lyricList.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
-                lrcListDragged = true;
+                lyricListDragged = true;
                 // 停止当前动画
                 swActionTimer.stop();
-                lrcScrollAnimation = false;
-                lrcScrollWaiting = true;
+                lyricScrollAnimation = false;
+                lyricScrollWaiting = true;
                 Point p = e.getPoint();
                 int yOffset = (dragFrom.y - p.y) * 2;
-                boolean ok = lrcScrollPane.setVBarValue(lrcScrollPane.getVBarValue() + yOffset);
+                boolean ok = lyricScrollPane.setVBarValue(lyricScrollPane.getVBarValue() + yOffset);
                 dragFrom.x = p.x;
                 // 拖动时超出滚动条范围后不再叠加参数
                 dragFrom.y = ok ? p.y + yOffset : p.y;
@@ -20038,14 +20046,14 @@ public class MainFrame extends JFrame {
             }
         });
         // 歌词面板滚轮滚动触发延时动画
-        lrcScrollPane.addMouseWheelListener(e -> swAction.run());
+        lyricScrollPane.addMouseWheelListener(e -> swAction.run());
         // 滚动条拖拽时停止延时动画
         vb.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 swActionTimer.stop();
-                lrcScrollAnimation = false;
-                lrcScrollWaiting = true;
+                lyricScrollAnimation = false;
+                lyricScrollWaiting = true;
             }
         });
         // 滚动条显示/隐藏，松开时触发延时动画
@@ -20057,7 +20065,7 @@ public class MainFrame extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                vb.setActive(vb.getValueIsAdjusting() || lrcScrollWaiting);
+                vb.setActive(vb.getValueIsAdjusting() || lyricScrollWaiting);
             }
 
             @Override
@@ -20102,31 +20110,31 @@ public class MainFrame extends JFrame {
         });
         // 初始不可见
         spectrumPanel.setVisible(false);
-        lrcScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        lrcScrollPane.setVBarActive(false);
-        lrcAndSpecBox.add(lrcScrollPane);
-        lrcAndSpecBox.add(spectrumPanel);
-        infoAndLrcBox.add(lrcAndSpecBox);
+        lyricScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        lyricScrollPane.setVBarActive(false);
+        lyricAndSpecBox.add(lyricScrollPane);
+        lyricAndSpecBox.add(spectrumPanel);
+        infoAndLyricBox.add(lyricAndSpecBox);
     }
 
 //    // 更新歌词面板上下边缘渐隐效果
-//    private void updateLrcListViewFading() {
-//        int first = lrcList.getFirstVisibleIndex();
-//        int last = lrcList.getLastVisibleIndex();
-//        JViewport vp = lrcScrollPane.getViewport();
-//        Rectangle fb = lrcList.getCellBounds(first, first);
+//    private void updateLyricListViewFading() {
+//        int first = lyricList.getFirstVisibleIndex();
+//        int last = lyricList.getLastVisibleIndex();
+//        JViewport vp = lyricScrollPane.getViewport();
+//        Rectangle fb = lyricList.getCellBounds(first, first);
 //        if (fb != null) {
-//            Rectangle vfb = SwingUtilities.convertRectangle(lrcList, fb, vp);
+//            Rectangle vfb = SwingUtilities.convertRectangle(lyricList, fb, vp);
 //            // 向上取整 (a + b - 1) / b
 //            if (vfb.y > vfb.height) first -= (vfb.y + vfb.height - 1) / vfb.height;
 //        }
-//        Rectangle lb = lrcList.getCellBounds(last, last);
+//        Rectangle lb = lyricList.getCellBounds(last, last);
 //        if (lb != null) {
-//            Rectangle vlb = SwingUtilities.convertRectangle(lrcList, lb, vp);
+//            Rectangle vlb = SwingUtilities.convertRectangle(lyricList, lb, vp);
 //            // 向上取整 (a + b - 1) / b
 //            if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - 1) / vlb.height;
 //        }
-//        LrcListRenderer r = (LrcListRenderer) lrcList.getCellRenderer();
+//        LyricListRenderer r = (LyricListRenderer) lyricList.getCellRenderer();
 //        Map<Integer, Float> alphas = r.getAlphas();
 //        alphas.clear();
 //        int t = r.edgeCellNum;
@@ -20155,7 +20163,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    private int lrcTimerFrame;
+    private int lyricTimerFrame;
 
     // 初始化动画 Timer
     private void initTimer() {
@@ -20172,52 +20180,52 @@ public class MainFrame extends JFrame {
                     else if (specs[i] > specsOrigin[i])
                         specs[i] -= Math.min(step, specs[i] - specsOrigin[i]);
                 }
-                lrcAndSpecBox.repaint();
+                lyricAndSpecBox.repaint();
             });
         });
-        final int LRC_TIMER_INTERVAL = 10, LRC_PIECE = 100 / LRC_TIMER_INTERVAL;
-        lrcTimer = new Timer(LRC_TIMER_INTERVAL, e -> {
-            lrcExecutor.execute(() -> {
-                LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+        final int LYRIC_TIMER_INTERVAL = 10, LYRIC_PIECE = 100 / LYRIC_TIMER_INTERVAL;
+        lyricTimer = new Timer(LYRIC_TIMER_INTERVAL, e -> {
+            lyricExecutor.execute(() -> {
+                LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
                 // 更新歌词动画比率
-                if (nextLrc >= 0) {
+                if (nextLyric >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
                     double or = originalRatio;
-                    if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LRC_PIECE + currRatio;
+                    if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LYRIC_PIECE + currRatio;
                     renderer.setRatio(ratio);
-                    desktopLyricDialog.updateLyric(statements.get(nextLrc - 1 >= 0 ? nextLrc - 1 : nextLrc), ratio);
+                    desktopLyricDialog.updateLyric(statements.get(nextLyric - 1 >= 0 ? nextLyric - 1 : nextLyric), ratio);
                     // 更新歌词上动画
-                    updateWordDropAnimation(desktopLyricDialog.getHighlightLyric(), LRC_PIECE);
-                    updateWordDropAnimation(renderer.getHl(), LRC_PIECE);
+                    updateWordDropAnimation(desktopLyricDialog.getHighlightLyric(), LYRIC_PIECE);
+                    updateWordDropAnimation(renderer.getHl(), LYRIC_PIECE);
                 } else {
                     renderer.setRatio(0);
-                    desktopLyricDialog.updateLyric(nextLrc == NextLrc.NOT_EXISTS ? NO_LRC_STMT : nextLrc == NextLrc.LOADING ? LRC_LOADING_STMT : BAD_FORMAT_LRC_STMT, 0);
+                    desktopLyricDialog.updateLyric(nextLyric == NextLyric.NOT_EXISTS ? NO_LYRIC_STMT : nextLyric == NextLyric.LOADING ? LYRIC_LOADING_STMT : BAD_FORMAT_LYRIC_STMT, 0);
                 }
-                if (!spectrumTimer.isRunning()) lrcAndSpecBox.repaint();
+                if (!spectrumTimer.isRunning()) lyricAndSpecBox.repaint();
 
                 // 律动动画，由于过多 timer 会导致卡顿，所以尽量在同一 timer 处理
-                if (grooveOn && !globalPanelTimer.isRunning() && ++lrcTimerFrame % 5 == 0) {
+                if (grooveOn && !globalPanelTimer.isRunning() && ++lyricTimerFrame % 5 == 0) {
                     double angle = globalPanel.getAngle();
                     globalPanel.setAngle((angle + 1) % 360);
                 }
             });
-            if (lrcScrollAnimation) {
+            if (lyricScrollAnimation) {
                 // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
-//                lrcScrollExecutor.execute(() -> {
-                Rectangle bounds = lrcList.getCellBounds(row, row);
+//                lyricScrollExecutor.execute(() -> {
+                Rectangle bounds = lyricList.getCellBounds(row, row);
                 if (bounds == null) return;
-                Insets insets = lrcScrollPane.getInsets();
-                int val = lrcScrollPane.getVBarValue(), dVal = bounds.y - (lrcScrollPane.getHeight() - insets.top - insets.bottom) / 2
+                Insets insets = lyricScrollPane.getInsets();
+                int val = lyricScrollPane.getVBarValue(), dVal = bounds.y - (lyricScrollPane.getHeight() - insets.top - insets.bottom) / 2
                         + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / ScaleUtil.scale(20));
                 int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
-                lrcScrollPane.setVBarValue(nv);
-                if (nv == dVal || lrcScrollPane.getVBarValue() == val) lrcScrollAnimation = false;
+                lyricScrollPane.setVBarValue(nv);
+                if (nv == dVal || lyricScrollPane.getVBarValue() == val) lyricScrollAnimation = false;
 //                });
             }
         });
-        lrcDelayScrollTimer = new Timer(300, e -> {
-            lrcDelayScrollTimer.stop();
-            lrcScrollAnimation = true;
+        lyricDelayScrollTimer = new Timer(300, e -> {
+            lyricDelayScrollTimer.stop();
+            lyricScrollAnimation = true;
         });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
@@ -20265,7 +20273,7 @@ public class MainFrame extends JFrame {
                 if (player.isEmpty()) return;
                 double t = (double) timeBar.getValue() / TIME_BAR_MAX * player.getDurationSeconds();
                 player.seek(t);
-                seekLrc(t);
+                seekLyric(t);
             }
         });
         // 改变时间条的值，当前时间标签的值随之改变
@@ -20285,13 +20293,13 @@ public class MainFrame extends JFrame {
     private void toTabView(Runnable extraOperation) {
 //        // 滑入动画之后处理
 //        globalPanel.setOnAfterSlide(() -> {
-//            globalPanel.remove(infoAndLrcBox);
+//            globalPanel.remove(infoAndLyricBox);
 //            globalPanel.remove(netCommentBox);
 //            globalPanel.remove(netSheetBox);
 //            globalPanel.add(tabbedPane, BorderLayout.CENTER);
 //            globalPanel.repaint();
 //        });
-//        globalPanel.slideFrom(infoAndLrcBox, tabbedPane, SlideFrom.TOP);
+//        globalPanel.slideFrom(infoAndLyricBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netCommentBox, tabbedPane, SlideFrom.TOP);
 //        globalPanel.slideFrom(netSheetBox, tabbedPane, SlideFrom.TOP);
         if (componentChangeFadingAnimation != null && componentChangeFadingAnimation.isRunning()) return;
@@ -20326,15 +20334,15 @@ public class MainFrame extends JFrame {
 //            globalPanel.remove(netSheetBox);
 //            // 防止事件不起作用
 //            globalPanel.requestFocus();
-//            globalPanel.add(infoAndLrcBox, BorderLayout.CENTER);
+//            globalPanel.add(infoAndLyricBox, BorderLayout.CENTER);
 //            globalPanel.repaint();
-////          updateLrcListViewFading();
-//            lrcScrollAnimation = true;
+////          updateLyricListViewFading();
+//            lyricScrollAnimation = true;
 //        });
 //        // 播放组件放置的滑入动画
-//        globalPanel.slideFrom(tabbedPane, infoAndLrcBox, SlideFrom.BOTTOM);
-//        globalPanel.slideFrom(netCommentBox, infoAndLrcBox, SlideFrom.BOTTOM);
-//        globalPanel.slideFrom(netSheetBox, infoAndLrcBox, SlideFrom.BOTTOM);
+//        globalPanel.slideFrom(tabbedPane, infoAndLyricBox, SlideFrom.BOTTOM);
+//        globalPanel.slideFrom(netCommentBox, infoAndLyricBox, SlideFrom.BOTTOM);
+//        globalPanel.slideFrom(netSheetBox, infoAndLyricBox, SlideFrom.BOTTOM);
         if (componentChangeFadingAnimation != null && componentChangeFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.LYRIC;
         lastPaneType = null;
@@ -20346,7 +20354,7 @@ public class MainFrame extends JFrame {
             globalPanel.add(t, BorderLayout.CENTER);
             globalPanel.revalidate();
 
-            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
@@ -20355,9 +20363,9 @@ public class MainFrame extends JFrame {
         };
         // 有时切换到歌词面板，歌词自动滚动失败，在动画结束后再试
         ComponentChangeHandler onFadingInStopped = (s, t) -> {
-            if (nextLrc != NextLrc.BAD_FORMAT) lrcScrollAnimation = true;
+            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
         };
-        componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, infoAndLrcBox, onFadingOutStopped, onFadingInStopped);
+        componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, infoAndLyricBox, onFadingOutStopped, onFadingInStopped);
         componentChangeFadingAnimation.transition();
     }
 
@@ -20367,7 +20375,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
         changePaneButton.setIconTextGap(ScaleUtil.scale(10));
         changePaneButton.setPreferredSize(new HDDimension(280, 66));
-        changePaneButton.setText(NO_LRC_MSG);
+        changePaneButton.setText(NO_LYRIC_MSG);
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
         changePaneButton.addActionListener(e -> {
             // 动画状态无响应
@@ -20482,12 +20490,12 @@ public class MainFrame extends JFrame {
         backwardButton.addActionListener(e -> {
             double t = player.getCurrTimeSeconds() - forwardOrBackwardTime;
             player.seek(t);
-            seekLrc(t);
+            seekLyric(t);
         });
         forwardButton.addActionListener(e -> {
             double t = player.getCurrTimeSeconds() + forwardOrBackwardTime;
             player.seek(t);
-            seekLrc(t);
+            seekLyric(t);
         });
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
@@ -20526,6 +20534,7 @@ public class MainFrame extends JFrame {
             switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊菜单
+        blurPopupMenu.add(fluidMenuItem);
         blurPopupMenu.add(gsMenuItem);
         blurPopupMenu.add(darkerMenuItem);
         blurPopupMenu.add(maskMenuItem);
@@ -20536,6 +20545,10 @@ public class MainFrame extends JFrame {
         blurPopupMenu.add(mcBlurMenuItem);
         blurPopupMenu.add(lgBlurMenuItem);
         blurPopupMenu.add(fbmBlurMenuItem);
+        fluidMenuItem.addActionListener(e -> {
+            fluidMenuItem.setSelected(fluidOn = !fluidOn);
+            doBlur();
+        });
         gsMenuItem.addActionListener(e -> {
             gsMenuItem.setSelected(gsOn = !gsOn);
             doBlur();
@@ -20584,7 +20597,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(342) : h));
+                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(348) : h));
             }
         });
         // 音效按钮
@@ -20599,7 +20612,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 桌面歌词开关
-        desktopLyricButton.setToolTipText(DESKTOP_LRC_TIP);
+        desktopLyricButton.setToolTipText(DESKTOP_LYRIC_TIP);
         desktopLyricButton.addActionListener(e -> {
             if (showDesktopLyric = !showDesktopLyric) {
                 // 最大化时不显示桌面歌词
@@ -20612,40 +20625,40 @@ public class MainFrame extends JFrame {
         });
         // 歌词类型按钮
         // 歌词类型切换事件
-        switchLrcTypeButton.addMouseListener(new MouseAdapter() {
+        switchLyricTypeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = lyricTypePopupMenu.getHeight();
-                lyricTypePopupMenu.show(switchLrcTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(161) : h));
+                lyricTypePopupMenu.show(switchLyricTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(161) : h));
             }
         });
         // 歌词类型弹出菜单
-        originalLrcMenuItem.addActionListener(e -> {
-            if (currLrcType == LyricType.ORIGINAL) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ORIGINAL, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
-            switchLrcTypeButton.setToolTipText(ORIGINAL_LRC_TIP);
+        originalLyricMenuItem.addActionListener(e -> {
+            if (currLyricType == LyricType.ORIGINAL) return;
+            loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.ORIGINAL, true);
+            switchLyricTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            switchLyricTypeButton.setToolTipText(ORIGINAL_LYRIC_TIP);
         });
         translationMenuItem.addActionListener(e -> {
-            if (currLrcType == LyricType.TRANSLATION) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRANSLATION, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
-            switchLrcTypeButton.setToolTipText(TRANSLATION_TIP);
+            if (currLyricType == LyricType.TRANSLATION) return;
+            loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.TRANSLATION, true);
+            switchLyricTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            switchLyricTypeButton.setToolTipText(TRANSLATION_TIP);
         });
         romaMenuItem.addActionListener(e -> {
-            if (currLrcType == LyricType.ROMA) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.ROMA, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
-            switchLrcTypeButton.setToolTipText(ROMA_TIP);
+            if (currLyricType == LyricType.ROMA) return;
+            loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.ROMA, true);
+            switchLyricTypeButton.setIcon(ImageUtil.dye(romajiIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            switchLyricTypeButton.setToolTipText(ROMA_TIP);
         });
         tradChineseMenuItem.addActionListener(e -> {
-            if (currLrcType == LyricType.TRADITIONAL_CN) return;
-            loadLrc(player.getAudioFile(), player.getMusicInfo(), currLrcType = LyricType.TRADITIONAL_CN, true);
-            switchLrcTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
-            switchLrcTypeButton.setToolTipText(TRAD_CHINESE_TIP);
+            if (currLyricType == LyricType.TRADITIONAL_CN) return;
+            loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.TRADITIONAL_CN, true);
+            switchLyricTypeButton.setIcon(ImageUtil.dye(tradChineseIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            switchLyricTypeButton.setToolTipText(TRAD_CHINESE_TIP);
         });
 
-        lyricTypePopupMenu.add(originalLrcMenuItem);
+        lyricTypePopupMenu.add(originalLyricMenuItem);
         lyricTypePopupMenu.add(translationMenuItem);
         lyricTypePopupMenu.add(romaMenuItem);
         lyricTypePopupMenu.add(tradChineseMenuItem);
@@ -20686,16 +20699,16 @@ public class MainFrame extends JFrame {
 
         fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(0));
-        controlLrcPanel.setLayout(fl);
-        controlLrcPanel.setBorder(new HDEmptyBorder(16, 0, 0, 0));
-        controlLrcPanel.add(desktopLyricButton);
-        controlLrcPanel.add(switchLrcTypeButton);
+        controlLyricPanel.setLayout(fl);
+        controlLyricPanel.setBorder(new HDEmptyBorder(16, 0, 0, 0));
+        controlLyricPanel.add(desktopLyricButton);
+        controlLyricPanel.add(switchLyricTypeButton);
 
         controlBox.add(changePanePanel);
         controlBox.add(CustomBox.createHorizontalGlue());
         controlBox.add(controlPanel);
         controlBox.add(CustomBox.createHorizontalGlue());
-        controlBox.add(controlLrcPanel);
+        controlBox.add(controlLyricPanel);
         controlBox.add(CustomBox.createHorizontalGlue());
         bottomBox.add(controlBox);
         globalPanel.add(bottomBox, BorderLayout.SOUTH);
@@ -20705,7 +20718,7 @@ public class MainFrame extends JFrame {
     private void unload() {
         player.unload();
         unloadUI();
-        clearLrc();
+        clearLyric();
         currSong = -1;
     }
 
@@ -20750,13 +20763,13 @@ public class MainFrame extends JFrame {
             miniDialog.playOrPauseButton.setToolTipText(playOrPauseButton.getToolTipText());
         }
         // 重置桌面歌词
-        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
+        desktopLyricDialog.updateLyric(NO_LYRIC_STMT, 0);
         // 允许“关闭当前歌曲”
         closeSong.setEnabled(true);
         // 开启频谱动画
         if (showSpectrum) openSpectrum();
         // 开启歌词动画
-        if (!lrcTimer.isRunning()) lrcTimer.start();
+        if (!lyricTimer.isRunning()) lyricTimer.start();
 
         boolean isNetMusic = musicInfo != null;
 
@@ -20811,18 +20824,18 @@ public class MainFrame extends JFrame {
         // 重置播放进度条
         timeBar.setValue(0);
         // 重置桌面歌词
-        desktopLyricDialog.updateLyric(NO_LRC_STMT, 0);
+        desktopLyricDialog.updateLyric(NO_LYRIC_STMT, 0);
         // 禁止“关闭当前歌曲”
         closeSong.setEnabled(false);
         // 关闭频谱动画
         closeSpectrum();
         // 关闭歌词动画
-        lrcTimer.stop();
+        lyricTimer.stop();
 
         // 卸载专辑图片
         albumImageLabel.setIcon(null);
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(ImageConstants.DEFAULT_IMG, changePaneImageWidth), TINY_ARC)));
-        changePaneButton.setText(NO_LRC_MSG);
+        changePaneButton.setText(NO_LYRIC_MSG);
         if (miniDialog != null) {
             miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
             miniDialog.infoLabel.setText(changePaneButton.getText());
@@ -20863,51 +20876,51 @@ public class MainFrame extends JFrame {
     }
 
     // 清空歌词
-    private void clearLrc() {
-        lrcList.setModel(emptyLrcListModel);
-        lrcListModel.clear();
+    private void clearLyric() {
+        lyricList.setModel(emptyLyricListModel);
+        lyricListModel.clear();
         if (statements != null) statements.clear();
-        nextLrc = NextLrc.NOT_EXISTS;
+        nextLyric = NextLyric.NOT_EXISTS;
     }
 
     // 歌词加载中
-    private void lrcLoading() {
-        clearLrc();
-        lrcListModel.addElement(new Statement(0, LRC_LOADING_MSG));
+    private void lyricLoading() {
+        clearLyric();
+        lyricListModel.addElement(new Statement(0, LYRIC_LOADING_MSG));
 
         row = 0;
-        nextLrc = NextLrc.LOADING;
+        nextLyric = NextLyric.LOADING;
         originalRatio = 0;
-        lrcScrollPane.setVBarValue(currScrollVal = 0);
+        lyricScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
-        LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+        LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
         renderer.setRow(row);
-        lrcList.setModel(lrcListModel);
+        lyricList.setModel(lyricListModel);
     }
 
     // 加载歌词
-    private void loadLrc(AudioFile file, NetMusicInfo musicInfo, LyricType lyricType, boolean reload) {
+    private void loadLyric(AudioFile file, NetMusicInfo musicInfo, LyricType lyricType, boolean reload) {
         if (player.isEmpty()) return;
-        clearLrc();
+        clearLyric();
 
         LyricData lyricData = null;
-        final int BAD_FORMAT = 0, NO_LRC = 1;
+        final int BAD_FORMAT = 0, NO_LYRIC = 1;
         int state = -1;
         boolean isFile = musicInfo == null;
 
         // 本地音乐歌词
         if (isFile) {
-            File lrcFile = file.toLrcFile();
-            boolean exists = lrcFile.exists();
+            File lyricFile = file.toLyricFile();
+            boolean exists = lyricFile.exists();
             String embeddedLyric = null;
             // 从歌词文件读取歌词，若不存在，读取内嵌歌词
-            lyricData = exists ? new LyricData(lrcFile) : new LyricData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
+            lyricData = exists ? new LyricData(lyricFile) : new LyricData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
             // 首次读取为空，说明歌词格式不正确或者歌词为空
             if (lyricData.isEmpty()) {
-                statements = exists ? new LyricData(lrcFile, true).getStatements()
+                statements = exists ? new LyricData(lyricFile, true).getStatements()
                         : new LyricData(embeddedLyric, true).getStatements();
                 // 再次读取为空，说明歌词为空
-                state = statements.isEmpty() ? NO_LRC : BAD_FORMAT;
+                state = statements.isEmpty() ? NO_LYRIC : BAD_FORMAT;
             } else statements = lyricData.getStatements();
             // 繁体转换
             if (lyricType == LyricType.TRADITIONAL_CN)
@@ -20922,18 +20935,18 @@ public class MainFrame extends JFrame {
                 // 歌词
                 case ORIGINAL:
                 case TRADITIONAL_CN:
-                    if (musicInfo.hasLrc()) {
-                        String lrc = musicInfo.getLrc();
-                        lyricData = new LyricData(lrc);
+                    if (musicInfo.hasLyric()) {
+                        String lyric = musicInfo.getLyric();
+                        lyricData = new LyricData(lyric);
                         if (lyricData.isEmpty()) {
-                            statements = new LyricData(lrc, true).getStatements();
+                            statements = new LyricData(lyric, true).getStatements();
                             state = BAD_FORMAT;
                         } else statements = lyricData.getStatements();
                         // 繁体转换
                         if (lyricType == LyricType.TRADITIONAL_CN)
                             for (Statement stmt : statements)
                                 stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
-                    } else state = NO_LRC;
+                    } else state = NO_LYRIC;
                     break;
                 // 翻译
                 case TRANSLATION:
@@ -20947,7 +20960,7 @@ public class MainFrame extends JFrame {
                     }
                     // 无翻译时，加载原歌词
                     else {
-                        loadLrc(file, musicInfo, LyricType.ORIGINAL, reload);
+                        loadLyric(file, musicInfo, LyricType.ORIGINAL, reload);
                         return;
                     }
                     break;
@@ -20962,38 +20975,38 @@ public class MainFrame extends JFrame {
                         } else statements = lyricData.getStatements();
                     }
                     // 无罗马音时，使用原歌词进行转换
-                    else if (musicInfo.hasLrc()) {
-                        String lrc = musicInfo.getLrc();
-                        lyricData = new LyricData(lrc);
+                    else if (musicInfo.hasLyric()) {
+                        String lyric = musicInfo.getLyric();
+                        lyricData = new LyricData(lyric);
                         if (lyricData.isEmpty()) {
-                            statements = new LyricData(lrc, true).getStatements();
+                            statements = new LyricData(lyric, true).getStatements();
                             state = BAD_FORMAT;
                         } else statements = lyricData.getStatements();
                         for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
-                    } else state = NO_LRC;
+                    } else state = NO_LYRIC;
                     break;
             }
         }
-        lrcStr = lyricData == null ? "" : lyricData.getLrcStr();
-        if (StringUtil.isEmpty(LrcUtil.cleanLrcStr(lrcStr))) state = NO_LRC;
+        lyricStr = lyricData == null ? "" : lyricData.getLyricStr();
+        if (StringUtil.isEmpty(LyricUtil.cleanLyricStr(lyricStr))) state = NO_LYRIC;
 
-        if (state == BAD_FORMAT) lrcListModel.addElement(new Statement(0, BAD_FORMAT_LRC_MSG));
-        else if (state == NO_LRC) lrcListModel.addElement(new Statement(0, NO_LRC_MSG));
+        if (state == BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
+        else if (state == NO_LYRIC) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
         if (ListUtil.notEmpty(statements)) {
-            for (int i = 0, s = statements.size(); i < s; i++) lrcListModel.addElement(statements.get(i));
+            for (int i = 0, s = statements.size(); i < s; i++) lyricListModel.addElement(statements.get(i));
         }
         // 标记为无歌词 / 不支持滚动
-        nextLrc = state == BAD_FORMAT ? NextLrc.BAD_FORMAT : state == NO_LRC ? NextLrc.NOT_EXISTS : 0;
-        row = state == BAD_FORMAT || state == NO_LRC ? 0 : -1;
+        nextLyric = state == BAD_FORMAT ? NextLyric.BAD_FORMAT : state == NO_LYRIC ? NextLyric.NOT_EXISTS : 0;
+        row = state == BAD_FORMAT || state == NO_LYRIC ? 0 : -1;
 
         originalRatio = 0;
-        lrcScrollPane.setVBarValue(currScrollVal = 0);
+        lyricScrollPane.setVBarValue(currScrollVal = 0);
         // 更新歌词面板渲染
-        LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+        LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
         renderer.setRow(row);
-        lrcList.setModel(lrcListModel);
-        lrcScrollAnimation = true;
-        if (reload) seekLrc(player.getCurrTimeSeconds());
+        lyricList.setModel(lyricListModel);
+        lyricScrollAnimation = true;
+        if (reload) seekLyric(player.getCurrTimeSeconds());
     }
 
     // mp 出错后重置
@@ -21002,7 +21015,7 @@ public class MainFrame extends JFrame {
         player.initMp();
         if (!player.isPlaying()) return;
         playLoaded(false);
-        seekLrc(0);
+        seekLyric(0);
     }
 
     // 初始化播放器设置
@@ -21087,26 +21100,26 @@ public class MainFrame extends JFrame {
                 // 未被操作时频繁更新时间条
                 if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrScale() * TIME_BAR_MAX));
                 // 监听并更新歌词(若有歌词)
-                if (nextLrc < 0) return;
+                if (nextLyric < 0) return;
                 double currTimeSeconds = newValue.toSeconds();
                 // 判断是否该高亮下一行歌词，每次时间更新可能跳过多行歌词
                 boolean wrapped = false;
-                while (nextLrc < statements.size() && currTimeSeconds >= statements.get(nextLrc).getTime() - lrcOffset) {
-                    row = nextLrc;
-                    if (!lrcScrollAnimation && !lrcScrollWaiting) {
-                        currScrollVal = lrcScrollPane.getVBarValue();
-                        if (!lrcDelayScrollTimer.isRunning()) lrcDelayScrollTimer.start();
+                while (nextLyric < statements.size() && currTimeSeconds >= statements.get(nextLyric).getTime() - lyricOffset) {
+                    row = nextLyric;
+                    if (!lyricScrollAnimation && !lyricScrollWaiting) {
+                        currScrollVal = lyricScrollPane.getVBarValue();
+                        if (!lyricDelayScrollTimer.isRunning()) lyricDelayScrollTimer.start();
                     }
-                    LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+                    LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
                     renderer.setRow(row);
-                    nextLrc++;
+                    nextLyric++;
                     originalRatio = 0;
                     wrapped = true;
                 }
                 if (wrapped) return;
                 updateOriginalDrop(currTimeSeconds);
                 // 每一句歌词最后一个 originalRatio 设成 1 避免歌词滚动不完整！
-                if (nextLrc > 0 && nextLrc < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLrc).getTime() - lrcOffset)
+                if (nextLyric > 0 && nextLyric < statements.size() && currTimeSeconds + 0.15 > statements.get(nextLyric).getTime() - lyricOffset)
                     originalRatio = 1;
                 else updateOriginalRatio(currTimeSeconds);
             } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
@@ -21121,7 +21134,7 @@ public class MainFrame extends JFrame {
                     break;
                 case SINGLE:
                     playLoaded(true);
-                    seekLrc(0);
+                    seekLyric(0);
                     break;
                 case SEQUENCE:
                     if (currSong < playQueueModel.size() - 1) playNext();
@@ -21141,24 +21154,24 @@ public class MainFrame extends JFrame {
 
     // 更新 OriginalDrop
     private void updateOriginalDrop(double t) {
-        if (nextLrc <= 0) return;
-        Statement ls = statements.get(nextLrc - 1);
+        if (nextLyric <= 0) return;
+        Statement ls = statements.get(nextLyric - 1);
         double lineStartTime = ls.getTime();
         HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
-        HighlightLyric rhl = ((LyricListRenderer) lrcList.getCellRenderer()).getHl();
+        HighlightLyric rhl = ((LyricListRenderer) lyricList.getCellRenderer()).getHl();
         // 逐字歌词
         if (hl.isByWord()) {
-            hl.updateWordDropOriginList(t, lineStartTime - lrcOffset);
-            rhl.updateWordDropOriginList(t, lineStartTime - lrcOffset);
+            hl.updateWordDropOriginList(t, lineStartTime - lyricOffset);
+            if (rhl != null) rhl.updateWordDropOriginList(t, lineStartTime - lyricOffset);
         }
         // 非逐字歌词
         else {
-            Statement ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
-            double lineEndTime = ls.hasEndTime() ? ls.getEndTime() - lrcOffset
-                    : ns != null ? ns.getTime() - lrcOffset
+            Statement ns = nextLyric < statements.size() ? statements.get(nextLyric) : null;
+            double lineEndTime = ls.hasEndTime() ? ls.getEndTime() - lyricOffset
+                    : ns != null ? ns.getTime() - lyricOffset
                     : player.getDurationSeconds();
-            hl.updateNormalWordDropOriginList(t, lineStartTime - lrcOffset, lineEndTime);
-            rhl.updateNormalWordDropOriginList(t, lineStartTime - lrcOffset, lineEndTime);
+            hl.updateNormalWordDropOriginList(t, lineStartTime - lyricOffset, lineEndTime);
+            if (rhl != null) rhl.updateNormalWordDropOriginList(t, lineStartTime - lyricOffset, lineEndTime);
         }
     }
 
@@ -21166,20 +21179,20 @@ public class MainFrame extends JFrame {
     private void updateOriginalRatio(double t) {
         HighlightLyric hl = desktopLyricDialog.getHighlightLyric();
         double tempRatio = 0;
-        if (nextLrc > 0) {
-            Statement ls = statements.get(nextLrc - 1);
+        if (nextLyric > 0) {
+            Statement ls = statements.get(nextLyric - 1);
             double lineStartTime = ls.getTime();
             if (hl.isByWord()) {
-                tempRatio = hl.computeRatio(t, lineStartTime - lrcOffset);
+                tempRatio = hl.computeRatio(t, lineStartTime - lyricOffset);
             } else {
-                Statement ns = nextLrc < statements.size() ? statements.get(nextLrc) : null;
-                tempRatio = (t - lineStartTime + lrcOffset) /
-                        ((ls.hasEndTime() ? ls.getEndTime() - lrcOffset
-                                : (ns != null ? ns.getTime() - lrcOffset
-                                : player.getDurationSeconds())) - lineStartTime + lrcOffset);
+                Statement ns = nextLyric < statements.size() ? statements.get(nextLyric) : null;
+                tempRatio = (t - lineStartTime + lyricOffset) /
+                        ((ls.hasEndTime() ? ls.getEndTime() - lyricOffset
+                                : (ns != null ? ns.getTime() - lyricOffset
+                                : player.getDurationSeconds())) - lineStartTime + lyricOffset);
             }
         }
-        originalRatio = tempRatio > 1 ? (statements.get(nextLrc - 1).hasEndTime() ? 1 : 0) : tempRatio;
+        originalRatio = tempRatio > 1 ? (statements.get(nextLyric - 1).hasEndTime() ? 1 : 0) : tempRatio;
     }
 
     // 播放载入的歌曲
@@ -21371,18 +21384,18 @@ public class MainFrame extends JFrame {
 
             // 本地音乐直接加载歌词，在线音乐等待歌词缓冲完成再加载 url
             if (isAudioFile) {
-                loadLrc(file, null, currLrcType, false);
+                loadLyric(file, null, currLyricType, false);
             } else {
-                if (!musicInfo.hasLrc()) lrcLoading();
+                if (!musicInfo.hasLyric()) lyricLoading();
                 NetMusicInfo finalMusicInfo = musicInfo;
-                Future<?> lrcTask = globalExecutor.submit(() -> {
+                Future<?> lyricTask = globalExecutor.submit(() -> {
                     try {
-                        MusicServerUtil.fillLrc(finalMusicInfo);
+                        MusicServerUtil.fillLyric(finalMusicInfo);
                     } catch (Exception e) {
 
                     } finally {
                         if (!finalMusicInfo.equals(player.getMusicInfo())) return;
-                        loadLrc(null, finalMusicInfo, currLrcType, false);
+                        loadLyric(null, finalMusicInfo, currLyricType, false);
                     }
                 });
 
@@ -21419,7 +21432,7 @@ public class MainFrame extends JFrame {
                     player.load(file, musicInfo);
                 }
                 // 加载 url 时可能拖动进度条导致歌词偏移，让歌词重头开始
-                if (lrcTask.isDone() && nextLrc > 0) seekLrc(0);
+                if (lyricTask.isDone() && nextLyric > 0) seekLyric(0);
             }
 
             // 初始化 MediaPlayer 对象
@@ -21853,7 +21866,7 @@ public class MainFrame extends JFrame {
         lgBlurMenuItem.setIcon(ImageUtil.dye(lgBlurIcon, iconColor));
         fbmBlurMenuItem.setIcon(ImageUtil.dye(fbmBlurIcon, iconColor));
 
-        originalLrcMenuItem.setIcon(ImageUtil.dye(originalIcon, iconColor));
+        originalLyricMenuItem.setIcon(ImageUtil.dye(originalIcon, iconColor));
         translationMenuItem.setIcon(ImageUtil.dye(translationIcon, iconColor));
         romaMenuItem.setIcon(ImageUtil.dye(romajiIcon, iconColor));
         tradChineseMenuItem.setIcon(ImageUtil.dye(tradChineseIcon, iconColor));
@@ -21993,20 +22006,20 @@ public class MainFrame extends JFrame {
         netSheetBrowseMenuItem.setIcon(ImageUtil.dye(browseSheetMenuItemIcon, iconColor));
         netSheetCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        locateLrcMenuItem.setIcon(ImageUtil.dye(locateLrcMenuItemIcon, iconColor));
-        locateLrcMenuItem.setDisabledIcon(ImageUtil.dye(locateLrcMenuItemIcon, darkerIconColor));
-        copyMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
-        browseLrcMenuItem.setIcon(ImageUtil.dye(browseLrcMenuItemIcon, iconColor));
-        browseLrcMenuItem.setDisabledIcon(ImageUtil.dye(browseLrcMenuItemIcon, darkerIconColor));
-        downloadLrcMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
-        downloadLrcMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
+        locateLyricMenuItem.setIcon(ImageUtil.dye(locateLyricMenuItemIcon, iconColor));
+        locateLyricMenuItem.setDisabledIcon(ImageUtil.dye(locateLyricMenuItemIcon, darkerIconColor));
+        copyLyricMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        browseLyricMenuItem.setIcon(ImageUtil.dye(browseLyricMenuItemIcon, iconColor));
+        browseLyricMenuItem.setDisabledIcon(ImageUtil.dye(browseLyricMenuItemIcon, darkerIconColor));
+        downloadLyricMenuItem.setIcon(ImageUtil.dye(downloadIcon, iconColor));
+        downloadLyricMenuItem.setDisabledIcon(ImageUtil.dye(downloadIcon, darkerIconColor));
         spectrumOpacityMenuItem.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, darkerIconColor));
         for (CustomMenuItem mi : calcSpectrumOpacityMenuItems) {
             mi.setIcon(ImageUtil.dye(spectrumOpacityMenuItemIcon, iconColor));
         }
-        currLrcOffsetMenuItem.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, darkerIconColor));
-        for (CustomMenuItem mi : calcLrcOffsetMenuItems) {
-            mi.setIcon(ImageUtil.dye(lrcOffsetMenuItemIcon, iconColor));
+        currLyricOffsetMenuItem.setIcon(ImageUtil.dye(lyricOffsetMenuItemIcon, darkerIconColor));
+        for (CustomMenuItem mi : calcLyricOffsetMenuItems) {
+            mi.setIcon(ImageUtil.dye(lyricOffsetMenuItemIcon, iconColor));
         }
 
         saveAlbumImageMenuItem.setIcon(ImageUtil.dye(saveAlbumImgMenuItemIcon, iconColor));
@@ -22067,7 +22080,7 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(sortPopupMenu);
         updateMenuItemStyle(descriptionPanelPopupMenu);
         updateMenuItemStyle(leftInfoPopupMenu);
-        updateMenuItemStyle(lrcPopupMenu);
+        updateMenuItemStyle(lyricPopupMenu);
         updateMenuItemStyle(spectrumPopupMenu);
         updateMenuItemStyle(playModePopupMenu);
         updateMenuItemStyle(blurPopupMenu);
@@ -22696,8 +22709,8 @@ public class MainFrame extends JFrame {
         lyricListRenderer.setRow(row);
         lyricListRenderer.setBgColor(lrcColor);
         lyricListRenderer.setHighlightColor(highlightColor);
-        lrcList.setCellRenderer(lyricListRenderer);
-        lrcList.setUI(new CustomListUI());
+        lyricList.setCellRenderer(lyricListRenderer);
+        lyricList.setUI(new CustomListUI());
 
         // 进度条和控制面板透明
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
@@ -22738,7 +22751,7 @@ public class MainFrame extends JFrame {
         soundEffectButton.updateIconStyle();
         goToPlayQueueButton.updateIconStyle();
         desktopLyricButton.updateIconStyle();
-        switchLrcTypeButton.updateIconStyle();
+        switchLyricTypeButton.updateIconStyle();
         volumeSlider.setUI(new TimeSliderUI(volumeSlider, style.getSliderColor(), style.getSliderColor(), THIS, player, false));
 
         // 其他标签颜色
@@ -22857,7 +22870,7 @@ public class MainFrame extends JFrame {
             // 停止状态
             case STOPPED:
                 playLoaded(true);
-                seekLrc(0);
+                seekLyric(0);
                 break;
         }
     }
@@ -22893,11 +22906,11 @@ public class MainFrame extends JFrame {
     }
 
     // 下载歌词
-    private void downloadLrc(NetMusicInfo musicInfo) {
+    private void downloadLyric(NetMusicInfo musicInfo) {
         globalExecutor.execute(() -> {
             try {
                 FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-                FileUtil.writeStr(lrcStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName());
+                FileUtil.writeStr(lyricStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
                 if (e instanceof IORuntimeException) {
@@ -22917,12 +22930,12 @@ public class MainFrame extends JFrame {
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
         task.setInvokeLater(() -> {
             String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
+            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
             // 写入歌曲信息
             MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
             // 自动下载歌词
-            if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
-                FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
+            if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
+                FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22943,12 +22956,12 @@ public class MainFrame extends JFrame {
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
             task.setInvokeLater(() -> {
                 String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLrcFileName();
+                String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
                 // 写入歌曲信息
                 MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                 // 自动下载歌词
-                if (isAutoDownloadLrc && StringUtil.notEmpty(musicInfo.getLrcFileText()))
-                    FileUtil.writeStr(musicInfo.getLrcFileText(), destLrcPath);
+                if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
+                    FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
             });
             tasks.add(task);
             downloadListModel.add(0, task);
@@ -23173,18 +23186,18 @@ public class MainFrame extends JFrame {
     }
 
     // 移动歌词
-    private void seekLrc(double t) {
-        if (nextLrc < 0) return;
+    private void seekLyric(double t) {
+        if (nextLyric < 0) return;
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime() - lrcOffset) nextLrc = i;
-            else if (i == size - 1) nextLrc = size;
+            if (t < statements.get(i).getTime() - lyricOffset) nextLyric = i;
+            else if (i == size - 1) nextLyric = size;
             else continue;
-            row = nextLrc - 1;
-            if (!lrcScrollAnimation) {
-                currScrollVal = lrcScrollPane.getVBarValue();
-                lrcScrollAnimation = true;
+            row = nextLyric - 1;
+            if (!lyricScrollAnimation) {
+                currScrollVal = lyricScrollPane.getVBarValue();
+                lyricScrollAnimation = true;
             }
-            LyricListRenderer renderer = (LyricListRenderer) lrcList.getCellRenderer();
+            LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
             renderer.setRow(row);
             updateOriginalRatio(t);
             break;
@@ -23192,10 +23205,10 @@ public class MainFrame extends JFrame {
     }
 
     // 获取 t 时间处的歌词
-    public String getTimeLrc(double t) {
-        if (nextLrc < 0) return "";
+    public String getTimeLyric(double t) {
+        if (nextLyric < 0) return "";
         for (int i = 0, size = statements.size(); i < size; i++) {
-            if (t < statements.get(i).getTime() - lrcOffset) {
+            if (t < statements.get(i).getTime() - lyricOffset) {
                 if (i == 0) return statements.get(i).getPlainLyric();
                 else return statements.get(i - 1).getPlainLyric();
             } else if (i == size - 1) {
@@ -23246,17 +23259,17 @@ public class MainFrame extends JFrame {
             img = ImageUtil.eraseTransparency(img);
             if (loadedMusicResource) {
                 // 线性渐变
-                if (blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, gw, gh);
+                if (blurType == BlurConstants.LG) img = ImageUtil.gradientImage(img, gw, gh);
                     // 迷幻纹理
-                else if (blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, gw, gh);
+                else if (blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, gw, gh);
             }
+            // 缩小
+            img = ImageUtil.width(img, 256);
+            // 流体图
+            if (fluidOn) img = ImageUtil.fluidImage(img);
             if (maskOn) img = ImageUtil.mask(img);
-            if (gsOn) {
-                // 缩小
-                img = ImageUtil.width(img, 256);
-                // 高斯模糊
-                img = ImageUtil.gaussianBlur(img);
-            }
+            // 高斯模糊
+            if (gsOn) img = ImageUtil.gaussianBlur(img);
             // 缩放至窗口大小
             img = ImageUtil.width(img, gw);
             if (gh > img.getHeight())

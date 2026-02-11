@@ -441,7 +441,7 @@ public class MusicInfoReq {
                     musicInfo.callback();
                 });
             }
-            musicInfo.setLrc("");
+            musicInfo.setLyric("");
         }
 
         // 猫耳
@@ -573,35 +573,35 @@ public class MusicInfoReq {
     /**
      * 为 NetMusicInfo 填充歌词字符串（包括原文、翻译、罗马音），没有的部分填充 ""
      */
-    public void fillLrc(NetMusicInfo musicInfo) {
-        if (musicInfo.isLrcIntegrated()) return;
+    public void fillLyric(NetMusicInfo musicInfo) {
+        if (musicInfo.isLyricIntegrated()) return;
 
         int source = musicInfo.getSource();
         String id = musicInfo.getId();
 
         // 网易云
         if (source == NetMusicSource.NC) {
-            NcLyricHero.getInstance().fillLrc(musicInfo);
+            NcLyricHero.getInstance().fillLyric(musicInfo);
         }
 
         // 酷狗
         else if (source == NetMusicSource.KG) {
-            KgLyricHero.getInstance().fillLrc(musicInfo);
+            KgLyricHero.getInstance().fillLyric(musicInfo);
         }
 
         // QQ
         else if (source == NetMusicSource.QQ) {
-            QqLyricHero.getInstance().fillLrc(musicInfo);
+            QqLyricHero.getInstance().fillLyric(musicInfo);
         }
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            KwLyricHero.getInstance().fillLrc(musicInfo);
+            KwLyricHero.getInstance().fillLyric(musicInfo);
         }
 
         // 咪咕
         else if (source == NetMusicSource.MG) {
-            MgLyricHero.getInstance().fillLrc(musicInfo);
+            MgLyricHero.getInstance().fillLyric(musicInfo);
         }
 
         // 千千
@@ -610,8 +610,8 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
-            String lrcUrl = urlJson.getJSONObject("data").getString("lyric");
-            musicInfo.setLrc(StringUtil.notEmpty(lrcUrl) ? HttpRequest.get(lrcUrl).executeAsync().body() : "");
+            String lyricUrl = urlJson.getJSONObject("data").getString("lyric");
+            musicInfo.setLyric(StringUtil.notEmpty(lyricUrl) ? HttpRequest.get(lyricUrl).executeAsync().body() : "");
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -630,13 +630,13 @@ public class MusicInfoReq {
                 List<Node> nodes = p.childNodes();
                 for (Node node : nodes) {
                     if (!(node instanceof TextNode)) continue;
-                    String lrc = node.toString();
-                    if (StringUtil.isEmpty(lrc)) continue;
-                    sb.append(lrc);
+                    String lyric = node.toString();
+                    if (StringUtil.isEmpty(lyric)) continue;
+                    sb.append(lyric);
                     sb.append('\n');
                 }
             }
-            musicInfo.setLrc(sb.toString());
+            musicInfo.setLyric(sb.toString());
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -650,12 +650,12 @@ public class MusicInfoReq {
             Elements ps = doc.select(".message.break-all p");
             StringBuilder sb = new StringBuilder();
             for (Element p : ps) {
-                String lrc = p.text().trim();
-                if (StringUtil.isEmpty(lrc)) continue;
-                sb.append(lrc);
+                String lyric = p.text().trim();
+                if (StringUtil.isEmpty(lyric)) continue;
+                sb.append(lyric);
                 sb.append('\n');
             }
-            musicInfo.setLrc(sb.toString());
+            musicInfo.setLyric(sb.toString());
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -663,11 +663,11 @@ public class MusicInfoReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String[] sp = id.split("_");
-            String lrcBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
+            String lyricBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
                     .executeAsync()
                     .body();
-            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
-            musicInfo.setLrc(lrcJson.getString("txt"));
+            JSONObject lyricJson = JSONObject.parseObject(lyricBody);
+            musicInfo.setLyric(lyricJson.getString("txt"));
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -685,34 +685,34 @@ public class MusicInfoReq {
             StringBuilder sb = new StringBuilder();
             for (Element d : ds) {
                 double time = Double.parseDouble(d.attr("p").split(",", 2)[0]);
-                sb.append(DurationUtil.formatToLrcTime(time));
+                sb.append(DurationUtil.formatToLyricTime(time));
                 sb.append(d.text());
                 sb.append("\n");
             }
-            musicInfo.setLrc(sb.toString());
+            musicInfo.setLyric(sb.toString());
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
 
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
-            String lrcBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
+            String lyricBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
                     .setFollowRedirects(true)
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsync()
                     .body();
-            JSONObject lrcJson = JSONObject.parseObject(lrcBody);
-            musicInfo.setLrc(lrcJson.getString("data"));
+            JSONObject lyricJson = JSONObject.parseObject(lyricBody);
+            musicInfo.setLyric(lyricJson.getString("data"));
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
 
         // 发姐
         else if (source == NetMusicSource.FA) {
-            String lrcBody = HttpRequest.get(String.format(LYRIC_FA_API, id))
+            String lyricBody = HttpRequest.get(String.format(LYRIC_FA_API, id))
                     .executeAsync()
                     .body();
-            musicInfo.setLrc(lrcBody);
+            musicInfo.setLyric(lyricBody);
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -724,15 +724,16 @@ public class MusicInfoReq {
                     .executeAsync()
                     .body();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
-            JSONObject lrcJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
-            musicInfo.setLrc(lrcJson.getString("lyrics").replace("\r\n", "\n"));
+            JSONObject lyricJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
+            String lyric = lyricJson.getString("lyrics").replace("\r\n", "\n");
+            musicInfo.setLyric(lyric);
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
 
         // 其他
         else {
-            musicInfo.setLrc("");
+            musicInfo.setLyric("");
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }

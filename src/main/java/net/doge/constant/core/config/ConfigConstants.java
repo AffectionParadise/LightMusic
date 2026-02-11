@@ -56,7 +56,7 @@ public class ConfigConstants {
     // 是否显示侧边栏文字
     public static final String SHOW_TAB_TEXT = "showTabText";
     // 歌词对齐方式
-    public static final String LRC_ALIGNMENT = "lrcAlignment";
+    public static final String LYRIC_ALIGNMENT = "lyricAlignment";
     // 频谱最大高度
     public static final String SPEC_MAX_HEIGHT = "specMaxHeight";
     // 高斯模糊因子
@@ -83,6 +83,8 @@ public class ConfigConstants {
     public static final String MAX_CONCURRENT_TASK_COUNT = "maxConcurrentTaskCount";
     // 是否显示频谱
     public static final String SHOW_SPECTRUM = "showSpectrum";
+    // 是否旋转流体
+    public static final String FLUID_ON = "fluidOn";
     // 是否高斯模糊
     public static final String GS_ON = "gsOn";
     // 是否暗化

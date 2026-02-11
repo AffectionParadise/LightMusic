@@ -40,7 +40,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
     private CustomLabel artistLabel = new CustomLabel();
     private CustomLabel albumNameLabel = new CustomLabel();
     private CustomLabel durationLabel = new CustomLabel();
-    private CustomLabel lrcMatchLabel = new CustomLabel();
+    private CustomLabel lyricMatchLabel = new CustomLabel();
 
     private MusicPlayer player;
     private static ImageIcon musicIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.musicItem"), ImageConstants.SMALL_WIDTH));
@@ -69,7 +69,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
 
         artistLabel.setOpacity(opacity);
         albumNameLabel.setOpacity(opacity);
-        lrcMatchLabel.setOpacity(opacity);
+        lyricMatchLabel.setOpacity(opacity);
 
         GridLayout layout = new GridLayout(1, 5);
         layout.setHgap(ScaleUtil.scale(15));
@@ -128,16 +128,16 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
 
-        if (musicInfo.hasLrcMatch()) {
-            String lrcMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(musicInfo.getLrcMatch(), lw));
-            lrcMatchLabel.setText(lrcMatch);
-            lrcMatchLabel.setForeground(textColor);
-            Dimension p = lrcMatchLabel.getPreferredSize();
-            outerPanel.add(lrcMatchLabel, BorderLayout.SOUTH);
+        if (musicInfo.hasLyricMatch()) {
+            String lyricMatch = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(musicInfo.getLyricMatch(), lw));
+            lyricMatchLabel.setText(lyricMatch);
+            lyricMatchLabel.setForeground(textColor);
+            Dimension p = lyricMatchLabel.getPreferredSize();
+            outerPanel.add(lyricMatchLabel, BorderLayout.SOUTH);
             outerPanel.setPreferredSize(new Dimension(d.width, d.height + p.height + ScaleUtil.scale(20)));
         } else {
             // 移除多余的歌词显示
-            outerPanel.remove(lrcMatchLabel);
+            outerPanel.remove(lyricMatchLabel);
             outerPanel.setPreferredSize(null);
         }
 

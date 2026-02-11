@@ -62,17 +62,17 @@ public abstract class AbstractMiniDialog extends JDialog {
         img = ImageUtil.eraseTransparency(img);
         if (loadedMusicResource) {
             // 线性渐变
-            if (f.blurType == BlurConstants.LG) img = ImageUtil.toGradientImage(img, dw, dh);
+            if (f.blurType == BlurConstants.LG) img = ImageUtil.gradientImage(img, dw, dh);
                 // 迷幻纹理
-            else if (f.blurType == BlurConstants.FBM) img = ImageUtil.toFbmImage(img, dw, dh);
+            else if (f.blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, dw, dh);
         }
+        // 缩小
+        img = ImageUtil.width(img, 256);
+        // 流体图
+        if (f.fluidOn) img = ImageUtil.fluidImage(img);
         if (f.maskOn) img = ImageUtil.mask(img);
-        if (f.gsOn) {
-            // 缩小
-            img = ImageUtil.width(img, 256);
-            // 高斯模糊
-            img = ImageUtil.gaussianBlur(img);
-        }
+        // 高斯模糊
+        if (f.gsOn) img = ImageUtil.gaussianBlur(img);
         // 缩放至窗口大小
         img = ImageUtil.width(img, dw);
         if (dh > img.getHeight())
@@ -85,6 +85,7 @@ public abstract class AbstractMiniDialog extends JDialog {
         } else {
             img = ImageUtil.forceSize(img, dw, dh);
         }
+        // 暗角滤镜
         if (f.darkerOn) img = ImageUtil.darker(img);
         // 设置圆角
         img = ImageUtil.radius(img, ScaleUtil.scale(10));

@@ -27,7 +27,7 @@ public class MgLyricHero {
     private final String LYRIC_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
 //    private final String LYRIC_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=%s";
 
-    public void fillLrc(NetMusicInfo musicInfo) {
+    public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
         String songBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
@@ -46,8 +46,8 @@ public class MgLyricHero {
                     // 行起始时间
                     String lineStartStr = RegexUtil.getGroup1("\\[(\\d+),\\d+\\]", l);
                     int lineStart = Integer.parseInt(lineStartStr);
-                    String lrcTime = DurationUtil.formatToLrcTime((double) lineStart / 1000);
-                    sb.append(lrcTime);
+                    String lyricTime = DurationUtil.formatToLyricTime((double) lineStart / 1000);
+                    sb.append(lyricTime);
 
                     List<String> wordStartList = RegexUtil.findAllGroup1("\\((\\d+),\\d+\\)", l);
                     List<String> wordDurationList = RegexUtil.findAllGroup1("\\(\\d+,(\\d+)\\)", l);
@@ -62,27 +62,27 @@ public class MgLyricHero {
                 } else sb.append(l);
                 sb.append("\n");
             }
-            musicInfo.setLrc(sb.toString());
+            musicInfo.setLyric(sb.toString());
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
         // lrc
         else {
-            String lrcUrl = data.getString("lrcUrl");
-            String lrcStr = HttpRequest.get(lrcUrl).executeAsync().body();
-            musicInfo.setLrc(lrcStr);
+            String lyricUrl = data.getString("lrcUrl");
+            String lyricStr = HttpRequest.get(lyricUrl).executeAsync().body();
+            musicInfo.setLyric(lyricStr);
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
 
         // lrc
-//            String lrcBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
+//            String lyricBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
 //                    .header(Header.REFERER, "https://music.migu.cn/v3/music/player/audio?from=migu")
 //                    .executeAsync()
 //                    .body();
-//            JSONObject data = JSONObject.parseObject(lrcBody);
-//            String lrcStr = data.getString("lyric").replace("\r\n", "\n");
-//            musicInfo.setLrc(lrcStr);
+//            JSONObject data = JSONObject.parseObject(lyricBody);
+//            String lyricStr = data.getString("lyric").replace("\r\n", "\n");
+//            musicInfo.setLyric(lyricStr);
 //            musicInfo.setTrans("");
 //            musicInfo.setRoma("");
     }

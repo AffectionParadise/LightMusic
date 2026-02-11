@@ -10,7 +10,7 @@ import javax.swing.*;
  * @Date 2020/12/7
  */
 public class LyricAlignment {
-    public static int lrcAlignmentIndex = 0;
+    public static int lyricAlignmentIndex = 0;
     public static final int[] VALUES = {
             SwingConstants.LEFT,
             SwingConstants.CENTER,

@@ -71,7 +71,7 @@ public class DurationUtil {
      * @param seconds
      * @return
      */
-    public static String formatToLrcTime(Double seconds) {
+    public static String formatToLyricTime(Double seconds) {
         if (seconds == null) return "";
         if (seconds < 0) seconds = 0D;
         StringBuilder sb = new StringBuilder();
@@ -95,7 +95,7 @@ public class DurationUtil {
      * @param s
      * @return
      */
-    public static double lrcTimeToSeconds(String s) {
+    public static double lyricTimeToSeconds(String s) {
         String[] sp = StringUtil.trimStringWith(s, '[', ']').split("[.:]");
         // xx:xx
         if (sp.length == 2) return Integer.parseInt(sp[0]) * 60 + Integer.parseInt(sp[1]);

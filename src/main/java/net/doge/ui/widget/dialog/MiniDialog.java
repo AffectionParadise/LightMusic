@@ -221,7 +221,7 @@ public class MiniDialog extends AbstractMiniDialog {
             f.miniDialog = null;
             if (f.showSpectrum) f.openSpectrum();
             f.setVisible(true);
-            f.lrcScrollAnimation = true;
+            f.lyricScrollAnimation = true;
         });
 
         FlowLayout fl = new HDFlowLayout();

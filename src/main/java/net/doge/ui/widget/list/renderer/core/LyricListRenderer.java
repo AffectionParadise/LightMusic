@@ -118,8 +118,8 @@ public class LyricListRenderer extends CustomListCellRenderer {
 
         // 标签
         label.setOpaque(false);
-        label.setBorder(BORDERS[LyricAlignment.lrcAlignmentIndex]);
-        label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lrcAlignmentIndex]);
+        label.setBorder(BORDERS[LyricAlignment.lyricAlignmentIndex]);
+        label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lyricAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(labelUI);
         if (index == row) labelUI.setOpacity(highlightMaxAlpha);

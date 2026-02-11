@@ -111,9 +111,9 @@ public class SettingDialog extends AbstractTitledDialog {
 
     private CustomPanel showTabTextPanel = new CustomPanel();
     private CustomCheckBox showTabTextCheckBox = new CustomCheckBox(I18n.getText("showTabText"));
-    private CustomPanel lrcAlignmentPanel = new CustomPanel();
-    private CustomLabel lrcAlignmentLabel = new CustomLabel(I18n.getText("lrcAlignment"));
-    private CustomComboBox<String> lrcAlignmentComboBox = new CustomComboBox<>();
+    private CustomPanel lyricAlignmentPanel = new CustomPanel();
+    private CustomLabel lyricAlignmentLabel = new CustomLabel(I18n.getText("lyricAlignment"));
+    private CustomComboBox<String> lyricAlignmentComboBox = new CustomComboBox<>();
     private final int specMaxHeightLimit = 150;
     private CustomPanel specMaxHeightPanel = new CustomPanel();
     private CustomLabel specMaxHeightLabel = new CustomLabel(String.format(I18n.getText("specMaxHeight"), specMaxHeightLimit));
@@ -125,8 +125,8 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomLabel darkerFactorLabel = new CustomLabel(I18n.getText("darkerFactor"));
     private CustomComboBox<String> darkerFactorComboBox = new CustomComboBox<>();
 
-    private CustomPanel autoDownloadLrcPanel = new CustomPanel();
-    private CustomCheckBox autoDownloadLrcCheckBox = new CustomCheckBox(I18n.getText("autoDownloadLrc"));
+    private CustomPanel autoDownloadLyricPanel = new CustomPanel();
+    private CustomCheckBox autoDownloadLyricCheckBox = new CustomCheckBox(I18n.getText("autoDownloadLyric"));
     //    private CustomPanel verbatimTimelinePanel = new CustomPanel();
 //    private CustomCheckBox verbatimTimelineCheckBox = new CustomCheckBox(I18n.getText("verbatimTimeline"));
     private CustomPanel musicDownPanel = new CustomPanel();
@@ -324,11 +324,11 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setLayout(fl);
         windowSizePanel.setLayout(fl);
         showTabTextPanel.setLayout(fl);
-        lrcAlignmentPanel.setLayout(fl);
+        lyricAlignmentPanel.setLayout(fl);
         specMaxHeightPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
-        autoDownloadLrcPanel.setLayout(fl);
+        autoDownloadLyricPanel.setLayout(fl);
 //        verbatimTimelinePanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
         mvDownPanel.setLayout(fl);
@@ -359,11 +359,11 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setMaximumSize(d);
         windowSizePanel.setMaximumSize(d);
         showTabTextPanel.setMaximumSize(d);
-        lrcAlignmentPanel.setMaximumSize(d);
+        lyricAlignmentPanel.setMaximumSize(d);
         specMaxHeightPanel.setMaximumSize(d);
         gsFactorPanel.setMaximumSize(d);
         darkerFactorPanel.setMaximumSize(d);
-        autoDownloadLrcPanel.setMaximumSize(d);
+        autoDownloadLyricPanel.setMaximumSize(d);
 //        verbatimTimelinePanel.setMaximumSize(d);
         musicDownPanel.setMaximumSize(d);
         mvDownPanel.setMaximumSize(d);
@@ -396,11 +396,11 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setForeground(textColor);
         videoOnlyCheckBox.setForeground(textColor);
         showTabTextCheckBox.setForeground(textColor);
-        lrcAlignmentLabel.setForeground(textColor);
+        lyricAlignmentLabel.setForeground(textColor);
         specMaxHeightLabel.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
-        autoDownloadLrcCheckBox.setForeground(textColor);
+        autoDownloadLyricCheckBox.setForeground(textColor);
 //        verbatimTimelineCheckBox.setForeground(textColor);
         musicDownLabel.setForeground(textColor);
         mvDownLabel.setForeground(textColor);
@@ -598,7 +598,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenTextField.addFocusListener(focusAdapter);
 
         // 下拉框 UI
-        lrcAlignmentComboBox.setUI(new StringComboBoxUI(lrcAlignmentComboBox, f));
+        lyricAlignmentComboBox.setUI(new StringComboBoxUI(lyricAlignmentComboBox, f));
         gsFactorComboBox.setUI(new StringComboBoxUI(gsFactorComboBox, f));
         darkerFactorComboBox.setUI(new StringComboBoxUI(darkerFactorComboBox, f));
         langComboBox.setUI(new StringComboBoxUI(langComboBox, f));
@@ -721,7 +721,7 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.updateIconStyle();
         videoOnlyCheckBox.updateIconStyle();
         showTabTextCheckBox.updateIconStyle();
-        autoDownloadLrcCheckBox.updateIconStyle();
+        autoDownloadLyricCheckBox.updateIconStyle();
 //        verbatimTimelineCheckBox.updateIconStyle();
         enableKeyCheckBox.updateIconStyle();
 
@@ -731,9 +731,9 @@ public class SettingDialog extends AbstractTitledDialog {
 
         showTabTextPanel.add(showTabTextCheckBox);
 
-        for (String name : LyricAlignment.NAMES) lrcAlignmentComboBox.addItem(name);
-        lrcAlignmentPanel.add(lrcAlignmentLabel);
-        lrcAlignmentPanel.add(lrcAlignmentComboBox);
+        for (String name : LyricAlignment.NAMES) lyricAlignmentComboBox.addItem(name);
+        lyricAlignmentPanel.add(lyricAlignmentLabel);
+        lyricAlignmentPanel.add(lyricAlignmentComboBox);
 
         specMaxHeightPanel.add(specMaxHeightLabel);
         specMaxHeightPanel.add(specMaxHeightTextField);
@@ -746,7 +746,7 @@ public class SettingDialog extends AbstractTitledDialog {
         darkerFactorPanel.add(darkerFactorLabel);
         darkerFactorPanel.add(darkerFactorComboBox);
 
-        autoDownloadLrcPanel.add(autoDownloadLrcCheckBox);
+        autoDownloadLyricPanel.add(autoDownloadLyricCheckBox);
 
 //        verbatimTimelinePanel.add(verbatimTimelineCheckBox);
 
@@ -850,7 +850,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
         appearanceContentBox.add(showTabTextPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(lrcAlignmentPanel);
+        appearanceContentBox.add(lyricAlignmentPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(specMaxHeightPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
@@ -859,7 +859,7 @@ public class SettingDialog extends AbstractTitledDialog {
         appearanceContentBox.add(darkerFactorPanel);
         appearanceContentBox.add(CustomBox.createVerticalGlue());
 
-        downloadAndCacheContentBox.add(autoDownloadLrcPanel);
+        downloadAndCacheContentBox.add(autoDownloadLyricPanel);
         downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
 //        downloadAndCacheContentBox.add(verbatimTimelinePanel);
 //        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
@@ -915,11 +915,11 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         videoOnlyCheckBox.setSelected(f.videoOnly);
         showTabTextCheckBox.setSelected(f.showTabText);
-        lrcAlignmentComboBox.setSelectedIndex(LyricAlignment.lrcAlignmentIndex);
+        lyricAlignmentComboBox.setSelectedIndex(LyricAlignment.lyricAlignmentIndex);
         specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.barMaxHeight));
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
-        autoDownloadLrcCheckBox.setSelected(f.isAutoDownloadLrc);
+        autoDownloadLyricCheckBox.setSelected(f.autoDownloadLyric);
 //        verbatimTimelineCheckBox.setSelected(LyricType.verbatimTimeline);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
@@ -976,7 +976,7 @@ public class SettingDialog extends AbstractTitledDialog {
         f.showTabText = showTabTextCheckBox.isSelected();
         f.updateTabSize();
 
-        LyricAlignment.lrcAlignmentIndex = lrcAlignmentComboBox.getSelectedIndex();
+        LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
 
         int gsFactorIndex = BlurConstants.gsFactorIndex;
         BlurConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
@@ -987,7 +987,7 @@ public class SettingDialog extends AbstractTitledDialog {
         if (gsFactorIndex != BlurConstants.gsFactorIndex || darkerFactorIndex != BlurConstants.darkerFactorIndex)
             f.doBlur();
 
-        f.isAutoDownloadLrc = autoDownloadLrcCheckBox.isSelected();
+        f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();
 
 //        LyricType.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
 
