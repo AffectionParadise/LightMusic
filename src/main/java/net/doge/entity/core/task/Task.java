@@ -2,7 +2,7 @@ package net.doge.entity.core.task;
 
 import lombok.Data;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.task.TaskStatus;
 import net.doge.constant.core.task.TaskType;

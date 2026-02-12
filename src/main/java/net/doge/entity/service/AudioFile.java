@@ -2,7 +2,7 @@ package net.doge.entity.service;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.util.core.StringUtil;
 import net.doge.util.os.FileUtil;
@@ -96,6 +96,6 @@ public class AudioFile extends File implements MusicResource {
     }
 
     public File toLyricFile() {
-        return new File(FileUtil.getPathWithoutSuffix(this) + ".lrc");
+        return new File(FileUtil.getPathWithoutSuffix(this) + "." + Format.LRC);
     }
 }

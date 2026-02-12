@@ -33,9 +33,9 @@
 //        qualityMap.put("ancient", "magic_ancient");
 //        qualityMap.put("dj", "magic_dj");
 //        qualityMap.put("surnay", "magic_surnay");
-//        qualityMap.put("128k", "128");
-//        qualityMap.put("320k", "320");
-//        qualityMap.put("flac", "flac");
+//        qualityMap.put("standard", "128");
+//        qualityMap.put("hq", "320");
+//        qualityMap.put("lossless", "flac");
 //        qualityMap.put("hires", "high");
 //        qualityMap.put("master", "viper_atmos");
 //    }
@@ -76,6 +76,6 @@
 //    }
 //
 /// /    public static void main(String[] args) {
-/// /        System.out.println(getInstance().getTrackUrl("CAD5C392FA6E6BFC2F76F5905BC027ED", "128k"));
+/// /        System.out.println(getInstance().getTrackUrl("CAD5C392FA6E6BFC2F76F5905BC027ED", "standard"));
 /// /    }
 //}

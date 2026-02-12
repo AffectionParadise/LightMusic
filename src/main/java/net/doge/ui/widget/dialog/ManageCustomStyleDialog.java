@@ -231,7 +231,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 }
                 selectedStyle.setForeColor((Color) results[2]);
                 selectedStyle.setSelectedColor((Color) results[3]);
-                selectedStyle.setLrcColor((Color) results[4]);
+                selectedStyle.setLyricColor((Color) results[4]);
                 selectedStyle.setHighlightColor((Color) results[5]);
                 selectedStyle.setTextColor((Color) results[6]);
                 selectedStyle.setTimeBarColor((Color) results[7]);

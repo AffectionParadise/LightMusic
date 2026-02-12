@@ -36,7 +36,7 @@ public class UIStyle {
     // 播放列表选中颜色
     private Color selectedColor;
     // 歌词文字颜色
-    private Color lrcColor;
+    private Color lyricColor;
     // 歌词高亮颜色
     private Color highlightColor;
     // 标签文字颜色
@@ -102,14 +102,14 @@ public class UIStyle {
     }
 
     public UIStyle(Integer type, String name, String imgKey,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
+                   Color foreColor, Color selectedColor, Color lyricColor, Color highlightColor,
                    Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
         this.type = type;
         this.name = name;
         setImgKey(imgKey);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;
-        this.lrcColor = lrcColor;
+        this.lyricColor = lyricColor;
         this.highlightColor = highlightColor;
         this.textColor = textColor;
         this.timeBarColor = timeBarColor;
@@ -120,7 +120,7 @@ public class UIStyle {
     }
 
     public UIStyle(Integer type, String name, String imgKey, Color bgColor,
-                   Color foreColor, Color selectedColor, Color lrcColor, Color highlightColor,
+                   Color foreColor, Color selectedColor, Color lyricColor, Color highlightColor,
                    Color textColor, Color timeBarColor, Color iconColor, Color scrollBarColor, Color sliderColor, Color spectrumColor) {
         this.type = type;
         this.name = name;
@@ -128,7 +128,7 @@ public class UIStyle {
         setBgColor(bgColor);
         this.foreColor = foreColor;
         this.selectedColor = selectedColor;
-        this.lrcColor = lrcColor;
+        this.lyricColor = lyricColor;
         this.highlightColor = highlightColor;
         this.textColor = textColor;
         this.timeBarColor = timeBarColor;

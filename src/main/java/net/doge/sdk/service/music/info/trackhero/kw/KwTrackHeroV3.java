@@ -22,14 +22,17 @@ public class KwTrackHeroV3 {
         return instance;
     }
 
+    // 歌曲 URL 获取 API (酷我)
+    private final String SONG_URL_KW_API = "https://mobi.kuwo.cn/mobi.s?f=web&source=kwplayer_ar_5.0.0.0_B_jiakong_vh.apk&type=convert_url_with_sign&rid=%s&br=%s&user=0";
+
     private Map<String, String> brMap = new HashMap<>();
     // url 黑名单，为排除某些试听音频
     private List<String> subStrBlacklist = new LinkedList<>();
 
     private void initMap() {
-        brMap.put("128k", "128kmp3");
-        brMap.put("320k", "320kmp3");
-        brMap.put("flac", "2000kflac");
+        brMap.put("standard", "128kmp3");
+        brMap.put("hq", "320kmp3");
+        brMap.put("lossless", "2000kflac");
         // 返回的是加密音频
         brMap.put("hires", "4000kflac");
     }
@@ -46,8 +49,7 @@ public class KwTrackHeroV3 {
      * @return
      */
     public String getTrackUrl(String mid, String quality) {
-        String urlBody = HttpRequest.get(String.format("https://mobi.kuwo.cn/mobi.s?f=web&source=kwplayer_ar_5.0.0.0_B_jiakong_vh.apk&type=convert_url_with_sign&rid=%s&br=%s&user=0",
-                        mid, brMap.get(quality)))
+        String urlBody = HttpRequest.get(String.format(SONG_URL_KW_API, mid, brMap.get(quality)))
                 .executeAsync()
                 .body();
         JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");
@@ -60,8 +62,8 @@ public class KwTrackHeroV3 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("228908", "128k"));
-//        System.out.println(getInstance().getTrackUrl("228908", "320k"));
-//        System.out.println(getInstance().getTrackUrl("228908", "flac"));
+//        System.out.println(getInstance().getTrackUrl("228908", "standard"));
+//        System.out.println(getInstance().getTrackUrl("228908", "hq"));
+//        System.out.println(getInstance().getTrackUrl("228908", "lossless"));
 //    }
 }

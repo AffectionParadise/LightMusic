@@ -146,14 +146,14 @@
 //    private Map<String, String> hMap = new HashMap<>();
 //
 //    private void initMap() {
-//        eMap.put("128k", "mp3");
-//        eMap.put("320k", "mp3");
-//        eMap.put("flac", "flac");
+//        eMap.put("standard", "mp3");
+//        eMap.put("hq", "mp3");
+//        eMap.put("lossless", "flac");
 //        eMap.put("hires", "flac");
 //
-//        hMap.put("128k", "128k");
-//        hMap.put("320k", "320k");
-//        hMap.put("flac", "2000k");
+//        hMap.put("standard", "128k");
+//        hMap.put("hq", "320k");
+//        hMap.put("lossless", "2000k");
 //        hMap.put("hires", "4000k");
 //    }
 //
@@ -181,7 +181,7 @@
 //
 //    public static void main(String[] args) {
 /// /        System.out.println(getInstance().base64Decrypt("GfpFYNPP+sMNUO+mrQXAhQl3mi5yh3oaLllRP1zUrsWS+z0OdN4kZRorWOeN290cfOMggtHmERFJr7VDD6KSwimb8WlJ63WTW05lIbfwvLazE0ldxLrJ/KsyY25tgs+qP/yniqZc00T9dNvY0ZaKijSPEuXrwJ5hzCWAz9zBeRw6/2t3t/KL220vZs/ej5BH0COfkuC6iiFM/FuDzZQiXKFvDvU3cf3iUylr9yYul7vwLP/IiYIvJgrWaknLsL7yzwLvgwVM/MUjDctRfR7v/v5ak9iXwzeOnJFbcp9wDC0U2hdXIzDhNwb6alh97qveYjBOC2u0npFGQRv/KluhdBnx9PIZ50B8jIgWH6CVxUiIi/GoXp7TqjBKc5GpRYmb4R9fJoa9VH/FJS7mjh1o/ZPQVEx6P/6r+40BdbmCUsVVC9E9/Hkp8hNVV7evo7/7aVdCgIet8JTXw2xrCXJHJG00EHdiwIJgEOquAxh3ymEBlJ5T8Xq1A7/V5TI+MmjsBgpMKSVIp20w6+F/RCv7YV7u8Hu2TzY+0dMpR3TKgBs8E/U5w4mDRNR/cSqQlJnzl9C4WpDdzXw634X2IobYCOziZZJqXAhEHB+5fx98z66MaD/1zqN2HvkZw9CrWimdRUbOKIwISu4ha2HkYTs2ycCRoFNq4IsvHrwDdEhqg8aOj1FBXyy+KKTFo3QI1NPFagmwibxFrjvMPIsNVHUP6/l/nK3wc4wLbwEByD597PzRwkG/x+UbEbxhHNlx29ZWbP8mdEj6rBpzI++P+R3k3r9lc7KFhRliM0nVnNQsEFZ5jW5LICTMsProJoQrKbZZ7R/MkW7LmEpuVpPKd2XDbkJYZohZYD+iObULwJDJ6K6fjLUc55vMaPkz+ziKimbJamNIiFPkHdE="));
-//        System.out.println(getInstance().getTrackUrl("228908", "flac"));
+//        System.out.println(getInstance().getTrackUrl("228908", "lossless"));
 //    }
 //
 //    // 解密方法，用于调试加密参数

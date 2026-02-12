@@ -36,19 +36,19 @@
 //    private Map<String, String> qualityMap = new HashMap<>();
 //
 //    private void initMap() {
-////        qualityHashMap.put("128k", "128hash");
-////        qualityHashMap.put("320k", "320hash");
-////        qualityHashMap.put("flac", "sqhash");
+////        qualityHashMap.put("standard", "128hash");
+////        qualityHashMap.put("hq", "320hash");
+////        qualityHashMap.put("lossless", "sqhash");
 ////        qualityHashMap.put("hires", "highhash");
-//        qualityHashMap.put("128k", "hash_128");
-//        qualityHashMap.put("320k", "hash_320");
-//        qualityHashMap.put("flac", "hash_flac");
+//        qualityHashMap.put("standard", "hash_128");
+//        qualityHashMap.put("hq", "hash_320");
+//        qualityHashMap.put("lossless", "hash_flac");
 //        qualityHashMap.put("hires", "hash_high");
 //        qualityHashMap.put("master", "hash_128");
 //
-//        qualityMap.put("128k", "128");
-//        qualityMap.put("320k", "320");
-//        qualityMap.put("flac", "flac");
+//        qualityMap.put("standard", "128");
+//        qualityMap.put("hq", "320");
+//        qualityMap.put("lossless", "flac");
 //        qualityMap.put("hires", "high");
 //        qualityMap.put("master", "viper_atmos");
 //    }
@@ -148,6 +148,6 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k"));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "standard"));
 //    }
 //}

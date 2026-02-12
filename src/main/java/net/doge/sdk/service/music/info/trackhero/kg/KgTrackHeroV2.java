@@ -23,6 +23,9 @@ public class KgTrackHeroV2 {
         return instance;
     }
 
+    // 歌曲 URL 获取 API (酷狗)
+    private final String SONG_URL_KG_API = "/v5/url";
+
     private Map<String, String> qualityMap = new HashMap<>();
 
     private void initMap() {
@@ -32,9 +35,9 @@ public class KgTrackHeroV2 {
         qualityMap.put("ancient", "magic_ancient");
         qualityMap.put("dj", "magic_dj");
         qualityMap.put("surnay", "magic_surnay");
-        qualityMap.put("128k", "128");
-        qualityMap.put("320k", "320");
-        qualityMap.put("flac", "flac");
+        qualityMap.put("standard", "128");
+        qualityMap.put("hq", "320");
+        qualityMap.put("lossless", "flac");
         qualityMap.put("hires", "high");
         qualityMap.put("master", "viper_atmos");
     }
@@ -50,7 +53,7 @@ public class KgTrackHeroV2 {
      *                ancient：手机端魔法音乐 尤克里里
      *                dj：手机端魔法音乐 DJ
      *                surnay：手机端魔法音乐 唢呐
-     *                128k 320k flac hires
+     *                standard hq flac hires
      *                master：蝰蛇全景声
      *                )
      * @return
@@ -76,7 +79,7 @@ public class KgTrackHeroV2 {
         params.put("cdnBackup", 1);
         params.put("kcard", 0);
         params.put("module", "collection");
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey("/v5/url");
+        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey(SONG_URL_KG_API);
         String respBody = SdkCommon.kgRequest(params, null, options)
                 .header("x-router", "trackercdn.kugou.com")
                 .executeAsync()
@@ -88,6 +91,6 @@ public class KgTrackHeroV2 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "128k"));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "standard"));
 //    }
 }

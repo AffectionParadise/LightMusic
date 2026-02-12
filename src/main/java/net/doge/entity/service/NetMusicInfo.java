@@ -3,7 +3,7 @@ package net.doge.entity.service;
 import lombok.Data;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.Downloadable;
@@ -208,11 +208,11 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public String toLyricFileName() {
-        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + ".lrc");
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + "." + Format.LRC);
     }
 
     public String toSimpleLyricFileName() {
-        return FileUtil.filterFileName(toSimpleString() + ".lrc");
+        return FileUtil.filterFileName(toSimpleString() + "." + Format.LRC);
     }
 
     public String toString() {

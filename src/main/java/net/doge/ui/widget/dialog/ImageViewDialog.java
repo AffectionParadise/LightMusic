@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;

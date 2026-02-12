@@ -1,8 +1,8 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.core.media.Format;
 import net.doge.constant.core.media.VideoQuality;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.service.MvInfoType;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.Downloadable;

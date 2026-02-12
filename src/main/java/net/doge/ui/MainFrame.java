@@ -25,9 +25,9 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.lyric.LyricType;
 import net.doge.constant.core.lyric.NextLyric;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.core.media.Format;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.meta.SoftInfo;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.player.PlayMode;
@@ -3011,7 +3011,7 @@ public class MainFrame extends JFrame {
                         ColorUtil.hexToColor(styleObject.getString("bgColor")),
                         ColorUtil.hexToColor(styleObject.getString("foreColor")),
                         ColorUtil.hexToColor(styleObject.getString("selectedColor")),
-                        ColorUtil.hexToColor(styleObject.getString("lrcColor")),
+                        ColorUtil.hexToColor(styleObject.getString("lyricColor")),
                         ColorUtil.hexToColor(styleObject.getString("highlightColor")),
                         ColorUtil.hexToColor(styleObject.getString("textColor")),
                         ColorUtil.hexToColor(styleObject.getString("timeBarColor")),
@@ -3319,12 +3319,12 @@ public class MainFrame extends JFrame {
 
                     task.setInvokeLater(() -> {
                         String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                        String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+                        String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
                         // 写入歌曲信息
                         MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                         // 自动下载歌词
                         if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                            FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
+                            FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -3868,7 +3868,7 @@ public class MainFrame extends JFrame {
             styleObject.put("bgColor", ColorUtil.colorToHex(style.getBgColor()));
             styleObject.put("foreColor", ColorUtil.colorToHex(style.getForeColor()));
             styleObject.put("selectedColor", ColorUtil.colorToHex(style.getSelectedColor()));
-            styleObject.put("lrcColor", ColorUtil.colorToHex(style.getLrcColor()));
+            styleObject.put("lyricColor", ColorUtil.colorToHex(style.getLyricColor()));
             styleObject.put("highlightColor", ColorUtil.colorToHex(style.getHighlightColor()));
             styleObject.put("textColor", ColorUtil.colorToHex(style.getTextColor()));
             styleObject.put("timeBarColor", ColorUtil.colorToHex(style.getTimeBarColor()));
@@ -19880,20 +19880,20 @@ public class MainFrame extends JFrame {
         });
         // 查看歌词文件
         browseLyricMenuItem.addActionListener(e -> {
-            String lrcPath;
+            String lyricPath;
             // 在线音乐先将歌词存为临时文件再查看
             if (player.loadedNetMusic()) {
                 NetMusicInfo musicInfo = player.getMusicInfo();
-                lrcPath = new File(SimplePath.CACHE_PATH + musicInfo.toLyricFileName()).getAbsolutePath();
-                FileUtil.writeStr(lyricStr, lrcPath);
+                lyricPath = new File(SimplePath.CACHE_PATH + musicInfo.toLyricFileName()).getAbsolutePath();
+                FileUtil.writeStr(lyricStr, lyricPath);
             }
             // 本地音乐直接打开 lrc 文件
             else {
                 File file = player.getAudioFile();
                 String filePath = file.getAbsolutePath();
-                lrcPath = filePath.substring(0, filePath.lastIndexOf('.')) + ".lrc";
+                lyricPath = filePath.substring(0, filePath.lastIndexOf('.')) + "." + Format.LRC;
             }
-            DesktopUtil.edit(lrcPath);
+            DesktopUtil.edit(lyricPath);
         });
         // 下载歌词文件
         downloadLyricMenuItem.addActionListener(e -> downloadLyric(player.getMusicInfo()));
@@ -21782,7 +21782,7 @@ public class MainFrame extends JFrame {
         Color selectedColor = style.getSelectedColor();
         Color foreColor = style.getForeColor();
         Color timeBarColor = style.getTimeBarColor();
-        Color lrcColor = style.getLrcColor();
+        Color lyricColor = style.getLyricColor();
         Color highlightColor = style.getHighlightColor();
 
         // 托盘
@@ -22707,7 +22707,7 @@ public class MainFrame extends JFrame {
         // 歌词高亮显示
         LyricListRenderer lyricListRenderer = new LyricListRenderer();
         lyricListRenderer.setRow(row);
-        lyricListRenderer.setBgColor(lrcColor);
+        lyricListRenderer.setBgColor(lyricColor);
         lyricListRenderer.setHighlightColor(highlightColor);
         lyricList.setCellRenderer(lyricListRenderer);
         lyricList.setUI(new CustomListUI());
@@ -22715,7 +22715,7 @@ public class MainFrame extends JFrame {
         // 进度条和控制面板透明
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI
         // 桌面歌词更新颜色
-        desktopLyricDialog.setBgColor(lrcColor);
+        desktopLyricDialog.setBgColor(lyricColor);
         desktopLyricDialog.setForeColor(highlightColor);
         desktopLyricDialog.updateStyle();
         // 时间标签用进度条的颜色
@@ -22930,12 +22930,12 @@ public class MainFrame extends JFrame {
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
         task.setInvokeLater(() -> {
             String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-            String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+            String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
             // 写入歌曲信息
             MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
             // 自动下载歌词
             if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
+                FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22956,12 +22956,12 @@ public class MainFrame extends JFrame {
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
             task.setInvokeLater(() -> {
                 String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                String destLrcPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+                String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
                 // 写入歌曲信息
                 MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                 // 自动下载歌词
                 if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                    FileUtil.writeStr(musicInfo.getLyricFileText(), destLrcPath);
+                    FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
             });
             tasks.add(task);
             downloadListModel.add(0, task);

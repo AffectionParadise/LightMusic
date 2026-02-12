@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import lombok.Getter;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
@@ -201,7 +201,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         results[1] = StringUtil.isEmpty(imgKey) ? showedStyle.getBgColor() : imgKey;
         results[2] = showedStyle.getForeColor();
         results[3] = showedStyle.getSelectedColor();
-        results[4] = showedStyle.getLrcColor();
+        results[4] = showedStyle.getLyricColor();
         results[5] = showedStyle.getHighlightColor();
         results[6] = showedStyle.getTextColor();
         results[7] = showedStyle.getTimeBarColor();

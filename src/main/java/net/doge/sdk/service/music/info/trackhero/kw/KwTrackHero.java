@@ -23,14 +23,14 @@
 //    private Map<String, String> hMap = new HashMap<>();
 //
 //    private void initMap() {
-//        eMap.put("128k", "mp3");
-//        eMap.put("320k", "mp3");
-//        eMap.put("flac", "flac");
+//        eMap.put("standard", "mp3");
+//        eMap.put("hq", "mp3");
+//        eMap.put("lossless", "flac");
 //        eMap.put("hires", "flac");
 //
-//        hMap.put("128k", "128k");
-//        hMap.put("320k", "320k");
-//        hMap.put("flac", "2000k");
+//        hMap.put("standard", "128k");
+//        hMap.put("hq", "320k");
+//        hMap.put("lossless", "2000k");
 //        hMap.put("hires", "4000k");
 //    }
 //
@@ -56,6 +56,6 @@
 //    }
 //
 /// /    public static void main(String[] args) {
-/// /        System.out.println(getInstance().getTrackUrl("228908", "flac"));
+/// /        System.out.println(getInstance().getTrackUrl("228908", "lossless"));
 /// /    }
 //}

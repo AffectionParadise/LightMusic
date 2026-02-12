@@ -701,11 +701,13 @@ public class I18n {
         LANG_MAP.put("scaryHorn", new String[]{"喇叭炸机专用", "Scary horn"});
         LANG_MAP.put("oldPhone", new String[]{"老年机/儿童玩具", "Old phone/Toy"});
 
+        LANG_MAP.put("master", new String[]{"至臻母带 (FLAC)", "Master (FLAC)"});
+        LANG_MAP.put("atmosphere", new String[]{"至臻全景声 (FLAC)", "Atmosphere (FLAC)"});
         LANG_MAP.put("hiRes", new String[]{"Hi-Res (FLAC)", "Hi-Res (FLAC)"});
         LANG_MAP.put("lossless", new String[]{"无损 (FLAC)", "Lossless (FLAC)"});
         LANG_MAP.put("super", new String[]{"超高 (MP3)", "Super (MP3)"});
         LANG_MAP.put("high", new String[]{"高 (MP3)", "High (MP3)"});
-        LANG_MAP.put("normal", new String[]{"普通 (MP3)", "Normal (MP3)"});
+        LANG_MAP.put("standard", new String[]{"普通 (MP3)", "Standard (MP3)"});
 
         LANG_MAP.put("hr", new String[]{"HR", "HR"});
         LANG_MAP.put("sq", new String[]{"SQ", "SQ"});

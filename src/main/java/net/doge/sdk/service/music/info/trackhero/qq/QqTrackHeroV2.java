@@ -33,12 +33,13 @@ public class QqTrackHeroV2 {
     private Map<String, QQualityEntry> fnMap = new HashMap<>();
 
     private void initMap() {
-        fnMap.put("128k", new QQualityEntry("M500", ".mp3"));
-        fnMap.put("320k", new QQualityEntry("M800", ".mp3"));
-        fnMap.put("flac", new QQualityEntry("F000", ".flac"));
+        fnMap.put("standard", new QQualityEntry("M500", ".mp3"));
+        fnMap.put("hq", new QQualityEntry("M800", ".mp3"));
+        fnMap.put("super", new QQualityEntry("M800", ".mp3"));
+        fnMap.put("lossless", new QQualityEntry("F000", ".flac"));
         fnMap.put("hires", new QQualityEntry("RS01", ".flac"));
-        fnMap.put("atmos", new QQualityEntry("Q000", ".flac"));
-        fnMap.put("atmos_plus", new QQualityEntry("Q001", ".flac"));
+        fnMap.put("atmosphere", new QQualityEntry("Q000", ".flac"));
+        fnMap.put("atmosphere_plus", new QQualityEntry("Q001", ".flac"));
         fnMap.put("master", new QQualityEntry("AI00", ".flac"));
         fnMap.put("nac", new QQualityEntry("TL01", ".nac"));
         fnMap.put("dts", new QQualityEntry("DT03", ".mp4"));
@@ -54,7 +55,7 @@ public class QqTrackHeroV2 {
      * 获取 QQ 音乐歌曲链接
      *
      * @param mid     歌曲 id
-     * @param quality 品质(128k 320k flac hires atmos atmos_plus master nac dts)
+     * @param quality 品质
      * @return
      */
     public String getTrackUrl(String mid, String quality) {
@@ -92,8 +93,8 @@ public class QqTrackHeroV2 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "128k"));
-//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "320k"));
-//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", "flac"));
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "standard"));
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "hq"));
+//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", "lossless"));
 //    }
 }

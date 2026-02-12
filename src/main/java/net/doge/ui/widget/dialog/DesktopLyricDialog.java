@@ -147,7 +147,7 @@ public class DesktopLyricDialog extends JDialog {
         updateLocation();
 
         // 设置主题色
-        bgColor = style.getLrcColor();
+        bgColor = style.getLyricColor();
         // Dialog 背景透明
         setUndecorated(true);
         setBackground(Colors.TRANSPARENT);

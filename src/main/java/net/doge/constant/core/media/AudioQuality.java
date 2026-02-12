@@ -8,25 +8,31 @@ import net.doge.constant.core.lang.I18n;
  * @Date 2020/12/15
  */
 public class AudioQuality {
+    // 至臻母带
+    public static final int MASTER = 0;
+    // 至臻全景声
+    public static final int ATMOSPHERE = 1;
     // Hi-Res
-    public static final int HI_RES = 0;
+    public static final int HI_RES = 2;
     // 无损
-    public static final int LOSSLESS = 1;
+    public static final int LOSSLESS = 3;
     // 超高
-    public static final int SUPER = 2;
+    public static final int SUPER = 4;
     // 高
-    public static final int HIGH = 3;
+    public static final int HIGH = 5;
     // 普通
-    public static final int NORMAL = 4;
+    public static final int STANDARD = 6;
 
     // 当前音质
     public static int quality = SUPER;
     public static final String[] NAMES = {
+            I18n.getText("master"),
+            I18n.getText("atmosphere"),
             I18n.getText("hiRes"),
             I18n.getText("lossless"),
             I18n.getText("super"),
             I18n.getText("high"),
-            I18n.getText("normal")
+            I18n.getText("standard")
     };
 
     // Hi-Res

@@ -1,4 +1,4 @@
-package net.doge.constant.core.media;
+package net.doge.constant.core.os;
 
 /**
  * @Author Doge
@@ -20,6 +20,9 @@ public class Format {
     public static final String FLV = "flv";
 
     public static final String[] AUDIO_TYPE_SUPPORTED = {AIF, AIFF, M3U8, M4A, M4V, MP3, MP4, WAV};
+
+    // 歌词文件格式
+    public static final String LRC = "lrc";
 
     // 图片文件格式
     public static final String JPG = "jpg";

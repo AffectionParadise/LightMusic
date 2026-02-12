@@ -1,7 +1,7 @@
 package net.doge.entity.core.player;
 
 import lombok.Data;
-import net.doge.constant.core.media.Format;
+import net.doge.constant.core.os.Format;
 
 import java.awt.image.BufferedImage;
 
