@@ -1,7 +1,5 @@
 package net.doge.sdk.service.mv.info;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.VideoQuality;
@@ -11,6 +9,8 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
@@ -95,8 +95,7 @@ public class MvUrlReq {
                 if (isMlog) {
                     Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                     String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
-                            .executeAsync()
-                            .body();
+                            .executeAsStr();
                     id = JSONObject.parseObject(body).getString("data");
                     mvInfo.setId(id);
                     mvInfo.setType(MvInfoType.VIDEO);
@@ -104,8 +103,7 @@ public class MvUrlReq {
 
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", id, quality), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONArray urls = mvJson.getJSONArray("urls");
                 String url = urls.getJSONObject(0).getString("url");
@@ -136,8 +134,7 @@ public class MvUrlReq {
             else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", id, quality), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvJson = JSONObject.parseObject(mvBody);
                 JSONObject data = mvJson.getJSONObject("data");
                 String url = data.getString("url");
@@ -148,8 +145,7 @@ public class MvUrlReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
             // 高画质优先
             JSONObject mvJson = VideoQuality.quality <= VideoQuality.FHD ? data.getJSONObject("rq") : null;
@@ -185,8 +181,7 @@ public class MvUrlReq {
             String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
                             "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(id);
             JSONArray mp4Array = data.getJSONArray("mp4");
             String quality;
@@ -220,8 +215,7 @@ public class MvUrlReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String mvBody = SdkCommon.kwRequest(String.format(MV_URL_KW_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             if (JsonUtil.notEmpty(data)) return data.getString("url");
         }
@@ -234,8 +228,7 @@ public class MvUrlReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String mvBody = SdkCommon.qiRequest(String.format(MV_URL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");
             JSONArray urlArray = data.getJSONObject(0).getJSONArray("allRate");
             String quality;
@@ -267,8 +260,7 @@ public class MvUrlReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String mvBody = HttpRequest.get(String.format(MV_URL_FS_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray urlArray = JSONObject.parseObject(mvBody).getJSONArray("data");
             String quality;
             String[] qs = {"超清", "高清", "标清"};
@@ -295,8 +287,7 @@ public class MvUrlReq {
         // 好看
         else if (source == NetMusicSource.HK) {
             String mvBody = HttpRequest.get(String.format(MV_URL_HK_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urlArray = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");
             String quality;
@@ -329,8 +320,7 @@ public class MvUrlReq {
             if (StringUtil.isEmpty(id)) {
                 String cidBody = HttpRequest.get(String.format(VIDEO_CID_BI_API, bvId))
                         .cookie(SdkCommon.BI_COOKIE)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 mvInfo.setId(id = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid"));
             }
 
@@ -352,8 +342,7 @@ public class MvUrlReq {
             }
             String mvBody = HttpRequest.get(String.format(VIDEO_URL_BI_API, bvId, id, quality))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urlArray = data.getJSONArray("durl");
             return urlArray.getJSONObject(0).getString("url");
@@ -362,8 +351,7 @@ public class MvUrlReq {
         // 音悦台
         else if (source == NetMusicSource.YY) {
             String mvBody = HttpRequest.get(String.format(MV_URL_YY_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
             JSONArray urlArray = data.getJSONObject("fullClip").getJSONArray("urls");
             for (int i = 0, s = urlArray.size(); i < s; i++) {
@@ -378,8 +366,7 @@ public class MvUrlReq {
         // 发姐
         else if (source == NetMusicSource.FA) {
             String mvBody = HttpRequest.get(String.format(VIDEO_URL_FA_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(mvBody);
             Elements vs = doc.select("video source");
             if (vs.isEmpty()) vs = doc.select("video");
@@ -389,8 +376,7 @@ public class MvUrlReq {
         // 李志
         else if (source == NetMusicSource.LZ) {
             String mvBody = HttpRequest.get(String.format(VIDEO_URL_LZ_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(mvBody);
             Elements video = doc.select("video");
             return UrlUtil.encodeBlank(video.attr("src"));

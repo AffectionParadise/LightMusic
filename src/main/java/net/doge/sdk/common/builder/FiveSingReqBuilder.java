@@ -1,9 +1,8 @@
 package net.doge.sdk.common.builder;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.UrlUtil;
@@ -47,7 +46,7 @@ public class FiveSingReqBuilder {
         // 签名
         params.put("signature", sign(params, data));
         url += "?" + buildRequestParams(params);
-        return HttpUtil.createRequest(method, url)
+        return HttpRequest.createRequest(url, method)
                 .header("dfid", dfid)
                 .header("mid", mid)
                 .header("clienttime", ct)

@@ -1,7 +1,8 @@
 package net.doge.sdk.service.music.info.trackhero.kw;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
 
 import java.util.HashMap;
@@ -30,11 +31,11 @@ public class KwTrackHeroV3 {
     private List<String> subStrBlacklist = new LinkedList<>();
 
     private void initMap() {
-        brMap.put("standard", "128kmp3");
-        brMap.put("hq", "320kmp3");
-        brMap.put("lossless", "2000kflac");
+        brMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "128kmp3");
+        brMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "320kmp3");
+        brMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "2000kflac");
         // 返回的是加密音频
-        brMap.put("hires", "4000kflac");
+        brMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "4000kflac");
     }
 
     private void initBlacklist() {
@@ -50,8 +51,7 @@ public class KwTrackHeroV3 {
      */
     public String getTrackUrl(String mid, String quality) {
         String urlBody = HttpRequest.get(String.format(SONG_URL_KW_API, mid, brMap.get(quality)))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(urlBody).getJSONObject("data");
         if (JsonUtil.isEmpty(urlJson)) return "";
         String trackUrl = urlJson.getString("url");
@@ -62,8 +62,8 @@ public class KwTrackHeroV3 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("228908", "standard"));
-//        System.out.println(getInstance().getTrackUrl("228908", "hq"));
-//        System.out.println(getInstance().getTrackUrl("228908", "lossless"));
+//        System.out.println(getInstance().getTrackUrl("228908", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(getInstance().getTrackUrl("228908", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(getInstance().getTrackUrl("228908", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 }

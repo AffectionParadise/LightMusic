@@ -1,11 +1,10 @@
 package net.doge.sdk.common.builder;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.http.Method;
 import net.doge.sdk.common.crypto.NeteaseCrypto;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptConstants;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.StringUtil;
@@ -110,8 +109,8 @@ public class NeteaseReqBuilder {
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }
-        return HttpUtil.createRequest(method, url)
-                .headerMap(headers, true)
+        return HttpRequest.createRequest(url, method)
+                .headers(headers)
                 .body(body);
     }
 

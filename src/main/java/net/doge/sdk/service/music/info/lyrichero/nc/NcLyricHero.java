@@ -1,6 +1,5 @@
 package net.doge.sdk.service.music.info.lyrichero.nc;
 
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
@@ -8,6 +7,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.JsonUtil;
@@ -37,8 +37,7 @@ public class NcLyricHero {
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/lyric/v1");
         String lyricBody = SdkCommon.ncRequest(Method.POST, LYRIC_API,
                         String.format("{\"id\":\"%s\",\"cp\":false,\"tv\":0,\"lv\":0,\"rv\":0,\"kv\":0,\"yv\":0,\"ytv\":0,\"yrv\":0}", id), options)
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject lyricJson = JSONObject.parseObject(lyricBody);
         JSONObject lrcJson = lyricJson.getJSONObject("lrc");
         JSONObject yrcJson = lyricJson.getJSONObject("yrc");

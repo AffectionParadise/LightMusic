@@ -33,11 +33,11 @@
 //        qualityMap.put("ancient", "magic_ancient");
 //        qualityMap.put("dj", "magic_dj");
 //        qualityMap.put("surnay", "magic_surnay");
-//        qualityMap.put("standard", "128");
-//        qualityMap.put("hq", "320");
-//        qualityMap.put("lossless", "flac");
-//        qualityMap.put("hires", "high");
-//        qualityMap.put("master", "viper_atmos");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "128");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "320");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "flac");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "high");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "viper_atmos");
 //    }
 //
 //    /**
@@ -76,6 +76,6 @@
 //    }
 //
 /// /    public static void main(String[] args) {
-/// /        System.out.println(getInstance().getTrackUrl("CAD5C392FA6E6BFC2F76F5905BC027ED", "standard"));
+/// /        System.out.println(getInstance().getTrackUrl("CAD5C392FA6E6BFC2F76F5905BC027ED", AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.STANDARD]));
 /// /    }
 //}

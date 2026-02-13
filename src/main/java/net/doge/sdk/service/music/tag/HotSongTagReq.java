@@ -1,6 +1,5 @@
 package net.doge.sdk.service.music.tag;
 
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -11,6 +10,7 @@ import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 
@@ -86,8 +86,7 @@ public class HotSongTagReq {
         Runnable initHotSongTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -132,8 +131,7 @@ public class HotSongTagReq {
             long ct = System.currentTimeMillis() / 1000;
             String dat = String.format("{\"platform\":\"android\",\"clienttime\":%s,\"userid\":0,\"module_id\":508}", ct);
             String tagBody = SdkCommon.kgRequest(null, dat, options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("all_theme_detail_list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -154,8 +152,7 @@ public class HotSongTagReq {
                     ct, KugouReqBuilder.mid, KugouReqBuilder.clientver, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct), KugouReqBuilder.appid);
             String tagBody = SdkCommon.kgRequest(null, dat, options)
                     .header("x-router", "fm.service.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray classList = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("class_list");
             for (int i = 0, len = classList.size(); i < len; i++) {
                 JSONArray fmList = classList.getJSONObject(i).getJSONArray("fmlist");
@@ -176,8 +173,7 @@ public class HotSongTagReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
             String tagBody = SdkCommon.kgRequest(null, null, options)
                     .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);

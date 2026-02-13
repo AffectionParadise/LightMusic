@@ -1,7 +1,5 @@
 package net.doge.sdk.service.music.rcmd;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +10,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.RegexUtil;
@@ -75,8 +75,7 @@ public class RecommendProgramReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PROGRAM_API, "{\"cateId\":\"\",\"offset\":0,\"limit\":10}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("programs");
             t = programArray.size();
@@ -116,8 +115,7 @@ public class RecommendProgramReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_PROGRAM_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("result");
             t = programArray.size();
@@ -157,8 +155,7 @@ public class RecommendProgramReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_24_HOURS_TOPLIST_API, "{\"limit\":100}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONObject("data").getJSONArray("list");
             t = programArray.size();
@@ -198,8 +195,7 @@ public class RecommendProgramReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_TOPLIST_API, "{\"offset\":0,\"limit\":200}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONArray programArray = programInfoJson.getJSONArray("toplist");
             t = programArray.size();
@@ -240,8 +236,7 @@ public class RecommendProgramReq {
             Integer t = 0;
 
             String programInfoBody = HttpRequest.get(REC_PROGRAM_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
             JSONObject info = programInfoJson.getJSONObject("info");
             // 轮播图
@@ -287,8 +282,7 @@ public class RecommendProgramReq {
 
             if (StringUtil.notEmpty(s[0])) {
                 String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, s[0], page, Math.min(limit, 20)))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
                 t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
@@ -323,8 +317,7 @@ public class RecommendProgramReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
                 t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
@@ -354,8 +347,7 @@ public class RecommendProgramReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(programInfoBody);
                 String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
                 t = StringUtil.isEmpty(ts) ? limit : Integer.parseInt(ts) * limit;
@@ -385,8 +377,7 @@ public class RecommendProgramReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(programInfoBody);
                 Elements boxes = doc.select(".vw-weibo-title.floatleft a");
                 boxes.addAll(doc.select(".vw-right-content.floatleft a"));

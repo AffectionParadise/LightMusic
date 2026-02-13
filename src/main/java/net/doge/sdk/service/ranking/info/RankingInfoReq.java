@@ -1,6 +1,5 @@
 package net.doge.sdk.service.ranking.info;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +11,7 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.JsonUtil;
@@ -78,8 +78,7 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("detail").getJSONObject("data").getJSONObject("data");
 
@@ -96,8 +95,7 @@ public class RankingInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
 
@@ -117,8 +115,7 @@ public class RankingInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info").getJSONObject("album");
 
@@ -144,8 +141,7 @@ public class RankingInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KG_API, id, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
             total = data.getIntValue("total");
@@ -191,8 +187,7 @@ public class RankingInfoReq {
             String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1000))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("detail").getJSONObject("data");
             total = data.getJSONObject("data").getIntValue("totalNum");
@@ -270,8 +265,7 @@ public class RankingInfoReq {
 //            }
 
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KW_API, id, page - 1, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(rankingInfoBody);
             total = data.getIntValue("num");
             JSONArray songArray = data.getJSONArray("musiclist");
@@ -312,8 +306,7 @@ public class RankingInfoReq {
         // 咪咕(程序分页)
         else if (source == NetMusicSource.MG) {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
             total = data.getIntValue("contentsCount");
@@ -359,8 +352,7 @@ public class RankingInfoReq {
         // 千千(程序分页)
         else if (source == NetMusicSource.QI) {
             String rankingInfoBody = SdkCommon.qiRequest(String.format(RANKING_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
             total = data.getIntValue("total");
@@ -399,8 +391,7 @@ public class RankingInfoReq {
         // 猫耳(程序分页)
         else if (source == NetMusicSource.ME) {
             String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("info");
             JSONArray songArray = data.getJSONArray("sounds");

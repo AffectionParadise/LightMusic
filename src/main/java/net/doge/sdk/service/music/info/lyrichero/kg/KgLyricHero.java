@@ -1,12 +1,12 @@
 package net.doge.sdk.service.music.info.lyrichero.kg;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.*;
 
 import java.nio.charset.StandardCharsets;
@@ -39,8 +39,7 @@ public class KgLyricHero {
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
-                .executeAsync()
-                .body();
+                .executeAsStr();
         // 部分响应体 json 格式有误，直接用正则表达式提取
         if (JsonUtil.isValidObject(lBody)) {
             JSONObject data = JSONObject.parseObject(lBody);
@@ -60,8 +59,7 @@ public class KgLyricHero {
                 .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject lyricData = JSONObject.parseObject(lyricBody);
         String content = lyricData.getString("content");
         if (StringUtil.isEmpty(content)) return;

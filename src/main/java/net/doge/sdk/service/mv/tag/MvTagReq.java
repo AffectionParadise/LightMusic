@@ -1,6 +1,5 @@
 package net.doge.sdk.service.mv.tag;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -8,6 +7,7 @@ import net.doge.constant.core.data.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import org.jsoup.Jsoup;
@@ -259,8 +259,7 @@ public class MvTagReq {
         // MV 标签
         Runnable initMvTagKg = () -> {
             String mvTagBody = HttpRequest.get(MV_TAG_KG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
             JSONArray tags = mvTagJson.getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -278,8 +277,7 @@ public class MvTagReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
             String tagBody = SdkCommon.kgRequest(null, null, options)
                     .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -297,8 +295,7 @@ public class MvTagReq {
         Runnable initMvTagQq = () -> {
             String mvTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
             JSONArray tags = mvTagJson.getJSONObject("mv_tag").getJSONObject("data").getJSONArray("version");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -318,8 +315,7 @@ public class MvTagReq {
         // 视频标签
         Runnable initVideoTagFa = () -> {
             String mvTagBody = HttpRequest.get(VIDEO_TAG_FA_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(mvTagBody);
             Elements tags = doc.select(".filter-item .filter a");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -336,8 +332,7 @@ public class MvTagReq {
         // 直播标签
         Runnable initLiveTagFa = () -> {
             String mvTagBody = HttpRequest.get(LIVE_TAG_FA_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(mvTagBody);
             Elements tags = doc.select(".filter-item .filter a");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -355,8 +350,7 @@ public class MvTagReq {
         // 李志
         Runnable initVideoTagLz = () -> {
             String mvTagBody = HttpRequest.get(VIDEO_TAG_LZ_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(mvTagBody);
             Elements tags = doc.select(".zaxu-friendly-link-content");
             for (int i = 0, len = tags.size(); i < len; i++) {

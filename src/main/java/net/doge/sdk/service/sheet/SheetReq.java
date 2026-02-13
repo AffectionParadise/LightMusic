@@ -1,6 +1,5 @@
 package net.doge.sdk.service.sheet;
 
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +11,7 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 
 import java.awt.image.BufferedImage;
@@ -47,8 +47,7 @@ public class SheetReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
             JSONObject data = sheetInfoJson.getJSONObject("data");
             JSONArray sheetArray = data.getJSONArray("musicSheetSimpleInfoVOS");
@@ -102,8 +101,7 @@ public class SheetReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api//music/sheet/preview/info");
             String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_API, id), String.format("{\"id\":\"%s\"}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);
             JSONArray imgArray = imgInfoJson.getJSONArray("data");
             total = imgArray.size();

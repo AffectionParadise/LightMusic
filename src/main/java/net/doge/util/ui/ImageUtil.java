@@ -2,13 +2,13 @@ package net.doge.util.ui;
 
 import cn.hutool.core.img.ImgUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.http.HttpRequest;
 import com.jhlabs.image.*;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.LogUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.quantizer.MMCQ;
@@ -94,8 +94,8 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage read(InputStream in) {
-        try {
-            return Thumbnails.of(in).scale(1).asBufferedImage();
+        try (InputStream input = in) {
+            return Thumbnails.of(input).scale(1).asBufferedImage();
         } catch (Exception e) {
             return null;
         }
@@ -108,7 +108,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage readWebp(String imgUrl) {
-        try {
+        try (InputStream in = getImgStream(imgUrl)) {
             // Obtain a WebP ImageReader instance
             ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
 
@@ -119,7 +119,7 @@ public class ImageUtil {
             // Configure the input on the ImageReader
             reader.setInput(
                     // 读取网络流用 MemoryCacheImageInputStream
-                    new MemoryCacheImageInputStream(getImgStream(imgUrl))
+                    new MemoryCacheImageInputStream(in)
             );
 
             // Decode the image
@@ -150,10 +150,8 @@ public class ImageUtil {
     public static InputStream getImgStream(String imgUrl) {
         try {
             return HttpRequest.get(imgUrl)
-                    .setFollowRedirects(true)
-                    .setReadTimeout(20000)
-                    .executeAsync()
-                    .bodyStream();
+                    .timeout(20)
+                    .executeAsStream();
         } catch (Exception e) {
             return null;
         }
@@ -178,8 +176,8 @@ public class ImageUtil {
      * @return
      */
     public static void toFile(String imgUrl, File outputFile) {
-        try {
-            Thumbnails.of(getImgStream(imgUrl)).scale(1).toFile(outputFile);
+        try (InputStream in = getImgStream(imgUrl)) {
+            Thumbnails.of(in).scale(1).toFile(outputFile);
         } catch (Exception e) {
             LogUtil.error(e);
         }

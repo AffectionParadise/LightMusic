@@ -1,7 +1,5 @@
 package net.doge.sdk.service.radio.rcmd;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +10,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.HtmlUtil;
 
@@ -67,8 +67,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, NEW_RADIO_API, "{\"type\":0,\"offset\":0,\"limit\":200}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("toplist");
             t = radioArray.size();
@@ -112,8 +111,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_RADIO_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("result");
             t = radioArray.size();
@@ -159,8 +157,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");
             t = radioArray.size();
@@ -204,8 +201,7 @@ public class NewRadioReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_RADIO_API, "{\"limit\":100}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
             t = radioArray.size();
@@ -247,8 +243,7 @@ public class NewRadioReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_API,
                             String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");
             t = radioArray.size();
@@ -292,8 +287,7 @@ public class NewRadioReq {
                     .body("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":99,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("radiolist").getJSONObject("data");
             JSONArray radioList = data.getJSONArray("radio_list");
@@ -336,8 +330,7 @@ public class NewRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(REC_RADIO_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
             t = radioArray.size();
@@ -372,8 +365,7 @@ public class NewRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.get(SUMMER_RADIO_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("info");
             for (int i = 0, len = radioArray.size(); i < len; i++) {

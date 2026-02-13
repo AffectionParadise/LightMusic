@@ -1,6 +1,5 @@
 package net.doge.ui.widget.dialog;
 
-import cn.hutool.http.HttpRequest;
 import lombok.Getter;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
@@ -11,6 +10,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.exception.InvalidPackageFileException;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.core.layout.HDFlowLayout;
@@ -129,7 +129,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         String dest = SimplePath.TEMP_PATH + SoftInfo.PACKAGE_FILE_NAME;
         File packageFile = new File(dest);
         try {
-            String releaseBody = HttpRequest.get(SoftInfo.RELEASE_ASSET).executeAsync().body();
+            String releaseBody = HttpRequest.get(SoftInfo.RELEASE_ASSET).executeAsStr();
             Document doc = Jsoup.parse(releaseBody);
             Element a = doc.select("li a").first();
             String url = "https://github.com" + a.attr("href");

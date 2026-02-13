@@ -1,9 +1,9 @@
 package net.doge.util.core;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.listener.DownloadListener;
 
 import java.io.*;
@@ -49,10 +49,9 @@ public class NetUtil {
     public static void download(String url, String dest, Map<String, String> headers, DownloadListener listener) throws Exception {
         HttpResponse resp = HttpRequest.get(url)
                 .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                .headerMap(headers, true)
-                .setFollowRedirects(true)
+                .headers(headers)
                 // 注意这里是异步执行，否则会等待流中数据全部初始化才继续
-                .executeAsync();
+                .execute();
         try (InputStream in = new BufferedInputStream(resp.bodyStream());
              OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
             // 以流的形式下载文件

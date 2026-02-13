@@ -1,7 +1,5 @@
 package net.doge.sdk.service.album.info;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -16,6 +14,8 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -95,8 +95,7 @@ public class AlbumInfoReq {
             if (source == NetMusicSource.NC) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject albumJson = albumInfoJson.getJSONObject("album");
 
@@ -127,8 +126,7 @@ public class AlbumInfoReq {
             // 酷狗
             else if (source == NetMusicSource.KG) {
                 String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KG_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -160,8 +158,7 @@ public class AlbumInfoReq {
             // QQ
             else if (source == NetMusicSource.QQ) {
                 String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -193,8 +190,7 @@ public class AlbumInfoReq {
             // 酷我
             else if (source == NetMusicSource.KW) {
                 String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, 1, 1))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -226,9 +222,7 @@ public class AlbumInfoReq {
             // 咪咕
             else if (source == NetMusicSource.MG) {
                 String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, id, 1))
-                        .setFollowRedirects(true)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(albumInfoBody);
                 Elements as = doc.select(".singer-name > a");
 
@@ -264,8 +258,7 @@ public class AlbumInfoReq {
             // 千千
             else if (source == NetMusicSource.QI) {
                 String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -312,8 +305,7 @@ public class AlbumInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject albumJson = albumInfoJson.getJSONObject("album");
 
@@ -331,8 +323,7 @@ public class AlbumInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
 
@@ -347,8 +338,7 @@ public class AlbumInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
 
@@ -364,8 +354,7 @@ public class AlbumInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, 1, 1))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
 
@@ -384,9 +373,7 @@ public class AlbumInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, id, 1))
-                    .setFollowRedirects(true)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
 
             String coverImgUrl = "https:" + doc.select(".mad-album-info .thumb-img").attr("src");
@@ -400,8 +387,7 @@ public class AlbumInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -423,8 +409,7 @@ public class AlbumInfoReq {
         // 豆瓣
         else if (source == NetMusicSource.DB) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_DB_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
             Element re = doc.select("#link-report").first();
@@ -441,8 +426,7 @@ public class AlbumInfoReq {
         // 堆糖
         else if (source == NetMusicSource.DT) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_DT_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject albumJson = albumInfoJson.getJSONObject("data");
 
@@ -460,8 +444,7 @@ public class AlbumInfoReq {
         // 李志
         else if (source == NetMusicSource.LZ) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_LZ_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Element tc = doc.select(".zaxu-alert-tips-content").first();
 
@@ -486,8 +469,7 @@ public class AlbumInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_API, id), "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray songArray = albumInfoJson.getJSONArray("songs");
             total = songArray.size();
@@ -571,8 +553,7 @@ public class AlbumInfoReq {
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .header("x-router", "openapi.kugou.com")
                     .header("kg-tid", "255")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             total = data.getIntValue("total");
@@ -621,8 +602,7 @@ public class AlbumInfoReq {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"comm\":{\"ct\":24,\"cv\":10000},\"albumSonglist\":{\"method\":\"GetAlbumSongList\",\"param\":" +
                             "{\"albumMid\":\"%s\",\"albumID\":0,\"begin\":0,\"num\":999,\"order\":2},\"module\":\"music.musichallAlbum.AlbumSongList\"}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("albumSonglist").getJSONObject("data");
             total = data.getIntValue("totalNum");
@@ -665,8 +645,7 @@ public class AlbumInfoReq {
         // 酷我 (接口分页)
         else if (source == NetMusicSource.KW) {
             String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             total = data.getIntValue("total");
@@ -705,9 +684,7 @@ public class AlbumInfoReq {
         // 咪咕 (程序分页)
         else if (source == NetMusicSource.MG) {
             String musicInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, id, page))
-                    .setFollowRedirects(true)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements pageElem = doc.select(".page *");
             total = !pageElem.isEmpty() ? Integer.parseInt(pageElem.get(pageElem.size() - 2).text()) * limit : limit;
@@ -753,7 +730,6 @@ public class AlbumInfoReq {
             }
             // 部分专辑返回数据为空，停用
 //            String albumInfoBody = HttpRequest.get(String.format(ALBUM_SONGS_MG_API, id))
-//                    .setFollowRedirects(true)
 //                    .executeAsync()
 //                    .body();
 //            JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -789,8 +765,7 @@ public class AlbumInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             JSONArray songArray = data.getJSONArray("trackList");
@@ -829,16 +804,14 @@ public class AlbumInfoReq {
         // 李志
         else if (source == NetMusicSource.LZ) {
             String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_LZ_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements ai = doc.select(".audioigniter-root");
             String aid = RegexUtil.getGroup1("audioigniter-(\\d+)", ai.attr("id"));
 
             if (StringUtil.notEmpty(aid)) {
                 String albumSongBody = HttpRequest.get(String.format(ALBUM_SONGS_LZ_API, aid))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONArray songArray = JSONArray.parseArray(albumSongBody);
                 total = songArray.size();
                 // 获取专辑歌曲同时填充专辑歌曲数
@@ -880,8 +853,7 @@ public class AlbumInfoReq {
 
         if (source == NetMusicSource.DT) {
             String imgInfoBody = HttpRequest.get(String.format(GET_ALBUMS_IMG_DT_API, id, cursor, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(imgInfoBody).getJSONObject("data");
             JSONArray imgs = data.getJSONArray("object_list");
             cursor = data.getString("after");

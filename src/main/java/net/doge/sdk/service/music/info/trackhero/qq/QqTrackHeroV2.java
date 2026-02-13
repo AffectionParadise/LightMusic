@@ -1,10 +1,11 @@
 package net.doge.sdk.service.music.info.trackhero.qq;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.trackhero.qq.entity.QQualityEntry;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
 
@@ -33,14 +34,14 @@ public class QqTrackHeroV2 {
     private Map<String, QQualityEntry> fnMap = new HashMap<>();
 
     private void initMap() {
-        fnMap.put("standard", new QQualityEntry("M500", ".mp3"));
-        fnMap.put("hq", new QQualityEntry("M800", ".mp3"));
-        fnMap.put("super", new QQualityEntry("M800", ".mp3"));
-        fnMap.put("lossless", new QQualityEntry("F000", ".flac"));
-        fnMap.put("hires", new QQualityEntry("RS01", ".flac"));
-        fnMap.put("atmosphere", new QQualityEntry("Q000", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], new QQualityEntry("M500", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.HIGH], new QQualityEntry("M800", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.SUPER], new QQualityEntry("M800", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], new QQualityEntry("F000", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], new QQualityEntry("RS01", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], new QQualityEntry("Q000", ".flac"));
         fnMap.put("atmosphere_plus", new QQualityEntry("Q001", ".flac"));
-        fnMap.put("master", new QQualityEntry("AI00", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.MASTER], new QQualityEntry("AI00", ".flac"));
         fnMap.put("nac", new QQualityEntry("TL01", ".nac"));
         fnMap.put("dts", new QQualityEntry("DT03", ".mp4"));
     }
@@ -64,8 +65,7 @@ public class QqTrackHeroV2 {
                 "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);
         String infoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                 .body(infoReqBody)
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject infoBodyJson = JSONObject.parseObject(infoBody);
         if (infoBodyJson.getIntValue("code") != 0 || infoBodyJson.getJSONObject("req").getIntValue("code") != 0)
             return "";
@@ -79,8 +79,7 @@ public class QqTrackHeroV2 {
                 qualityEntry.getPrefix() + mediaMid + qualityEntry.getSuffix(), guid, mid, uin, loginuin, qqmusic_key);
         String urlBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                 .body(reqBody)
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(urlBody);
         JSONObject data = urlJson.getJSONObject("req").getJSONObject("data");
         if (JsonUtil.isEmpty(data)) return "";
@@ -93,8 +92,8 @@ public class QqTrackHeroV2 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "standard"));
-//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", "hq"));
-//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", "lossless"));
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 }

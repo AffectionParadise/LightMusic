@@ -1,9 +1,5 @@
 package net.doge.sdk.service.album.rcmd;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -18,6 +14,10 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
@@ -116,8 +116,7 @@ public class NewAlbumReq {
                                 String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
                                         s[0], TimeUtil.currYear(), TimeUtil.currMonth()),
                                 options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONArray("weekData");
                 JSONArray monthData = albumInfoJson.getJSONArray("monthData");
@@ -205,8 +204,7 @@ public class NewAlbumReq {
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_API,
                                 String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[0], (page - 1) * limit, limit),
                                 options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 t = albumInfoJson.getIntValue("total");
                 JSONArray albumArray = albumInfoJson.getJSONArray("albums");
@@ -246,8 +244,7 @@ public class NewAlbumReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_ALBUM_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("albums");
             t = albumArray.size();
@@ -287,8 +284,7 @@ public class NewAlbumReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_DI_ALBUM_API,
                             "{\"area\":\"ALL\",\"offset\":0,\"limit\":200,\"total\":true,\"type\":\"\"}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("products");
             t = albumArray.size();
@@ -326,8 +322,7 @@ public class NewAlbumReq {
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_API,
                                 String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit),
                                 options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONArray("albumProducts");
                 t = albumInfoJson.getBooleanValue("hasNextPage") ? page * limit + 1 : page * limit;
@@ -363,8 +358,7 @@ public class NewAlbumReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
                 JSONArray albumArray = data.getJSONArray("albums");
@@ -409,8 +403,7 @@ public class NewAlbumReq {
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
                 String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KugouReqBuilder.apiver, page, limit);
                 String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
                 JSONArray albumArray = data.getJSONArray(s[3]);
@@ -454,8 +447,7 @@ public class NewAlbumReq {
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ALBUM_KG_API);
                 String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
                 String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 t = albumInfoJson.getIntValue("total");
                 JSONArray albumArray = albumInfoJson.getJSONArray("data");
@@ -496,8 +488,7 @@ public class NewAlbumReq {
                 String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"comm\":{\"ct\":24},\"new_album\":{\"module\":\"newalbum.NewAlbumServer\",\"method\":\"get_new_album_info\"," +
                                 "\"param\":{\"area\":%s,\"sin\":0,\"num\":100}}}", s[5]))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONArray albumArray = albumInfoJson.getJSONObject("new_album").getJSONObject("data").getJSONArray("albums");
                 t = albumArray.size();
@@ -540,9 +531,7 @@ public class NewAlbumReq {
 
             String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_MG_API, page - 1, limit))
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .setFollowRedirects(true)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("result");
             t = data.getIntValue("totalCount");
@@ -583,8 +572,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(NEW_ALBUM_RANKING_MG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("columnInfo");
             t = data.getIntValue("contentsCount");
@@ -626,8 +614,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             String albumInfoBody = SdkCommon.qiRequest(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray dataArray = albumInfoJson.getJSONArray("data");
             JSONObject data = dataArray.getJSONObject(4);
@@ -673,8 +660,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             String albumInfoBody = SdkCommon.qiRequest(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -713,8 +699,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             String albumInfoBody = SdkCommon.qiRequest(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -754,7 +739,7 @@ public class NewAlbumReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(REC_ALBUM_DT_API, (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
+            HttpResponse resp = HttpRequest.get(String.format(REC_ALBUM_DT_API, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
@@ -797,7 +782,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
-                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[7], (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
+                HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[7], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
@@ -844,8 +829,7 @@ public class NewAlbumReq {
             final int rn = 25;
 
             String albumInfoBody = HttpRequest.get(String.format(TOP_ALBUM_DB_API, (page - 1) * rn))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements as = doc.select("tr.item");
             t -= 250 / rn * 5;
@@ -885,8 +869,7 @@ public class NewAlbumReq {
 
             if (StringUtil.notEmpty(s[6])) {
                 String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[6], (page - 1) * limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(albumInfoBody);
                 Elements as = doc.select("tr.item");
                 Element te = doc.select(".paginator > a").last();
@@ -929,8 +912,7 @@ public class NewAlbumReq {
             Integer t = 0;
 
             String albumInfoBody = HttpRequest.get(ALBUM_LZ_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements albums = doc.select(".wp-block-image");
             t = albums.size();

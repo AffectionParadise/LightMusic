@@ -23,15 +23,15 @@
 //    private Map<String, String> hMap = new HashMap<>();
 //
 //    private void initMap() {
-//        eMap.put("standard", "mp3");
-//        eMap.put("hq", "mp3");
-//        eMap.put("lossless", "flac");
-//        eMap.put("hires", "flac");
+//        eMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "mp3");
+//        eMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "mp3");
+//        eMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "flac");
+//        eMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "flac");
 //
-//        hMap.put("standard", "128k");
-//        hMap.put("hq", "320k");
-//        hMap.put("lossless", "2000k");
-//        hMap.put("hires", "4000k");
+//        hMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "128k");
+//        hMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "320k");
+//        hMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "2000k");
+//        hMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "4000k");
 //    }
 //
 //    /**
@@ -56,6 +56,6 @@
 //    }
 //
 /// /    public static void main(String[] args) {
-/// /        System.out.println(getInstance().getTrackUrl("228908", "lossless"));
+/// /        System.out.println(getInstance().getTrackUrl("228908", AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.LOSSLESS]));
 /// /    }
 //}

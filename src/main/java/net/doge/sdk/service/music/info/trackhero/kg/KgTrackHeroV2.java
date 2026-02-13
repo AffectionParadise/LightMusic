@@ -2,6 +2,7 @@ package net.doge.sdk.service.music.info.trackhero.kg;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
@@ -35,11 +36,11 @@ public class KgTrackHeroV2 {
         qualityMap.put("ancient", "magic_ancient");
         qualityMap.put("dj", "magic_dj");
         qualityMap.put("surnay", "magic_surnay");
-        qualityMap.put("standard", "128");
-        qualityMap.put("hq", "320");
-        qualityMap.put("lossless", "flac");
-        qualityMap.put("hires", "high");
-        qualityMap.put("master", "viper_atmos");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "128");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "320");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "flac");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "high");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], "viper_atmos");
     }
 
     /**
@@ -53,8 +54,8 @@ public class KgTrackHeroV2 {
      *                ancient：手机端魔法音乐 尤克里里
      *                dj：手机端魔法音乐 DJ
      *                surnay：手机端魔法音乐 唢呐
-     *                standard hq flac hires
-     *                master：蝰蛇全景声
+     *                standard hq lossless hires
+     *                atmosphere：蝰蛇全景声
      *                )
      * @return
      */
@@ -82,8 +83,7 @@ public class KgTrackHeroV2 {
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey(SONG_URL_KG_API);
         String respBody = SdkCommon.kgRequest(params, null, options)
                 .header("x-router", "trackercdn.kugou.com")
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(respBody);
         JSONArray urlArray = urlJson.getJSONArray("url");
         if (JsonUtil.notEmpty(urlArray)) return urlArray.getString(0);
@@ -91,6 +91,6 @@ public class KgTrackHeroV2 {
     }
 
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "standard"));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
 //    }
 }

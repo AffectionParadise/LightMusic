@@ -1,12 +1,12 @@
 package net.doge.sdk.service.music.info.lyrichero.qq;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.lyrichero.qq.decoder.QrcDecoder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
@@ -80,14 +80,12 @@ public class QqLyricHero {
         // 先根据 mid 获取 id
         String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                 .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", mid))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         String id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
         // 获取歌词
         String lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         Document doc = Jsoup.parse(lyricBody.replaceAll("(<!--)|(-->)", ""));
         String lyricHex = doc.select("content").text();
         String transHex = doc.select("contentts").text();
@@ -98,8 +96,7 @@ public class QqLyricHero {
         if (StringUtil.isEmpty(qrcXml) && StringUtil.notEmpty(lyricHex)) {
             lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API_2, mid))
                     .header(Header.REFERER, "https://y.qq.com/portal/player.html")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject lyricJson = JSONObject.parseObject(lyricBody);
             String lyric = lyricJson.getString("lyric");
             String trans = lyricJson.getString("trans");

@@ -1,6 +1,5 @@
 package net.doge.sdk.service.album.search;
 
-import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -13,9 +12,12 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
-import net.doge.util.core.HtmlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -81,8 +83,7 @@ public class AlbumSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":10,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject result = albumInfoJson.getJSONObject("result");
             JSONArray albumArray = result.getJSONArray("albums");
@@ -165,8 +166,7 @@ public class AlbumSearchReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
             String albumInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -207,8 +207,7 @@ public class AlbumSearchReq {
 
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 2))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -247,8 +246,8 @@ public class AlbumSearchReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).execute();
+            if (resp.isSuccessful()) {
                 String albumInfoBody = resp.body();
                 JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
                 JSONObject data = albumInfoJson.getJSONObject("data");
@@ -289,8 +288,7 @@ public class AlbumSearchReq {
 
             String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_MG_API, encodedKeyword, page, limit))
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             t = albumInfoJson.getIntValue("pgt");
             JSONArray albumArray = albumInfoJson.getJSONArray("albums");
@@ -367,7 +365,7 @@ public class AlbumSearchReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_ALBUM_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)).executeAsync();
+            HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_ALBUM_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)).execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
@@ -411,8 +409,7 @@ public class AlbumSearchReq {
 
             final int lim = Math.min(20, limit);
             String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * lim))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(albumArray)) {
@@ -479,7 +476,7 @@ public class AlbumSearchReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
+            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
@@ -518,7 +515,7 @@ public class AlbumSearchReq {
             List<NetAlbumInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API_2, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).executeAsync();
+            HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API_2, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");

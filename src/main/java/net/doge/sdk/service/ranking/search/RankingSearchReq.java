@@ -1,9 +1,5 @@
 package net.doge.sdk.service.ranking.search;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -14,6 +10,9 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
@@ -76,8 +75,7 @@ public class RankingSearchReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String rankingInfoBody = SdkCommon.ncRequest(Method.POST, GET_RANKING_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray rankingArray = rankingInfoJson.getJSONArray("list");
             for (int i = 0, len = rankingArray.size(); i < len; i++) {
@@ -116,8 +114,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_KG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray rankingArray = rankingInfoJson.getJSONObject("data").getJSONArray("info");
             for (int i = 0, len = rankingArray.size(); i < len; i++) {
@@ -154,8 +151,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray group = rankingInfoJson.getJSONObject("topList").getJSONObject("data").getJSONArray("group");
             for (int i = 0, len = group.size(); i < len; i++) {
@@ -193,8 +189,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_QQ_API_2)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray data = rankingInfoJson.getJSONObject("data").getJSONArray("topList");
             for (int i = 0, len = data.size(); i < len; i++) {
@@ -227,8 +222,8 @@ public class RankingSearchReq {
             List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(GET_RANKING_KW_API).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.kwRequest(GET_RANKING_KW_API).execute();
+            if (resp.isSuccessful()) {
                 String rankingInfoBody = resp.body();
                 JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
                 JSONArray data = rankingInfoJson.getJSONArray("data");
@@ -265,8 +260,8 @@ public class RankingSearchReq {
             List<NetRankingInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(GET_RANKING_KW_API_2).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = HttpRequest.get(GET_RANKING_KW_API_2).execute();
+            if (resp.isSuccessful()) {
                 String rankingInfoBody = resp.body();
                 JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
                 JSONArray data = rankingInfoJson.getJSONArray("child");
@@ -303,7 +298,7 @@ public class RankingSearchReq {
 //            HttpResponse resp = kwRequest(GET_REC_RANKING_KW_API)
 //                    .header(Header.REFERER, "https://kuwo.cn/rankList")
 //                    .executeAsync();
-//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//            if (resp.isSuccessful()) {
 //                String rankingInfoBody = resp.body();
 //                JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
 //                JSONArray data = rankingInfoJson.getJSONArray("data");
@@ -340,8 +335,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_MG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONObject data = rankingInfoJson.getJSONObject("data");
             JSONArray contentItemList = data.getJSONArray("contentItemList");
@@ -387,8 +381,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = SdkCommon.qiRequest(String.format(GET_RANKING_QI_API, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray rankingArray = rankingInfoJson.getJSONArray("data");
             for (int i = 0, len = rankingArray.size(); i < len; i++) {
@@ -420,8 +413,7 @@ public class RankingSearchReq {
             Integer t = 0;
 
             String rankingInfoBody = HttpRequest.get(GET_RANKING_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
             JSONArray rankingArray = rankingInfoJson.getJSONArray("info");
             for (int i = 0, len = rankingArray.size(); i < len; i++) {

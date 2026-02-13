@@ -1,8 +1,5 @@
 package net.doge.sdk.service.mv.menu;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -15,6 +12,9 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
 
 import java.awt.image.BufferedImage;
@@ -66,8 +66,7 @@ public class MvMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_MLOG_API,
                             String.format("{\"id\":\"0\",\"type\":2,\"rcmdType\":20,\"limit\":500,\"extInfo\":\"{'songId':'%s'}\"}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("feeds");
             t = mvArray.size();
@@ -110,8 +109,7 @@ public class MvMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
@@ -119,8 +117,7 @@ public class MvMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"video\":{\"module\":\"MvService.MvInfoProServer\"," +
                             "\"method\":\"GetSongRelatedMv\",\"param\":{\"songid\":%s,\"songtype\":1,\"lastmvid\":0,\"num\":10}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("video").getJSONObject("data").getJSONArray("list");
             t = mvArray.size();
@@ -178,8 +175,7 @@ public class MvMenuReq {
                 if (isMlog) {
                     Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                     String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
-                            .executeAsync()
-                            .body();
+                            .executeAsStr();
                     id = JSONObject.parseObject(body).getString("data");
                     netMvInfo.setId(id);
                     netMvInfo.setType(MvInfoType.VIDEO);
@@ -188,8 +184,7 @@ public class MvMenuReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_VIDEO_API,
                                 String.format("{\"id\":\"%s\",\"type\":%s}", id, RegexUtil.test("^\\d+$", id) ? 0 : 1), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
@@ -225,8 +220,7 @@ public class MvMenuReq {
             else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_MV_API, String.format("{\"mvid\":\"%s\"}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("mvs");
                 t = mvArray.size();
@@ -269,8 +263,7 @@ public class MvMenuReq {
                             "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
                             "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
                             "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", id, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("other").getJSONObject("data");
             JSONArray mvArray = data.getJSONArray("list");
             t = mvArray.size();
@@ -309,8 +302,7 @@ public class MvMenuReq {
         else if (source == NetMusicSource.HK) {
             String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_HK_API, name, id))
                     .header(Header.REFERER, String.format("https://haokan.baidu.com/v?vid=%s", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data").getJSONObject("response");
             JSONArray mvArray = data.getJSONArray("videos");
             t = mvArray.size();
@@ -349,8 +341,7 @@ public class MvMenuReq {
         else if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvid))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             t = mvArray.size();
             for (int i = 0, len = mvArray.size(); i < len; i++) {
@@ -406,8 +397,7 @@ public class MvMenuReq {
         if (source == NetMusicSource.BI) {
             String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvid))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
             if (JsonUtil.notEmpty(mvArray)) {
                 t = mvArray.size();

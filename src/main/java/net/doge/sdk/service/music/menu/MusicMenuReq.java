@@ -1,8 +1,5 @@
 package net.doge.sdk.service.music.menu;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -16,6 +13,9 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
@@ -71,8 +71,7 @@ public class MusicMenuReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_SONG_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONArray("songs");
             t = songArray.size();
@@ -115,8 +114,7 @@ public class MusicMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
@@ -124,8 +122,7 @@ public class MusicMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"simsongs\":{\"module\":\"rcmusic.similarSongRadioServer\"," +
                             "\"method\":\"get_simsongs\",\"param\":{\"songid\":%s}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             musicInfoJson = JSONObject.parseObject(musicInfoBody).getJSONObject("simsongs").getJSONObject("data");
             JSONArray songArray = musicInfoJson.getJSONArray("songInfoList");
             t = songArray.size();
@@ -169,8 +166,7 @@ public class MusicMenuReq {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".relate_post a");
             t = songs.size();
@@ -193,8 +189,7 @@ public class MusicMenuReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select("ul.text-middle.break-all li a");
             t = songs.size();
@@ -217,8 +212,7 @@ public class MusicMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
             t = songArray.size();
@@ -256,8 +250,7 @@ public class MusicMenuReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_PLAYLIST_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
             t = playlistArray.size();
@@ -295,8 +288,7 @@ public class MusicMenuReq {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
@@ -304,8 +296,7 @@ public class MusicMenuReq {
                     .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"gedan\":{\"module\":\"music.mb_gedan_recommend_svr\"," +
                             "\"method\":\"get_related_gedan\",\"param\":{\"sin\":0,\"last_id\":0,\"song_type\":1,\"song_id\":%s}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONObject("gedan").getJSONObject("data").getJSONArray("vec_gedan");
             t = playlistArray.size();
@@ -354,8 +345,7 @@ public class MusicMenuReq {
         // 猫耳
         if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(SONG_REC_RADIO_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
             JSONArray radioArray = data.getJSONArray("dramas");

@@ -1,9 +1,5 @@
 package net.doge.sdk.service.mv.search;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -15,6 +11,9 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
 
@@ -73,8 +72,7 @@ public class MvSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1004,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -117,8 +115,7 @@ public class MvSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1014,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject result = mvInfoJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -163,8 +160,7 @@ public class MvSearchReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_KG_API, encodedKeyword, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -257,8 +253,7 @@ public class MvSearchReq {
 
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -300,8 +295,8 @@ public class MvSearchReq {
             List<NetMvInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MV_KW_API, encodedKeyword, page, limit)).execute();
+            if (resp.isSuccessful()) {
                 String mvInfoBody = resp.body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("data");
@@ -345,7 +340,7 @@ public class MvSearchReq {
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_HK_API, encodedKeyword, page, limit))
                     .cookie(SdkCommon.HK_COOKIE)
-                    .executeAsync();
+                    .execute();
             String mvInfoBody = resp.body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
@@ -391,7 +386,7 @@ public class MvSearchReq {
 
             HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_BI_API, encodedKeyword, page))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync();
+                    .execute();
             String mvInfoBody = resp.body();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
@@ -439,8 +434,7 @@ public class MvSearchReq {
                                     "\"requestTagRows\":[{\"key\":\"sortType\",\"chosenTags\":[\"COMPREHENSIVE\"]}," +
                                     "{\"key\":\"source\",\"chosenTags\":[\"-1\"]},{\"key\":\"duration\",\"chosenTags\":[\"-1\"]}]}",
                             keyword, cursor, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
             t = page * limit + 1;

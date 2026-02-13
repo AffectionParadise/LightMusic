@@ -1,6 +1,5 @@
 package net.doge.sdk.service.music.info;
 
-import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -20,6 +19,10 @@ import net.doge.sdk.service.music.info.lyrichero.mg.MgLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.nc.NcLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.qq.QqLyricHero;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
@@ -108,8 +111,7 @@ public class MusicInfoReq {
         if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
 //                    .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
             if (!musicInfo.hasDuration()) musicInfo.setDuration(DurationUtil.toSeconds(data.getString("length")));
         }
@@ -132,8 +134,7 @@ public class MusicInfoReq {
             if (isProgram) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_PROGRAM_DETAIL_API, String.format("{\"id\":\"%s\"}", musicInfo.getProgramId()), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
                 JSONObject dj = songJson.getJSONObject("dj");
 
@@ -154,8 +155,7 @@ public class MusicInfoReq {
             } else {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_SONG_DETAIL_API, String.format("{\"c\":\"[{'id':'%s'}]\"}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");
                 if (JsonUtil.isEmpty(array)) return;
                 JSONObject songJson = array.getJSONObject(0);
@@ -209,8 +209,7 @@ public class MusicInfoReq {
             String songBody = SdkCommon.kgRequest(null, dat, options)
                     .header(Header.CONTENT_TYPE, "application/json")
                     .header("x-router", "media.store.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject songData = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
             JSONObject info = songData.getJSONObject("info");
             // 时长是毫秒，转为秒
@@ -234,8 +233,7 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.QQ) {
             String songBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("songinfo").getJSONObject("data");
             JSONObject trackInfo = data.getJSONObject("track_info");
             JSONObject album = trackInfo.getJSONObject("album");
@@ -263,8 +261,8 @@ public class MusicInfoReq {
 
         // 酷我
         else if (source == NetMusicSource.KW) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SINGLE_SONG_DETAIL_KW_API, id)).executeAsync();
-            if (resp.getStatus() != HttpStatus.HTTP_OK) return;
+            HttpResponse resp = SdkCommon.kwRequest(String.format(SINGLE_SONG_DETAIL_KW_API, id)).execute();
+            if (!resp.isSuccessful()) return;
             String songBody = resp.body();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 
@@ -286,8 +284,7 @@ public class MusicInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
 
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
@@ -309,8 +306,7 @@ public class MusicInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String songBody = SdkCommon.qiRequest(String.format(SINGLE_SONG_DETAIL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 
             if (!musicInfo.hasArtist()) musicInfo.setArtist(SdkUtil.parseArtist(data));
@@ -333,8 +329,7 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("audio:\\[.*?(\\{.*?\\}).*?\\]", doc.html());
             // json 字段带引号
@@ -366,8 +361,7 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
@@ -404,8 +398,7 @@ public class MusicInfoReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, UrlUtil.encodeAll(id.replace("_", "$"))))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
 
             if (!musicInfo.hasArtist()) musicInfo.setArtist(data.getString("nickname"));
@@ -423,8 +416,7 @@ public class MusicInfoReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             JSONObject trackInfo = data.getJSONObject("trackInfo");
             JSONObject albumInfo = data.getJSONObject("albumInfo");
@@ -449,8 +441,7 @@ public class MusicInfoReq {
             // 歌曲信息
             Runnable fillMusicInfo = () -> {
                 String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
                 // 时长是毫秒，转为秒
                 if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration") / 1000);
@@ -468,8 +459,7 @@ public class MusicInfoReq {
             // 专辑信息
             Runnable fillAlbumInfo = () -> {
                 String albumBody = HttpRequest.get(String.format(SONG_ALBUM_DETAIL_ME_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 String infoStr = JSONObject.parseObject(albumBody).getString("info");
                 // 可能是字符串也可能是 json 对象，先判断
                 if (!JsonUtil.isValidObject(infoStr)) return;
@@ -499,10 +489,8 @@ public class MusicInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_BI_API, id))
-                    .setFollowRedirects(true)
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             // 时长是毫秒，转为秒
             if (!musicInfo.hasDuration()) musicInfo.setDuration(data.getDouble("duration"));
@@ -522,16 +510,14 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.FA) {
             // 获取发姐请求参数
             String body = HttpRequest.get(SdkCommon.FA_RADIO_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
             String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FA_API, musicSet, _nonce))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
             JSONObject data = songInfoJson.getJSONObject("msg");
             JSONArray songArray = data.getJSONArray("songs");
@@ -555,8 +541,7 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.LZ) {
             String[] sp = id.split("_");
             String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, sp[0]))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
             JSONObject songJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
             if (!musicInfo.hasAlbumImage()) {
@@ -607,11 +592,10 @@ public class MusicInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             String lyricUrl = urlJson.getJSONObject("data").getString("lyric");
-            musicInfo.setLyric(StringUtil.notEmpty(lyricUrl) ? HttpRequest.get(lyricUrl).executeAsync().body() : "");
+            musicInfo.setLyric(StringUtil.notEmpty(lyricUrl) ? HttpRequest.get(lyricUrl).executeAsStr() : "");
             musicInfo.setTrans("");
             musicInfo.setRoma("");
         }
@@ -621,8 +605,7 @@ public class MusicInfoReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             Elements ps = doc.select("p:not(.text-center)");
             StringBuilder sb = new StringBuilder();
@@ -644,8 +627,7 @@ public class MusicInfoReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             Elements ps = doc.select(".message.break-all p");
             StringBuilder sb = new StringBuilder();
@@ -664,8 +646,7 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.FS) {
             String[] sp = id.split("_");
             String lyricBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject lyricJson = JSONObject.parseObject(lyricBody);
             musicInfo.setLyric(lyricJson.getString("txt"));
             musicInfo.setTrans("");
@@ -675,8 +656,7 @@ public class MusicInfoReq {
         // 猫耳(弹幕)
         else if (source == NetMusicSource.ME) {
             String dmBody = HttpRequest.get(String.format(DM_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(dmBody);
             Elements elements = doc.select("d");
             // 限制弹幕数量，避免引发性能问题
@@ -697,10 +677,8 @@ public class MusicInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String lyricBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
-                    .setFollowRedirects(true)
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject lyricJson = JSONObject.parseObject(lyricBody);
             musicInfo.setLyric(lyricJson.getString("data"));
             musicInfo.setTrans("");
@@ -710,8 +688,7 @@ public class MusicInfoReq {
         // 发姐
         else if (source == NetMusicSource.FA) {
             String lyricBody = HttpRequest.get(String.format(LYRIC_FA_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             musicInfo.setLyric(lyricBody);
             musicInfo.setTrans("");
             musicInfo.setRoma("");
@@ -721,8 +698,7 @@ public class MusicInfoReq {
         else if (source == NetMusicSource.LZ) {
             String[] sp = id.split("_");
             String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, sp[0]))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
             JSONObject lyricJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
             String lyric = lyricJson.getString("lyrics").replace("\r\n", "\n");

@@ -1,7 +1,7 @@
 package net.doge.sdk.service.motto;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.StringUtil;
 
 public class MottoReq {
@@ -25,8 +25,7 @@ public class MottoReq {
      */
     public String getMotto() {
         String mottoBody = HttpRequest.get(MOTTO_API)
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject mottoJson = JSONObject.parseObject(mottoBody);
         String content = mottoJson.getString("hitokoto");
         String from = mottoJson.getString("from");

@@ -1,8 +1,5 @@
 package net.doge.sdk.service.playlist.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -15,6 +12,9 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.JsonUtil;
@@ -72,8 +72,7 @@ public class PlaylistSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1000,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject result = playlistInfoJson.getJSONObject("result");
             if (result.containsKey("playlists")) {
@@ -155,8 +154,7 @@ public class PlaylistSearchReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_PLAYLIST_KG_API);
             String playlistInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -195,8 +193,7 @@ public class PlaylistSearchReq {
 
             String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 3))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -234,7 +231,7 @@ public class PlaylistSearchReq {
             Integer t = 0;
 
 //            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).executeAsync();
-//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//            if (resp.isSuccessful()) {
 //                String playlistInfoBody = resp.body();
 //                JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
 //                JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -266,8 +263,7 @@ public class PlaylistSearchReq {
 //                }
 //            }
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page - 1, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(playlistInfoBody);
             t = data.getIntValue("TOTAL");
             JSONArray playlistArray = data.getJSONArray("abslist");
@@ -306,8 +302,7 @@ public class PlaylistSearchReq {
 
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_MG_API, encodedKeyword, page, limit))
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getIntValue("pgt");
             JSONArray playlistArray = playlistInfoJson.getJSONArray("songLists");
@@ -389,8 +384,7 @@ public class PlaylistSearchReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_FS_API, encodedKeyword, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(playlistInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
             JSONArray playlistArray = data.getJSONArray("list");

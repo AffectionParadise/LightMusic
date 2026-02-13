@@ -1,7 +1,5 @@
 package net.doge.sdk.service.radio.info;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -14,6 +12,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
@@ -90,8 +90,7 @@ public class RadioInfoReq {
             if (source == NetMusicSource.NC) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject radioJson = radioInfoJson.getJSONObject("data");
                 JSONObject djJson = radioJson.getJSONObject("dj");
@@ -126,8 +125,7 @@ public class RadioInfoReq {
             // 喜马拉雅
             else if (source == NetMusicSource.XM) {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject data = radioInfoJson.getJSONObject("data");
                 JSONObject radioJson = data.getJSONObject("albumPageMainInfo");
@@ -160,8 +158,7 @@ public class RadioInfoReq {
             // 猫耳
             else if (source == NetMusicSource.ME) {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject info = radioInfoJson.getJSONObject("info");
                 JSONObject drama = info.getJSONObject("drama");
@@ -219,8 +216,7 @@ public class RadioInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_API, String.format("{\"id\":\"%s\"}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject radioJson = radioInfoJson.getJSONObject("data");
             JSONObject dj = radioJson.getJSONObject("dj");
@@ -253,8 +249,7 @@ public class RadioInfoReq {
             if (!radioInfo.hasTrackCount()) {
                 GlobalExecutors.requestExecutor.execute(() -> {
                     String radioInfoBody = HttpRequest.get(String.format(BRIEF_RADIO_DETAIL_XM_API, id))
-                            .executeAsync()
-                            .body();
+                            .executeAsStr();
                     JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                     JSONObject radioJson = radioInfoJson.getJSONObject("data");
 
@@ -262,8 +257,7 @@ public class RadioInfoReq {
                 });
             }
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject radioJson = radioInfoJson.getJSONObject("data").getJSONObject("albumPageMainInfo");
 
@@ -280,8 +274,7 @@ public class RadioInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject info = radioInfoJson.getJSONObject("info");
             JSONObject drama = info.getJSONObject("drama");
@@ -312,8 +305,7 @@ public class RadioInfoReq {
         else if (source == NetMusicSource.DB) {
             if (isBook) {
                 String radioInfoBody = HttpRequest.get(String.format(BOOK_RADIO_DETAIL_DB_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(radioInfoBody);
                 String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
                 Elements re = doc.select("#link-report");
@@ -333,8 +325,7 @@ public class RadioInfoReq {
                 GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else if (isGame) {
                 String radioInfoBody = HttpRequest.get(String.format(GAME_RADIO_DETAIL_DB_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(radioInfoBody);
                 String info = HtmlUtil.getPrettyText(doc.select("dl.game-attr").first()) + "\n";
                 Element p = doc.select("#link-report p").first();
@@ -347,8 +338,7 @@ public class RadioInfoReq {
                 GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
             } else {
                 String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_DB_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(radioInfoBody);
                 String info = HtmlUtil.getPrettyText(doc.select("#info").first()) + "\n";
                 Elements re = doc.select("#link-report");
@@ -379,8 +369,7 @@ public class RadioInfoReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_PROGRAM_DETAIL_API,
                             String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", id, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             total.set(radioInfoJson.getIntValue("count"));
             JSONArray songArray = radioInfoJson.getJSONArray("programs");
@@ -418,8 +407,7 @@ public class RadioInfoReq {
                     .body(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":%s,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray songArray = radioInfoJson.getJSONObject("songlist").getJSONObject("data").getJSONArray("tracks");
             if (JsonUtil.notEmpty(songArray)) {
@@ -463,8 +451,7 @@ public class RadioInfoReq {
         // 喜马拉雅(接口分页)
         else if (source == NetMusicSource.XM) {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, id, sortType, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
             total.set(data.getIntValue("trackTotalCount"));
@@ -496,8 +483,7 @@ public class RadioInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject info = radioInfoJson.getJSONObject("info");
             // 猫耳的电台可能有多种类型！
@@ -550,8 +536,7 @@ public class RadioInfoReq {
         if (source == NetMusicSource.DB) {
             if (isGame) {
                 String imgInfoBody = HttpRequest.get(String.format(GET_GAME_RADIO_IMG_DB_API, id, (page - 1) * limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(imgInfoBody);
                 Elements imgs = doc.select(".pholist ul img");
                 String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
@@ -563,8 +548,7 @@ public class RadioInfoReq {
                 }
             } else if (!isBook) {
                 String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id, (page - 1) * limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(imgInfoBody);
                 Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
                 String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());
@@ -593,8 +577,7 @@ public class RadioInfoReq {
 
         if (source == NetMusicSource.DB && !isBook) {
             String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_POSTER_DB_API, id, (page - 1) * limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
             String t = RegexUtil.getGroup1("共(\\d+)张", doc.select("span.count").text());

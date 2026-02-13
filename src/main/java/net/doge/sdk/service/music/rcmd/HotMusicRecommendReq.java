@@ -1,8 +1,5 @@
 package net.doge.sdk.service.music.rcmd;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -20,6 +17,9 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.service.ranking.info.RankingInfoReq;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
@@ -114,8 +114,7 @@ public class HotMusicRecommendReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_HOT_SONG_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
                 JSONArray songArray = data.getJSONArray("songs");
@@ -177,8 +176,7 @@ public class HotMusicRecommendReq {
                                 "\"client_playlist\":[],\"u_info\":\"a0c35cd40af564444b5584c2754dedec\"}",
                         KugouReqBuilder.appid, KugouReqBuilder.clientver, ct, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct), KugouReqBuilder.mid);
                 String musicInfoBody = SdkCommon.kgRequest(params, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
                 JSONArray songArray = data.getJSONArray("song_list");
@@ -230,8 +228,7 @@ public class HotMusicRecommendReq {
                 String dat = String.format("{\"platform\":\"android\",\"clienttime\":%s,\"theme_category_id\":\"%s\"," +
                         "\"show_theme_category_id\":0,\"userid\":0,\"module_id\":508}", ct, s[2]);
                 String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("data");
                 JSONArray songArray = data.getJSONArray("song_list");
@@ -288,8 +285,7 @@ public class HotMusicRecommendReq {
                 String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
                         .header(Header.CONTENT_TYPE, "application/json")
                         .header("x-router", "fm.service.kugou.com")
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(0);
                 JSONArray songArray = data.getJSONArray("songs");
@@ -338,8 +334,7 @@ public class HotMusicRecommendReq {
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_SONG_KG_API);
                 String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
                 String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 t = musicInfoJson.getIntValue("total");
                 JSONArray songArray = musicInfoJson.getJSONArray("data");
@@ -491,8 +486,7 @@ public class HotMusicRecommendReq {
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 4, (page - 1) * limit, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("detail").getJSONObject("data");
             t = data.getJSONObject("data").getIntValue("totalNum");
@@ -540,8 +534,7 @@ public class HotMusicRecommendReq {
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 26, (page - 1) * limit, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("detail").getJSONObject("data");
             t = data.getJSONObject("data").getIntValue("totalNum");
@@ -591,7 +584,7 @@ public class HotMusicRecommendReq {
 //            Integer t = 0;
 //
 //            HttpResponse resp = SdkCommon.kwRequest(String.format(UP_MUSIC_KW_API, page, limit)).executeAsync();
-//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//            if (resp.isSuccessful()) {
 //                String musicInfoBody = resp.body();
 //                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
 //                JSONObject data = musicInfoJson.getJSONObject("data");
@@ -639,7 +632,7 @@ public class HotMusicRecommendReq {
 //            Integer t = 0;
 //
 //            HttpResponse resp = SdkCommon.kwRequest(String.format(HOT_MUSIC_KW_API, page, limit)).executeAsync();
-//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//            if (resp.isSuccessful()) {
 //                String musicInfoBody = resp.body();
 //                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
 //                JSONObject data = musicInfoJson.getJSONObject("data");
@@ -726,8 +719,7 @@ public class HotMusicRecommendReq {
                 String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_HF_API, s[5], page))
                         .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                         .cookie(SdkCommon.HF_COOKIE)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
@@ -768,8 +760,7 @@ public class HotMusicRecommendReq {
 
             if (StringUtil.notEmpty(s[6])) {
                 String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_GG_API, s[6], page))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(musicInfoBody);
                 Elements songs = doc.select(".media.thread.tap");
                 Elements ap = doc.select("a.page-link");
@@ -805,8 +796,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SPREAD_YC_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
             if (!songs.isEmpty()) {
@@ -840,8 +830,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SHARE_YC_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
             if (!songs.isEmpty()) {
@@ -875,8 +864,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SPREAD_FC_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
             if (!songs.isEmpty()) {
@@ -910,8 +898,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SHARE_FC_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
             if (!songs.isEmpty()) {
@@ -945,8 +932,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(HOT_BZ_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select("tr");
             if (!songs.isEmpty()) {
@@ -984,8 +970,7 @@ public class HotMusicRecommendReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(RANK_BZ_MUSIC_FS_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select("tr");
             if (!songs.isEmpty()) {
@@ -1025,16 +1010,14 @@ public class HotMusicRecommendReq {
 
             // 获取发姐请求参数
             String body = HttpRequest.get(SdkCommon.FA_RADIO_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
             String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(HOT_MUSIC_FA_API, musicSet, _nonce))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
             JSONObject data = songInfoJson.getJSONObject("msg");
             JSONArray songArray = data.getJSONArray("songs");

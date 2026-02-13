@@ -1,12 +1,15 @@
 package net.doge.sdk.service.music.search;
 
-import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
@@ -62,8 +65,7 @@ public class SearchSuggestionReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SIMPLE_SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject result = searchSuggestionJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -82,8 +84,7 @@ public class SearchSuggestionReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SEARCH_SUGGESTION_API, String.format("{\"s\":\"%s\"}", keyword), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject result = searchSuggestionJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -114,8 +115,7 @@ public class SearchSuggestionReq {
             List<String> r = new LinkedList<>();
 
             String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_KG_API, encodedKeyword))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONArray data = searchSuggestionJson.getJSONArray("data");
             for (int i = 0, len = data.size(); i < len; i++) {
@@ -131,8 +131,7 @@ public class SearchSuggestionReq {
 
             String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_QQ_API, encodedKeyword))
                     .header(Header.REFERER, "https://y.qq.com/portal/player.html")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
             JSONObject data = searchSuggestionJson.getJSONObject("data");
             if (JsonUtil.notEmpty(data)) {
@@ -160,8 +159,8 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSearchSuggestionKw = () -> {
             List<String> r = new LinkedList<>();
 
-            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).execute();
+            if (resp.isSuccessful()) {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {
@@ -175,8 +174,8 @@ public class SearchSuggestionReq {
         Callable<List<String>> getSearchSuggestionQi = () -> {
             List<String> r = new LinkedList<>();
 
-            HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword)).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword)).execute();
+            if (resp.isSuccessful()) {
                 JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
                 JSONArray data = searchSuggestionJson.getJSONArray("data");
                 for (int i = 0, len = data.size(); i < len; i++) {

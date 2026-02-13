@@ -1,7 +1,5 @@
 package net.doge.sdk.service.playlist.tag;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -11,6 +9,8 @@ import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -77,8 +77,7 @@ public class HotPlaylistTagReq {
         Runnable initHighQualityPlaylistTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistTagBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_TAG_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("tags");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -94,8 +93,7 @@ public class HotPlaylistTagReq {
         Runnable initPickedPlaylistTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistTagBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_TAG_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("sub");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -111,8 +109,7 @@ public class HotPlaylistTagReq {
         // 酷狗
         Runnable initHotPlaylistTagKg = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tagIds = playlistTagJson.getJSONObject("data").getJSONObject("tagids");
             final String[] cats = new String[]{"主题", "语种", "风格", "年代", "心情", "场景"};
@@ -134,8 +131,7 @@ public class HotPlaylistTagReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
             String tagBody = SdkCommon.kgRequest(null, null, options)
                     .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -151,8 +147,7 @@ public class HotPlaylistTagReq {
         // QQ
         Runnable initHotPlaylistTagQq = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONObject("tags").getJSONObject("data").getJSONArray("v_group");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -172,8 +167,7 @@ public class HotPlaylistTagReq {
         // 酷我
         Runnable initHotPlaylistTagKw = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KW_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -193,8 +187,7 @@ public class HotPlaylistTagReq {
         // 咪咕
         Runnable initHotPlaylistTagMg = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_MG_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -214,8 +207,7 @@ public class HotPlaylistTagReq {
         // 千千
         Runnable initHotPlaylistTagQi = () -> {
             String playlistTagBody = SdkCommon.qiRequest(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONArray tags = playlistTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -235,8 +227,7 @@ public class HotPlaylistTagReq {
         // 猫耳
         Runnable initHotPlaylistTagMe = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
             JSONObject tags = playlistTagJson.getJSONObject("info");
             final String[] cats = new String[]{"主题", "场景", "情感"};
@@ -256,8 +247,7 @@ public class HotPlaylistTagReq {
         // 猫耳探索
         Runnable initExpPlaylistTagMe = () -> {
             String playlistTagBody = HttpRequest.get(EXP_PLAYLIST_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistTagBody);
 
             Elements tags = doc.select(".explore-tag");
@@ -275,8 +265,7 @@ public class HotPlaylistTagReq {
         // 5sing
         Runnable initHotPlaylistTagFs = () -> {
             String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_FS_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistTagBody);
             Elements tags = doc.select("ul.flx li a");
             for (int i = 0, len = tags.size(); i < len; i++) {

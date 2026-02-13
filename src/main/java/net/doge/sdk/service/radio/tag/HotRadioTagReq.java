@@ -1,7 +1,5 @@
 package net.doge.sdk.service.radio.tag;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -9,6 +7,8 @@ import net.doge.constant.core.data.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
@@ -91,8 +91,7 @@ public class HotRadioTagReq {
         Runnable initHotRadioTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -109,8 +108,7 @@ public class HotRadioTagReq {
         Runnable initRecRadioTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray tags = radioTagJson.getJSONArray("categories");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -128,8 +126,7 @@ public class HotRadioTagReq {
         // 电台分类标签
         Runnable initRadioTagXm = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_XM_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONArray("data");
             for (int i = 0, len = fTags.size(); i < len; i++) {
@@ -161,8 +158,7 @@ public class HotRadioTagReq {
         // 排行榜标签
         Runnable initRankingTagXm = () -> {
             String radioTagBody = HttpRequest.get(RADIO_RANKING_TAG_XM_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONArray fTags = radioTagJson.getJSONObject("data").getJSONArray("clusterType");
             for (int i = 0, len = fTags.size(); i < len; i++) {
@@ -187,8 +183,7 @@ public class HotRadioTagReq {
         // 广播剧标签
         Runnable initRadioTagMe = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
             JSONObject tags = radioTagJson.getJSONObject("info");
             final String[] cats = {"integrity", "age", "tags"};
@@ -214,8 +209,7 @@ public class HotRadioTagReq {
         // 分类电台标签
         Runnable initRadioTagDb = () -> {
             String radioTagBody = HttpRequest.get(RADIO_TAG_DB_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(radioTagBody);
             Elements tags = doc.select(".types span a");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -231,8 +225,7 @@ public class HotRadioTagReq {
         // 分类游戏电台标签
         Runnable initGameRadioTagDb = () -> {
             String radioTagBody = HttpRequest.get(GAME_RADIO_TAG_DB_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(radioTagBody);
             Elements fieldset = doc.select("form.filters fieldset");
             Elements tags = fieldset.first().select("label:not(.is-active)");

@@ -1,8 +1,5 @@
 package net.doge.sdk.service.music.search;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -17,6 +14,9 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
@@ -95,8 +95,7 @@ public class MusicSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject result = musicInfoJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -147,8 +146,7 @@ public class MusicSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1006,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject result = musicInfoJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -211,8 +209,7 @@ public class MusicSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, SEARCH_VOICE_API,
                             String.format("{\"keyword\":\"%s\",\"scene\":\"normal\",\"offset\":%s,\"limit\":%s}", keyword, (page - 1) * lim, lim), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
             int to = data.getIntValue("totalCount");
@@ -295,8 +292,7 @@ public class MusicSearchReq {
 //            }
 
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -443,8 +439,7 @@ public class MusicSearchReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_MUSIC_BY_LYRIC_KG_API);
             String musicInfoBody = SdkCommon.kgRequest(params, null, options)
                     .header("x-router", "complexsearch.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -495,8 +490,7 @@ public class MusicSearchReq {
 
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 0))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -543,8 +537,7 @@ public class MusicSearchReq {
 
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 7))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -594,7 +587,7 @@ public class MusicSearchReq {
 
 //            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).executeAsync();
 //            // 有时候请求会崩，先判断是否请求成功
-//            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+//            if (resp.isSuccessful()) {
 //                String musicInfoBody = resp.body();
 //                JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
 //                JSONObject data = musicInfoJson.getJSONObject("data");
@@ -631,8 +624,7 @@ public class MusicSearchReq {
 //                }
 //            }
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page - 1, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             if (JsonUtil.notEmpty(musicInfoJson)) {
                 t = musicInfoJson.getIntValue("TOTAL");
@@ -763,8 +755,7 @@ public class MusicSearchReq {
             Integer t = 0;
 
             String musicInfoBody = SdkCommon.mgSearchRequest("song", keyword, page, limit)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("songResultData");
             t = data.getIntValue("totalCount");
@@ -819,8 +810,7 @@ public class MusicSearchReq {
             Integer t = 0;
 
             String musicInfoBody = SdkCommon.mgSearchRequest("lyric", keyword, page, limit)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("lyricResultData");
             t = data.getIntValue("totalCount");
@@ -875,8 +865,7 @@ public class MusicSearchReq {
             Integer t = 0;
 
             String musicInfoBody = SdkCommon.qiRequest(String.format(SEARCH_MUSIC_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
             if (JsonUtil.notEmpty(data)) {
@@ -923,8 +912,7 @@ public class MusicSearchReq {
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_HF_API, encodedKeyword.replace("%", "_"), page))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
@@ -964,8 +952,7 @@ public class MusicSearchReq {
 
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_GG_API, encodedKeyword.replace("%", "_"), page))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".media.thread.tap");
             Elements ap = doc.select("a.page-link");
@@ -999,8 +986,7 @@ public class MusicSearchReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_FS_API, encodedKeyword, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(musicInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
             JSONArray songArray = data.getJSONArray("list");
@@ -1033,8 +1019,7 @@ public class MusicSearchReq {
             Integer t = 0;
 
             String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_XM_API, encodedKeyword, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data").getJSONObject("track");
             t = data.getIntValue("total");
@@ -1072,8 +1057,7 @@ public class MusicSearchReq {
 
             if (StringUtil.notEmpty(s[0])) {
                 String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0].trim(), encodedKeyword, page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
                 JSONObject data = musicInfoJson.getJSONObject("info");
                 t = data.getJSONObject("pagination").getIntValue("count");

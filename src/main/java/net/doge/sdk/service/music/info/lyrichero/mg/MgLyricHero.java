@@ -1,10 +1,10 @@
 package net.doge.sdk.service.music.info.lyrichero.mg;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.lyrichero.mg.decoder.MrcDecoder;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.RegexUtil;
@@ -31,13 +31,12 @@ public class MgLyricHero {
         String id = musicInfo.getId();
 
         String songBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
         String mrcUrl = data.getString("mrcUrl");
         // mrc 优先
         if (StringUtil.notEmpty(mrcUrl)) {
-            String mrcStr = HttpRequest.get(mrcUrl).executeAsync().body();
+            String mrcStr = HttpRequest.get(mrcUrl).executeAsStr();
             mrcStr = MrcDecoder.getInstance().decode(mrcStr);
             String[] lsp = mrcStr.split("\n");
             StringBuilder sb = new StringBuilder();
@@ -69,7 +68,7 @@ public class MgLyricHero {
         // lrc
         else {
             String lyricUrl = data.getString("lrcUrl");
-            String lyricStr = HttpRequest.get(lyricUrl).executeAsync().body();
+            String lyricStr = HttpRequest.get(lyricUrl).executeAsStr();
             musicInfo.setLyric(lyricStr);
             musicInfo.setTrans("");
             musicInfo.setRoma("");

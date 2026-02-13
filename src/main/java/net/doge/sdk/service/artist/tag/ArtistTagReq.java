@@ -1,7 +1,5 @@
 package net.doge.sdk.service.artist.tag;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -11,6 +9,8 @@ import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 
@@ -93,8 +93,7 @@ public class ArtistTagReq {
         Runnable initStyleArtistTag = () -> {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject tagJson = JSONObject.parseObject(tagBody);
             JSONArray tags = tagJson.getJSONArray("data");
             for (int i = 0, len = tags.size(); i < len; i++) {
@@ -138,8 +137,7 @@ public class ArtistTagReq {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
             String tagBody = SdkCommon.kgRequest(null, null, options)
                     .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject tag = tags.getJSONObject(i);
@@ -158,8 +156,7 @@ public class ArtistTagReq {
             String artistTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                             "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject artistTagJson = JSONObject.parseObject(artistTagBody);
             JSONObject data = artistTagJson.getJSONObject("singerList").getJSONObject("data").getJSONObject("tags");
             // 流派

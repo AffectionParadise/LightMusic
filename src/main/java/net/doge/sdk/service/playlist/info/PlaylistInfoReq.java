@@ -1,6 +1,5 @@
 package net.doge.sdk.service.playlist.info;
 
-import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -13,8 +12,11 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
-import net.doge.util.core.HtmlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -91,8 +93,7 @@ public class PlaylistInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
             if (JsonUtil.notEmpty(playlistJson)) {
@@ -133,8 +134,8 @@ public class PlaylistInfoReq {
                     .header("mid", "1586163242519")
                     .header("dfid", "-")
                     .header("clienttime", "1586163242519")
-                    .executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                    .execute();
+            if (resp.isSuccessful()) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
@@ -168,8 +169,7 @@ public class PlaylistInfoReq {
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
                     .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
             if (JsonUtil.notEmpty(cdlist)) {
@@ -230,8 +230,7 @@ public class PlaylistInfoReq {
 //            }
 
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, 0, 1))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistJson = JSONObject.parseObject(playlistInfoBody);
             if (JsonUtil.notEmpty(playlistJson)) {
                 String playlistId = playlistJson.getString("id");
@@ -263,8 +262,7 @@ public class PlaylistInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray resource = playlistInfoJson.getJSONArray("resource");
             if (JsonUtil.notEmpty(resource)) {
@@ -299,8 +297,7 @@ public class PlaylistInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
             if (JsonUtil.notEmpty(playlistJson)) {
@@ -327,8 +324,7 @@ public class PlaylistInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("info");
             if (JsonUtil.notEmpty(playlistJson)) {
@@ -363,8 +359,7 @@ public class PlaylistInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
             if (JsonUtil.notEmpty(playlistJson)) {
@@ -414,8 +409,7 @@ public class PlaylistInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
             JSONObject ct = playlistJson.getJSONObject("creator");
@@ -444,8 +438,7 @@ public class PlaylistInfoReq {
                     .header("mid", "1586163242519")
                     .header("dfid", "-")
                     .header("clienttime", "1586163242519")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
 
@@ -463,8 +456,7 @@ public class PlaylistInfoReq {
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
                     .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
             if (JsonUtil.isEmpty(cdlist)) return;
@@ -497,8 +489,7 @@ public class PlaylistInfoReq {
 //            if (!playlistInfo.hasTag()) playlistInfo.setTag(data.getString("tag").replace(",", "、"));
 
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, 0, 1))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(playlistInfoBody);
 
             String coverImgUrl = data.getString("pic");
@@ -513,8 +504,7 @@ public class PlaylistInfoReq {
         // 咪咕
         else if (source == NetMusicSource.MG) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONArray("resource").getJSONObject(0);
 
@@ -531,8 +521,7 @@ public class PlaylistInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
 
@@ -549,9 +538,7 @@ public class PlaylistInfoReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_FS_API, creatorId, id))
-                    .setFollowRedirects(true)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
 
             String coverImgUrl = doc.select(".lt.w_30 img").attr("src");
@@ -570,8 +557,7 @@ public class PlaylistInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject info = playlistInfoJson.getJSONObject("info");
             if (JsonUtil.isEmpty(info)) return;
@@ -590,8 +576,7 @@ public class PlaylistInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
 
@@ -630,8 +615,7 @@ public class PlaylistInfoReq {
                 // 先获取 trackId 列表
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String trackIdBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONArray trackIdArray = JSONObject.parseObject(trackIdBody).getJSONObject("playlist").getJSONArray("trackIds");
                 StringJoiner sj = new StringJoiner(",");
                 for (int i = (page - 1) * limit, s = Math.min(trackIdArray.size(), page * limit); i < s; i++)
@@ -639,8 +623,7 @@ public class PlaylistInfoReq {
                 String ids = sj.toString();
 
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, BATCH_SONGS_DETAIL_API, String.format("{\"c\":\"[%s]\"}", ids), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray songArray = playlistInfoJson.getJSONArray("songs");
                 for (int i = 0, len = songArray.size(); i < len; i++) {
@@ -681,8 +664,7 @@ public class PlaylistInfoReq {
                 // 网易云获取歌单歌曲总数需要额外请求歌单详情接口！
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 total.set(playlistInfoJson.getJSONObject("playlist").getIntValue("trackCount"));
             };
@@ -714,8 +696,7 @@ public class PlaylistInfoReq {
                     .header("User-Agent", "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1")
                     .header("dfid", "-")
                     .header("clienttime", "1586163263991")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             total.set(data.getIntValue("total"));
@@ -757,8 +738,7 @@ public class PlaylistInfoReq {
         else if (source == NetMusicSource.QQ) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
                     .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
             if (JsonUtil.notEmpty(cdlist)) {
@@ -835,8 +815,7 @@ public class PlaylistInfoReq {
 //            }
 
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, page - 1, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(playlistInfoBody);
             JSONArray songArray = data.getJSONArray("musiclist");
             total.set(data.getIntValue("total"));
@@ -879,8 +858,7 @@ public class PlaylistInfoReq {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_MG_API, id, page, limit))
                     .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray songArray = playlistInfoJson.getJSONArray("list");
             total.set(playlistInfoJson.getIntValue("totalCount"));
@@ -926,8 +904,7 @@ public class PlaylistInfoReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             total.set(data.getIntValue("trackCount"));
@@ -966,9 +943,7 @@ public class PlaylistInfoReq {
         // 5sing
         else if (source == NetMusicSource.FS) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_FS_API, creatorId, id))
-                    .setFollowRedirects(true)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             total.set(Integer.parseInt(RegexUtil.getGroup1("（(\\d+)）", doc.select("span.number").text())));
             Elements songArray = doc.select("li.p_rel");
@@ -996,8 +971,7 @@ public class PlaylistInfoReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("info");
             JSONArray songArray = data.getJSONArray("sounds");
@@ -1022,8 +996,7 @@ public class PlaylistInfoReq {
         // 哔哩哔哩
         else if (source == NetMusicSource.BI) {
             String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_BI_API, id, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             total.set(data.getIntValue("totalSize"));

@@ -1,22 +1,15 @@
 package net.doge.sdk.common;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import net.doge.sdk.common.builder.*;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 
 import java.util.Map;
 
 public class SdkCommon {
-    // 最大等待时间(ms)
-    public static final int TIME_OUT = 6000;
-
-    static {
-        HttpRequest.setGlobalTimeout(TIME_OUT);
-    }
-
     // 请求头
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.60";
     // Cookie

@@ -1,8 +1,8 @@
 package net.doge.sdk.common.builder;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.UrlUtil;
 

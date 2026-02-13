@@ -703,7 +703,7 @@ public class I18n {
 
         LANG_MAP.put("master", new String[]{"至臻母带 (FLAC)", "Master (FLAC)"});
         LANG_MAP.put("atmosphere", new String[]{"至臻全景声 (FLAC)", "Atmosphere (FLAC)"});
-        LANG_MAP.put("hiRes", new String[]{"Hi-Res (FLAC)", "Hi-Res (FLAC)"});
+        LANG_MAP.put("hires", new String[]{"Hi-Res (FLAC)", "Hi-Res (FLAC)"});
         LANG_MAP.put("lossless", new String[]{"无损 (FLAC)", "Lossless (FLAC)"});
         LANG_MAP.put("super", new String[]{"超高 (MP3)", "Super (MP3)"});
         LANG_MAP.put("high", new String[]{"高 (MP3)", "High (MP3)"});

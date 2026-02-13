@@ -1,7 +1,5 @@
 package net.doge.sdk.service.radio.menu;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -15,6 +13,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -71,8 +71,7 @@ public class RadioMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"time\":-1,\"limit\":1000,\"total\":true}", id), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("subscribers");
             t = userArray.size();
@@ -128,8 +127,7 @@ public class RadioMenuReq {
         if (source == NetMusicSource.DB) {
             String artistInfoBody = HttpRequest.get(String.format(isBook ? SIMILAR_BOOK_RADIO_DB_API
                             : isGame ? SIMILAR_GAME_RADIO_DB_API : SIMILAR_RADIO_DB_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements rs = doc.select(isBook ? "#db-rec-section dl:not(.clear)"
                     : isGame ? ".list.fav-list li" : ".recommendations-bd dl");
@@ -160,8 +158,7 @@ public class RadioMenuReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String radioInfoBody = HttpRequest.get(String.format(SIMILAR_RADIO_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
             JSONArray radioArray = data.getJSONArray("recommend");
@@ -208,8 +205,7 @@ public class RadioMenuReq {
         // 猫耳
         if (source == NetMusicSource.ME) {
             String artistInfoBody = HttpRequest.get(String.format(RADIO_CVS_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("info");
             JSONArray artistArray = data.getJSONArray("cvs");
@@ -239,8 +235,7 @@ public class RadioMenuReq {
         // 豆瓣
         else if (source == NetMusicSource.DB && !isBook) {
             String artistInfoBody = HttpRequest.get(String.format(RADIO_ARTISTS_DB_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(artistInfoBody);
             Elements cs = doc.select("li.celebrity");
             t = cs.size();

@@ -1,7 +1,5 @@
 package net.doge.sdk.service.mv.info;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.VideoQuality;
@@ -12,6 +10,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.TimeUtil;
 
 import java.awt.image.BufferedImage;
@@ -73,8 +73,7 @@ public class MvInfoReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_API, String.format("{\"id\":\"%s\"}", mvId), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
             String name = data.getString("name").trim();
@@ -102,8 +101,7 @@ public class MvInfoReq {
         // 酷狗
         else if (source == NetMusicSource.KG) {
             String mvBody = HttpRequest.get(String.format(MV_DETAIL_KG_API, mvId))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
             String[] s = data.getString("filename").split(" - ");
@@ -139,8 +137,7 @@ public class MvInfoReq {
                             "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
                             "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
                             "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", mvId, mvId))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
 
@@ -169,8 +166,7 @@ public class MvInfoReq {
         // 酷我
         else if (source == NetMusicSource.KW) {
             String mvBody = SdkCommon.kwRequest(String.format(MV_DETAIL_KW_API, mvId))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
             JSONObject data = mvJson.getJSONObject("data");
 

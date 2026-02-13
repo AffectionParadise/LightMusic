@@ -1,7 +1,5 @@
 package net.doge.sdk.service.music.info;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
@@ -15,6 +13,7 @@ import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
 import net.doge.sdk.service.music.info.entity.MusicCandidate;
 import net.doge.sdk.service.music.info.trackhero.kg.KgTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.kw.KwTrackHeroV3;
+import net.doge.sdk.service.music.info.trackhero.mg.MgTrackHero;
 import net.doge.sdk.service.music.info.trackhero.nc.CunYuNcTrackHero;
 import net.doge.sdk.service.music.info.trackhero.nc.CyruiNcTrackHero;
 import net.doge.sdk.service.music.info.trackhero.nc.NcTrackHero;
@@ -24,7 +23,12 @@ import net.doge.sdk.service.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.qq.VkeysQqTrackHero;
 import net.doge.sdk.service.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.*;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.util.core.CryptoUtil;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -47,7 +51,6 @@ public class MusicUrlReq {
 
     // 歌曲 URL 获取 API (咪咕)
 //    private final String SONG_URL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
-    private final String SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/strategy/listen-url/v2.4?songId=%s&toneFlag=%s&resourceType=2";
     // 歌曲 URL 获取 API (千千)
     private final String SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (喜马拉雅)
@@ -104,23 +107,23 @@ public class MusicUrlReq {
             String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.MASTER:
-                    quality = "master";
+                    quality = AudioQuality.KEYS[AudioQuality.MASTER];
                     break;
                 case AudioQuality.ATMOSPHERE:
-                    quality = "atmosphere";
+                    quality = AudioQuality.KEYS[AudioQuality.ATMOSPHERE];
                     break;
                 case AudioQuality.HI_RES:
-                    quality = "hires";
+                    quality = AudioQuality.KEYS[AudioQuality.HI_RES];
                     break;
                 case AudioQuality.LOSSLESS:
-                    quality = "lossless";
+                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
                     break;
                 case AudioQuality.SUPER:
                 case AudioQuality.HIGH:
-                    quality = "hq";
+                    quality = AudioQuality.KEYS[AudioQuality.HIGH];
                     break;
                 default:
-                    quality = "standard";
+                    quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
             String trackUrl = TmetuNcTrackHero.getInstance().getTrackUrl(id, quality);
@@ -136,18 +139,20 @@ public class MusicUrlReq {
             switch (AudioQuality.quality) {
                 case AudioQuality.MASTER:
                 case AudioQuality.ATMOSPHERE:
+                    quality = AudioQuality.KEYS[AudioQuality.ATMOSPHERE];
+                    break;
                 case AudioQuality.HI_RES:
-                    quality = "hires";
+                    quality = AudioQuality.KEYS[AudioQuality.HI_RES];
                     break;
                 case AudioQuality.LOSSLESS:
-                    quality = "lossless";
+                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
                     break;
                 case AudioQuality.SUPER:
                 case AudioQuality.HIGH:
-                    quality = "hq";
+                    quality = AudioQuality.KEYS[AudioQuality.HIGH];
                     break;
                 default:
-                    quality = "standard";
+                    quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
             return KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
@@ -158,25 +163,25 @@ public class MusicUrlReq {
             String quality;
             switch (AudioQuality.quality) {
                 case AudioQuality.MASTER:
-                    quality = "master";
+                    quality = AudioQuality.KEYS[AudioQuality.MASTER];
                     break;
                 case AudioQuality.ATMOSPHERE:
-                    quality = "atmosphere";
+                    quality = AudioQuality.KEYS[AudioQuality.ATMOSPHERE];
                     break;
                 case AudioQuality.HI_RES:
-                    quality = "hires";
+                    quality = AudioQuality.KEYS[AudioQuality.HI_RES];
                     break;
                 case AudioQuality.LOSSLESS:
-                    quality = "lossless";
+                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
                     break;
                 case AudioQuality.SUPER:
-                    quality = "super";
+                    quality = AudioQuality.KEYS[AudioQuality.SUPER];
                     break;
                 case AudioQuality.HIGH:
-                    quality = "hq";
+                    quality = AudioQuality.KEYS[AudioQuality.HIGH];
                     break;
                 default:
-                    quality = "standard";
+                    quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
             String trackUrl = VkeysQqTrackHero.getInstance().getTrackUrl(id, quality);
@@ -193,14 +198,14 @@ public class MusicUrlReq {
                 case AudioQuality.ATMOSPHERE:
                 case AudioQuality.HI_RES:
                 case AudioQuality.LOSSLESS:
-                    quality = "lossless";
+                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
                     break;
                 case AudioQuality.SUPER:
                 case AudioQuality.HIGH:
-                    quality = "hq";
+                    quality = AudioQuality.KEYS[AudioQuality.HIGH];
                     break;
                 default:
-                    quality = "standard";
+                    quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
             return KwTrackHeroV3.getInstance().getTrackUrl(id, quality);
@@ -213,32 +218,20 @@ public class MusicUrlReq {
                 case AudioQuality.MASTER:
                 case AudioQuality.ATMOSPHERE:
                 case AudioQuality.HI_RES:
-                    quality = "ZQ";
+                    quality = AudioQuality.KEYS[AudioQuality.HI_RES];
                     break;
                 case AudioQuality.LOSSLESS:
-                    quality = "SQ";
+                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
                     break;
                 case AudioQuality.SUPER:
                 case AudioQuality.HIGH:
-                    quality = "HQ";
+                    quality = AudioQuality.KEYS[AudioQuality.HIGH];
                     break;
                 default:
-                    quality = "PQ";
+                    quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
-            String songBody = HttpRequest.get(String.format(SONG_URL_MG_API, id, quality))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .header("aversionid", "")
-                    .header("token", "")
-                    .header("channel", "0146832")
-                    .header("language", "Chinese")
-                    .header("ua", "Android_migu")
-                    .header("mode", "android")
-                    .header("os", "Android 10")
-                    .executeAsync()
-                    .body();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
-            if (JsonUtil.notEmpty(data)) return data.getString("url");
+            return MgTrackHero.getInstance().getTrackUrl(id, quality);
 //            String songBody = HttpRequest.get(String.format(SONG_URL_MG_API, id))
 //                    .executeAsync()
 //                    .body();
@@ -279,8 +272,7 @@ public class MusicUrlReq {
         // 千千
         else if (source == NetMusicSource.QI) {
             String playUrlBody = SdkCommon.qiRequest(String.format(SONG_URL_QI_API, id, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(playUrlBody).getJSONObject("data");
             // 排除试听部分，直接换源
             if (data.getIntValue("isVip") == 0) {
@@ -295,8 +287,7 @@ public class MusicUrlReq {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("audio:\\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
@@ -311,8 +302,7 @@ public class MusicUrlReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
             if (StringUtil.notEmpty(dataStr)) {
@@ -343,8 +333,7 @@ public class MusicUrlReq {
             params.put("version", "6.6.72");
             Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(SONG_URL_FS_API);
             String songBody = SdkCommon.fsRequest(params, null, options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             String url = AudioQuality.quality <= AudioQuality.SUPER ? data.getString("squrl") : "";
             if (StringUtil.isEmpty(url)) url = AudioQuality.quality <= AudioQuality.HIGH ? data.getString("hqurl") : "";
@@ -355,8 +344,7 @@ public class MusicUrlReq {
         // 喜马拉雅
         else if (source == NetMusicSource.XM) {
             String playUrlBody = HttpRequest.get(String.format(SONG_URL_XM_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
 
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             return urlJson.getJSONObject("data").getString("src");
@@ -365,8 +353,7 @@ public class MusicUrlReq {
         // 猫耳
         else if (source == NetMusicSource.ME) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
             return data.getString(AudioQuality.quality == AudioQuality.STANDARD ? "soundurl_128" : "soundurl");
         }
@@ -375,8 +362,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.BI) {
             String playUrlBody = HttpRequest.get(String.format(SONG_URL_BI_API, id))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(playUrlBody);
             return urlJson.getJSONObject("data").getJSONArray("cdns").getString(0);
         }
@@ -385,16 +371,14 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.FA) {
             // 获取发姐请求参数
             String body = HttpRequest.get(SdkCommon.FA_RADIO_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(body);
             Elements ap = doc.select("#aplayer1");
             String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
             String _nonce = ap.attr("data-_nonce");
 
             String songInfoBody = HttpRequest.get(String.format(SONG_URL_FA_API, musicSet, _nonce))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
             JSONObject data = songInfoJson.getJSONObject("msg");
             JSONArray songArray = data.getJSONArray("songs");
@@ -409,8 +393,7 @@ public class MusicUrlReq {
         else if (source == NetMusicSource.LZ) {
             String[] sp = id.split("_");
             String albumSongBody = HttpRequest.get(String.format(SONG_URL_LZ_API, sp[0]))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray songArray = JSONArray.parseArray(albumSongBody);
             JSONObject urlJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
             return UrlUtil.encodeBlank(urlJson.getString("audio"));
@@ -422,7 +405,7 @@ public class MusicUrlReq {
 //            switch (AudioQuality.quality) {
 //                case AudioQuality.HI_RES:
 //                case AudioQuality.LOSSLESS:
-//                    quality = "lossless";
+//                    quality = AudioQuality.KEYS[AudioQuality.LOSSLESS];
 //                    break;
 //                case AudioQuality.SUPER:
 //                case AudioQuality.HIGH:

@@ -1,10 +1,6 @@
 package net.doge.ui;
 
-import cn.hutool.core.io.IORuntimeException;
-import cn.hutool.http.HttpException;
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.JSONObject;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -66,6 +62,7 @@ import net.doge.exception.IllegalMediaException;
 import net.doge.exception.NoCopyrightException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.ui.core.animation.ComponentChangeFadingAnimation;
 import net.doge.ui.core.animation.handler.ComponentChangeHandler;
 import net.doge.ui.core.dimension.HDDimension;
@@ -4397,7 +4394,7 @@ public class MainFrame extends JFrame {
             if (!mute) td = new TipDialog(THIS, UPDATE_CHECKING_MSG, 0);
             try {
                 if (!mute) td.showDialog();
-                String body = HttpRequest.get(SoftInfo.RELEASE).executeAsync().body();
+                String body = HttpRequest.get(SoftInfo.RELEASE).executeAsStr();
                 if (!mute) td.close();
                 Document doc = Jsoup.parse(body);
                 String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1], now = SoftInfo.VERSION;
@@ -5439,15 +5436,8 @@ public class MainFrame extends JFrame {
                     }
                     netMusicScrollPane.setVBarValue(0);
                     netMusicInCollectionCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -5673,7 +5663,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemTagLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
@@ -5719,15 +5709,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -5762,7 +5745,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
                             }
@@ -5807,15 +5790,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -5852,7 +5828,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemTagLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
@@ -5898,15 +5874,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -5943,7 +5912,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemTagLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
@@ -5992,15 +5961,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -6035,7 +5997,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
                             }
@@ -6081,15 +6043,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -6138,7 +6093,7 @@ public class MainFrame extends JFrame {
                                         collectionList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 collectionItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 collectionItemDescriptionLabel.setText(LOAD_FAILED);
                             }
@@ -6193,15 +6148,8 @@ public class MainFrame extends JFrame {
 
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -7493,15 +7441,8 @@ public class MainFrame extends JFrame {
                         netLeftBox.add(netMusicScrollPane);
                     }
                     netMusicCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -7635,15 +7576,8 @@ public class MainFrame extends JFrame {
                             netLeftBox.add(netMusicScrollPane);
                         }
                         netMusicScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -7958,15 +7892,8 @@ public class MainFrame extends JFrame {
                         netLeftBox.add(netMusicScrollPane);
                     }
                     netMusicScrollPane.setVBarValue(0);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8028,15 +7955,8 @@ public class MainFrame extends JFrame {
                     }
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8154,15 +8074,8 @@ public class MainFrame extends JFrame {
                         netArtistScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8282,15 +8195,8 @@ public class MainFrame extends JFrame {
                         netAlbumScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                     }
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8355,15 +8261,8 @@ public class MainFrame extends JFrame {
                     }
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8425,15 +8324,8 @@ public class MainFrame extends JFrame {
                     }
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -8727,15 +8619,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8762,15 +8647,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8797,15 +8675,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8832,15 +8703,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8867,15 +8731,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8902,15 +8759,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8937,15 +8787,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -8986,15 +8829,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -9041,15 +8877,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -9077,15 +8906,8 @@ public class MainFrame extends JFrame {
                     };
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -9496,15 +9318,8 @@ public class MainFrame extends JFrame {
                         netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
                     netPlaylistCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             }
         });
@@ -9540,15 +9355,8 @@ public class MainFrame extends JFrame {
                         playlistListCountBox.add(netMusicScrollPane);
                     }
                     netMusicInPlaylistCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -9714,15 +9522,8 @@ public class MainFrame extends JFrame {
                             netPlaylistLeftBox.add(netPlaylistScrollPane);
                         }
                         netPlaylistScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -9979,7 +9780,7 @@ public class MainFrame extends JFrame {
                                     netPlaylistList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             playlistCoverAndNameLabel.setText(LOAD_FAILED);
                             playlistTagLabel.setText(LOAD_FAILED);
                             playlistDescriptionLabel.setText(LOAD_FAILED);
@@ -10030,15 +9831,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netPlaylistLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -10227,15 +10021,8 @@ public class MainFrame extends JFrame {
                     }
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -10296,15 +10083,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -10365,15 +10145,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -10487,15 +10260,8 @@ public class MainFrame extends JFrame {
                         netAlbumLeftBox.add(netAlbumScrollPane);
                     }
                     netAlbumCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -10531,15 +10297,8 @@ public class MainFrame extends JFrame {
                         albumListCountBox.add(netMusicScrollPane);
                     }
                     netMusicInAlbumCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -10700,15 +10459,8 @@ public class MainFrame extends JFrame {
                             netAlbumLeftBox.add(netAlbumScrollPane);
                         }
                         netAlbumScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -10961,7 +10713,7 @@ public class MainFrame extends JFrame {
                                     netAlbumList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             albumCoverAndNameLabel.setText(LOAD_FAILED);
                             albumDescriptionLabel.setText(LOAD_FAILED);
                         }
@@ -11013,15 +10765,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netAlbumLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -11263,15 +11008,8 @@ public class MainFrame extends JFrame {
                         netArtistScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -11330,15 +11068,8 @@ public class MainFrame extends JFrame {
                     }
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -11367,15 +11098,8 @@ public class MainFrame extends JFrame {
                 };
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
         // 复制名称
@@ -11492,15 +11216,8 @@ public class MainFrame extends JFrame {
                         netArtistLeftBox.add(netArtistScrollPane);
                     }
                     netArtistCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -11536,15 +11253,8 @@ public class MainFrame extends JFrame {
                         artistListCountBox.add(netMusicScrollPane);
                     }
                     netMusicInArtistCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -11712,15 +11422,8 @@ public class MainFrame extends JFrame {
                             netArtistLeftBox.add(netArtistScrollPane);
                         }
                         netArtistScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -11976,7 +11679,7 @@ public class MainFrame extends JFrame {
                                     netArtistList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             artistCoverAndNameLabel.setText(LOAD_FAILED);
                             artistTagLabel.setText(LOAD_FAILED);
                             artistDescriptionLabel.setText(LOAD_FAILED);
@@ -12029,15 +11732,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netArtistLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -12221,15 +11917,8 @@ public class MainFrame extends JFrame {
                     }
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12289,15 +11978,8 @@ public class MainFrame extends JFrame {
                     }
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12357,15 +12039,8 @@ public class MainFrame extends JFrame {
                     }
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12427,15 +12102,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12495,15 +12163,8 @@ public class MainFrame extends JFrame {
                     }
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12564,15 +12225,8 @@ public class MainFrame extends JFrame {
                     }
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -12601,15 +12255,8 @@ public class MainFrame extends JFrame {
                 };
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
         // 复制名称
@@ -12725,15 +12372,8 @@ public class MainFrame extends JFrame {
                         netRadioLeftBox.add(netRadioScrollPane);
                     }
                     netRadioCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -12769,15 +12409,8 @@ public class MainFrame extends JFrame {
                         radioListCountBox.add(netMusicScrollPane);
                     }
                     netMusicInRadioCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -12944,15 +12577,8 @@ public class MainFrame extends JFrame {
                             netRadioLeftBox.add(netRadioScrollPane);
                         }
                         netRadioScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -13220,7 +12846,7 @@ public class MainFrame extends JFrame {
                                     netRadioList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             radioCoverAndNameLabel.setText(LOAD_FAILED);
                             radioTagLabel.setText(LOAD_FAILED);
                             radioDescriptionLabel.setText(LOAD_FAILED);
@@ -13275,15 +12901,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netRadioLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -13475,15 +13094,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -13544,15 +13156,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -13613,15 +13218,8 @@ public class MainFrame extends JFrame {
                     }
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -13680,15 +13278,8 @@ public class MainFrame extends JFrame {
                     }
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -13714,15 +13305,8 @@ public class MainFrame extends JFrame {
                 };
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
         // 查看电台海报
@@ -13747,15 +13331,8 @@ public class MainFrame extends JFrame {
                 };
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
         // 复制名称
@@ -13872,15 +13449,8 @@ public class MainFrame extends JFrame {
                         netMvLeftBox.add(netMvScrollPane);
                     }
                     netMvCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -14006,15 +13576,8 @@ public class MainFrame extends JFrame {
                             netMvLeftBox.add(netMvScrollPane);
                         }
                         netMvScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -14169,15 +13732,8 @@ public class MainFrame extends JFrame {
         Runnable playMvAction = () -> {
             try {
                 playMv(MvCompSourceType.MV_LIST);
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         };
         netMvList.addKeyListener(new KeyAdapter() {
@@ -14315,15 +13871,8 @@ public class MainFrame extends JFrame {
                     }
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -14383,15 +13932,8 @@ public class MainFrame extends JFrame {
                     }
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -14501,15 +14043,8 @@ public class MainFrame extends JFrame {
                         netUserScrollPane.setVBarValue(0);
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     }
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -14625,15 +14160,8 @@ public class MainFrame extends JFrame {
                 }
                 netRankingScrollPane.setVBarValue(0);
                 netRankingCurrPage = page;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
     }
@@ -14669,15 +14197,8 @@ public class MainFrame extends JFrame {
                         rankingListCountBox.add(netMusicScrollPane);
                     }
                     netMusicInRankingCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -14946,7 +14467,7 @@ public class MainFrame extends JFrame {
                                     netRankingList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             rankingCoverAndNameLabel.setText(LOAD_FAILED);
                             rankingDescriptionLabel.setText(LOAD_FAILED);
                         }
@@ -14993,15 +14514,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netRankingLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -15209,15 +14723,8 @@ public class MainFrame extends JFrame {
                         netUserLeftBox.add(netUserScrollPane);
                     }
                     netUserCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -15253,15 +14760,8 @@ public class MainFrame extends JFrame {
                     userListCountBox.add(netMusicScrollPane);
                 }
                 netMusicInUserCurrPage = page;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
     }
@@ -15428,15 +14928,8 @@ public class MainFrame extends JFrame {
                             netUserLeftBox.add(netUserScrollPane);
                         }
                         netUserScrollPane.setVBarValue(0);
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 });
             }
@@ -15722,7 +15215,7 @@ public class MainFrame extends JFrame {
                                     netUserList.repaint();
                                 });
                             }
-                        } catch (HttpException e) {
+                        } catch (Exception e) {
                             userCoverAndNameLabel.setText(LOAD_FAILED);
                             userTagLabel.setText(LOAD_FAILED);
                             userDescriptionLabel.setText(LOAD_FAILED);
@@ -15783,15 +15276,8 @@ public class MainFrame extends JFrame {
                         }
                         // 切换后一定要刷新！
                         netUserLeftBox.repaint();
-                    } catch (IORuntimeException ioRuntimeException) {
-                        // 无网络连接
-                        new TipDialog(THIS, NO_NET_MSG).showDialog();
-                    } catch (HttpException httpException) {
-                        // 请求超时
-                        new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                    } catch (JSONException jsonException) {
-                        // 接口异常
-                        new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                    } catch (Exception exception) {
+                        ExceptionUtil.handleRequestException(exception, THIS);
                     }
                 }));
 
@@ -15970,15 +15456,8 @@ public class MainFrame extends JFrame {
                     }
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16036,15 +15515,8 @@ public class MainFrame extends JFrame {
                     }
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16102,15 +15574,8 @@ public class MainFrame extends JFrame {
                     }
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16170,15 +15635,8 @@ public class MainFrame extends JFrame {
                     }
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16237,15 +15695,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16304,15 +15755,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16443,15 +15887,8 @@ public class MainFrame extends JFrame {
                         lastPaneType = currPaneType;
                     currPaneType = CenterPaneType.COMMENT;
                 }
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
     }
@@ -16503,15 +15940,8 @@ public class MainFrame extends JFrame {
                         lastPaneType = currPaneType;
                     currPaneType = CenterPaneType.SHEET;
                 }
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
     }
@@ -16767,15 +16197,8 @@ public class MainFrame extends JFrame {
                     netCommentBackwardButton.doClick();
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16833,15 +16256,8 @@ public class MainFrame extends JFrame {
                     netCommentBackwardButton.doClick();
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -16899,15 +16315,8 @@ public class MainFrame extends JFrame {
                     netCommentBackwardButton.doClick();
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -17121,15 +16530,8 @@ public class MainFrame extends JFrame {
                 };
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
-            } catch (IORuntimeException ioRuntimeException) {
-                // 无网络连接
-                new TipDialog(THIS, NO_NET_MSG).showDialog();
-            } catch (HttpException httpException) {
-                // 请求超时
-                new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            } catch (JSONException jsonException) {
-                // 接口异常
-                new TipDialog(THIS, API_ERROR_MSG).showDialog();
+            } catch (Exception exception) {
+                ExceptionUtil.handleRequestException(exception, THIS);
             }
         });
         // 复制乐谱名称
@@ -17267,15 +16669,8 @@ public class MainFrame extends JFrame {
                     }
                     netMusicScrollPane.setVBarValue(0);
                     netMusicInRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17317,15 +16712,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17367,15 +16755,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17407,15 +16788,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17447,15 +16821,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17498,15 +16865,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17549,15 +16909,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17600,15 +16953,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17651,15 +16997,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17691,15 +17030,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17742,15 +17074,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         }
@@ -17974,15 +17299,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18038,15 +17356,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18092,15 +17403,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18146,15 +17450,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18209,15 +17506,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18273,15 +17563,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18327,15 +17610,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(false);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18390,15 +17666,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18444,15 +17713,8 @@ public class MainFrame extends JFrame {
                     // 不需要加载更多，删除加载更多的工具栏
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18507,15 +17769,8 @@ public class MainFrame extends JFrame {
                     }
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
-                } catch (IORuntimeException ioRuntimeException) {
-                    // 无网络连接
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } catch (HttpException httpException) {
-                    // 请求超时
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } catch (JSONException jsonException) {
-                    // 接口异常
-                    new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                } catch (Exception exception) {
+                    ExceptionUtil.handleRequestException(exception, THIS);
                 }
             });
         });
@@ -18728,7 +17983,7 @@ public class MainFrame extends JFrame {
                                         itemRecommendList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 recommendItemTagLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
@@ -18778,15 +18033,8 @@ public class MainFrame extends JFrame {
                             }
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -18820,7 +18068,7 @@ public class MainFrame extends JFrame {
                                         itemRecommendList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
                             }
@@ -18869,15 +18117,8 @@ public class MainFrame extends JFrame {
                             }
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -18913,7 +18154,7 @@ public class MainFrame extends JFrame {
                                         itemRecommendList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 recommendItemTagLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
@@ -18963,15 +18204,8 @@ public class MainFrame extends JFrame {
                             }
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -19007,7 +18241,7 @@ public class MainFrame extends JFrame {
                                         itemRecommendList.repaint();
                                     });
                                 }
-                            } catch (HttpException e) {
+                            } catch (Exception e) {
                                 recommendItemCoverAndNameLabel.setText(LOAD_FAILED);
                                 recommendItemTagLabel.setText(LOAD_FAILED);
                                 recommendItemDescriptionLabel.setText(LOAD_FAILED);
@@ -19058,15 +18292,8 @@ public class MainFrame extends JFrame {
                             }
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
-                        } catch (IORuntimeException runtimeException) {
-                            // 无网络连接
-                            new TipDialog(THIS, NO_NET_MSG).showDialog();
-                        } catch (HttpException httpException) {
-                            // 请求超时
-                            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                        } catch (JSONException jsonException) {
-                            // 接口问题
-                            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+                        } catch (Exception exception) {
+                            ExceptionUtil.handleRequestException(exception, THIS);
                         }
                     }));
                 }
@@ -21364,13 +20591,7 @@ public class MainFrame extends JFrame {
                 MusicServerUtil.fillMusicInfo(musicInfo);
                 updateRenderer(netMusicList);
             } catch (Exception e) {
-                if (e instanceof IORuntimeException) {
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } else if (e instanceof HttpException) {
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } else {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                }
+                ExceptionUtil.handleMusicResourceException(e, THIS);
                 if (allowRetry) retryPlay();
                 return false;
             }
@@ -21452,12 +20673,7 @@ public class MainFrame extends JFrame {
             return true;
         } catch (Exception e) {
             updateTitle(LOAD_TRACK_FAILED);
-            if (e instanceof MediaException) new TipDialog(THIS, UNSUPPORTED_AUDIO_FILE_MSG).showDialog();
-            else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)
-                new TipDialog(THIS, INVALID_AUDIO_FILE_MSG).showDialog();
-            else if (e instanceof IORuntimeException) new TipDialog(THIS, NO_NET_MSG).showDialog();
-            else if (e instanceof HttpException) new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-            else new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
+            ExceptionUtil.handlePlaybackException(e, THIS);
         }
         if (allowRetry) retryPlay();
         return false;
@@ -22913,13 +22129,7 @@ public class MainFrame extends JFrame {
                 FileUtil.writeStr(lyricStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
-                if (e instanceof IORuntimeException) {
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } else if (e instanceof HttpException) {
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } else {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                }
+                ExceptionUtil.handleMusicResourceException(e, THIS);
             }
         });
     }
@@ -23050,13 +22260,7 @@ public class MainFrame extends JFrame {
                 videoDialog = null;
                 setVisible(true);
             } catch (Exception e) {
-                if (e instanceof IORuntimeException) {
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } else if (e instanceof HttpException) {
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } else {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                }
+                ExceptionUtil.handleMusicResourceException(e, THIS);
             } finally {
                 dialog.close();
                 if (videoOnly) setVisible(true);
@@ -23120,13 +22324,7 @@ public class MainFrame extends JFrame {
                 videoDialog = null;
                 setVisible(true);
             } catch (Exception e) {
-                if (e instanceof IORuntimeException) {
-                    new TipDialog(THIS, NO_NET_MSG).showDialog();
-                } else if (e instanceof HttpException) {
-                    new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-                } else {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                }
+                ExceptionUtil.handleMusicResourceException(e, THIS);
             } finally {
                 dialog.close();
                 if (videoOnly) setVisible(true);
@@ -23442,15 +22640,8 @@ public class MainFrame extends JFrame {
                 });
             }
             netMusicSearchSuggestionPanel.repaint();
-        } catch (IORuntimeException ioRuntimeException) {
-            // 无网络连接
-            new TipDialog(THIS, NO_NET_MSG).showDialog();
-        } catch (HttpException httpException) {
-            // 请求超时
-            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-        } catch (JSONException jsonException) {
-            // 接口异常
-            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+        } catch (Exception exception) {
+            ExceptionUtil.handleRequestException(exception, THIS);
         } finally {
             searchSuggestionProcessing = false;
         }
@@ -23500,15 +22691,8 @@ public class MainFrame extends JFrame {
                 });
             }
             netMusicHotSearchPanel.repaint();
-        } catch (IORuntimeException ioRuntimeException) {
-            // 无网络连接
-            new TipDialog(THIS, NO_NET_MSG).showDialog();
-        } catch (HttpException httpException) {
-            // 请求超时
-            new TipDialog(THIS, TIME_OUT_MSG).showDialog();
-        } catch (JSONException jsonException) {
-            // 接口异常
-            new TipDialog(THIS, API_ERROR_MSG).showDialog();
+        } catch (Exception exception) {
+            ExceptionUtil.handleRequestException(exception, THIS);
         } finally {
             hotSearchProcessing = false;
         }

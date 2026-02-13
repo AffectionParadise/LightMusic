@@ -1,7 +1,5 @@
 package net.doge.sdk.service.user.search;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +10,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
@@ -75,8 +75,7 @@ public class UserSearchReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
             String userInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_API,
                             String.format("{\"s\":\"%s\",\"type\":1002,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("result");
             if (JsonUtil.notEmpty(result)) {
@@ -120,8 +119,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 8))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
             t = data.getJSONObject("meta").getIntValue("sum");
@@ -161,8 +159,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_XM_API, encodedKeyword, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject result = userInfoJson.getJSONObject("data").getJSONObject("user");
             if (JsonUtil.notEmpty(result)) {
@@ -210,8 +207,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_ME_API, encodedKeyword, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject info = userInfoJson.getJSONObject("info");
             t = info.getJSONObject("pagination").getIntValue("count");
@@ -259,8 +255,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(userInfoBody);
             t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;
             JSONArray userArray = data.getJSONArray("list");
@@ -303,8 +298,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, page, encodedKeyword, limit))
                     .cookie(SdkCommon.HK_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             t = data.getIntValue("has_more") == 1 ? (page + 1) * limit : page * limit;
@@ -345,8 +339,7 @@ public class UserSearchReq {
 
             final int lim = Math.min(20, limit);
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DB_API, encodedKeyword, (page - 1) * lim))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("items");
             if (JsonUtil.notEmpty(userArray)) {
@@ -390,8 +383,7 @@ public class UserSearchReq {
             Integer t = 0;
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("object_list");
@@ -434,8 +426,7 @@ public class UserSearchReq {
 
             String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_BI_API, encodedKeyword, page))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONObject data = userInfoJson.getJSONObject("data");
             JSONArray userArray = data.getJSONArray("result");

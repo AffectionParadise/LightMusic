@@ -1,7 +1,8 @@
 package net.doge.sdk.service.music.info.trackhero.qq;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class VkeysQqTrackHero {
         // 有损 97k
         qualityMap.put("97k", "3");
         // 标准 193k
-        qualityMap.put("standard", "4");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "4");
         // 标准 86k
         qualityMap.put("86k", "5");
         // 标准 128k
@@ -40,19 +41,19 @@ public class VkeysQqTrackHero {
         // 标准 173k
         qualityMap.put("173k", "7");
         // HQ
-        qualityMap.put("hq", "8");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "8");
         // HQ 提高
-        qualityMap.put("super", "9");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.SUPER], "9");
         // 无损
-        qualityMap.put("lossless", "10");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "10");
         // HI-RES
-        qualityMap.put("hires", "11");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "11");
         // Dolby
         qualityMap.put("dolby", "12");
         // 至臻全景声
-        qualityMap.put("atmosphere", "13");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], "13");
         // 至臻母带
-        qualityMap.put("master", "14");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "14");
         // AI 伴奏消音
         qualityMap.put("aiAccompaniment", "15");
         // AI 人声消音
@@ -68,8 +69,7 @@ public class VkeysQqTrackHero {
      */
     public String getTrackUrl(String id, String quality) {
         String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, id, qualityMap.get(quality)))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
         if (JsonUtil.isEmpty(data)) return "";
         String trackUrl = data.getString("url");
@@ -78,8 +78,8 @@ public class VkeysQqTrackHero {
 
 //    public static void main(String[] args) {
 //        VkeysQqTrackHero trackHero = getInstance();
-//        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", "standard"));
-//        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", "hq"));
-//        System.out.println(trackHero.getTrackUrl("0039MnYb0qxYhV", "lossless"));
+//        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(trackHero.getTrackUrl("0039MnYb0qxYhV", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 }

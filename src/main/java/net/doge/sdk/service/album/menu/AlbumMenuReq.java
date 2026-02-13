@@ -1,11 +1,11 @@
 package net.doge.sdk.service.album.menu;
 
-import cn.hutool.http.HttpRequest;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,8 +45,7 @@ public class AlbumMenuReq {
         // 豆瓣
         if (source == NetMusicSource.DB) {
             String albumInfoBody = HttpRequest.get(String.format(SIMILAR_ALBUM_DB_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements rs = doc.select("dl.subject-rec-list");
             t = rs.size();

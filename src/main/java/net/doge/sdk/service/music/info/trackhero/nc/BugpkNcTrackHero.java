@@ -29,13 +29,13 @@
 //
 //    private void initMap() {
 //        // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, sky => 沉浸环绕声, jymaster => 超清母带
-//        qualityMap.put("standard", "standard");
-//        qualityMap.put("hq", "exhigh");
-//        qualityMap.put("lossless", "lossless");
-//        qualityMap.put("hires", "hires");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "standard");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "exhigh");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "lossless");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "hires");
 //        qualityMap.put("jyeffect", "jyeffect");
-//        qualityMap.put("atmosphere", "sky");
-//        qualityMap.put("master", "jymaster");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], "sky");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "jymaster");
 //        qualityMap.put("dolby", "dolby");
 //    }
 //
@@ -61,10 +61,10 @@
 //        return "";
 //    }
 //
-//    public static void main(String[] args) throws IOException {
+//    public static void main(String[] args) {
 //        BugpkNcTrackHero trackHero = getInstance();
-//        System.out.println(trackHero.getTrackUrl("2600493765", "standard"));
-//        System.out.println(trackHero.getTrackUrl("2600493765", "hq"));
-//        System.out.println(trackHero.getTrackUrl("2600493765", "lossless"));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 //}

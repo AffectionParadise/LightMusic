@@ -1,6 +1,5 @@
 package net.doge.sdk.service.playlist.menu;
 
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -12,6 +11,7 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.RegexUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -55,8 +55,7 @@ public class PlaylistMenuReq {
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapiPC();
             String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_API, id), "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements playlistArray = doc.select(".m-rctlist.f-cb li");
             t = playlistArray.size();
@@ -107,8 +106,7 @@ public class PlaylistMenuReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_SUBSCRIBERS_API,
                             String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
             JSONArray userArray = userInfoJson.getJSONArray("subscribers");
             t = userInfoJson.getIntValue("total");

@@ -1,9 +1,5 @@
 package net.doge.sdk.service.mv.rcmd;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import cn.hutool.http.HttpStatus;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -17,6 +13,9 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
@@ -110,8 +109,7 @@ public class RecommendMvReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                 s[0].replace("全部", ""), (page - 1) * limit, limit), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
@@ -155,8 +153,7 @@ public class RecommendMvReq {
             if (StringUtil.notEmpty(s[0])) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", s[0]), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
@@ -196,8 +193,7 @@ public class RecommendMvReq {
                 String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_API,
                                 String.format("{\"tags\":\"{'area':'%s','type':'%s','order':'上升最快'}\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                         s[0], s[1], (page - 1) * limit, limit), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
@@ -236,8 +232,7 @@ public class RecommendMvReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_MV_API, "{}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("result");
             t = mvArray.size();
@@ -276,8 +271,7 @@ public class RecommendMvReq {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, EXCLUSIVE_MV_API,
                             String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
             t = mvArray.size();
@@ -317,8 +311,7 @@ public class RecommendMvReq {
 
             if (StringUtil.notEmpty(s[2])) {
                 String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, s[2], page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("data");
                 t = data.getIntValue("total");
@@ -364,8 +357,7 @@ public class RecommendMvReq {
                 Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_MV_KG_API);
                 String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[3], page, limit);
                 String mvInfoBody = SdkCommon.kgRequest(null, dat, options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 t = mvInfoJson.getIntValue("total");
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
@@ -414,8 +406,7 @@ public class RecommendMvReq {
                         .body(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
                                 "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
                                 "\"order\":1}}}", s[4], s[5], (page - 1) * limit, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("mv_list").getJSONObject("data");
                 t = data.getIntValue("total");
@@ -459,8 +450,7 @@ public class RecommendMvReq {
 
             if (StringUtil.notEmpty(s[6])) {
                 String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[6]))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("mvlist");
                 t = mvArray.size();
@@ -501,8 +491,8 @@ public class RecommendMvReq {
             Integer t = 0;
 
             if (StringUtil.notEmpty(s[7])) {
-                HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[7], page, limit)).executeAsync();
-                if (resp.getStatus() == HttpStatus.HTTP_OK) {
+                HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[7], page, limit)).execute();
+                if (resp.isSuccessful()) {
                     String mvInfoBody = resp.body();
                     JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                     JSONObject data = mvInfoJson.getJSONObject("data");
@@ -547,8 +537,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_MV_QI_API, page, limit, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -592,8 +581,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_FS_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -636,8 +624,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(HOT_MV_FS_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -680,8 +667,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(NEW_MV_FS_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             t = data.getIntValue("total");
@@ -726,8 +712,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(GUESS_VIDEO_HK_API, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
             JSONArray mvArray = data.getJSONArray("apiData");
@@ -769,8 +754,7 @@ public class RecommendMvReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.get(String.format(TOP_VIDEO_HK_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("apiData").getJSONObject("response");
             t = data.getIntValue("total_page") * limit;
@@ -814,8 +798,7 @@ public class RecommendMvReq {
             if (StringUtil.notEmpty(s[8])) {
                 String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[8], limit))
                         .cookie(SdkCommon.HK_COOKIE)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("data").getJSONObject("response");
                 JSONArray mvArray = data.getJSONArray("videos");
@@ -861,8 +844,7 @@ public class RecommendMvReq {
 
             String mvInfoBody = HttpRequest.get(String.format(HOT_VIDEO_BI_API, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
             t = data.getBoolean("no_more") ? page * limit : page * limit + 1;
             JSONArray mvArray = data.getJSONArray("list");
@@ -908,8 +890,7 @@ public class RecommendMvReq {
             if (StringUtil.notEmpty(s[9])) {
                 String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[9]))
                         .cookie(SdkCommon.BI_COOKIE)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONArray mvArray = mvInfoJson.getJSONArray("data");
                 t = mvArray.size();
@@ -955,8 +936,7 @@ public class RecommendMvReq {
             if (StringUtil.notEmpty(s[9])) {
                 String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[9], page, limit))
                         .cookie(SdkCommon.BI_COOKIE)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
                 JSONObject data = mvInfoJson.getJSONObject("data");
                 t = data.getJSONObject("page").getIntValue("count");
@@ -1006,9 +986,7 @@ public class RecommendMvReq {
             String[] sp = s[10].split(" ", -1);
             if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
                 String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, page, sp[0]))
-                        .setFollowRedirects(true)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(mvInfoBody);
                 Elements as = doc.select(".pagination ul li");
                 if (as.isEmpty()) t = limit;
@@ -1062,9 +1040,7 @@ public class RecommendMvReq {
             String[] sp = s[10].split(" ", -1);
             if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {
                 String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, page, sp[1]))
-                        .setFollowRedirects(true)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(mvInfoBody);
                 Elements as = doc.select(".pagination ul li");
                 if (as.isEmpty()) t = limit;
@@ -1118,8 +1094,7 @@ public class RecommendMvReq {
 
             if (StringUtil.notEmpty(s[11])) {
                 String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[11]))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(mvInfoBody);
                 Elements mvArray = doc.select(".tile-content");
                 t = mvArray.size();

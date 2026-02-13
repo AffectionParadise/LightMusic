@@ -36,21 +36,20 @@
 //    private Map<String, String> qualityMap = new HashMap<>();
 //
 //    private void initMap() {
-////        qualityHashMap.put("standard", "128hash");
-////        qualityHashMap.put("hq", "320hash");
-////        qualityHashMap.put("lossless", "sqhash");
-////        qualityHashMap.put("hires", "highhash");
-//        qualityHashMap.put("standard", "hash_128");
-//        qualityHashMap.put("hq", "hash_320");
-//        qualityHashMap.put("lossless", "hash_flac");
-//        qualityHashMap.put("hires", "hash_high");
-//        qualityHashMap.put("master", "hash_128");
+/// /        qualityHashMap.put(AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.STANDARD], "128hash");
+/// /        qualityHashMap.put(AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.HIGH], "320hash");
+/// /        qualityHashMap.put(AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.LOSSLESS], "sqhash");
+/// /        qualityHashMap.put(AudioQuality.KEYS[net.doge.constant.core.media.AudioQuality.HI_RES], "highhash");
+//        qualityHashMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "hash_128");
+//        qualityHashMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "hash_320");
+//        qualityHashMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "hash_flac");
+//        qualityHashMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "hash_high");
 //
-//        qualityMap.put("standard", "128");
-//        qualityMap.put("hq", "320");
-//        qualityMap.put("lossless", "flac");
-//        qualityMap.put("hires", "high");
-//        qualityMap.put("master", "viper_atmos");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "128");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "320");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "flac");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "high");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "viper_atmos");
 //    }
 //
 //    /**
@@ -148,6 +147,6 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "standard"));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
 //    }
 //}

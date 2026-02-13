@@ -28,6 +28,7 @@
         <opencc4j.version>1.14.0</opencc4j.version>
         <moji4j.version>1.2.0</moji4j.version>
         <hutool.version>5.8.43</hutool.version>
+        <okhttp.version>4.12.0</okhttp.version>
     </properties>
 
     <dependencies>
@@ -118,10 +119,17 @@
         </dependency>
 
         <!-- HuTool HTTP 请求 -->
+        <!--        <dependency>-->
+        <!--            <groupId>cn.hutool</groupId>-->
+        <!--            <artifactId>hutool-http</artifactId>-->
+        <!--            <version>${hutool.version}</version>-->
+        <!--        </dependency>-->
+
+        <!-- OkHttp -->
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-http</artifactId>
-            <version>${hutool.version}</version>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
         </dependency>
 
         <!-- HuTool 加密解密 -->

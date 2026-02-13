@@ -1,8 +1,5 @@
 package net.doge.sdk.service.comment;
 
-import cn.hutool.http.Header;
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.Method;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -21,6 +18,9 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -142,8 +142,7 @@ public class CommentReq {
                 // QQ 需要先通过 mid 获取 id
                 String songInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                         .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
                 id = trackInfo.getString("id");
             }
@@ -163,8 +162,7 @@ public class CommentReq {
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
                 String songInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
             }
         } else if (resource instanceof NetRadioInfo) {
@@ -190,8 +188,7 @@ public class CommentReq {
             if (isMlog) {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_API, String.format("{\"mlogId\":\"%s\"}", id), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 id = JSONObject.parseObject(body).getString("data");
                 mvInfo.setId(id);
                 mvInfo.setType(MvInfoType.VIDEO);
@@ -223,8 +220,7 @@ public class CommentReq {
             String commentInfoBody = SdkCommon.ncRequest(Method.POST, COMMENTS_API,
                             String.format("{\"threadId\":\"%s\",\"showInner\":true,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":\"%s\",\"sortType\":%s}",
                                     threadId, page, limit, cur, sortType), options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
 //            String threadId = typeStr[0] + id;
 //            int sortType = hotOnly ? 2 : 3;
 //            String cur = "";
@@ -380,8 +376,7 @@ public class CommentReq {
             params.put("ver", 10);
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(hotOnly ? HOT_COMMENTS_KG_API : NEW_COMMENTS_KG_API);
             String commentInfoBody = SdkCommon.kgRequest(params, null, options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONArray commentArray = commentInfoJson.getJSONArray("list");
             total = commentInfoJson.getIntValue("count");
@@ -425,8 +420,7 @@ public class CommentReq {
             cmd.put("5", new int[]{8, 6});
             String bizType = typeStr[1];
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_QQ_API, bizType, id, cmd.get(bizType)[hotOnly ? 1 : 0], page - 1, lim))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject commentJson = commentInfoJson.getJSONObject("comment");
             int to = commentJson.getIntValue("commenttotal");
@@ -516,8 +510,7 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(url, typeStr[2], id, page, limit))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .header(Header.REFERER, ref)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONArray commentArray = null;
             if (!commentInfoJson.containsKey("data")) {
@@ -581,16 +574,14 @@ public class CommentReq {
         else if (source == NetMusicSource.MG && resource instanceof NetMusicInfo) {
             // 先根据 cid 获取 songId
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             id = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0).getString("songId");
 
             // 评论
             String url = hotOnly ? HOT_COMMENTS_MG_API : NEW_COMMENTS_MG_API;
             String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
                     .header(Header.REFERER, "https://music.migu.cn")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             if (JsonUtil.notEmpty(data)) {
@@ -663,8 +654,7 @@ public class CommentReq {
             if (isRadio) {
                 String url = hotOnly ? RADIO_HOT_COMMENTS_XM_API : RADIO_NEW_COMMENTS_XM_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
                 JSONObject data = commentInfoJson.getJSONObject("data");
                 JSONObject comments = data.getJSONObject("comments");
@@ -672,8 +662,7 @@ public class CommentReq {
                 commentArray = comments.getJSONArray("list");
             } else {
                 String commentInfoBody = HttpRequest.get(String.format(COMMENTS_XM_API, id, page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
                 JSONObject data = commentInfoJson.getJSONObject("data");
                 total = data.getIntValue("totalComment");
@@ -753,8 +742,7 @@ public class CommentReq {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HF_API, id, page))
                     .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select("li.media.post");
             Elements ap = doc.select("a.page-link");
@@ -822,8 +810,7 @@ public class CommentReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_GG_API, id, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select("li.media.post");
             Elements ap = doc.select("a.page-link");
@@ -910,8 +897,7 @@ public class CommentReq {
             }
             Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(url);
             String commentInfoBody = SdkCommon.fsRequest(params, null, options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             JSONArray commentArray = data.getJSONArray(hotOnly && isMv ? "hotList" : "comments");
@@ -1013,8 +999,7 @@ public class CommentReq {
         // 猫耳
         else if (source == NetMusicSource.ME && StringUtil.notEmpty(typeStr[3])) {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_ME_API, typeStr[3], hotOnly ? 3 : 1, id, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("info").getJSONObject("comment");
             total = data.getJSONObject("pagination").getIntValue("count");
@@ -1081,8 +1066,7 @@ public class CommentReq {
         // 好看
         else if (source == NetMusicSource.HK) {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HK_API, id, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
             total = data.getIntValue("comment_count");
@@ -1152,9 +1136,7 @@ public class CommentReq {
             if (isGame) {
                 String url = GAME_RADIO_COMMENTS_DB_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "score" : "time", (page - 1) * limit, limit))
-                        .setFollowRedirects(true)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select("li.comment-item");
                 String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("#content h1").text());
@@ -1198,9 +1180,7 @@ public class CommentReq {
                     else url = RADIO_COMMENTS_DB_API;
                 } else url = ALBUM_COMMENTS_DB_API;
                 String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "new_score" : "time", (page - 1) * limit, limit))
-                        .setFollowRedirects(true)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(commentInfoBody);
                 Elements comments = doc.select(isRadio && !isBook ? ".comment-item" : "li.comment-item");
                 String ts = RegexUtil.getGroup1("\\((\\d+)\\)", doc.select("li.is-active").text());
@@ -1251,8 +1231,7 @@ public class CommentReq {
                     : String.format(SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
             String commentInfoBody = HttpRequest.get(url)
                     .cookie(SdkCommon.BI_COOKIE)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
 //                    // 貌似解析不了，触及到什么特殊字符了？
 //                    .replaceAll("\"\\[\\d+.*?\\]\"", "\"\"");
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -1366,8 +1345,7 @@ public class CommentReq {
             boolean isVideo = resource instanceof NetMvInfo;
             // 获取 post-id
             String albumInfoBody = HttpRequest.get(String.format(isVideo ? VIDEO_DETAIL_LZ_API : ALBUM_DETAIL_LZ_API, id))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements ct = doc.select(".comments.tabbar");
             String pid = ct.attr("data-post_id");
@@ -1378,8 +1356,7 @@ public class CommentReq {
             formMap.put("page", page);
             String commentInfoBody = HttpRequest.post(COMMENTS_LZ_API)
                     .form(formMap)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             doc = Jsoup.parse(commentInfoBody);
             Elements commentArray = doc.select("#comments-list li");
             // 获取评论数量

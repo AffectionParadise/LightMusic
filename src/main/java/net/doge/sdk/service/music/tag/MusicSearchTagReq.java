@@ -1,10 +1,10 @@
 package net.doge.sdk.service.music.tag;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
+import net.doge.sdk.util.http.HttpRequest;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -39,8 +39,7 @@ public class MusicSearchTagReq {
         // 猫耳
         Runnable initProgramSearchTagMe = () -> {
             String playlistTagBody = HttpRequest.get(PROGRAM_SEARCH_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONArray tags = JSONArray.parseArray(playlistTagBody);
             for (int i = 0, len = tags.size(); i < len; i++) {
                 JSONObject son = tags.getJSONObject(i).getJSONObject("son");

@@ -1,8 +1,9 @@
 package net.doge.sdk.service.music.info.trackhero.nc;
 
-import cn.hutool.http.HttpRequest;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
 
@@ -28,13 +29,13 @@ public class CyruiNcTrackHero {
 
     private void initMap() {
         // standard => 标准, exhigh => 极高, lossless => 无损, hires => Hi-Res, jyeffect => 高清环绕声, sky => 沉浸环绕声, jymaster => 超清母带
-        qualityMap.put("standard", "standard");
-        qualityMap.put("hq", "exhigh");
-        qualityMap.put("lossless", "lossless");
-        qualityMap.put("hires", "hires");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "standard");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "exhigh");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "lossless");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "hires");
         qualityMap.put("jyeffect", "jyeffect");
-        qualityMap.put("atmosphere", "sky");
-        qualityMap.put("master", "jymaster");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], "sky");
+        qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "jymaster");
     }
 
     /**
@@ -46,8 +47,7 @@ public class CyruiNcTrackHero {
      */
     public String getTrackUrl(String id, String quality) {
         String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
-                .executeAsync()
-                .body();
+                .executeAsStr();
         JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
         if (JsonUtil.isEmpty(data)) return "";
         JSONObject urlJson = data.getJSONObject(0);
@@ -61,8 +61,8 @@ public class CyruiNcTrackHero {
 
 //    public static void main(String[] args) {
 //        CyruiNcTrackHero trackHero = getInstance();
-//        System.out.println(trackHero.getTrackUrl("2600493765", "standard"));
-//        System.out.println(trackHero.getTrackUrl("2600493765", "hq"));
-//        System.out.println(trackHero.getTrackUrl("2600493765", "lossless"));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 }

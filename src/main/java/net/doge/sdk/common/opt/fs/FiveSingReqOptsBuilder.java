@@ -1,6 +1,6 @@
 package net.doge.sdk.common.opt.fs;
 
-import cn.hutool.http.Method;
+import net.doge.sdk.util.http.constant.Method;
 
 import java.util.HashMap;
 import java.util.Map;

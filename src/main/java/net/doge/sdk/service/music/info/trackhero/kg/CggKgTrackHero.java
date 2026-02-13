@@ -28,10 +28,10 @@
 //
 //    private void initMap() {
 //        qualityMap.put("ogg", "ogg");
-//        qualityMap.put("standard", "standard");
-//        qualityMap.put("hq", "exhigh");
-//        qualityMap.put("lossless", "lossless");
-//        qualityMap.put("hires", "hires");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], "standard");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HIGH], "exhigh");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], "lossless");
+//        qualityMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], "hires");
 //    }
 //
 //    /**
@@ -81,8 +81,8 @@
 //
 //    public static void main(String[] args) {
 //        CggKgTrackHero trackHero = getInstance();
-//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "standard"));
-//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "hq"));
-//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", "lossless"));
+//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(trackHero.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 //}

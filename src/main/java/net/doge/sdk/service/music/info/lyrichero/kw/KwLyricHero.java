@@ -1,8 +1,8 @@
 package net.doge.sdk.service.music.info.lyrichero.kw;
 
-import cn.hutool.http.HttpRequest;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
+import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.RegexUtil;
@@ -51,8 +51,7 @@ public class KwLyricHero {
 
         // 获取歌词
         byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
-                .executeAsync()
-                .bodyBytes();
+                .executeAsBytes();
         if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);

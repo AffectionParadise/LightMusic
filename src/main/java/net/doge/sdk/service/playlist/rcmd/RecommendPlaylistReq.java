@@ -1,6 +1,5 @@
 package net.doge.sdk.service.playlist.rcmd;
 
-import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
@@ -15,6 +14,10 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.sdk.util.http.HttpRequest;
+import net.doge.sdk.util.http.HttpResponse;
+import net.doge.sdk.util.http.constant.Header;
+import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.LangUtil;
 import net.doge.util.core.RegexUtil;
@@ -103,8 +106,7 @@ public class RecommendPlaylistReq {
 
             final int lim = Math.min(35, limit);
             String playlistInfoBody = HttpRequest.get(String.format(DISCOVER_PLAYLIST_API, (page - 1) * lim, lim))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements playlists = doc.select("ul.m-cvrlst.f-cb li");
             Elements a = doc.select(".u-page a");
@@ -146,8 +148,7 @@ public class RecommendPlaylistReq {
 
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PLAYLIST_API, "{\"n\":1000,\"limit\":100,\"total\":true}", options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("result");
             t = playlistArray.size();
@@ -184,8 +185,7 @@ public class RecommendPlaylistReq {
                 Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
                 String playlistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_PLAYLIST_API,
                                 String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
                 JSONArray playlistArray = data.getJSONArray("playlist");
@@ -227,8 +227,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_KG_API, page))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("plist").getJSONObject("list");
             t = data.getIntValue("total");
@@ -267,8 +266,7 @@ public class RecommendPlaylistReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
@@ -305,8 +303,7 @@ public class RecommendPlaylistReq {
 
             if (StringUtil.notEmpty(s[1])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = limit * 100;
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("special_db");
@@ -349,8 +346,7 @@ public class RecommendPlaylistReq {
                             "\"is_selected\":0,\"withrecommend\":1,\"area_code\":1,\"categoryid\":\"0\"}}",
                     KugouReqBuilder.appid, KugouReqBuilder.mid, KugouReqBuilder.clientver, ct, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct));
             String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             JSONArray playlistArray = data.getJSONArray("special_list");
@@ -389,8 +385,7 @@ public class RecommendPlaylistReq {
 
             String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .body("{\"comm\":{\"ct\":24},\"recomPlaylist\":{\"method\":\"get_hot_recommend\",\"param\":{\"async\":1,\"cmd\":2},\"module\":\"playlist.HotRecommendServer\"}}")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONObject("recomPlaylist").getJSONObject("data").getJSONArray("v_hot");
             t = playlistArray.size();
@@ -490,8 +485,7 @@ public class RecommendPlaylistReq {
                                     "\"module\":\"playlist.PlayListCategoryServer\"}}", cat, cat, limit, page - 1));
                 }
                 String playlistInfoBody = HttpRequest.get(url)
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 if (isAll) {
                     JSONObject data = playlistInfoJson.getJSONObject("playlist").getJSONObject("data");
@@ -558,8 +552,8 @@ public class RecommendPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API).execute();
+            if (resp.isSuccessful()) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONArray playlistArray = playlistInfoJson.getJSONObject("data").getJSONArray("list");
@@ -597,8 +591,8 @@ public class RecommendPlaylistReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            HttpResponse resp = HttpRequest.get(String.format(NEW_PLAYLIST_KW_API, page, limit)).executeAsync();
-            if (resp.getStatus() == HttpStatus.HTTP_OK) {
+            HttpResponse resp = HttpRequest.get(String.format(NEW_PLAYLIST_KW_API, page, limit)).execute();
+            if (resp.isSuccessful()) {
                 String playlistInfoBody = resp.body();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -640,8 +634,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(REC_NEW_PLAYLIST_MG_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
             t = 1000;
@@ -680,8 +673,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
                     .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("retMsg");
             t = data.getIntValue("countSize");
@@ -721,8 +713,7 @@ public class RecommendPlaylistReq {
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_MG_API, (page - 1) * 10))
                     .header(Header.USER_AGENT, "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1")
                     .header(Header.REFERER, "https://m.music.migu.cn/")
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("retMsg");
             t = data.getIntValue("countSize");
@@ -762,8 +753,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = SdkCommon.qiRequest(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis()))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(5);
             t = data.getIntValue("module_nums");
@@ -799,8 +789,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(REC_PLAYLIST_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject info = playlistInfoJson.getJSONObject("info");
             JSONArray playlistArray = info.getJSONArray("albums");
@@ -841,8 +830,7 @@ public class RecommendPlaylistReq {
 
             if (StringUtil.notEmpty(s[3])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[3].trim(), page, limit))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
                 t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");
                 JSONArray playlistArray = playlistInfoJson.getJSONArray("albums");
@@ -883,8 +871,7 @@ public class RecommendPlaylistReq {
 
             if (StringUtil.notEmpty(s[4])) {
                 String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, s[4].trim(), page))
-                        .executeAsync()
-                        .body();
+                        .executeAsStr();
                 Document doc = Jsoup.parse(playlistInfoBody);
                 Elements as = doc.select("span.pagecon a");
                 if (as.isEmpty()) t = limit;
@@ -930,8 +917,7 @@ public class RecommendPlaylistReq {
             Integer t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_BI_API, page, limit))
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
             t = data.getIntValue("totalSize");

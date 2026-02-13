@@ -1,8 +1,8 @@
 package net.doge.sdk.service.music.tag;
 
-import cn.hutool.http.HttpRequest;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
+import net.doge.sdk.util.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -43,8 +43,7 @@ public class ProgramTagReq {
         // 猫耳探索
         Runnable initExpProgramTagMe = () -> {
             String playlistTagBody = HttpRequest.get(EXP_PROGRAM_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(playlistTagBody);
 
             Elements tags = doc.select(".explore-tag");
@@ -61,8 +60,7 @@ public class ProgramTagReq {
         // 首页标签
         Runnable initProgramIndexTagMe = () -> {
             String radioTagBody = HttpRequest.get(PROGRAM_SUB_TAG_ME_API)
-                    .executeAsync()
-                    .body();
+                    .executeAsStr();
             Document doc = Jsoup.parse(radioTagBody);
 
             // 大标签
