@@ -3,6 +3,7 @@ package net.doge.util.lmdata.manager;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.data.LMDataConstants;
 import net.doge.constant.core.os.SimplePath;
+import net.doge.util.core.LogUtil;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -28,6 +29,7 @@ public class LMIconManager {
         try {
             return new ImageIcon(getImage(key));
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }

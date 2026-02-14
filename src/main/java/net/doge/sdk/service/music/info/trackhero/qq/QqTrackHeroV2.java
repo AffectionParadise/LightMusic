@@ -5,9 +5,9 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.trackhero.qq.entity.QQualityEntry;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class QqTrackHeroV2 {
         String infoReqBody = String.format("{\"comm\":{\"ct\":\"19\",\"cv\":\"1859\",\"uin\":\"0\"},\"req\":{\"module\":\"music.pf_song_detail_svr\"," +
                 "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);
         String infoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                .body(infoReqBody)
+                .jsonBody(infoReqBody)
                 .executeAsStr();
         JSONObject infoBodyJson = JSONObject.parseObject(infoBody);
         if (infoBodyJson.getIntValue("code") != 0 || infoBodyJson.getJSONObject("req").getIntValue("code") != 0)
@@ -78,7 +78,7 @@ public class QqTrackHeroV2 {
                         "\"comm\":{\"qq\":\"%s\",\"authst\":\"%s\",\"ct\":\"26\",\"cv\":\"2010101\",\"v\":\"2010101\"}}",
                 qualityEntry.getPrefix() + mediaMid + qualityEntry.getSuffix(), guid, mid, uin, loginuin, qqmusic_key);
         String urlBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                .body(reqBody)
+                .jsonBody(reqBody)
                 .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(urlBody);
         JSONObject data = urlJson.getJSONObject("req").getJSONObject("data");

@@ -1,10 +1,8 @@
 package net.doge.util.core;
 
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.listener.DownloadListener;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
 
 import java.io.*;
 import java.util.Map;
@@ -48,7 +46,6 @@ public class NetUtil {
      */
     public static void download(String url, String dest, Map<String, String> headers, DownloadListener listener) throws Exception {
         HttpResponse resp = HttpRequest.get(url)
-                .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                 .headers(headers)
                 // 注意这里是异步执行，否则会等待流中数据全部初始化才继续
                 .execute();

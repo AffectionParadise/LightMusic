@@ -13,11 +13,11 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -28,7 +28,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -403,7 +402,7 @@ public class RecommendMvReq {
 
             if (StringUtil.notEmpty(s[4])) {
                 String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                        .body(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
+                        .jsonBody(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
                                 "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
                                 "\"order\":1}}}", s[4], s[5], (page - 1) * limit, limit))
                         .executeAsStr();
@@ -1185,10 +1184,8 @@ public class RecommendMvReq {
                 CommonResult<NetMvInfo> result = task.get();
                 rl.add(result.data);
                 total.set(Math.max(total.get(), result.total));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
         res.addAll(ListUtil.joinAll(rl));

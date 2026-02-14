@@ -1,12 +1,12 @@
 //package net.doge.sdk.service.music.info.trackhero.nc;
 //
-//import cn.hutool.http.HttpRequest;
 //import com.alibaba.fastjson2.JSONArray;
 //import com.alibaba.fastjson2.JSONObject;
+//import net.doge.constant.core.media.AudioQuality;
 //import net.doge.util.core.JsonUtil;
 //import net.doge.util.core.StringUtil;
+//import net.doge.util.http.HttpRequest;
 //
-//import java.io.IOException;
 //import java.util.HashMap;
 //import java.util.Map;
 //
@@ -48,8 +48,7 @@
 //     */
 //    public String getTrackUrl(String id, String quality) {
 //        String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
-//                .executeAsync()
-//                .body();
+//                .executeAsStr();
 //        JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
 //        if (JsonUtil.isEmpty(data)) return "";
 //        JSONObject urlJson = data.getJSONObject(0);

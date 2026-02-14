@@ -10,9 +10,9 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.TimeUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.Map;
@@ -130,7 +130,7 @@ public class MvInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
+                    .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
                             "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
                             "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
                             "\"isfav\",\"gmid\"]}},\"other\":{\"module\":\"video.VideoLogicServer\",\"method\":\"rec_video_byvid\"," +

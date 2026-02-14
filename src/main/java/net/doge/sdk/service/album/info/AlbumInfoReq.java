@@ -14,9 +14,9 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -600,7 +600,7 @@ public class AlbumInfoReq {
         // QQ (程序分页)
         else if (source == NetMusicSource.QQ) {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":10000},\"albumSonglist\":{\"method\":\"GetAlbumSongList\",\"param\":" +
+                    .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":10000},\"albumSonglist\":{\"method\":\"GetAlbumSongList\",\"param\":" +
                             "{\"albumMid\":\"%s\",\"albumID\":0,\"begin\":0,\"num\":999,\"order\":2},\"module\":\"music.musichallAlbum.AlbumSongList\"}}", id))
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

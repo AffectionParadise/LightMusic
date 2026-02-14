@@ -58,11 +58,10 @@ import net.doge.entity.service.*;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.entity.service.base.Resource;
-import net.doge.exception.IllegalMediaException;
-import net.doge.exception.NoCopyrightException;
+import net.doge.exception.media.IllegalMediaException;
+import net.doge.exception.media.InvalidResourceException;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.MusicServerUtil;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.ui.core.animation.ComponentChangeFadingAnimation;
 import net.doge.ui.core.animation.handler.ComponentChangeHandler;
 import net.doge.ui.core.dimension.HDDimension;
@@ -109,6 +108,7 @@ import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.media.MediaUtil;
@@ -140,7 +140,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class MainFrame extends JFrame {
     private MainFrame() {
@@ -244,16 +247,10 @@ public class MainFrame extends JFrame {
     private final String LAST_PAGE_MSG = I18n.getText("lastPageMsg");
     private final String ILLEGAL_PAGE_MSG = I18n.getText("illegalPageMsg");
     private final String FILE_NOT_FOUND_MSG = I18n.getText("fileNotFoundMsg");
-    private final String UNSUPPORTED_AUDIO_FILE_MSG = I18n.getText("unsupportedAudioFileMsg");
-    private final String INVALID_AUDIO_FILE_MSG = I18n.getText("invalidAudioFileMsg");
     private final String NO_CATALOG_MSG = I18n.getText("noCatalogMsg");
     private final String NO_MUSIC_MSG = I18n.getText("noMusicMsg");
     private final String ALREADY_PLAYING_MSG = I18n.getText("alreadyPlayingMsg");
     private final String NO_IMG_MSG = I18n.getText("noImgMsg");
-    private final String GET_RESOURCE_FAILED_MSG = I18n.getText("getResourceFailedMsg");
-    private final String NO_NET_MSG = I18n.getText("noNetMsg");
-    private final String TIME_OUT_MSG = I18n.getText("timeOutMsg");
-    private final String API_ERROR_MSG = I18n.getText("apiErrorMsg");
     private final String CLEAR_CACHE_SUCCESS_MSG = I18n.getText("clearCacheSuccessMsg");
     private final String NEXT_PLAY_SUCCESS_MSG = I18n.getText("nextPlaySuccessMsg");
     private final String COLLECT_SUCCESS_MSG = I18n.getText("collectSuccessMsg");
@@ -5437,7 +5434,7 @@ public class MainFrame extends JFrame {
                     netMusicScrollPane.setVBarValue(0);
                     netMusicInCollectionCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -5710,7 +5707,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -5791,7 +5788,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -5875,7 +5872,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -5962,7 +5959,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -6044,7 +6041,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -6149,7 +6146,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             collectionLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -6157,10 +6154,8 @@ public class MainFrame extends JFrame {
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -7442,7 +7437,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -7577,7 +7572,7 @@ public class MainFrame extends JFrame {
                         }
                         netMusicScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -7893,7 +7888,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicScrollPane.setVBarValue(0);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -7956,7 +7951,7 @@ public class MainFrame extends JFrame {
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -8075,7 +8070,7 @@ public class MainFrame extends JFrame {
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -8196,7 +8191,7 @@ public class MainFrame extends JFrame {
                         tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                     }
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -8262,7 +8257,7 @@ public class MainFrame extends JFrame {
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -8325,7 +8320,7 @@ public class MainFrame extends JFrame {
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -8620,7 +8615,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8648,7 +8643,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8676,7 +8671,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8704,7 +8699,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8732,7 +8727,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8760,7 +8755,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8788,7 +8783,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8830,7 +8825,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8878,7 +8873,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -8907,7 +8902,7 @@ public class MainFrame extends JFrame {
                     imageViewDialog.showDialog();
                     imageViewDialog = null;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -9319,7 +9314,7 @@ public class MainFrame extends JFrame {
                     }
                     netPlaylistCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             }
         });
@@ -9356,7 +9351,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicInPlaylistCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -9523,7 +9518,7 @@ public class MainFrame extends JFrame {
                         }
                         netPlaylistScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -9832,17 +9827,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netPlaylistLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -10022,7 +10015,7 @@ public class MainFrame extends JFrame {
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -10084,7 +10077,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -10146,7 +10139,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -10261,7 +10254,7 @@ public class MainFrame extends JFrame {
                     }
                     netAlbumCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -10298,7 +10291,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicInAlbumCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -10460,7 +10453,7 @@ public class MainFrame extends JFrame {
                         }
                         netAlbumScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -10766,17 +10759,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netAlbumLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -11009,7 +11000,7 @@ public class MainFrame extends JFrame {
                         tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                     }
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -11069,7 +11060,7 @@ public class MainFrame extends JFrame {
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -11099,7 +11090,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
         // 复制名称
@@ -11217,7 +11208,7 @@ public class MainFrame extends JFrame {
                     }
                     netArtistCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -11254,7 +11245,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicInArtistCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -11423,7 +11414,7 @@ public class MainFrame extends JFrame {
                         }
                         netArtistScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -11733,17 +11724,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netArtistLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -11918,7 +11907,7 @@ public class MainFrame extends JFrame {
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -11979,7 +11968,7 @@ public class MainFrame extends JFrame {
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -12040,7 +12029,7 @@ public class MainFrame extends JFrame {
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -12103,7 +12092,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -12164,7 +12153,7 @@ public class MainFrame extends JFrame {
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -12226,7 +12215,7 @@ public class MainFrame extends JFrame {
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -12256,7 +12245,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
         // 复制名称
@@ -12373,7 +12362,7 @@ public class MainFrame extends JFrame {
                     }
                     netRadioCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -12410,7 +12399,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicInRadioCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -12578,7 +12567,7 @@ public class MainFrame extends JFrame {
                         }
                         netRadioScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -12902,17 +12891,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netRadioLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -13095,7 +13082,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -13157,7 +13144,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -13219,7 +13206,7 @@ public class MainFrame extends JFrame {
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -13279,7 +13266,7 @@ public class MainFrame extends JFrame {
                     netArtistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ARTIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -13306,7 +13293,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
         // 查看电台海报
@@ -13332,7 +13319,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
         // 复制名称
@@ -13450,7 +13437,7 @@ public class MainFrame extends JFrame {
                     }
                     netMvCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -13577,7 +13564,7 @@ public class MainFrame extends JFrame {
                         }
                         netMvScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -13733,7 +13720,7 @@ public class MainFrame extends JFrame {
             try {
                 playMv(MvCompSourceType.MV_LIST);
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         };
         netMvList.addKeyListener(new KeyAdapter() {
@@ -13872,7 +13859,7 @@ public class MainFrame extends JFrame {
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -13933,7 +13920,7 @@ public class MainFrame extends JFrame {
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -14044,7 +14031,7 @@ public class MainFrame extends JFrame {
                         tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                     }
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -14161,7 +14148,7 @@ public class MainFrame extends JFrame {
                 netRankingScrollPane.setVBarValue(0);
                 netRankingCurrPage = page;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
     }
@@ -14198,7 +14185,7 @@ public class MainFrame extends JFrame {
                     }
                     netMusicInRankingCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -14515,17 +14502,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netRankingLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -14724,7 +14709,7 @@ public class MainFrame extends JFrame {
                     }
                     netUserCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -14761,7 +14746,7 @@ public class MainFrame extends JFrame {
                 }
                 netMusicInUserCurrPage = page;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
     }
@@ -14929,7 +14914,7 @@ public class MainFrame extends JFrame {
                         }
                         netUserScrollPane.setVBarValue(0);
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 });
             }
@@ -15277,17 +15262,15 @@ public class MainFrame extends JFrame {
                         // 切换后一定要刷新！
                         netUserLeftBox.repaint();
                     } catch (Exception exception) {
-                        ExceptionUtil.handleRequestException(exception, THIS);
+                        ExceptionUtil.handleResourceException(exception, THIS);
                     }
                 }));
 
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -15457,7 +15440,7 @@ public class MainFrame extends JFrame {
                     netPlaylistScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15516,7 +15499,7 @@ public class MainFrame extends JFrame {
                     netAlbumScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15575,7 +15558,7 @@ public class MainFrame extends JFrame {
                     netRadioScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_RADIO);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15636,7 +15619,7 @@ public class MainFrame extends JFrame {
                     netMvScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_MV);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15696,7 +15679,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15756,7 +15739,7 @@ public class MainFrame extends JFrame {
                     netUserScrollPane.setVBarValue(0);
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -15888,7 +15871,7 @@ public class MainFrame extends JFrame {
                     currPaneType = CenterPaneType.COMMENT;
                 }
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
     }
@@ -15941,7 +15924,7 @@ public class MainFrame extends JFrame {
                     currPaneType = CenterPaneType.SHEET;
                 }
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
     }
@@ -16198,7 +16181,7 @@ public class MainFrame extends JFrame {
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -16257,7 +16240,7 @@ public class MainFrame extends JFrame {
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -16316,7 +16299,7 @@ public class MainFrame extends JFrame {
                     if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -16531,7 +16514,7 @@ public class MainFrame extends JFrame {
                 imageViewDialog.showDialog();
                 imageViewDialog = null;
             } catch (Exception exception) {
-                ExceptionUtil.handleRequestException(exception, THIS);
+                ExceptionUtil.handleResourceException(exception, THIS);
             }
         });
         // 复制乐谱名称
@@ -16670,7 +16653,7 @@ public class MainFrame extends JFrame {
                     netMusicScrollPane.setVBarValue(0);
                     netMusicInRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16713,7 +16696,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16756,7 +16739,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16789,7 +16772,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16822,7 +16805,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16866,7 +16849,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16910,7 +16893,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16954,7 +16937,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -16998,7 +16981,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -17031,7 +17014,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -17075,7 +17058,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.repaint();
                     netRecommendCurrPage = page;
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         }
@@ -17300,7 +17283,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17357,7 +17340,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17404,7 +17387,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17451,7 +17434,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17507,7 +17490,7 @@ public class MainFrame extends JFrame {
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17564,7 +17547,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17611,7 +17594,7 @@ public class MainFrame extends JFrame {
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(false);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17667,7 +17650,7 @@ public class MainFrame extends JFrame {
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17714,7 +17697,7 @@ public class MainFrame extends JFrame {
                     recommendLeftBox.remove(musicRecommendToolBar);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -17770,7 +17753,7 @@ public class MainFrame extends JFrame {
                     recommendBackwardButton.setEnabled(false);
                     netRecommendTagComboBox.setVisible(true);
                 } catch (Exception exception) {
-                    ExceptionUtil.handleRequestException(exception, THIS);
+                    ExceptionUtil.handleResourceException(exception, THIS);
                 }
             });
         });
@@ -18034,7 +18017,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -18118,7 +18101,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -18205,7 +18188,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -18293,7 +18276,7 @@ public class MainFrame extends JFrame {
                             // 切换后一定要刷新！
                             recommendLeftBox.repaint();
                         } catch (Exception exception) {
-                            ExceptionUtil.handleRequestException(exception, THIS);
+                            ExceptionUtil.handleResourceException(exception, THIS);
                         }
                     }));
                 }
@@ -18301,10 +18284,8 @@ public class MainFrame extends JFrame {
                 taskList.forEach(task -> {
                     try {
                         task.get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        ExceptionUtil.handleAsyncException(e);
                     }
                 });
             });
@@ -20591,7 +20572,7 @@ public class MainFrame extends JFrame {
                 MusicServerUtil.fillMusicInfo(musicInfo);
                 updateRenderer(netMusicList);
             } catch (Exception e) {
-                ExceptionUtil.handleMusicResourceException(e, THIS);
+                ExceptionUtil.handleResourceException(e, THIS);
                 if (allowRetry) retryPlay();
                 return false;
             }
@@ -20624,7 +20605,7 @@ public class MainFrame extends JFrame {
                 MusicServerUtil.fillMusicUrl(musicInfo);
                 String url = musicInfo.getUrl();
                 // 歌曲无版权
-                if (StringUtil.isEmpty(url)) throw new NoCopyrightException("歌曲无版权");
+                if (StringUtil.isEmpty(url)) throw new InvalidResourceException("歌曲资源获取失败");
                 // 酷狗的链接给的 wav，实际上是 mp3 格式，这种情况以 mp3 格式下载到本地再播放
                 // 另外 flac 格式文件先下载 flac 文件，转为 mp3 格式再播放
                 if (url.endsWith(Format.WAV) || musicInfo.isFlac()) {
@@ -22129,7 +22110,7 @@ public class MainFrame extends JFrame {
                 FileUtil.writeStr(lyricStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
-                ExceptionUtil.handleMusicResourceException(e, THIS);
+                ExceptionUtil.handleResourceException(e, THIS);
             }
         });
     }
@@ -22248,10 +22229,7 @@ public class MainFrame extends JFrame {
             try {
                 MusicServerUtil.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();
-                if (StringUtil.isEmpty(url)) {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                    return;
-                }
+                if (StringUtil.isEmpty(url)) throw new InvalidResourceException(" MV 资源获取失败");
                 if (player.isPlaying()) playOrPause();
                 dialog.close();
                 if (videoOnly) setVisible(false);
@@ -22260,7 +22238,7 @@ public class MainFrame extends JFrame {
                 videoDialog = null;
                 setVisible(true);
             } catch (Exception e) {
-                ExceptionUtil.handleMusicResourceException(e, THIS);
+                ExceptionUtil.handleResourceException(e, THIS);
             } finally {
                 dialog.close();
                 if (videoOnly) setVisible(true);
@@ -22282,10 +22260,7 @@ public class MainFrame extends JFrame {
             try {
                 MusicServerUtil.fillMvInfo(mvInfo);
                 String url = mvInfo.getUrl();
-                if (StringUtil.isEmpty(url)) {
-                    new TipDialog(THIS, GET_RESOURCE_FAILED_MSG).showDialog();
-                    return;
-                }
+                if (StringUtil.isEmpty(url)) throw new InvalidResourceException(" MV 资源获取失败");
 
                 // 不支持的格式转为 mp4 格式再播放
                 if (!mvInfo.isMp4()) {
@@ -22324,7 +22299,7 @@ public class MainFrame extends JFrame {
                 videoDialog = null;
                 setVisible(true);
             } catch (Exception e) {
-                ExceptionUtil.handleMusicResourceException(e, THIS);
+                ExceptionUtil.handleResourceException(e, THIS);
             } finally {
                 dialog.close();
                 if (videoOnly) setVisible(true);
@@ -22641,7 +22616,7 @@ public class MainFrame extends JFrame {
             }
             netMusicSearchSuggestionPanel.repaint();
         } catch (Exception exception) {
-            ExceptionUtil.handleRequestException(exception, THIS);
+            ExceptionUtil.handleResourceException(exception, THIS);
         } finally {
             searchSuggestionProcessing = false;
         }
@@ -22692,7 +22667,7 @@ public class MainFrame extends JFrame {
             }
             netMusicHotSearchPanel.repaint();
         } catch (Exception exception) {
-            ExceptionUtil.handleRequestException(exception, THIS);
+            ExceptionUtil.handleResourceException(exception, THIS);
         } finally {
             hotSearchProcessing = false;
         }

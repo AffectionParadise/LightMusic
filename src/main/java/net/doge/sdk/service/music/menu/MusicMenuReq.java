@@ -13,11 +13,10 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -38,7 +37,7 @@ public class MusicMenuReq {
         if (instance == null) instance = new MusicMenuReq();
         return instance;
     }
-    
+
     // 相似歌曲 API
     private final String SIMILAR_SONG_API = "https://music.163.com/weapi/v1/discovery/simiSong";
     // 相似歌曲 API (猫耳)
@@ -113,13 +112,13 @@ public class MusicMenuReq {
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
+                    .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
             musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
+                    .jsonBody(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"simsongs\":{\"module\":\"rcmusic.similarSongRadioServer\"," +
                             "\"method\":\"get_simsongs\",\"param\":{\"songid\":%s}}}", id))
                     .executeAsStr();
@@ -164,7 +163,6 @@ public class MusicMenuReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -287,13 +285,13 @@ public class MusicMenuReq {
         else if (source == NetMusicSource.QQ) {
             // 先根据 mid 获取 id
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
+                    .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
             String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
+                    .jsonBody(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                             "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"gedan\":{\"module\":\"music.mb_gedan_recommend_svr\"," +
                             "\"method\":\"get_related_gedan\",\"param\":{\"sin\":0,\"last_id\":0,\"song_type\":1,\"song_id\":%s}}}", id))
                     .executeAsStr();

@@ -4,11 +4,11 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.lyrichero.mg.decoder.MrcDecoder;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.List;
 

@@ -11,18 +11,17 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -252,7 +251,7 @@ public class MvSearchReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
+                    .jsonBody(String.format(SdkCommon.QQ_SEARCH_JSON, page, limit, keyword, 4))
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
@@ -430,7 +429,7 @@ public class MvSearchReq {
             Integer t = 0;
 
             String mvInfoBody = HttpRequest.post(SEARCH_MV_YY_API)
-                    .body(String.format("{\"searchType\":\"MV\",\"key\":\"%s\",\"sinceId\":\"%s\",\"size\":%s," +
+                    .jsonBody(String.format("{\"searchType\":\"MV\",\"key\":\"%s\",\"sinceId\":\"%s\",\"size\":%s," +
                                     "\"requestTagRows\":[{\"key\":\"sortType\",\"chosenTags\":[\"COMPREHENSIVE\"]}," +
                                     "{\"key\":\"source\",\"chosenTags\":[\"-1\"]},{\"key\":\"duration\",\"chosenTags\":[\"-1\"]}]}",
                             keyword, cursor, limit))
@@ -497,10 +496,8 @@ public class MvSearchReq {
                 CommonResult<NetMvInfo> result = task.get();
                 rl.add(result.data);
                 total.set(Math.max(total.get(), result.total));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
         res.addAll(ListUtil.joinAll(rl));

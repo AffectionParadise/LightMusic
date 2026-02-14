@@ -5,10 +5,10 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.lyrichero.qq.decoder.QrcDecoder;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Header;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -79,7 +79,7 @@ public class QqLyricHero {
 
         // 先根据 mid 获取 id
         String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", mid))
+                .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", mid))
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         String id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");

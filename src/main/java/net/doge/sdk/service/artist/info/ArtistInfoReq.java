@@ -15,10 +15,10 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -229,7 +229,7 @@ public class ArtistInfoReq {
 //                res.add(artistInfo);
 
                 String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                        .body(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
+                        .jsonBody(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
                                 "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
                                 "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
                                 "\"songNumTag\":0,\"singerID\":0},\"module\":\"music.musichallAlbum.AlbumListServer\"}," +
@@ -479,7 +479,7 @@ public class ArtistInfoReq {
 //            artistInfo.setDescription(description);
 
             String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
+                    .jsonBody(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
                             "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
                             "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
                             "\"songNumTag\":0,\"singerID\":0},\"module\":\"music.musichallAlbum.AlbumListServer\"}," +
@@ -795,7 +795,7 @@ public class ArtistInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singer\":{\"method\":\"get_singer_detail_info\",\"param\":" +
+                    .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singer\":{\"method\":\"get_singer_detail_info\",\"param\":" +
                             "{\"sort\":5,\"singermid\":\"%s\",\"sin\":%s,\"num\":%s},\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

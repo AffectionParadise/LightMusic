@@ -2,7 +2,8 @@ package net.doge.sdk.service.music.tag;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.sdk.util.http.HttpRequest;
+import net.doge.util.core.ExceptionUtil;
+import net.doge.util.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,7 +11,6 @@ import org.jsoup.select.Elements;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class ProgramTagReq {
@@ -23,7 +23,7 @@ public class ProgramTagReq {
         if (instance == null) instance = new ProgramTagReq();
         return instance;
     }
-    
+
     // 探索节目标签 API (猫耳)
     private final String EXP_PROGRAM_TAG_ME_API = "https://www.missevan.com/explore";
     // 首页子标签 API (猫耳)
@@ -100,10 +100,8 @@ public class ProgramTagReq {
         taskList.forEach(task -> {
             try {
                 task.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
     }

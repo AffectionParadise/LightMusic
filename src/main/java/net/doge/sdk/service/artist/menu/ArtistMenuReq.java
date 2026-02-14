@@ -13,11 +13,11 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -25,7 +25,6 @@ import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -224,7 +223,7 @@ public class ArtistMenuReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerAlbum\":{\"method\":\"get_singer_album\",\"param\":" +
+                    .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerAlbum\":{\"method\":\"get_singer_album\",\"param\":" +
                             "{\"singermid\":\"%s\",\"order\":\"time\",\"begin\":%s,\"num\":%s,\"exstatus\":1}," +
                             "\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
                     .executeAsStr();
@@ -571,7 +570,7 @@ public class ArtistMenuReq {
 //            }
 
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"order\":1,\"start\":%s,\"count\":%s}," +
+                    .jsonBody(String.format("{\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"order\":1,\"start\":%s,\"count\":%s}," +
                             "\"module\":\"MvService.MvInfoProServer\"}}", id, (page - 1) * limit, limit))
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -854,10 +853,8 @@ public class ArtistMenuReq {
             taskList.forEach(task -> {
                 try {
                     task.get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    ExceptionUtil.handleAsyncException(e);
                 }
             });
         }

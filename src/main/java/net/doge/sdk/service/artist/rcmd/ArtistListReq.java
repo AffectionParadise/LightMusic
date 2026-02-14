@@ -13,19 +13,19 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.core.ExceptionUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -370,7 +370,7 @@ public class ArtistListReq {
                 final int lim = 80, p = (page - 1) / 4 + 1;
                 String[] sp = s[5].split(" ");
                 String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                        .body(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
+                        .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                                 "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
                         .executeAsStr();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -744,10 +744,8 @@ public class ArtistListReq {
                 CommonResult<NetArtistInfo> result = task.get();
                 rl.add(result.data);
                 total.set(Math.max(total.get(), result.total));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
         res.addAll(ListUtil.joinAll(rl));

@@ -1,5 +1,7 @@
-package net.doge.sdk.util.http;
+package net.doge.util.http;
 
+import net.doge.util.core.LogUtil;
+import net.doge.util.http.interceptor.CustomRequestInterceptor;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.*;
@@ -21,12 +23,12 @@ public class HttpClient {
             .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
             .sslSocketFactory(getSSLSocketFactory(), getX509TrustManager())
             .hostnameVerifier(getHostnameVerifier())
+            .addInterceptor(new CustomRequestInterceptor())
             .build();
 
     // 忽略 https 证书验证
     private static HostnameVerifier getHostnameVerifier() {
-        HostnameVerifier hostnameVerifier = (s, sslSession) -> true;
-        return hostnameVerifier;
+        return (s, sslSession) -> true;
     }
 
     // 忽略 https 证书验证
@@ -51,7 +53,7 @@ public class HttpClient {
             }
             trustManager = (X509TrustManager) trustManagers[0];
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.error(e);
         }
 
         return trustManager;

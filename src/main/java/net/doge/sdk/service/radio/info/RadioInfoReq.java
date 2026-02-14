@@ -12,12 +12,12 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -39,7 +39,7 @@ public class RadioInfoReq {
         if (instance == null) instance = new RadioInfoReq();
         return instance;
     }
-    
+
     // 电台信息 API
     private final String RADIO_DETAIL_API = "https://music.163.com/api/djradio/v2/get";
     // 电台节目信息 API
@@ -404,7 +404,7 @@ public class RadioInfoReq {
         // QQ(程序分页)
         else if (source == NetMusicSource.QQ) {
             String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
+                    .jsonBody(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":%s,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", id))
                     .executeAsStr();

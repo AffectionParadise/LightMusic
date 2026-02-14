@@ -99,6 +99,7 @@ public class CryptoUtil {
             else cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
             return cipher.doFinal(data);
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -117,6 +118,7 @@ public class CryptoUtil {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             return cipher.doFinal(data);
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }

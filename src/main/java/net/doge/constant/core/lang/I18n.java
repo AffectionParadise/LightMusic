@@ -66,9 +66,8 @@ public class I18n {
         LANG_MAP.put("alreadyPlayingMsg", new String[]{"当前歌曲已经在播放", "The track selected is already playing"});
         LANG_MAP.put("noImgMsg", new String[]{"没有可加载的图片", "No images to load"});
         LANG_MAP.put("getResourceFailedMsg", new String[]{"获取资源失败", "Failed to get resources"});
-        LANG_MAP.put("noNetMsg", new String[]{"网络异常", "Network error"});
+        LANG_MAP.put("netErrorMsg", new String[]{"网络异常", "Network error"});
         LANG_MAP.put("timeOutMsg", new String[]{"请求超时", "Request timed out"});
-        LANG_MAP.put("apiErrorMsg", new String[]{"接口异常，请稍后再试", "API error, please try again later"});
         LANG_MAP.put("clearCacheSuccessMsg", new String[]{"清除缓存成功", "Cache cleared successfully"});
         LANG_MAP.put("nextPlaySuccessMsg", new String[]{"已添加到下一首", "Added to next track"});
         LANG_MAP.put("collectSuccessMsg", new String[]{"收藏成功", "Collected Successfully"});

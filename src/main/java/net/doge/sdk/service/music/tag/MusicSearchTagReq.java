@@ -4,12 +4,12 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.sdk.util.http.HttpRequest;
+import net.doge.util.core.ExceptionUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MusicSearchTagReq {
@@ -63,10 +63,8 @@ public class MusicSearchTagReq {
         taskList.forEach(task -> {
             try {
                 task.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
     }

@@ -11,8 +11,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.RegexUtil;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -33,7 +33,7 @@ public class PlaylistMenuReq {
         if (instance == null) instance = new PlaylistMenuReq();
         return instance;
     }
-    
+
     // 歌单相似歌单 API
     private final String SIMILAR_PLAYLIST_API = "https://music.163.com/playlist?id=%s";
     // 歌单收藏者 API

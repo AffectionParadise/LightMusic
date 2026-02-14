@@ -2,10 +2,8 @@ package net.doge.sdk.service.music.info.trackhero.mg;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.JsonUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +41,6 @@ public class MgTrackHero {
      */
     public String getTrackUrl(String id, String quality) {
         String urlBody = HttpRequest.get(String.format(SONG_URL_MG_API, id, quality))
-                .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                 .header("aversionid", "")
                 .header("token", "")
                 .header("channel", "0146832")

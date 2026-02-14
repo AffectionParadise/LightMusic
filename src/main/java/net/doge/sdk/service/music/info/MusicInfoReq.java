@@ -19,11 +19,11 @@ import net.doge.sdk.service.music.info.lyrichero.mg.MgLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.nc.NcLyricHero;
 import net.doge.sdk.service.music.info.lyrichero.qq.QqLyricHero;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ImageUtil;
 import org.jsoup.Jsoup;
@@ -37,7 +37,6 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MusicInfoReq {
@@ -232,7 +231,7 @@ public class MusicInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String songBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
+                    .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("songinfo").getJSONObject("data");
             JSONObject trackInfo = data.getJSONObject("track_info");
@@ -327,7 +326,6 @@ public class MusicInfoReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(songBody);
@@ -360,7 +358,6 @@ public class MusicInfoReq {
         // 咕咕咕音乐
         else if (source == NetMusicSource.GG) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .executeAsStr();
             Document doc = Jsoup.parse(songBody);
             String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
@@ -478,10 +475,8 @@ public class MusicInfoReq {
             taskList.forEach(task -> {
                 try {
                     task.get();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    ExceptionUtil.handleAsyncException(e);
                 }
             });
         }
@@ -603,7 +598,6 @@ public class MusicInfoReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(songBody);

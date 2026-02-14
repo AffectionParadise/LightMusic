@@ -9,12 +9,12 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -179,7 +179,7 @@ public class MvUrlReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
+                    .jsonBody(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
                             "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", id))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("getMvUrl").getJSONObject("data").getJSONObject(id);

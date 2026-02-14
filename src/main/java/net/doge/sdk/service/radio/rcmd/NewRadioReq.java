@@ -10,17 +10,17 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.core.ExceptionUtil;
 import net.doge.util.core.HtmlUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -34,7 +34,7 @@ public class NewRadioReq {
         if (instance == null) instance = new NewRadioReq();
         return instance;
     }
-    
+
     // 新晋电台 API
     private final String NEW_RADIO_API = "https://music.163.com/api/djradio/toplist";
     // 推荐个性电台 API
@@ -284,7 +284,7 @@ public class NewRadioReq {
             Integer t = 0;
 
             String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
+                    .jsonBody("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                             "\"param\":{\"id\":99,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                             "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}")
                     .executeAsStr();
@@ -457,10 +457,8 @@ public class NewRadioReq {
                 CommonResult<NetRadioInfo> result = task.get();
                 rl.add(result.data);
                 total.set(Math.max(total.get(), result.total));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
         res.addAll(ListUtil.joinAll(rl));

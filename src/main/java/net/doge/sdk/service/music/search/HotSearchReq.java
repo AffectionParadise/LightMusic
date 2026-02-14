@@ -6,15 +6,15 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Method;
+import net.doge.util.core.ExceptionUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class HotSearchReq {
@@ -27,7 +27,7 @@ public class HotSearchReq {
         if (instance == null) instance = new HotSearchReq();
         return instance;
     }
-    
+
     // 热搜 API
     private final String HOT_SEARCH_API = "https://music.163.com/api/search/chart/detail";
     // 热搜 API (酷狗)
@@ -94,7 +94,7 @@ public class HotSearchReq {
             List<String> r = new LinkedList<>();
 
             String hotSearchBody = HttpRequest.post(HOT_SEARCH_QQ_API)
-                    .body("{\"comm\":{\"ct\":\"19\",\"cv\":\"1803\",\"guid\":\"0\",\"patch\":\"118\",\"psrf_access_token_expiresAt\":0," +
+                    .jsonBody("{\"comm\":{\"ct\":\"19\",\"cv\":\"1803\",\"guid\":\"0\",\"patch\":\"118\",\"psrf_access_token_expiresAt\":0," +
                             "\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\",\"tmeLoginType\":0," +
                             "\"uin\":\"0\",\"wid\":\"0\"},\"hotkey\":{\"method\":\"GetHotkeyForQQMusicPC\"," +
                             "\"module\":\"tencent_musicsoso_hotkey.HotkeyService\",\"param\":{\"search_id\":\"\",\"uin\":0}}}")
@@ -180,10 +180,8 @@ public class HotSearchReq {
         taskList.forEach(task -> {
             try {
                 res.addAll(task.get());
-            } catch (InterruptedException e) {
-//                e.printStackTrace();
-            } catch (ExecutionException e) {
-//                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
 

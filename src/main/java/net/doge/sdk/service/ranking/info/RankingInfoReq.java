@@ -11,11 +11,11 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.DurationUtil;
 import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class RankingInfoReq {
         // QQ
         else if (source == NetMusicSource.QQ) {
             String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                    .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1))
                     .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
@@ -185,7 +185,7 @@ public class RankingInfoReq {
         // QQ(程序分页)
         else if (source == NetMusicSource.QQ) {
             String rankingInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
+                    .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                             "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1000))
                     .executeAsStr();
             JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);

@@ -1,8 +1,11 @@
-package net.doge.sdk.util.http;
+package net.doge.util.http;
 
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
+import net.doge.util.core.ExceptionUtil;
+import net.doge.util.http.constant.ContentType;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import okhttp3.*;
+import okhttp3.internal.http.HttpMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,64 +23,53 @@ public class HttpRequest {
     private Method method;
 
     // 私有构造器
-    private HttpRequest(String url, Method method) {
+    private HttpRequest(Method method, String url) {
         this.method = method;
         this.requestBuilder = new Request.Builder().url(url);
-        switch (method) {
-            case GET:
-                requestBuilder.get();
-                break;
-            case POST:
-                requestBuilder.post(createEmptyBody());
-                break;
-            case PUT:
-                requestBuilder.put(createEmptyBody());
-                break;
-            case DELETE:
-                requestBuilder.delete(createEmptyBody());
-                break;
-            case PATCH:
-                requestBuilder.patch(createEmptyBody());
-                break;
-            case HEAD:
-                requestBuilder.head();
-                break;
-        }
-
+        String methodStr = method.getValue();
+        requestBuilder.method(methodStr, HttpMethod.requiresRequestBody(methodStr) ? createEmptyBody() : null);
     }
 
     // 创建空 body
     private RequestBody createEmptyBody() {
-        return RequestBody.create(new byte[0], null);
+        return RequestBody.create(new byte[0]);
     }
 
     // 通过请求方法构造
     public static HttpRequest get(String url) {
-        return new HttpRequest(url, Method.GET);
+        return new HttpRequest(Method.GET, url);
     }
 
     public static HttpRequest post(String url) {
-        return new HttpRequest(url, Method.POST);
+        return new HttpRequest(Method.POST, url);
     }
 
     public static HttpRequest put(String url) {
-        return new HttpRequest(url, Method.PUT);
+        return new HttpRequest(Method.PUT, url);
     }
 
     public static HttpRequest delete(String url) {
-        return new HttpRequest(url, Method.DELETE);
+        return new HttpRequest(Method.DELETE, url);
     }
 
     public static HttpRequest patch(String url) {
-        return new HttpRequest(url, Method.PATCH);
+        return new HttpRequest(Method.PATCH, url);
     }
 
     public static HttpRequest head(String url) {
-        return new HttpRequest(url, Method.HEAD);
+        return new HttpRequest(Method.HEAD, url);
     }
 
-    public static HttpRequest createRequest(String url, Method method) {
-        return new HttpRequest(url, method);
+    public static HttpRequest trace(String url) {
+        return new HttpRequest(Method.TRACE, url);
+    }
+
+    public static HttpRequest options(String url) {
+        return new HttpRequest(Method.OPTIONS, url);
+    }
+
+    public static HttpRequest createRequest(Method method, String url) {
+        return new HttpRequest(method, url);
     }
 
     // Header
@@ -91,7 +83,7 @@ public class HttpRequest {
     }
 
     public HttpRequest headers(Map<String, String> headers) {
-        requestBuilder.headers(Headers.of(headers));
+        if (headers != null) headers.forEach(this::header);
         return this;
     }
 
@@ -105,9 +97,12 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest body(String body) {
-        if (body == null) return this;
-        return body(RequestBody.create(body, MediaType.parse("application/x-www-form-urlencoded; charset=utf-8")));
+    public HttpRequest jsonBody(String json) {
+        return json == null ? this : body(RequestBody.create(json, MediaType.parse(ContentType.JSON)));
+    }
+
+    public HttpRequest formBody(String form) {
+        return form == null ? this : body(RequestBody.create(form, MediaType.parse(ContentType.FORM)));
     }
 
     // 表单
@@ -117,16 +112,14 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest form(Map<String, ?> formMap) {
-        formMap.forEach(this::form);
+    public HttpRequest form(Map<String, ?> forms) {
+        if (forms != null) forms.forEach(this::form);
         return this;
     }
 
     // 显式构建表单
     private void buildForm() {
-        if (formBuilder == null) return;
-        body(formBuilder.build());
-        formBuilder = null;
+        if (formBuilder != null) body(formBuilder.build());
     }
 
     // 超时
@@ -156,9 +149,9 @@ public class HttpRequest {
             Response response = client.newCall(request).execute();
             return HttpResponse.of(response);
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            ExceptionUtil.throwRuntimeException(e);
         }
+        return null;
     }
 
     public String executeAsStr() {

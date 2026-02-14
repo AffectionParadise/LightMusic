@@ -3,12 +3,10 @@ package net.doge.sdk.util;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.ui.image.ImageConstants;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
 import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -191,9 +189,7 @@ public class SdkUtil {
      */
     public static String getRedirectUrl(String url) {
         try {
-            HttpResponse resp = HttpRequest.get(url)
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
-                    .execute();
+            HttpResponse resp = HttpRequest.get(url).execute();
             return resp.header("Location");
         } catch (Exception e) {
             return "";

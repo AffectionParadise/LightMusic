@@ -11,8 +11,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.JsonUtil;
+import net.doge.util.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ public class SheetReq {
         if (instance == null) instance = new SheetReq();
         return instance;
     }
-    
+
     // 获取乐谱 API
     private final String GET_SHEETS_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
     // 获取乐谱图片 API

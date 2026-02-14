@@ -181,7 +181,7 @@ public class MediaUtil {
             // 从头信息获取时长
             file.setDuration(getDuration(af.getAudioHeader()));
         } catch (Exception e) {
-
+            LogUtil.error(e);
         }
     }
 
@@ -200,6 +200,7 @@ public class MediaUtil {
             if (artwork != null) albumImage = (BufferedImage) artwork.getImage();
             return albumImage;
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -248,7 +249,7 @@ public class MediaUtil {
             mediaInfo.setVersion(version);
             mediaInfo.setCopyright(copyright);
         } catch (Exception e) {
-
+            LogUtil.error(e);
         }
         return mediaInfo;
     }

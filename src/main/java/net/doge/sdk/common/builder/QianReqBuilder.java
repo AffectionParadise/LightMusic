@@ -1,8 +1,8 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.Arrays;
 import java.util.StringJoiner;

@@ -132,6 +132,13 @@
             <version>${okhttp.version}</version>
         </dependency>
 
+        <!-- HuTool 日志 -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-log</artifactId>
+            <version>${hutool.version}</version>
+        </dependency>
+
         <!-- HuTool 加密解密 -->
         <dependency>
             <groupId>cn.hutool</groupId>

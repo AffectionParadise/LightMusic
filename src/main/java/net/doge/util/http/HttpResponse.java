@@ -1,4 +1,4 @@
-package net.doge.sdk.util.http;
+package net.doge.util.http;
 
 import okhttp3.Response;
 import okhttp3.ResponseBody;

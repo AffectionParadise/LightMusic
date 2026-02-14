@@ -8,9 +8,9 @@ import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.LogUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 import net.doge.util.ui.quantizer.MMCQ;
 
 import javax.imageio.ImageIO;
@@ -69,6 +69,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(source).scale(1).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -83,6 +84,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(f).scale(1).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -97,6 +99,7 @@ public class ImageUtil {
         try (InputStream input = in) {
             return Thumbnails.of(input).scale(1).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -125,6 +128,7 @@ public class ImageUtil {
             // Decode the image
             return reader.read(0, readParam);
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -153,6 +157,7 @@ public class ImageUtil {
                     .timeout(20)
                     .executeAsStream();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -209,7 +214,7 @@ public class ImageUtil {
         try {
             Thumbnails.of(img).scale(1).toFile(outputFile);
         } catch (Exception e) {
-
+            LogUtil.error(e);
         }
     }
 
@@ -233,6 +238,7 @@ public class ImageUtil {
         try {
             return ImgUtil.toImage(base64);
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -416,6 +422,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).scale(1f).outputQuality(q).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -431,6 +438,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -450,6 +458,7 @@ public class ImageUtil {
             if (img == null) return Thumbnails.of(getImgStream(imgUrl)).width(width).asBufferedImage();
             return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -465,6 +474,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).height(height).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -481,6 +491,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).forceSize(width, height).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -513,6 +524,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).scale(1f).sourceRegion(x, y, w, h).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -528,6 +540,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).scale(scale).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }
@@ -543,6 +556,7 @@ public class ImageUtil {
         try {
             return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
         } catch (Exception e) {
+            LogUtil.error(e);
             return null;
         }
     }

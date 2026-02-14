@@ -12,14 +12,15 @@ import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.HttpResponse;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ListUtil;
+import net.doge.util.core.ExceptionUtil;
 import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.HttpResponse;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -170,7 +170,7 @@ public class ArtistSearchReq {
 
             int lim = Math.min(40, limit);
             String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body(String.format(SdkCommon.QQ_SEARCH_JSON, page, lim, keyword, 1))
+                    .jsonBody(String.format(SdkCommon.QQ_SEARCH_JSON, page, lim, keyword, 1))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("music.search.SearchCgiService").getJSONObject("data");
@@ -445,10 +445,8 @@ public class ArtistSearchReq {
                 CommonResult<NetArtistInfo> result = task.get();
                 rl.add(result.data);
                 total.set(Math.max(total.get(), result.total));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
         res.addAll(ListUtil.joinAll(rl));

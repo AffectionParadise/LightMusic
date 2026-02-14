@@ -2,11 +2,11 @@ package net.doge.sdk.common.builder;
 
 import net.doge.sdk.common.opt.kg.KugouReqOptConstants;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Method;
 
 import java.util.Map;
 import java.util.StringJoiner;
@@ -61,11 +61,11 @@ public class KugouReqBuilder {
                 break;
         }
         url += "?" + buildRequestParams(params);
-        return HttpRequest.createRequest(url, method)
+        return HttpRequest.createRequest(method, url)
                 .header("dfid", dfid)
                 .header("mid", mid)
                 .header("clienttime", ct)
-                .body(data);
+                .jsonBody(data);
     }
 
     // 构造请求参数

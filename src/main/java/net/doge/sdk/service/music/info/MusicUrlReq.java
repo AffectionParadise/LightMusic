@@ -23,12 +23,11 @@ import net.doge.sdk.service.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.qq.VkeysQqTrackHero;
 import net.doge.sdk.service.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -285,7 +284,6 @@ public class MusicUrlReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(songBody);

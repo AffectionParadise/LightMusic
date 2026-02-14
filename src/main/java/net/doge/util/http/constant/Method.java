@@ -1,4 +1,4 @@
-package net.doge.sdk.util.http.constant;
+package net.doge.util.http.constant;
 
 import lombok.Getter;
 

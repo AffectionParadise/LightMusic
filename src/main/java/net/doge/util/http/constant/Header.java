@@ -1,4 +1,4 @@
-package net.doge.sdk.util.http.constant;
+package net.doge.util.http.constant;
 
 /**
  * 预定义的 Header

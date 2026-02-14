@@ -7,9 +7,10 @@ import net.doge.constant.core.data.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.sdk.util.http.HttpRequest;
+import net.doge.util.core.ExceptionUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -18,7 +19,6 @@ import org.jsoup.select.Elements;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class MvTagReq {
@@ -294,7 +294,7 @@ public class MvTagReq {
         // MV 标签
         Runnable initMvTagQq = () -> {
             String mvTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .body("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
+                    .jsonBody("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
                     .executeAsStr();
             JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
             JSONArray tags = mvTagJson.getJSONObject("mv_tag").getJSONObject("data").getJSONArray("version");
@@ -378,10 +378,8 @@ public class MvTagReq {
         taskList.forEach(task -> {
             try {
                 task.get();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                ExceptionUtil.handleAsyncException(e);
             }
         });
     }

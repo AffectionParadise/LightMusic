@@ -61,11 +61,11 @@
 //     */
 //    public String getTrackUrl(String hash, String quality) {
 //        // 封 IP
-////        String body = HttpRequest.get("https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=" + hash).executeAsync().body();
-////        JSONObject bodyJson = JSONObject.parseObject(body);
-////        String thash = bodyJson.getJSONObject("extra").getString(qualityHashMap.get(quality)).toLowerCase();
-////        String albumId = bodyJson.getString("albumid");
-////        String albumAudioId = bodyJson.getString("album_audio_id");
+/// /        String body = HttpRequest.get("https://m.kugou.com/app/i/getSongInfo.php?cmd=playInfo&hash=" + hash).executeAsync().body();
+/// /        JSONObject bodyJson = JSONObject.parseObject(body);
+/// /        String thash = bodyJson.getJSONObject("extra").getString(qualityHashMap.get(quality)).toLowerCase();
+/// /        String albumId = bodyJson.getString("albumid");
+/// /        String albumAudioId = bodyJson.getString("album_audio_id");
 //
 //        String body = HttpRequest.post("http://gateway.kugou.com/v3/album_audio/audio")
 //                .header(Header.USER_AGENT, "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")

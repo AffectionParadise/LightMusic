@@ -2,8 +2,8 @@ package net.doge.sdk.service.music.info.trackhero.kw;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.JsonUtil;
+import net.doge.util.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.LinkedList;

@@ -5,8 +5,8 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.RegexUtil;
+import net.doge.util.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -26,7 +26,7 @@ public class AlbumMenuReq {
         if (instance == null) instance = new AlbumMenuReq();
         return instance;
     }
-    
+
     // 相似专辑 API (豆瓣)
     private final String SIMILAR_ALBUM_DB_API = "https://music.douban.com/subject/%s/";
 

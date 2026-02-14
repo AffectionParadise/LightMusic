@@ -1,8 +1,9 @@
 //package net.doge.sdk.service.music.info.trackhero.kg;
 //
-//import cn.hutool.http.HttpRequest;
 //import com.alibaba.fastjson2.JSONArray;
 //import com.alibaba.fastjson2.JSONObject;
+//import net.doge.constant.core.media.AudioQuality;
+//import net.doge.sdk.util.http.HttpRequest;
 //import net.doge.util.core.JsonUtil;
 //import net.doge.util.core.StringUtil;
 //
@@ -43,31 +44,7 @@
 //     */
 //    public String getTrackUrl(String id, String quality) {
 //        String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
-//                .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36")
-//                // 标准浏览器接受类型
-//                .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
-//                // 自动解压gzip
-//                .header("Accept-Encoding", "gzip, deflate, br, zstd")
-//                .header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6")
-//                .header("Cache-Control", "max-age=0")
-//                .header("Priority", "u=0, i")
-//                // 模拟浏览器安全头
-//                .header("Sec-Ch-Ua", "\"Not(A:Brand\";v=\"8\", \"Chromium\";v=\"144\", \"Microsoft Edge\";v=\"144\"")
-//                .header("Sec-Ch-Ua-Mobile", "?0")
-//                .header("Sec-Ch-Ua-Platform", "\"Windows\"")
-//                .header("Sec-Fetch-Dest", "document")
-//                .header("Sec-Fetch-Mode", "navigate")
-//                .header("Sec-Fetch-Site", "none")
-//                .header("Sec-Fetch-User", "?1")
-//                .header("Upgrade-Insecure-Requests", "1")
-//                // 启用Cookie自动管理
-//                .enableDefaultCookie()
-//                // 设置超时（毫秒）
-//                .timeout(10000)
-//                // 允许重定向
-//                .setFollowRedirects(true)
-//                .executeAsync()
-//                .body();
+//                .executeAsStr();
 //        JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
 //        if (JsonUtil.isEmpty(data)) return "";
 //        JSONObject urlJson = data.getJSONObject(0);

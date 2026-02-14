@@ -20,6 +20,7 @@ import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.ColorSliderUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
+import net.doge.util.core.LogUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ImageUtil;
@@ -422,7 +423,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
             bTextField.setText(String.valueOf(isRGB ? b : isHSV ? (int) v : (int) nl));
             hexTextField.setText(ColorUtil.colorToHex(makeColor()));
         } catch (Exception e) {
-
+            LogUtil.error(e);
         }
     }
 
@@ -436,7 +437,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         r = color.getRed();
         g = color.getGreen();
         b = color.getBlue();
-        boolean isRGB = isRGB(), isHSV = isHSV(),isHSL=isHSL();
+        boolean isRGB = isRGB(), isHSV = isHSV(), isHSL = isHSL();
         // 针对 HSV 防止因转换误差带来的滑动条调整
         if (!isHSV || !sliderRequest) {
             HSV hsv = ColorUtil.colorToHsv(color);

@@ -18,10 +18,10 @@ import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Header;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.core.*;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -141,7 +141,7 @@ public class CommentReq {
             if (source == NetMusicSource.QQ) {
                 // QQ 需要先通过 mid 获取 id
                 String songInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                        .body(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
+                        .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                         .executeAsStr();
                 JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
                 id = trackInfo.getString("id");
@@ -508,7 +508,6 @@ public class CommentReq {
             String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;
             // 最新评论
             String commentInfoBody = HttpRequest.get(String.format(url, typeStr[2], id, page, limit))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .header(Header.REFERER, ref)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -740,7 +739,6 @@ public class CommentReq {
         // 音乐磁场
         else if (source == NetMusicSource.HF) {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HF_API, id, page))
-                    .header(Header.USER_AGENT, SdkCommon.USER_AGENT)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(commentInfoBody);

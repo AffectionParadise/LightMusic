@@ -3,12 +3,13 @@ package net.doge.sdk.common.builder;
 import net.doge.sdk.common.crypto.NeteaseCrypto;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptConstants;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.util.http.HttpRequest;
-import net.doge.sdk.util.http.constant.Method;
 import net.doge.util.collection.ArrayUtil;
 import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.UrlUtil;
+import net.doge.util.http.HttpRequest;
+import net.doge.util.http.constant.Header;
+import net.doge.util.http.constant.Method;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,16 +57,16 @@ public class NeteaseReqBuilder {
         String device = options.getOrDefault(NeteaseReqOptEnum.UA, NeteaseReqOptConstants.BOTH);
         switch (device) {
             case NeteaseReqOptConstants.MOBILE:
-                headers.put("User-Agent", ArrayUtil.randomChoose(MOBILE_USER_AGENTS));
+                headers.put(Header.USER_AGENT, ArrayUtil.randomChoose(MOBILE_USER_AGENTS));
                 break;
             case NeteaseReqOptConstants.PC:
-                headers.put("User-Agent", ArrayUtil.randomChoose(PC_USER_AGENTS));
+                headers.put(Header.USER_AGENT, ArrayUtil.randomChoose(PC_USER_AGENTS));
                 break;
             case NeteaseReqOptConstants.BOTH:
-                headers.put("User-Agent", ArrayUtil.randomChoose(ArrayUtil.concat(MOBILE_USER_AGENTS, PC_USER_AGENTS)));
+                headers.put(Header.USER_AGENT, ArrayUtil.randomChoose(ArrayUtil.concat(MOBILE_USER_AGENTS, PC_USER_AGENTS)));
                 break;
         }
-        if (method == Method.POST) headers.put("Content-Type", "application/x-www-form-urlencoded");
+        if (method == Method.POST) headers.put(Header.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
         String _ntes_nuid = CryptoUtil.bytesToHex(ArrayUtil.randomBytes(32));
         String _ntes_nnid = String.format("%s,%s", _ntes_nuid, System.currentTimeMillis());
@@ -82,11 +83,11 @@ public class NeteaseReqBuilder {
         String body = "";
         switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
             case NeteaseReqOptConstants.WEAPI:
-                headers.put("Referer", "https://music.163.com");
+                headers.put(Header.REFERER, "https://music.163.com");
                 String cookie = String.format("__remember_me=true; ntes_kaola_ad=1; _ntes_nuid=%s; _ntes_nnid=%s; WNMCID=%s; WEVNSM=%s; NMTID=%s; osver=%s; deviceId=%s; " +
                                 "os=%s; channel=%s; appver=%s; MUSIC_A=%s;",
                         _ntes_nuid, _ntes_nnid, WNMCID, WEVNSM, NMTID, osver, deviceId, os, channel, appver, anonymousToken);
-                headers.put("Cookie", cookie);
+                headers.put(Header.COOKIE, cookie);
                 body = NeteaseCrypto.getInstance().weapi(data);
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
@@ -104,14 +105,14 @@ public class NeteaseReqBuilder {
                 headers.put("channel", channel);
                 headers.put("requestId", requestId);
                 headers.put("MUSIC_A", anonymousToken);
-                headers.put("Cookie", getCookie(headers));
+                headers.put(Header.COOKIE, getCookie(headers));
                 body = NeteaseCrypto.getInstance().eapi(options.get(NeteaseReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }
-        return HttpRequest.createRequest(url, method)
+        return HttpRequest.createRequest(method, url)
                 .headers(headers)
-                .body(body);
+                .formBody(body);
     }
 
     private String getWNMCID() {

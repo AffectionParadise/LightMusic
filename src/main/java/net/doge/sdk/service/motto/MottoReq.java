@@ -1,8 +1,8 @@
 package net.doge.sdk.service.motto;
 
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.sdk.util.http.HttpRequest;
 import net.doge.util.core.StringUtil;
+import net.doge.util.http.HttpRequest;
 
 public class MottoReq {
     private static MottoReq instance;
@@ -14,7 +14,7 @@ public class MottoReq {
         if (instance == null) instance = new MottoReq();
         return instance;
     }
-    
+
     // 格言 API
     private final String MOTTO_API = "https://v1.hitokoto.cn/?encode=json&lang=cn&c=d&c=i";
 

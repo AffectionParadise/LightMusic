@@ -185,46 +185,46 @@
 //    }
 //
 //    // 解密方法，用于调试加密参数
-////    public String base64Decrypt(String encryptedMsg) {
-////        // Base64解码
-////        byte[] encryptedBytes = CryptoUtil.base64DecodeToBytes(encryptedMsg);
-////        // 使用密钥解密
-////        byte[] decryptedBytes = decrypt(encryptedBytes, SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-////        // 转换为字符串
-////        return new String(decryptedBytes, StandardCharsets.UTF_8);
-////    }
-////
-////    private byte[] decrypt(byte[] encrypted, byte[] key) {
-////        // 处理密钥（取前8字节）
-////        long keyLong = 0;
-////        for (int i = 0; i < 8; i++) keyLong |= (long) (key[i] & 0xFF) << (i * 8);
-////
-////        // 生成子密钥
-////        long[] encryptKeys = new long[16];
-////        subKeys(keyLong, encryptKeys);
-////        // 反转子密钥用于解密
-////        long[] decryptKeys = new long[16];
-////        for (int i = 0; i < 16; i++) decryptKeys[i] = encryptKeys[15-i];
-////
-////        // 分组处理（每组 8 字节）
-////        int blockCount = encrypted.length / 8;
-////        long[] decryptedBlocks = new long[blockCount];
-////
-////        // 转换字节块为 long
-////        for (int m = 0; m < blockCount; m++) {
-////            long block = 0;
-////            for (int n = 0; n < 8; n++) block |= (long) (encrypted[n+m*8] & 0xFF) << (n * 8);
-////            decryptedBlocks[m] = DES64(decryptKeys, block);
-////        }
-////
-////        // 将 long 数组转回字节
-////        byte[] result = new byte[8*blockCount];
-////        int index = 0;
-////        for (long block : decryptedBlocks) {
-////            for (int i = 0; i < 8; i++) result[index++] = (byte) ((block >> (i * 8)) & 0xFF);
-////        }
-////        return result;
-////    }
+/// /    public String base64Decrypt(String encryptedMsg) {
+/// /        // Base64解码
+/// /        byte[] encryptedBytes = CryptoUtil.base64DecodeToBytes(encryptedMsg);
+/// /        // 使用密钥解密
+/// /        byte[] decryptedBytes = decrypt(encryptedBytes, SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+/// /        // 转换为字符串
+/// /        return new String(decryptedBytes, StandardCharsets.UTF_8);
+/// /    }
+/// /
+/// /    private byte[] decrypt(byte[] encrypted, byte[] key) {
+/// /        // 处理密钥（取前8字节）
+/// /        long keyLong = 0;
+/// /        for (int i = 0; i < 8; i++) keyLong |= (long) (key[i] & 0xFF) << (i * 8);
+/// /
+/// /        // 生成子密钥
+/// /        long[] encryptKeys = new long[16];
+/// /        subKeys(keyLong, encryptKeys);
+/// /        // 反转子密钥用于解密
+/// /        long[] decryptKeys = new long[16];
+/// /        for (int i = 0; i < 16; i++) decryptKeys[i] = encryptKeys[15-i];
+/// /
+/// /        // 分组处理（每组 8 字节）
+/// /        int blockCount = encrypted.length / 8;
+/// /        long[] decryptedBlocks = new long[blockCount];
+/// /
+/// /        // 转换字节块为 long
+/// /        for (int m = 0; m < blockCount; m++) {
+/// /            long block = 0;
+/// /            for (int n = 0; n < 8; n++) block |= (long) (encrypted[n+m*8] & 0xFF) << (n * 8);
+/// /            decryptedBlocks[m] = DES64(decryptKeys, block);
+/// /        }
+/// /
+/// /        // 将 long 数组转回字节
+/// /        byte[] result = new byte[8*blockCount];
+/// /        int index = 0;
+/// /        for (long block : decryptedBlocks) {
+/// /            for (int i = 0; i < 8; i++) result[index++] = (byte) ((block >> (i * 8)) & 0xFF);
+/// /        }
+/// /        return result;
+/// /    }
 //
 //    private String base64Encrypt(String msg) {
 //        byte[] msgBytes = msg.getBytes(StandardCharsets.UTF_8);
