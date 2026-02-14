@@ -1,6 +1,8 @@
 package net.doge.util.os;
 
 import com.github.houbb.heaven.util.util.OsUtil;
+import net.doge.constant.core.meta.SoftInfo;
+import net.doge.constant.core.os.SimplePath;
 import net.doge.util.core.LogUtil;
 
 import java.awt.*;
@@ -54,5 +56,29 @@ public class DesktopUtil {
         if (OsUtil.isWindows()) TerminalUtil.exec(String.format("notepad \"%s\"", path));
         else if (OsUtil.isMac()) TerminalUtil.exec(String.format("open -e \"%s\"", path));
         else if (OsUtil.isUnix()) TerminalUtil.exec(String.format("vim \"%s\"", path));
+    }
+
+    /**
+     * 调用更新程序
+     *
+     * @param
+     * @return
+     */
+    public static void updater(String keyMD5) {
+        TerminalUtil.exec(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
+    }
+
+    /**
+     * 发送模拟浏览器的请求
+     *
+     * @param
+     * @return
+     */
+    public static String getRequestImpersonate(String url) {
+        return getRequestImpersonate(url, "chrome131");
+    }
+
+    public static String getRequestImpersonate(String url, String impersonate) {
+        return TerminalUtil.execAsStr(SimplePath.PLUGIN_PATH + String.format("curl-impersonate \"%s\" \"%s\"", url, impersonate));
     }
 }

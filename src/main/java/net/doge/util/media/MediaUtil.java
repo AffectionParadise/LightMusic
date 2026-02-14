@@ -165,6 +165,7 @@ public class MediaUtil {
      * @return
      */
     public static void fillAudioFileInfo(AudioFile file) {
+        if (file == null || !file.exists()) return;
         try {
             file.setFormat(FileUtil.getSuffix(file).toLowerCase());
 

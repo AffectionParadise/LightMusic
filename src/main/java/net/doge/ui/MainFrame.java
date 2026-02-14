@@ -115,7 +115,6 @@ import net.doge.util.media.MediaUtil;
 import net.doge.util.os.DesktopUtil;
 import net.doge.util.os.FileUtil;
 import net.doge.util.os.KeyUtil;
-import net.doge.util.os.TerminalUtil;
 import net.doge.util.ui.*;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
@@ -4379,7 +4378,7 @@ public class MainFrame extends JFrame {
 
     // 开始更新
     private void startUpdate(boolean mute, String keyMD5) {
-        TerminalUtil.updater(keyMD5);
+        DesktopUtil.updater(keyMD5);
         if (mute) System.exit(0);
         else exit();
     }

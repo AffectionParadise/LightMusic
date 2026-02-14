@@ -11,6 +11,7 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
 import net.doge.sdk.service.music.info.entity.MusicCandidate;
+import net.doge.sdk.service.music.info.trackhero.kg.CggKgTrackHero;
 import net.doge.sdk.service.music.info.trackhero.kg.KgTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.service.music.info.trackhero.mg.MgTrackHero;
@@ -154,7 +155,9 @@ public class MusicUrlReq {
                     quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
-            return KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
+            String trackUrl = CggKgTrackHero.getInstance().getTrackUrl(hash, quality);
+            if (StringUtil.isEmpty(trackUrl)) trackUrl = KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
+            return trackUrl;
         }
 
         // QQ

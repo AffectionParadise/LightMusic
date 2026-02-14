@@ -152,6 +152,7 @@ public class ImageUtil {
      * @return
      */
     public static InputStream getImgStream(String imgUrl) {
+        if (StringUtil.isEmpty(imgUrl)) return null;
         try {
             return HttpRequest.get(imgUrl)
                     .timeout(20)
@@ -455,7 +456,10 @@ public class ImageUtil {
             BufferedImage img = null;
             // 先处理 webp 图像
             if (imgUrl.endsWith(Format.WEBP)) img = readWebp(imgUrl);
-            if (img == null) return Thumbnails.of(getImgStream(imgUrl)).width(width).asBufferedImage();
+            if (img == null) {
+                InputStream in = getImgStream(imgUrl);
+                return in == null ? null : Thumbnails.of(in).width(width).asBufferedImage();
+            }
             return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (Exception e) {
             LogUtil.error(e);

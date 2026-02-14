@@ -5,7 +5,7 @@
 //import net.doge.constant.core.media.AudioQuality;
 //import net.doge.util.core.JsonUtil;
 //import net.doge.util.core.StringUtil;
-//import net.doge.util.http.HttpRequest;
+//import net.doge.util.os.DesktopUtil;
 //
 //import java.util.HashMap;
 //import java.util.Map;
@@ -47,8 +47,7 @@
 //     * @return
 //     */
 //    public String getTrackUrl(String id, String quality) {
-//        String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
-//                .executeAsStr();
+//        String songBody = DesktopUtil.getRequestImpersonate(String.format(SONG_URL_API, id, qualityMap.get(quality)));
 //        JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
 //        if (JsonUtil.isEmpty(data)) return "";
 //        JSONObject urlJson = data.getJSONObject(0);
