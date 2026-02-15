@@ -6,7 +6,7 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

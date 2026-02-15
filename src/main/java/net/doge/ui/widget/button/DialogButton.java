@@ -5,7 +5,7 @@ import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.base.BaseButton;
 import net.doge.ui.widget.button.listener.DialogButtonMouseAdapter;
-import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;

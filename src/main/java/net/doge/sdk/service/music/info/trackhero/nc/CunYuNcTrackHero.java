@@ -2,7 +2,8 @@ package net.doge.sdk.service.music.info.trackhero.nc;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class CunYuNcTrackHero {
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody);
         String trackUrl = data.getString("song_file_url");
+        if (StringUtil.isEmpty(trackUrl)) return "";
         return trackUrl;
     }
 

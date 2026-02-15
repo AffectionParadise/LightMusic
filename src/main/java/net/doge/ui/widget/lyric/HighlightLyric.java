@@ -5,12 +5,12 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.entity.core.lyric.Statement;
-import net.doge.util.collection.ArrayUtil;
-import net.doge.util.collection.ListUtil;
 import net.doge.util.core.RegexUtil;
+import net.doge.util.core.array.ArrayUtil;
+import net.doge.util.core.collection.ListUtil;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

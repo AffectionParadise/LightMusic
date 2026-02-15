@@ -21,7 +21,7 @@ import net.doge.ui.widget.list.entity.ChoosableListItem;
 import net.doge.ui.widget.list.renderer.core.LocalPlaylistListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.util.collection.ListUtil;
+import net.doge.util.core.collection.ListUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

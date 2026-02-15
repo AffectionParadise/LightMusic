@@ -8,7 +8,7 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
-import net.doge.util.os.FileUtil;
+import net.doge.util.core.io.FileUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

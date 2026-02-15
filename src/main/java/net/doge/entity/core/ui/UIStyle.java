@@ -6,7 +6,7 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.style.UIStyleConstants;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import java.awt.*;

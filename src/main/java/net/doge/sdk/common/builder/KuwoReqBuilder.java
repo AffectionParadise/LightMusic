@@ -1,7 +1,7 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.constant.Header;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Header;
 
 public class KuwoReqBuilder {
     private static KuwoReqBuilder instance;

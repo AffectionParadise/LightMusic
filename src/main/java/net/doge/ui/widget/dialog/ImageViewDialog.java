@@ -20,12 +20,12 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
-import net.doge.util.collection.ListUtil;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.collection.ListUtil;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

@@ -14,7 +14,7 @@ import java.awt.*;
  * @Date 2020/12/15
  */
 public class LMFontManager {
-    private static final JSONObject FONT_DATA = LMDataUtil.read(SimplePath.RESOURCE_PATH + LMDataConstants.FONT_DATA_FILE_NAME);
+    private static final JSONObject FONT_DATA = LMDataUtil.readOrCreate(SimplePath.RESOURCE_PATH + LMDataConstants.FONT_DATA_FILE_NAME);
 
     /**
      * 根据 key 获取 Font

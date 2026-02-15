@@ -5,10 +5,14 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.lyrichero.qq.decoder.QrcDecoder;
-import net.doge.util.collection.ArrayUtil;
-import net.doge.util.core.*;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.constant.Header;
+import net.doge.util.core.RegexUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.array.ArrayUtil;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Header;
+import net.doge.util.core.text.HtmlUtil;
+import net.doge.util.media.DurationUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 

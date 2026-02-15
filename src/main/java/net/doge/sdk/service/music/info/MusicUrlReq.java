@@ -11,7 +11,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
 import net.doge.sdk.service.music.info.entity.MusicCandidate;
-import net.doge.sdk.service.music.info.trackhero.kg.CggKgTrackHero;
 import net.doge.sdk.service.music.info.trackhero.kg.KgTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.kw.KwTrackHeroV3;
 import net.doge.sdk.service.music.info.trackhero.mg.MgTrackHero;
@@ -24,11 +23,11 @@ import net.doge.sdk.service.music.info.trackhero.qq.QqTrackHeroV2;
 import net.doge.sdk.service.music.info.trackhero.qq.VkeysQqTrackHero;
 import net.doge.sdk.service.music.search.MusicSearchReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.UrlUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.net.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -155,8 +154,9 @@ public class MusicUrlReq {
                     quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                     break;
             }
-            String trackUrl = CggKgTrackHero.getInstance().getTrackUrl(hash, quality);
-            if (StringUtil.isEmpty(trackUrl)) trackUrl = KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
+            String trackUrl = KgTrackHeroV2.getInstance().getTrackUrl(hash, quality);
+            // Cgg 有时返回的 url 不是正确音源，优先使用官方 api
+//            if (StringUtil.isEmpty(trackUrl)) trackUrl = CggKgTrackHero.getInstance().getTrackUrl(hash, quality);
             return trackUrl;
         }
 

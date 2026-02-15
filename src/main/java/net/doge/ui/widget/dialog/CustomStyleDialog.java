@@ -21,10 +21,10 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.io.FileUtil;
 import net.doge.util.lmdata.manager.LMStyleManager;
-import net.doge.util.os.FileUtil;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

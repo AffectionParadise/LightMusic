@@ -1,11 +1,11 @@
 package net.doge.sdk.common.builder;
 
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
-import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.UrlUtil;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Method;
+import net.doge.util.core.net.UrlUtil;
 
 import java.util.Map;
 import java.util.StringJoiner;

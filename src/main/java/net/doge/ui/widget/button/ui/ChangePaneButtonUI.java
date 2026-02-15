@@ -3,9 +3,9 @@ package net.doge.ui.widget.button.ui;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.button.ChangePaneButton;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

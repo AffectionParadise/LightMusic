@@ -5,9 +5,9 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.service.music.info.trackhero.qq.entity.QQualityEntry;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 
 import java.util.HashMap;
 import java.util.Map;

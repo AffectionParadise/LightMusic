@@ -2,11 +2,11 @@ package net.doge.entity.core.lyric;
 
 import lombok.Data;
 import net.doge.constant.core.lyric.LyricPattern;
-import net.doge.util.core.DurationUtil;
-import net.doge.util.core.LyricUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.os.FileUtil;
+import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.text.LyricUtil;
+import net.doge.util.media.DurationUtil;
 
 import java.io.File;
 import java.util.Comparator;

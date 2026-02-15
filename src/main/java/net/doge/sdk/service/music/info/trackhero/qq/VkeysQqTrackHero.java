@@ -2,8 +2,9 @@ package net.doge.sdk.service.music.info.trackhero.qq;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.util.core.JsonUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.http.HttpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class VkeysQqTrackHero {
     }
 
     /**
-     * 获取网易云音乐歌曲链接
+     * 获取 QQ 音乐歌曲链接
      *
      * @param id      歌曲 id
      * @param quality 品质
@@ -73,6 +74,7 @@ public class VkeysQqTrackHero {
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
         if (JsonUtil.isEmpty(data)) return "";
         String trackUrl = data.getString("url");
+        if (StringUtil.isEmpty(trackUrl)) return "";
         return trackUrl;
     }
 

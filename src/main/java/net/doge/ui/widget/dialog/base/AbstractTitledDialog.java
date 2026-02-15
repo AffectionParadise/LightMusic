@@ -11,8 +11,8 @@ import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.core.HtmlUtil;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.text.HtmlUtil;
 
 import javax.swing.*;
 import java.awt.*;

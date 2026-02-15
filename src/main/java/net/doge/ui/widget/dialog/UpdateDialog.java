@@ -20,11 +20,11 @@ import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
-import net.doge.util.core.CryptoUtil;
-import net.doge.util.core.NetUtil;
-import net.doge.util.core.listener.DownloadListener;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.os.FileUtil;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpUtil;
+import net.doge.util.core.http.listener.DownloadListener;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.io.FileUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -133,7 +133,7 @@ public class UpdateDialog extends AbstractShadowDialog {
             Document doc = Jsoup.parse(releaseBody);
             Element a = doc.select("li a").first();
             String url = "https://github.com" + a.attr("href");
-            NetUtil.download(url, dest, new DownloadListener() {
+            HttpUtil.download(url, dest, new DownloadListener() {
                 @Override
                 public void progress(long finishedSize, long totalSize) {
                     msgLabel.setText(String.format(DOWNLOAD_MSG + "(%s / %s)", FileUtil.getUnitString(finishedSize), FileUtil.getUnitString(totalSize)));

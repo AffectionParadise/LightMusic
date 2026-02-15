@@ -2,7 +2,7 @@ package net.doge.util.ui;
 
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
-import net.doge.util.core.LogUtil;
+import net.doge.util.core.log.LogUtil;
 import net.doge.util.ui.quantizer.MMCQ;
 
 import java.awt.*;

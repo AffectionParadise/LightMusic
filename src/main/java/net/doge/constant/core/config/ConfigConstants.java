@@ -13,7 +13,7 @@ public class ConfigConstants {
     // 配置文件名称
     public static final String CONFIG_FILE_NAME = "config" + LMDataConstants.DATA_FILE_SUFFIX;
     // 配置文件数据
-    public static final JSONObject CONFIG_DATA = LMDataUtil.read(CONFIG_FILE_NAME);
+    public static final JSONObject CONFIG_DATA = LMDataUtil.readOrCreate(CONFIG_FILE_NAME);
 
     // 所有自定义主题
     public static final String CUSTOM_UI_STYLES = "customUIStyles";

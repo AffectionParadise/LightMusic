@@ -106,16 +106,31 @@ import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
 import net.doge.ui.widget.toolbar.CustomToolBar;
-import net.doge.util.collection.ListUtil;
-import net.doge.util.core.*;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.PageUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.VersionUtil;
+import net.doge.util.core.collection.ListUtil;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.exception.ExceptionUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.HttpUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.log.LogUtil;
+import net.doge.util.core.os.DesktopUtil;
+import net.doge.util.core.os.KeyUtil;
+import net.doge.util.core.text.HtmlUtil;
+import net.doge.util.core.text.LangUtil;
+import net.doge.util.core.text.LyricUtil;
 import net.doge.util.lmdata.LMDataUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.media.DurationUtil;
 import net.doge.util.media.MediaUtil;
-import net.doge.util.os.DesktopUtil;
-import net.doge.util.os.FileUtil;
-import net.doge.util.os.KeyUtil;
-import net.doge.util.ui.*;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SpectrumUtil;
+import net.doge.util.ui.SwingUtil;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -20616,7 +20631,7 @@ public class MainFrame extends JFrame {
                         if (!file.exists() || FileUtil.startsWithLeftBrace(file)) {
                             loading.start();
                             loading.setText(LOADING_MSG);
-                            NetUtil.download(musicInfo.getUrl(), file.getPath(), (finishedSize, totalSize) -> {
+                            HttpUtil.download(musicInfo.getUrl(), file.getPath(), (finishedSize, totalSize) -> {
                                 loading.setText("加载歌曲文件，" + String.format("%.1f%%", (double) finishedSize / totalSize * 100).replace(".0", ""));
                             });
                         }
@@ -22278,7 +22293,7 @@ public class MainFrame extends JFrame {
                                 headers = new HashMap<>();
                                 headers.put("referer", "https://www.bilibili.com/");
                             }
-                            NetUtil.download(mvInfo.getUrl(), file.getPath(), headers);
+                            HttpUtil.download(mvInfo.getUrl(), file.getPath(), headers);
                         }
                         dialog.setMessage("转换视频文件格式......");
                         dialog.updateSize();

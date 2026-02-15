@@ -6,9 +6,9 @@ import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

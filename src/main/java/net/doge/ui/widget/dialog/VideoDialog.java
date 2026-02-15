@@ -34,12 +34,12 @@ import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.TimeSliderUI;
-import net.doge.util.core.DurationUtil;
-import net.doge.util.core.HtmlUtil;
+import net.doge.util.media.DurationUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

@@ -11,8 +11,8 @@ import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.dialog.base.AbstractMiniDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.CustomPanel;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

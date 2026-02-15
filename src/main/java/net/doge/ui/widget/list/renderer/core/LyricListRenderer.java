@@ -8,7 +8,7 @@ import net.doge.ui.widget.label.ui.CustomLabelUI;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
-import net.doge.util.core.HtmlUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

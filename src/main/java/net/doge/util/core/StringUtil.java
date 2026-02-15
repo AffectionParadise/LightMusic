@@ -1,7 +1,7 @@
 package net.doge.util.core;
 
 import cn.hutool.core.util.StrUtil;
-import net.doge.util.collection.ArrayUtil;
+import net.doge.util.core.array.ArrayUtil;
 
 import java.nio.charset.StandardCharsets;
 

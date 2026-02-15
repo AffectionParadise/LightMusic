@@ -11,9 +11,9 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.sdk.util.MusicServerUtil;
-import net.doge.util.core.NetUtil;
-import net.doge.util.core.listener.DownloadListener;
-import net.doge.util.os.FileUtil;
+import net.doge.util.core.http.HttpUtil;
+import net.doge.util.core.http.listener.DownloadListener;
+import net.doge.util.core.io.FileUtil;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -103,7 +103,7 @@ public class Task {
                 ensureDir();
                 prepareInfo();
                 setStatus(TaskStatus.RUNNING);
-                NetUtil.download(url, dest, getHeaders(), new DownloadListener() {
+                HttpUtil.download(url, dest, getHeaders(), new DownloadListener() {
                     @Override
                     public void totalSizeInitialized(long totalSize) {
                         setTotal(totalSize);

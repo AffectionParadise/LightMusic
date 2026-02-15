@@ -2,8 +2,8 @@ package net.doge.sdk.service.music.tag;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.util.core.ExceptionUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.exception.ExceptionUtil;
+import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

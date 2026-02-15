@@ -4,11 +4,11 @@ import net.doge.constant.core.os.SimplePath;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.MediaInfo;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.util.core.LogUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.os.FileUtil;
-import net.doge.util.os.TerminalUtil;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.log.LogUtil;
+import net.doge.util.core.os.TerminalUtil;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.AudioHeader;
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPicture;
@@ -43,11 +43,13 @@ public class MediaUtil {
      * @param file
      */
     public static double getDuration(AudioFile file) {
+        if (file == null || !file.exists()) return 0;
         try {
             org.jaudiotagger.audio.AudioFile af = AudioFileIO.read(file);
             AudioHeader audioHeader = af.getAudioHeader();
             return getDuration(audioHeader);
         } catch (Exception e) {
+            LogUtil.error(e);
             return 0;
         }
     }
@@ -268,6 +270,7 @@ public class MediaUtil {
 
             return StringUtil.fixEncoding(tag.getFirst(FieldKey.LYRICS));
         } catch (Exception e) {
+            LogUtil.error(e);
             return "";
         }
     }
@@ -279,6 +282,6 @@ public class MediaUtil {
      * @return
      */
     public static void convert(File source, File dest) {
-        TerminalUtil.execSync(SimplePath.PLUGIN_PATH + String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
+        TerminalUtil.exec(SimplePath.PLUGIN_PATH + String.format("ffmpeg -i \"%s\" \"%s\"", source.getPath(), dest.getPath()));
     }
 }

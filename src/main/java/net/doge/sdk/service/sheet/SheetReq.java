@@ -11,8 +11,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.JsonUtil;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.http.constant.Method;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;

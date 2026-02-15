@@ -2,8 +2,8 @@ package net.doge.ui.widget.panel;
 
 import lombok.Data;
 import net.doge.ui.widget.panel.base.BasePanel;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

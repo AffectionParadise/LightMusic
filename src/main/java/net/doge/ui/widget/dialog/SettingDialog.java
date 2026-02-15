@@ -35,11 +35,11 @@ import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
-import net.doge.util.collection.ListUtil;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.os.FileUtil;
-import net.doge.util.os.KeyUtil;
+import net.doge.util.core.collection.ListUtil;
+import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.os.KeyUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -710,7 +710,7 @@ public class SettingDialog extends AbstractTitledDialog {
                 fileChooser.setTitle(I18n.getText("chooseFile"));
                 File input = fileChooser.showOpenDialog(null);
                 if (input == null) return;
-                JSONObject config = JsonUtil.read(input);
+                JSONObject config = JsonUtil.readOrCreate(input);
                 f.loadLocalMusicList(config);
                 f.loadCollectedMusicList(config);
                 new TipDialog(f, I18n.getText("restoreSuccess"), true).showDialog();

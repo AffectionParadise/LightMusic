@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.util.core.ExceptionUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.exception.ExceptionUtil;
+import net.doge.util.core.http.HttpRequest;
 
 import java.util.LinkedList;
 import java.util.List;

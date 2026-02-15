@@ -2,8 +2,9 @@ package net.doge.sdk.service.music.info.trackhero.kg;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.util.core.JsonUtil;
-import net.doge.util.os.DesktopUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.os.DesktopUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,8 +21,8 @@ public class CggKgTrackHero {
         return instance;
     }
 
-    // 歌曲 URL 获取 API
-    private final String SONG_URL_API = "https://music-api2.cenguigui.cn/?kg=&id=%s&type=song&format=json&level=%s";
+    // 歌曲 URL 获取 API (酷狗)
+    private final String SONG_URL_KG_API = "https://music-api2.cenguigui.cn/?kg=&id=%s&type=song&format=json&level=%s";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -35,17 +36,18 @@ public class CggKgTrackHero {
     }
 
     /**
-     * 获取网易云音乐歌曲链接
+     * 获取酷狗音乐歌曲链接
      *
      * @param hash    歌曲 hash
      * @param quality 品质
      * @return
      */
     public String getTrackUrl(String hash, String quality) {
-        String urlBody = DesktopUtil.getRequestImpersonate(String.format(SONG_URL_API, hash, qualityMap.get(quality)));
+        String urlBody = DesktopUtil.impersonateGet(String.format(SONG_URL_KG_API, hash, qualityMap.get(quality)));
         JSONObject data = JSONObject.parseObject(urlBody).getJSONObject("data");
         if (JsonUtil.isEmpty(data)) return "";
         String trackUrl = data.getString("url");
+        if (StringUtil.isEmpty(trackUrl)) return "";
         return trackUrl;
     }
 

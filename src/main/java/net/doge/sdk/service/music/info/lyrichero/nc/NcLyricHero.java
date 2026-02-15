@@ -7,12 +7,12 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.collection.ArrayUtil;
-import net.doge.util.core.DurationUtil;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.array.ArrayUtil;
+import net.doge.util.core.http.constant.Method;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.media.DurationUtil;
 
 import java.util.List;
 import java.util.Map;

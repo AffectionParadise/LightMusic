@@ -7,7 +7,11 @@ import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.util.ui.*;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.ui.ColorUtil;
+import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

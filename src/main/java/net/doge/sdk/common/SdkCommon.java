@@ -4,8 +4,8 @@ import net.doge.sdk.common.builder.*;
 import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Method;
 
 import java.util.Map;
 

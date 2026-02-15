@@ -1,8 +1,8 @@
 package net.doge.ui.widget.menu;
 
 import net.doge.constant.core.ui.style.UIStyleStorage;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
-import net.doge.util.ui.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

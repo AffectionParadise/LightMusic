@@ -8,9 +8,9 @@ import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.popup.CustomComboPopup;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

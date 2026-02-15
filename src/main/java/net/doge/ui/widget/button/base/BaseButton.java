@@ -4,7 +4,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.tooltip.CustomToolTip;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.img.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;

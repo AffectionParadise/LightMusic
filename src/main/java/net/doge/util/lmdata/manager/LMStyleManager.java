@@ -3,8 +3,8 @@ package net.doge.util.lmdata.manager;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.data.LMDataConstants;
 import net.doge.constant.core.os.SimplePath;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.LMDataUtil;
-import net.doge.util.ui.ImageUtil;
 
 import java.awt.image.BufferedImage;
 
@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
  * @Date 2020/12/15
  */
 public class LMStyleManager {
-    private static final JSONObject STYLE_DATA = LMDataUtil.read(SimplePath.RESOURCE_PATH + LMDataConstants.STYLE_DATA_FILE_NAME);
+    private static final JSONObject STYLE_DATA = LMDataUtil.readOrCreate(SimplePath.RESOURCE_PATH + LMDataConstants.STYLE_DATA_FILE_NAME);
 
     /**
      * 根据 key 获取 BufferedImage

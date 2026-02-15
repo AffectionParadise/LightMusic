@@ -1,0 +1,42 @@
+package net.doge.util.core.os;
+
+import cn.hutool.core.util.RuntimeUtil;
+import net.doge.util.core.io.IoUtil;
+import net.doge.util.core.log.LogUtil;
+
+import java.nio.charset.StandardCharsets;
+
+/**
+ * @Author Doge
+ * @Description 终端工具类
+ * @Date 2020/12/15
+ */
+public class TerminalUtil {
+    /**
+     * 执行命令
+     *
+     * @param commands
+     * @return
+     */
+    public static void exec(String... commands) {
+        Process p = RuntimeUtil.exec(commands);
+        IoUtil.drainAsync(p.getInputStream());
+        IoUtil.drainAsync(p.getErrorStream());
+        try {
+            p.waitFor();
+        } catch (InterruptedException e) {
+            LogUtil.error(e);
+        } finally {
+            p.destroy();
+        }
+    }
+
+    /**
+     * 执行命令，获取标准输出字符串
+     *
+     * @param commands
+     */
+    public static String execAsStr(String... commands) {
+        return RuntimeUtil.execForStr(StandardCharsets.UTF_8, commands);
+    }
+}

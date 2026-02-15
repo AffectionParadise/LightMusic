@@ -9,11 +9,11 @@ import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.core.ExceptionUtil;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.RegexUtil;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.exception.ExceptionUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Method;
+import net.doge.util.core.json.JsonUtil;
 
 import java.util.LinkedList;
 import java.util.List;

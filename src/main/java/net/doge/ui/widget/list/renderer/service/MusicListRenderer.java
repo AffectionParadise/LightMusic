@@ -11,11 +11,11 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.core.DurationUtil;
-import net.doge.util.core.HtmlUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.media.DurationUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

@@ -6,7 +6,7 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.util.core.JsonUtil;
+import net.doge.util.core.json.JsonUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,5 +92,7 @@ public class KgTrackHeroV2 {
 
 //    public static void main(String[] args) {
 //        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(getInstance().getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
 //    }
 }

@@ -1,7 +1,7 @@
 package net.doge.util.ui;
 
-import net.doge.util.core.CryptoUtil;
-import net.doge.util.core.LogUtil;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.log.LogUtil;
 
 import java.awt.*;
 import java.io.ByteArrayInputStream;

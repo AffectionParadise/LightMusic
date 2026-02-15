@@ -20,8 +20,8 @@ import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.ui.MainFrame;
-import net.doge.util.core.DurationUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.media.DurationUtil;
 import net.doge.util.media.MediaUtil;
 
 import java.awt.image.BufferedImage;

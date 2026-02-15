@@ -11,11 +11,11 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.DurationUtil;
-import net.doge.util.core.HtmlUtil;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.text.HtmlUtil;
+import net.doge.util.media.DurationUtil;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -6,10 +6,10 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.core.ExceptionUtil;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.HttpResponse;
-import net.doge.util.http.constant.Method;
+import net.doge.util.core.exception.ExceptionUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.HttpResponse;
+import net.doge.util.core.http.constant.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 

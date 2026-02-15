@@ -2,11 +2,11 @@ package net.doge.sdk.service.music.info.lyrichero.kw;
 
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.util.collection.ArrayUtil;
-import net.doge.util.core.CryptoUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.http.HttpRequest;
+import net.doge.util.core.array.ArrayUtil;
+import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpRequest;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

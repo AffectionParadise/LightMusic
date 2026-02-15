@@ -4,7 +4,7 @@ import lombok.Data;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.TimeUtil;
+import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

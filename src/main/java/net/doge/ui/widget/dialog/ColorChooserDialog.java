@@ -20,10 +20,10 @@ import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.ColorSliderUI;
 import net.doge.ui.widget.textfield.CustomTextField;
 import net.doge.ui.widget.textfield.document.LimitedDocument;
-import net.doge.util.core.LogUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.log.LogUtil;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;

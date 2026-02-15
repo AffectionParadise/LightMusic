@@ -3,11 +3,11 @@ package net.doge.sdk.util;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.ui.image.ImageConstants;
-import net.doge.util.core.JsonUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.http.HttpRequest;
-import net.doge.util.http.HttpResponse;
-import net.doge.util.ui.ImageUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.HttpResponse;
+import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.json.JsonUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import java.awt.image.BufferedImage;

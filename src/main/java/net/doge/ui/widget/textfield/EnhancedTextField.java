@@ -7,7 +7,7 @@
 //import net.doge.ui.widget.textfield.base.CustomTextField;
 //import net.doge.util.lmdata.manager.LMIconManager;
 //import net.doge.util.ui.GraphicsUtil;
-//import net.doge.util.ui.ImageUtil;
+//import net.doge.util.core.img.ImageUtil;
 //import net.doge.util.ui.ScaleUtil;
 //import net.doge.util.ui.SwingUtil;
 //

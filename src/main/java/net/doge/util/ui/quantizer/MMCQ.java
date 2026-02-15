@@ -1,8 +1,8 @@
 package net.doge.util.ui.quantizer;
 
 import net.doge.entity.core.color.HSL;
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
-import net.doge.util.ui.ImageUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
