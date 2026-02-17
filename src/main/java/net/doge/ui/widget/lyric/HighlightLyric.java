@@ -23,6 +23,7 @@ import java.util.List;
 public class HighlightLyric {
     private int width;
     private int height;
+    private double time;
     private String lyric;
     private String plainLyric;
     private Font labelFont;
@@ -84,6 +85,7 @@ public class HighlightLyric {
         this.widthThreshold = widthThreshold;
         this.shadowHOffset = ScaleUtil.scale(isDesktopLyric ? 3 : 0);
 
+        this.time = stmt.getTime();
         this.lyric = stmt.getLyric();
         this.plainLyric = stmt.getPlainLyric();
 

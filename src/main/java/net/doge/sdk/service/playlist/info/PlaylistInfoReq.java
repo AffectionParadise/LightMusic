@@ -83,7 +83,6 @@ public class PlaylistInfoReq {
     public void preloadPlaylistInfo(NetPlaylistInfo playlistInfo) {
         // 信息完整直接跳过
         if (playlistInfo.isIntegrated()) return;
-
         GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImgThumb(SdkUtil.extractCover(playlistInfo.getCoverImgThumbUrl())));
     }
 
@@ -881,7 +880,7 @@ public class PlaylistInfoReq {
                     if ("ZQ".equals(formatType)) qualityType = AudioQuality.HR;
                     else if ("SQ".equals(formatType)) qualityType = AudioQuality.SQ;
                     else if ("HQ".equals(formatType)) qualityType = AudioQuality.HQ;
-                    else if ("PQ".equals(formatType)) qualityType = AudioQuality.LQ;
+                    else if ("PQ".equals(formatType)) qualityType = AudioQuality.MQ;
                     if (qualityType != AudioQuality.UNKNOWN) break;
                 }
 

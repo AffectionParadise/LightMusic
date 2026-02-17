@@ -1,0 +1,99 @@
+package net.doge.sdk.service.music.info.impl.musicurl.track.qq;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+import net.doge.constant.core.media.AudioQuality;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.service.music.info.impl.musicurl.track.qq.entity.QQualityEntry;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class QqTrackReqV2 {
+    private static QqTrackReqV2 instance;
+
+    private QqTrackReqV2() {
+        initMap();
+    }
+
+    public static QqTrackReqV2 getInstance() {
+        if (instance == null) instance = new QqTrackReqV2();
+        return instance;
+    }
+
+    private final String guid = "0";
+    private final String uin = "0";
+    // 从 Cookie 中/客户端的请求体中(comm.authst)获取
+    private final String qqmusic_key = "";
+    // QQ 号
+    private final String loginuin = "";
+
+    private Map<String, QQualityEntry> fnMap = new HashMap<>();
+
+    private void initMap() {
+        fnMap.put(AudioQuality.KEYS[AudioQuality.STANDARD], new QQualityEntry("M500", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.HIGH], new QQualityEntry("M800", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.SUPER], new QQualityEntry("M800", ".mp3"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.LOSSLESS], new QQualityEntry("F000", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.HI_RES], new QQualityEntry("RS01", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], new QQualityEntry("Q000", ".flac"));
+        fnMap.put("atmosphere_plus", new QQualityEntry("Q001", ".flac"));
+        fnMap.put(AudioQuality.KEYS[AudioQuality.MASTER], new QQualityEntry("AI00", ".flac"));
+        fnMap.put("nac", new QQualityEntry("TL01", ".nac"));
+        fnMap.put("dts", new QQualityEntry("DT03", ".mp4"));
+    }
+
+    // 用于需要签名的 QQ 接口，musicu.fcg 不需要签名
+//    private HttpRequest signRequest(String body) {
+//        String s = QSignHelper.getInstance().sign(body);
+//        return HttpRequest.post("https://u.y.qq.com/cgi-bin/musics.fcg?format=json&sign=" + s).body(body);
+//    }
+
+    /**
+     * 获取 QQ 音乐歌曲链接
+     *
+     * @param mid     歌曲 mid
+     * @param quality 品质
+     * @return
+     */
+    public String getTrackUrl(String mid, String quality) {
+        // 获取 mediaMid
+        String infoReqBody = String.format("{\"comm\":{\"ct\":\"19\",\"cv\":\"1859\",\"uin\":\"0\"},\"req\":{\"module\":\"music.pf_song_detail_svr\"," +
+                "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);
+        String infoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                .jsonBody(infoReqBody)
+                .executeAsStr();
+        JSONObject infoBodyJson = JSONObject.parseObject(infoBody);
+        if (infoBodyJson.getIntValue("code") != 0 || infoBodyJson.getJSONObject("req").getIntValue("code") != 0)
+            return "";
+        String mediaMid = infoBodyJson.getJSONObject("req").getJSONObject("data")
+                .getJSONObject("track_info").getJSONObject("file").getString("media_mid");
+        // 获取 url
+        QQualityEntry qualityEntry = fnMap.get(quality);
+        String reqBody = String.format("{\"req\":{\"module\":\"vkey.GetVkeyServer\",\"method\":\"CgiGetVkey\",\"param\":{\"filename\":[\"%s\"]," +
+                        "\"guid\":\"%s\",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"%s\",\"loginflag\":1,\"platform\":\"20\"}}," +
+                        "\"comm\":{\"qq\":\"%s\",\"authst\":\"%s\",\"ct\":\"26\",\"cv\":\"2010101\",\"v\":\"2010101\"}}",
+                qualityEntry.getPrefix() + mediaMid + qualityEntry.getSuffix(), guid, mid, uin, loginuin, qqmusic_key);
+        String urlBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+                .jsonBody(reqBody)
+                .executeAsStr();
+        JSONObject urlJson = JSONObject.parseObject(urlBody);
+        JSONObject data = urlJson.getJSONObject("req").getJSONObject("data");
+        if (JsonUtil.isEmpty(data)) return "";
+        JSONArray sipArray = data.getJSONArray("sip");
+        if (JsonUtil.isEmpty(sipArray)) return "";
+        String sip = sipArray.getString(0);
+        String url = data.getJSONArray("midurlinfo").getJSONObject(0).getString("purl");
+        String trackUrl = sip + url;
+        return StringUtil.isEmpty(url) ? "" : trackUrl;
+    }
+
+//    public static void main(String[] args) {
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.STANDARD]));
+//        System.out.println(getInstance().getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.HIGH]));
+//        System.out.println(getInstance().getTrackUrl("0039MnYb0qxYhV", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
+//    }
+}

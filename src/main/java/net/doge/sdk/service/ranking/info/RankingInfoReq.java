@@ -330,7 +330,7 @@ public class RankingInfoReq {
                     if ("ZQ".equals(formatType)) qualityType = AudioQuality.HR;
                     else if ("SQ".equals(formatType)) qualityType = AudioQuality.SQ;
                     else if ("HQ".equals(formatType)) qualityType = AudioQuality.HQ;
-                    else if ("PQ".equals(formatType)) qualityType = AudioQuality.LQ;
+                    else if ("PQ".equals(formatType)) qualityType = AudioQuality.MQ;
                     if (qualityType != AudioQuality.UNKNOWN) break;
                 }
 

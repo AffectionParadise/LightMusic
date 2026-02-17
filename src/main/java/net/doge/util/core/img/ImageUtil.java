@@ -99,6 +99,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage read(InputStream in) {
+        if (in == null) return null;
         try (InputStream input = in) {
             return Thumbnails.of(input).scale(1).asBufferedImage();
         } catch (Exception e) {
@@ -114,7 +115,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage readWebp(String imgUrl) {
+        if (StringUtil.isEmpty(imgUrl)) return null;
         try (InputStream in = getImgStream(imgUrl)) {
+            if (in == null) return null;
             // Obtain a WebP ImageReader instance
             ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
 
@@ -186,6 +189,7 @@ public class ImageUtil {
      */
     public static void toFile(String imgUrl, File outputFile) {
         try (InputStream in = getImgStream(imgUrl)) {
+            if (in == null) return;
             Thumbnails.of(in).scale(1).toFile(outputFile);
         } catch (Exception e) {
             LogUtil.error(e);
@@ -455,6 +459,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage width(String imgUrl, int width) {
+        if (StringUtil.isEmpty(imgUrl)) return null;
         try {
             BufferedImage img = null;
             // 先处理 webp 图像

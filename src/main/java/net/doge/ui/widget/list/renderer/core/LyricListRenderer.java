@@ -114,6 +114,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(maxWidth);
 
         Statement statement = (Statement) value;
+        double time = statement.getTime();
         String plainLyric = statement.getPlainLyric();
 
         // 标签
@@ -130,8 +131,13 @@ public class LyricListRenderer extends CustomListCellRenderer {
         // 高亮的行的样式
         if (index == row) {
             label.setFont(highlightFont);
-            if (hl == null || hl.getWidthThreshold() != maxWidth || !hl.getLabelFont().equals(highlightFont)
-                    || !hl.getPlainLyric().equals(plainLyric) || !hl.getC1().equals(highlightColor) || !hl.getC2().equals(bgColor))
+            if (hl == null
+                    || hl.getWidthThreshold() != maxWidth
+                    || !hl.getLabelFont().equals(highlightFont)
+                    || hl.getTime() != time
+                    || !hl.getPlainLyric().equals(plainLyric)
+                    || !hl.getC1().equals(highlightColor)
+                    || !hl.getC2().equals(bgColor))
                 hl = new HighlightLyric(label, statement, highlightColor, bgColor, ratio, false, maxWidth);
             else hl.setRatio(ratio);
             label.setIcon(hl.getImgIcon());

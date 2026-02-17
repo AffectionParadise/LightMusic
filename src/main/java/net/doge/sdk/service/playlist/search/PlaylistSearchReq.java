@@ -15,7 +15,6 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.collection.ListUtil;
 import net.doge.util.core.exception.ExceptionUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.net.UrlUtil;
@@ -49,8 +48,6 @@ public class PlaylistSearchReq {
     // 关键词搜索歌单 API (酷我)
 //    private final String SEARCH_PLAYLIST_KW_API = "https://kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
     private final String SEARCH_PLAYLIST_KW_API = "http://search.kuwo.cn/r.s?all=%s&pn=%s&rn=%s&rformat=json&encoding=utf8&ver=mbox&vipver=MUSIC_8.7.7.0_BCS37&plat=pc&devid=28156413&ft=playlist&pay=0&needliveshow=0";
-    // 关键词搜索歌单 API (咪咕)
-    private final String SEARCH_PLAYLIST_MG_API = "https://m.music.migu.cn/migu/remoting/scr_search_tag?type=6&keyword=%s&pgc=%s&rows=%s";
     // 关键词搜索歌单 API (5sing)
     private final String SEARCH_PLAYLIST_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=1";
 
@@ -300,12 +297,11 @@ public class PlaylistSearchReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             Integer t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_MG_API, encodedKeyword, page, limit))
-                    .header(Header.REFERER, "https://m.music.migu.cn/")
+            String playlistInfoBody = SdkCommon.mgSearchRequest("playlist", keyword, page, limit)
                     .executeAsStr();
-            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-            t = playlistInfoJson.getIntValue("pgt");
-            JSONArray playlistArray = playlistInfoJson.getJSONArray("songLists");
+            JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody).getJSONObject("songListResultData");
+            t = playlistInfoJson.getIntValue("totalCount");
+            JSONArray playlistArray = playlistInfoJson.getJSONArray("result");
             if (JsonUtil.notEmpty(playlistArray)) {
                 for (int i = 0, len = playlistArray.size(); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
@@ -316,7 +312,7 @@ public class PlaylistSearchReq {
                     String creatorId = playlistJson.getString("userId");
                     Long playCount = playlistJson.getLong("playNum");
                     Integer trackCount = playlistJson.getIntValue("musicNum");
-                    String coverImgThumbUrl = playlistJson.getString("img");
+                    String coverImgThumbUrl = playlistJson.getString("musicListPicUrl");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                     playlistInfo.setSource(NetMusicSource.MG);

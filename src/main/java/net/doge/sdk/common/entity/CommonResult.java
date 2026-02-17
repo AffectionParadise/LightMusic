@@ -1,5 +1,6 @@
 package net.doge.sdk.common.entity;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -20,5 +21,10 @@ public class CommonResult<E> {
         this.data = data;
         this.total = total;
         this.cursor = cursor;
+    }
+
+    // 构造空的请求数据
+    public static <E> CommonResult<E> create() {
+        return new CommonResult<>(new LinkedList<>(), 0);
     }
 }

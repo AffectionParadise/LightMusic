@@ -106,13 +106,18 @@ public class DesktopLyricDialog extends JDialog {
     }
 
     public void updateLyric(Statement stmt, double ratio) {
+        double time = stmt.getTime();
         String plainLyric = stmt.getPlainLyric();
 
         this.statement = stmt;
         this.ratio = ratio;
 
         tempLabel.setText(plainLyric);
-        if (highlightLyric == null || !highlightLyric.getPlainLyric().equals(plainLyric) || !highlightLyric.getC1().equals(foreColor) || !highlightLyric.getC2().equals(bgColor)
+        if (highlightLyric == null
+                || !highlightLyric.getPlainLyric().equals(plainLyric)
+                || highlightLyric.getTime() != time
+                || !highlightLyric.getC1().equals(foreColor)
+                || !highlightLyric.getC2().equals(bgColor)
                 || !highlightLyric.getLabelFont().equals(tempLabel.getFont()))
             highlightLyric = new HighlightLyric(tempLabel, stmt, foreColor, bgColor, ratio, true, width);
         else highlightLyric.setRatio(ratio);

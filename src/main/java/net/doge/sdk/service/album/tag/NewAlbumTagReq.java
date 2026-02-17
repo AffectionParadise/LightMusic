@@ -1,28 +1,10 @@
 package net.doge.sdk.service.album.tag;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.core.RegexUtil;
-import net.doge.util.core.exception.ExceptionUtil;
-import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Method;
-import net.doge.util.core.json.JsonUtil;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
+import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
+import net.doge.sdk.service.album.tag.impl.DbNewAlbumTagReq;
+import net.doge.sdk.service.album.tag.impl.KgNewAlbumTagReq;
+import net.doge.sdk.service.album.tag.impl.NcNewAlbumTagReq;
 
 public class NewAlbumTagReq {
     private static NewAlbumTagReq instance;
@@ -34,13 +16,6 @@ public class NewAlbumTagReq {
         if (instance == null) instance = new NewAlbumTagReq();
         return instance;
     }
-
-    // 曲风 API
-    private final String STYLE_API = "https://music.163.com/api/tag/list/get";
-    // 编辑精选标签 API (酷狗)
-    private final String IP_TAG_KG_API = "/v1/zone/index";
-    // 专辑标签 API (豆瓣)
-    private final String ALBUM_TAG_DB_API = "https://music.douban.com/tag/";
 
     /**
      * 加载新碟标签
@@ -393,98 +368,10 @@ public class NewAlbumTagReq {
         Tags.newAlbumTag.put("素材", new String[]{"", "", "", "", "", "", "", "素材"});
         Tags.newAlbumTag.put("动图", new String[]{"", "", "", "", "", "", "", "动图"});
 
-        final int c = 8;
-        // 网易云曲风
-        Runnable initAlbumTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .executeAsStr();
-            JSONObject tagJson = JSONObject.parseObject(tagBody);
-            JSONArray tags = tagJson.getJSONArray("data");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tag = tags.getJSONObject(i);
-
-                String name = tag.getString("tagName");
-                String id = tag.getString("tagId");
-
-                if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-                Tags.newAlbumTag.get(name)[2] = id;
-                // 子标签
-                JSONArray subTags = tag.getJSONArray("childrenTags");
-                if (JsonUtil.isEmpty(subTags)) continue;
-                for (int j = 0, s = subTags.size(); j < s; j++) {
-                    JSONObject subTag = subTags.getJSONObject(j);
-
-                    String subName = subTag.getString("tagName");
-                    String subId = subTag.getString("tagId");
-
-                    if (!Tags.newAlbumTag.containsKey(subName)) Tags.newAlbumTag.put(subName, new String[c]);
-                    Tags.newAlbumTag.get(subName)[2] = subId;
-                    // 孙子标签
-                    JSONArray ssTags = subTag.getJSONArray("childrenTags");
-                    if (JsonUtil.isEmpty(ssTags)) continue;
-                    for (int k = 0, l = ssTags.size(); k < l; k++) {
-                        JSONObject ssTag = ssTags.getJSONObject(k);
-
-                        String ssName = ssTag.getString("tagName");
-                        String ssId = ssTag.getString("tagId");
-
-                        if (!Tags.newAlbumTag.containsKey(ssName)) Tags.newAlbumTag.put(ssName, new String[c]);
-                        Tags.newAlbumTag.get(ssName)[2] = ssId;
-                    }
-                }
-            }
-        };
-
-        // 酷狗
-        // 编辑精选标签
-        Runnable initIpTagKg = () -> {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
-            String tagBody = SdkCommon.kgRequest(null, null, options)
-                    .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsStr();
-            JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tag = tags.getJSONObject(i);
-
-                String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
-                String name = tag.getString("name");
-
-                if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-                Tags.newAlbumTag.get(name)[4] = id;
-            }
-        };
-
-        // 豆瓣
-        // 分类专辑标签
-        Runnable initAlbumTagDb = () -> {
-            String albumTagBody = HttpRequest.get(ALBUM_TAG_DB_API)
-                    .executeAsStr();
-            Document doc = Jsoup.parse(albumTagBody);
-            Elements tags = doc.select("tbody tr td a");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                Element tag = tags.get(i);
-
-                String name = tag.text();
-                String id = tag.text();
-
-                if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-                Tags.newAlbumTag.get(name)[6] = id;
-            }
-        };
-
-        List<Future<?>> taskList = new LinkedList<>();
-
-        taskList.add(GlobalExecutors.requestExecutor.submit(initAlbumTag));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initIpTagKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initAlbumTagDb));
-
-        taskList.forEach(task -> {
-            try {
-                task.get();
-            } catch (Exception e) {
-                ExceptionUtil.handleAsyncException(e);
-            }
-        });
+        MultiRunnableExecutor executor = new MultiRunnableExecutor();
+        executor.submit(() -> NcNewAlbumTagReq.getInstance().initAlbumTag());
+        executor.submit(() -> KgNewAlbumTagReq.getInstance().initIpTag());
+        executor.submit(() -> DbNewAlbumTagReq.getInstance().initAlbumTag());
+        executor.await();
     }
 }

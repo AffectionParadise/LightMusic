@@ -124,11 +124,11 @@ public class HtmlUtil {
         Pattern pattern = Pattern.compile("<[^>]+>");
         Matcher matcher = pattern.matcher(s);
         return matcher.replaceAll("")
-                .replace("&nbsp;", " ")
-                .replace("&amp;", "&")
-                .replace("&lt;", "<")
-                .replace("&gt;", ">")
-                .replace("&apos;", "'");
+                .replaceAll("&?nbsp;", " ")
+                .replaceAll("&?amp;", "&")
+                .replaceAll("&?lt;", "<")
+                .replaceAll("&?gt;", ">")
+                .replaceAll("&?apos;", "'");
     }
 
     public static String wrapLineByWidth(String text, int thresholdWidth) {

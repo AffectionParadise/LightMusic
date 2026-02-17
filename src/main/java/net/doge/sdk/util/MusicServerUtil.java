@@ -249,7 +249,7 @@ public class MusicServerUtil {
     }
 
     /**
-     * 获取 歌曲 / 歌单 / 专辑 / MV 评论
+     * 获取评论
      */
     public static CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit, String cursor) {
         return CommentReq.getInstance().getComments(resource, type, page, limit, cursor);

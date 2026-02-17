@@ -1,24 +1,10 @@
 package net.doge.sdk.service.artist.tag;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
-import net.doge.util.core.RegexUtil;
-import net.doge.util.core.exception.ExceptionUtil;
-import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Method;
-import net.doge.util.core.json.JsonUtil;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
+import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
+import net.doge.sdk.service.artist.tag.impl.KgArtistTagReq;
+import net.doge.sdk.service.artist.tag.impl.NcArtistTagReq;
+import net.doge.sdk.service.artist.tag.impl.QqArtistTagReq;
 
 public class ArtistTagReq {
     private static ArtistTagReq instance;
@@ -30,11 +16,6 @@ public class ArtistTagReq {
         if (instance == null) instance = new ArtistTagReq();
         return instance;
     }
-
-    // 曲风 API
-    private final String STYLE_API = "https://music.163.com/api/tag/list/get";
-    // 编辑精选标签 API (酷狗)
-    private final String IP_TAG_KG_API = "/v1/zone/index";
 
     /**
      * 加载歌手标签
@@ -88,127 +69,10 @@ public class ArtistTagReq {
         Tags.artistTag.put("其他组合", new String[]{"", "3 0 -1", "", "3 4", "", "2 -100 -100 6", "", "", " 其他 组合", ""});
         Tags.artistTag.put("其他乐队", new String[]{"", "", "", "", "", "", "", "", " 其他 乐队", ""});
 
-        final int c = 10;
-        // 网易云曲风
-        Runnable initStyleArtistTag = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
-                    .executeAsStr();
-            JSONObject tagJson = JSONObject.parseObject(tagBody);
-            JSONArray tags = tagJson.getJSONArray("data");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tag = tags.getJSONObject(i);
-
-                String name = tag.getString("tagName");
-                String id = tag.getString("tagId");
-
-                if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[2] = id;
-                // 子标签
-                JSONArray subTags = tag.getJSONArray("childrenTags");
-                if (JsonUtil.isEmpty(subTags)) continue;
-                for (int j = 0, s = subTags.size(); j < s; j++) {
-                    JSONObject subTag = subTags.getJSONObject(j);
-
-                    String subName = subTag.getString("tagName");
-                    String subId = subTag.getString("tagId");
-
-                    if (!Tags.artistTag.containsKey(subName)) Tags.artistTag.put(subName, new String[c]);
-                    Tags.artistTag.get(subName)[2] = subId;
-                    // 孙子标签
-                    JSONArray ssTags = subTag.getJSONArray("childrenTags");
-                    if (JsonUtil.isEmpty(ssTags)) continue;
-                    for (int k = 0, l = ssTags.size(); k < l; k++) {
-                        JSONObject ssTag = ssTags.getJSONObject(k);
-
-                        String ssName = ssTag.getString("tagName");
-                        String ssId = ssTag.getString("tagId");
-
-                        if (!Tags.artistTag.containsKey(ssName)) Tags.artistTag.put(ssName, new String[c]);
-                        Tags.artistTag.get(ssName)[2] = ssId;
-                    }
-                }
-            }
-        };
-
-        // 酷狗
-        // 编辑精选标签
-        Runnable initIpTagKg = () -> {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
-            String tagBody = SdkCommon.kgRequest(null, null, options)
-                    .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsStr();
-            JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tag = tags.getJSONObject(i);
-
-                String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
-                String name = tag.getString("name");
-
-                if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[4] = id;
-            }
-        };
-
-        // QQ + 网易云 + 千千
-        // 分类歌手标签
-        Runnable initArtistTagQq = () -> {
-            String artistTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .jsonBody("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
-                            "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}")
-                    .executeAsStr();
-            JSONObject artistTagJson = JSONObject.parseObject(artistTagBody);
-            JSONObject data = artistTagJson.getJSONObject("singerList").getJSONObject("data").getJSONObject("tags");
-            // 流派
-            JSONArray genre = data.getJSONArray("genre");
-            for (int i = 0, len = genre.size(); i < len; i++) {
-                JSONObject tagJson = genre.getJSONObject(i);
-
-                String name = tagJson.getString("name");
-                if ("全部".equals(name)) continue;
-                String id = tagJson.getString("id");
-
-                if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[5] = String.format("-100 %s -100 -100", id);
-            }
-            // 首字母
-            JSONArray index = data.getJSONArray("index");
-            for (int i = 0, len = index.size(); i < len; i++) {
-                JSONObject tagJson = index.getJSONObject(i);
-
-                String name = tagJson.getString("name");
-                if ("热门".equals(name)) continue;
-                String id = tagJson.getString("id");
-
-                if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-                Tags.artistTag.get(name)[5] = String.format("-100 -100 %s -100", id);
-
-                // 网易云
-                Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
-
-                // 酷我
-                if (!"#".equals(name)) Tags.artistTag.get(name)[7] = String.format("0 %s", name);
-
-                // 千千
-                Tags.artistTag.get(name)[8] = String.format("%s  ", "#".equals(name) ? "other" : name);
-
-                // 猫耳
-                Tags.artistTag.get(name)[9] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
-            }
-        };
-
-        List<Future<?>> taskList = new LinkedList<>();
-
-        taskList.add(GlobalExecutors.requestExecutor.submit(initStyleArtistTag));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initIpTagKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initArtistTagQq));
-
-        taskList.forEach(task -> {
-            try {
-                task.get();
-            } catch (Exception e) {
-                ExceptionUtil.handleAsyncException(e);
-            }
-        });
+        MultiRunnableExecutor executor = new MultiRunnableExecutor();
+        executor.submit(() -> NcArtistTagReq.getInstance().initStyleArtistTag());
+        executor.submit(() -> KgArtistTagReq.getInstance().initIpTag());
+        executor.submit(() -> QqArtistTagReq.getInstance().initArtistTag());
+        executor.await();
     }
 }

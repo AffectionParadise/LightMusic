@@ -1,16 +1,8 @@
 package net.doge.sdk.service.music.tag;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.util.core.exception.ExceptionUtil;
-import net.doge.util.core.http.HttpRequest;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Future;
+import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
+import net.doge.sdk.service.music.tag.impl.musicsearchtag.MeMusicSearchTagReq;
 
 public class MusicSearchTagReq {
     private static MusicSearchTagReq instance;
@@ -23,9 +15,6 @@ public class MusicSearchTagReq {
         return instance;
     }
 
-    // 搜索子标签 (猫耳)
-    private final String PROGRAM_SEARCH_TAG_ME_API = "https://www.missevan.com/sound/getcatalogleaves";
-
     /**
      * 加载节目搜索子标签
      *
@@ -35,37 +24,8 @@ public class MusicSearchTagReq {
         // 猫耳
         Tags.programSearchTag.put("默认", new String[]{" "});
 
-        final int c = 1;
-        // 猫耳
-        Runnable initProgramSearchTagMe = () -> {
-            String playlistTagBody = HttpRequest.get(PROGRAM_SEARCH_TAG_ME_API)
-                    .executeAsStr();
-            JSONArray tags = JSONArray.parseArray(playlistTagBody);
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject son = tags.getJSONObject(i).getJSONObject("son");
-                Set<String> keys = son.keySet();
-                for (String key : keys) {
-                    JSONObject obj = son.getJSONObject(key);
-
-                    String name = obj.getString("catalog_name");
-                    String id = obj.getString("id");
-
-                    if (!Tags.programSearchTag.containsKey(name)) Tags.programSearchTag.put(name, new String[c]);
-                    Tags.programSearchTag.get(name)[0] = id;
-                }
-            }
-        };
-
-        List<Future<?>> taskList = new LinkedList<>();
-
-        taskList.add(GlobalExecutors.requestExecutor.submit(initProgramSearchTagMe));
-
-        taskList.forEach(task -> {
-            try {
-                task.get();
-            } catch (Exception e) {
-                ExceptionUtil.handleAsyncException(e);
-            }
-        });
+        MultiRunnableExecutor executor = new MultiRunnableExecutor();
+        executor.submit(() -> MeMusicSearchTagReq.getInstance().initProgramSearchTag());
+        executor.await();
     }
 }
