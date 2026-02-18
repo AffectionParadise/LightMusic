@@ -26,19 +26,14 @@ public class MusicMenuReq {
     public CommonResult<NetMusicInfo> getSimilarSongs(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            // QQ
             case NetMusicSource.QQ:
                 return QqMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            // 音乐磁场
             case NetMusicSource.HF:
                 return HfMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            // 咕咕咕音乐
             case NetMusicSource.GG:
                 return GgMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            // 猫耳
             case NetMusicSource.ME:
                 return MeMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
             default:
@@ -54,10 +49,8 @@ public class MusicMenuReq {
     public CommonResult<NetPlaylistInfo> getRelatedPlaylists(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcMusicMenuReq.getInstance().getRelatedPlaylists(musicInfo);
-            // QQ
             case NetMusicSource.QQ:
                 return QqMusicMenuReq.getInstance().getRelatedPlaylists(musicInfo);
             default:
@@ -73,7 +66,6 @@ public class MusicMenuReq {
     public CommonResult<NetRadioInfo> getRecRadios(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            // 猫耳
             case NetMusicSource.ME:
                 return MeMusicMenuReq.getInstance().getRecRadios(musicInfo);
             default:

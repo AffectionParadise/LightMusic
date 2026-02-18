@@ -1,21 +1,15 @@
 package net.doge.sdk.service.mv.info;
 
-import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetMvInfo;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.service.mv.info.impl.mvinfo.KgMvInfoReq;
+import net.doge.sdk.service.mv.info.impl.mvinfo.KwMvInfoReq;
+import net.doge.sdk.service.mv.info.impl.mvinfo.NcMvInfoReq;
+import net.doge.sdk.service.mv.info.impl.mvinfo.QqMvInfoReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Method;
-import net.doge.util.core.time.TimeUtil;
-
-import java.awt.image.BufferedImage;
-import java.util.Map;
 
 public class MvInfoReq {
     private static MvInfoReq instance;
@@ -28,20 +22,12 @@ public class MvInfoReq {
         return instance;
     }
 
-    // MV 信息 API
-    private final String MV_DETAIL_API = "https://music.163.com/api/v1/mv/detail";
-    // MV 信息 API (酷狗)
-    private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
-    // MV 信息 API (酷我)
-    private final String MV_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
-
     /**
      * 根据 MV id 预加载 MV 信息
      */
     public void preloadMvInfo(NetMvInfo mvInfo) {
         // 信息完整直接跳过
         if (mvInfo.isIntegrated()) return;
-
         GlobalExecutors.imageExecutor.execute(() -> mvInfo.setCoverImgThumb(SdkUtil.extractMvCover(mvInfo.getCoverImgUrl())));
     }
 
@@ -67,129 +53,19 @@ public class MvInfoReq {
      */
     public void fillMvDetail(NetMvInfo mvInfo) {
         int source = mvInfo.getSource();
-        String mvId = mvInfo.getId();
-
-        // 网易云
-        if (source == NetMusicSource.NC) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_API, String.format("{\"id\":\"%s\"}", mvId), options)
-                    .executeAsStr();
-            JSONObject mvJson = JSONObject.parseObject(mvBody);
-            JSONObject data = mvJson.getJSONObject("data");
-            String name = data.getString("name").trim();
-            String artist = SdkUtil.parseArtist(data);
-            String creatorId = SdkUtil.parseArtistId(data);
-            Long playCount = data.getLong("playCount");
-            Double duration = data.getDouble("duration") / 1000;
-            String pubTime = data.getString("publishTime");
-            String coverImgUrl = data.getString("cover");
-
-            mvInfo.setName(name);
-            mvInfo.setArtist(artist);
-            mvInfo.setCreatorId(creatorId);
-            mvInfo.setPlayCount(playCount);
-            mvInfo.setDuration(duration);
-            mvInfo.setPubTime(pubTime);
-            mvInfo.setCoverImgUrl(coverImgUrl);
-
-            GlobalExecutors.imageExecutor.execute(() -> {
-                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                mvInfo.setCoverImgThumb(coverImgThumb);
-            });
-        }
-
-        // 酷狗
-        else if (source == NetMusicSource.KG) {
-            String mvBody = HttpRequest.get(String.format(MV_DETAIL_KG_API, mvId))
-                    .executeAsStr();
-            JSONObject mvJson = JSONObject.parseObject(mvBody);
-            JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");
-            String[] s = data.getString("filename").split(" - ");
-            String name = s[1];
-            String artist = s[0];
-            String creatorId = SdkUtil.parseArtistId(mvJson);
-            Long playCount = data.getLong("history_heat");
-            Double duration = data.getDouble("mv_timelength") / 1000;
-            String pubTime = data.getString("update");
-            String coverImgUrl = data.getString("imgurl").replace("/{size}", "");
-
-            mvInfo.setName(name);
-            mvInfo.setArtist(artist);
-            mvInfo.setCreatorId(creatorId);
-            mvInfo.setPlayCount(playCount);
-            mvInfo.setDuration(duration);
-            mvInfo.setPubTime(pubTime);
-            mvInfo.setCoverImgUrl(coverImgUrl);
-
-            GlobalExecutors.imageExecutor.execute(() -> {
-                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                mvInfo.setCoverImgThumb(coverImgThumb);
-            });
-        }
-
-        // QQ
-        else if (source == NetMusicSource.QQ) {
-            String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
-                            "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
-                            "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
-                            "\"isfav\",\"gmid\"]}},\"other\":{\"module\":\"video.VideoLogicServer\",\"method\":\"rec_video_byvid\"," +
-                            "\"param\":{\"vid\":\"%s\",\"required\":[\"vid\",\"type\",\"sid\",\"cover_pic\",\"duration\",\"singers\"," +
-                            "\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\",\"isfav\",\"gmid\",\"uploader_headurl\"," +
-                            "\"uploader_nick\",\"uploader_encuin\",\"uploader_uin\",\"uploader_hasfollow\",\"uploader_follower_num\"],\"support\":1}}}", mvId, mvId))
-                    .executeAsStr();
-            JSONObject mvJson = JSONObject.parseObject(mvBody);
-            JSONObject data = mvJson.getJSONObject("mvinfo").getJSONObject("data").getJSONObject(mvId);
-
-            String name = data.getString("name");
-            String artist = SdkUtil.parseArtist(data);
-            String creatorId = SdkUtil.parseArtistId(data);
-            Long playCount = data.getLong("playcnt");
-            Double duration = data.getDouble("duration");
-            String pubTime = TimeUtil.msToDate(data.getLong("pubdate") * 1000);
-            String coverImgUrl = data.getString("cover_pic");
-
-            mvInfo.setName(name);
-            mvInfo.setArtist(artist);
-            mvInfo.setCreatorId(creatorId);
-            mvInfo.setPlayCount(playCount);
-            mvInfo.setDuration(duration);
-            mvInfo.setPubTime(pubTime);
-            mvInfo.setCoverImgUrl(coverImgUrl);
-
-            GlobalExecutors.imageExecutor.execute(() -> {
-                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                mvInfo.setCoverImgThumb(coverImgThumb);
-            });
-        }
-
-        // 酷我
-        else if (source == NetMusicSource.KW) {
-            String mvBody = SdkCommon.kwRequest(String.format(MV_DETAIL_KW_API, mvId))
-                    .executeAsStr();
-            JSONObject mvJson = JSONObject.parseObject(mvBody);
-            JSONObject data = mvJson.getJSONObject("data");
-
-            String name = data.getString("name");
-            String artist = data.getString("artist").replace("&", "、");
-            String creatorId = data.getString("artistid");
-            Long playCount = data.getLong("mvPlayCnt");
-            Double duration = data.getDouble("duration");
-            String pubTime = data.getString("releaseDate");
-            String coverImgUrl = data.getString("pic");
-
-            mvInfo.setName(name);
-            mvInfo.setArtist(artist);
-            mvInfo.setCreatorId(creatorId);
-            mvInfo.setPlayCount(playCount);
-            mvInfo.setDuration(duration);
-            mvInfo.setPubTime(pubTime);
-            mvInfo.setCoverImgUrl(coverImgUrl);
-
-            GlobalExecutors.imageExecutor.execute(() -> {
-                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
-                mvInfo.setCoverImgThumb(coverImgThumb);
-            });
+        switch (source) {
+            case NetMusicSource.NC:
+                NcMvInfoReq.getInstance().fillMvDetail(mvInfo);
+                break;
+            case NetMusicSource.KG:
+                KgMvInfoReq.getInstance().fillMvDetail(mvInfo);
+                break;
+            case NetMusicSource.QQ:
+                QqMvInfoReq.getInstance().fillMvDetail(mvInfo);
+                break;
+            case NetMusicSource.KW:
+                KwMvInfoReq.getInstance().fillMvDetail(mvInfo);
+                break;
         }
     }
 }

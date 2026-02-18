@@ -24,7 +24,6 @@ public class AlbumMenuReq {
     public CommonResult<NetAlbumInfo> getSimilarAlbums(NetAlbumInfo albumInfo) {
         int source = albumInfo.getSource();
         switch (source) {
-            // 豆瓣
             case NetMusicSource.DB:
                 return DbAlbumMenuReq.getInstance().getSimilarAlbums(albumInfo);
             default:

@@ -22,22 +22,16 @@ public class ArtistMenuReq {
     public CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            // QQ
             case NetMusicSource.QQ:
                 return QqArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            // 酷我
             case NetMusicSource.KW:
                 return KwArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            // 咪咕
             case NetMusicSource.MG:
                 return MgArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            // 千千
             case NetMusicSource.QI:
                 return QiArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
             default:
@@ -51,16 +45,12 @@ public class ArtistMenuReq {
     public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            // QQ
             case NetMusicSource.QQ:
                 return QqArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            // 酷我
             case NetMusicSource.KW:
                 return KwArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
             default:
@@ -74,7 +64,6 @@ public class ArtistMenuReq {
     public CommonResult<String> getArtistImgUrls(NetArtistInfo artistInfo, int page) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 豆瓣
             case NetMusicSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistImgUrls(artistInfo, page);
             default:
@@ -90,13 +79,10 @@ public class ArtistMenuReq {
     public CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo netArtistInfo) {
         int source = netArtistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
-            // QQ
             case NetMusicSource.QQ:
                 return QqArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
             default:
@@ -112,13 +98,10 @@ public class ArtistMenuReq {
     public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistMenuReq.getInstance().getArtistFans(artistInfo, page, limit);
-            // 猫耳
             case NetMusicSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistFans(artistInfo, page, limit);
-            // 豆瓣
             case NetMusicSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistFans(artistInfo, page);
             default:
@@ -134,10 +117,8 @@ public class ArtistMenuReq {
     public CommonResult<NetArtistInfo> getArtistBuddies(NetArtistInfo netArtistInfo, int page, int limit) {
         int source = netArtistInfo.getSource();
         switch (source) {
-            // 猫耳
             case NetMusicSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistBuddies(netArtistInfo, page, limit);
-            // 豆瓣
             case NetMusicSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistBuddies(netArtistInfo, page, limit);
             default:
@@ -153,10 +134,8 @@ public class ArtistMenuReq {
     public CommonResult<NetRadioInfo> getArtistRadios(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 猫耳
             case NetMusicSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistRadios(artistInfo, page, limit);
-            // 豆瓣
             case NetMusicSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistRadios(artistInfo, page, limit);
             default:

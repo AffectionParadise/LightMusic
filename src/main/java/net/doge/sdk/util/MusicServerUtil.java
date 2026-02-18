@@ -46,8 +46,8 @@ import net.doge.sdk.service.radio.rcmd.HotRadioReq;
 import net.doge.sdk.service.radio.rcmd.NewRadioReq;
 import net.doge.sdk.service.radio.search.RadioSearchReq;
 import net.doge.sdk.service.radio.tag.HotRadioTagReq;
+import net.doge.sdk.service.ranking.fetch.RankingFetchReq;
 import net.doge.sdk.service.ranking.info.RankingInfoReq;
-import net.doge.sdk.service.ranking.search.RankingSearchReq;
 import net.doge.sdk.service.sheet.SheetReq;
 import net.doge.sdk.service.user.info.UserInfoReq;
 import net.doge.sdk.service.user.menu.UserMenuReq;
@@ -238,7 +238,7 @@ public class MusicServerUtil {
      * 获取所有榜单
      */
     public static CommonResult<NetRankingInfo> getRankings(int src) {
-        return RankingSearchReq.getInstance().getRankings(src);
+        return RankingFetchReq.getInstance().getRankings(src);
     }
 
     /**

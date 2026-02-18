@@ -31,7 +31,7 @@ public class NetMvInfo implements NetResource, Downloadable {
     // MV id
     private String id;
     // MV bvid (哔哩哔哩)
-    private String bvid;
+    private String bvId;
     // MV 名称
     private String name;
     // 创建者 id
@@ -136,7 +136,7 @@ public class NetMvInfo implements NetResource, Downloadable {
     // 必须重写 hashCode 和 equals 方法才能在 Set 判断是否重复！
     @Override
     public int hashCode() {
-        return Objects.hash(source, id, bvid);
+        return Objects.hash(source, id, bvId);
     }
 
     public String toFileName() {

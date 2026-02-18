@@ -21,7 +21,6 @@ public class MusicInfoReq {
     public void fillDuration(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            // 咪咕
             case NetMusicSource.MG:
                 MgMusicInfoReq.getInstance().fillDuration(musicInfo);
                 break;
@@ -36,59 +35,45 @@ public class MusicInfoReq {
         if (musicInfo.isIntegrated()) return;
         int source = musicInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 NcMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 酷狗
             case NetMusicSource.KG:
                 KgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // QQ
             case NetMusicSource.QQ:
                 QqMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 酷我
             case NetMusicSource.KW:
                 KwMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 咪咕
             case NetMusicSource.MG:
                 MgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 千千
             case NetMusicSource.QI:
                 QiMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 音乐磁场
             case NetMusicSource.HF:
                 HfMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 咕咕咕音乐
             case NetMusicSource.GG:
                 GgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 5sing
             case NetMusicSource.FS:
                 FsMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 喜马拉雅
             case NetMusicSource.XM:
                 XmMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 猫耳
             case NetMusicSource.ME:
                 MeMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 哔哩哔哩
             case NetMusicSource.BI:
                 BiMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 发姐
             case NetMusicSource.FA:
                 FaMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            // 李志
             case NetMusicSource.LZ:
                 LzMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
@@ -103,55 +88,42 @@ public class MusicInfoReq {
         if (musicInfo.isLyricIntegrated()) return;
         int source = musicInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 NcMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 酷狗
             case NetMusicSource.KG:
                 KgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // QQ
             case NetMusicSource.QQ:
                 QqMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 酷我
             case NetMusicSource.KW:
                 KwMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 咪咕
             case NetMusicSource.MG:
                 MgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 千千
             case NetMusicSource.QI:
                 QiMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 音乐磁场
             case NetMusicSource.HF:
                 HfMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 咕咕咕音乐
             case NetMusicSource.GG:
                 GgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 5sing
             case NetMusicSource.FS:
                 FsMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 猫耳
             case NetMusicSource.ME:
                 MeMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 哔哩哔哩
             case NetMusicSource.BI:
                 BiMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 发姐
             case NetMusicSource.FA:
                 FaMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            // 李志
             case NetMusicSource.LZ:
                 LzMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;

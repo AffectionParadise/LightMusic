@@ -3340,7 +3340,7 @@ public class MainFrame extends JFrame {
                     mvInfo.setSource(jo.getIntValue(ConfigConstants.NET_MV_SOURCE));
                     mvInfo.setType(jo.getIntValue(ConfigConstants.NET_MV_TYPE));
                     mvInfo.setId(jo.getString(ConfigConstants.NET_MV_ID));
-                    mvInfo.setBvid(jo.getString(ConfigConstants.NET_MV_BVID));
+                    mvInfo.setBvId(jo.getString(ConfigConstants.NET_MV_BVID));
                     mvInfo.setName(jo.getString(ConfigConstants.NET_MV_NAME));
                     mvInfo.setArtist(jo.getString(ConfigConstants.NET_MV_ARTIST));
                     task = new Task(downloadList, type, mvInfo);
@@ -3806,7 +3806,7 @@ public class MainFrame extends JFrame {
                 mvInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_MV_SOURCE));
                 mvInfo.setType(jsonObject.getIntValue(ConfigConstants.NET_MV_TYPE));
                 mvInfo.setId(jsonObject.getString(ConfigConstants.NET_MV_ID));
-                mvInfo.setBvid(jsonObject.getString(ConfigConstants.NET_MV_BVID));
+                mvInfo.setBvId(jsonObject.getString(ConfigConstants.NET_MV_BVID));
                 mvInfo.setName(jsonObject.getString(ConfigConstants.NET_MV_NAME));
                 mvInfo.setArtist(jsonObject.getString(ConfigConstants.NET_MV_ARTIST));
                 mvInfo.setCreatorId(jsonObject.getString(ConfigConstants.NET_MV_CREATOR_ID));
@@ -4092,7 +4092,7 @@ public class MainFrame extends JFrame {
                 jo.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
                 jo.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
                 jo.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
-                jo.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
+                jo.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvId());
                 jo.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());
                 jo.put(ConfigConstants.NET_MV_ARTIST, mvInfo.getArtist());
                 jsonObject.put(ConfigConstants.TASK_MV_INFO, jo);
@@ -4339,7 +4339,7 @@ public class MainFrame extends JFrame {
             jsonObject.put(ConfigConstants.NET_MV_SOURCE, mvInfo.getSource());
             jsonObject.put(ConfigConstants.NET_MV_TYPE, mvInfo.getType());
             jsonObject.put(ConfigConstants.NET_MV_ID, mvInfo.getId());
-            jsonObject.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvid());
+            jsonObject.put(ConfigConstants.NET_MV_BVID, mvInfo.getBvId());
             jsonObject.put(ConfigConstants.NET_MV_NAME, mvInfo.getName());
             jsonObject.put(ConfigConstants.NET_MV_ARTIST, mvInfo.getArtist());
             jsonObject.put(ConfigConstants.NET_MV_CREATOR_ID, mvInfo.getCreatorId());

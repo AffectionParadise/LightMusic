@@ -1,25 +1,11 @@
 package net.doge.sdk.service.mv.tag;
 
-import com.alibaba.fastjson2.JSONArray;
-import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.data.Tags;
-import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.util.core.RegexUtil;
-import net.doge.util.core.StringUtil;
-import net.doge.util.core.exception.ExceptionUtil;
-import net.doge.util.core.http.HttpRequest;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Future;
+import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
+import net.doge.sdk.service.mv.tag.impl.FaMvTagReq;
+import net.doge.sdk.service.mv.tag.impl.KgMvTagReq;
+import net.doge.sdk.service.mv.tag.impl.LzMvTagReq;
+import net.doge.sdk.service.mv.tag.impl.QqMvTagReq;
 
 public class MvTagReq {
     private static MvTagReq instance;
@@ -31,17 +17,6 @@ public class MvTagReq {
         if (instance == null) instance = new MvTagReq();
         return instance;
     }
-
-    // MV 标签 API (酷狗)
-    private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel?version=9108&type=2";
-    // 编辑精选标签 API (酷狗)
-    private final String IP_TAG_KG_API = "/v1/zone/index";
-    // 视频标签 API (发姐)
-    private final String VIDEO_TAG_FA_API = "https://www.chatcyf.com/video/";
-    // 直播标签 API (发姐)
-    private final String LIVE_TAG_FA_API = "https://www.chatcyf.com/teaparty/";
-    // 视频标签 API (李志)
-    private final String VIDEO_TAG_LZ_API = "https://www.lizhinb.com/ssp/";
 
     /**
      * 加载 MV 标签
@@ -254,133 +229,13 @@ public class MvTagReq {
         Tags.mvTag.put("国产剧", new String[]{"", "", "", "", "", "", "", "", "", "185", "", ""});
         Tags.mvTag.put("海外剧", new String[]{"", "", "", "", "", "", "", "", "", "187", "", ""});
 
-        final int c = 12;
-        // 酷狗
-        // MV 标签
-        Runnable initMvTagKg = () -> {
-            String mvTagBody = HttpRequest.get(MV_TAG_KG_API)
-                    .executeAsStr();
-            JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
-            JSONArray tags = mvTagJson.getJSONObject("data").getJSONArray("list");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tagJson = tags.getJSONObject(i);
-
-                String name = tagJson.getString("name");
-                String id = tagJson.getString("channel_id");
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[2] = id;
-            }
-        };
-        // 编辑精选标签
-        Runnable initIpTagKg = () -> {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
-            String tagBody = SdkCommon.kgRequest(null, null, options)
-                    .header("x-router", "yuekucategory.kugou.com")
-                    .executeAsStr();
-            JSONArray tags = JSONObject.parseObject(tagBody).getJSONObject("data").getJSONArray("list");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tag = tags.getJSONObject(i);
-
-                String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
-                String name = tag.getString("name");
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[3] = id;
-            }
-        };
-
-        // QQ
-        // MV 标签
-        Runnable initMvTagQq = () -> {
-            String mvTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                    .jsonBody("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
-                    .executeAsStr();
-            JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
-            JSONArray tags = mvTagJson.getJSONObject("mv_tag").getJSONObject("data").getJSONArray("version");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                JSONObject tagJson = tags.getJSONObject(i);
-
-                String name = tagJson.getString("name");
-                if ("全部".equals(name)) continue;
-                String id = tagJson.getString("id");
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[4] = "15";
-                Tags.mvTag.get(name)[5] = id;
-            }
-        };
-
-        // 发姐
-        // 视频标签
-        Runnable initVideoTagFa = () -> {
-            String mvTagBody = HttpRequest.get(VIDEO_TAG_FA_API)
-                    .executeAsStr();
-            Document doc = Jsoup.parse(mvTagBody);
-            Elements tags = doc.select(".filter-item .filter a");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                Element a = tags.get(i);
-
-                String id = RegexUtil.getGroup1("c2=(\\d+)", a.attr("href"));
-                if (StringUtil.isEmpty(id)) continue;
-                String name = a.text();
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[10] = id + " ";
-            }
-        };
-        // 直播标签
-        Runnable initLiveTagFa = () -> {
-            String mvTagBody = HttpRequest.get(LIVE_TAG_FA_API)
-                    .executeAsStr();
-            Document doc = Jsoup.parse(mvTagBody);
-            Elements tags = doc.select(".filter-item .filter a");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                Element a = tags.get(i);
-
-                String id = RegexUtil.getGroup1("c2=(\\d+)", a.attr("href"));
-                if (StringUtil.isEmpty(id)) continue;
-                String name = a.text();
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[10] = " " + id;
-            }
-        };
-
-        // 李志
-        Runnable initVideoTagLz = () -> {
-            String mvTagBody = HttpRequest.get(VIDEO_TAG_LZ_API)
-                    .executeAsStr();
-            Document doc = Jsoup.parse(mvTagBody);
-            Elements tags = doc.select(".zaxu-friendly-link-content");
-            for (int i = 0, len = tags.size(); i < len; i++) {
-                Element content = tags.get(i);
-                Elements a = content.select("a");
-                Elements n = content.select(".zaxu-friendly-link-name");
-
-                String id = RegexUtil.getGroup1("/live-category/(.*?)/", a.attr("href"));
-                String name = n.text();
-
-                if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-                Tags.mvTag.get(name)[11] = id;
-            }
-        };
-
-        List<Future<?>> taskList = new LinkedList<>();
-
-        taskList.add(GlobalExecutors.requestExecutor.submit(initMvTagKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initIpTagKg));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initMvTagQq));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initVideoTagFa));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initLiveTagFa));
-        taskList.add(GlobalExecutors.requestExecutor.submit(initVideoTagLz));
-
-        taskList.forEach(task -> {
-            try {
-                task.get();
-            } catch (Exception e) {
-                ExceptionUtil.handleAsyncException(e);
-            }
-        });
+        MultiRunnableExecutor executor = new MultiRunnableExecutor();
+        executor.submit(() -> KgMvTagReq.getInstance().initMvTag());
+        executor.submit(() -> KgMvTagReq.getInstance().initIpTag());
+        executor.submit(() -> QqMvTagReq.getInstance().initMvTag());
+        executor.submit(() -> FaMvTagReq.getInstance().initVideoTag());
+        executor.submit(() -> FaMvTagReq.getInstance().initLiveTag());
+        executor.submit(() -> LzMvTagReq.getInstance().initVideoTag());
+        executor.await();
     }
 }

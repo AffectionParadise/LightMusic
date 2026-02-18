@@ -11,8 +11,8 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.http.constant.Method;
+import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -30,10 +30,10 @@ public class SheetReq {
         return instance;
     }
 
-    // 获取乐谱 API
-    private final String GET_SHEETS_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
-    // 获取乐谱图片 API
-    private final String GET_SHEETS_IMG_API = "https://interface3.music.163.com/eapi//music/sheet/preview/info?id=%s";
+    // 获取乐谱 API (网易云)
+    private final String GET_SHEETS_NC_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
+    // 获取乐谱图片 API (网易云)
+    private final String GET_SHEETS_IMG_NC_API = "https://interface3.music.163.com/eapi//music/sheet/preview/info?id=%s";
 
     /**
      * 获取歌曲乐谱
@@ -46,7 +46,7 @@ public class SheetReq {
 
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
+            String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_NC_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
                     .executeAsStr();
             JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
             JSONObject data = sheetInfoJson.getJSONObject("data");
@@ -96,11 +96,11 @@ public class SheetReq {
         int source = sheetInfo.getSource();
         String id = sheetInfo.getId();
         List<String> res = new LinkedList<>();
-        Integer total = 0;
+        int total = 0;
 
         if (source == NetMusicSource.NC) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api//music/sheet/preview/info");
-            String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_API, id), String.format("{\"id\":\"%s\"}", id), options)
+            String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_NC_API, id), String.format("{\"id\":\"%s\"}", id), options)
                     .executeAsStr();
             JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);
             JSONArray imgArray = imgInfoJson.getJSONArray("data");

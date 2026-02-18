@@ -41,25 +41,18 @@ public class ArtistInfoReq {
      */
     public CommonResult<NetArtistInfo> getArtistInfo(int source, String id) {
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistInfoReq.getInstance().getArtistInfo(id);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgArtistInfoReq.getInstance().getArtistInfo(id);
-            // QQ
             case NetMusicSource.QQ:
                 return QqArtistInfoReq.getInstance().getArtistInfo(id);
-            // 酷我
             case NetMusicSource.KW:
                 return KwArtistInfoReq.getInstance().getArtistInfo(id);
-            // 咪咕
             case NetMusicSource.MG:
                 return MgArtistInfoReq.getInstance().getArtistInfo(id);
-            // 千千
             case NetMusicSource.QI:
                 return QiArtistInfoReq.getInstance().getArtistInfo(id);
-            // 豆瓣
 //            case NetMusicSource.DB:
 //                return DbArtistInfoReq.getInstance().getArtistInfo(id);
             default:
@@ -75,35 +68,27 @@ public class ArtistInfoReq {
         if (artistInfo.isIntegrated()) return;
         int source = artistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 NcArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 酷狗
             case NetMusicSource.KG:
                 KgArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // QQ
             case NetMusicSource.QQ:
                 QqArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 酷我
             case NetMusicSource.KW:
                 KwArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 咪咕
             case NetMusicSource.MG:
                 MgArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 千千
             case NetMusicSource.QI:
                 QiArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 猫耳
             case NetMusicSource.ME:
                 MeArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            // 豆瓣
             case NetMusicSource.DB:
                 DbArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
@@ -116,25 +101,18 @@ public class ArtistInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // QQ
             case NetMusicSource.QQ:
                 return QqArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // 酷我
             case NetMusicSource.KW:
                 return KwArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // 咪咕
             case NetMusicSource.MG:
                 return MgArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // 千千
             case NetMusicSource.QI:
                 return QiArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            // 猫耳
             case NetMusicSource.ME:
                 return MeArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
             default:

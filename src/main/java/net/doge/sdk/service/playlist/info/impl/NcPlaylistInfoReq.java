@@ -11,6 +11,7 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
 
@@ -76,6 +77,32 @@ public class NcPlaylistInfoReq {
         }
 
         return new CommonResult<>(res, t);
+    }
+
+    /**
+     * 根据歌单 id 补全歌单信息(包括封面图、描述)
+     */
+    public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
+        String id = playlistInfo.getId();
+        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_NC_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
+                .executeAsStr();
+        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+        JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
+        JSONObject ct = playlistJson.getJSONObject("creator");
+
+        String coverImgUrl = playlistJson.getString("coverImgUrl");
+        String description = playlistJson.getString("description");
+
+        if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
+        GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
+        playlistInfo.setDescription(StringUtil.notEmpty(description) ? description : "");
+        if (!playlistInfo.hasCreator())
+            playlistInfo.setCreator(JsonUtil.notEmpty(ct) ? ct.getString("nickname") : "");
+        if (!playlistInfo.hasCreatorId())
+            playlistInfo.setCreatorId(JsonUtil.notEmpty(ct) ? ct.getString("userId") : "");
+        if (!playlistInfo.hasTag()) playlistInfo.setTag(SdkUtil.parseTag(playlistJson));
+        if (!playlistInfo.hasTrackCount()) playlistInfo.setTrackCount(playlistJson.getIntValue("trackCount"));
     }
 
     /**

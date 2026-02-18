@@ -24,7 +24,6 @@ public class ArtistListReq {
         final String defaultTag = "默认";
         MultiCommonResultCallableExecutor<NetArtistInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
-        // 网易云
         if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             NcArtistListReq ncArtistListReq = NcArtistListReq.getInstance();
             executor.submit(() -> ncArtistListReq.getArtistRanking(tag, page, limit));
@@ -32,36 +31,30 @@ public class ArtistListReq {
             executor.submit(() -> ncArtistListReq.getCatArtist(tag, page, limit));
             executor.submit(() -> ncArtistListReq.getStyleArtist(tag, page, limit));
         }
-        // 酷狗
         if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
             KgArtistListReq kgArtistListReq = KgArtistListReq.getInstance();
             executor.submit(() -> kgArtistListReq.getHotArtist(tag, page, limit));
             executor.submit(() -> kgArtistListReq.getUpArtist(tag, page, limit));
             executor.submit(() -> kgArtistListReq.getIpArtist(tag, page, limit));
         }
-        // QQ
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             executor.submit(() -> QqArtistListReq.getInstance().getArtistRanking(tag, page, limit));
         }
-        // 酷我
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             KwArtistListReq kwArtistListReq = KwArtistListReq.getInstance();
             executor.submit(() -> kwArtistListReq.getArtistRanking(tag, page, limit));
             executor.submit(() -> kwArtistListReq.getAllArtists(tag, page, limit));
         }
-        // 咪咕
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             MgArtistListReq mgArtistListReq = MgArtistListReq.getInstance();
             if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking(page, limit));
             if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking2(page, limit));
         }
-        // 千千
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             QiArtistListReq qiArtistListReq = QiArtistListReq.getInstance();
             if (dt) executor.submit(() -> qiArtistListReq.getRecArtists(page, limit));
             executor.submit(() -> qiArtistListReq.getCatArtists(tag, page, limit));
         }
-        // 猫耳
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
             MeArtistListReq meArtistListReq = MeArtistListReq.getInstance();
             executor.submit(() -> meArtistListReq.getCatCVs(tag, page, limit));

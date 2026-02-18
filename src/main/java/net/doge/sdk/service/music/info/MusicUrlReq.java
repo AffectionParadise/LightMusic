@@ -51,46 +51,32 @@ public class MusicUrlReq {
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            // 网易云
             case NetMusicSource.NC:
                 return NcMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 酷狗
             case NetMusicSource.KG:
                 return KgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // QQ
             case NetMusicSource.QQ:
                 return QqMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 酷我
             case NetMusicSource.KW:
                 return KwMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 咪咕
             case NetMusicSource.MG:
                 return MgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 千千
             case NetMusicSource.QI:
                 return QiMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 音乐磁场
             case NetMusicSource.HF:
                 return HfMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 咕咕咕音乐
             case NetMusicSource.GG:
                 return GgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 5sing
             case NetMusicSource.FS:
                 return FsMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 喜马拉雅
             case NetMusicSource.XM:
                 return XmMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 猫耳
             case NetMusicSource.ME:
                 return MeMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 哔哩哔哩
             case NetMusicSource.BI:
                 return BiMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 发姐
             case NetMusicSource.FA:
                 return FaMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            // 李志
             case NetMusicSource.LZ:
                 return LzMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
             default:

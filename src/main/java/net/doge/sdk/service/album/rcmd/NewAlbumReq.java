@@ -26,7 +26,6 @@ public class NewAlbumReq {
         MultiCommonResultCallableExecutor<NetAlbumInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (dt) {
-            // 网易云
             if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
                 NcNewAlbumReq ncNewAlbumReq = NcNewAlbumReq.getInstance();
                 executor.submit(() -> ncNewAlbumReq.getNewAlbums(tag, page, limit));
@@ -34,36 +33,29 @@ public class NewAlbumReq {
                 executor.submit(() -> ncNewAlbumReq.getNewestDiAlbums(page, limit));
                 executor.submit(() -> ncNewAlbumReq.getAllNewAlbums(tag, page, limit));
             }
-            // 酷狗
             if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
                 executor.submit(() -> KgNewAlbumReq.getInstance().getNewAlbums(tag, page, limit));
             }
-            // QQ
             if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
                 executor.submit(() -> QqNewAlbumReq.getInstance().getNewAlbums(tag, page, limit));
             }
-            // 咪咕
             if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
                 MgNewAlbumReq mgNewAlbumReq = MgNewAlbumReq.getInstance();
                 executor.submit(() -> mgNewAlbumReq.getNewAlbums(page, limit));
                 executor.submit(() -> mgNewAlbumReq.getNewAlbumsRanking(page, limit));
             }
-            // 千千
             if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
                 QiNewAlbumReq qiNewAlbumReq = QiNewAlbumReq.getInstance();
                 executor.submit(() -> qiNewAlbumReq.getIndexNewAlbums(page, limit));
                 executor.submit(() -> qiNewAlbumReq.getNewAlbums(page, limit));
                 executor.submit(() -> qiNewAlbumReq.getXDAlbums(page, limit));
             }
-            // 堆糖
             if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
                 executor.submit(() -> DtNewAlbumReq.getInstance().getRecAlbums(page, limit));
             }
-            // 豆瓣
             if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
                 executor.submit(() -> DbNewAlbumReq.getInstance().getTopAlbums(page));
             }
-            // 李志
             if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
                 executor.submit(() -> LzNewAlbumReq.getInstance().getAlbums(page, limit));
             }
