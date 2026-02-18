@@ -24,7 +24,7 @@ public class LzMusicInfoReq {
     }
 
     // 歌曲信息 API (李志)
-    private final String SINGLE_SONG_DETAIL_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
+    private final String SONG_DETAIL_LZ_API = "https://www.lizhinb.com/?audioigniter_playlist_id=%s";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
@@ -32,7 +32,7 @@ public class LzMusicInfoReq {
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
         String[] sp = id.split("_");
-        String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, sp[0]))
+        String albumSongBody = HttpRequest.get(String.format(SONG_DETAIL_LZ_API, sp[0]))
                 .executeAsStr();
         JSONArray songArray = JSONArray.parseArray(albumSongBody);
         JSONObject songJson = songArray.getJSONObject(Integer.parseInt(sp[1]));
@@ -53,7 +53,7 @@ public class LzMusicInfoReq {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
         String[] sp = id.split("_");
-        String albumSongBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_LZ_API, sp[0]))
+        String albumSongBody = HttpRequest.get(String.format(SONG_DETAIL_LZ_API, sp[0]))
                 .executeAsStr();
         JSONArray songArray = JSONArray.parseArray(albumSongBody);
         JSONObject lyricJson = songArray.getJSONObject(Integer.parseInt(sp[1]));

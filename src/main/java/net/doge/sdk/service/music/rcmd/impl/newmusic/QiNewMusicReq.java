@@ -36,7 +36,8 @@ public class QiNewMusicReq {
         String musicInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_NEW_SONG_QI_API, System.currentTimeMillis()))
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-        JSONObject data = musicInfoJson.getJSONArray("data").getJSONObject(3);
+        JSONArray dataArray = musicInfoJson.getJSONArray("data");
+        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "song");
         t = data.getIntValue("module_nums");
         JSONArray songArray = data.getJSONArray("result");
         for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {

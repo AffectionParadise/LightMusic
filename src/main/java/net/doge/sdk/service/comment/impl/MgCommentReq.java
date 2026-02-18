@@ -36,7 +36,7 @@ public class MgCommentReq {
 //    private final String NEW_COMMENTS_MG_API = "https://music.migu.cn/v3/api/comment/listComments?targetId=%s&pageNo=%s&pageSize=%s";
     private final String NEW_COMMENTS_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/user/comment/stack/v1.0?queryType=1&resourceId=%s&resourceType=2&pageSize=%s&commentId=%s";
     // 歌曲信息 API (咪咕)
-    private final String SINGLE_SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
 
     /**
      * 获取评论
@@ -45,17 +45,13 @@ public class MgCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total = 0;
 
-        String id = null;
+        String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        }
 
         // 咪咕
         if (resource instanceof NetMusicInfo) {
             // 先根据 cid 获取 songId
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+            String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, id))
                     .executeAsStr();
             id = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0).getString("songId");
             // 评论

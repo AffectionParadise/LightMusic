@@ -301,7 +301,7 @@ public class HighlightLyric {
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         // 部分情况有 NAN 值
-        if (wordRatio != wordRatio) wordRatio = 1;
+        if (Double.isNaN(wordRatio)) wordRatio = 1;
         double currWidth = wordWidthPrefixSumExcludedList.get(wordStartIndex) + wordWidthList.get(wordStartIndex) * wordRatio;
         int totalWidth = width - 2 * shadowHOffset;
         // 防止整句比率超出

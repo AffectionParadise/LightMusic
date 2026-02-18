@@ -45,11 +45,11 @@ public class QiNewAlbumReq {
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONArray dataArray = albumInfoJson.getJSONArray("data");
-        JSONObject data = dataArray.getJSONObject(4);
+        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "album");
         JSONArray albumArray = data.getJSONArray("result");
-        // 首页秀动发行
-        JSONObject xdData = dataArray.getJSONObject(2);
-        albumArray.addAll(xdData.getJSONArray("result"));
+//        // 首页秀动发行
+//        JSONObject xdData = dataArray.getJSONObject(2);
+//        albumArray.addAll(xdData.getJSONArray("result"));
         t = albumArray.size();
         for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
             JSONObject albumJson = albumArray.getJSONObject(i);

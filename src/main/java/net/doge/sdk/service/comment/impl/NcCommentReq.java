@@ -46,33 +46,23 @@ public class NcCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total = 0;
 
-        String id = null;
+        String id = resource.getId();
         String typeStr = null;
         boolean hotOnly = I18n.getText("hotComment").equals(type);
         if (resource instanceof NetMusicInfo) {
             NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            // 网易云需要先判断是普通歌曲还是电台节目，酷狗歌曲获取评论需要 hash
+            // 网易云电台节目 id
             boolean hasProgramId = musicInfo.hasProgramId();
-            id = hasProgramId ? musicInfo.getProgramId() : musicInfo.getId();
+            if (hasProgramId) id = musicInfo.getProgramId();
             typeStr = hasProgramId ? "A_DJ_1_" : "R_SO_4_";
-        } else if (resource instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
-            typeStr = "A_PL_0_";
-        } else if (resource instanceof NetAlbumInfo) {
-            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-            id = albumInfo.getId();
-            typeStr = "R_AL_3_";
-        } else if (resource instanceof NetRadioInfo) {
-            NetRadioInfo radioInfo = (NetRadioInfo) resource;
-            id = radioInfo.getId();
-            typeStr = "A_DR_14_";
-        } else if (resource instanceof NetMvInfo) {
+        } else if (resource instanceof NetPlaylistInfo) typeStr = "A_PL_0_";
+        else if (resource instanceof NetAlbumInfo) typeStr = "R_AL_3_";
+        else if (resource instanceof NetRadioInfo) typeStr = "A_DR_14_";
+        else if (resource instanceof NetMvInfo) {
             NetMvInfo mvInfo = (NetMvInfo) resource;
             // 网易云需要判断是视频还是 MV 还是 Mlog
             boolean isVideo = mvInfo.isVideo();
             boolean isMlog = mvInfo.isMlog();
-            id = mvInfo.getId();
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
@@ -84,12 +74,7 @@ public class NcCommentReq {
                 mvInfo.setType(MvInfoType.VIDEO);
             }
             typeStr = isVideo || isMlog ? "R_VI_62_" : "R_MV_5_";
-        } else if (resource instanceof NetRankingInfo) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) resource;
-            id = rankingInfo.getId();
-            // 网易 QQ 酷我 猫耳
-            typeStr = "A_PL_0_";
-        }
+        } else if (resource instanceof NetRankingInfo) typeStr = "A_PL_0_";
 
         if (StringUtil.notEmpty(typeStr)) {
             String threadId = typeStr + id;

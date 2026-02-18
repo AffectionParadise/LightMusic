@@ -39,7 +39,7 @@ public class UserSearchReq {
         if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
             executor.submit(() -> DtUserSearchReq.getInstance().searchUsers(keyword, page, limit));
         if (src == NetMusicSource.BI || src == NetMusicSource.ALL)
-            executor.submit(() -> BiUserSearchReq.getInstance().searchUsers(keyword, page, limit));
+            executor.submit(() -> BiUserSearchReq.getInstance().searchUsers(keyword, page));
         return executor.getResult();
     }
 }

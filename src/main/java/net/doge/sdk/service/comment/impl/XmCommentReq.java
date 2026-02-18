@@ -6,7 +6,6 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.entity.CommonResult;
@@ -43,20 +42,12 @@ public class XmCommentReq {
      * 获取评论
      */
     public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit) {
-        int total;
         List<NetCommentInfo> res = new LinkedList<>();
+        int total;
 
-        String id = null;
+        String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        boolean isRadio = false;
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        } else if (resource instanceof NetRadioInfo) {
-            NetRadioInfo radioInfo = (NetRadioInfo) resource;
-            id = radioInfo.getId();
-            isRadio = true;
-        }
+        boolean isRadio = resource instanceof NetRadioInfo;
 
         JSONArray commentArray;
         if (isRadio) {

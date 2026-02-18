@@ -14,9 +14,9 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description MV
- * @Date 2020/12/7
+ * @author Doge
+ * @description MV
+ * @date 2020/12/7
  */
 @Data
 public class NetMvInfo implements NetResource, Downloadable {

@@ -31,9 +31,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 收藏歌曲的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 收藏歌曲的对话框
+ * @date 2020/12/15
  */
 public class AddToFavoritesDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(600);

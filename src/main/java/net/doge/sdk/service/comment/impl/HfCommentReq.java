@@ -3,7 +3,6 @@ package net.doge.sdk.service.comment.impl;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -42,11 +41,7 @@ public class HfCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        }
+        String id = resource.getId();
 
         String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HF_API, id, page))
                 .cookie(SdkCommon.HF_COOKIE)

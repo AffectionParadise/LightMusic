@@ -22,8 +22,8 @@ public class TmetuNcTrackReq {
         return instance;
     }
 
-    // 歌曲 URL 获取 API
-    private final String SONG_URL_API = "https://www.tmetu.cn/api/music/api.php?miss=songAll&id=%s&level=%s&withLyric=true";
+    // 歌曲 URL 获取 API (网易云)
+    private final String SONG_URL_NC_API = "https://www.tmetu.cn/api/music/api.php?miss=songAll&id=%s&level=%s&withLyric=true";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -48,7 +48,7 @@ public class TmetuNcTrackReq {
      */
     public String getTrackUrl(String id, String quality) {
         try {
-            String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
+            String songBody = HttpRequest.get(String.format(SONG_URL_NC_API, id, qualityMap.get(quality)))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
             if (JsonUtil.isEmpty(data)) return "";

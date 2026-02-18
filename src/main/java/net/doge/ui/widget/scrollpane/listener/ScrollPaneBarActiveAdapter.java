@@ -9,9 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 滚动条的监听器
- * @Date 2021/1/10
+ * @author Doge
+ * @description 滚动条的监听器
+ * @date 2021/1/10
  */
 public class ScrollPaneBarActiveAdapter extends MouseAdapter {
     private CustomScrollPane sp;

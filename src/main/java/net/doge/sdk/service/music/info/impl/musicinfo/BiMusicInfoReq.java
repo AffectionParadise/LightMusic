@@ -24,7 +24,7 @@ public class BiMusicInfoReq {
     }
 
     // 歌曲信息 API (哔哩哔哩)
-    private final String SINGLE_SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
+    private final String SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
     // 歌词 API (哔哩哔哩)
     private final String LYRIC_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
 
@@ -33,7 +33,7 @@ public class BiMusicInfoReq {
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_BI_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_BI_API, id))
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

@@ -5,9 +5,9 @@ import net.doge.constant.core.lang.I18n;
 import javax.swing.*;
 
 /**
- * @Author Doge
- * @Description 歌词对齐方式
- * @Date 2020/12/7
+ * @author Doge
+ * @description 歌词对齐方式
+ * @date 2020/12/7
  */
 public class LyricAlignment {
     public static int lyricAlignmentIndex = 0;

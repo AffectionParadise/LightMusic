@@ -7,9 +7,9 @@ import net.doge.util.core.log.LogUtil;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author Doge
- * @Description 终端工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 终端工具类
+ * @date 2020/12/15
  */
 public class TerminalUtil {
     /**

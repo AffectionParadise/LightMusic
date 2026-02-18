@@ -3,9 +3,9 @@ package net.doge.constant.core.task;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 任务类型
- * @Date 2020/12/7
+ * @author Doge
+ * @description 任务类型
+ * @date 2020/12/7
  */
 public class TaskType {
     public static final String[] NAMES = new String[]{

@@ -14,9 +14,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @Author Doge
- * @Description HTML 工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description HTML 工具类
+ * @date 2020/12/15
  */
 public class HtmlUtil {
     private static final Map<Character, String> cMap = new HashMap<>();
@@ -119,7 +119,7 @@ public class HtmlUtil {
      * @return
      */
     public static String removeHtmlLabel(String s) {
-        if (s == null) return s;
+        if (s == null) return null;
         s = s.replaceAll("<br ?/?>", "\n");
         Pattern pattern = Pattern.compile("<[^>]+>");
         Matcher matcher = pattern.matcher(s);

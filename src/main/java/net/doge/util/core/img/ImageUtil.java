@@ -28,9 +28,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/9
+ * @author Doge
+ * @description
+ * @date 2020/12/9
  */
 public class ImageUtil {
     // 高斯模糊过滤器
@@ -134,7 +134,6 @@ public class ImageUtil {
             // Decode the image
             return reader.read(0, readParam);
         } catch (Exception e) {
-            LogUtil.error(e);
             return null;
         }
     }
@@ -443,10 +442,27 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage width(BufferedImage img, int width) {
+        if (img == null) return null;
         try {
             return Thumbnails.of(img).width(width).asBufferedImage();
         } catch (Exception e) {
             LogUtil.error(e);
+            return null;
+        }
+    }
+
+    /**
+     * 等比例设置图片宽度，返回新的 BufferedImage
+     *
+     * @param in
+     * @param width
+     * @return
+     */
+    public static BufferedImage width(InputStream in, int width) {
+        if (in == null) return null;
+        try (InputStream cin = in) {
+            return Thumbnails.of(cin).width(width).asBufferedImage();
+        } catch (Exception e) {
             return null;
         }
     }
@@ -464,11 +480,8 @@ public class ImageUtil {
             BufferedImage img = null;
             // 先处理 webp 图像
             if (imgUrl.endsWith(Format.WEBP)) img = readWebp(imgUrl);
-            if (img == null) {
-                InputStream in = getImgStream(imgUrl);
-                return in == null ? null : Thumbnails.of(in).width(width).asBufferedImage();
-            }
-            return Thumbnails.of(img).width(width).asBufferedImage();
+            if (img == null) return width(getImgStream(imgUrl), width);
+            return width(img, width);
         } catch (Exception e) {
             LogUtil.error(e);
             return null;

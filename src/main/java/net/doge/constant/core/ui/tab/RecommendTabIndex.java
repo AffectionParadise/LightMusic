@@ -1,9 +1,9 @@
 package net.doge.constant.core.ui.tab;
 
 /**
- * @Author Doge
- * @Description 推荐标签页
- * @Date 2020/12/7
+ * @author Doge
+ * @description 推荐标签页
+ * @date 2020/12/7
  */
 public class RecommendTabIndex {
     // 推荐歌单

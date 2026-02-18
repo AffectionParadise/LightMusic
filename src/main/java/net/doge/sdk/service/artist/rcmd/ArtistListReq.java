@@ -49,6 +49,7 @@ public class ArtistListReq {
             MgArtistListReq mgArtistListReq = MgArtistListReq.getInstance();
             if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking(page, limit));
             if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking2(page, limit));
+            executor.submit(() -> mgArtistListReq.getCatArtists(tag, page, limit));
         }
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
             QiArtistListReq qiArtistListReq = QiArtistListReq.getInstance();

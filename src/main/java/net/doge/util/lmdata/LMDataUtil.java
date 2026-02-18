@@ -8,9 +8,9 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author Doge
- * @Description LM 数据工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description LM 数据工具类
+ * @date 2020/12/15
  */
 public class LMDataUtil {
     /**
@@ -33,6 +33,7 @@ public class LMDataUtil {
         try {
             byte[] bytes = FileUtil.readBytes(file);
             byte[] decompressed = CryptoUtil.decompress(bytes);
+            if (decompressed == null) return null;
             String jsonStr = new String(decompressed, StandardCharsets.UTF_8);
             return JSONObject.parseObject(jsonStr);
         } catch (Exception e) {

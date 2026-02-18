@@ -11,8 +11,8 @@ import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
-import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -20,9 +20,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 默认的主题列表显示渲染器
- * @Date 2020/12/7
+ * @author Doge
+ * @description 默认的主题列表显示渲染器
+ * @date 2020/12/7
  */
 @Data
 public class StyleListRenderer extends CustomListCellRenderer {

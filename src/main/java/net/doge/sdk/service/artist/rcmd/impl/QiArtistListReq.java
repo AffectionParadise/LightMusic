@@ -44,7 +44,8 @@ public class QiArtistListReq {
                 .execute();
         String artistInfoBody = resp.body();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-        JSONObject data = artistInfoJson.getJSONArray("data").getJSONObject(6);
+        JSONArray dataArray = artistInfoJson.getJSONArray("data");
+        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "artist");
         t = data.getIntValue("module_nums");
         JSONArray artistArray = data.getJSONArray("result");
         for (int i = (page - 1) * limit, len = Math.min(artistArray.size(), page * limit); i < len; i++) {
@@ -81,9 +82,9 @@ public class QiArtistListReq {
         int t = 0;
         String[] s = Tags.artistTag.get(tag);
 
-        if (StringUtil.notEmpty(s[8])) {
+        if (StringUtil.notEmpty(s[9])) {
             // 分割时保留空串
-            String[] sp = s[8].split(" ", -1);
+            String[] sp = s[9].split(" ", -1);
             String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

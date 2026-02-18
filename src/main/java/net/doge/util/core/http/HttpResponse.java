@@ -38,6 +38,8 @@ public class HttpResponse {
             return body != null ? body.string() : null;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            response.close();
         }
     }
 
@@ -47,6 +49,8 @@ public class HttpResponse {
             return body != null ? body.bytes() : null;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            response.close();
         }
     }
 

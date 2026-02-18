@@ -11,9 +11,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @Author Doge
- * @Description 时间转换工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 时间转换工具类
+ * @date 2020/12/15
  */
 public class TimeUtil {
     private static final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

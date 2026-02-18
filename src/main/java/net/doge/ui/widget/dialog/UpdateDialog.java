@@ -21,9 +21,9 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.MuteSliderUI;
 import net.doge.util.core.crypto.CryptoUtil;
+import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpUtil;
 import net.doge.util.core.http.listener.DownloadListener;
-import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.io.FileUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,9 +33,9 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * @Author Doge
- * @Description 更新对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 更新对话框
+ * @date 2020/12/15
  */
 public class UpdateDialog extends AbstractShadowDialog {
     private final String DOWNLOAD_MSG = I18n.getText("downloadMsg");

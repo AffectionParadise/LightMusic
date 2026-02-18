@@ -26,8 +26,8 @@ public class NcTrackReq {
         return instance;
     }
 
-    // 歌曲 URL 获取 API
-    private final String SONG_URL_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
+    // 歌曲 URL 获取 API (网易云)
+    private final String SONG_URL_NC_API = "https://interface.music.163.com/eapi/song/enhance/player/url/v1";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -52,7 +52,7 @@ public class NcTrackReq {
     public String getTrackUrl(String id, String quality) {
         try {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
-            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_API,
+            String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_NC_API,
                             String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, qualityMap.get(quality)), options)
                     .executeAsStr();
             JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");

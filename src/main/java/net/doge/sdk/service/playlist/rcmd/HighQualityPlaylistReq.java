@@ -40,7 +40,7 @@ public class HighQualityPlaylistReq {
 //            executor.submit(() -> kgHighQualityPlaylistReq.getIpPlaylists(page, limit));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
-            executor.submit(() -> QiHighQualityPlaylistReq.getInstance().getCatPlaylists(tag, page, limit));
+            executor.submit(() -> QqHighQualityPlaylistReq.getInstance().getCatPlaylists(tag, page, limit));
         }
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             KwHighQualityPlaylistReq kwHighQualityPlaylistReq = KwHighQualityPlaylistReq.getInstance();

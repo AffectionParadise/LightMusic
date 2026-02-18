@@ -39,9 +39,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
- * @Author Doge
- * @Description 编辑歌曲信息的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 编辑歌曲信息的对话框
+ * @date 2020/12/15
  */
 public class EditInfoDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(960);
@@ -341,12 +341,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
                     fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
                     // 添加可读取的图片格式
-                    String allSuffix = "";
+                    StringBuilder allSuffix = new StringBuilder();
                     for (String suffix : Format.READ_IMAGE_TYPE_SUPPORTED) {
                         filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
-                        allSuffix += "*." + suffix + ";";
+                        allSuffix.append("*.").append(suffix).append(";");
                     }
-                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix));
+                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix.toString()));
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file != null) {

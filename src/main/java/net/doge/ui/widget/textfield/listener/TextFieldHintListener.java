@@ -7,9 +7,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
- * @Author Doge
- * @Description 文本框占位文本
- * @Date 2020/12/21
+ * @author Doge
+ * @description 文本框占位文本
+ * @date 2020/12/21
  */
 public class TextFieldHintListener implements FocusListener {
     private String hintText;

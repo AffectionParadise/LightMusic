@@ -12,9 +12,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 滚动条自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 滚动条自定义 UI
+ * @date 2020/12/13
  */
 public class CustomScrollBarUI extends BasicScrollBarUI {
     private boolean active;

@@ -29,15 +29,15 @@ public class KgMusicInfoReq {
     }
 
     // 歌曲信息 API (酷狗)
-//    private final String SINGLE_SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
-    private final String SINGLE_SONG_DETAIL_KG_API_V2 = "/v2/get_res_privilege/lite";
+//    private final String SONG_DETAIL_KG_API = "https://www.kugou.com/yy/index.php?r=play/getdata&album_audio_id=%s";
+    private final String SONG_DETAIL_KG_API_V2 = "/v2/get_res_privilege/lite";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String hash = musicInfo.getHash();
-//            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_KG_API, id))
+//            String songBody = HttpRequest.get(String.format(SONG_DETAIL_KG_API, id))
 //                    .cookie(SdkCommon.KG_COOKIE)
 //                    .executeAsync()
 //                    .body();
@@ -60,7 +60,7 @@ public class KgMusicInfoReq {
 ////                if (!musicInfo.hasLrc()) musicInfo.setLrc(data.getString("lyrics"));
 //            } else {
         // 歌曲信息接口有时返回为空，直接用 V2 版本接口，不过由于部分信息不完整，作为备选
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SINGLE_SONG_DETAIL_KG_API_V2);
+        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SONG_DETAIL_KG_API_V2);
         String dat = String.format("{\"appid\":%s,\"area_code\":1,\"behavior\":\"play\",\"clientver\":%s,\"need_hash_offset\":1,\"relate\":1," +
                         "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}",
                 KugouReqBuilder.appid, KugouReqBuilder.clientver, hash);

@@ -27,9 +27,9 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 管理自定义样式的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 管理自定义样式的对话框
+ * @date 2020/12/15
  */
 public class ManageCustomStyleDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(890);

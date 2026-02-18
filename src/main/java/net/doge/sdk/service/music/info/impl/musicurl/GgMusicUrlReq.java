@@ -23,14 +23,14 @@ public class GgMusicUrlReq {
     }
 
     // 歌曲信息 API (咕咕咕音乐)
-    private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
+    private final String SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
 
     /**
      * 根据歌曲 id 获取歌曲地址
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_GG_API, id))
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);
         String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());

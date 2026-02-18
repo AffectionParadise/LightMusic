@@ -54,7 +54,7 @@ public class LMDataGenerator {
         File[] files = dir.listFiles();
         for (File f : files) {
             if (f.isDirectory()) {
-                if (deeper) walk(f, true, deeper);
+                if (deeper) walk(f, true, true);
             } else {
                 try {
                     data.put(prefix + FileUtil.getPrefix(f), CryptoUtil.base64Encode(FileUtil.readBytes(f)));

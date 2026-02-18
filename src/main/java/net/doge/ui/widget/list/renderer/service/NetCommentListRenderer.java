@@ -17,9 +17,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/7
+ * @author Doge
+ * @description
+ * @date 2020/12/7
  */
 @Data
 public class NetCommentListRenderer extends CustomListCellRenderer {

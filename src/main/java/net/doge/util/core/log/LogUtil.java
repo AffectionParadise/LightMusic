@@ -5,9 +5,9 @@ import cn.hutool.log.dialect.console.ConsoleLog;
 import cn.hutool.log.level.Level;
 
 /**
- * @Author Doge
- * @Description 日志工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 日志工具类
+ * @date 2020/12/15
  */
 public class LogUtil {
     static {

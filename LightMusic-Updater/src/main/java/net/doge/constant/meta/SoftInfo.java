@@ -1,9 +1,9 @@
 package net.doge.constant.meta;
 
 /**
- * @Author Doge
- * @Description 软件信息
- * @Date 2020/12/7
+ * @author Doge
+ * @description 软件信息
+ * @date 2020/12/7
  */
 public class SoftInfo {
     // 更新包名称

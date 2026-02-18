@@ -11,9 +11,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/12
+ * @author Doge
+ * @description
+ * @date 2020/12/12
  */
 @Data
 public class GlobalPanel extends BasePanel {

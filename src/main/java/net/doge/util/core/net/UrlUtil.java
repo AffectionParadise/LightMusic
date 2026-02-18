@@ -3,9 +3,9 @@ package net.doge.util.core.net;
 import cn.hutool.core.util.URLUtil;
 
 /**
- * @Author Doge
- * @Description URL 工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description URL 工具类
+ * @date 2020/12/15
  */
 public class UrlUtil {
     /**

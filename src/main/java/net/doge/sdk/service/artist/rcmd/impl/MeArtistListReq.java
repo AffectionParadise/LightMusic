@@ -39,7 +39,7 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTag.get(tag);
 
-        if (StringUtil.notEmpty(s[9])) {
+        if (StringUtil.notEmpty(s[10])) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[9].trim(), page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -78,7 +78,7 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTag.get(tag);
 
-        if (StringUtil.notEmpty(s[9])) {
+        if (StringUtil.notEmpty(s[10])) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[9].trim(), page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

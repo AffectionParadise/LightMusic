@@ -3,9 +3,9 @@ package net.doge.constant.core.ui.core;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 颜色
- * @Date 2020/12/12
+ * @author Doge
+ * @description 颜色
+ * @date 2020/12/12
  */
 public class Colors {
     public static final Color TRANSPARENT = new Color(0, 0, 0, 0);

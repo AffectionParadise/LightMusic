@@ -9,9 +9,9 @@ import javax.swing.plaf.basic.BasicLabelUI;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 列表元素标签自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 列表元素标签自定义 UI
+ * @date 2020/12/13
  */
 @Setter
 public class CustomLabelUI extends BasicLabelUI {

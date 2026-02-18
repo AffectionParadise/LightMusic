@@ -13,9 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description loading 面板
- * @Date 2020/12/21
+ * @author Doge
+ * @description loading 面板
+ * @date 2020/12/21
  */
 public class LoadingPanel extends BasePanel {
     private final Font textFont = Fonts.NORMAL_BIG;

@@ -3,9 +3,9 @@ package net.doge.constant.core.media;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 画质
- * @Date 2020/12/15
+ * @author Doge
+ * @description 画质
+ * @date 2020/12/15
  */
 public class VideoQuality {
     // 流畅

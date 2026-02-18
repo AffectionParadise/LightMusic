@@ -28,7 +28,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
 
 /**
- * @Author Doge
+ * @author Doge
  * @description
  * @date 2020/12/7
  */

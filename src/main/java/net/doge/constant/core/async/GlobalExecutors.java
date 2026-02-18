@@ -4,9 +4,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author Doge
- * @Description 线程池
- * @Date 2020/12/12
+ * @author Doge
+ * @description 线程池
+ * @date 2020/12/12
  */
 public class GlobalExecutors {
     // 下载任务(大小由设置决定)

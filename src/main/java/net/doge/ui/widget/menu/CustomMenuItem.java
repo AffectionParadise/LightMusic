@@ -15,9 +15,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 自定义菜单项
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义菜单项
+ * @date 2020/12/13
  */
 public class CustomMenuItem extends JMenuItem implements ExtendedOpacitySupported {
     private boolean drawBg;

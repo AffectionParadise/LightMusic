@@ -26,9 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @Author Doge
- * @Description 音乐工具类
- * @Date 2020/12/11
+ * @author Doge
+ * @description 音乐工具类
+ * @date 2020/12/11
  */
 public class MediaUtil {
 

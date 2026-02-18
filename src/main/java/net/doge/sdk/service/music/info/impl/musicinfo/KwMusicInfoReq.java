@@ -25,14 +25,14 @@ public class KwMusicInfoReq {
     }
 
     // 歌曲信息 API (酷我)
-    private final String SINGLE_SONG_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
+    private final String SONG_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        HttpResponse resp = SdkCommon.kwRequest(String.format(SINGLE_SONG_DETAIL_KW_API, id)).execute();
+        HttpResponse resp = SdkCommon.kwRequest(String.format(SONG_DETAIL_KW_API, id)).execute();
         if (!resp.isSuccessful()) return;
         String songBody = resp.body();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

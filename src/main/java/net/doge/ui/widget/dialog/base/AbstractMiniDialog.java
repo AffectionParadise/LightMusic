@@ -15,9 +15,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author Doge
- * @Description 抽象迷你对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 抽象迷你对话框
+ * @date 2021/1/5
  */
 public abstract class AbstractMiniDialog extends JDialog {
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();

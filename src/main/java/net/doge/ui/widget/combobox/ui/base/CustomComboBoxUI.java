@@ -21,9 +21,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 下拉框元素标签自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 下拉框元素标签自定义 UI
+ * @date 2020/12/13
  */
 public class CustomComboBoxUI extends BasicComboBoxUI {
     // 此处不要用父类的变量，因为需要初始化，避免 null 异常

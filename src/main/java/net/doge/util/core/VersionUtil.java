@@ -1,9 +1,9 @@
 package net.doge.util.core;
 
 /**
- * @Author Doge
- * @Description 版本工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 版本工具类
+ * @date 2020/12/15
  */
 public class VersionUtil {
     private static final String DELIMITER = "\\.";

@@ -4,9 +4,9 @@ import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.entity.core.player.MusicPlayer;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/9
+ * @author Doge
+ * @description
+ * @date 2020/12/9
  */
 public class SpectrumUtil {
     private static final int ABS_THRESHOLD = Math.abs(SpectrumConstants.THRESHOLD);

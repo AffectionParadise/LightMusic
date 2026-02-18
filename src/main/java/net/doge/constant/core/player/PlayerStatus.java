@@ -1,9 +1,9 @@
 package net.doge.constant.core.player;
 
 /**
- * @Author Doge
- * @Description 播放器状态
- * @Date 2020/12/7
+ * @author Doge
+ * @description 播放器状态
+ * @date 2020/12/7
  */
 public enum PlayerStatus {
     // 空

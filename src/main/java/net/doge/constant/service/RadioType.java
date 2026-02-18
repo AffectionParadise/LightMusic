@@ -1,9 +1,9 @@
 package net.doge.constant.service;
 
 /**
- * @Author Doge
- * @Description 电台类型
- * @Date 2020/12/7
+ * @author Doge
+ * @description 电台类型
+ * @date 2020/12/7
  */
 public class RadioType {
     // 电台

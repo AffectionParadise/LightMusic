@@ -3,9 +3,9 @@ package net.doge.util.ui;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 缩放工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 缩放工具类
+ * @date 2020/12/15
  */
 public class ScaleUtil {
     public static final float SCALE = Toolkit.getDefaultToolkit().getScreenResolution() / 96f;

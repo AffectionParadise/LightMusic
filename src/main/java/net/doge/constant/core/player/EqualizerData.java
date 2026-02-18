@@ -4,9 +4,9 @@ import javafx.scene.media.EqualizerBand;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 均衡器参数
- * @Date 2020/12/7
+ * @author Doge
+ * @description 均衡器参数
+ * @date 2020/12/7
  */
 public class EqualizerData {
     public static final int BAND_NUM = 10;

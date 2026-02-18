@@ -1,9 +1,9 @@
 package net.doge.constant.core.data;
 
 /**
- * @Author Doge
- * @Description 搜索历史类型
- * @Date 2020/12/7
+ * @author Doge
+ * @description 搜索历史类型
+ * @date 2020/12/7
  */
 public enum HistorySearchType {
     NET_MUSIC,

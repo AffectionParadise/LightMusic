@@ -28,14 +28,14 @@ public class NcLyricReq {
         return instance;
     }
 
-    // 歌词 API
-    private final String LYRIC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
+    // 歌词 API (网易云)
+    private final String LYRIC_NC_API = "https://interface3.music.163.com/eapi/song/lyric/v1";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/lyric/v1");
-        String lyricBody = SdkCommon.ncRequest(Method.POST, LYRIC_API,
+        String lyricBody = SdkCommon.ncRequest(Method.POST, LYRIC_NC_API,
                         String.format("{\"id\":\"%s\",\"cp\":false,\"tv\":0,\"lv\":0,\"rv\":0,\"kv\":0,\"yv\":0,\"ytv\":0,\"yrv\":0}", id), options)
                 .executeAsStr();
         JSONObject lyricJson = JSONObject.parseObject(lyricBody);

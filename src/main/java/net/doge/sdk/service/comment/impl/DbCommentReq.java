@@ -3,7 +3,6 @@ package net.doge.sdk.service.comment.impl;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.NetMusicSource;
-import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.base.NetResource;
@@ -49,15 +48,11 @@ public class DbCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
+        String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
         boolean isRadio = false, isBook = false, isGame = false;
-        if (resource instanceof NetAlbumInfo) {
-            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-            id = albumInfo.getId();
-        } else if (resource instanceof NetRadioInfo) {
+        if (resource instanceof NetRadioInfo) {
             NetRadioInfo radioInfo = (NetRadioInfo) resource;
-            id = radioInfo.getId();
             isRadio = true;
             isBook = radioInfo.isBook();
             isGame = radioInfo.isGame();

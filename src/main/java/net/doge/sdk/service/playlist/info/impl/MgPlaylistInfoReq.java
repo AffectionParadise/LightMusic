@@ -31,7 +31,6 @@ public class MgPlaylistInfoReq {
     }
 
     // 歌单信息 API (咪咕)
-//    private final String PLAYLIST_DETAIL_MG_API = PREFIX_MG + "/playlist?id=%s";
     private final String PLAYLIST_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=%s";
     // 歌单歌曲 API (咪咕)
     private final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?musicListId=%s&pageNo=%s&pageSize=%s";

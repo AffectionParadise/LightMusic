@@ -1,9 +1,9 @@
 package net.doge.constant.core.os;
 
 /**
- * @Author Doge
- * @Description 文件格式
- * @Date 2020/12/7
+ * @author Doge
+ * @description 文件格式
+ * @date 2020/12/7
  */
 public class Format {
     // 音视频文件格式

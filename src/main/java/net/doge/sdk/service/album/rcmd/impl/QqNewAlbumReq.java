@@ -28,7 +28,7 @@ public class QqNewAlbumReq {
     }
 
     // 歌曲封面信息 API (QQ)
-    private final String SINGLE_SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
+    private final String SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
 
     /**
      * 新碟上架
@@ -55,7 +55,7 @@ public class QqNewAlbumReq {
                 String artistId = SdkUtil.parseArtistId(albumJson);
                 String publishTime = albumJson.getString("release_time");
 //            Integer songNum = albumJson.getJSONObject("ex").getIntValue("track_nums");
-                String coverImgThumbUrl = String.format(SINGLE_SONG_IMG_QQ_API, albumId);
+                String coverImgThumbUrl = String.format(SONG_IMG_QQ_API, albumId);
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.QQ);

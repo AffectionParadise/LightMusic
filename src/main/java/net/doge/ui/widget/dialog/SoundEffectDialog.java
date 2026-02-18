@@ -22,9 +22,9 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 
 /**
- * @Author Doge
- * @Description 音效对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 音效对话框
+ * @date 2020/12/15
  */
 public class SoundEffectDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(400);

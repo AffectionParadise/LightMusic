@@ -27,15 +27,15 @@ public class MgMusicInfoReq {
     }
 
     // 歌曲信息 API (咪咕) (下面那个接口能获取无版权音乐的信息)
-//    private final String SINGLE_SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
-    private final String SINGLE_SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+//    private final String SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
+    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
 
     /**
      * 补充 NetMusicInfo 歌曲时长
      */
     public void fillDuration(NetMusicInfo musicInfo) {
         String songId = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, songId))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, songId))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
         if (!musicInfo.hasDuration()) musicInfo.setDuration(DurationUtil.toSeconds(data.getString("length")));
@@ -46,7 +46,7 @@ public class MgMusicInfoReq {
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_MG_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, id))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
 

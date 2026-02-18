@@ -22,9 +22,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/7
+ * @author Doge
+ * @description
+ * @date 2020/12/7
  */
 @Data
 public class MusicListRenderer extends CustomListCellRenderer {

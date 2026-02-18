@@ -21,9 +21,9 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
- * @Author Doge
- * @Description 下载任务
- * @Date 2022/1/21
+ * @author Doge
+ * @description 下载任务
+ * @date 2022/1/21
  */
 @Data
 public class Task {

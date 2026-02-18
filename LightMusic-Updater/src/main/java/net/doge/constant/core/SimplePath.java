@@ -4,9 +4,9 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/9
+ * @author Doge
+ * @description
+ * @date 2020/12/9
  */
 public class SimplePath {
     private static final String SEPARATOR = File.separator;

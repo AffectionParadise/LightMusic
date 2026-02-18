@@ -3,9 +3,9 @@ package net.doge.util.core.text;
 import net.doge.util.core.StringUtil;
 
 /**
- * @Author Doge
- * @Description 歌词工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 歌词工具类
+ * @date 2020/12/15
  */
 public class LyricUtil {
     /**

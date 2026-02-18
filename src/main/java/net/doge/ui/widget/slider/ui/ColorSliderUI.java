@@ -11,9 +11,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 颜色滑动条自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 颜色滑动条自定义 UI
+ * @date 2020/12/13
  */
 public class ColorSliderUI extends BasicSliderUI {
     private ColorChooserDialog d;

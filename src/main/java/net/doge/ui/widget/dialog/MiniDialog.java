@@ -24,9 +24,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @Author Doge
- * @Description 迷你模式对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 迷你模式对话框
+ * @date 2020/12/15
  */
 public class MiniDialog extends AbstractMiniDialog {
     private final int WIDTH = ScaleUtil.scale(460);

@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 主题变量存储
- * @Date 2020/12/12
+ * @author Doge
+ * @description 主题变量存储
+ * @date 2020/12/12
  */
 public class UIStyleStorage {
     // 当前主题

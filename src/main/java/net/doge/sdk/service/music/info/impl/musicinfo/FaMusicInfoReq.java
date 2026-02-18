@@ -29,7 +29,7 @@ public class FaMusicInfoReq {
     }
 
     // 歌曲信息 API (发姐)
-    private final String SINGLE_SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    private final String SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
     // 歌词 API (发姐)
     private final String LYRIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&scope=remote_lyric&id=%s";
 
@@ -46,7 +46,7 @@ public class FaMusicInfoReq {
         String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
         String _nonce = ap.attr("data-_nonce");
 
-        String songInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FA_API, musicSet, _nonce))
+        String songInfoBody = HttpRequest.get(String.format(SONG_DETAIL_FA_API, musicSet, _nonce))
                 .executeAsStr();
         JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
         JSONObject data = songInfoJson.getJSONObject("msg");

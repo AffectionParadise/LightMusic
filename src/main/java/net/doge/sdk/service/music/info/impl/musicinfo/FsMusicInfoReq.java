@@ -25,7 +25,7 @@ public class FsMusicInfoReq {
     }
 
     // 歌曲信息 API (5sing)
-    private final String SINGLE_SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find?songinfo=%s";
+    private final String SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find?songinfo=%s";
     // 歌词 API (5sing)
     private final String LYRIC_FS_API = "http://5sing.kugou.com/fm/m/json/lrc?songType=%s&songId=%s";
 
@@ -34,7 +34,7 @@ public class FsMusicInfoReq {
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_FS_API, UrlUtil.encodeAll(id.replace("_", "$"))))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_FS_API, UrlUtil.encodeAll(id.replace("_", "$"))))
                 .executeAsStr();
         JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
 

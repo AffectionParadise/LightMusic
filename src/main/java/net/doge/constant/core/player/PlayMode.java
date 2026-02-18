@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @Author Doge
- * @Description 播放模式
- * @Date 2020/12/7
+ * @author Doge
+ * @description 播放模式
+ * @date 2020/12/7
  */
 @Getter
 @AllArgsConstructor

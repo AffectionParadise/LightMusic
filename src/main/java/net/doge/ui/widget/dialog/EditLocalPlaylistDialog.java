@@ -21,9 +21,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
- * @Author Doge
- * @Description 编辑收藏夹的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 编辑收藏夹的对话框
+ * @date 2020/12/15
  */
 public class EditLocalPlaylistDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(560);

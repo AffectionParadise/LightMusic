@@ -40,9 +40,9 @@ import java.io.File;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 自定义样式的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 自定义样式的对话框
+ * @date 2020/12/15
  */
 public class CustomStyleDialog extends AbstractTitledDialog implements DocumentListener {
     private final int WIDTH = ScaleUtil.scale(960);
@@ -257,12 +257,12 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
                     // 添加可读取的图片格式
-                    String allSuffix = "";
+                    StringBuilder allSuffix = new StringBuilder();
                     for (String suffix : Format.READ_IMAGE_TYPE_SUPPORTED) {
                         filters.add(new FileChooser.ExtensionFilter(suffix.toUpperCase(), "*." + suffix));
-                        allSuffix += "*." + suffix + ";";
+                        allSuffix.append("*.").append(suffix).append(";");
                     }
-                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix));
+                    filters.add(0, new FileChooser.ExtensionFilter(I18n.getText("imgFile"), allSuffix.toString()));
                     Platform.runLater(() -> {
                         File file = fileChooser.showOpenDialog(null);
                         if (file == null) return;

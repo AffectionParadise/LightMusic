@@ -12,9 +12,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
- * @Author Doge
- * @Description 桌面工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 桌面工具类
+ * @date 2020/12/15
  */
 public class DesktopUtil {
     /**

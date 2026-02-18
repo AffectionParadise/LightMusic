@@ -14,9 +14,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 对话框中的按钮自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 对话框中的按钮自定义 UI
+ * @date 2020/12/13
  */
 public class DialogButton extends BaseButton implements ExtendedOpacitySupported {
     private static final HDEmptyBorder BORDER = new HDEmptyBorder(4, 15, 4, 15);

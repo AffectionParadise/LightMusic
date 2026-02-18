@@ -9,9 +9,9 @@ import net.doge.util.lmdata.LMDataUtil;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 主题管理器
- * @Date 2020/12/15
+ * @author Doge
+ * @description 主题管理器
+ * @date 2020/12/15
  */
 public class LMStyleManager {
     private static final JSONObject STYLE_DATA = LMDataUtil.readOrCreate(SimplePath.RESOURCE_PATH + LMDataConstants.STYLE_DATA_FILE_NAME);

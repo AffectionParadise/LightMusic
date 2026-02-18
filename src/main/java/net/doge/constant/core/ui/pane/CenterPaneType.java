@@ -1,9 +1,9 @@
 package net.doge.constant.core.ui.pane;
 
 /**
- * @Author Doge
- * @Description 主要界面面板
- * @Date 2020/12/15
+ * @author Doge
+ * @description 主要界面面板
+ * @date 2020/12/15
  */
 public enum CenterPaneType {
     TAB,

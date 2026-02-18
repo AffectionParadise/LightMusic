@@ -17,9 +17,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 抽象阴影对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 抽象阴影对话框
+ * @date 2021/1/5
  */
 public abstract class AbstractShadowDialog extends JDialog {
     // 最大阴影透明度

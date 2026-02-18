@@ -11,9 +11,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * @Author Doge
- * @Description Swing 组件工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description Swing 组件工具类
+ * @date 2020/12/15
  */
 public class SwingUtil {
     /**

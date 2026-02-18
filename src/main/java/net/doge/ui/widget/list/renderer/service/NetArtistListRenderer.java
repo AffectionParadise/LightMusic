@@ -19,9 +19,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/7
+ * @author Doge
+ * @description
+ * @date 2020/12/7
  */
 @Data
 public class NetArtistListRenderer extends CustomListCellRenderer {
@@ -94,7 +94,7 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = artistInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(artistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String songNum = artistInfo.hasSongNum() ? HtmlUtil.textToHtml(artistInfo.fromME() ? artistInfo.getSongNum() + " 电台" : artistInfo.getSongNum() + " 歌曲") : "";
         String albumNum = artistInfo.hasAlbumNum() ? HtmlUtil.textToHtml(artistInfo.getAlbumNum() + " 专辑") : "";
         String mvNum = artistInfo.hasMvNum() ? HtmlUtil.textToHtml(artistInfo.getMvNum() + " MV") : "";

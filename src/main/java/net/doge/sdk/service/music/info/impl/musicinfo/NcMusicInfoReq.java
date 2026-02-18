@@ -30,9 +30,9 @@ public class NcMusicInfoReq {
     }
 
     // 歌曲信息 API (网易云)
-    private final String SINGLE_SONG_DETAIL_NC_API = "https://music.163.com/api/v3/song/detail";
+    private final String SONG_DETAIL_NC_API = "https://music.163.com/api/v3/song/detail";
     // 节目信息 API (网易云)
-    private final String SINGLE_PROGRAM_DETAIL_NC_API = "https://music.163.com/api/dj/program/detail";
+    private final String PROGRAM_DETAIL_NC_API = "https://music.163.com/api/dj/program/detail";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
@@ -42,7 +42,7 @@ public class NcMusicInfoReq {
         boolean isProgram = musicInfo.isProgram();
         if (isProgram) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_PROGRAM_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", musicInfo.getProgramId()), options)
+            String songBody = SdkCommon.ncRequest(Method.POST, PROGRAM_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", musicInfo.getProgramId()), options)
                     .executeAsStr();
             JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
             JSONObject dj = songJson.getJSONObject("dj");
@@ -63,7 +63,7 @@ public class NcMusicInfoReq {
             }
         } else {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String songBody = SdkCommon.ncRequest(Method.POST, SINGLE_SONG_DETAIL_NC_API, String.format("{\"c\":\"[{'id':'%s'}]\"}", id), options)
+            String songBody = SdkCommon.ncRequest(Method.POST, SONG_DETAIL_NC_API, String.format("{\"c\":\"[{'id':'%s'}]\"}", id), options)
                     .executeAsStr();
             JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");
             if (JsonUtil.isEmpty(array)) return;

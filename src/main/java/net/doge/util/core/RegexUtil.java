@@ -5,9 +5,9 @@ import cn.hutool.core.util.ReUtil;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 正则表达式工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 正则表达式工具类
+ * @date 2020/12/15
  */
 public class RegexUtil {
     /**

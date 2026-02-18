@@ -3,9 +3,9 @@ package net.doge.constant.core.ui.list;
 import net.doge.util.ui.ScaleUtil;
 
 /**
- * @Author Doge
- * @Description 列表渲染参数
- * @Date 2020/12/7
+ * @author Doge
+ * @description 列表渲染参数
+ * @date 2020/12/7
  */
 public class RendererConstants {
     // 元素宽度

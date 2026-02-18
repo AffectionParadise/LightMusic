@@ -1,9 +1,9 @@
 package net.doge.constant.service;
 
 /**
- * @Author Doge
- * @Description MV 类型
- * @Date 2020/12/7
+ * @author Doge
+ * @description MV 类型
+ * @date 2020/12/7
  */
 public class MvInfoType {
     // MV

@@ -6,8 +6,8 @@ import net.doge.entity.core.player.MusicPlayer;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.dimension.HDDimension;
 import net.doge.ui.widget.dialog.TipDialog;
-import net.doge.util.media.DurationUtil;
 import net.doge.util.core.text.HtmlUtil;
+import net.doge.util.media.DurationUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -18,9 +18,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 播放时间条自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 播放时间条自定义 UI
+ * @date 2020/12/13
  */
 public class TimeSliderUI extends BasicSliderUI {
     private Color thumbColor;

@@ -7,9 +7,9 @@ import java.awt.*;
 import java.io.ByteArrayInputStream;
 
 /**
- * @Author Doge
- * @Description 字体工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 字体工具类
+ * @date 2020/12/15
  */
 public class FontUtil {
     /**

@@ -1,9 +1,9 @@
 package net.doge.constant.core.ui.list;
 
 /**
- * @Author Doge
- * @Description MV 播放界面组件来源类型
- * @Date 2020/12/7
+ * @author Doge
+ * @description MV 播放界面组件来源类型
+ * @date 2020/12/7
  */
 public enum MvCompSourceType {
     MUSIC_LIST,

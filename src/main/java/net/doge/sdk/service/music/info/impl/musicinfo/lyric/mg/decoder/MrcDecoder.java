@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description MRC 歌词解析工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description MRC 歌词解析工具类
+ * @date 2020/12/15
  */
 public class MrcDecoder {
     private static MrcDecoder instance;

@@ -24,9 +24,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * @Author Doge
- * @Description 桌面歌词对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 桌面歌词对话框
+ * @date 2021/1/5
  */
 public class DesktopLyricDialog extends JDialog {
     private int width;

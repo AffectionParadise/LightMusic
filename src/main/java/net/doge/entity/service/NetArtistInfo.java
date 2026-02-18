@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description 歌手
- * @Date 2020/12/7
+ * @author Doge
+ * @description 歌手
+ * @date 2020/12/7
  */
 @Data
 public class NetArtistInfo implements NetResource {

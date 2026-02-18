@@ -1,9 +1,9 @@
 package net.doge.constant.core.lyric;
 
 /**
- * @Author Doge
- * @Description 当前歌词状态
- * @Date 2020/12/7
+ * @author Doge
+ * @description 当前歌词状态
+ * @date 2020/12/7
  */
 public class NextLyric {
     // 无

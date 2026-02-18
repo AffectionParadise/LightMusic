@@ -1,9 +1,9 @@
 package net.doge.constant.core.ui.tab;
 
 /**
- * @Author Doge
- * @Description 标签页
- * @Date 2020/12/7
+ * @author Doge
+ * @description 标签页
+ * @date 2020/12/7
  */
 public class TabIndex {
     public static final int PERSONAL = 0;

@@ -4,9 +4,9 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.util.ui.ScaleUtil;
 
 /**
- * @Author Doge
- * @Description 频谱参数
- * @Date 2020/12/14
+ * @author Doge
+ * @description 频谱参数
+ * @date 2020/12/14
  */
 public class SpectrumConstants {
     public static final String[] NAMES = {

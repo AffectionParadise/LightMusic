@@ -33,7 +33,7 @@ public class BiUserSearchReq {
     /**
      * 根据关键词获取用户
      */
-    public CommonResult<NetUserInfo> searchUsers(String keyword, int page, int limit) {
+    public CommonResult<NetUserInfo> searchUsers(String keyword, int page) {
         List<NetUserInfo> r = new LinkedList<>();
         int t = 0;
 

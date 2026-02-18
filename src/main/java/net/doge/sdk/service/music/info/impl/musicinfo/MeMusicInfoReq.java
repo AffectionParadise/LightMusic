@@ -31,7 +31,7 @@ public class MeMusicInfoReq {
     }
 
     // 歌曲信息 API (猫耳)
-    private final String SINGLE_SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
+    private final String SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
     // 歌曲专辑信息 API (猫耳)
     private final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
     // 弹幕 API (猫耳)
@@ -44,7 +44,7 @@ public class MeMusicInfoReq {
         String id = musicInfo.getId();
         // 歌曲信息
         Runnable fillMusicInfo = () -> {
-            String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_ME_API, id))
+            String songBody = HttpRequest.get(String.format(SONG_DETAIL_ME_API, id))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
             // 时长是毫秒，转为秒

@@ -5,9 +5,9 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 选项卡面板自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 选项卡面板自定义 UI
+ * @date 2020/12/13
  */
 public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
     @Override

@@ -5,4 +5,6 @@ package net.doge.entity.service.base;
  */
 public interface NetResource extends Resource {
     int getSource();
+
+    String getId();
 }

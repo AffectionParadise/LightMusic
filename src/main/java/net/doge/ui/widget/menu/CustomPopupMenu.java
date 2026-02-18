@@ -15,9 +15,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义弹出菜单
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义弹出菜单
+ * @date 2020/12/13
  */
 public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySupported {
     @Getter

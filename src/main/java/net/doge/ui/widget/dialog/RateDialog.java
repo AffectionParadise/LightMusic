@@ -21,9 +21,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * @Author Doge
- * @Description 播放速率对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 播放速率对话框
+ * @date 2020/12/15
  */
 public class RateDialog extends AbstractShadowDialog {
     // 最大/小值

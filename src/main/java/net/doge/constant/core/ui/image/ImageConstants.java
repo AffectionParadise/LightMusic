@@ -6,9 +6,9 @@ import net.doge.util.ui.ScaleUtil;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 图片参数
- * @Date 2020/12/7
+ * @author Doge
+ * @description 图片参数
+ * @date 2020/12/7
  */
 public class ImageConstants {
     // 小图标

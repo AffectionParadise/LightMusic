@@ -10,9 +10,9 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 静默的进度条自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 静默的进度条自定义 UI
+ * @date 2020/12/13
  */
 public class MuteSliderUI extends BasicSliderUI {
     private Color trackColor;

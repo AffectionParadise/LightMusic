@@ -5,9 +5,9 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.entity.core.ui.UIStyle;
 
 /**
- * @Author Doge
- * @Description 预设主题
- * @Date 2020/12/12
+ * @author Doge
+ * @description 预设主题
+ * @date 2020/12/12
  */
 public class PreDefinedUIStyle {
     public static final UIStyle[] STYLES = {

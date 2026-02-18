@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description 电台
- * @Date 2020/12/7
+ * @author Doge
+ * @description 电台
+ * @date 2020/12/7
  */
 @Data
 public class NetRadioInfo implements NetResource {

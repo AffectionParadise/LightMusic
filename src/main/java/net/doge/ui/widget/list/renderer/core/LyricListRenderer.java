@@ -17,9 +17,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/7
+ * @author Doge
+ * @description
+ * @date 2020/12/7
  */
 @Data
 public class LyricListRenderer extends CustomListCellRenderer {

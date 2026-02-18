@@ -37,7 +37,8 @@ public class QiRecommendPlaylistReq {
         String playlistInfoBody = SdkCommon.qiRequest(String.format(REC_PLAYLIST_QI_API, System.currentTimeMillis()))
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-        JSONObject data = playlistInfoJson.getJSONArray("data").getJSONObject(5);
+        JSONArray dataArray = playlistInfoJson.getJSONArray("data");
+        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "tracklist");
         t = data.getIntValue("module_nums");
         JSONArray playlistArray = data.getJSONArray("result");
         for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {

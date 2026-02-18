@@ -22,8 +22,8 @@ public class NcNewAlbumTagReq {
         return instance;
     }
 
-    // 曲风 API
-    private final String STYLE_API = "https://music.163.com/api/tag/list/get";
+    // 曲风 API (网易云)
+    private final String STYLE_NC_API = "https://music.163.com/api/tag/list/get";
 
     /**
      * 网易云曲风标签
@@ -31,7 +31,7 @@ public class NcNewAlbumTagReq {
     public void initAlbumTag() {
         int c = Tags.newAlbumMap.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-        String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_API, "{}", options)
+        String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject tagJson = JSONObject.parseObject(tagBody);
         JSONArray tags = tagJson.getJSONArray("data");

@@ -23,9 +23,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义用户交互对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 自定义用户交互对话框
+ * @date 2021/1/5
  */
 public class ConfirmDialog extends AbstractShadowDialog {
     private final int MAX_WIDTH = ScaleUtil.scale(900);

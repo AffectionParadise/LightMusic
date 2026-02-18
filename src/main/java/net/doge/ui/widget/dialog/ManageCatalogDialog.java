@@ -29,9 +29,9 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 管理歌曲目录的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 管理歌曲目录的对话框
+ * @date 2020/12/15
  */
 public class ManageCatalogDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(600);

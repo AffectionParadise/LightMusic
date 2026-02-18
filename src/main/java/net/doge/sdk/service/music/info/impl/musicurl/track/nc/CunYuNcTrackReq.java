@@ -21,8 +21,8 @@ public class CunYuNcTrackReq {
         return instance;
     }
 
-    // 歌曲 URL 获取 API
-    private final String SONG_URL_API = "https://www.cunyuapi.top/163music_play?id=%s&quality=%s";
+    // 歌曲 URL 获取 API (网易云)
+    private final String SONG_URL_NC_API = "https://www.cunyuapi.top/163music_play?id=%s&quality=%s";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -47,7 +47,7 @@ public class CunYuNcTrackReq {
      */
     public String getTrackUrl(String id, String quality) {
         try {
-            String songBody = HttpRequest.get(String.format(SONG_URL_API, id, qualityMap.get(quality)))
+            String songBody = HttpRequest.get(String.format(SONG_URL_NC_API, id, qualityMap.get(quality)))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody);
             String trackUrl = data.getString("song_file_url");

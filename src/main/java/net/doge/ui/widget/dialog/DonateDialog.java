@@ -18,9 +18,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 捐赠对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 捐赠对话框
+ * @date 2021/1/5
  */
 public class DonateDialog extends AbstractTitledDialog {
     private DialogButton yes;

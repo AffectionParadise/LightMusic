@@ -30,7 +30,7 @@ public class MvTagReq {
         Tags.mvTag.put("精选", new String[]{"", "", "", "", "", "", "all", "", "", "", "", ""});
         Tags.mvTag.put("内地", new String[]{"内地", "全部", "", "", "16", "7", "neidi", "", "", "", "", ""});
         Tags.mvTag.put("港台", new String[]{"港台", "全部", "", "", "17", "7", "gangtai", "", "", "", "", ""});
-        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "", "18", "7", "oumei", "", "", "", "", ""});
+        Tags.mvTag.put("欧美", new String[]{"欧美", "全部", "", "", "18", "7", "oumei", "236682735", "", "", "", ""});
         Tags.mvTag.put("韩国", new String[]{"韩国", "全部", "", "", "19", "7", "korea", "", "", "", "", ""});
         Tags.mvTag.put("日本", new String[]{"日本", "全部", "", "", "20", "7", "janpan", "", "", "", "", ""});
         Tags.mvTag.put("官方版", new String[]{"", "官方版", "", "", "", "", "", "", "", "", "", ""});
@@ -42,7 +42,7 @@ public class MvTagReq {
         Tags.mvTag.put("华语", new String[]{"", "", "", "", "", "", "", "236682731", "", "", "", ""});
         Tags.mvTag.put("日韩", new String[]{"", "", "", "", "", "", "", "236742444", "", "", "", ""});
         Tags.mvTag.put("网络", new String[]{"", "", "", "", "", "", "", "236682773", "", "", "", ""});
-        Tags.mvTag.put("欧美", new String[]{"", "", "", "", "", "", "", "236682735", "", "", "", ""});
+//        Tags.mvTag.put("欧美", new String[]{"", "", "", "", "", "", "", "236682735", "", "", "", ""});
         Tags.mvTag.put("现场", new String[]{"", "", "", "", "", "", "", "236742576", "", "", "", ""});
         Tags.mvTag.put("热舞", new String[]{"", "", "", "", "", "", "", "236682777", "", "", "", ""});
         Tags.mvTag.put("伤感", new String[]{"", "", "", "", "", "", "", "236742508", "", "", "", ""});

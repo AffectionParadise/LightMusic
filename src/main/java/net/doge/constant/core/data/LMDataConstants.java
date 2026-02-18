@@ -1,9 +1,9 @@
 package net.doge.constant.core.data;
 
 /**
- * @Author Doge
- * @Description LM 数据参数
- * @Date 2020/12/15
+ * @author Doge
+ * @description LM 数据参数
+ * @date 2020/12/15
  */
 public class LMDataConstants {
     // 数据文件后缀

@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @Author Doge
- * @Description 排序方式
- * @Date 2020/12/11
+ * @author Doge
+ * @description 排序方式
+ * @date 2020/12/11
  */
 @Getter
 @AllArgsConstructor

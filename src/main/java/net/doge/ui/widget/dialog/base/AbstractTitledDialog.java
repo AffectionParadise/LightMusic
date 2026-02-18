@@ -21,9 +21,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 /**
- * @Author Doge
- * @Description 抽象含标题对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 抽象含标题对话框
+ * @date 2021/1/5
  */
 public abstract class AbstractTitledDialog extends AbstractShadowDialog {
     protected CustomPanel topPanel = new CustomPanel();

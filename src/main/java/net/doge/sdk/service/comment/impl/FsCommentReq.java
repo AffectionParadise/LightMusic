@@ -47,20 +47,9 @@ public class FsCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
+        String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        boolean isMv = false;
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        } else if (resource instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
-        } else if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getId();
-            isMv = true;
-        }
+        boolean isMv = resource instanceof NetMvInfo;
 
         String url = "";
         Map<String, Object> params = new TreeMap<>();

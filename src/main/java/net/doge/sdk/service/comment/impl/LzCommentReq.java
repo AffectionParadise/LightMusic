@@ -2,9 +2,7 @@ package net.doge.sdk.service.comment.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
-import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.entity.CommonResult;
@@ -48,19 +46,8 @@ public class LzCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
-        boolean isVideo = false;
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        } else if (resource instanceof NetAlbumInfo) {
-            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-            id = albumInfo.getId();
-        } else if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getId();
-            isVideo = true;
-        }
+        String id = resource.getId();
+        boolean isVideo = resource instanceof NetMvInfo;
 
         // 专辑和歌曲使用同一参数
         // 获取 post-id

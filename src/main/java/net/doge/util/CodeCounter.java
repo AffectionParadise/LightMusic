@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 计算项目代码行数
- * @Date 2020/12/15
+ * @author Doge
+ * @description 计算项目代码行数
+ * @date 2020/12/15
  */
 public class CodeCounter {
 

@@ -45,7 +45,7 @@ public class KgHighQualityPlaylistReq {
     private final String HOT_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4" +
             "&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
     // 编辑精选歌单 API (酷狗)
-    private final String IP_PLAYLIST_KG_API = "/ocean/v6/pubsongs/list_info_for_ip";
+//    private final String IP_PLAYLIST_KG_API = "/ocean/v6/pubsongs/list_info_for_ip";
 
     /**
      * Top 歌单

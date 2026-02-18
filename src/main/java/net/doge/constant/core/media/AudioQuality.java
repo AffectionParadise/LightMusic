@@ -3,9 +3,9 @@ package net.doge.constant.core.media;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 音质
- * @Date 2020/12/15
+ * @author Doge
+ * @description 音质
+ * @date 2020/12/15
  */
 public class AudioQuality {
     // 普通

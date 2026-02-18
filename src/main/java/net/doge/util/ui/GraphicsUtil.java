@@ -3,9 +3,9 @@ package net.doge.util.ui;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 画笔工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 画笔工具类
+ * @date 2020/12/15
  */
 public class GraphicsUtil {
     /**

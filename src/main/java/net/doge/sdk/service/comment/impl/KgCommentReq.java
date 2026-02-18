@@ -43,8 +43,8 @@ public class KgCommentReq {
      * 获取评论
      */
     public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit) {
-        int total = 0;
         List<NetCommentInfo> res = new LinkedList<>();
+        int total = 0;
 
         String id = null, anotherId = null;
         boolean hotOnly = I18n.getText("hotComment").equals(type);

@@ -5,9 +5,9 @@ import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 列表自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 列表自定义 UI
+ * @date 2020/12/13
  */
 public class CustomListUI extends BasicListUI {
     public void setCellHeight(int index, int h) {

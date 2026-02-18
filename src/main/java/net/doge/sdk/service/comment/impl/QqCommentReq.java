@@ -47,12 +47,10 @@ public class QqCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total = 0;
 
-        String id = null;
+        String id = resource.getId();
         String typeStr = null;
         boolean hotOnly = I18n.getText("hotComment").equals(type);
         if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
             typeStr = "1";
 
             // QQ 需要先通过 mid 获取 id
@@ -61,28 +59,16 @@ public class QqCommentReq {
                     .executeAsStr();
             JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");
             id = trackInfo.getString("id");
-        } else if (resource instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
-            typeStr = "3";
-        } else if (resource instanceof NetAlbumInfo) {
-            NetAlbumInfo albumInfo = (NetAlbumInfo) resource;
-            id = albumInfo.getId();
+        } else if (resource instanceof NetPlaylistInfo) typeStr = "3";
+        else if (resource instanceof NetAlbumInfo) {
             typeStr = "2";
 
             // QQ 需要先通过 mid 获取 id
             String songInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
                     .executeAsStr();
             id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
-        } else if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getId();
-            typeStr = "5";
-        } else if (resource instanceof NetRankingInfo) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) resource;
-            id = rankingInfo.getId();
-            typeStr = "4";
-        }
+        } else if (resource instanceof NetMvInfo) typeStr = "5";
+        else if (resource instanceof NetRankingInfo) typeStr = "4";
 
         if (StringUtil.notEmpty(typeStr)) {
             int lim = hotOnly ? limit : Math.min(25, limit);

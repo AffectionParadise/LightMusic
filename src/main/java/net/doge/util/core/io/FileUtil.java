@@ -12,9 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 /**
- * @Author Doge
- * @Description 文件工具类
- * @Date 2020/12/21
+ * @author Doge
+ * @description 文件工具类
+ * @date 2020/12/21
  */
 public class FileUtil {
     /**

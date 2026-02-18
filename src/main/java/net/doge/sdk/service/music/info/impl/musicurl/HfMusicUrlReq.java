@@ -23,14 +23,14 @@ public class HfMusicUrlReq {
     }
 
     // 歌曲信息 API (音乐磁场)
-    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
+    private final String SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
 
     /**
      * 根据歌曲 id 获取歌曲地址
      */
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_HF_API, id))
                 .cookie(SdkCommon.HF_COOKIE)
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);

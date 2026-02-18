@@ -11,9 +11,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 /**
- * @Author Doge
- * @Description 语言工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 语言工具类
+ * @date 2020/12/15
  */
 public class LangUtil {
     static HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();

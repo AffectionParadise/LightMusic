@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Author Doge
- * @Description 语言
- * @Date 2020/12/7
+ * @author Doge
+ * @description 语言
+ * @date 2020/12/7
  */
 public class I18n {
     private static final Map<String, String[]> LANG_MAP = new HashMap<>();

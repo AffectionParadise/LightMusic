@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/15
+ * @author Doge
+ * @description
+ * @date 2020/12/15
  */
 public class ArrayUtil {
     /**

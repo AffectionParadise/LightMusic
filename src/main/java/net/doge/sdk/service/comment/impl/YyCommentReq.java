@@ -34,11 +34,7 @@
 //        List<NetCommentInfo> res = new LinkedList<>();
 //        int total;
 //
-//        String id = null;
-//        if (resource instanceof NetMvInfo) {
-//            NetMvInfo mvInfo = (NetMvInfo) resource;
-//            id = mvInfo.getId();
-//        }
+//        String id = resource.getId();
 //
 //        // 加密参数未知
 //        String url = String.format(MV_COMMENTS_YY_API, id, cursor, limit);

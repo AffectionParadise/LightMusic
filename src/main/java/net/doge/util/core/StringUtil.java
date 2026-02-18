@@ -6,9 +6,9 @@ import net.doge.util.core.array.ArrayUtil;
 import java.nio.charset.StandardCharsets;
 
 /**
- * @Author Doge
- * @Description 字符串工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 字符串工具类
+ * @date 2020/12/15
  */
 public class StringUtil {
     /**
@@ -62,7 +62,7 @@ public class StringUtil {
      * @return
      */
     public static String shortenBlank(String s) {
-        if (s == null) return s;
+        if (s == null) return null;
         return s.replaceAll(" +", " ");
     }
 

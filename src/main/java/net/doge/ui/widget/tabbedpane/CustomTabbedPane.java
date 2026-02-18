@@ -14,9 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 自定义标签页面板
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义标签页面板
+ * @date 2020/12/13
  */
 public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupported {
     @Getter

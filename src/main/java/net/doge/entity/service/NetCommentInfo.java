@@ -7,9 +7,9 @@ import net.doge.util.core.text.LangUtil;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 评论
- * @Date 2020/12/7
+ * @author Doge
+ * @description 评论
+ * @date 2020/12/7
  */
 @Data
 public class NetCommentInfo {

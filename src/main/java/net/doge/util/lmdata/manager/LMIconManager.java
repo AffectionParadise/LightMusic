@@ -12,9 +12,9 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 图标管理器
- * @Date 2020/12/15
+ * @author Doge
+ * @description 图标管理器
+ * @date 2020/12/15
  */
 public class LMIconManager {
     private static final JSONObject ICON_DATA = LMDataUtil.readOrCreate(SimplePath.RESOURCE_PATH + LMDataConstants.ICON_DATA_FILE_NAME);

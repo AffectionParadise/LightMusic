@@ -13,9 +13,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 下拉框渲染器
- * @Date 2020/12/7
+ * @author Doge
+ * @description 下拉框渲染器
+ * @date 2020/12/7
  */
 @Data
 public class LocalPlaylistComboBoxRenderer extends CustomListCellRenderer {

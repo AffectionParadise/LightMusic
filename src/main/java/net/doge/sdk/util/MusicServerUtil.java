@@ -56,7 +56,7 @@ import net.doge.sdk.service.user.search.UserSearchReq;
 import java.util.Set;
 
 /**
- * @Author Doge
+ * @author Doge
  * @description
  * @date 2020/12/19
  */

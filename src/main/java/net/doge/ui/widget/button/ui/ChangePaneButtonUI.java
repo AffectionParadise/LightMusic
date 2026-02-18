@@ -14,9 +14,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 为 ChangePaneButton 设定的自定义 UI，图标添加遮罩
- * @Date 2020/12/13
+ * @author Doge
+ * @description 为 ChangePaneButton 设定的自定义 UI，图标添加遮罩
+ * @date 2020/12/13
  */
 public class ChangePaneButtonUI extends BasicButtonUI {
     private boolean drawMask;

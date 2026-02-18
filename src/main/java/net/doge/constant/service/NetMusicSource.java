@@ -3,9 +3,9 @@ package net.doge.constant.service;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 音乐来源
- * @Date 2020/12/7
+ * @author Doge
+ * @description 音乐来源
+ * @date 2020/12/7
  */
 public class NetMusicSource {
     public static final String[] NAMES = new String[]{

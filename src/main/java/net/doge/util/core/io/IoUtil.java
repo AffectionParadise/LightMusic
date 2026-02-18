@@ -5,9 +5,9 @@ import net.doge.constant.core.async.GlobalExecutors;
 import java.io.InputStream;
 
 /**
- * @Author Doge
- * @Description IO 工具类
- * @Date 2020/12/21
+ * @author Doge
+ * @description IO 工具类
+ * @date 2020/12/21
  */
 public class IoUtil {
     /**

@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description 歌单
- * @Date 2020/12/7
+ * @author Doge
+ * @description 歌单
+ * @date 2020/12/7
  */
 @Data
 public class NetPlaylistInfo implements NetResource {

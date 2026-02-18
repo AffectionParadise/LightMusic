@@ -33,14 +33,14 @@ public class HfMusicInfoReq {
     }
 
     // 歌曲信息 API (音乐磁场)
-    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
+    private final String SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_HF_API, id))
                 .cookie(SdkCommon.HF_COOKIE)
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);
@@ -76,7 +76,7 @@ public class HfMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_HF_API, id))
                 .cookie(SdkCommon.HF_COOKIE)
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);

@@ -6,9 +6,9 @@ import net.doge.ui.widget.combobox.renderer.StringComboBoxRenderer;
 import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
 
 /**
- * @Author Doge
- * @Description 下拉框元素标签自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 下拉框元素标签自定义 UI
+ * @date 2020/12/13
  */
 public class StringComboBoxUI extends CustomComboBoxUI {
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f) {

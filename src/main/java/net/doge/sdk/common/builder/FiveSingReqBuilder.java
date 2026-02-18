@@ -77,9 +77,4 @@ public class FiveSingReqBuilder {
         String content = buildSignParams(params);
         return CryptoUtil.md5(signKey + content + (StringUtil.notEmpty(data) ? data : "") + signKey);
     }
-
-    // 请求参数签名
-    public static String signParamsKey(String data) {
-        return CryptoUtil.md5(appid + signKey + clientver + data);
-    }
 }

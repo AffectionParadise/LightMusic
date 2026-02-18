@@ -25,7 +25,7 @@ public class GgMusicMenuReq {
     }
 
     // 歌曲信息 API (咕咕咕音乐)
-    private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
+    private final String SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
 
     /**
      * 获取相似歌曲
@@ -37,7 +37,7 @@ public class GgMusicMenuReq {
         int t;
 
         String id = netMusicInfo.getId();
-        String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+        String musicInfoBody = HttpRequest.get(String.format(SONG_DETAIL_GG_API, id))
                 .executeAsStr();
         Document doc = Jsoup.parse(musicInfoBody);
         Elements songs = doc.select("ul.text-middle.break-all li a");

@@ -55,7 +55,6 @@ public class HttpClient {
         } catch (Exception e) {
             LogUtil.error(e);
         }
-
         return trustManager;
     }
 

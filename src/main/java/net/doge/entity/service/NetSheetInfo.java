@@ -6,9 +6,9 @@ import net.doge.util.core.StringUtil;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 乐谱
- * @Date 2020/12/7
+ * @author Doge
+ * @description 乐谱
+ * @date 2020/12/7
  */
 @Data
 public class NetSheetInfo {

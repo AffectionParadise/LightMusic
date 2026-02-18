@@ -23,14 +23,14 @@ public class XmMusicInfoReq {
     }
 
     // 歌曲信息 API (喜马拉雅)
-    private final String SINGLE_SONG_DETAIL_XM_API = "https://www.ximalaya.com/revision/track/simple?trackId=%s";
+    private final String SONG_DETAIL_XM_API = "https://www.ximalaya.com/revision/track/simple?trackId=%s";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_XM_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_XM_API, id))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
         JSONObject trackInfo = data.getJSONObject("trackInfo");

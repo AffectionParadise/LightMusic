@@ -18,9 +18,9 @@ import java.io.File;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description 在线音乐
- * @Date 2020/12/7
+ * @author Doge
+ * @description 在线音乐
+ * @date 2020/12/7
  */
 @Data
 public class NetMusicInfo implements MusicResource, NetResource, Downloadable {

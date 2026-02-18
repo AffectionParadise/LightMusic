@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -37,11 +36,7 @@ public class HkCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
-        if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getId();
-        }
+        String id = resource.getId();
 
         String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HK_API, id, page, limit))
                 .executeAsStr();

@@ -8,9 +8,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
- * @Author Doge
- * @Description QRC 歌词解析工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description QRC 歌词解析工具类
+ * @date 2020/12/15
  */
 public class QrcDecoder {
     private static QrcDecoder instance;

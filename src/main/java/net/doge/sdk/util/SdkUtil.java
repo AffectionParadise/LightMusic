@@ -90,6 +90,17 @@ public class SdkUtil {
     }
 
     /**
+     * 在 JSONArray 中查找并返回含特征键值对的 JSONObject
+     */
+    public static JSONObject findFeatureObj(JSONArray array, String key, String value) {
+        for (int i = 0, s = array.size(); i < s; i++) {
+            JSONObject obj = array.getJSONObject(i);
+            if (obj.containsKey(key) && value.equals(obj.getString(key))) return obj;
+        }
+        return null;
+    }
+
+    /**
      * 根据链接获取图片
      */
     public static BufferedImage getImageFromUrl(String url) {

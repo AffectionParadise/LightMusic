@@ -1,9 +1,9 @@
 package net.doge.util.core;
 
 /**
- * @Author Doge
- * @Description 分页工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 分页工具类
+ * @date 2020/12/15
  */
 public class PageUtil {
     /**

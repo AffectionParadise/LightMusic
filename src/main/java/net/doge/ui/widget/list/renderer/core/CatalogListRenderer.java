@@ -12,9 +12,9 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * @Author Doge
- * @Description 默认的主题列表显示渲染器
- * @Date 2020/12/7
+ * @author Doge
+ * @description 默认的主题列表显示渲染器
+ * @date 2020/12/7
  */
 @Data
 public class CatalogListRenderer extends CustomListCellRenderer {

@@ -33,7 +33,7 @@ public class NcArtistInfoReq {
 
     // 歌手信息 API (网易云)
     private final String ARTIST_DETAIL_NC_API = "https://music.163.com/api/artist/head/info/get";
-    // 歌手歌曲 API
+    // 歌手歌曲 API (网易云)
     private final String ARTIST_SONGS_NC_API = "https://music.163.com/api/v1/artist/songs";
 
     /**

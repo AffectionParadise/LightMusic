@@ -10,9 +10,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 垂直滑动条自定义 UI
- * @Date 2020/12/13
+ * @author Doge
+ * @description 垂直滑动条自定义 UI
+ * @date 2020/12/13
  */
 public class VerticalSliderUI extends BasicSliderUI {
     private Color thumbColor;

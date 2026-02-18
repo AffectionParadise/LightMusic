@@ -29,14 +29,14 @@ public class GgMusicInfoReq {
     }
 
     // 歌曲信息 API (咕咕咕音乐)
-    private final String SINGLE_SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
+    private final String SONG_DETAIL_GG_API = "http://www.gggmusic.com/thread-%s.htm";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_GG_API, id))
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);
         String dataStr = RegexUtil.getGroup1("(?:audio|music): \\[.*?(\\{.*?\\}).*?\\]", doc.html());
@@ -77,7 +77,7 @@ public class GgMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_GG_API, id))
+        String songBody = HttpRequest.get(String.format(SONG_DETAIL_GG_API, id))
                 .executeAsStr();
         Document doc = Jsoup.parse(songBody);
         Elements ps = doc.select(".message.break-all p");

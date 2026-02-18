@@ -33,8 +33,6 @@ public class NcAlbumInfoReq {
 
     // 专辑信息 API (网易云)
     private final String ALBUM_DETAIL_NC_API = "https://music.163.com/weapi/v1/album/%s";
-    // 歌手歌曲 API (网易云)
-    private final String ARTIST_SONGS_NC_API = "https://music.163.com/api/v1/artist/songs";
 
     /**
      * 根据专辑 id 获取专辑

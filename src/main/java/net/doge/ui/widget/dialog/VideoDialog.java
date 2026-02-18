@@ -34,12 +34,12 @@ import net.doge.ui.widget.menu.ui.CustomMenuItemUI;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.TimeSliderUI;
-import net.doge.util.media.DurationUtil;
-import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.lmdata.manager.LMIconManager;
-import net.doge.util.ui.ColorUtil;
 import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.text.HtmlUtil;
+import net.doge.util.lmdata.manager.LMIconManager;
+import net.doge.util.media.DurationUtil;
+import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -55,9 +55,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 播放 MV 的对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 播放 MV 的对话框
+ * @date 2020/12/15
  */
 public class VideoDialog extends AbstractTitledDialog {
     private final String DEFAULT_TIME = "00:00";

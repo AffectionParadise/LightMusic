@@ -26,7 +26,7 @@ public class HfMusicMenuReq {
     }
 
     // 歌曲信息 API (音乐磁场)
-    private final String SINGLE_SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
+    private final String SONG_DETAIL_HF_API = "https://www.hifiti.com/thread-%s.htm";
 
     /**
      * 获取相似歌曲
@@ -38,7 +38,7 @@ public class HfMusicMenuReq {
         int t;
 
         String id = netMusicInfo.getId();
-        String musicInfoBody = HttpRequest.get(String.format(SINGLE_SONG_DETAIL_HF_API, id))
+        String musicInfoBody = HttpRequest.get(String.format(SONG_DETAIL_HF_API, id))
                 .cookie(SdkCommon.HF_COOKIE)
                 .executeAsStr();
         Document doc = Jsoup.parse(musicInfoBody);

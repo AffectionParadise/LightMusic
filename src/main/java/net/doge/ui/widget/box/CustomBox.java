@@ -9,9 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义 Box
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义 Box
+ * @date 2020/12/13
  */
 public class CustomBox extends Box implements ExtendedOpacitySupported {
     @Getter

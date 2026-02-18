@@ -3,9 +3,9 @@ package net.doge.util.core.collection;
 import java.util.*;
 
 /**
- * @Author Doge
- * @Description
- * @Date 2020/12/15
+ * @author Doge
+ * @description
+ * @date 2020/12/15
  */
 public class ListUtil {
     /**

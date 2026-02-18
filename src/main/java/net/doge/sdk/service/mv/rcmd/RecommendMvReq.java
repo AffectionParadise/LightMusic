@@ -46,7 +46,7 @@ public class RecommendMvReq {
             executor.submit(() -> KwRecommendMvReq.getInstance().getRecommendMv(tag, page, limit));
         }
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
-            if (dt) executor.submit(() -> QiRecommendMvReq.getInstance().getRecommendMv(tag, page, limit));
+            if (dt) executor.submit(() -> QiRecommendMvReq.getInstance().getRecommendMv(page, limit));
         }
         if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
             if (dt) {

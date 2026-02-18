@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @Author Doge
- * @Description 字体
- * @Date 2021/1/3
+ * @author Doge
+ * @description 字体
+ * @date 2021/1/3
  */
 public class Fonts {
     public static int currFont = 0;

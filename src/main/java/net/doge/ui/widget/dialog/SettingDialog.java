@@ -55,9 +55,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * @Author Doge
- * @Description 设置对话框
- * @Date 2020/12/15
+ * @author Doge
+ * @description 设置对话框
+ * @date 2020/12/15
  */
 public class SettingDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(800);

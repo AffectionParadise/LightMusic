@@ -3,9 +3,9 @@ package net.doge.constant.core.ui.window;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 关闭窗口操作
- * @Date 2020/12/7
+ * @author Doge
+ * @description 关闭窗口操作
+ * @date 2020/12/7
  */
 public class CloseWindowOptions {
     public static final int ASK = 0;

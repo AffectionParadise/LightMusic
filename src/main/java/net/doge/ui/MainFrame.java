@@ -4597,7 +4597,7 @@ public class MainFrame extends JFrame {
                 if (!dir.exists()) return;
                 // 歌曲列表不为空时，询问是否保留原歌曲列表
                 ListModel model = musicList.getModel();
-                if (musicListModel.size() != 0) {
+                if (!musicListModel.isEmpty()) {
                     ConfirmDialog confirmDialog = new ConfirmDialog(THIS,
                             ASK_RETAIN_MUSIC_LIST_MSG, YES, NO, CANCEL);
                     confirmDialog.showDialog();
@@ -7852,8 +7852,7 @@ public class MainFrame extends JFrame {
             NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                 musicInfo = (NetMusicInfo) musicList.getSelectedValue();
             } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
             else musicInfo = netMusicList.getSelectedValue();
@@ -7911,8 +7910,7 @@ public class MainFrame extends JFrame {
             NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                 musicInfo = (NetMusicInfo) musicList.getSelectedValue();
             } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
             else musicInfo = netMusicList.getSelectedValue();
@@ -7976,8 +7974,7 @@ public class MainFrame extends JFrame {
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                        || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                        && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                        || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                     musicInfo = (NetMusicInfo) musicList.getSelectedValue();
                 } else if (selectedIndex == TabIndex.PLAY_QUEUE)
                     musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
@@ -8095,8 +8092,7 @@ public class MainFrame extends JFrame {
             else {
                 int selectedIndex = tabbedPane.getSelectedIndex();
                 if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                        || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                        && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                        || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                     musicInfo = (NetMusicInfo) musicList.getSelectedValue();
                 } else if (selectedIndex == TabIndex.PLAY_QUEUE)
                     musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
@@ -8214,8 +8210,7 @@ public class MainFrame extends JFrame {
             NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                 musicInfo = (NetMusicInfo) musicList.getSelectedValue();
             } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
             else musicInfo = netMusicList.getSelectedValue();
@@ -8280,8 +8275,7 @@ public class MainFrame extends JFrame {
             NetMusicInfo musicInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
             if (selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || selectedIndex == TabIndex.PERSONAL && currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION
-                    && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
+                    || selectedIndex == TabIndex.PERSONAL && collectionTabbedPane.getSelectedIndex() == CollectionTabIndex.MUSIC) {
                 musicInfo = (NetMusicInfo) musicList.getSelectedValue();
             } else if (selectedIndex == TabIndex.PLAY_QUEUE) musicInfo = (NetMusicInfo) playQueue.getSelectedValue();
             else musicInfo = netMusicList.getSelectedValue();
@@ -22265,7 +22259,7 @@ public class MainFrame extends JFrame {
             if (mvType == MvCompSourceType.MV_LIST) mvInfo = netMvList.getSelectedValue();
             else if (mvType == MvCompSourceType.MV_RECOMMEND_LIST)
                 mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
-            else if (mvType == MvCompSourceType.COLLECTION) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) collectionList.getSelectedValue();
             if (mvInfo == null) return;
 
             TipDialog dialog = new TipDialog(THIS, LOADING_MV_MSG, 0);

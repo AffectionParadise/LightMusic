@@ -18,9 +18,9 @@ import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 /**
- * @Author Doge
- * @Description 加解密工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 加解密工具类
+ * @date 2020/12/15
  */
 public class CryptoUtil {
     /**

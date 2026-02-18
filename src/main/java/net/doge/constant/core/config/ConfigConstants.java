@@ -5,9 +5,9 @@ import net.doge.constant.core.data.LMDataConstants;
 import net.doge.util.lmdata.LMDataUtil;
 
 /**
- * @Author Doge
- * @Description 配置属性类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 配置属性类
+ * @date 2020/12/15
  */
 public class ConfigConstants {
     // 配置文件名称

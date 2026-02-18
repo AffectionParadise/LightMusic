@@ -9,9 +9,9 @@ import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 /**
- * @Author Doge
- * @Description 榜单
- * @Date 2020/12/7
+ * @author Doge
+ * @description 榜单
+ * @date 2020/12/7
  */
 @Data
 public class NetRankingInfo implements NetResource {

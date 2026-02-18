@@ -3,9 +3,9 @@ package net.doge.constant.core.ui.image;
 import net.doge.constant.core.lang.I18n;
 
 /**
- * @Author Doge
- * @Description 模糊参数
- * @Date 2020/12/7
+ * @author Doge
+ * @description 模糊参数
+ * @date 2020/12/7
  */
 public class BlurConstants {
     // 关闭

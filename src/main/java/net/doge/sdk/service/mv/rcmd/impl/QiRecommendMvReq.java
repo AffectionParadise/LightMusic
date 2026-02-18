@@ -30,7 +30,7 @@ public class QiRecommendMvReq {
     /**
      * 推荐 MV
      */
-    public CommonResult<NetMvInfo> getRecommendMv(String tag, int page, int limit) {
+    public CommonResult<NetMvInfo> getRecommendMv(int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 

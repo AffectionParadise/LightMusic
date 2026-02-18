@@ -37,7 +37,7 @@ public class NcArtistMenuReq {
     // 歌手专辑 API (网易云)
     private final String ARTIST_ALBUMS_NC_API = "https://music.163.com/weapi/artist/albums/%s";
     // 歌手 MV API (网易云)
-    private final String ARTIST_MVS_API = "https://music.163.com/weapi/artist/mvs";
+    private final String ARTIST_MVS_NC_API = "https://music.163.com/weapi/artist/mvs";
     // 歌手视频 API (网易云)
 //    private final String ARTIST_VIDEOS_NC_API = SdkCommon.PREFIX + "/artist/video?id=%s&cursor=%s&size=%s";
     // 相似歌手 API (网易云)
@@ -101,7 +101,7 @@ public class NcArtistMenuReq {
         String id = artistInfo.getId();
         // 歌手 MV
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-        String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_API,
+        String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_NC_API,
                         String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", id, (page - 1) * limit, limit),
                         options)
                 .executeAsStr();

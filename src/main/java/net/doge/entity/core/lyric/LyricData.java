@@ -14,9 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @Author Doge
- * @Description 歌词数据
- * @Date 2020/12/7
+ * @author Doge
+ * @description 歌词数据
+ * @date 2020/12/7
  */
 @Data
 public class LyricData {

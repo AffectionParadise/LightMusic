@@ -5,17 +5,17 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.style.UIStyleConstants;
 import net.doge.util.core.StringUtil;
-import net.doge.util.lmdata.manager.LMStyleManager;
 import net.doge.util.core.img.ImageUtil;
+import net.doge.util.lmdata.manager.LMStyleManager;
 import net.doge.util.ui.ScaleUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @Author Doge
- * @Description 主题
- * @Date 2020/12/12
+ * @author Doge
+ * @description 主题
+ * @date 2020/12/12
  */
 @Data
 public class UIStyle {

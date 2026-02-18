@@ -2,13 +2,18 @@ package net.doge.util.core.http;
 
 import net.doge.util.core.http.listener.DownloadListener;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 /**
- * @Author Doge
- * @Description 网络工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 网络工具类
+ * @date 2020/12/15
  */
 public class HttpUtil {
     /**
@@ -48,7 +53,7 @@ public class HttpUtil {
                 // 注意这里是异步执行，否则会等待流中数据全部初始化才继续
                 .execute();
         try (InputStream in = new BufferedInputStream(resp.bodyStream());
-             OutputStream out = new BufferedOutputStream(new FileOutputStream(dest))) {
+             OutputStream out = new BufferedOutputStream(Files.newOutputStream(Paths.get(dest)))) {
             // 以流的形式下载文件
             byte[] buffer = new byte[1024];
             // 文件大小

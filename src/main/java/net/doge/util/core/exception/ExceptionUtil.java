@@ -12,9 +12,9 @@ import net.doge.util.core.log.LogUtil;
 import java.net.SocketTimeoutException;
 
 /**
- * @Author Doge
- * @Description 异常处理工具类
- * @Date 2020/12/15
+ * @author Doge
+ * @description 异常处理工具类
+ * @date 2020/12/15
  */
 public class ExceptionUtil {
     private static final String NET_ERROR_MSG = I18n.getText("netErrorMsg");

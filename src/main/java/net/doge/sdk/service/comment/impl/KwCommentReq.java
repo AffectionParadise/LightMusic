@@ -43,26 +43,13 @@ public class KwCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total = 0;
 
-        String id = null;
+        String id = resource.getId();
         String typeStr = null;
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-            typeStr = "15";
-        } else if (resource instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
-            typeStr = "8";
-        } else if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getId();
-            typeStr = "7";
-        } else if (resource instanceof NetRankingInfo) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) resource;
-            id = rankingInfo.getId();
-            typeStr = "2";
-        }
+        if (resource instanceof NetMusicInfo) typeStr = "15";
+        else if (resource instanceof NetPlaylistInfo) typeStr = "8";
+        else if (resource instanceof NetMvInfo) typeStr = "7";
+        else if (resource instanceof NetRankingInfo) typeStr = "2";
 
         if (StringUtil.notEmpty(typeStr)) {
             String ref = "";

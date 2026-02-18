@@ -1,9 +1,9 @@
 package net.doge.constant.core.lyric;
 
 /**
- * @Author Doge
- * @Description 逐字歌词匹配模式
- * @Date 2020/12/7
+ * @author Doge
+ * @description 逐字歌词匹配模式
+ * @date 2020/12/7
  */
 public class LyricPattern {
     // 逐字时间轴

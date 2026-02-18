@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @Author Doge
- * @Description 分类标签
- * @Date 2020/12/7
+ * @author Doge
+ * @description 分类标签
+ * @date 2020/12/7
  */
 public class Tags {
     public static final Map<String, String[]> programSearchTag = Collections.synchronizedMap(new LinkedHashMap<>());
@@ -35,7 +35,7 @@ public class Tags {
 
     public static final Map<String, String[]> artistTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final int[] artistMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.KG, NetMusicSource.KG,
-            NetMusicSource.QQ, NetMusicSource.KW, NetMusicSource.KW, NetMusicSource.QI, NetMusicSource.ME};
+            NetMusicSource.QQ, NetMusicSource.KW, NetMusicSource.KW, NetMusicSource.MG, NetMusicSource.QI, NetMusicSource.ME};
 
     public static final Map<String, String[]> radioTag = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final int[] radioMap = {NetMusicSource.NC, NetMusicSource.NC, NetMusicSource.XM, NetMusicSource.XM, NetMusicSource.XM,

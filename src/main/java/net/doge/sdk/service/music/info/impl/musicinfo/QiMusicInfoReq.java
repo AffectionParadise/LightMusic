@@ -25,7 +25,7 @@ public class QiMusicInfoReq {
     }
 
     // 歌曲信息 API (千千)
-    private final String SINGLE_SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
+    private final String SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
     // 歌曲 URL 获取 API (千千)
     private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
 
@@ -34,7 +34,7 @@ public class QiMusicInfoReq {
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = SdkCommon.qiRequest(String.format(SINGLE_SONG_DETAIL_QI_API, id, System.currentTimeMillis()))
+        String songBody = SdkCommon.qiRequest(String.format(SONG_DETAIL_QI_API, id, System.currentTimeMillis()))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 

@@ -20,9 +20,9 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 关于对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 关于对话框
+ * @date 2021/1/5
  */
 public class AboutDialog extends AbstractTitledDialog {
     private DialogButton yes;

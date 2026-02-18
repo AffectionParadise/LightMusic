@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义勾选菜单项
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义勾选菜单项
+ * @date 2020/12/13
  */
 public class CustomCheckBoxMenuItem extends CustomMenuItem {
     // 选定勾图标

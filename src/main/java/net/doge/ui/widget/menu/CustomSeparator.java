@@ -9,9 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义菜单分隔符
- * @Date 2020/12/13
+ * @author Doge
+ * @description 自定义菜单分隔符
+ * @date 2020/12/13
  */
 public class CustomSeparator extends JSeparator implements ExtendedOpacitySupported {
     @Getter

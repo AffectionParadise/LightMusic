@@ -1,9 +1,9 @@
 package net.doge.exception.core;
 
 /**
- * @Author Doge
- * @Description 无效包文件异常
- * @Date 2020/12/20
+ * @author Doge
+ * @description 无效包文件异常
+ * @date 2020/12/20
  */
 public class InvalidPackageFileException extends RuntimeException {
     public InvalidPackageFileException() {

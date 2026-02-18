@@ -6,7 +6,6 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetCommentInfo;
-import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
@@ -45,15 +44,8 @@ public class BiCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
-        String id = null;
+        String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-        } else if (resource instanceof NetMvInfo) {
-            NetMvInfo mvInfo = (NetMvInfo) resource;
-            id = mvInfo.getBvId();
-        }
 
         int lim = Math.min(20, limit);
         String url = resource instanceof NetMvInfo ? String.format(VIDEO_COMMENTS_BI_API, BvAvConverter.getInstance().convertBv2Av(id), hotOnly ? 1 : 0, page, lim)

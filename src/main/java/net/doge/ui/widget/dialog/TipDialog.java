@@ -7,17 +7,17 @@ import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
-import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 自定义淡入淡出式对话框
- * @Date 2021/1/5
+ * @author Doge
+ * @description 自定义淡入淡出式对话框
+ * @date 2021/1/5
  */
 public class TipDialog extends AbstractShadowDialog {
     private TipDialog THIS = this;

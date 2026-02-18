@@ -9,9 +9,9 @@ import net.doge.util.ui.FontUtil;
 import java.awt.*;
 
 /**
- * @Author Doge
- * @Description 字体管理器
- * @Date 2020/12/15
+ * @author Doge
+ * @description 字体管理器
+ * @date 2020/12/15
  */
 public class LMFontManager {
     private static final JSONObject FONT_DATA = LMDataUtil.readOrCreate(SimplePath.RESOURCE_PATH + LMDataConstants.FONT_DATA_FILE_NAME);

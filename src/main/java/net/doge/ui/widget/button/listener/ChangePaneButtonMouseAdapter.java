@@ -10,9 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * @Author Doge
- * @Description 改变按钮样式的监听器
- * @Date 2021/1/10
+ * @author Doge
+ * @description 改变按钮样式的监听器
+ * @date 2021/1/10
  */
 public class ChangePaneButtonMouseAdapter extends MouseAdapter {
     private ChangePaneButton b;

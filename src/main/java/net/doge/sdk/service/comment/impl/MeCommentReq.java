@@ -37,21 +37,14 @@ public class MeCommentReq {
      * 获取评论
      */
     public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit) {
-        int total = 0;
         List<NetCommentInfo> res = new LinkedList<>();
+        int total = 0;
 
-        String id = null;
+        String id = resource.getId();
         String typeStr = null;
         boolean hotOnly = I18n.getText("hotComment").equals(type);
-        if (resource instanceof NetMusicInfo) {
-            NetMusicInfo musicInfo = (NetMusicInfo) resource;
-            id = musicInfo.getId();
-            typeStr = "1";
-        } else if (resource instanceof NetPlaylistInfo) {
-            NetPlaylistInfo playlistInfo = (NetPlaylistInfo) resource;
-            id = playlistInfo.getId();
-            typeStr = "2";
-        }
+        if (resource instanceof NetMusicInfo) typeStr = "1";
+        else if (resource instanceof NetPlaylistInfo) typeStr = "2";
 
         if (StringUtil.notEmpty(typeStr)) {
             String commentInfoBody = HttpRequest.get(String.format(COMMENTS_ME_API, typeStr, hotOnly ? 3 : 1, id, page, limit))
