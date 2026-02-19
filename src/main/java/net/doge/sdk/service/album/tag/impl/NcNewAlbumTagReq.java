@@ -29,7 +29,7 @@ public class NcNewAlbumTagReq {
      * 网易云曲风标签
      */
     public void initAlbumTag() {
-        int c = Tags.newAlbumMap.length;
+        int c = Tags.newAlbumIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();

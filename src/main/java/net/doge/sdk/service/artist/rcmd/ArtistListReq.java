@@ -26,7 +26,7 @@ public class ArtistListReq {
         boolean dt = defaultTag.equals(tag);
         if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             NcArtistListReq ncArtistListReq = NcArtistListReq.getInstance();
-            executor.submit(() -> ncArtistListReq.getArtistRanking(tag, page, limit));
+            executor.submit(() -> ncArtistListReq.getArtistRank(tag, page, limit));
             executor.submit(() -> ncArtistListReq.getHotArtist(page, limit));
             executor.submit(() -> ncArtistListReq.getCatArtist(tag, page, limit));
             executor.submit(() -> ncArtistListReq.getStyleArtist(tag, page, limit));
@@ -38,17 +38,17 @@ public class ArtistListReq {
             executor.submit(() -> kgArtistListReq.getIpArtist(tag, page, limit));
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
-            executor.submit(() -> QqArtistListReq.getInstance().getArtistRanking(tag, page, limit));
+            executor.submit(() -> QqArtistListReq.getInstance().getArtistRank(tag, page, limit));
         }
         if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
             KwArtistListReq kwArtistListReq = KwArtistListReq.getInstance();
-            executor.submit(() -> kwArtistListReq.getArtistRanking(tag, page, limit));
+            executor.submit(() -> kwArtistListReq.getArtistRank(tag, page, limit));
             executor.submit(() -> kwArtistListReq.getAllArtists(tag, page, limit));
         }
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             MgArtistListReq mgArtistListReq = MgArtistListReq.getInstance();
-            if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking(page, limit));
-            if (dt) executor.submit(() -> mgArtistListReq.getArtistRanking2(page, limit));
+            if (dt) executor.submit(() -> mgArtistListReq.getArtistRank(page, limit));
+            if (dt) executor.submit(() -> mgArtistListReq.getArtistRank2(page, limit));
             executor.submit(() -> mgArtistListReq.getCatArtists(tag, page, limit));
         }
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {

@@ -8,7 +8,7 @@ package net.doge.constant.core.ui.tab;
 public class TabIndex {
     public static final int PERSONAL = 0;
     public static final int RECOMMEND = 1;
-    public static final int NET_RANKING = 2;
+    public static final int NET_RANK = 2;
     public static final int NET_MUSIC = 3;
     public static final int NET_PLAYLIST = 4;
     public static final int NET_ALBUM = 5;

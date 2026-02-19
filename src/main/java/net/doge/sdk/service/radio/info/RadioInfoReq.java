@@ -58,6 +58,9 @@ public class RadioInfoReq {
             case NetMusicSource.QQ:
                 QqRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
+            case NetMusicSource.MG:
+                MgRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
+                break;
             case NetMusicSource.XM:
                 XmRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
@@ -80,6 +83,8 @@ public class RadioInfoReq {
                 return NcRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
             case NetMusicSource.QQ:
                 return QqRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
+            case NetMusicSource.MG:
+                return MgRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
             case NetMusicSource.XM:
                 return XmRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, sortType, page, limit);
             case NetMusicSource.ME:

@@ -29,7 +29,7 @@ public class MeProgramTagReq {
      * @return
      */
     public void initExpProgramTag() {
-        int c = Tags.programMap.length;
+        int c = Tags.programIndices.length;
         String playlistTagBody = HttpRequest.get(EXP_PROGRAM_TAG_ME_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(playlistTagBody);
@@ -52,7 +52,7 @@ public class MeProgramTagReq {
      * @return
      */
     public void initProgramIndexTag() {
-        int c = Tags.programMap.length;
+        int c = Tags.programIndices.length;
         String radioTagBody = HttpRequest.get(PROGRAM_SUB_TAG_ME_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(radioTagBody);

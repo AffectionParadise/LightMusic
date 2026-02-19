@@ -46,8 +46,8 @@ import net.doge.sdk.service.radio.rcmd.HotRadioReq;
 import net.doge.sdk.service.radio.rcmd.NewRadioReq;
 import net.doge.sdk.service.radio.search.RadioSearchReq;
 import net.doge.sdk.service.radio.tag.HotRadioTagReq;
-import net.doge.sdk.service.ranking.fetch.RankingFetchReq;
-import net.doge.sdk.service.ranking.info.RankingInfoReq;
+import net.doge.sdk.service.rank.fetch.RankFetchReq;
+import net.doge.sdk.service.rank.info.RankInfoReq;
 import net.doge.sdk.service.sheet.SheetReq;
 import net.doge.sdk.service.user.info.UserInfoReq;
 import net.doge.sdk.service.user.menu.UserMenuReq;
@@ -237,8 +237,8 @@ public class MusicServerUtil {
     /**
      * 获取所有榜单
      */
-    public static CommonResult<NetRankingInfo> getRankings(int src) {
-        return RankingFetchReq.getInstance().getRankings(src);
+    public static CommonResult<NetRankInfo> getRanks(int src) {
+        return RankFetchReq.getInstance().getRanks(src);
     }
 
     /**
@@ -475,15 +475,15 @@ public class MusicServerUtil {
     /**
      * 根据榜单 id 预加载榜单信息(包括封面图)
      */
-    public static void preloadRankingInfo(NetRankingInfo rankingInfo) {
-        RankingInfoReq.getInstance().preloadRankingInfo(rankingInfo);
+    public static void preloadRankInfo(NetRankInfo rankInfo) {
+        RankInfoReq.getInstance().preloadRankInfo(rankInfo);
     }
 
     /**
      * 根据榜单 id 补全榜单信息(包括封面图)
      */
-    public static void fillRankingInfo(NetRankingInfo rankingInfo) {
-        RankingInfoReq.getInstance().fillRankingInfo(rankingInfo);
+    public static void fillRankInfo(NetRankInfo rankInfo) {
+        RankInfoReq.getInstance().fillRankInfo(rankInfo);
     }
 
     /**
@@ -545,8 +545,8 @@ public class MusicServerUtil {
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public static CommonResult<NetMusicInfo> getMusicInfoInRanking(String rankingId, int source, int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(rankingId, source, page, limit);
+    public static CommonResult<NetMusicInfo> getMusicInfoInRank(String rankId, int source, int page, int limit) {
+        return RankInfoReq.getInstance().getMusicInfoInRank(rankId, source, page, limit);
     }
 
     /**

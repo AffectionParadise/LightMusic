@@ -30,7 +30,7 @@ public class KgNewSongTagReq {
      * @return
      */
     public void initNewSongTag() {
-        int c = Tags.newSongMap.length;
+        int c = Tags.newSongIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_KG_API);
         Map<String, Object> params = new TreeMap<>();
         params.put("tagids", "");

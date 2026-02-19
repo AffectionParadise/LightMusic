@@ -102,8 +102,8 @@ public class NetMvListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String artist = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = mvInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String artist = mvInfo.hasArtist() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(mvInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String duration = HtmlUtil.textToHtml(mvInfo.hasDuration() ? DurationUtil.format(mvInfo.getDuration()) : "--:--");
         String playCount = mvInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(mvInfo.getPlayCount())) : "";
         String pubTime = mvInfo.hasPubTime() ? HtmlUtil.textToHtml(mvInfo.getPubTime()) : "";

@@ -53,9 +53,11 @@ public class RecommendPlaylistReq {
         if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
             MgRecommendPlaylistReq mgRecommendPlaylistReq = MgRecommendPlaylistReq.getInstance();
             if (dt) {
+                executor.submit(() -> mgRecommendPlaylistReq.getSquarePlaylists(limit));
+                executor.submit(() -> mgRecommendPlaylistReq.getIndexRecPlaylists(page, limit));
                 executor.submit(() -> mgRecommendPlaylistReq.getRecNewPlaylists(page, limit));
-                executor.submit(() -> mgRecommendPlaylistReq.getRecommendPlaylists(page));
-                executor.submit(() -> mgRecommendPlaylistReq.getNewPlaylists(page));
+//                executor.submit(() -> mgRecommendPlaylistReq.getRecommendPlaylists(page));
+//                executor.submit(() -> mgRecommendPlaylistReq.getNewPlaylists(page));
             }
         }
         if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {

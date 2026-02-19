@@ -58,6 +58,14 @@ public class NetMvInfo implements NetResource, Downloadable {
         return type == MvInfoType.MV && source != NetMusicSource.HK && source != NetMusicSource.BI;
     }
 
+    public boolean hasName() {
+        return StringUtil.notEmpty(name);
+    }
+
+    public boolean hasArtist() {
+        return StringUtil.notEmpty(artist);
+    }
+
     public boolean hasDuration() {
         return duration != null && !Double.isNaN(duration) && !Double.isInfinite(duration) && duration != 0;
     }

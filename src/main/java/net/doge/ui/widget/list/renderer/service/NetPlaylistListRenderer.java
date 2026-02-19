@@ -96,7 +96,7 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = playlistInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(playlistInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String creator = playlistInfo.hasCreator() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(playlistInfo.getCreator(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String playCount = playlistInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(playlistInfo.getPlayCount())) : "";

@@ -31,7 +31,7 @@ public class MeHotPlaylistTagReq {
      * @return
      */
     public void initHotPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -57,7 +57,7 @@ public class MeHotPlaylistTagReq {
      * @return
      */
     public void initExpPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(EXP_PLAYLIST_TAG_ME_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(playlistTagBody);

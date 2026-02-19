@@ -165,7 +165,7 @@ public class NcRecommendProgramReq {
     /**
      * 节目榜
      */
-    public CommonResult<NetMusicInfo> getProgramsRanking(int page, int limit) {
+    public CommonResult<NetMusicInfo> getProgramsRank(int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 

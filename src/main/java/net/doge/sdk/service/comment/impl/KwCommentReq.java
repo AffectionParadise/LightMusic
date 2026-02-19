@@ -49,7 +49,7 @@ public class KwCommentReq {
         if (resource instanceof NetMusicInfo) typeStr = "15";
         else if (resource instanceof NetPlaylistInfo) typeStr = "8";
         else if (resource instanceof NetMvInfo) typeStr = "7";
-        else if (resource instanceof NetRankingInfo) typeStr = "2";
+        else if (resource instanceof NetRankInfo) typeStr = "2";
 
         if (StringUtil.notEmpty(typeStr)) {
             String ref = "";

@@ -28,7 +28,7 @@ public class QqRecPlaylistTagReq {
      * @return
      */
     public void initRecPlaylistTag() {
-        int c = Tags.recPlaylistMap.length;
+        int c = Tags.recPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

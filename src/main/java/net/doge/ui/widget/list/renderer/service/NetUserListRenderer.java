@@ -107,7 +107,7 @@ public class NetUserListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = userInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(userInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String gender = userInfo.hasGender() ? HtmlUtil.textToHtml(userInfo.getGender()) : "";
         boolean hasRadioCount = userInfo.hasRadioCount(), hasProgramCount = userInfo.hasProgramCount();
         String playlistCount = userInfo.hasPlaylistCount() ? HtmlUtil.textToHtml(userInfo.getPlaylistCount() + " 歌单")

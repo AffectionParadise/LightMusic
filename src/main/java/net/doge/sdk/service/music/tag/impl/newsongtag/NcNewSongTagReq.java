@@ -31,7 +31,7 @@ public class NcNewSongTagReq {
      * @return
      */
     public void initNewSongTag() {
-        int c = Tags.newSongMap.length;
+        int c = Tags.newSongIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();

@@ -30,7 +30,7 @@ public class NcArtistListReq {
     }
 
     // 歌手榜 API (网易云)
-    private final String ARTIST_RANKING_LIST_NC_API = "https://music.163.com/weapi/toplist/artist";
+    private final String ARTIST_RANK_LIST_NC_API = "https://music.163.com/weapi/toplist/artist";
     // 热门歌手 API (网易云)
     private final String HOT_ARTIST_LIST_NC_API = "https://music.163.com/weapi/artist/top";
     // 分类歌手 API (网易云)
@@ -41,14 +41,14 @@ public class NcArtistListReq {
     /**
      * 歌手榜
      */
-    public CommonResult<NetArtistInfo> getArtistRanking(String tag, int page, int limit) {
+    public CommonResult<NetArtistInfo> getArtistRank(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
         String[] s = Tags.artistTag.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANKING_LIST_NC_API,
+            String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANK_LIST_NC_API,
                             String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", s[0]), options)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

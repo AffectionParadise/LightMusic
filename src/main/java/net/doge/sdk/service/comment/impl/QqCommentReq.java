@@ -68,7 +68,7 @@ public class QqCommentReq {
                     .executeAsStr();
             id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
         } else if (resource instanceof NetMvInfo) typeStr = "5";
-        else if (resource instanceof NetRankingInfo) typeStr = "4";
+        else if (resource instanceof NetRankInfo) typeStr = "4";
 
         if (StringUtil.notEmpty(typeStr)) {
             int lim = hotOnly ? limit : Math.min(25, limit);

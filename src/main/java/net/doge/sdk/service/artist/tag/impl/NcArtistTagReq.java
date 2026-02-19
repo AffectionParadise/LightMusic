@@ -31,7 +31,7 @@ public class NcArtistTagReq {
      * @return
      */
     public void initStyleArtistTag() {
-        int c = Tags.artistMap.length;
+        int c = Tags.artistIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();

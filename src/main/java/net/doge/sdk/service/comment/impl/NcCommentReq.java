@@ -74,7 +74,7 @@ public class NcCommentReq {
                 mvInfo.setType(MvInfoType.VIDEO);
             }
             typeStr = isVideo || isMlog ? "R_VI_62_" : "R_MV_5_";
-        } else if (resource instanceof NetRankingInfo) typeStr = "A_PL_0_";
+        } else if (resource instanceof NetRankInfo) typeStr = "A_PL_0_";
 
         if (StringUtil.notEmpty(typeStr)) {
             String threadId = typeStr + id;

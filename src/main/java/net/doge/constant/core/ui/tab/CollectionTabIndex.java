@@ -8,7 +8,7 @@ package net.doge.constant.core.ui.tab;
 public class CollectionTabIndex {
     public static final int MUSIC = 0;
     public static final int PLAYLIST = 1;
-    public static final int RANKING = 2;
+    public static final int RANK = 2;
     public static final int ALBUM = 3;
     public static final int ARTIST = 4;
     public static final int RADIO = 5;

@@ -1,4 +1,4 @@
-package net.doge.sdk.service.ranking.info.impl;
+package net.doge.sdk.service.rank.info.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -12,31 +12,31 @@ import net.doge.sdk.util.SdkUtil;
 import java.util.LinkedList;
 import java.util.List;
 
-public class QiRankingInfoReq {
-    private static QiRankingInfoReq instance;
+public class QiRankInfoReq {
+    private static QiRankInfoReq instance;
 
-    private QiRankingInfoReq() {
+    private QiRankInfoReq() {
     }
 
-    public static QiRankingInfoReq getInstance() {
-        if (instance == null) instance = new QiRankingInfoReq();
+    public static QiRankInfoReq getInstance() {
+        if (instance == null) instance = new QiRankInfoReq();
         return instance;
     }
 
     // 榜单信息 API (千千)
-    private final String RANKING_DETAIL_QI_API = "https://music.91q.com/v1/bd/list?appid=16073360&bdid=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String RANK_DETAIL_QI_API = "https://music.91q.com/v1/bd/list?appid=16073360&bdid=%s&pageNo=%s&pageSize=%s&timestamp=%s";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInRanking(String id, int page, int limit) {
+    public CommonResult<NetMusicInfo> getMusicInfoInRank(String id, int page, int limit) {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankingInfoBody = SdkCommon.qiRequest(String.format(RANKING_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
+        String rankInfoBody = SdkCommon.qiRequest(String.format(RANK_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
                 .executeAsStr();
-        JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-        JSONObject data = rankingInfoJson.getJSONObject("data");
+        JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+        JSONObject data = rankInfoJson.getJSONObject("data");
         total = data.getIntValue("total");
         JSONArray songArray = data.getJSONArray("result");
         for (int i = 0, len = songArray.size(); i < len; i++) {

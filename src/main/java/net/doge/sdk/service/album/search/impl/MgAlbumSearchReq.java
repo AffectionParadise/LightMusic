@@ -48,7 +48,7 @@ public class MgAlbumSearchReq {
                 String publishTime = albumJson.getString("publishDate");
 //                    Integer songNum = albumJson.getIntValue("songNum");
                 JSONArray imgItems = albumJson.getJSONArray("imgItems");
-                String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : imgItems.getJSONObject(imgItems.size() - 1).getString("img");
+                String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : SdkUtil.findFeatureObj(imgItems, "imgSizeType", "03").getString("img");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetMusicSource.MG);

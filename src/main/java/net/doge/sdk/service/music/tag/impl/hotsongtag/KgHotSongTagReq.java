@@ -35,7 +35,7 @@ public class KgHotSongTagReq {
      * @return
      */
     public void initThemeSongTag() {
-        int c = Tags.hotSongMap.length;
+        int c = Tags.hotSongIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(THEME_SONG_TAG_KG_API);
         long ct = System.currentTimeMillis() / 1000;
         String dat = String.format("{\"platform\":\"android\",\"clienttime\":%s,\"userid\":0,\"module_id\":508}", ct);
@@ -59,7 +59,7 @@ public class KgHotSongTagReq {
      * @return
      */
     public void initFmTag() {
-        int c = Tags.hotSongMap.length;
+        int c = Tags.hotSongIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(FM_TAG_KG_API);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         String dat = String.format("{\"kguid\":0,\"clienttime\":%s,\"mid\":\"%s\",\"platform\":\"android\",\"clientver\":%s," +
@@ -90,7 +90,7 @@ public class KgHotSongTagReq {
      * @return
      */
     public void initIpTag() {
-        int c = Tags.hotSongMap.length;
+        int c = Tags.hotSongIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")

@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.service.ranking.info.RankingInfoReq;
+import net.doge.sdk.service.rank.info.RankInfoReq;
 
 public class MgHotMusicRecommendReq {
     private static MgHotMusicRecommendReq instance;
@@ -23,16 +23,16 @@ public class MgHotMusicRecommendReq {
      * 尖叫热歌榜
      */
     public CommonResult<NetMusicInfo> getHotMusic(int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(27186466), NetMusicSource.MG, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(27186466), NetMusicSource.MG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            String rankingInfoBody = HttpRequest.get(HOT_MUSIC_MG_API)
+//            String rankInfoBody = HttpRequest.get(HOT_MUSIC_MG_API)
 //                    .executeAsync()
 //                    .body();
-//            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-//            JSONObject data = rankingInfoJson.getJSONObject("columnInfo");
+//            JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+//            JSONObject data = rankInfoJson.getJSONObject("columnInfo");
 //            t = data.getIntValue("contentsCount");
 //            JSONArray songArray = data.getJSONArray("contents");
 //            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {

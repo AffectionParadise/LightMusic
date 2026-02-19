@@ -112,7 +112,7 @@ public class NetSheetListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
+        String name = sheetInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(sheetInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
         String difficulty = sheetInfo.hasDifficulty() ? HtmlUtil.textToHtml(sheetInfo.getDifficulty() + "难度") : "";
         String musicKey = sheetInfo.hasMusicKey() ? HtmlUtil.textToHtml(sheetInfo.getMusicKey() + "调") : "";
         String playVersion = sheetInfo.hasPlayVersion() ? HtmlUtil.textToHtml(sheetInfo.getPlayVersion()) : "";

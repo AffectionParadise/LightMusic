@@ -14,7 +14,7 @@ import java.util.Objects;
  * @date 2020/12/7
  */
 @Data
-public class NetRankingInfo implements NetResource {
+public class NetRankInfo implements NetResource {
     // 榜单来源
     private int source = NetMusicSource.NC;
     // 榜单 id
@@ -38,6 +38,10 @@ public class NetRankingInfo implements NetResource {
 
     // 缩略图加载后的回调函数
     private Runnable invokeLater;
+
+    public boolean hasName() {
+        return StringUtil.notEmpty(name);
+    }
 
     public boolean hasPlayCount() {
         return playCount != null && playCount >= 0;
@@ -91,9 +95,9 @@ public class NetRankingInfo implements NetResource {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof NetRankingInfo) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) o;
-            return hashCode() == rankingInfo.hashCode();
+        if (o instanceof NetRankInfo) {
+            NetRankInfo rankInfo = (NetRankInfo) o;
+            return hashCode() == rankInfo.hashCode();
         }
         return false;
     }

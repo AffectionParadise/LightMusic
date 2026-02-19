@@ -27,7 +27,7 @@ public class RecommendMvReq {
         if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
             NcRecommendMvReq ncRecommendMvReq = NcRecommendMvReq.getInstance();
             if (dt) executor.submit(() -> ncRecommendMvReq.getRecommendMv(page, limit));
-            executor.submit(() -> ncRecommendMvReq.getMvRanking(tag, page, limit));
+            executor.submit(() -> ncRecommendMvReq.getMvRank(tag, page, limit));
             executor.submit(() -> ncRecommendMvReq.getNewMv(tag, page, limit));
             executor.submit(() -> ncRecommendMvReq.getAllMv(tag, page, limit));
             if (dt) executor.submit(() -> ncRecommendMvReq.getExclusiveMv(page, limit));

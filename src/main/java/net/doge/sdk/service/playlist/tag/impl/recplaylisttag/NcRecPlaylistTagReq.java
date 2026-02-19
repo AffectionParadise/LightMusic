@@ -31,7 +31,7 @@ public class NcRecPlaylistTagReq {
      * @return
      */
     public void initRecPlaylistTag() {
-        int c = Tags.recPlaylistMap.length;
+        int c = Tags.recPlaylistIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();

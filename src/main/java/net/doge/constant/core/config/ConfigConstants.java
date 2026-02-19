@@ -169,7 +169,7 @@ public class ConfigConstants {
     // 当前 MV 收藏列表
     public static final String MV_COLLECTION = "mvCollection";
     // 当前榜单收藏列表
-    public static final String RANKING_COLLECTION = "rankingCollection";
+    public static final String RANK_COLLECTION = "rankCollection";
     // 当前用户收藏列表
     public static final String USER_COLLECTION = "userCollection";
     // 当前下载任务列表
@@ -315,21 +315,21 @@ public class ConfigConstants {
     public static final String NET_MV_PLAY_COUNT = "playCount";
 
     // 榜单来源
-    public static final String NET_RANKING_SOURCE = "source";
+    public static final String NET_RANK_SOURCE = "source";
     // 榜单id
-    public static final String NET_RANKING_ID = "id";
+    public static final String NET_RANK_ID = "id";
     // 榜单名称
-    public static final String NET_RANKING_NAME = "name";
+    public static final String NET_RANK_NAME = "name";
     // 榜单描述
-    public static final String NET_RANKING_DESCRIPTION = "description";
+    public static final String NET_RANK_DESCRIPTION = "description";
     // 榜单播放量
-    public static final String NET_RANKING_PLAY_COUNT = "playCount";
+    public static final String NET_RANK_PLAY_COUNT = "playCount";
     // 榜单更新频率
-    public static final String NET_RANKING_UPDATE_FRE = "updateFre";
+    public static final String NET_RANK_UPDATE_FRE = "updateFre";
     // 榜单更新时间
-    public static final String NET_RANKING_UPDATE_TIME = "updateTime";
+    public static final String NET_RANK_UPDATE_TIME = "updateTime";
     // 榜单封面图片 url
-    public static final String NET_RANKING_COVER_IMG_URL = "coverImgUrl";
+    public static final String NET_RANK_COVER_IMG_URL = "coverImgUrl";
 
     // 用户来源
     public static final String NET_USER_SOURCE = "source";

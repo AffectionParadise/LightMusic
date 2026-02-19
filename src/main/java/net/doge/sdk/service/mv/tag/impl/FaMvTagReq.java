@@ -31,7 +31,7 @@ public class FaMvTagReq {
      * @return
      */
     public void initVideoTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         String mvTagBody = HttpRequest.get(VIDEO_TAG_FA_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(mvTagBody);
@@ -54,7 +54,7 @@ public class FaMvTagReq {
      * @return
      */
     public void initLiveTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         String mvTagBody = HttpRequest.get(LIVE_TAG_FA_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(mvTagBody);

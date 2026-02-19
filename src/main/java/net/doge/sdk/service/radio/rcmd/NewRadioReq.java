@@ -5,6 +5,7 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
 import net.doge.sdk.service.radio.rcmd.impl.newradio.MeNewRadioReq;
+import net.doge.sdk.service.radio.rcmd.impl.newradio.MgNewRadioReq;
 import net.doge.sdk.service.radio.rcmd.impl.newradio.NcNewRadioReq;
 import net.doge.sdk.service.radio.rcmd.impl.newradio.QqNewRadioReq;
 
@@ -34,6 +35,9 @@ public class NewRadioReq {
         }
         if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
             executor.submit(() -> QqNewRadioReq.getInstance().getRecommendRadios(page, limit));
+        }
+        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            executor.submit(() -> MgNewRadioReq.getInstance().getTimingRadios(page, limit));
         }
         if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
             MeNewRadioReq meNewRadioReq = MeNewRadioReq.getInstance();

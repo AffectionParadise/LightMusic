@@ -1,4 +1,4 @@
-package net.doge.sdk.service.ranking.info.impl;
+package net.doge.sdk.service.rank.info.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -13,31 +13,31 @@ import net.doge.util.core.json.JsonUtil;
 import java.util.LinkedList;
 import java.util.List;
 
-public class KgRankingInfoReq {
-    private static KgRankingInfoReq instance;
+public class KgRankInfoReq {
+    private static KgRankInfoReq instance;
 
-    private KgRankingInfoReq() {
+    private KgRankInfoReq() {
     }
 
-    public static KgRankingInfoReq getInstance() {
-        if (instance == null) instance = new KgRankingInfoReq();
+    public static KgRankInfoReq getInstance() {
+        if (instance == null) instance = new KgRankInfoReq();
         return instance;
     }
 
     // 榜单信息 API (酷狗)
-    private final String RANKING_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
+    private final String RANK_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInRanking(String id, int page, int limit) {
+    public CommonResult<NetMusicInfo> getMusicInfoInRank(String id, int page, int limit) {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KG_API, id, page, limit))
+        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_KG_API, id, page, limit))
                 .executeAsStr();
-        JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-        JSONObject data = rankingInfoJson.getJSONObject("data");
+        JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+        JSONObject data = rankInfoJson.getJSONObject("data");
         total = data.getIntValue("total");
         JSONArray songArray = data.getJSONArray("info");
         for (int i = 0, len = songArray.size(); i < len; i++) {

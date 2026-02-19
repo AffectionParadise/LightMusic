@@ -25,7 +25,7 @@ public class MeRecPlaylistTagReq {
      * @return
      */
     public void initRecPlaylistTag() {
-        int c = Tags.recPlaylistMap.length;
+        int c = Tags.recPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_ME_API)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

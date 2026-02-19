@@ -163,7 +163,7 @@ public class NcHotRadioReq {
     /**
      * 热门电台榜
      */
-    public CommonResult<NetRadioInfo> getRadiosRanking(int page, int limit) {
+    public CommonResult<NetRadioInfo> getRadiosRank(int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 

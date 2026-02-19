@@ -37,7 +37,7 @@ public class MgArtistListReq {
     /**
      * 来电新声榜
      */
-    public CommonResult<NetArtistInfo> getArtistRanking(int page, int limit) {
+    public CommonResult<NetArtistInfo> getArtistRank(int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
 
@@ -74,7 +74,7 @@ public class MgArtistListReq {
     /**
      * 来电唱作榜
      */
-    public CommonResult<NetArtistInfo> getArtistRanking2(int page, int limit) {
+    public CommonResult<NetArtistInfo> getArtistRank2(int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
 

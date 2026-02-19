@@ -28,7 +28,7 @@ public class FsNewSongTagReq {
      * @return
      */
     public void initNewSongTag() {
-        int c = Tags.newSongMap.length;
+        int c = Tags.newSongIndices.length;
         String tagBody = HttpRequest.get(SONG_TAG_API_FS)
                 .executeAsStr();
         Document doc = Jsoup.parse(tagBody);

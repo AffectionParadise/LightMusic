@@ -31,7 +31,7 @@ public class RecommendProgramReq {
                 executor.submit(() -> ncRecommendProgramReq.getRecommendPrograms(page, limit));
                 executor.submit(() -> ncRecommendProgramReq.getPersonalizedPrograms(page, limit));
                 executor.submit(() -> ncRecommendProgramReq.get24HoursPrograms(page, limit));
-                executor.submit(() -> ncRecommendProgramReq.getProgramsRanking(page, limit));
+                executor.submit(() -> ncRecommendProgramReq.getProgramsRank(page, limit));
             }
             if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
                 executor.submit(() -> MeRecommendProgramReq.getInstance().getRecPrograms(page, limit));
@@ -42,7 +42,7 @@ public class RecommendProgramReq {
                 executor.submit(() -> meRecommendProgramReq.getExpPrograms(tag, page, limit));
                 executor.submit(() -> meRecommendProgramReq.getIndexCatPrograms(tag, page, limit));
                 executor.submit(() -> meRecommendProgramReq.getIndexCatNewPrograms(tag, page, limit));
-                executor.submit(() -> meRecommendProgramReq.getIndexCatProgramsRanking(tag, page, limit));
+                executor.submit(() -> meRecommendProgramReq.getIndexCatProgramsRank(tag, page, limit));
             }
         }
         return executor.getResult();

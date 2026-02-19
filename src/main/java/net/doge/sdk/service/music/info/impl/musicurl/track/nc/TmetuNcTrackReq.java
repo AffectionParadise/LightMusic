@@ -5,7 +5,6 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.log.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +55,6 @@ public class TmetuNcTrackReq {
             if (StringUtil.isEmpty(trackUrl)) return "";
             return trackUrl;
         } catch (Exception e) {
-            LogUtil.error(e);
             return "";
         }
     }

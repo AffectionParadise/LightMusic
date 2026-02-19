@@ -47,7 +47,7 @@ public class MgArtistSearchReq {
                 Integer albumNum = artistJson.getIntValue("albumCount");
                 Integer mvNum = artistJson.getIntValue("mvCount");
                 JSONArray singerPicUrls = artistJson.getJSONArray("singerPicUrl");
-                String coverImgThumbUrl = JsonUtil.isEmpty(singerPicUrls) ? null : singerPicUrls.getJSONObject(0).getString("img");
+                String coverImgThumbUrl = JsonUtil.isEmpty(singerPicUrls) ? null : SdkUtil.findFeatureObj(singerPicUrls, "imgSizeType", "03").getString("img");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetMusicSource.MG);

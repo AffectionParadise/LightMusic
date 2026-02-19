@@ -33,7 +33,7 @@ public class KgMvTagReq {
      * @return
      */
     public void initMvTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         String mvTagBody = HttpRequest.get(MV_TAG_KG_API)
                 .executeAsStr();
         JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
@@ -55,7 +55,7 @@ public class KgMvTagReq {
      * @return
      */
     public void initIpTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")

@@ -28,7 +28,7 @@ public class KgNewAlbumTagReq {
      * 编辑精选标签
      */
     public void initIpTag() {
-        int c = Tags.newAlbumMap.length;
+        int c = Tags.newAlbumIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")

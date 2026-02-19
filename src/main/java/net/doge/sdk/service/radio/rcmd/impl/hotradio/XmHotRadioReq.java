@@ -32,7 +32,7 @@ public class XmHotRadioReq {
     // 频道电台 API (喜马拉雅)
     private final String CHANNEL_RADIO_XM_API = "https://www.ximalaya.com/revision/metadata/v2/channel/albums?groupId=%s&pageNum=%s&pageSize=%s&sort=1&metadata=";
     // 分类电台榜 API (喜马拉雅)
-    private final String CAT_RADIO_RANKING_XM_API = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
+    private final String CAT_RADIO_RANK_XM_API = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
 
     /**
      * 分类电台
@@ -135,14 +135,14 @@ public class XmHotRadioReq {
     /**
      * 排行榜
      */
-    public CommonResult<NetRadioInfo> getCatRadioRanking(String tag, int page, int limit) {
+    public CommonResult<NetRadioInfo> getCatRadioRank(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
         String[] s = Tags.radioTag.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String[] sp = s[2].split(" ");
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANKING_XM_API, sp[0], sp[1]))
+            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANK_XM_API, sp[0], sp[1]))
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("rankList").getJSONObject(0).getJSONArray("albums");

@@ -36,7 +36,7 @@ public class KwArtistListReq {
     /**
      * 推荐歌手
      */
-    public CommonResult<NetArtistInfo> getArtistRanking(String tag, int page, int limit) {
+    public CommonResult<NetArtistInfo> getArtistRank(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
         String[] s = Tags.artistTag.get(tag);

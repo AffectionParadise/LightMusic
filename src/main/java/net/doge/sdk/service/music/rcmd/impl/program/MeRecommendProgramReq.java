@@ -196,7 +196,7 @@ public class MeRecommendProgramReq {
     /**
      * 首页分类节目侧边榜单
      */
-    public CommonResult<NetMusicInfo> getIndexCatProgramsRanking(String tag, int page, int limit) {
+    public CommonResult<NetMusicInfo> getIndexCatProgramsRank(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
         String[] s = Tags.programTag.get(tag);

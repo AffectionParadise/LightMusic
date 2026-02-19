@@ -19,7 +19,7 @@ public class XmHotRadioTagReq {
     // 电台分类标签 API (喜马拉雅)
     private final String RADIO_TAG_XM_API = "https://www.ximalaya.com/revision/category/allCategoryInfo";
     // 排行榜标签 API (喜马拉雅)
-    private final String RADIO_RANKING_TAG_XM_API = "https://www.ximalaya.com/revision/rank/v3/cluster";
+    private final String RADIO_RANK_TAG_XM_API = "https://www.ximalaya.com/revision/rank/v3/cluster";
 
     /**
      * 电台分类标签
@@ -27,7 +27,7 @@ public class XmHotRadioTagReq {
      * @return
      */
     public void initRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         String radioTagBody = HttpRequest.get(RADIO_TAG_XM_API)
                 .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -64,9 +64,9 @@ public class XmHotRadioTagReq {
      *
      * @return
      */
-    public void initRankingTag() {
-        int c = Tags.radioMap.length;
-        String radioTagBody = HttpRequest.get(RADIO_RANKING_TAG_XM_API)
+    public void initRankTag() {
+        int c = Tags.radioIndices.length;
+        String radioTagBody = HttpRequest.get(RADIO_RANK_TAG_XM_API)
                 .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
         JSONArray fTags = radioTagJson.getJSONObject("data").getJSONArray("clusterType");

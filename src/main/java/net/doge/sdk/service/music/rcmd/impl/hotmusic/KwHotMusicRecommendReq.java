@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.service.ranking.info.RankingInfoReq;
+import net.doge.sdk.service.rank.info.RankInfoReq;
 
 public class KwHotMusicRecommendReq {
     private static KwHotMusicRecommendReq instance;
@@ -25,7 +25,7 @@ public class KwHotMusicRecommendReq {
      * 飙升榜
      */
     public CommonResult<NetMusicInfo> getUpMusic(int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(93), NetMusicSource.KW, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(93), NetMusicSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -76,7 +76,7 @@ public class KwHotMusicRecommendReq {
      * 热歌榜
      */
     public CommonResult<NetMusicInfo> getHotMusic(int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(16), NetMusicSource.KW, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(16), NetMusicSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;

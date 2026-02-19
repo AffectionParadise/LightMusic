@@ -45,6 +45,10 @@ public class NetSheetInfo {
         return coverImg != null;
     }
 
+    public boolean hasName() {
+        return StringUtil.notEmpty(name);
+    }
+
     public boolean hasDifficulty() {
         return StringUtil.notEmpty(difficulty);
     }

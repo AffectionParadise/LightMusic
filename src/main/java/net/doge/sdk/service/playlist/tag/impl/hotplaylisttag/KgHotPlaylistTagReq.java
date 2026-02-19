@@ -33,7 +33,7 @@ public class KgHotPlaylistTagReq {
      * @return
      */
     public void initHotPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -59,7 +59,7 @@ public class KgHotPlaylistTagReq {
      * @return
      */
     public void initIpTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")

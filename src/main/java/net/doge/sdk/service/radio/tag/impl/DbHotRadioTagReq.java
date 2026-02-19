@@ -30,7 +30,7 @@ public class DbHotRadioTagReq {
      * @return
      */
     public void initRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         String radioTagBody = HttpRequest.get(RADIO_TAG_DB_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(radioTagBody);
@@ -52,7 +52,7 @@ public class DbHotRadioTagReq {
      * @return
      */
     public void initGameRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         String radioTagBody = HttpRequest.get(GAME_RADIO_TAG_DB_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(radioTagBody);

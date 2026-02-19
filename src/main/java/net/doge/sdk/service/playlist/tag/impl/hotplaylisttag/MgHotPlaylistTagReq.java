@@ -25,7 +25,7 @@ public class MgHotPlaylistTagReq {
      * @return
      */
     public void initHotPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_MG_API)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

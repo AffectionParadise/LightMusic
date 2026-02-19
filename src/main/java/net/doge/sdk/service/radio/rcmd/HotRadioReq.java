@@ -4,10 +4,7 @@ import net.doge.constant.service.NetMusicSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
-import net.doge.sdk.service.radio.rcmd.impl.hotradio.DbHotRadioReq;
-import net.doge.sdk.service.radio.rcmd.impl.hotradio.MeHotRadioReq;
-import net.doge.sdk.service.radio.rcmd.impl.hotradio.NcHotRadioReq;
-import net.doge.sdk.service.radio.rcmd.impl.hotradio.XmHotRadioReq;
+import net.doge.sdk.service.radio.rcmd.impl.hotradio.*;
 
 public class HotRadioReq {
     private static HotRadioReq instance;
@@ -32,7 +29,7 @@ public class HotRadioReq {
                 NcHotRadioReq ncHotRadioReq = NcHotRadioReq.getInstance();
                 executor.submit(() -> ncHotRadioReq.getDailyRadios(page, limit));
                 executor.submit(() -> ncHotRadioReq.getHotRadios(page, limit));
-                executor.submit(() -> ncHotRadioReq.getRadiosRanking(page, limit));
+                executor.submit(() -> ncHotRadioReq.getRadiosRank(page, limit));
                 executor.submit(() -> ncHotRadioReq.getRecRadios(page, limit));
             }
             if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
@@ -53,11 +50,14 @@ public class HotRadioReq {
                 executor.submit(() -> ncHotRadioReq.getCatHotRadios(tag, page, limit));
                 executor.submit(() -> ncHotRadioReq.getCatRecRadios(tag, page, limit));
             }
+            if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+                executor.submit(() -> MgHotRadioReq.getInstance().getCatRadios(tag, page, limit));
+            }
             if (src == NetMusicSource.XM || src == NetMusicSource.ALL) {
                 XmHotRadioReq xmHotRadioReq = XmHotRadioReq.getInstance();
                 executor.submit(() -> xmHotRadioReq.getCatRadios(tag, page, limit));
                 executor.submit(() -> xmHotRadioReq.getChannelRadios(tag, page, limit));
-                executor.submit(() -> xmHotRadioReq.getCatRadioRanking(tag, page, limit));
+                executor.submit(() -> xmHotRadioReq.getCatRadioRank(tag, page, limit));
             }
             if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
                 executor.submit(() -> MeHotRadioReq.getInstance().getCatRadios(tag, page, limit));

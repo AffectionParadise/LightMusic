@@ -43,7 +43,7 @@ public class NcRecommendMvReq {
     /**
      * MV 排行
      */
-    public CommonResult<NetMvInfo> getMvRanking(String tag, int page, int limit) {
+    public CommonResult<NetMvInfo> getMvRank(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
         String[] s = Tags.mvTag.get(tag);

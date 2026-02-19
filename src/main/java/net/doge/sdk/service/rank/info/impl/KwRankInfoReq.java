@@ -1,4 +1,4 @@
-package net.doge.sdk.service.ranking.info.impl;
+package net.doge.sdk.service.rank.info.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -11,34 +11,34 @@ import net.doge.util.core.http.HttpRequest;
 import java.util.LinkedList;
 import java.util.List;
 
-public class KwRankingInfoReq {
-    private static KwRankingInfoReq instance;
+public class KwRankInfoReq {
+    private static KwRankInfoReq instance;
 
-    private KwRankingInfoReq() {
+    private KwRankInfoReq() {
     }
 
-    public static KwRankingInfoReq getInstance() {
-        if (instance == null) instance = new KwRankingInfoReq();
+    public static KwRankInfoReq getInstance() {
+        if (instance == null) instance = new KwRankInfoReq();
         return instance;
     }
 
     // 榜单信息 API (酷我)
-//    private final String RANKING_DETAIL_KW_API = "https://kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
-    private final String RANKING_DETAIL_KW_API = "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&id=%s&pn=%s&rn=%s&type=bang&data=content&show_copyright_off=0&pcmp4=1&isbang=1";
+//    private final String RANK_DETAIL_KW_API = "https://kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String RANK_DETAIL_KW_API = "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&id=%s&pn=%s&rn=%s&type=bang&data=content&show_copyright_off=0&pcmp4=1&isbang=1";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
      */
-    public CommonResult<NetMusicInfo> getMusicInfoInRanking(String id, int page, int limit) {
+    public CommonResult<NetMusicInfo> getMusicInfoInRank(String id, int page, int limit) {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
         //            int lim = Math.min(30, limit);
-//            String rankingInfoBody = SdkCommon.kwRequest(String.format(RANKING_DETAIL_KW_API, id, page, lim))
+//            String rankInfoBody = SdkCommon.kwRequest(String.format(RANK_DETAIL_KW_API, id, page, lim))
 //                    .executeAsync()
 //                    .body();
-//            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-//            JSONObject data = rankingInfoJson.getJSONObject("data");
+//            JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+//            JSONObject data = rankInfoJson.getJSONObject("data");
 //            int to = data.getIntValue("num");
 //            total = PageUtil.totalPage(to, lim) * limit;
 //            JSONArray songArray = data.getJSONArray("musicList");
@@ -68,9 +68,9 @@ public class KwRankingInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        String rankingInfoBody = HttpRequest.get(String.format(RANKING_DETAIL_KW_API, id, page - 1, limit))
+        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_KW_API, id, page - 1, limit))
                 .executeAsStr();
-        JSONObject data = JSONObject.parseObject(rankingInfoBody);
+        JSONObject data = JSONObject.parseObject(rankInfoBody);
         total = data.getIntValue("num");
         JSONArray songArray = data.getJSONArray("musiclist");
         for (int i = 0, len = songArray.size(); i < len; i++) {

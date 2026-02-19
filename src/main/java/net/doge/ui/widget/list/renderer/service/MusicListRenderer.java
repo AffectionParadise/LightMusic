@@ -123,7 +123,7 @@ public class MusicListRenderer extends CustomListCellRenderer {
         String source = HtmlUtil.textToHtml(isFile ? "  " : NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
         String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
-                StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH),
+                StringUtil.shorten(isFile ? file.hasSongName() ? file.getSongName() : file.toString() : musicInfo.hasName() ? musicInfo.getName() : "", RendererConstants.STRING_MAX_LENGTH),
                 maxWidth));
         String artist = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(isFile ? file.hasArtist() ? file.getArtist() : "" : musicInfo.hasArtist() ? musicInfo.getArtist() : "", RendererConstants.STRING_MAX_LENGTH),

@@ -58,7 +58,7 @@ public class MgMusicInfoReq {
         if (!musicInfo.hasAlbumImage()) {
             GlobalExecutors.imageExecutor.execute(() -> {
                 JSONArray imgArray = data.getJSONArray("albumImgs");
-                BufferedImage albumImage = SdkUtil.getImageFromUrl(JsonUtil.isEmpty(imgArray) ? "" : imgArray.getJSONObject(imgArray.size() - 1).getString("img"));
+                BufferedImage albumImage = SdkUtil.getImageFromUrl(JsonUtil.isEmpty(imgArray) ? "" : SdkUtil.findFeatureObj(imgArray, "imgSizeType", "03").getString("img"));
                 FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
                 ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
                 musicInfo.callback();

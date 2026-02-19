@@ -23,7 +23,7 @@ public class QqMvTagReq {
      * @return
      */
     public void initMvTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         String mvTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                 .jsonBody("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
                 .executeAsStr();

@@ -27,7 +27,7 @@ public class FsRecPlaylistTagReq {
      * @return
      */
     public void initRecPlaylistTag() {
-        int c = Tags.recPlaylistMap.length;
+        int c = Tags.recPlaylistIndices.length;
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_FS_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(playlistTagBody);

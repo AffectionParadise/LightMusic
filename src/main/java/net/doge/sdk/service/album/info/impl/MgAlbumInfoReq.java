@@ -83,7 +83,7 @@ public class MgAlbumInfoReq {
         String artistId = data.getString("singerId");
         String publishTime = data.getString("publishTime");
         JSONArray imgItems = data.getJSONArray("imgItem");
-        String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : imgItems.getJSONObject(imgItems.size() - 1).getString("img");
+        String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : SdkUtil.findFeatureObj(imgItems, "imgSizeType", "03").getString("img");
         Integer songNum = data.getIntValue("totalCount");
 
         NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -126,7 +126,7 @@ public class MgAlbumInfoReq {
         JSONObject data = JSONObject.parseObject(albumInfoBody).getJSONArray("resource").getJSONObject(0);
 
         JSONArray imgItems = data.getJSONArray("imgItem");
-        String coverImgUrl = JsonUtil.isEmpty(imgItems) ? null : imgItems.getJSONObject(imgItems.size() - 1).getString("img");
+        String coverImgUrl = JsonUtil.isEmpty(imgItems) ? null : SdkUtil.findFeatureObj(imgItems, "imgSizeType", "03").getString("img");
         String description = data.getString("summary");
 
         if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);

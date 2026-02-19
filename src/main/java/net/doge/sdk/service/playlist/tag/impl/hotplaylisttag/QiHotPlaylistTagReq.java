@@ -25,7 +25,7 @@ public class QiHotPlaylistTagReq {
      * @return
      */
     public void initHotPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         String playlistTagBody = SdkCommon.qiRequest(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis()))
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

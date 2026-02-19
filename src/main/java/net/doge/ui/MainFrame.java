@@ -538,7 +538,7 @@ public class MainFrame extends JFrame {
     // 电台图标
     private ImageIcon netRadioIcon = LMIconManager.getIcon("tab.netRadio");
     // 榜单图标
-    private ImageIcon netRankingIcon = LMIconManager.getIcon("tab.netRanking");
+    private ImageIcon netRankIcon = LMIconManager.getIcon("tab.netRank");
     // 用户图标
     private ImageIcon netUserIcon = LMIconManager.getIcon("tab.netUser");
     // MV 标签页图标
@@ -792,8 +792,8 @@ public class MainFrame extends JFrame {
     private int netMvCurrPage = 1;
     private int netMusicInRecommendCurrPage = 1;
     private int netMusicInCollectionCurrPage = 1;
-    private int netRankingCurrPage = 1;
-    private int netMusicInRankingCurrPage = 1;
+    private int netRankCurrPage = 1;
+    private int netMusicInRankCurrPage = 1;
     private int netUserCurrPage = 1;
     private int netMusicInUserCurrPage = 1;
     private int netCommentCurrPage = 1;
@@ -810,8 +810,8 @@ public class MainFrame extends JFrame {
     private int netRadioMaxPage;
     private int netMusicInRadioMaxPage;
     private int netMvMaxPage;
-    private int netRankingMaxPage;
-    private int netMusicInRankingMaxPage;
+    private int netRankMaxPage;
+    private int netMusicInRankMaxPage;
     private int netUserMaxPage;
     private int netMusicInUserMaxPage;
     private int netCommentMaxPage;
@@ -1040,8 +1040,8 @@ public class MainFrame extends JFrame {
     private CustomPanel netMvPanel = new CustomPanel();
     private CustomLabel netMvLabel = new CustomLabel(netMvIcon);
     // 榜单 Tab 面板
-    private CustomPanel netRankingPanel = new CustomPanel();
-    private CustomLabel netRankingLabel = new CustomLabel(netRankingIcon);
+    private CustomPanel netRankPanel = new CustomPanel();
+    private CustomLabel netRankLabel = new CustomLabel(netRankIcon);
     // 用户 Tab 面板
     private CustomPanel netUserPanel = new CustomPanel();
     private CustomLabel netUserLabel = new CustomLabel(netUserIcon);
@@ -1076,8 +1076,8 @@ public class MainFrame extends JFrame {
     private CustomPanel mvCollectionPanel = new CustomPanel();
     private CustomLabel mvCollectionLabel = new CustomLabel(I18n.getText("mvCollection"), netMvIcon);
     // 榜单收藏 Tab 面板
-    private CustomPanel rankingCollectionPanel = new CustomPanel();
-    private CustomLabel rankingCollectionLabel = new CustomLabel(I18n.getText("rankingCollection"), netRankingIcon);
+    private CustomPanel rankCollectionPanel = new CustomPanel();
+    private CustomLabel rankCollectionLabel = new CustomLabel(I18n.getText("rankCollection"), netRankIcon);
     // 用户收藏 Tab 面板
     private CustomPanel userCollectionPanel = new CustomPanel();
     private CustomLabel userCollectionLabel = new CustomLabel(I18n.getText("userCollection"), netUserIcon);
@@ -1137,9 +1137,9 @@ public class MainFrame extends JFrame {
     // MV 收藏 ListModel
     public DefaultListModel<NetResource> mvCollectionModel = new DefaultListModel<>();
     // 榜单收藏 ListModel
-    private DefaultListModel<NetResource> rankingCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetResource> rankCollectionModel = new DefaultListModel<>();
     // 作为收藏榜单单独的 ListModel，切换
-    private DefaultListModel<NetMusicInfo> netMusicListForRankingCollectionModel = new DefaultListModel<>();
+    private DefaultListModel<NetMusicInfo> netMusicListForRankCollectionModel = new DefaultListModel<>();
     // 用户收藏 ListModel
     private DefaultListModel<NetResource> userCollectionModel = new DefaultListModel<>();
     // 作为收藏用户单独的 ListModel，切换
@@ -1777,49 +1777,49 @@ public class MainFrame extends JFrame {
     private NetArtistInfo currMvArtistInfo;
 
     // 榜单列表
-    private CustomList<NetRankingInfo> netRankingList = new CustomList<>();
-    private CustomScrollPane netRankingScrollPane = new CustomScrollPane(netRankingList);
-    private DefaultListModel netRankingListModel = new DefaultListModel<>();
+    private CustomList<NetRankInfo> netRankList = new CustomList<>();
+    private CustomScrollPane netRankScrollPane = new CustomScrollPane(netRankList);
+    private DefaultListModel netRankListModel = new DefaultListModel<>();
     // 作为榜单单独的 ListModel，与 netMusicListModel 在同一 CustomList 中切换
-    private DefaultListModel netMusicListForRankingModel = new DefaultListModel<>();
+    private DefaultListModel netMusicListForRankModel = new DefaultListModel<>();
     // 榜单右键弹出菜单
-    private CustomPopupMenu netRankingPopupMenu = new CustomPopupMenu(THIS);
+    private CustomPopupMenu netRankPopupMenu = new CustomPopupMenu(THIS);
     // 榜单右键菜单：打开
-    private CustomMenuItem netRankingOpenMenuItem = new CustomMenuItem(OPEN_MENU_ITEM_TEXT);
+    private CustomMenuItem netRankOpenMenuItem = new CustomMenuItem(OPEN_MENU_ITEM_TEXT);
     // 榜单右键菜单：播放全部
-    private CustomMenuItem netRankingPlayAllMenuItem = new CustomMenuItem(PLAY_ALL_MENU_ITEM_TEXT);
+    private CustomMenuItem netRankPlayAllMenuItem = new CustomMenuItem(PLAY_ALL_MENU_ITEM_TEXT);
     // 榜单右键菜单：收藏
-    private CustomMenuItem netRankingCollectMenuItem = new CustomMenuItem(COLLECT_MENU_ITEM_TEXT);
+    private CustomMenuItem netRankCollectMenuItem = new CustomMenuItem(COLLECT_MENU_ITEM_TEXT);
     // 榜单右键菜单：查看评论
-    private CustomMenuItem netRankingCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
+    private CustomMenuItem netRankCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
     // 榜单右键菜单：复制名称
-    private CustomMenuItem netRankingCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
+    private CustomMenuItem netRankCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // 榜单工具栏
-    private CustomToolBar netRankingToolBar = new CustomToolBar();
+    private CustomToolBar netRankToolBar = new CustomToolBar();
     // 返回榜单按钮
-    private CustomButton netRankingBackwardButton = new CustomButton(backwardIcon);
+    private CustomButton netRankBackwardButton = new CustomButton(backwardIcon);
     // 榜单播放全部按钮
-    private CustomButton netRankingPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
+    private CustomButton netRankPlayAllButton = new CustomButton(I18n.getText("playAll"), playAllIcon);
     // 榜单刷新按钮
-    private CustomButton netRankingRefreshButton = new CustomButton(refreshIcon);
+    private CustomButton netRankRefreshButton = new CustomButton(refreshIcon);
     // 榜单页数框
-    private CustomTextField netRankingPageTextField = new CustomTextField(3);
+    private CustomTextField netRankPageTextField = new CustomTextField(3);
     // 榜单跳页按钮
-    private CustomButton netRankingGoButton = new CustomButton(goIcon);
+    private CustomButton netRankGoButton = new CustomButton(goIcon);
     // 榜单第一页按钮
-    private CustomButton netRankingStartPageButton = new CustomButton(startPageIcon);
+    private CustomButton netRankStartPageButton = new CustomButton(startPageIcon);
     // 榜单上一页按钮
-    private CustomButton netRankingLastPageButton = new CustomButton(lastPageIcon);
+    private CustomButton netRankLastPageButton = new CustomButton(lastPageIcon);
     // 榜单下一页按钮
-    private CustomButton netRankingNextPageButton = new CustomButton(nextPageIcon);
+    private CustomButton netRankNextPageButton = new CustomButton(nextPageIcon);
     // 榜单最后一页按钮
-    private CustomButton netRankingEndPageButton = new CustomButton(endPageIcon);
+    private CustomButton netRankEndPageButton = new CustomButton(endPageIcon);
     // 榜单数量面板
-    private CustomPanel netRankingCountPanel = new CustomPanel();
+    private CustomPanel netRankCountPanel = new CustomPanel();
     // 榜单源
-    private CustomComboBox<String> netRankingSourceComboBox = new CustomComboBox<>();
+    private CustomComboBox<String> netRankSourceComboBox = new CustomComboBox<>();
     // 榜单数量标签
-    private CustomLabel netRankingCountLabel = new CustomLabel();
+    private CustomLabel netRankCountLabel = new CustomLabel();
 
     // 用户列表
     private CustomList<NetUserInfo> netUserList = new CustomList<>();
@@ -2104,7 +2104,7 @@ public class MainFrame extends JFrame {
     private CustomPanel albumDescriptionPanel = new CustomPanel();
     private CustomPanel artistDescriptionPanel = new CustomPanel();
     private CustomPanel radioDescriptionPanel = new CustomPanel();
-    private CustomPanel rankingDescriptionPanel = new CustomPanel();
+    private CustomPanel rankDescriptionPanel = new CustomPanel();
     private CustomPanel userDescriptionPanel = new CustomPanel();
     private CustomPanel recommendItemDescriptionPanel = new CustomPanel();
     private CustomPanel collectionItemDescriptionPanel = new CustomPanel();
@@ -2113,7 +2113,7 @@ public class MainFrame extends JFrame {
     private CustomLabel albumCoverAndNameLabel = new CustomLabel();
     private CustomLabel artistCoverAndNameLabel = new CustomLabel();
     private CustomLabel radioCoverAndNameLabel = new CustomLabel();
-    private CustomLabel rankingCoverAndNameLabel = new CustomLabel();
+    private CustomLabel rankCoverAndNameLabel = new CustomLabel();
     private CustomLabel userCoverAndNameLabel = new CustomLabel();
     private CustomLabel recommendItemCoverAndNameLabel = new CustomLabel();
     private CustomLabel collectionItemCoverAndNameLabel = new CustomLabel();
@@ -2129,7 +2129,7 @@ public class MainFrame extends JFrame {
     private CustomLabel albumDescriptionLabel = new CustomLabel();
     private CustomLabel artistDescriptionLabel = new CustomLabel();
     private CustomLabel radioDescriptionLabel = new CustomLabel();
-    private CustomLabel rankingDescriptionLabel = new CustomLabel();
+    private CustomLabel rankDescriptionLabel = new CustomLabel();
     private CustomLabel userDescriptionLabel = new CustomLabel();
     private CustomLabel recommendItemDescriptionLabel = new CustomLabel();
     private CustomLabel collectionItemDescriptionLabel = new CustomLabel();
@@ -2138,7 +2138,7 @@ public class MainFrame extends JFrame {
     private CustomScrollPane albumDescriptionScrollPane = new CustomScrollPane(albumDescriptionPanel);
     private CustomScrollPane artistDescriptionScrollPane = new CustomScrollPane(artistDescriptionPanel);
     private CustomScrollPane radioDescriptionScrollPane = new CustomScrollPane(radioDescriptionPanel);
-    private CustomScrollPane rankingDescriptionScrollPane = new CustomScrollPane(rankingDescriptionPanel);
+    private CustomScrollPane rankDescriptionScrollPane = new CustomScrollPane(rankDescriptionPanel);
     private CustomScrollPane userDescriptionScrollPane = new CustomScrollPane(userDescriptionPanel);
     private CustomScrollPane recommendItemDescriptionScrollPane = new CustomScrollPane(recommendItemDescriptionPanel);
     private CustomScrollPane collectionItemDescriptionScrollPane = new CustomScrollPane(collectionItemDescriptionPanel);
@@ -2147,7 +2147,7 @@ public class MainFrame extends JFrame {
     private CustomPanel albumDescriptionOuterPanel = new CustomPanel();
     private CustomPanel artistDescriptionOuterPanel = new CustomPanel();
     private CustomPanel radioDescriptionOuterPanel = new CustomPanel();
-    private CustomPanel rankingDescriptionOuterPanel = new CustomPanel();
+    private CustomPanel rankDescriptionOuterPanel = new CustomPanel();
     private CustomPanel userDescriptionOuterPanel = new CustomPanel();
     private CustomPanel recommendItemDescriptionOuterPanel = new CustomPanel();
     private CustomPanel collectionItemDescriptionOuterPanel = new CustomPanel();
@@ -2156,7 +2156,7 @@ public class MainFrame extends JFrame {
     private CustomPanel albumDescriptionCollectionPanel = new CustomPanel();
     private CustomPanel artistDescriptionCollectionPanel = new CustomPanel();
     private CustomPanel radioDescriptionCollectionPanel = new CustomPanel();
-    private CustomPanel rankingDescriptionCollectionPanel = new CustomPanel();
+    private CustomPanel rankDescriptionCollectionPanel = new CustomPanel();
     private CustomPanel userDescriptionCollectionPanel = new CustomPanel();
     private CustomPanel recommendItemDescriptionCollectionPanel = new CustomPanel();
     private CustomPanel collectionItemDescriptionCollectionPanel = new CustomPanel();
@@ -2165,7 +2165,7 @@ public class MainFrame extends JFrame {
     private CustomButton albumDescriptionCollectionButton = new CustomButton();
     private CustomButton artistDescriptionCollectionButton = new CustomButton();
     private CustomButton radioDescriptionCollectionButton = new CustomButton();
-    private CustomButton rankingDescriptionCollectionButton = new CustomButton();
+    private CustomButton rankDescriptionCollectionButton = new CustomButton();
     private CustomButton userDescriptionCollectionButton = new CustomButton();
     private CustomButton recommendItemDescriptionCollectionButton = new CustomButton();
     private CustomButton collectionItemDescriptionCollectionButton = new CustomButton();
@@ -2189,7 +2189,7 @@ public class MainFrame extends JFrame {
     private CustomBox netArtistLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox netRadioLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox netMvLeftBox = new CustomBox(BoxLayout.Y_AXIS);
-    private CustomBox netRankingLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox netRankLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox netUserLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox recommendLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox collectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
@@ -2202,7 +2202,7 @@ public class MainFrame extends JFrame {
     private CustomBox artistCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox radioCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox mvCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
-    private CustomBox rankingCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox rankCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox userCollectionLeftBox = new CustomBox(BoxLayout.Y_AXIS);
     // 底部进度条和控制面板盒子
     private CustomBox bottomBox = new CustomBox(BoxLayout.Y_AXIS);
@@ -2223,7 +2223,7 @@ public class MainFrame extends JFrame {
     private CustomBox albumListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox artistListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox radioListBox = new CustomBox(BoxLayout.X_AXIS);
-    private CustomBox rankingListBox = new CustomBox(BoxLayout.X_AXIS);
+    private CustomBox rankListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox userListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox recommendItemListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox collectionItemListBox = new CustomBox(BoxLayout.X_AXIS);
@@ -2232,7 +2232,7 @@ public class MainFrame extends JFrame {
     private CustomBox albumListCountBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox artistListCountBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox radioListCountBox = new CustomBox(BoxLayout.Y_AXIS);
-    private CustomBox rankingListCountBox = new CustomBox(BoxLayout.Y_AXIS);
+    private CustomBox rankListCountBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox userListCountBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox recommendItemListCountBox = new CustomBox(BoxLayout.Y_AXIS);
     private CustomBox collectionItemListCountBox = new CustomBox(BoxLayout.Y_AXIS);
@@ -2687,10 +2687,10 @@ public class MainFrame extends JFrame {
         initNetMvList();
 
         // 初始化榜单工具条
-        initNetRankingToolBar();
+        initNetRankToolBar();
 
         // 初始化榜单列表
-        initNetRankingList();
+        initNetRankList();
 
         // 初始化用户工具条
         initNetUserToolBar();
@@ -2952,7 +2952,7 @@ public class MainFrame extends JFrame {
                         && !netArtistSearchTextField.hasFocus() && !netArtistPageTextField.hasFocus()
                         && !netRadioSearchTextField.hasFocus() && !netRadioPageTextField.hasFocus()
                         && !netMvSearchTextField.hasFocus() && !netMvPageTextField.hasFocus()
-                        && !netRankingPageTextField.hasFocus()
+                        && !netRankPageTextField.hasFocus()
                         && !netUserSearchTextField.hasFocus() && !netUserPageTextField.hasFocus()
                         && !netCommentPageTextField.hasFocus()
                         && !netSheetPageTextField.hasFocus()
@@ -2980,7 +2980,7 @@ public class MainFrame extends JFrame {
                     else if (netArtistPageTextField.hasFocus()) netArtistGoButton.doClick();
                     else if (netRadioPageTextField.hasFocus()) netRadioGoButton.doClick();
                     else if (netMvPageTextField.hasFocus()) netMvGoButton.doClick();
-                    else if (netRankingPageTextField.hasFocus()) netRankingGoButton.doClick();
+                    else if (netRankPageTextField.hasFocus()) netRankGoButton.doClick();
                     else if (netUserPageTextField.hasFocus()) netUserGoButton.doClick();
                     else if (netCommentPageTextField.hasFocus()) netCommentGoButton.doClick();
                     else if (netSheetPageTextField.hasFocus()) netSheetGoButton.doClick();
@@ -3820,22 +3820,22 @@ public class MainFrame extends JFrame {
         }
 
         // 载入收藏榜单列表
-        JSONArray rankingCollectionJsonArray = config.getJSONArray(ConfigConstants.RANKING_COLLECTION);
-        if (JsonUtil.notEmpty(rankingCollectionJsonArray)) {
-            for (int i = 0, len = rankingCollectionJsonArray.size(); i < len; i++) {
-                JSONObject jsonObject = rankingCollectionJsonArray.getJSONObject(i);
+        JSONArray rankCollectionJsonArray = config.getJSONArray(ConfigConstants.RANK_COLLECTION);
+        if (JsonUtil.notEmpty(rankCollectionJsonArray)) {
+            for (int i = 0, len = rankCollectionJsonArray.size(); i < len; i++) {
+                JSONObject jsonObject = rankCollectionJsonArray.getJSONObject(i);
 
-                NetRankingInfo rankingInfo = new NetRankingInfo();
-                rankingInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RANKING_SOURCE));
-                rankingInfo.setId(jsonObject.getString(ConfigConstants.NET_RANKING_ID));
-                rankingInfo.setName(jsonObject.getString(ConfigConstants.NET_RANKING_NAME));
-                rankingInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RANKING_PLAY_COUNT, -1));
-                rankingInfo.setDescription(jsonObject.getString(ConfigConstants.NET_RANKING_DESCRIPTION));
-                rankingInfo.setUpdateFre(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_FRE));
-                rankingInfo.setUpdateTime(jsonObject.getString(ConfigConstants.NET_RANKING_UPDATE_TIME));
-                rankingInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RANKING_COVER_IMG_URL));
+                NetRankInfo rankInfo = new NetRankInfo();
+                rankInfo.setSource(jsonObject.getIntValue(ConfigConstants.NET_RANK_SOURCE));
+                rankInfo.setId(jsonObject.getString(ConfigConstants.NET_RANK_ID));
+                rankInfo.setName(jsonObject.getString(ConfigConstants.NET_RANK_NAME));
+                rankInfo.setPlayCount(jsonObject.getLongValue(ConfigConstants.NET_RANK_PLAY_COUNT, -1));
+                rankInfo.setDescription(jsonObject.getString(ConfigConstants.NET_RANK_DESCRIPTION));
+                rankInfo.setUpdateFre(jsonObject.getString(ConfigConstants.NET_RANK_UPDATE_FRE));
+                rankInfo.setUpdateTime(jsonObject.getString(ConfigConstants.NET_RANK_UPDATE_TIME));
+                rankInfo.setCoverImgUrl(jsonObject.getString(ConfigConstants.NET_RANK_COVER_IMG_URL));
 
-                rankingCollectionModel.addElement(rankingInfo);
+                rankCollectionModel.addElement(rankInfo);
             }
         }
 
@@ -4352,22 +4352,22 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.MV_COLLECTION, mvCollectionJsonArray);
 
         // 存入收藏榜单列表
-        JSONArray rankingCollectionJsonArray = new JSONArray();
-        for (int i = 0, len = rankingCollectionModel.size(); i < len; i++) {
-            NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(i);
+        JSONArray rankCollectionJsonArray = new JSONArray();
+        for (int i = 0, len = rankCollectionModel.size(); i < len; i++) {
+            NetRankInfo rankInfo = (NetRankInfo) rankCollectionModel.get(i);
 
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(ConfigConstants.NET_RANKING_SOURCE, rankingInfo.getSource());
-            jsonObject.put(ConfigConstants.NET_RANKING_ID, rankingInfo.getId());
-            jsonObject.put(ConfigConstants.NET_RANKING_NAME, rankingInfo.getName());
-            jsonObject.put(ConfigConstants.NET_RANKING_DESCRIPTION, rankingInfo.getDescription());
-            jsonObject.put(ConfigConstants.NET_RANKING_PLAY_COUNT, rankingInfo.getPlayCount());
-            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_FRE, rankingInfo.getUpdateFre());
-            jsonObject.put(ConfigConstants.NET_RANKING_UPDATE_TIME, rankingInfo.getUpdateTime());
-            jsonObject.put(ConfigConstants.NET_RANKING_COVER_IMG_URL, rankingInfo.getCoverImgUrl());
-            rankingCollectionJsonArray.add(jsonObject);
+            jsonObject.put(ConfigConstants.NET_RANK_SOURCE, rankInfo.getSource());
+            jsonObject.put(ConfigConstants.NET_RANK_ID, rankInfo.getId());
+            jsonObject.put(ConfigConstants.NET_RANK_NAME, rankInfo.getName());
+            jsonObject.put(ConfigConstants.NET_RANK_DESCRIPTION, rankInfo.getDescription());
+            jsonObject.put(ConfigConstants.NET_RANK_PLAY_COUNT, rankInfo.getPlayCount());
+            jsonObject.put(ConfigConstants.NET_RANK_UPDATE_FRE, rankInfo.getUpdateFre());
+            jsonObject.put(ConfigConstants.NET_RANK_UPDATE_TIME, rankInfo.getUpdateTime());
+            jsonObject.put(ConfigConstants.NET_RANK_COVER_IMG_URL, rankInfo.getCoverImgUrl());
+            rankCollectionJsonArray.add(jsonObject);
         }
-        config.put(ConfigConstants.RANKING_COLLECTION, rankingCollectionJsonArray);
+        config.put(ConfigConstants.RANK_COLLECTION, rankCollectionJsonArray);
 
         // 存入收藏用户列表
         JSONArray userCollectionJsonArray = new JSONArray();
@@ -4656,7 +4656,7 @@ public class MainFrame extends JFrame {
         netArtistPanel.setPreferredSize(d);
         netRadioPanel.setPreferredSize(d);
         netMvPanel.setPreferredSize(d);
-        netRankingPanel.setPreferredSize(d);
+        netRankPanel.setPreferredSize(d);
         netUserPanel.setPreferredSize(d);
         recommendPanel.setPreferredSize(d);
         downloadManagementPanel.setPreferredSize(d);
@@ -4669,7 +4669,7 @@ public class MainFrame extends JFrame {
         netArtistLabel.setText(showTabText ? I18n.getText("netArtist") : "");
         netRadioLabel.setText(showTabText ? I18n.getText("netRadio") : "");
         netMvLabel.setText(showTabText ? I18n.getText("netMv") : "");
-        netRankingLabel.setText(showTabText ? I18n.getText("netRanking") : "");
+        netRankLabel.setText(showTabText ? I18n.getText("netRank") : "");
         netUserLabel.setText(showTabText ? I18n.getText("netUser") : "");
         recommendLabel.setText(showTabText ? I18n.getText("netRecommend") : "");
         downloadManagementLabel.setText(showTabText ? I18n.getText("downloadManagement") : "");
@@ -4686,7 +4686,7 @@ public class MainFrame extends JFrame {
         netArtistLabel.setIconTextGap(gap);
         netRadioLabel.setIconTextGap(gap);
         netMvLabel.setIconTextGap(gap);
-        netRankingLabel.setIconTextGap(gap);
+        netRankLabel.setIconTextGap(gap);
         netUserLabel.setIconTextGap(gap);
         recommendLabel.setIconTextGap(gap);
         downloadManagementLabel.setIconTextGap(gap);
@@ -4699,7 +4699,7 @@ public class MainFrame extends JFrame {
         netArtistPanel.add(netArtistLabel);
         netRadioPanel.add(netRadioLabel);
         netMvPanel.add(netMvLabel);
-        netRankingPanel.add(netRankingLabel);
+        netRankPanel.add(netRankLabel);
         netUserPanel.add(netUserLabel);
         recommendPanel.add(recommendLabel);
         downloadManagementPanel.add(downloadManagementLabel);
@@ -4714,7 +4714,7 @@ public class MainFrame extends JFrame {
         netArtistPanel.setLayout(fl);
         netRadioPanel.setLayout(fl);
         netMvPanel.setLayout(fl);
-        netRankingPanel.setLayout(fl);
+        netRankPanel.setLayout(fl);
         netUserPanel.setLayout(fl);
         recommendPanel.setLayout(fl);
         downloadManagementPanel.setLayout(fl);
@@ -4723,7 +4723,7 @@ public class MainFrame extends JFrame {
         // 添加标签对应的内容
         tabbedPane.add(leftBox);
         tabbedPane.add(recommendLeftBox);
-        tabbedPane.add(netRankingLeftBox);
+        tabbedPane.add(netRankLeftBox);
         tabbedPane.add(netLeftBox);
         tabbedPane.add(netPlaylistLeftBox);
         tabbedPane.add(netAlbumLeftBox);
@@ -4736,7 +4736,7 @@ public class MainFrame extends JFrame {
         // 自定义标签面板
         tabbedPane.setTabComponentAt(TabIndex.PERSONAL, personalMusicPanel);
         tabbedPane.setTabComponentAt(TabIndex.RECOMMEND, recommendPanel);
-        tabbedPane.setTabComponentAt(TabIndex.NET_RANKING, netRankingPanel);
+        tabbedPane.setTabComponentAt(TabIndex.NET_RANK, netRankPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_MUSIC, netMusicPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_PLAYLIST, netPlaylistPanel);
         tabbedPane.setTabComponentAt(TabIndex.NET_ALBUM, netAlbumPanel);
@@ -4765,7 +4765,7 @@ public class MainFrame extends JFrame {
                     else if (index == CollectionTabIndex.ARTIST) model = artistCollectionModel;
                     else if (index == CollectionTabIndex.RADIO) model = radioCollectionModel;
                     else if (index == CollectionTabIndex.MV) model = mvCollectionModel;
-                    else if (index == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                    else if (index == CollectionTabIndex.RANK) model = rankCollectionModel;
                     else if (index == CollectionTabIndex.USER) model = userCollectionModel;
                 }
                 boolean modelEmpty = model.isEmpty();
@@ -4794,7 +4794,7 @@ public class MainFrame extends JFrame {
                     else if (index == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
                     else if (index == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
                     else if (index == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                    else if (index == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
+                    else if (index == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
                     else if (index == CollectionTabIndex.USER) box = userCollectionLeftBox;
                     if (modelEmpty) {
                         box.remove(collectionScrollPane);
@@ -4821,9 +4821,9 @@ public class MainFrame extends JFrame {
                     } else if (index == CollectionTabIndex.RADIO) {
                         // 显示收藏电台的歌曲列表
                         netMusicList.setModel(netMusicListForRadioCollectionModel);
-                    } else if (index == CollectionTabIndex.RANKING) {
+                    } else if (index == CollectionTabIndex.RANK) {
                         // 显示收藏榜单的歌曲列表
-                        netMusicList.setModel(netMusicListForRankingCollectionModel);
+                        netMusicList.setModel(netMusicListForRankCollectionModel);
                     } else if (index == CollectionTabIndex.USER) {
                         // 显示收藏用户的歌曲列表
                         netMusicList.setModel(netMusicListForUserCollectionModel);
@@ -4845,12 +4845,11 @@ public class MainFrame extends JFrame {
                 updateRenderer(netMusicList);
                 netMusicList.setModel(netMusicListModel);
                 // 首次切到在线音乐标签页时加载热搜
-                if (netMusicListModel.isEmpty() && netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
+                if (netMusicListModel.isEmpty()) {
                     netLeftBox.remove(netMusicScrollPane);
                     netLeftBox.add(netMusicKeywordsPanelScrollPane);
-                    hotSearchProcessing = true;
-                    globalExecutor.execute(() -> updateHotSearch());
-                } else if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
+                }
+                if (netMusicHotSearchInnerPanel2.getComponentCount() == 0) {
                     hotSearchProcessing = true;
                     globalExecutor.execute(() -> updateHotSearch());
                 } else if (!netMusicListModel.isEmpty()) {
@@ -4965,25 +4964,25 @@ public class MainFrame extends JFrame {
                 }
             }
             // 榜单音乐
-            else if (selectedIndex == TabIndex.NET_RANKING) {
-                if (netRankingListModel.isEmpty()) {
-                    getRankingGoPage(netRankingCurrPage);
+            else if (selectedIndex == TabIndex.NET_RANK) {
+                if (netRankListModel.isEmpty()) {
+                    getRankGoPage(netRankCurrPage);
                     return;
                 }
                 // 显示榜单的歌曲列表
-                if (netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1) == rankingListBox) {
-                    netMusicList.setModel(netMusicListForRankingModel);
-                    checkDescriptionCollectionStatus(rankingDescriptionCollectionButton, netRankingList.getSelectedValue());
-                    if (netMusicListForRankingModel.isEmpty()) rankingListCountBox.add(emptyHintPanel);
-                    else rankingListCountBox.add(netMusicScrollPane);
-                    rankingListBox.add(rankingListCountBox);
-                    netRankingLeftBox.add(rankingListBox);
+                if (netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1) == rankListBox) {
+                    netMusicList.setModel(netMusicListForRankModel);
+                    checkDescriptionCollectionStatus(rankDescriptionCollectionButton, netRankList.getSelectedValue());
+                    if (netMusicListForRankModel.isEmpty()) rankListCountBox.add(emptyHintPanel);
+                    else rankListCountBox.add(netMusicScrollPane);
+                    rankListBox.add(rankListCountBox);
+                    netRankLeftBox.add(rankListBox);
                 }
                 // 显示榜单列表
                 else {
-                    netRankingLeftBox.remove(rankingListBox);
-                    if (netRankingListModel.isEmpty()) netRankingLeftBox.add(emptyHintPanel);
-                    else netRankingLeftBox.add(netRankingScrollPane);
+                    netRankLeftBox.remove(rankListBox);
+                    if (netRankListModel.isEmpty()) netRankLeftBox.add(emptyHintPanel);
+                    else netRankLeftBox.add(netRankScrollPane);
                 }
             }
             // 用户音乐
@@ -5112,8 +5111,8 @@ public class MainFrame extends JFrame {
         mvCollectionLabel.setIconTextGap(gap);
         mvCollectionPanel.add(mvCollectionLabel);
 
-        rankingCollectionLabel.setIconTextGap(gap);
-        rankingCollectionPanel.add(rankingCollectionLabel);
+        rankCollectionLabel.setIconTextGap(gap);
+        rankCollectionPanel.add(rankCollectionLabel);
 
         userCollectionLabel.setIconTextGap(gap);
         userCollectionPanel.add(userCollectionLabel);
@@ -5121,7 +5120,7 @@ public class MainFrame extends JFrame {
         // 添加标签对应的内容
         collectionTabbedPane.add(musicCollectionLeftBox);
         collectionTabbedPane.add(playlistCollectionLeftBox);
-        collectionTabbedPane.add(rankingCollectionLeftBox);
+        collectionTabbedPane.add(rankCollectionLeftBox);
         collectionTabbedPane.add(albumCollectionLeftBox);
         collectionTabbedPane.add(artistCollectionLeftBox);
         collectionTabbedPane.add(radioCollectionLeftBox);
@@ -5131,7 +5130,7 @@ public class MainFrame extends JFrame {
         // 自定义标签面板
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.MUSIC, musicCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.PLAYLIST, playlistCollectionPanel);
-        collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RANKING, rankingCollectionPanel);
+        collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RANK, rankCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.ALBUM, albumCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.ARTIST, artistCollectionPanel);
         collectionTabbedPane.setTabComponentAt(CollectionTabIndex.RADIO, radioCollectionPanel);
@@ -5258,25 +5257,25 @@ public class MainFrame extends JFrame {
                         MusicServerUtil.preloadMvInfo(mvInfo);
                     });
                 }
-            } else if (selectedIndex == CollectionTabIndex.RANKING) {
-                collectionList.setModel(rankingCollectionModel);
-                int size = rankingCollectionModel.size();
+            } else if (selectedIndex == CollectionTabIndex.RANK) {
+                collectionList.setModel(rankCollectionModel);
+                int size = rankCollectionModel.size();
                 if (size > 0) {
-                    rankingCollectionLeftBox.remove(emptyHintPanel);
-                    rankingCollectionLeftBox.add(collectionScrollPane);
+                    rankCollectionLeftBox.remove(emptyHintPanel);
+                    rankCollectionLeftBox.add(collectionScrollPane);
                 } else {
-                    rankingCollectionLeftBox.remove(collectionScrollPane);
-                    rankingCollectionLeftBox.add(emptyHintPanel);
+                    rankCollectionLeftBox.remove(collectionScrollPane);
+                    rankCollectionLeftBox.add(emptyHintPanel);
                 }
                 countLabel.setText(String.format(TOTAL_MSG, size));
 
-                for (int i = 0, s = rankingCollectionModel.size(); i < s; i++) {
+                for (int i = 0, s = rankCollectionModel.size(); i < s; i++) {
                     int finalI = i;
                     globalExecutor.execute(() -> {
-                        NetRankingInfo rankingInfo = (NetRankingInfo) rankingCollectionModel.get(finalI);
-                        if (rankingInfo.isIntegrated()) return;
-                        rankingInfo.setInvokeLater(() -> updateRenderer(collectionList));
-                        MusicServerUtil.preloadRankingInfo(rankingInfo);
+                        NetRankInfo rankInfo = (NetRankInfo) rankCollectionModel.get(finalI);
+                        if (rankInfo.isIntegrated()) return;
+                        rankInfo.setInvokeLater(() -> updateRenderer(collectionList));
+                        MusicServerUtil.preloadRankInfo(rankInfo);
                     });
                 }
             } else if (selectedIndex == CollectionTabIndex.USER) {
@@ -5397,10 +5396,10 @@ public class MainFrame extends JFrame {
                         collectionLeftBox.repaint();
                     }
                     // 这是榜单里的歌
-                    else if (resource instanceof NetRankingInfo) {
-                        NetRankingInfo RankingInfo = (NetRankingInfo) resource;
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                RankingInfo.getId(), RankingInfo.getSource(), page, limit);
+                    else if (resource instanceof NetRankInfo) {
+                        NetRankInfo RankInfo = (NetRankInfo) resource;
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRank(
+                                RankInfo.getId(), RankInfo.getSource(), page, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
                         netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -5409,12 +5408,12 @@ public class MainFrame extends JFrame {
                         collectionCountPanel.add(collectionCountLabel, collectionCountPanel.getComponentIndex(collectionCountLabel));
                         // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                         netMusicList.setModel(emptyListModel);
-                        netMusicListForRankingCollectionModel.clear();
+                        netMusicListForRankCollectionModel.clear();
                         musicInfos.forEach(musicInfo -> {
                             globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForRankingCollectionModel.addElement(musicInfo);
+                            netMusicListForRankCollectionModel.addElement(musicInfo);
                         });
-                        netMusicList.setModel(netMusicListForRankingCollectionModel);
+                        netMusicList.setModel(netMusicListForRankCollectionModel);
                         collectionLeftBox.repaint();
                     }
                     // 这是用户里的歌
@@ -5493,7 +5492,7 @@ public class MainFrame extends JFrame {
             else if (resource instanceof NetAlbumInfo) netAlbumPlayAllButton.doClick();
             else if (resource instanceof NetArtistInfo) netArtistPlayAllButton.doClick();
             else if (resource instanceof NetRadioInfo) netRadioPlayAllButton.doClick();
-            else if (resource instanceof NetRankingInfo) netRankingPlayAllButton.doClick();
+            else if (resource instanceof NetRankInfo) netRankPlayAllButton.doClick();
             else if (resource instanceof NetUserInfo) netUserPlayAllButton.doClick();
         });
         // 刷新按钮事件
@@ -5978,8 +5977,8 @@ public class MainFrame extends JFrame {
                     }));
                 }
                 // 打开的是榜单
-                else if (resource instanceof NetRankingInfo) {
-                    NetRankingInfo rankingInfo = (NetRankingInfo) resource;
+                else if (resource instanceof NetRankInfo) {
+                    NetRankInfo rankInfo = (NetRankInfo) resource;
                     // 加载封面图片和描述
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
@@ -5991,19 +5990,19 @@ public class MainFrame extends JFrame {
                         collectionItemDescriptionLabel.setIcon(null);
                         GlobalExecutors.requestExecutor.execute(() -> {
                             try {
-                                MusicServerUtil.fillRankingInfo(rankingInfo);
+                                MusicServerUtil.fillRankInfo(rankInfo);
                                 updateRenderer(collectionList);
-                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankingInfo.getName()));
-                                if (rankingInfo.getDescription() != null)
-                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(rankingInfo.getDescription()));
-                                if (rankingInfo.hasCoverImg()) {
+                                collectionItemCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankInfo.getName()));
+                                if (rankInfo.getDescription() != null)
+                                    collectionItemDescriptionLabel.setText(HtmlUtil.textToHtml(rankInfo.getDescription()));
+                                if (rankInfo.hasCoverImg()) {
                                     collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
                                 } else {
-                                    rankingInfo.setInvokeLater(() -> {
+                                    rankInfo.setInvokeLater(() -> {
                                         collectionItemCoverAndNameLabel.setIcon(new ImageIcon(
-                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                                ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                         ));
                                         collectionList.repaint();
                                     });
@@ -6018,8 +6017,8 @@ public class MainFrame extends JFrame {
                     // 得到榜单的音乐信息
                     taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                         try {
-                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                    rankingInfo.getId(), rankingInfo.getSource(), netMusicInCollectionCurrPage = 1, limit);
+                            CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRank(
+                                    rankInfo.getId(), rankInfo.getSource(), netMusicInCollectionCurrPage = 1, limit);
                             List<NetMusicInfo> musicInfos = result.data;
                             int total = result.total;
                             netMusicInCollectionMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -6029,21 +6028,21 @@ public class MainFrame extends JFrame {
                             collectionItemListCountBox.add(netMusicScrollPane);
                             collectionItemListBox.add(collectionItemListCountBox);
                             // 榜单列表切换到在线音乐列表
-                            netMusicList.setModel(netMusicListForRankingCollectionModel);
+                            netMusicList.setModel(netMusicListForRankCollectionModel);
                             collectionLeftBox.add(collectionItemListBox);
                             // 收藏工具栏添加，需要更新 LAF
                             collectionLeftBox.add(musicCollectionToolBar, 0);
                             // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                             netMusicList.setModel(emptyListModel);
-                            netMusicListForRankingCollectionModel.clear();
+                            netMusicListForRankCollectionModel.clear();
                             musicInfos.forEach(musicInfo -> {
                                 globalExecutor.execute(() -> updateCollection(musicInfo));
-                                netMusicListForRankingCollectionModel.addElement(musicInfo);
+                                netMusicListForRankCollectionModel.addElement(musicInfo);
                             });
-                            netMusicList.setModel(netMusicListForRankingCollectionModel);
+                            netMusicList.setModel(netMusicListForRankCollectionModel);
                             collectionItemDescriptionScrollPane.setVBarValue(0);
                             netMusicScrollPane.setVBarValue(0);
-                            if (netMusicListForRankingCollectionModel.isEmpty()) {
+                            if (netMusicListForRankCollectionModel.isEmpty()) {
                                 collectionItemListCountBox.remove(netMusicScrollPane);
                                 collectionItemListCountBox.add(emptyHintPanel);
                             } else {
@@ -6217,11 +6216,11 @@ public class MainFrame extends JFrame {
                             netMvCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
                             netMvPopupMenu.show(collectionList, e.getX(), e.getY());
-                        } else if (selectedIndex == CollectionTabIndex.RANKING) {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                            netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
+                        } else if (selectedIndex == CollectionTabIndex.RANK) {
+                            netRankCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                            netRankCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
 
-                            netRankingPopupMenu.show(collectionList, e.getX(), e.getY());
+                            netRankPopupMenu.show(collectionList, e.getX(), e.getY());
                         } else if (selectedIndex == CollectionTabIndex.USER) {
                             netUserCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                             netUserCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
@@ -6425,9 +6424,9 @@ public class MainFrame extends JFrame {
             } else if (index == CollectionTabIndex.MV) {
                 box = mvCollectionLeftBox;
                 model = mvCollectionModel;
-            } else if (index == CollectionTabIndex.RANKING) {
-                box = rankingCollectionLeftBox;
-                model = rankingCollectionModel;
+            } else if (index == CollectionTabIndex.RANK) {
+                box = rankCollectionLeftBox;
+                model = rankCollectionModel;
             } else if (index == CollectionTabIndex.USER) {
                 box = userCollectionLeftBox;
                 model = userCollectionModel;
@@ -6704,8 +6703,8 @@ public class MainFrame extends JFrame {
                             radioCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.MV)
                             mvCollectionModel.removeElement(resource);
-                        else if (selectedIndex == CollectionTabIndex.RANKING)
-                            rankingCollectionModel.removeElement(resource);
+                        else if (selectedIndex == CollectionTabIndex.RANK)
+                            rankCollectionModel.removeElement(resource);
                         else if (selectedIndex == CollectionTabIndex.USER)
                             userCollectionModel.removeElement(resource);
                     }
@@ -6747,7 +6746,7 @@ public class MainFrame extends JFrame {
                     else if (selectedIndex == CollectionTabIndex.ARTIST) artistCollectionModel.clear();
                     else if (selectedIndex == CollectionTabIndex.RADIO) radioCollectionModel.clear();
                     else if (selectedIndex == CollectionTabIndex.MV) mvCollectionModel.clear();
-                    else if (selectedIndex == CollectionTabIndex.RANKING) rankingCollectionModel.clear();
+                    else if (selectedIndex == CollectionTabIndex.RANK) rankCollectionModel.clear();
                     else if (selectedIndex == CollectionTabIndex.USER) userCollectionModel.clear();
                 }
             }
@@ -6771,7 +6770,7 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
-                else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RANK) model = rankCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
             for (int i = 0; i < model.size(); i++) {
@@ -6804,7 +6803,7 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.ARTIST) model = artistCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.RADIO) model = radioCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.MV) model = mvCollectionModel;
-                else if (selectedIndex == CollectionTabIndex.RANKING) model = rankingCollectionModel;
+                else if (selectedIndex == CollectionTabIndex.RANK) model = rankCollectionModel;
                 else if (selectedIndex == CollectionTabIndex.USER) model = userCollectionModel;
             }
             for (int i = 0, s = model.size(), half = s / 2; i < half; i++) {
@@ -7048,7 +7047,7 @@ public class MainFrame extends JFrame {
                 } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
                     collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
-                } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                } else if (selectedIndex == CollectionTabIndex.RANK && (model == rankCollectionModel || model == filterModel)) {
                     collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
                 } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
@@ -7062,7 +7061,7 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
                 else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
                 else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
+                else if (selectedIndex == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
                 else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
                 box.remove(emptyHintPanel);
                 box.add(collectionScrollPane);
@@ -7102,7 +7101,7 @@ public class MainFrame extends JFrame {
                     countLabel.setText(String.format(TOTAL_MSG, size));
                 } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
                     countLabel.setText(String.format(TOTAL_MSG, size));
-                } else if (selectedIndex == CollectionTabIndex.RANKING && (model == rankingCollectionModel || model == filterModel)) {
+                } else if (selectedIndex == CollectionTabIndex.RANK && (model == rankCollectionModel || model == filterModel)) {
                     countLabel.setText(String.format(TOTAL_MSG, size));
                 } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
                     countLabel.setText(String.format(TOTAL_MSG, size));
@@ -7114,7 +7113,7 @@ public class MainFrame extends JFrame {
                     else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                    else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
                     box.remove(collectionScrollPane);
                     box.add(emptyHintPanel);
@@ -7139,7 +7138,7 @@ public class MainFrame extends JFrame {
         artistCollectionModel.addListDataListener(countListener);
         radioCollectionModel.addListDataListener(countListener);
         mvCollectionModel.addListDataListener(countListener);
-        rankingCollectionModel.addListDataListener(countListener);
+        rankCollectionModel.addListDataListener(countListener);
         userCollectionModel.addListDataListener(countListener);
         filterModel.addListDataListener(countListener);
         musicList.setModel(musicListModel);
@@ -8528,7 +8527,7 @@ public class MainFrame extends JFrame {
         albumDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         radioTagLabel.setVerticalAlignment(SwingConstants.TOP);
         radioDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
-        rankingDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
+        rankDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         userTagLabel.setVerticalAlignment(SwingConstants.TOP);
         userDescriptionLabel.setVerticalAlignment(SwingConstants.TOP);
         recommendItemTagLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -8544,8 +8543,8 @@ public class MainFrame extends JFrame {
         artistCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         radioCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
         radioCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        rankingCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
-        rankingCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        rankCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+        rankCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         userCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
         userCoverAndNameLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         recommendItemCoverAndNameLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -8563,7 +8562,7 @@ public class MainFrame extends JFrame {
         albumCoverAndNameLabel.setIconTextGap(gap);
         artistCoverAndNameLabel.setIconTextGap(gap);
         radioCoverAndNameLabel.setIconTextGap(gap);
-        rankingCoverAndNameLabel.setIconTextGap(gap);
+        rankCoverAndNameLabel.setIconTextGap(gap);
         userCoverAndNameLabel.setIconTextGap(gap);
         userDescriptionLabel.setIconTextGap(gap);
         recommendItemCoverAndNameLabel.setIconTextGap(gap);
@@ -8579,7 +8578,7 @@ public class MainFrame extends JFrame {
         albumDescriptionLabel.setOpacity(opacity);
         radioTagLabel.setOpacity(opacity);
         radioDescriptionLabel.setOpacity(opacity);
-        rankingDescriptionLabel.setOpacity(opacity);
+        rankDescriptionLabel.setOpacity(opacity);
         userTagLabel.setOpacity(opacity);
         userDescriptionLabel.setOpacity(opacity);
         recommendItemTagLabel.setOpacity(opacity);
@@ -8593,7 +8592,7 @@ public class MainFrame extends JFrame {
         albumCoverAndNameLabel.setFont(font);
         artistCoverAndNameLabel.setFont(font);
         radioCoverAndNameLabel.setFont(font);
-        rankingCoverAndNameLabel.setFont(font);
+        rankCoverAndNameLabel.setFont(font);
         userCoverAndNameLabel.setFont(font);
         recommendItemCoverAndNameLabel.setFont(font);
         collectionItemCoverAndNameLabel.setFont(font);
@@ -8711,12 +8710,12 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-        rankingCoverAndNameLabel.addMouseListener(new MouseAdapter() {
+        rankCoverAndNameLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1 || e.getClickCount() != 2) return;
-                NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
-                String url = rankingInfo.getCoverImgUrl();
+                NetRankInfo rankInfo = netRankList.getSelectedValue();
+                String url = rankInfo.getCoverImgUrl();
                 if (StringUtil.isEmpty(url)) return;
                 try {
                     imageViewDialog = new ImageViewDialog(THIS, 1) {
@@ -8855,9 +8854,9 @@ public class MainFrame extends JFrame {
                 } else if (resource instanceof NetRadioInfo) {
                     NetRadioInfo radioInfo = (NetRadioInfo) resource;
                     url = radioInfo.hasCoverImgUrl() ? radioInfo.getCoverImgUrl() : radioInfo.getCoverImgThumbUrl();
-                } else if (resource instanceof NetRankingInfo) {
-                    NetRankingInfo rankingInfo = (NetRankingInfo) resource;
-                    url = rankingInfo.getCoverImgUrl();
+                } else if (resource instanceof NetRankInfo) {
+                    NetRankInfo rankInfo = (NetRankInfo) resource;
+                    url = rankInfo.getCoverImgUrl();
                 } else if (resource instanceof NetUserInfo) {
                     NetUserInfo userInfo = (NetUserInfo) resource;
                     url = userInfo.hasAvatarUrl() ? userInfo.getAvatarUrl() : userInfo.getAvatarThumbUrl();
@@ -8929,7 +8928,7 @@ public class MainFrame extends JFrame {
         albumDescriptionLabel.setBorder(eb);
         artistDescriptionLabel.setBorder(eb);
         radioDescriptionLabel.setBorder(eb);
-        rankingDescriptionLabel.setBorder(eb);
+        rankDescriptionLabel.setBorder(eb);
         userDescriptionLabel.setBorder(eb);
         recommendItemDescriptionLabel.setBorder(eb);
         collectionItemDescriptionLabel.setBorder(eb);
@@ -8947,8 +8946,8 @@ public class MainFrame extends JFrame {
         radioCoverAndNameLabel.setMaximumSize(size);
         radioTagLabel.setMaximumSize(size);
         radioDescriptionLabel.setMaximumSize(size);
-        rankingCoverAndNameLabel.setMaximumSize(size);
-        rankingDescriptionLabel.setMaximumSize(size);
+        rankCoverAndNameLabel.setMaximumSize(size);
+        rankDescriptionLabel.setMaximumSize(size);
         userCoverAndNameLabel.setMaximumSize(size);
         userTagLabel.setMaximumSize(size);
         userDescriptionLabel.setMaximumSize(size);
@@ -8964,7 +8963,7 @@ public class MainFrame extends JFrame {
         albumDescriptionScrollPane.setPreferredSize(size);
         artistDescriptionScrollPane.setPreferredSize(size);
         radioDescriptionScrollPane.setPreferredSize(size);
-        rankingDescriptionScrollPane.setPreferredSize(size);
+        rankDescriptionScrollPane.setPreferredSize(size);
         userDescriptionScrollPane.setPreferredSize(size);
         recommendItemDescriptionScrollPane.setPreferredSize(size);
         collectionItemDescriptionScrollPane.setPreferredSize(size);
@@ -8973,7 +8972,7 @@ public class MainFrame extends JFrame {
         albumDescriptionOuterPanel.setPreferredSize(size);
         artistDescriptionOuterPanel.setPreferredSize(size);
         radioDescriptionOuterPanel.setPreferredSize(size);
-        rankingDescriptionOuterPanel.setPreferredSize(size);
+        rankDescriptionOuterPanel.setPreferredSize(size);
         userDescriptionOuterPanel.setPreferredSize(size);
         recommendItemDescriptionOuterPanel.setPreferredSize(size);
         collectionItemDescriptionOuterPanel.setPreferredSize(size);
@@ -8982,7 +8981,7 @@ public class MainFrame extends JFrame {
         albumDescriptionScrollPane.setMaximumSize(size);
         artistDescriptionScrollPane.setMaximumSize(size);
         radioDescriptionScrollPane.setMaximumSize(size);
-        rankingDescriptionScrollPane.setMaximumSize(size);
+        rankDescriptionScrollPane.setMaximumSize(size);
         userDescriptionScrollPane.setMaximumSize(size);
         recommendItemDescriptionScrollPane.setMaximumSize(size);
         collectionItemDescriptionScrollPane.setMaximumSize(size);
@@ -8991,7 +8990,7 @@ public class MainFrame extends JFrame {
         albumDescriptionOuterPanel.setMaximumSize(size);
         artistDescriptionOuterPanel.setMaximumSize(size);
         radioDescriptionOuterPanel.setMaximumSize(size);
-        rankingDescriptionOuterPanel.setMaximumSize(size);
+        rankDescriptionOuterPanel.setMaximumSize(size);
         userDescriptionOuterPanel.setMaximumSize(size);
         recommendItemDescriptionOuterPanel.setMaximumSize(size);
         collectionItemDescriptionOuterPanel.setMaximumSize(size);
@@ -9001,7 +9000,7 @@ public class MainFrame extends JFrame {
         albumDescriptionPanel.setLayout(new BoxLayout(albumDescriptionPanel, BoxLayout.Y_AXIS));
         artistDescriptionPanel.setLayout(new BoxLayout(artistDescriptionPanel, BoxLayout.Y_AXIS));
         radioDescriptionPanel.setLayout(new BoxLayout(radioDescriptionPanel, BoxLayout.Y_AXIS));
-        rankingDescriptionPanel.setLayout(new BoxLayout(rankingDescriptionPanel, BoxLayout.Y_AXIS));
+        rankDescriptionPanel.setLayout(new BoxLayout(rankDescriptionPanel, BoxLayout.Y_AXIS));
         userDescriptionPanel.setLayout(new BoxLayout(userDescriptionPanel, BoxLayout.Y_AXIS));
         recommendItemDescriptionPanel.setLayout(new BoxLayout(recommendItemDescriptionPanel, BoxLayout.Y_AXIS));
         collectionItemDescriptionPanel.setLayout(new BoxLayout(collectionItemDescriptionPanel, BoxLayout.Y_AXIS));
@@ -9016,8 +9015,8 @@ public class MainFrame extends JFrame {
         radioDescriptionPanel.add(radioCoverAndNameLabel);
         radioDescriptionPanel.add(radioTagLabel);
         radioDescriptionPanel.add(radioDescriptionLabel);
-        rankingDescriptionPanel.add(rankingCoverAndNameLabel);
-        rankingDescriptionPanel.add(rankingDescriptionLabel);
+        rankDescriptionPanel.add(rankCoverAndNameLabel);
+        rankDescriptionPanel.add(rankDescriptionLabel);
         userDescriptionPanel.add(userCoverAndNameLabel);
         userDescriptionPanel.add(userTagLabel);
         userDescriptionPanel.add(userDescriptionLabel);
@@ -9038,7 +9037,7 @@ public class MainFrame extends JFrame {
         albumDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         artistDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         radioDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
-        rankingDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
+        rankDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         userDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         recommendItemDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
         collectionItemDescriptionPanel.setComponentPopupMenu(descriptionPanelPopupMenu);
@@ -9050,14 +9049,14 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_ALBUM) resource = netAlbumList.getSelectedValue();
             else if (si == TabIndex.NET_ARTIST) resource = netArtistList.getSelectedValue();
             else if (si == TabIndex.NET_RADIO) resource = netRadioList.getSelectedValue();
-            else if (si == TabIndex.NET_RANKING) resource = netRankingList.getSelectedValue();
+            else if (si == TabIndex.NET_RANK) resource = netRankList.getSelectedValue();
             else if (si == TabIndex.NET_USER) resource = netUserList.getSelectedValue();
             else if (si == TabIndex.RECOMMEND) resource = itemRecommendList.getSelectedValue();
             if (resource instanceof NetPlaylistInfo) saveImg(((NetPlaylistInfo) resource).getCoverImg());
             else if (resource instanceof NetAlbumInfo) saveImg(((NetAlbumInfo) resource).getCoverImg());
             else if (resource instanceof NetArtistInfo) saveImg(((NetArtistInfo) resource).getCoverImg());
             else if (resource instanceof NetRadioInfo) saveImg(((NetRadioInfo) resource).getCoverImg());
-            else if (resource instanceof NetRankingInfo) saveImg(((NetRankingInfo) resource).getCoverImg());
+            else if (resource instanceof NetRankInfo) saveImg(((NetRankInfo) resource).getCoverImg());
             else if (resource instanceof NetUserInfo) saveImg(((NetUserInfo) resource).getAvatar());
         });
         saveDescBgImgMenuItem.addActionListener(e -> {
@@ -9075,7 +9074,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_ALBUM) l = albumCoverAndNameLabel;
             else if (si == TabIndex.NET_ARTIST) l = artistCoverAndNameLabel;
             else if (si == TabIndex.NET_RADIO) l = radioCoverAndNameLabel;
-            else if (si == TabIndex.NET_RANKING) l = rankingCoverAndNameLabel;
+            else if (si == TabIndex.NET_RANK) l = rankCoverAndNameLabel;
             else if (si == TabIndex.NET_USER) l = userCoverAndNameLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemCoverAndNameLabel;
             copyToClipboard(HtmlUtil.removeHtmlLabel(l.getText()));
@@ -9100,7 +9099,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_ALBUM) l = albumDescriptionLabel;
             else if (si == TabIndex.NET_ARTIST) l = artistDescriptionLabel;
             else if (si == TabIndex.NET_RADIO) l = radioDescriptionLabel;
-            else if (si == TabIndex.NET_RANKING) l = rankingDescriptionLabel;
+            else if (si == TabIndex.NET_RANK) l = rankDescriptionLabel;
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
             if (l.isTextEmpty()) return;
@@ -9112,7 +9111,7 @@ public class MainFrame extends JFrame {
         albumDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(albumDescriptionScrollPane));
         artistDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(artistDescriptionScrollPane));
         radioDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(radioDescriptionScrollPane));
-        rankingDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(rankingDescriptionScrollPane));
+        rankDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(rankDescriptionScrollPane));
         userDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(userDescriptionScrollPane));
         recommendItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(recommendItemDescriptionScrollPane));
         collectionItemDescriptionScrollPane.addMouseListener(new ScrollPaneBarActiveAdapter(collectionItemDescriptionScrollPane));
@@ -9121,7 +9120,7 @@ public class MainFrame extends JFrame {
         albumDescriptionScrollPane.setVBarActive(false);
         artistDescriptionScrollPane.setVBarActive(false);
         radioDescriptionScrollPane.setVBarActive(false);
-        rankingDescriptionScrollPane.setVBarActive(false);
+        rankDescriptionScrollPane.setVBarActive(false);
         userDescriptionScrollPane.setVBarActive(false);
         recommendItemDescriptionScrollPane.setVBarActive(false);
         collectionItemDescriptionScrollPane.setVBarActive(false);
@@ -9130,7 +9129,7 @@ public class MainFrame extends JFrame {
         albumDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         artistDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         radioDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        rankingDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        rankDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         userDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         recommendItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         collectionItemDescriptionScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -9152,9 +9151,9 @@ public class MainFrame extends JFrame {
             netRadioCollectMenuItem.doClick();
             switchDescriptionCollectionStatus(radioDescriptionCollectionButton);
         });
-        rankingDescriptionCollectionButton.addActionListener(e -> {
-            netRankingCollectMenuItem.doClick();
-            switchDescriptionCollectionStatus(rankingDescriptionCollectionButton);
+        rankDescriptionCollectionButton.addActionListener(e -> {
+            netRankCollectMenuItem.doClick();
+            switchDescriptionCollectionStatus(rankDescriptionCollectionButton);
         });
         userDescriptionCollectionButton.addActionListener(e -> {
             netUserCollectMenuItem.doClick();
@@ -9178,7 +9177,7 @@ public class MainFrame extends JFrame {
             else if (resource instanceof NetAlbumInfo) menuItem = netAlbumCollectMenuItem;
             else if (resource instanceof NetArtistInfo) menuItem = netArtistCollectMenuItem;
             else if (resource instanceof NetRadioInfo) menuItem = netRadioCollectMenuItem;
-            else if (resource instanceof NetRankingInfo) menuItem = netRankingCollectMenuItem;
+            else if (resource instanceof NetRankInfo) menuItem = netRankCollectMenuItem;
             else if (resource instanceof NetUserInfo) menuItem = netUserCollectMenuItem;
             menuItem.doClick();
             switchDescriptionCollectionStatus(collectionItemDescriptionCollectionButton);
@@ -9188,7 +9187,7 @@ public class MainFrame extends JFrame {
         albumDescriptionCollectionPanel.add(albumDescriptionCollectionButton);
         artistDescriptionCollectionPanel.add(artistDescriptionCollectionButton);
         radioDescriptionCollectionPanel.add(radioDescriptionCollectionButton);
-        rankingDescriptionCollectionPanel.add(rankingDescriptionCollectionButton);
+        rankDescriptionCollectionPanel.add(rankDescriptionCollectionButton);
         userDescriptionCollectionPanel.add(userDescriptionCollectionButton);
         recommendItemDescriptionCollectionPanel.add(recommendItemDescriptionCollectionButton);
         collectionItemDescriptionCollectionPanel.add(collectionItemDescriptionCollectionButton);
@@ -9198,7 +9197,7 @@ public class MainFrame extends JFrame {
         albumDescriptionCollectionPanel.setMaximumSize(ms);
         artistDescriptionCollectionPanel.setMaximumSize(ms);
         radioDescriptionCollectionPanel.setMaximumSize(ms);
-        rankingDescriptionCollectionPanel.setMaximumSize(ms);
+        rankDescriptionCollectionPanel.setMaximumSize(ms);
         userDescriptionCollectionPanel.setMaximumSize(ms);
         recommendItemDescriptionCollectionPanel.setMaximumSize(ms);
         collectionItemDescriptionCollectionPanel.setMaximumSize(ms);
@@ -9207,7 +9206,7 @@ public class MainFrame extends JFrame {
         albumDescriptionOuterPanel.setLayout(new BorderLayout());
         artistDescriptionOuterPanel.setLayout(new BorderLayout());
         radioDescriptionOuterPanel.setLayout(new BorderLayout());
-        rankingDescriptionOuterPanel.setLayout(new BorderLayout());
+        rankDescriptionOuterPanel.setLayout(new BorderLayout());
         userDescriptionOuterPanel.setLayout(new BorderLayout());
         recommendItemDescriptionOuterPanel.setLayout(new BorderLayout());
         collectionItemDescriptionOuterPanel.setLayout(new BorderLayout());
@@ -9220,8 +9219,8 @@ public class MainFrame extends JFrame {
         artistDescriptionOuterPanel.add(artistDescriptionCollectionPanel, BorderLayout.SOUTH);
         radioDescriptionOuterPanel.add(radioDescriptionScrollPane, BorderLayout.CENTER);
         radioDescriptionOuterPanel.add(radioDescriptionCollectionPanel, BorderLayout.SOUTH);
-        rankingDescriptionOuterPanel.add(rankingDescriptionScrollPane, BorderLayout.CENTER);
-        rankingDescriptionOuterPanel.add(rankingDescriptionCollectionPanel, BorderLayout.SOUTH);
+        rankDescriptionOuterPanel.add(rankDescriptionScrollPane, BorderLayout.CENTER);
+        rankDescriptionOuterPanel.add(rankDescriptionCollectionPanel, BorderLayout.SOUTH);
         userDescriptionOuterPanel.add(userDescriptionScrollPane, BorderLayout.CENTER);
         userDescriptionOuterPanel.add(userDescriptionCollectionPanel, BorderLayout.SOUTH);
         recommendItemDescriptionOuterPanel.add(recommendItemDescriptionScrollPane, BorderLayout.CENTER);
@@ -9233,7 +9232,7 @@ public class MainFrame extends JFrame {
         albumListBox.add(albumDescriptionOuterPanel);
         artistListBox.add(artistDescriptionOuterPanel);
         radioListBox.add(radioDescriptionOuterPanel);
-        rankingListBox.add(rankingDescriptionOuterPanel);
+        rankListBox.add(rankDescriptionOuterPanel);
         userListBox.add(userDescriptionOuterPanel);
         recommendItemListBox.add(recommendItemDescriptionOuterPanel);
         collectionItemListBox.add(collectionItemDescriptionOuterPanel);
@@ -9244,7 +9243,7 @@ public class MainFrame extends JFrame {
         albumListBox.setPreferredSize(d);
         artistListBox.setPreferredSize(d);
         radioListBox.setPreferredSize(d);
-        rankingListBox.setPreferredSize(d);
+        rankListBox.setPreferredSize(d);
         userListBox.setPreferredSize(d);
         recommendItemListBox.setPreferredSize(d);
         collectionItemListBox.setPreferredSize(d);
@@ -14118,43 +14117,43 @@ public class MainFrame extends JFrame {
     }
 
     // 获取榜单事件
-    private void getRankingGoPage(int page) {
+    private void getRankGoPage(int page) {
         loadingAndRun(() -> {
             try {
                 // 搜索榜单并显示榜单列表
-                CommonResult<NetRankingInfo> result = MusicServerUtil.getRankings(netRankingSourceComboBox.getSelectedIndex());
-                List<NetRankingInfo> rankingInfos = result.data;
+                CommonResult<NetRankInfo> result = MusicServerUtil.getRanks(netRankSourceComboBox.getSelectedIndex());
+                List<NetRankInfo> rankInfos = result.data;
 //                        Integer total = result.total;
-//                        netRankingMaxPage = PageUtil.totalPage(total, limit);
-                netRankingMaxPage = 1;
+//                        netRankMaxPage = PageUtil.totalPage(total, limit);
+                netRankMaxPage = 1;
                 // 更新数量显示
-                netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netRankingMaxPage));
-                netRankingCountPanel.setVisible(true);
-                netRankingSourceComboBox.setVisible(true);
+                netRankCountLabel.setText(String.format(PAGINATION_MSG, page, netRankMaxPage));
+                netRankCountPanel.setVisible(true);
+                netRankSourceComboBox.setVisible(true);
                 // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                netRankingList.setModel(emptyListModel);
-                netRankingListModel.clear();
-                rankingInfos.forEach(rankingInfo -> {
-                    globalExecutor.execute(() -> updateCollection(rankingInfo));
+                netRankList.setModel(emptyListModel);
+                netRankListModel.clear();
+                rankInfos.forEach(rankInfo -> {
+                    globalExecutor.execute(() -> updateCollection(rankInfo));
                     // 设置图片加载后重绘的事件
-                    rankingInfo.setInvokeLater(() -> {
-                        updateRenderer(netRankingList);
+                    rankInfo.setInvokeLater(() -> {
+                        updateRenderer(netRankList);
                         updateRenderer(collectionList);
-                        netRankingList.repaint();
+                        netRankList.repaint();
                         collectionList.repaint();
                     });
-                    netRankingListModel.addElement(rankingInfo);
+                    netRankListModel.addElement(rankInfo);
                 });
-                netRankingList.setModel(netRankingListModel);
-                if (netRankingListModel.isEmpty()) {
-                    netRankingLeftBox.remove(netRankingScrollPane);
-                    netRankingLeftBox.add(emptyHintPanel);
+                netRankList.setModel(netRankListModel);
+                if (netRankListModel.isEmpty()) {
+                    netRankLeftBox.remove(netRankScrollPane);
+                    netRankLeftBox.add(emptyHintPanel);
                 } else {
-                    netRankingLeftBox.remove(emptyHintPanel);
-                    netRankingLeftBox.add(netRankingScrollPane);
+                    netRankLeftBox.remove(emptyHintPanel);
+                    netRankLeftBox.add(netRankScrollPane);
                 }
-                netRankingScrollPane.setVBarValue(0);
-                netRankingCurrPage = page;
+                netRankScrollPane.setVBarValue(0);
+                netRankCurrPage = page;
             } catch (Exception exception) {
                 ExceptionUtil.handleResourceException(exception, THIS);
             }
@@ -14162,36 +14161,36 @@ public class MainFrame extends JFrame {
     }
 
     // 获取榜单内歌曲并显示在在线歌曲列表
-    private void getMusicInRankingGoPage(int page) {
-        if (!netMusicListForRankingModel.isEmpty()) {
+    private void getMusicInRankGoPage(int page) {
+        if (!netMusicListForRankModel.isEmpty()) {
             loadingAndRun(() -> {
                 try {
-                    NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
-                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                            rankingInfo.getId(), rankingInfo.getSource(), page, limit);
+                    NetRankInfo rankInfo = netRankList.getSelectedValue();
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRank(
+                            rankInfo.getId(), rankInfo.getSource(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     Integer total = result.total;
-                    netMusicInRankingMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    netMusicInRankMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                     // 更新数量显示
-                    netRankingCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRankingMaxPage));
-                    netRankingCountPanel.add(netRankingCountLabel, netRankingCountPanel.getComponentIndex(netRankingCountLabel));
+                    netRankCountLabel.setText(String.format(PAGINATION_MSG, page, netMusicInRankMaxPage));
+                    netRankCountPanel.add(netRankCountLabel, netRankCountPanel.getComponentIndex(netRankCountLabel));
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
                     netMusicList.setModel(emptyListModel);
-                    netMusicListForRankingModel.clear();
+                    netMusicListForRankModel.clear();
                     musicInfos.forEach(musicInfo -> {
                         globalExecutor.execute(() -> updateCollection(musicInfo));
-                        netMusicListForRankingModel.addElement(musicInfo);
+                        netMusicListForRankModel.addElement(musicInfo);
                     });
-                    netMusicList.setModel(netMusicListForRankingModel);
+                    netMusicList.setModel(netMusicListForRankModel);
                     netMusicScrollPane.setVBarValue(0);
-                    if (netMusicListForRankingModel.isEmpty()) {
-                        rankingListCountBox.remove(netMusicScrollPane);
-                        rankingListCountBox.add(emptyHintPanel);
+                    if (netMusicListForRankModel.isEmpty()) {
+                        rankListCountBox.remove(netMusicScrollPane);
+                        rankListCountBox.add(emptyHintPanel);
                     } else {
-                        rankingListCountBox.remove(emptyHintPanel);
-                        rankingListCountBox.add(netMusicScrollPane);
+                        rankListCountBox.remove(emptyHintPanel);
+                        rankListCountBox.add(netMusicScrollPane);
                     }
-                    netMusicInRankingCurrPage = page;
+                    netMusicInRankCurrPage = page;
                 } catch (Exception exception) {
                     ExceptionUtil.handleResourceException(exception, THIS);
                 }
@@ -14200,271 +14199,271 @@ public class MainFrame extends JFrame {
     }
 
     // 初始化榜单工具栏
-    private void initNetRankingToolBar() {
+    private void initNetRankToolBar() {
         // 只能输入数字
-        netRankingPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netRankPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
         // 后退按钮事件
-        netRankingBackwardButton.addActionListener(e -> {
-            netMusicListForRankingModel.clear();
+        netRankBackwardButton.addActionListener(e -> {
+            netMusicListForRankModel.clear();
             // 从在线音乐列表切换回榜单列表
-            netRankingPlayAllButton.setVisible(false);
-            netRankingLeftBox.remove(rankingListBox);
-            netRankingLeftBox.add(netRankingCountPanel);
-            netRankingLeftBox.add(netRankingScrollPane);
+            netRankPlayAllButton.setVisible(false);
+            netRankLeftBox.remove(rankListBox);
+            netRankLeftBox.add(netRankCountPanel);
+            netRankLeftBox.add(netRankScrollPane);
             // 更新榜单歌曲数量显示
-            netRankingCountLabel.setText(String.format(PAGINATION_MSG, netRankingCurrPage, netRankingMaxPage));
-            netRankingBackwardButton.setEnabled(false);
-            netRankingSourceComboBox.setVisible(true);
+            netRankCountLabel.setText(String.format(PAGINATION_MSG, netRankCurrPage, netRankMaxPage));
+            netRankBackwardButton.setEnabled(false);
+            netRankSourceComboBox.setVisible(true);
             // 切换后一定要刷新！
-            netRankingLeftBox.repaint();
+            netRankLeftBox.repaint();
         });
 
         // 播放全部
-        netRankingPlayAllButton.addActionListener(e -> netRankingPlayAllMenuItem.doClick());
+        netRankPlayAllButton.addActionListener(e -> netRankPlayAllMenuItem.doClick());
         // 刷新按钮事件
-        netRankingRefreshButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankRefreshButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，刷新榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                getRankingGoPage(netRankingCurrPage);
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                getRankGoPage(netRankCurrPage);
             }
             // 当前显示的是某榜单的歌曲，刷新歌曲
             else {
-                getMusicInRankingGoPage(netMusicInRankingCurrPage);
+                getMusicInRankGoPage(netMusicInRankCurrPage);
             }
         });
         // 第一页按钮事件
-        netRankingStartPageButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankStartPageButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到第一页榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage == 1) {
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                if (netRankCurrPage == 1) {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingGoPage(1);
+                getRankGoPage(1);
             }
             // 当前显示的是某榜单的歌曲，跳到第一页歌曲
             else {
-                if (netMusicInRankingCurrPage == 1) {
+                if (netMusicInRankCurrPage == 1) {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                getMusicInRankingGoPage(1);
+                getMusicInRankGoPage(1);
             }
         });
         // 上一页按钮事件
-        netRankingLastPageButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankLastPageButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到上一页榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage == 1) {
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                if (netRankCurrPage == 1) {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingGoPage(netRankingCurrPage - 1);
+                getRankGoPage(netRankCurrPage - 1);
             }
             // 当前显示的是某榜单的歌曲，跳到上一页歌曲
             else {
-                if (netMusicInRankingCurrPage == 1) {
+                if (netMusicInRankCurrPage == 1) {
                     new TipDialog(THIS, FIRST_PAGE_MSG).showDialog();
                     return;
                 }
-                getMusicInRankingGoPage(netMusicInRankingCurrPage - 1);
+                getMusicInRankGoPage(netMusicInRankCurrPage - 1);
             }
         });
         // 下一页按钮事件
-        netRankingNextPageButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankNextPageButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到下一页榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage >= netRankingMaxPage) {
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                if (netRankCurrPage >= netRankMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingGoPage(netRankingCurrPage + 1);
+                getRankGoPage(netRankCurrPage + 1);
             }
             // 当前显示的是某榜单的歌曲，跳到下一页歌曲
             else {
-                if (netMusicInRankingCurrPage >= netMusicInRankingMaxPage) {
+                if (netMusicInRankCurrPage >= netMusicInRankMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                getMusicInRankingGoPage(netMusicInRankingCurrPage + 1);
+                getMusicInRankGoPage(netMusicInRankCurrPage + 1);
             }
         });
         // 最后一页按钮事件
-        netRankingEndPageButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankEndPageButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳到最后一页榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                if (netRankingCurrPage >= netRankingMaxPage) {
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                if (netRankCurrPage >= netRankMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingGoPage(netRankingMaxPage);
+                getRankGoPage(netRankMaxPage);
             }
             // 当前显示的是某榜单的歌曲，跳到最后一页歌曲
             else {
-                if (netMusicInRankingCurrPage >= netMusicInRankingMaxPage) {
+                if (netMusicInRankCurrPage >= netMusicInRankMaxPage) {
                     new TipDialog(THIS, LAST_PAGE_MSG).showDialog();
                     return;
                 }
-                getMusicInRankingGoPage(netMusicInRankingMaxPage);
+                getMusicInRankGoPage(netMusicInRankMaxPage);
             }
         });
         // 跳页按钮事件
-        netRankingGoButton.addActionListener(e -> {
-            Component lc = netRankingLeftBox.getComponent(netRankingLeftBox.getComponentCount() - 1);
+        netRankGoButton.addActionListener(e -> {
+            Component lc = netRankLeftBox.getComponent(netRankLeftBox.getComponentCount() - 1);
             // 当前显示的是榜单列表，跳页榜单
-            if (lc == netRankingScrollPane || lc == emptyHintPanel) {
-                String text = netRankingPageTextField.getText();
-                netRankingPageTextField.setText("");
+            if (lc == netRankScrollPane || lc == emptyHintPanel) {
+                String text = netRankPageTextField.getText();
+                netRankPageTextField.setText("");
                 if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
-                if (destPage < 1 || destPage > netRankingMaxPage) {
+                if (destPage < 1 || destPage > netRankMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                getRankingGoPage(destPage);
+                getRankGoPage(destPage);
             }
             // 当前显示的是某榜单的歌曲，跳页歌曲
             else {
-                String text = netRankingPageTextField.getText();
-                netRankingPageTextField.setText("");
+                String text = netRankPageTextField.getText();
+                netRankPageTextField.setText("");
                 if (text.isEmpty()) return;
                 int destPage = Integer.parseInt(text);
-                if (destPage < 1 || destPage > netMusicInRankingMaxPage) {
+                if (destPage < 1 || destPage > netMusicInRankMaxPage) {
                     new TipDialog(THIS, ILLEGAL_PAGE_MSG).showDialog();
                     return;
                 }
-                getMusicInRankingGoPage(destPage);
+                getMusicInRankGoPage(destPage);
             }
         });
         // 按钮被禁止的图标
-        netRankingBackwardButton.setEnabled(false);
+        netRankBackwardButton.setEnabled(false);
         // 按钮初始不可见
-        netRankingPlayAllButton.setVisible(false);
+        netRankPlayAllButton.setVisible(false);
         // 按钮大小限制
         Dimension dimension = new HDDimension(30, 30);
-        netRankingRefreshButton.setPreferredSize(dimension);
-        netRankingStartPageButton.setPreferredSize(dimension);
-        netRankingLastPageButton.setPreferredSize(dimension);
-        netRankingGoButton.setPreferredSize(dimension);
-        netRankingNextPageButton.setPreferredSize(dimension);
-        netRankingEndPageButton.setPreferredSize(dimension);
+        netRankRefreshButton.setPreferredSize(dimension);
+        netRankStartPageButton.setPreferredSize(dimension);
+        netRankLastPageButton.setPreferredSize(dimension);
+        netRankGoButton.setPreferredSize(dimension);
+        netRankNextPageButton.setPreferredSize(dimension);
+        netRankEndPageButton.setPreferredSize(dimension);
         // 帮助提示
-        netRankingBackwardButton.setToolTipText(BACKWARD_TIP);
-        netRankingPlayAllButton.setToolTipText(PLAY_ALL_TIP);
-        netRankingRefreshButton.setToolTipText(REFRESH_TIP);
-        netRankingStartPageButton.setToolTipText(START_PAGE_TIP);
-        netRankingLastPageButton.setToolTipText(LAST_PAGE_TIP);
-        netRankingGoButton.setToolTipText(GO_TIP);
-        netRankingNextPageButton.setToolTipText(NEXT_PAGE_TIP);
-        netRankingEndPageButton.setToolTipText(END_PAGE_TIP);
+        netRankBackwardButton.setToolTipText(BACKWARD_TIP);
+        netRankPlayAllButton.setToolTipText(PLAY_ALL_TIP);
+        netRankRefreshButton.setToolTipText(REFRESH_TIP);
+        netRankStartPageButton.setToolTipText(START_PAGE_TIP);
+        netRankLastPageButton.setToolTipText(LAST_PAGE_TIP);
+        netRankGoButton.setToolTipText(GO_TIP);
+        netRankNextPageButton.setToolTipText(NEXT_PAGE_TIP);
+        netRankEndPageButton.setToolTipText(END_PAGE_TIP);
 
-        netRankingPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
+        netRankPlayAllButton.setIconTextGap(ScaleUtil.scale(5));
 
         // 透明度
-        netRankingCountLabel.setOpacity(0.5f);
+        netRankCountLabel.setOpacity(0.5f);
 
-        netRankingToolBar.add(netRankingBackwardButton);
-        netRankingToolBar.add(CustomBox.createHorizontalGlue());
-        netRankingLeftBox.add(netRankingToolBar);
+        netRankToolBar.add(netRankBackwardButton);
+        netRankToolBar.add(CustomBox.createHorizontalGlue());
+        netRankLeftBox.add(netRankToolBar);
 
-        for (String name : NetMusicSource.NAMES) netRankingSourceComboBox.addItem(name);
-        netRankingSourceComboBox.addItemListener(e -> {
+        for (String name : NetMusicSource.NAMES) netRankSourceComboBox.addItem(name);
+        netRankSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netRankingCurrPage = 1;
-            netRankingRefreshButton.doClick();
+            netRankCurrPage = 1;
+            netRankRefreshButton.doClick();
         });
 
         // 榜单数量和当前歌曲标签
-        netRankingCountPanel.add(netRankingSourceComboBox);
-        netRankingCountPanel.add(netRankingPlayAllButton);
-        netRankingCountPanel.add(netRankingStartPageButton);
-        netRankingCountPanel.add(netRankingLastPageButton);
-        netRankingCountPanel.add(netRankingCountLabel);
-        netRankingCountPanel.add(netRankingNextPageButton);
-        netRankingCountPanel.add(netRankingEndPageButton);
-        netRankingCountPanel.add(netRankingRefreshButton);
-        netRankingCountPanel.add(netRankingPageTextField);
-        netRankingCountPanel.add(netRankingGoButton);
-        netRankingCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
-        netRankingCountPanel.setVisible(false);
-        netRankingLeftBox.add(netRankingCountPanel);
+        netRankCountPanel.add(netRankSourceComboBox);
+        netRankCountPanel.add(netRankPlayAllButton);
+        netRankCountPanel.add(netRankStartPageButton);
+        netRankCountPanel.add(netRankLastPageButton);
+        netRankCountPanel.add(netRankCountLabel);
+        netRankCountPanel.add(netRankNextPageButton);
+        netRankCountPanel.add(netRankEndPageButton);
+        netRankCountPanel.add(netRankRefreshButton);
+        netRankCountPanel.add(netRankPageTextField);
+        netRankCountPanel.add(netRankGoButton);
+        netRankCountPanel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
+        netRankCountPanel.setVisible(false);
+        netRankLeftBox.add(netRankCountPanel);
     }
 
     // 初始化在线榜单列表
-    private void initNetRankingList() {
-        netRankingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        netRankingList.setModel(netRankingListModel);
-        netRankingList.addMouseMotionListener(new MouseAdapter() {
+    private void initNetRankList() {
+        netRankList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        netRankList.setModel(netRankListModel);
+        netRankList.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                int index = netRankingList.locationToIndex(e.getPoint());
-                Rectangle bounds = netRankingList.getCellBounds(index, index);
+                int index = netRankList.locationToIndex(e.getPoint());
+                Rectangle bounds = netRankList.getCellBounds(index, index);
                 if (bounds == null) return;
                 setHoverIndex(bounds.contains(e.getPoint()) ? index : -1);
             }
 
             private void setHoverIndex(int index) {
-                NetRankingListRenderer renderer = (NetRankingListRenderer) netRankingList.getCellRenderer();
+                NetRankListRenderer renderer = (NetRankListRenderer) netRankList.getCellRenderer();
                 if (renderer == null) return;
                 int hoverIndex = renderer.getHoverIndex();
                 if (hoverIndex == index) return;
                 renderer.setHoverIndex(index);
-                netRankingList.repaint();
+                netRankList.repaint();
             }
         });
-        netRankingList.addMouseListener(new MouseAdapter() {
+        netRankList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseExited(MouseEvent e) {
-                NetRankingListRenderer renderer = (NetRankingListRenderer) netRankingList.getCellRenderer();
+                NetRankListRenderer renderer = (NetRankListRenderer) netRankList.getCellRenderer();
                 if (renderer == null) return;
                 renderer.setHoverIndex(-1);
-                netRankingList.repaint();
+                netRankList.repaint();
             }
         });
         // 打开榜单
-        Runnable openRankingAction = () -> {
-            NetRankingInfo rankingInfo = netRankingList.getSelectedValue();
-            if (rankingInfo == null) return;
+        Runnable openRankAction = () -> {
+            NetRankInfo rankInfo = netRankList.getSelectedValue();
+            if (rankInfo == null) return;
             loadingAndRun(() -> {
                 List<Future<?>> taskList = new LinkedList<>();
 
                 // 检查收藏按钮
-                checkDescriptionCollectionStatus(rankingDescriptionCollectionButton, rankingInfo);
+                checkDescriptionCollectionStatus(rankDescriptionCollectionButton, rankInfo);
 
                 // 加载封面图片和描述
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     BufferedImage coverImg = ImageUtil.borderShadow(ImageUtil.dye(loadingImage, UIStyleStorage.currUIStyle.getIconColor()));
-                    rankingCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
-                    rankingCoverAndNameLabel.setText(LOADING_MSG);
-                    rankingDescriptionLabel.setText(LOADING_MSG);
+                    rankCoverAndNameLabel.setIcon(new ImageIcon(coverImg));
+                    rankCoverAndNameLabel.setText(LOADING_MSG);
+                    rankDescriptionLabel.setText(LOADING_MSG);
                     GlobalExecutors.requestExecutor.execute(() -> {
                         try {
-                            MusicServerUtil.fillRankingInfo(rankingInfo);
-                            updateRenderer(netRankingList);
-                            rankingCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankingInfo.getName()));
-                            if (rankingInfo.getDescription() != null)
-                                rankingDescriptionLabel.setText(HtmlUtil.textToHtml(rankingInfo.getDescription()));
-                            if (rankingInfo.hasCoverImg()) {
-                                rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                            MusicServerUtil.fillRankInfo(rankInfo);
+                            updateRenderer(netRankList);
+                            rankCoverAndNameLabel.setText(HtmlUtil.textToHtml(rankInfo.getName()));
+                            if (rankInfo.getDescription() != null)
+                                rankDescriptionLabel.setText(HtmlUtil.textToHtml(rankInfo.getDescription()));
+                            if (rankInfo.hasCoverImg()) {
+                                rankCoverAndNameLabel.setIcon(new ImageIcon(
+                                        ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                 ));
                             } else {
-                                rankingInfo.setInvokeLater(() -> {
-                                    rankingCoverAndNameLabel.setIcon(new ImageIcon(
-                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankingInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
+                                rankInfo.setInvokeLater(() -> {
+                                    rankCoverAndNameLabel.setIcon(new ImageIcon(
+                                            ImageUtil.borderShadow(ImageUtil.radius(ImageUtil.width(rankInfo.getCoverImg(), coverImageWidth), MIDDLE_ARC))
                                     ));
-                                    netRankingList.repaint();
+                                    netRankList.repaint();
                                 });
                             }
                         } catch (Exception e) {
-                            rankingCoverAndNameLabel.setText(LOAD_FAILED);
-                            rankingDescriptionLabel.setText(LOAD_FAILED);
+                            rankCoverAndNameLabel.setText(LOAD_FAILED);
+                            rankDescriptionLabel.setText(LOAD_FAILED);
                         }
                     });
                 }));
@@ -14473,42 +14472,42 @@ public class MainFrame extends JFrame {
                 taskList.add(GlobalExecutors.requestExecutor.submit(() -> {
                     try {
                         // 得到榜单的音乐信息
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                                rankingInfo.getId(), rankingInfo.getSource(), netMusicInRankingCurrPage = 1, limit);
+                        CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRank(
+                                rankInfo.getId(), rankInfo.getSource(), netMusicInRankCurrPage = 1, limit);
                         List<NetMusicInfo> musicInfos = result.data;
                         Integer total = result.total;
-                        netMusicInRankingMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                        netMusicInRankMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
                         // 更新榜单歌曲数量显示
-//                            netCurrRankingLabel.setText(StringUtils.textToHtml(RankingInfo.getName()));
-                        netRankingCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankingCurrPage, netMusicInRankingMaxPage));
-                        rankingListCountBox.add(netRankingCountPanel);
-                        rankingListBox.add(rankingListCountBox);
+//                            netCurrRankLabel.setText(StringUtils.textToHtml(RankInfo.getName()));
+                        netRankCountLabel.setText(String.format(PAGINATION_MSG, netMusicInRankCurrPage, netMusicInRankMaxPage));
+                        rankListCountBox.add(netRankCountPanel);
+                        rankListBox.add(rankListCountBox);
                         // 榜单列表切换到在线音乐列表
-                        netMusicList.setModel(netMusicListForRankingModel);
-                        netRankingLeftBox.remove(netRankingScrollPane);
-                        netRankingLeftBox.add(rankingListBox);
+                        netMusicList.setModel(netMusicListForRankModel);
+                        netRankLeftBox.remove(netRankScrollPane);
+                        netRankLeftBox.add(rankListBox);
                         // 添加数据建议弄到更新数量显示之后，不然可能会不显示！
                         netMusicList.setModel(emptyListModel);
-                        netMusicListForRankingModel.clear();
+                        netMusicListForRankModel.clear();
                         musicInfos.forEach(musicInfo -> {
                             globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListForRankingModel.addElement(musicInfo);
+                            netMusicListForRankModel.addElement(musicInfo);
                         });
-                        netMusicList.setModel(netMusicListForRankingModel);
-                        rankingDescriptionScrollPane.setVBarValue(0);
+                        netMusicList.setModel(netMusicListForRankModel);
+                        rankDescriptionScrollPane.setVBarValue(0);
                         netMusicScrollPane.setVBarValue(0);
-                        netRankingBackwardButton.setEnabled(true);
-                        netRankingSourceComboBox.setVisible(false);
-                        netRankingPlayAllButton.setVisible(true);
-                        if (netMusicListForRankingModel.isEmpty()) {
-                            rankingListCountBox.remove(netMusicScrollPane);
-                            rankingListCountBox.add(emptyHintPanel);
+                        netRankBackwardButton.setEnabled(true);
+                        netRankSourceComboBox.setVisible(false);
+                        netRankPlayAllButton.setVisible(true);
+                        if (netMusicListForRankModel.isEmpty()) {
+                            rankListCountBox.remove(netMusicScrollPane);
+                            rankListCountBox.add(emptyHintPanel);
                         } else {
-                            rankingListCountBox.remove(emptyHintPanel);
-                            rankingListCountBox.add(netMusicScrollPane);
+                            rankListCountBox.remove(emptyHintPanel);
+                            rankListCountBox.add(netMusicScrollPane);
                         }
                         // 切换后一定要刷新！
-                        netRankingLeftBox.repaint();
+                        netRankLeftBox.repaint();
                     } catch (Exception exception) {
                         ExceptionUtil.handleResourceException(exception, THIS);
                     }
@@ -14523,59 +14522,59 @@ public class MainFrame extends JFrame {
                 });
             });
         };
-        netRankingList.addKeyListener(new KeyAdapter() {
+        netRankList.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    openRankingAction.run();
+                    openRankAction.run();
                 }
             }
         });
-        netRankingList.addMouseListener(new MouseAdapter() {
+        netRankList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击打开榜单
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    openRankingAction.run();
+                    openRankAction.run();
                 }
                 // 右键弹出菜单
                 else if (e.getButton() == MouseEvent.BUTTON3) {
-                    if (netRankingList.getModel().getSize() != 0) {
+                    if (netRankList.getModel().getSize() != 0) {
                         // 得到鼠标光标所在的选项并选中
-                        int index = netRankingList.locationToIndex(e.getPoint());
+                        int index = netRankList.locationToIndex(e.getPoint());
                         if (index == -1) return;
-                        if (!netRankingList.isSelectedIndex(index)) netRankingList.setSelectedIndex(index);
-                        if (hasBeenCollected(netRankingList.getSelectedValue())) {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                            netRankingCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
+                        if (!netRankList.isSelectedIndex(index)) netRankList.setSelectedIndex(index);
+                        if (hasBeenCollected(netRankList.getSelectedValue())) {
+                            netRankCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                            netRankCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
                         } else {
-                            netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                            netRankingCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
+                            netRankCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                            netRankCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                         }
 
-                        netRankingPopupMenu.show(netRankingList, e.getX(), e.getY());
+                        netRankPopupMenu.show(netRankList, e.getX(), e.getY());
                     }
                 }
             }
         });
         // 打开榜单
-        netRankingOpenMenuItem.addActionListener(e -> {
+        netRankOpenMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
-            if (index == TabIndex.NET_RANKING) openRankingAction.run();
+            if (index == TabIndex.NET_RANK) openRankAction.run();
             else if (index == TabIndex.PERSONAL) openCollectionItemAction.run();
             else openRecommendItemAction.run();
         });
         // 播放全部
-        netRankingPlayAllMenuItem.addActionListener(e -> {
-            NetRankingInfo rankingInfo;
+        netRankPlayAllMenuItem.addActionListener(e -> {
+            NetRankInfo rankInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
+            if (selectedIndex == TabIndex.NET_RANK) rankInfo = netRankList.getSelectedValue();
             else if (selectedIndex == TabIndex.PERSONAL)
-                rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            else rankingInfo = (NetRankingInfo) itemRecommendList.getSelectedValue();
+                rankInfo = (NetRankInfo) collectionList.getSelectedValue();
+            else rankInfo = (NetRankInfo) itemRecommendList.getSelectedValue();
             loadingAndRun(() -> {
-                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRanking(
-                        rankingInfo.getId(), rankingInfo.getSource(), 1, 1000);
+                CommonResult<NetMusicInfo> result = MusicServerUtil.getMusicInfoInRank(
+                        rankInfo.getId(), rankInfo.getSource(), 1, 1000);
                 List<NetMusicInfo> musicInfos = result.data;
                 if (musicInfos.isEmpty()) {
                     new TipDialog(THIS, NO_MUSIC_MSG).showDialog();
@@ -14593,16 +14592,16 @@ public class MainFrame extends JFrame {
             });
         });
         // 收藏榜单
-        netRankingCollectMenuItem.addActionListener(e -> {
+        netRankCollectMenuItem.addActionListener(e -> {
             int index = tabbedPane.getSelectedIndex();
             CustomList list;
-            if (index == TabIndex.NET_RANKING) list = netRankingList;
+            if (index == TabIndex.NET_RANK) list = netRankList;
             else if (index == TabIndex.PERSONAL) list = collectionList;
             else list = itemRecommendList;
             ListModel model = collectionList.getModel();
-            boolean needRefresh = model == rankingCollectionModel;
-            if (netRankingCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
-                    || list == netRankingList && rankingDescriptionCollectionButton.getText().equals(COLLECT_TIP)
+            boolean needRefresh = model == rankCollectionModel;
+            if (netRankCollectMenuItem.getText().equals(COLLECT_MENU_ITEM_TEXT) && list.isShowing()
+                    || list == netRankList && rankDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == itemRecommendList && recommendItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)
                     || list == collectionList && collectionItemDescriptionCollectionButton.getText().equals(COLLECT_TIP)) {
                 List values = list.getSelectedValuesList();
@@ -14610,12 +14609,12 @@ public class MainFrame extends JFrame {
                 // 描述面板取消收藏之后，使用之前保存的对象
                 boolean userOpenResource = values.isEmpty() && !hasBeenCollected(collectionOpenResource);
                 if (userOpenResource) {
-                    rankingCollectionModel.add(0, collectionOpenResource);
+                    rankCollectionModel.add(0, collectionOpenResource);
                 } else {
                     for (int i = values.size() - 1; i >= 0; i--) {
-                        NetRankingInfo rankingInfo = (NetRankingInfo) values.get(i);
-                        if (hasBeenCollected(rankingInfo)) continue;
-                        rankingCollectionModel.add(0, rankingInfo);
+                        NetRankInfo rankInfo = (NetRankInfo) values.get(i);
+                        if (hasBeenCollected(rankInfo)) continue;
+                        rankCollectionModel.add(0, rankInfo);
                     }
                 }
                 if (needRefresh) collectionList.setModel(model);
@@ -14626,7 +14625,7 @@ public class MainFrame extends JFrame {
                 if (needRefresh) collectionList.setModel(emptyListModel);
                 values.forEach(o -> {
                     if (list == collectionList || hasBeenCollected((Resource) o)) {
-                        rankingCollectionModel.removeElement(o);
+                        rankCollectionModel.removeElement(o);
                     }
                 });
                 if (needRefresh) collectionList.setModel(model);
@@ -14634,31 +14633,31 @@ public class MainFrame extends JFrame {
             }
         });
         // 查看评论
-        netRankingCommentMenuItem.addActionListener(e -> {
-            NetRankingInfo rankingInfo;
+        netRankCommentMenuItem.addActionListener(e -> {
+            NetRankInfo rankInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
-            else rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            getComments(rankingInfo, true);
+            if (selectedIndex == TabIndex.NET_RANK) rankInfo = netRankList.getSelectedValue();
+            else rankInfo = (NetRankInfo) collectionList.getSelectedValue();
+            getComments(rankInfo, true);
         });
         // 复制名称
-        netRankingCopyNameMenuItem.addActionListener(e -> {
-            NetRankingInfo rankingInfo;
+        netRankCopyNameMenuItem.addActionListener(e -> {
+            NetRankInfo rankInfo;
             int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_RANKING) rankingInfo = netRankingList.getSelectedValue();
-            else rankingInfo = (NetRankingInfo) collectionList.getSelectedValue();
-            copyToClipboard(rankingInfo.toSimpleString());
+            if (selectedIndex == TabIndex.NET_RANK) rankInfo = netRankList.getSelectedValue();
+            else rankInfo = (NetRankInfo) collectionList.getSelectedValue();
+            copyToClipboard(rankInfo.toSimpleString());
         });
         // 榜单列表右键菜单项
-        netRankingPopupMenu.add(netRankingOpenMenuItem);
-        netRankingPopupMenu.add(netRankingPlayAllMenuItem);
-        netRankingPopupMenu.add(netRankingCollectMenuItem);
-        netRankingPopupMenu.add(netRankingCommentMenuItem);
-        netRankingPopupMenu.add(netRankingCopyNameMenuItem);
+        netRankPopupMenu.add(netRankOpenMenuItem);
+        netRankPopupMenu.add(netRankPlayAllMenuItem);
+        netRankPopupMenu.add(netRankCollectMenuItem);
+        netRankPopupMenu.add(netRankCommentMenuItem);
+        netRankPopupMenu.add(netRankCopyNameMenuItem);
 
         // 榜单最佳大小
-        netRankingScrollPane.setPreferredSize(new HDDimension(200, 600));
-        netRankingLeftBox.add(netRankingScrollPane);
+        netRankScrollPane.setPreferredSize(new HDDimension(200, 600));
+        netRankLeftBox.add(netRankScrollPane);
     }
 
     // 搜索用户跳页事件
@@ -15841,7 +15840,7 @@ public class MainFrame extends JFrame {
                 else if (resource instanceof NetAlbumInfo) s = ((NetAlbumInfo) resource).toSimpleString();
                 else if (resource instanceof NetRadioInfo) s = ((NetRadioInfo) resource).toSimpleString();
                 else if (resource instanceof NetMvInfo) s = ((NetMvInfo) resource).toSimpleString();
-                else if (resource instanceof NetRankingInfo) s = ((NetRankingInfo) resource).toSimpleString();
+                else if (resource instanceof NetRankInfo) s = ((NetRankInfo) resource).toSimpleString();
                 netCommentTitleLabel.setText(HtmlUtil.textToHtml(s + I18n.getText("commentSuffix")));
                 netCommentCountLabel.setText(String.format(PAGINATION_MSG, netCommentCurrPage, netCommentMaxPage));
                 netCommentCountPanel.setVisible(true);
@@ -17249,7 +17248,7 @@ public class MainFrame extends JFrame {
                     if (Tags.recPlaylistTag.isEmpty()) MusicServerUtil.initRecPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.recPlaylistTag.keySet()) {
-                        if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistMap, tag))
+                        if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17306,7 +17305,7 @@ public class MainFrame extends JFrame {
                     if (Tags.hotPlaylistTag.isEmpty()) MusicServerUtil.initPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.hotPlaylistTag.keySet()) {
-                        if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistMap, tag))
+                        if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17363,7 +17362,7 @@ public class MainFrame extends JFrame {
                     if (Tags.hotSongTag.isEmpty()) MusicServerUtil.initHotSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.hotSongTag.keySet()) {
-                        if (shouldShowTag(Tags.hotSongTag, Tags.hotSongMap, tag))
+                        if (shouldShowTag(Tags.hotSongTag, Tags.hotSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17410,7 +17409,7 @@ public class MainFrame extends JFrame {
                     if (Tags.newSongTag.isEmpty()) MusicServerUtil.initNewSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.newSongTag.keySet()) {
-                        if (shouldShowTag(Tags.newSongTag, Tags.newSongMap, tag))
+                        if (shouldShowTag(Tags.newSongTag, Tags.newSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17457,7 +17456,7 @@ public class MainFrame extends JFrame {
                     if (Tags.newAlbumTag.isEmpty()) MusicServerUtil.initNewAlbumTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.newAlbumTag.keySet()) {
-                        if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumMap, tag))
+                        if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17513,7 +17512,7 @@ public class MainFrame extends JFrame {
                     if (Tags.artistTag.isEmpty()) MusicServerUtil.initArtistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.artistTag.keySet()) {
-                        if (shouldShowTag(Tags.artistTag, Tags.artistMap, tag))
+                        if (shouldShowTag(Tags.artistTag, Tags.artistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17617,7 +17616,7 @@ public class MainFrame extends JFrame {
                     if (Tags.radioTag.isEmpty()) MusicServerUtil.initRadioTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.radioTag.keySet()) {
-                        if (shouldShowTag(Tags.radioTag, Tags.radioMap, tag))
+                        if (shouldShowTag(Tags.radioTag, Tags.radioIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17673,7 +17672,7 @@ public class MainFrame extends JFrame {
                     if (Tags.programTag.isEmpty()) MusicServerUtil.initProgramTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.programTag.keySet()) {
-                        if (shouldShowTag(Tags.programTag, Tags.programMap, tag))
+                        if (shouldShowTag(Tags.programTag, Tags.programIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17720,7 +17719,7 @@ public class MainFrame extends JFrame {
                     if (Tags.mvTag.isEmpty()) MusicServerUtil.initMvTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
                     for (String tag : Tags.mvTag.keySet()) {
-                        if (shouldShowTag(Tags.mvTag, Tags.mvMap, tag))
+                        if (shouldShowTag(Tags.mvTag, Tags.mvIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17822,47 +17821,47 @@ public class MainFrame extends JFrame {
             ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
             if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) {
                 for (String tag : Tags.recPlaylistTag.keySet()) {
-                    if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistMap, tag))
+                    if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
                 for (String tag : Tags.hotPlaylistTag.keySet()) {
-                    if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistMap, tag))
+                    if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
                 for (String tag : Tags.hotSongTag.keySet()) {
-                    if (shouldShowTag(Tags.hotSongTag, Tags.hotSongMap, tag))
+                    if (shouldShowTag(Tags.hotSongTag, Tags.hotSongIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) {
                 for (String tag : Tags.newSongTag.keySet()) {
-                    if (shouldShowTag(Tags.newSongTag, Tags.newSongMap, tag))
+                    if (shouldShowTag(Tags.newSongTag, Tags.newSongIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
                 for (String tag : Tags.newAlbumTag.keySet()) {
-                    if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumMap, tag))
+                    if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
                 for (String tag : Tags.artistTag.keySet()) {
-                    if (shouldShowTag(Tags.artistTag, Tags.artistMap, tag))
+                    if (shouldShowTag(Tags.artistTag, Tags.artistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) {
                 for (String tag : Tags.radioTag.keySet()) {
-                    if (shouldShowTag(Tags.radioTag, Tags.radioMap, tag))
+                    if (shouldShowTag(Tags.radioTag, Tags.radioIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) {
                 for (String tag : Tags.programTag.keySet()) {
-                    if (shouldShowTag(Tags.programTag, Tags.programMap, tag))
+                    if (shouldShowTag(Tags.programTag, Tags.programIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
                 for (String tag : Tags.mvTag.keySet()) {
-                    if (shouldShowTag(Tags.mvTag, Tags.mvMap, tag))
+                    if (shouldShowTag(Tags.mvTag, Tags.mvIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             }
@@ -21018,7 +21017,7 @@ public class MainFrame extends JFrame {
         netArtistBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netArtistBackwardButton.getIcon(), darkerIconColor));
         netRadioBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRadioBackwardButton.getIcon(), darkerIconColor));
         netMvBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netMvBackwardButton.getIcon(), darkerIconColor));
-        netRankingBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRankingBackwardButton.getIcon(), darkerIconColor));
+        netRankBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netRankBackwardButton.getIcon(), darkerIconColor));
         netUserBackwardButton.setDisabledIcon(ImageUtil.dye((ImageIcon) netUserBackwardButton.getIcon(), darkerIconColor));
         mvButton.setDisabledIcon(ImageUtil.dye((ImageIcon) mvButton.getIcon(), darkerIconColor));
         collectButton.setDisabledIcon(ImageUtil.dye((ImageIcon) collectButton.getIcon(), darkerIconColor));
@@ -21184,11 +21183,11 @@ public class MainFrame extends JFrame {
         netMvCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
         netMvCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
-        netRankingOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
-        netRankingPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
-        netRankingCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
-        netRankingCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
-        netRankingCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
+        netRankOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
+        netRankPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
+        netRankCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
+        netRankCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
+        netRankCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         netUserOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
         netUserPlayAllMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
@@ -21297,7 +21296,7 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(netAlbumPopupMenu);
         updateMenuItemStyle(netArtistPopupMenu);
         updateMenuItemStyle(netRadioPopupMenu);
-        updateMenuItemStyle(netRankingPopupMenu);
+        updateMenuItemStyle(netRankPopupMenu);
         updateMenuItemStyle(netUserPopupMenu);
         updateMenuItemStyle(netCommentPopupMenu);
         updateMenuItemStyle(netSheetPopupMenu);
@@ -21481,11 +21480,11 @@ public class MainFrame extends JFrame {
         netMvPageTextField.setSelectedTextColor(textColor);
         netMvPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 榜单搜索栏透明
-        netRankingPageTextField.setForeground(textColor);
-        netRankingPageTextField.setCaretColor(textColor);
-        netRankingPageTextField.setSelectedTextColor(textColor);
-        netRankingPageTextField.setSelectionColor(darkerTextAlphaColor);
-        netRankingPlayAllButton.setForeground(textColor);
+        netRankPageTextField.setForeground(textColor);
+        netRankPageTextField.setCaretColor(textColor);
+        netRankPageTextField.setSelectedTextColor(textColor);
+        netRankPageTextField.setSelectionColor(darkerTextAlphaColor);
+        netRankPlayAllButton.setForeground(textColor);
         // 用户搜索栏透明
         netUserSearchTextField.updateStyle();
         netUserSearchTextField.setForeground(!netUserSearchTextField.isHintHolding() ? textColor : darkerTextColor);
@@ -21500,7 +21499,7 @@ public class MainFrame extends JFrame {
         netUserPageTextField.setSelectionColor(darkerTextAlphaColor);
         netUserPlayAllButton.setForeground(textColor);
         // 榜单栏
-        netRankingSourceComboBox.setUI(new StringComboBoxUI(netRankingSourceComboBox, THIS));
+        netRankSourceComboBox.setUI(new StringComboBoxUI(netRankSourceComboBox, THIS));
         // 评论栏透明
         netCommentTypeComboBox.setUI(new StringComboBoxUI(netCommentTypeComboBox, THIS));
         netCommentPageTextField.setForeground(textColor);
@@ -21628,14 +21627,14 @@ public class MainFrame extends JFrame {
         netMvNextPageButton.updateIconStyle();
         netMvEndPageButton.updateIconStyle();
         // 榜单搜索栏按钮颜色
-        netRankingBackwardButton.updateIconStyle();
-        netRankingPlayAllButton.updateIconStyle();
-        netRankingRefreshButton.updateIconStyle();
-        netRankingStartPageButton.updateIconStyle();
-        netRankingLastPageButton.updateIconStyle();
-        netRankingGoButton.updateIconStyle();
-        netRankingNextPageButton.updateIconStyle();
-        netRankingEndPageButton.updateIconStyle();
+        netRankBackwardButton.updateIconStyle();
+        netRankPlayAllButton.updateIconStyle();
+        netRankRefreshButton.updateIconStyle();
+        netRankStartPageButton.updateIconStyle();
+        netRankLastPageButton.updateIconStyle();
+        netRankGoButton.updateIconStyle();
+        netRankNextPageButton.updateIconStyle();
+        netRankEndPageButton.updateIconStyle();
         // 用户搜索栏按钮颜色
         netUserBackwardButton.updateIconStyle();
         netUserClearInputButton.updateIconStyle();
@@ -21720,7 +21719,7 @@ public class MainFrame extends JFrame {
         netRadioCountLabel.setForeground(textColor);
         netMvTitleLabel.setForeground(textColor);
         netMvCountLabel.setForeground(textColor);
-        netRankingCountLabel.setForeground(textColor);
+        netRankCountLabel.setForeground(textColor);
         netUserTitleLabel.setForeground(textColor);
         netUserCountLabel.setForeground(textColor);
         netCommentTitleLabel.setForeground(textColor);
@@ -21782,12 +21781,12 @@ public class MainFrame extends JFrame {
         netMvListRenderer.setIconColor(iconColor);
         netMvList.setCellRenderer(netMvListRenderer);
 
-        NetRankingListRenderer netRankingListRenderer = new NetRankingListRenderer();
-        netRankingListRenderer.setForeColor(foreColor);
-        netRankingListRenderer.setSelectedColor(selectedColor);
-        netRankingListRenderer.setTextColor(textColor);
-        netRankingListRenderer.setIconColor(iconColor);
-        netRankingList.setCellRenderer(netRankingListRenderer);
+        NetRankListRenderer netRankListRenderer = new NetRankListRenderer();
+        netRankListRenderer.setForeColor(foreColor);
+        netRankListRenderer.setSelectedColor(selectedColor);
+        netRankListRenderer.setTextColor(textColor);
+        netRankListRenderer.setIconColor(iconColor);
+        netRankList.setCellRenderer(netRankListRenderer);
 
         NetUserListRenderer netUserListRenderer = new NetUserListRenderer();
         netUserListRenderer.setForeColor(foreColor);
@@ -21844,7 +21843,7 @@ public class MainFrame extends JFrame {
         albumDescriptionCollectionButton.setForeground(textColor);
         artistDescriptionCollectionButton.setForeground(textColor);
         radioDescriptionCollectionButton.setForeground(textColor);
-        rankingDescriptionCollectionButton.setForeground(textColor);
+        rankDescriptionCollectionButton.setForeground(textColor);
         userDescriptionCollectionButton.setForeground(textColor);
         recommendItemDescriptionCollectionButton.setForeground(textColor);
         collectionItemDescriptionCollectionButton.setForeground(textColor);
@@ -21853,7 +21852,7 @@ public class MainFrame extends JFrame {
         albumDescriptionCollectionButton.updateIconStyle();
         artistDescriptionCollectionButton.updateIconStyle();
         radioDescriptionCollectionButton.updateIconStyle();
-        rankingDescriptionCollectionButton.updateIconStyle();
+        rankDescriptionCollectionButton.updateIconStyle();
         userDescriptionCollectionButton.updateIconStyle();
         recommendItemDescriptionCollectionButton.updateIconStyle();
         collectionItemDescriptionCollectionButton.updateIconStyle();
@@ -21862,7 +21861,7 @@ public class MainFrame extends JFrame {
         albumCoverAndNameLabel.setForeground(textColor);
         artistCoverAndNameLabel.setForeground(textColor);
         radioCoverAndNameLabel.setForeground(textColor);
-        rankingCoverAndNameLabel.setForeground(textColor);
+        rankCoverAndNameLabel.setForeground(textColor);
         userCoverAndNameLabel.setForeground(textColor);
         recommendItemCoverAndNameLabel.setForeground(textColor);
         collectionItemCoverAndNameLabel.setForeground(textColor);
@@ -21874,7 +21873,7 @@ public class MainFrame extends JFrame {
         artistDescriptionLabel.setForeground(textColor);
         radioTagLabel.setForeground(textColor);
         radioDescriptionLabel.setForeground(textColor);
-        rankingDescriptionLabel.setForeground(textColor);
+        rankDescriptionLabel.setForeground(textColor);
         userTagLabel.setForeground(textColor);
         userDescriptionLabel.setForeground(textColor);
         recommendItemTagLabel.setForeground(textColor);
@@ -22331,7 +22330,7 @@ public class MainFrame extends JFrame {
         else if (resource instanceof NetArtistInfo) model = artistCollectionModel;
         else if (resource instanceof NetRadioInfo) model = radioCollectionModel;
         else if (resource instanceof NetMvInfo) model = mvCollectionModel;
-        else if (resource instanceof NetRankingInfo) model = rankingCollectionModel;
+        else if (resource instanceof NetRankInfo) model = rankCollectionModel;
         else if (resource instanceof NetUserInfo) model = userCollectionModel;
         return model.contains(resource);
     }
@@ -22346,7 +22345,7 @@ public class MainFrame extends JFrame {
         else if (resource instanceof NetArtistInfo) model = artistCollectionModel;
         else if (resource instanceof NetRadioInfo) model = radioCollectionModel;
         else if (resource instanceof NetMvInfo) model = mvCollectionModel;
-        else if (resource instanceof NetRankingInfo) model = rankingCollectionModel;
+        else if (resource instanceof NetRankInfo) model = rankCollectionModel;
         else if (resource instanceof NetUserInfo) model = userCollectionModel;
         for (int i = 0, len = model.size(); i < len; i++) {
             if (model.get(i).equals(resource)) {
@@ -22491,7 +22490,7 @@ public class MainFrame extends JFrame {
                 else if (selectedIndex == CollectionTabIndex.ARTIST) collectionList.setModel(artistCollectionModel);
                 else if (selectedIndex == CollectionTabIndex.RADIO) collectionList.setModel(radioCollectionModel);
                 else if (selectedIndex == CollectionTabIndex.MV) collectionList.setModel(mvCollectionModel);
-                else if (selectedIndex == CollectionTabIndex.RANKING) collectionList.setModel(rankingCollectionModel);
+                else if (selectedIndex == CollectionTabIndex.RANK) collectionList.setModel(rankCollectionModel);
                 else if (selectedIndex == CollectionTabIndex.USER) collectionList.setModel(userCollectionModel);
             }
             if (useMusicList) {
@@ -22516,7 +22515,7 @@ public class MainFrame extends JFrame {
                     else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                    else if (selectedIndex == CollectionTabIndex.RANKING) box = rankingCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
                     else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
                     box.remove(emptyHintPanel);
                     box.add(collectionScrollPane);
@@ -22534,7 +22533,7 @@ public class MainFrame extends JFrame {
             else if (selectedIndex == CollectionTabIndex.ARTIST) listModel = artistCollectionModel;
             else if (selectedIndex == CollectionTabIndex.RADIO) listModel = radioCollectionModel;
             else if (selectedIndex == CollectionTabIndex.MV) listModel = mvCollectionModel;
-            else if (selectedIndex == CollectionTabIndex.RANKING) listModel = rankingCollectionModel;
+            else if (selectedIndex == CollectionTabIndex.RANK) listModel = rankCollectionModel;
             else if (selectedIndex == CollectionTabIndex.USER) listModel = userCollectionModel;
         }
         // 解决选中第一项重新筛选的性能问题

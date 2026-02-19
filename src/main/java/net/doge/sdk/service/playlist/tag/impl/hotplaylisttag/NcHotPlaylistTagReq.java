@@ -32,7 +32,7 @@ public class NcHotPlaylistTagReq {
      * @return
      */
     public void initHighQualityPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String playlistTagBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_TAG_NC_API, "{}", options)
                 .executeAsStr();
@@ -54,7 +54,7 @@ public class NcHotPlaylistTagReq {
      * @return
      */
     public void initPickedPlaylistTag() {
-        int c = Tags.hotPlaylistMap.length;
+        int c = Tags.hotPlaylistIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String playlistTagBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_TAG_NC_API, "{}", options)
                 .executeAsStr();

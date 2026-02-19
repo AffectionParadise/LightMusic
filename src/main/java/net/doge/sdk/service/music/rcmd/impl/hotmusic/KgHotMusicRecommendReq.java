@@ -11,7 +11,7 @@ import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
-import net.doge.sdk.service.ranking.info.RankingInfoReq;
+import net.doge.sdk.service.rank.info.RankInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Header;
@@ -284,16 +284,16 @@ public class KgHotMusicRecommendReq {
      * 飙升榜
      */
     public CommonResult<NetMusicInfo> getUpMusic(int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(6666), NetMusicSource.KG, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(6666), NetMusicSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            String rankingInfoBody = HttpRequest.get(String.format(UP_MUSIC_KG_API, page, limit))
+//            String rankInfoBody = HttpRequest.get(String.format(UP_MUSIC_KG_API, page, limit))
 //                    .executeAsync()
 //                    .body();
-//            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-//            JSONObject data = rankingInfoJson.getJSONObject("data");
+//            JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+//            JSONObject data = rankInfoJson.getJSONObject("data");
 //            t = data.getIntValue("total");
 //            JSONArray songArray = data.getJSONArray("info");
 //            for (int i = 0, len = songArray.size(); i < len; i++) {
@@ -337,16 +337,16 @@ public class KgHotMusicRecommendReq {
      * TOP500
      */
     public CommonResult<NetMusicInfo> getTop500(int page, int limit) {
-        return RankingInfoReq.getInstance().getMusicInfoInRanking(String.valueOf(8888), NetMusicSource.KG, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(8888), NetMusicSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
 //
-//            String rankingInfoBody = HttpRequest.get(String.format(TOP500_KG_API, page, limit))
+//            String rankInfoBody = HttpRequest.get(String.format(TOP500_KG_API, page, limit))
 //                    .executeAsync()
 //                    .body();
-//            JSONObject rankingInfoJson = JSONObject.parseObject(rankingInfoBody);
-//            JSONObject data = rankingInfoJson.getJSONObject("data");
+//            JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
+//            JSONObject data = rankInfoJson.getJSONObject("data");
 //            t = data.getIntValue("total");
 //            JSONArray songArray = data.getJSONArray("info");
 //            for (int i = 0, len = songArray.size(); i < len; i++) {

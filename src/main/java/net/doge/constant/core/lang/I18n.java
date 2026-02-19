@@ -156,7 +156,7 @@ public class I18n {
         LANG_MAP.put("netArtist", new String[]{"歌手", "Artists"});
         LANG_MAP.put("netRadio", new String[]{"电台", "Radios"});
         LANG_MAP.put("netMv", new String[]{"MV", "MVs"});
-        LANG_MAP.put("netRanking", new String[]{"榜单", "Ranks"});
+        LANG_MAP.put("netRank", new String[]{"榜单", "Ranks"});
         LANG_MAP.put("netUser", new String[]{"用户", "Users"});
         LANG_MAP.put("netRecommend", new String[]{"推荐", "Recommendations"});
         LANG_MAP.put("downloadManagement", new String[]{"下载管理", "Download Management"});
@@ -168,7 +168,7 @@ public class I18n {
         LANG_MAP.put("artistCollection", new String[]{"歌手", "Artists"});
         LANG_MAP.put("radioCollection", new String[]{"电台", "Radios"});
         LANG_MAP.put("mvCollection", new String[]{" MV ", "MVs"});
-        LANG_MAP.put("rankingCollection", new String[]{"榜单", "Ranks"});
+        LANG_MAP.put("rankCollection", new String[]{"榜单", "Ranks"});
         LANG_MAP.put("userCollection", new String[]{"用户", "Users"});
 
         LANG_MAP.put("miniWindowTip", new String[]{"迷你模式", "Mini mode"});

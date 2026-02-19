@@ -25,7 +25,7 @@ public class DbNewAlbumTagReq {
      * 分类专辑标签
      */
     public void initAlbumTag() {
-        int c = Tags.newAlbumMap.length;
+        int c = Tags.newAlbumIndices.length;
         String albumTagBody = HttpRequest.get(ALBUM_TAG_DB_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(albumTagBody);

@@ -26,7 +26,7 @@ public class MeHotRadioTagReq {
      * @return
      */
     public void initRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         String radioTagBody = HttpRequest.get(RADIO_TAG_ME_API)
                 .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);

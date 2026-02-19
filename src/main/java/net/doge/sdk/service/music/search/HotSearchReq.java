@@ -29,7 +29,7 @@ public class HotSearchReq {
         executor.submit(() -> KwHotSearchReq.getInstance().getHotSearch());
         executor.submit(() -> KwHotSearchReq.getInstance().getHotSearchWeb());
         executor.submit(() -> MgHotSearchReq.getInstance().getHotSearch());
-        executor.submit(() -> FsHotSearchReq.getInstance().getHotSearch());
+//        executor.submit(() -> FsHotSearchReq.getInstance().getHotSearch());
         return executor.getResultAsSet();
     }
 }

@@ -4,7 +4,7 @@ import lombok.Data;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.RendererConstants;
-import net.doge.entity.service.NetRankingInfo;
+import net.doge.entity.service.NetRankInfo;
 import net.doge.ui.widget.box.CustomBox;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
@@ -25,7 +25,7 @@ import java.awt.*;
  * @date 2020/12/7
  */
 @Data
-public class NetRankingListRenderer extends CustomListCellRenderer {
+public class NetRankListRenderer extends CustomListCellRenderer {
     private final Font tinyFont = Fonts.NORMAL_TINY;
     private Color foreColor;
     private Color selectedColor;
@@ -40,15 +40,15 @@ public class NetRankingListRenderer extends CustomListCellRenderer {
     private CustomLabel updateFreLabel = new CustomLabel();
     private CustomLabel updateTimeLabel = new CustomLabel();
 
-    private ImageIcon rankingIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankingItem"), ImageConstants.MEDIUM_WIDTH));
+    private ImageIcon rankIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankItem"), ImageConstants.MEDIUM_WIDTH));
 
-    public NetRankingListRenderer() {
+    public NetRankListRenderer() {
         init();
     }
 
     public void setIconColor(Color iconColor) {
         this.iconColor = iconColor;
-        rankingIcon = ImageUtil.dye(rankingIcon, iconColor);
+        rankIcon = ImageUtil.dye(rankIcon, iconColor);
     }
 
     private void init() {
@@ -79,9 +79,9 @@ public class NetRankingListRenderer extends CustomListCellRenderer {
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        NetRankingInfo rankingInfo = (NetRankingInfo) value;
+        NetRankInfo rankInfo = (NetRankInfo) value;
 
-        iconLabel.setIcon(rankingInfo.hasCoverImgThumb() ? new ImageIcon(rankingInfo.getCoverImgThumb()) : rankingIcon);
+        iconLabel.setIcon(rankInfo.hasCoverImgThumb() ? new ImageIcon(rankInfo.getCoverImgThumb()) : rankIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -95,10 +95,10 @@ public class NetRankingListRenderer extends CustomListCellRenderer {
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(rankingInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw));
-        String playCount = rankingInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(rankingInfo.getPlayCount())) : "";
-        String updateFre = rankingInfo.hasUpdateFre() ? HtmlUtil.textToHtml(rankingInfo.getUpdateFre()) : "";
-        String updateTime = rankingInfo.hasUpdateTime() ? HtmlUtil.textToHtml(rankingInfo.getUpdateTime() + " 更新") : "";
+        String name = rankInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(rankInfo.getName(), RendererConstants.STRING_MAX_LENGTH), tw)) : "";
+        String playCount = rankInfo.hasPlayCount() ? HtmlUtil.textToHtml(LangUtil.formatNumber(rankInfo.getPlayCount())) : "";
+        String updateFre = rankInfo.hasUpdateFre() ? HtmlUtil.textToHtml(rankInfo.getUpdateFre()) : "";
+        String updateTime = rankInfo.hasUpdateTime() ? HtmlUtil.textToHtml(rankInfo.getUpdateTime() + " 更新") : "";
 
         iconLabel.setText(source);
         nameLabel.setText(name);

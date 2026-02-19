@@ -32,7 +32,7 @@ public class NcHotRadioTagReq {
      * @return
      */
     public void initHotRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_NC_API, "{}", options)
                 .executeAsStr();
@@ -55,7 +55,7 @@ public class NcHotRadioTagReq {
      * @return
      */
     public void initRecRadioTag() {
-        int c = Tags.radioMap.length;
+        int c = Tags.radioIndices.length;
         Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
         String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_NC_API, "{}", options)
                 .executeAsStr();

@@ -107,7 +107,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
         int lw = list.getVisibleRect().width - ScaleUtil.scale(10), maxWidth = (lw - (innerPanel.getComponentCount() - 1) * ((GridLayout) innerPanel.getLayout()).getHgap()) / innerPanel.getComponentCount();
         String source = HtmlUtil.textToHtml(NetMusicSource.NAMES[musicInfo.getSource()]
                 + (musicInfo.hasQualityType() ? " " + AudioQuality.QT_NAMES[musicInfo.getQualityType()] : ""));
-        String name = HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth));
+        String name = musicInfo.hasName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(StringUtil.shorten(musicInfo.getName(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
         String artist = musicInfo.hasArtist() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(
                 StringUtil.shorten(musicInfo.getArtist(), RendererConstants.STRING_MAX_LENGTH), maxWidth)) : "";
         String albumName = musicInfo.hasAlbumName() ? HtmlUtil.textToHtml(HtmlUtil.wrapLineByWidth(

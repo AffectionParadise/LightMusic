@@ -28,7 +28,7 @@ public class LzMvTagReq {
      * @return
      */
     public void initVideoTag() {
-        int c = Tags.mvMap.length;
+        int c = Tags.mvIndices.length;
         String mvTagBody = HttpRequest.get(VIDEO_TAG_LZ_API)
                 .executeAsStr();
         Document doc = Jsoup.parse(mvTagBody);

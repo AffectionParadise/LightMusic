@@ -27,7 +27,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
     private NetArtistListRenderer artistListRenderer = new NetArtistListRenderer();
     private NetRadioListRenderer radioListRenderer = new NetRadioListRenderer();
     private NetMvListRenderer mvListRenderer = new NetMvListRenderer();
-    private NetRankingListRenderer rankingListRenderer = new NetRankingListRenderer();
+    private NetRankListRenderer rankListRenderer = new NetRankListRenderer();
     private NetUserListRenderer userListRenderer = new NetUserListRenderer();
 
     public void setForeColor(Color foreColor) {
@@ -37,7 +37,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
         artistListRenderer.setForeColor(foreColor);
         radioListRenderer.setForeColor(foreColor);
         mvListRenderer.setForeColor(foreColor);
-        rankingListRenderer.setForeColor(foreColor);
+        rankListRenderer.setForeColor(foreColor);
         userListRenderer.setForeColor(foreColor);
     }
 
@@ -48,7 +48,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
         artistListRenderer.setSelectedColor(selectedColor);
         radioListRenderer.setSelectedColor(selectedColor);
         mvListRenderer.setSelectedColor(selectedColor);
-        rankingListRenderer.setSelectedColor(selectedColor);
+        rankListRenderer.setSelectedColor(selectedColor);
         userListRenderer.setSelectedColor(selectedColor);
     }
 
@@ -59,7 +59,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
         artistListRenderer.setTextColor(textColor);
         radioListRenderer.setTextColor(textColor);
         mvListRenderer.setTextColor(textColor);
-        rankingListRenderer.setTextColor(textColor);
+        rankListRenderer.setTextColor(textColor);
         userListRenderer.setTextColor(textColor);
     }
 
@@ -70,7 +70,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
         artistListRenderer.setIconColor(iconColor);
         radioListRenderer.setIconColor(iconColor);
         mvListRenderer.setIconColor(iconColor);
-        rankingListRenderer.setIconColor(iconColor);
+        rankListRenderer.setIconColor(iconColor);
         userListRenderer.setIconColor(iconColor);
     }
 
@@ -81,7 +81,7 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
         artistListRenderer.setHoverIndex(hoverIndex);
         radioListRenderer.setHoverIndex(hoverIndex);
         mvListRenderer.setHoverIndex(hoverIndex);
-        rankingListRenderer.setHoverIndex(hoverIndex);
+        rankListRenderer.setHoverIndex(hoverIndex);
         userListRenderer.setHoverIndex(hoverIndex);
     }
 
@@ -97,8 +97,8 @@ public class ItemRecommendListRenderer extends CustomListCellRenderer {
             return root = radioListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetMvInfo)
             return root = mvListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-        else if (value instanceof NetRankingInfo)
-            return root = rankingListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+        else if (value instanceof NetRankInfo)
+            return root = rankListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         else if (value instanceof NetUserInfo)
             return root = userListRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 

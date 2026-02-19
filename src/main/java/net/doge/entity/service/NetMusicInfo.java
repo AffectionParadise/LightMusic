@@ -105,6 +105,10 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return StringUtil.notEmpty(hash);
     }
 
+    public boolean hasName() {
+        return StringUtil.notEmpty(name);
+    }
+
     public boolean hasArtist() {
         return StringUtil.notEmpty(artist);
     }

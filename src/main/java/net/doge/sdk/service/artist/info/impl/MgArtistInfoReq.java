@@ -73,9 +73,9 @@ public class MgArtistInfoReq {
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
         JSONObject artistJson = contents.getJSONObject(0).getJSONArray("contents").getJSONObject(0);
         JSONArray subContents = contents.getJSONObject(1).getJSONArray("contents");
-        JSONObject songJson = subContents.getJSONObject(1);
-        JSONObject mvJson = subContents.getJSONObject(2);
-        JSONObject albumJson = subContents.getJSONObject(3);
+        JSONObject songJson = SdkUtil.findFeatureObj(subContents, "action", "song");
+        JSONObject mvJson = SdkUtil.findFeatureObj(subContents, "action", "mv");
+        JSONObject albumJson = SdkUtil.findFeatureObj(subContents, "action", "album");
 
         String name = artistJson.getString("txt");
         Integer songNum = songJson.getIntValue("txt2");
@@ -139,9 +139,9 @@ public class MgArtistInfoReq {
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
         JSONObject artistJson = contents.getJSONObject(0).getJSONArray("contents").getJSONObject(0);
         JSONArray subContents = contents.getJSONObject(1).getJSONArray("contents");
-        JSONObject songJson = subContents.getJSONObject(1);
-        JSONObject mvJson = subContents.getJSONObject(2);
-        JSONObject albumJson = subContents.getJSONObject(3);
+        JSONObject songJson = SdkUtil.findFeatureObj(subContents, "action", "song");
+        JSONObject mvJson = SdkUtil.findFeatureObj(subContents, "action", "mv");
+        JSONObject albumJson = SdkUtil.findFeatureObj(subContents, "action", "album");
 
         if (!artistInfo.hasSongNum()) artistInfo.setSongNum(songJson.getIntValue("txt2"));
         if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(albumJson.getIntValue("txt2"));

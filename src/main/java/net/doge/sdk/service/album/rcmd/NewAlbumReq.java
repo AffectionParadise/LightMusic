@@ -42,7 +42,7 @@ public class NewAlbumReq {
             if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
                 MgNewAlbumReq mgNewAlbumReq = MgNewAlbumReq.getInstance();
                 executor.submit(() -> mgNewAlbumReq.getNewAlbums(page, limit));
-                executor.submit(() -> mgNewAlbumReq.getNewAlbumsRanking(page, limit));
+                executor.submit(() -> mgNewAlbumReq.getNewAlbumsRank(page, limit));
             }
             if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
                 QiNewAlbumReq qiNewAlbumReq = QiNewAlbumReq.getInstance();
