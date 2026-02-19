@@ -42,8 +42,8 @@ public class KgArtistTagReq {
             String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
             String name = tag.getString("name");
 
-            if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-            Tags.artistTag.get(name)[4] = id;
+            if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
+            Tags.artistTags.get(name)[4] = id;
         }
     }
 }

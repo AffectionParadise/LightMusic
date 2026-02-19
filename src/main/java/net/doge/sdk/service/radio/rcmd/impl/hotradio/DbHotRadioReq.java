@@ -91,7 +91,7 @@ public class DbHotRadioReq {
     public CommonResult<NetRadioInfo> getCatRadios(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, s[6], (page - 1) * limit, limit))
@@ -131,7 +131,7 @@ public class DbHotRadioReq {
     public CommonResult<NetRadioInfo> getCatGameRadios(String tag, int page) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);

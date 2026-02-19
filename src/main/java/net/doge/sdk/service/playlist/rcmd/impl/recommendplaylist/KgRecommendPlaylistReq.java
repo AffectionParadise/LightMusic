@@ -88,7 +88,7 @@ public class KgRecommendPlaylistReq {
     public CommonResult<NetPlaylistInfo> getRecommendTagPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.recPlaylistTag.get(tag);
+        String[] s = Tags.recPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
@@ -129,7 +129,7 @@ public class KgRecommendPlaylistReq {
     public CommonResult<NetPlaylistInfo> getNewTagPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.recPlaylistTag.get(tag);
+        String[] s = Tags.recPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))

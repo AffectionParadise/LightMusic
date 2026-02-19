@@ -53,7 +53,7 @@ public class KgHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getTopPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String cid = s[2].trim();
@@ -107,7 +107,7 @@ public class KgHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getTagPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, s[2].trim(), page))
@@ -148,7 +148,7 @@ public class KgHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getHotCollectedTagPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, s[2].trim(), page))
@@ -189,7 +189,7 @@ public class KgHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getUpTagPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, s[2].trim(), page))

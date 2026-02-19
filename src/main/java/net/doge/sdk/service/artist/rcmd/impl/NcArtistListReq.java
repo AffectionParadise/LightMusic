@@ -44,7 +44,7 @@ public class NcArtistListReq {
     public CommonResult<NetArtistInfo> getArtistRank(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -125,7 +125,7 @@ public class NcArtistListReq {
     public CommonResult<NetArtistInfo> getCatArtist(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String[] sp = s[1].split(" ");
@@ -169,7 +169,7 @@ public class NcArtistListReq {
     public CommonResult<NetArtistInfo> getStyleArtist(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

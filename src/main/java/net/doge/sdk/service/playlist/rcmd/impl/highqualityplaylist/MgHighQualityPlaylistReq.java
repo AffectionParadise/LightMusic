@@ -123,7 +123,7 @@ public class MgHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getCatPlaylists(String tag, int page) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, s[6], page))

@@ -66,6 +66,8 @@ public class MusicSearchReq {
                     executor.submit(() -> GgMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
                 if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
                     executor.submit(() -> FsMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
+                if (src == NetMusicSource.QS || src == NetMusicSource.ALL)
+                    executor.submit(() -> QsMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
         }
         return executor.getResult();
     }

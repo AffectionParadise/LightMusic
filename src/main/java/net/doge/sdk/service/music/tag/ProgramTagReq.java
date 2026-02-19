@@ -22,7 +22,7 @@ public class ProgramTagReq {
      */
     public void initProgramTag() {
         // 猫耳 猫耳
-        Tags.programTag.put("默认", new String[]{"", ""});
+        Tags.programTags.put("默认", new String[]{"", ""});
 
         MultiRunnableExecutor executor = new MultiRunnableExecutor();
         executor.submit(() -> MeProgramTagReq.getInstance().initExpProgramTag());

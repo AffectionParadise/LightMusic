@@ -39,8 +39,8 @@ public class MeRecPlaylistTagReq {
                 String name = tagJsonArray.getString(1);
                 String id = tagJsonArray.getString(0);
 
-                if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-                Tags.recPlaylistTag.get(name)[3] = id;
+                if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
+                Tags.recPlaylistTags.get(name)[3] = id;
             }
         }
     }

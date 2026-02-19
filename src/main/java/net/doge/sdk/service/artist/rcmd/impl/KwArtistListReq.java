@@ -39,7 +39,7 @@ public class KwArtistListReq {
     public CommonResult<NetArtistInfo> getArtistRank(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[6], page, limit)).execute();
@@ -85,7 +85,7 @@ public class KwArtistListReq {
     public CommonResult<NetArtistInfo> getAllArtists(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);

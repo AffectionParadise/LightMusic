@@ -40,8 +40,8 @@ public class KgNewAlbumTagReq {
             String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
             String name = tag.getString("name");
 
-            if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-            Tags.newAlbumTag.get(name)[4] = id;
+            if (!Tags.newAlbumTags.containsKey(name)) Tags.newAlbumTags.put(name, new String[c]);
+            Tags.newAlbumTags.get(name)[4] = id;
         }
     }
 }

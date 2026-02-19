@@ -40,7 +40,7 @@ public class XmHotRadioReq {
     public CommonResult<NetRadioInfo> getCatRadios(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             String[] sp = s[3].split(" ", -1);
@@ -92,7 +92,7 @@ public class XmHotRadioReq {
     public CommonResult<NetRadioInfo> getChannelRadios(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, s[4], page, limit))
@@ -138,7 +138,7 @@ public class XmHotRadioReq {
     public CommonResult<NetRadioInfo> getCatRadioRank(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String[] sp = s[2].split(" ");

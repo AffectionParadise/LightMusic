@@ -35,7 +35,7 @@ public class MgHotRadioReq {
     public CommonResult<NetRadioInfo> getCatRadios(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[8])) {
             String radioInfoBody = HttpRequest.get(CAT_RADIO_MG_API)

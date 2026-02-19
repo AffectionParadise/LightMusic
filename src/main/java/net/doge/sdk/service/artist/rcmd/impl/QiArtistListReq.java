@@ -80,7 +80,7 @@ public class QiArtistListReq {
     public CommonResult<NetArtistInfo> getCatArtists(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[9])) {
             // 分割时保留空串

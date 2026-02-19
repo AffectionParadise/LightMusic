@@ -134,7 +134,7 @@ public class HkRecommendMvReq {
     public CommonResult<NetMvInfo> getRecommendVideo(String tag, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[8])) {
             String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[8], limit))

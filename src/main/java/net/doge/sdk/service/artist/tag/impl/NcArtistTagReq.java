@@ -43,8 +43,8 @@ public class NcArtistTagReq {
             String name = tag.getString("tagName");
             String id = tag.getString("tagId");
 
-            if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-            Tags.artistTag.get(name)[2] = id;
+            if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
+            Tags.artistTags.get(name)[2] = id;
             // 子标签
             JSONArray subTags = tag.getJSONArray("childrenTags");
             if (JsonUtil.isEmpty(subTags)) continue;
@@ -54,8 +54,8 @@ public class NcArtistTagReq {
                 String subName = subTag.getString("tagName");
                 String subId = subTag.getString("tagId");
 
-                if (!Tags.artistTag.containsKey(subName)) Tags.artistTag.put(subName, new String[c]);
-                Tags.artistTag.get(subName)[2] = subId;
+                if (!Tags.artistTags.containsKey(subName)) Tags.artistTags.put(subName, new String[c]);
+                Tags.artistTags.get(subName)[2] = subId;
                 // 孙子标签
                 JSONArray ssTags = subTag.getJSONArray("childrenTags");
                 if (JsonUtil.isEmpty(ssTags)) continue;
@@ -65,8 +65,8 @@ public class NcArtistTagReq {
                     String ssName = ssTag.getString("tagName");
                     String ssId = ssTag.getString("tagId");
 
-                    if (!Tags.artistTag.containsKey(ssName)) Tags.artistTag.put(ssName, new String[c]);
-                    Tags.artistTag.get(ssName)[2] = ssId;
+                    if (!Tags.artistTags.containsKey(ssName)) Tags.artistTags.put(ssName, new String[c]);
+                    Tags.artistTags.get(ssName)[2] = ssId;
                 }
             }
         }

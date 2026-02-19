@@ -48,8 +48,8 @@ public class KgHotSongTagReq {
             String name = tag.getString("title");
             String id = tag.getString("id");
 
-            if (!Tags.hotSongTag.containsKey(name)) Tags.hotSongTag.put(name, new String[c]);
-            Tags.hotSongTag.get(name)[2] = id;
+            if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
+            Tags.hotSongTags.get(name)[2] = id;
         }
     }
 
@@ -78,8 +78,8 @@ public class KgHotSongTagReq {
                 String fmtype = tag.getString("fmtype");
                 String name = tag.getString("fmname");
 
-                if (!Tags.hotSongTag.containsKey(name)) Tags.hotSongTag.put(name, new String[c]);
-                Tags.hotSongTag.get(name)[3] = fmid + " " + fmtype;
+                if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
+                Tags.hotSongTags.get(name)[3] = fmid + " " + fmtype;
             }
         }
     }
@@ -102,8 +102,8 @@ public class KgHotSongTagReq {
             String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
             String name = tag.getString("name");
 
-            if (!Tags.hotSongTag.containsKey(name)) Tags.hotSongTag.put(name, new String[c]);
-            Tags.hotSongTag.get(name)[4] = id;
+            if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
+            Tags.hotSongTags.get(name)[4] = id;
         }
     }
 }

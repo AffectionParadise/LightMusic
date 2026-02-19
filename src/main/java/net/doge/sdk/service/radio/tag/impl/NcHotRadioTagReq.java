@@ -44,8 +44,8 @@ public class NcHotRadioTagReq {
             String name = tagJson.getString("categoryName");
             String id = tagJson.getString("categoryId");
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[0] = id;
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[0] = id;
         }
     }
 
@@ -67,8 +67,8 @@ public class NcHotRadioTagReq {
             String name = tagJson.getString("name");
             String id = tagJson.getString("id");
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[1] = id;
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[1] = id;
         }
     }
 }

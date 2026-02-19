@@ -41,7 +41,7 @@ public class KgRecommendMvReq {
     public CommonResult<NetMvInfo> getRecommendMv(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, s[2], page, limit))
@@ -89,7 +89,7 @@ public class KgRecommendMvReq {
     public CommonResult<NetMvInfo> getIpMv(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_MV_KG_API);

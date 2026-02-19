@@ -41,8 +41,8 @@ public class NcNewAlbumTagReq {
             String name = tag.getString("tagName");
             String id = tag.getString("tagId");
 
-            if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-            Tags.newAlbumTag.get(name)[2] = id;
+            if (!Tags.newAlbumTags.containsKey(name)) Tags.newAlbumTags.put(name, new String[c]);
+            Tags.newAlbumTags.get(name)[2] = id;
             // 子标签
             JSONArray subTags = tag.getJSONArray("childrenTags");
             if (JsonUtil.isEmpty(subTags)) continue;
@@ -52,8 +52,8 @@ public class NcNewAlbumTagReq {
                 String subName = subTag.getString("tagName");
                 String subId = subTag.getString("tagId");
 
-                if (!Tags.newAlbumTag.containsKey(subName)) Tags.newAlbumTag.put(subName, new String[c]);
-                Tags.newAlbumTag.get(subName)[2] = subId;
+                if (!Tags.newAlbumTags.containsKey(subName)) Tags.newAlbumTags.put(subName, new String[c]);
+                Tags.newAlbumTags.get(subName)[2] = subId;
                 // 孙子标签
                 JSONArray ssTags = subTag.getJSONArray("childrenTags");
                 if (JsonUtil.isEmpty(ssTags)) continue;
@@ -63,8 +63,8 @@ public class NcNewAlbumTagReq {
                     String ssName = ssTag.getString("tagName");
                     String ssId = ssTag.getString("tagId");
 
-                    if (!Tags.newAlbumTag.containsKey(ssName)) Tags.newAlbumTag.put(ssName, new String[c]);
-                    Tags.newAlbumTag.get(ssName)[2] = ssId;
+                    if (!Tags.newAlbumTags.containsKey(ssName)) Tags.newAlbumTags.put(ssName, new String[c]);
+                    Tags.newAlbumTags.get(ssName)[2] = ssId;
                 }
             }
         }

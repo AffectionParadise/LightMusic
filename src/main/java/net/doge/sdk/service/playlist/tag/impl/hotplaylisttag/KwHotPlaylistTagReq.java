@@ -40,8 +40,8 @@ public class KwHotPlaylistTagReq {
                 String name = tagJson.getString("name");
                 String id = String.format("%s %s", tagJson.getString("id"), tagJson.getString("digest"));
 
-                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[5] = id;
+                if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+                Tags.hotPlaylistTags.get(name)[5] = id;
             }
         }
     }

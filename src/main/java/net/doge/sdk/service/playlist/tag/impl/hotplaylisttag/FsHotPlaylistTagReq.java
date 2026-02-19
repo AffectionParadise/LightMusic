@@ -38,8 +38,8 @@ public class FsHotPlaylistTagReq {
             String name = tag.text();
             String id = tag.text();
 
-            if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-            Tags.hotPlaylistTag.get(name)[10] = id;
+            if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+            Tags.hotPlaylistTags.get(name)[10] = id;
         }
     }
 }

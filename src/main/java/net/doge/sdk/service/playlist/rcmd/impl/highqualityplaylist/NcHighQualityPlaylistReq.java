@@ -41,7 +41,7 @@ public class NcHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getHighQualityPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -88,7 +88,7 @@ public class NcHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getHotPickedPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -135,7 +135,7 @@ public class NcHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getNewPickedPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

@@ -52,7 +52,7 @@ public class NcNewAlbumReq {
     public CommonResult<NetAlbumInfo> getNewAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -149,7 +149,7 @@ public class NcNewAlbumReq {
     public CommonResult<NetAlbumInfo> getAllNewAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -277,7 +277,7 @@ public class NcNewAlbumReq {
     public CommonResult<NetAlbumInfo> getLangDiAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -318,7 +318,7 @@ public class NcNewAlbumReq {
     public CommonResult<NetAlbumInfo> getStyleAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

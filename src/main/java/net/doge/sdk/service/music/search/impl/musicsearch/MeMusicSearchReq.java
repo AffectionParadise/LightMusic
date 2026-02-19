@@ -34,7 +34,7 @@ public class MeMusicSearchReq {
     public CommonResult<NetMusicInfo> searchProgram(String subType, String keyword, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.programSearchTag.get(subType);
+        String[] s = Tags.programSearchTags.get(subType);
 
         // 先对关键词编码，避免特殊符号的干扰
         String encodedKeyword = UrlUtil.encodeAll(keyword);

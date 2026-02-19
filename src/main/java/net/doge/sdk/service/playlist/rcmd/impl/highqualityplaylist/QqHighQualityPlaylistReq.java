@@ -37,7 +37,7 @@ public class QqHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getCatPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             String cat = s[4];

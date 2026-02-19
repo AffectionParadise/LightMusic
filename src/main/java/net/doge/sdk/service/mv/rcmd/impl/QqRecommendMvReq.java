@@ -37,7 +37,7 @@ public class QqRecommendMvReq {
     public CommonResult<NetMvInfo> getRecommendMv(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
@@ -88,7 +88,7 @@ public class QqRecommendMvReq {
     public CommonResult<NetMvInfo> getNewMv(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[6]))

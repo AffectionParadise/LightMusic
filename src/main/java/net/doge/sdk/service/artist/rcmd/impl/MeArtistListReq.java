@@ -37,7 +37,7 @@ public class MeArtistListReq {
     public CommonResult<NetArtistInfo> getCatCVs(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[10])) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[9].trim(), page, limit))
@@ -76,7 +76,7 @@ public class MeArtistListReq {
     public CommonResult<NetArtistInfo> getCatOrganizations(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[10])) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[9].trim(), page, limit))

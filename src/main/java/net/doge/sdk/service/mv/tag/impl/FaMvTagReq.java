@@ -43,8 +43,8 @@ public class FaMvTagReq {
             if (StringUtil.isEmpty(id)) continue;
             String name = a.text();
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[10] = id + " ";
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[10] = id + " ";
         }
     }
 
@@ -66,8 +66,8 @@ public class FaMvTagReq {
             if (StringUtil.isEmpty(id)) continue;
             String name = a.text();
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[10] = " " + id;
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[10] = " " + id;
         }
     }
 }

@@ -41,8 +41,8 @@ public class DbHotRadioTagReq {
             String name = tag.text();
             String id = RegexUtil.getGroup1("type=(\\d+)", tag.attr("href"));
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[6] = id;
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[6] = id;
         }
     }
 
@@ -64,8 +64,8 @@ public class DbHotRadioTagReq {
             String name = tag.text();
             String id = tag.getElementsByTag("input").attr("value");
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[7] = id + " ";
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[7] = id + " ";
         }
         tags = fieldset.last().select("label:not(.is-active)");
         for (int i = 0, len = tags.size(); i < len; i++) {
@@ -74,8 +74,8 @@ public class DbHotRadioTagReq {
             String name = tag.text();
             String id = tag.getElementsByTag("input").attr("value");
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[7] = " " + id;
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[7] = " " + id;
         }
     }
 }

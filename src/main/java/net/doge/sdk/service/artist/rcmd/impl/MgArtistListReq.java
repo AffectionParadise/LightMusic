@@ -114,7 +114,7 @@ public class MgArtistListReq {
     public CommonResult<NetArtistInfo> getCatArtists(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[8])) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_LIST_MG_API, s[8]))

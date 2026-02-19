@@ -38,7 +38,7 @@ public class LzRecommendMvReq {
     public CommonResult<NetMvInfo> getVideo(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[11])) {
             String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[11]))

@@ -38,8 +38,8 @@ public class MgHotPlaylistTagReq {
                 String name = tagJsonArray.getString(0);
                 String id = tagJsonArray.getString(1);
 
-                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[6] = id;
+                if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+                Tags.hotPlaylistTags.get(name)[6] = id;
             }
         }
     }

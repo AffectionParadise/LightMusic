@@ -22,7 +22,7 @@ public class HotPlaylistTagReq {
      */
     public void initHotPlaylistTag() {
         // 网易云精品歌单 网易云网友精选碟 酷狗 酷狗 QQ 酷我 咪咕 千千 猫耳 猫耳探索 5sing
-        Tags.hotPlaylistTag.put("默认", new String[]{"全部", "全部", " ", "", "10000000", "", "", " ", " ", "", " "});
+        Tags.hotPlaylistTags.put("默认", new String[]{"全部", "全部", " ", "", "10000000", "", "", " ", " ", "", " "});
 
         MultiRunnableExecutor executor = new MultiRunnableExecutor();
         executor.submit(() -> NcHotPlaylistTagReq.getInstance().initHighQualityPlaylistTag());

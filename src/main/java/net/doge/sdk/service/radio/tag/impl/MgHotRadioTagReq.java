@@ -40,8 +40,8 @@ public class MgHotRadioTagReq {
             String name = tag.getString("txt");
             String id = tag.getString("txt2");
 
-            if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-            Tags.radioTag.get(name)[8] = id;
+            if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+            Tags.radioTags.get(name)[8] = id;
         }
     }
 }

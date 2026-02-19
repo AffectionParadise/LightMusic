@@ -35,7 +35,7 @@ public class QiHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getCatPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[7].trim(), System.currentTimeMillis()))

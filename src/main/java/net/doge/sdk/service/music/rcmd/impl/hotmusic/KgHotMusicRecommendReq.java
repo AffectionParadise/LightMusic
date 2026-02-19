@@ -51,7 +51,7 @@ public class KgHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getCardSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(CARD_SONG_KG_API);
@@ -115,7 +115,7 @@ public class KgHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getThemeSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(THEME_SONG_KG_API);
@@ -171,7 +171,7 @@ public class KgHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getFmSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             String[] sp = s[3].split(" ");
@@ -231,7 +231,7 @@ public class KgHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getIpSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_SONG_KG_API);

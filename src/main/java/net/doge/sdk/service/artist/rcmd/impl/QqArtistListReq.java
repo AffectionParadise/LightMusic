@@ -36,7 +36,7 @@ public class QqArtistListReq {
     public CommonResult<NetArtistInfo> getArtistRank(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[5])) {
             final int lim = 80, p = (page - 1) / 4 + 1;

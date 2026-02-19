@@ -41,11 +41,11 @@ public class MeHotRadioTagReq {
                 String name = tagJson.getString("name");
                 String id = tagJson.getString("id");
 
-                if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
+                if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
                 if (i == 0) id = String.format("%s 0 0", id);
                 else if (i == 1) id = String.format("0 %s 0", id);
                 else id = String.format("0 0 %s", id);
-                Tags.radioTag.get(name)[5] = id;
+                Tags.radioTags.get(name)[5] = id;
             }
         }
     }

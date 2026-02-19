@@ -24,32 +24,32 @@ public class NewSongTagReq {
      */
     public void initNewSongTag() {
         // 网易云 网易云 酷狗 酷狗 QQ 音乐磁场 咕咕咕音乐 5sing
-        Tags.newSongTag.put("默认", new String[]{"0", "", "1", "", "5", "", "", " "});
+        Tags.newSongTags.put("默认", new String[]{"0", "", "1", "", "5", "", "", " "});
 
-        Tags.newSongTag.put("华语", new String[]{"7", "", "1", "", "5", "forum-1", "forum-1", ""});
-        Tags.newSongTag.put("内地", new String[]{"", "", "", "", "1", "", "", ""});
-        Tags.newSongTag.put("港台", new String[]{"", "", "", "", "6", "", "", ""});
-        Tags.newSongTag.put("欧美", new String[]{"96", "", "2", "", "2", "forum-2", "forum-3", ""});
-        Tags.newSongTag.put("韩国", new String[]{"16", "", "4", "", "4", "", "", ""});
-        Tags.newSongTag.put("日本", new String[]{"8", "", "5", "", "3", "", "", ""});
-        Tags.newSongTag.put("日韩", new String[]{"", "", "3", "", "", "forum-3", "forum-7", ""});
+        Tags.newSongTags.put("华语", new String[]{"7", "", "1", "", "5", "forum-1", "forum-1", ""});
+        Tags.newSongTags.put("内地", new String[]{"", "", "", "", "1", "", "", ""});
+        Tags.newSongTags.put("港台", new String[]{"", "", "", "", "6", "", "", ""});
+        Tags.newSongTags.put("欧美", new String[]{"96", "", "2", "", "2", "forum-2", "forum-3", ""});
+        Tags.newSongTags.put("韩国", new String[]{"16", "", "4", "", "4", "", "", ""});
+        Tags.newSongTags.put("日本", new String[]{"8", "", "5", "", "3", "", "", ""});
+        Tags.newSongTags.put("日韩", new String[]{"", "", "3", "", "", "forum-3", "forum-7", ""});
 
         // 音乐磁场
-        Tags.newSongTag.put("Remix", new String[]{"", "", "", "", "", "forum-4", "", ""});
-        Tags.newSongTag.put("纯音乐", new String[]{"", "", "", "", "", "forum-5", "", ""});
+        Tags.newSongTags.put("Remix", new String[]{"", "", "", "", "", "forum-4", "", ""});
+        Tags.newSongTags.put("纯音乐", new String[]{"", "", "", "", "", "forum-5", "", ""});
 //        Tags.newSongTag.put("异次元", new String[]{"", "", "", "", "", "forum-13", "", ""});
-        Tags.newSongTag.put("音友", new String[]{"", "", "", "", "", "forum-6", "", ""});
-        Tags.newSongTag.put("互助", new String[]{"", "", "", "", "", "forum-7", "", ""});
-        Tags.newSongTag.put("站务", new String[]{"", "", "", "", "", "forum-9", "", ""});
+        Tags.newSongTags.put("音友", new String[]{"", "", "", "", "", "forum-6", "", ""});
+        Tags.newSongTags.put("互助", new String[]{"", "", "", "", "", "forum-7", "", ""});
+        Tags.newSongTags.put("站务", new String[]{"", "", "", "", "", "forum-9", "", ""});
 
         // 咕咕咕音乐
-        Tags.newSongTag.put("音乐分享区", new String[]{"", "", "", "", "", "", "forum-12", ""});
-        Tags.newSongTag.put("伤感", new String[]{"", "", "", "", "", "", "forum-8", ""});
-        Tags.newSongTag.put("粤语", new String[]{"", "", "", "", "", "", "forum-2", ""});
-        Tags.newSongTag.put("青春", new String[]{"", "", "", "", "", "", "forum-5", ""});
-        Tags.newSongTag.put("分享", new String[]{"", "", "", "", "", "", "forum-11", ""});
-        Tags.newSongTag.put("温柔男友音", new String[]{"", "", "", "", "", "", "forum-10", ""});
-        Tags.newSongTag.put("DJ", new String[]{"", "", "", "", "", "", "forum-9", ""});
+        Tags.newSongTags.put("音乐分享区", new String[]{"", "", "", "", "", "", "forum-12", ""});
+        Tags.newSongTags.put("伤感", new String[]{"", "", "", "", "", "", "forum-8", ""});
+        Tags.newSongTags.put("粤语", new String[]{"", "", "", "", "", "", "forum-2", ""});
+        Tags.newSongTags.put("青春", new String[]{"", "", "", "", "", "", "forum-5", ""});
+        Tags.newSongTags.put("分享", new String[]{"", "", "", "", "", "", "forum-11", ""});
+        Tags.newSongTags.put("温柔男友音", new String[]{"", "", "", "", "", "", "forum-10", ""});
+        Tags.newSongTags.put("DJ", new String[]{"", "", "", "", "", "", "forum-9", ""});
 
         MultiRunnableExecutor executor = new MultiRunnableExecutor();
         executor.submit(() -> NcNewSongTagReq.getInstance().initNewSongTag());

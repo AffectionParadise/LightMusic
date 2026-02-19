@@ -43,7 +43,7 @@ public class KgArtistListReq {
     public CommonResult<NetArtistInfo> getHotArtist(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             String[] split = s[3].split(" ");
@@ -88,7 +88,7 @@ public class KgArtistListReq {
     public CommonResult<NetArtistInfo> getUpArtist(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             String[] split = s[3].split(" ");
@@ -133,7 +133,7 @@ public class KgArtistListReq {
     public CommonResult<NetArtistInfo> getIpArtist(String tag, int page, int limit) {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.artistTag.get(tag);
+        String[] s = Tags.artistTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ARTIST_KG_API);

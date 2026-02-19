@@ -93,7 +93,7 @@ public class NcNewMusicReq {
     public CommonResult<NetMusicInfo> getFastNewSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
@@ -147,7 +147,7 @@ public class NcNewMusicReq {
     public CommonResult<NetMusicInfo> getStyleNewSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

@@ -56,7 +56,7 @@ public class NcHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getStyleHotSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

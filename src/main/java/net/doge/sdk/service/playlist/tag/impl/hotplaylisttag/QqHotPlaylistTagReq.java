@@ -41,8 +41,8 @@ public class QqHotPlaylistTagReq {
                 String name = tagJson.getString("name");
                 String id = tagJson.getString("id");
 
-                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[4] = id;
+                if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+                Tags.hotPlaylistTags.get(name)[4] = id;
             }
         }
     }

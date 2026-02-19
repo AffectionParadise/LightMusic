@@ -43,8 +43,8 @@ public class NcRecPlaylistTagReq {
             String name = tag.getString("tagName");
             String id = tag.getString("tagId");
 
-            if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-            Tags.recPlaylistTag.get(name)[0] = id;
+            if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
+            Tags.recPlaylistTags.get(name)[0] = id;
             // 子标签
             JSONArray subTags = tag.getJSONArray("childrenTags");
             if (JsonUtil.isEmpty(subTags)) continue;
@@ -54,8 +54,8 @@ public class NcRecPlaylistTagReq {
                 String subName = subTag.getString("tagName");
                 String subId = subTag.getString("tagId");
 
-                if (!Tags.recPlaylistTag.containsKey(subName)) Tags.recPlaylistTag.put(subName, new String[c]);
-                Tags.recPlaylistTag.get(subName)[0] = subId;
+                if (!Tags.recPlaylistTags.containsKey(subName)) Tags.recPlaylistTags.put(subName, new String[c]);
+                Tags.recPlaylistTags.get(subName)[0] = subId;
                 // 孙子标签
                 JSONArray ssTags = subTag.getJSONArray("childrenTags");
                 if (JsonUtil.isEmpty(ssTags)) continue;
@@ -65,8 +65,8 @@ public class NcRecPlaylistTagReq {
                     String ssName = ssTag.getString("tagName");
                     String ssId = ssTag.getString("tagId");
 
-                    if (!Tags.recPlaylistTag.containsKey(ssName)) Tags.recPlaylistTag.put(ssName, new String[c]);
-                    Tags.recPlaylistTag.get(ssName)[0] = ssId;
+                    if (!Tags.recPlaylistTags.containsKey(ssName)) Tags.recPlaylistTags.put(ssName, new String[c]);
+                    Tags.recPlaylistTags.get(ssName)[0] = ssId;
                 }
             }
         }

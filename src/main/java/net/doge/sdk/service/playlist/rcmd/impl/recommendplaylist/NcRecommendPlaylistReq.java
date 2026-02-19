@@ -132,7 +132,7 @@ public class NcRecommendPlaylistReq {
     public CommonResult<NetPlaylistInfo> getStylePlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.recPlaylistTag.get(tag);
+        String[] s = Tags.recPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();

@@ -35,7 +35,7 @@ public class GgHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getHotMusic(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_GG_API, s[6], page))

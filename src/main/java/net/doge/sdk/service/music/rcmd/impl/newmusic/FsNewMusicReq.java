@@ -47,7 +47,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getLatestYcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);
@@ -86,7 +86,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getWebsiteRecYcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);
@@ -125,7 +125,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getCandiRecYcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);
@@ -164,7 +164,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getLatestFcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);
@@ -203,7 +203,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getWebsiteRecFcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);
@@ -242,7 +242,7 @@ public class FsNewMusicReq {
     public CommonResult<NetMusicInfo> getCandiRecFcSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             String[] sp = s[7].split(" ", -1);

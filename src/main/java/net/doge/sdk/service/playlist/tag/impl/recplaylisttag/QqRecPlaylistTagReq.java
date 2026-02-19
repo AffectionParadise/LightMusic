@@ -41,8 +41,8 @@ public class QqRecPlaylistTagReq {
                 String name = tagJson.getString("name");
                 String id = tagJson.getString("id");
 
-                if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-                Tags.recPlaylistTag.get(name)[2] = id;
+                if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
+                Tags.recPlaylistTags.get(name)[2] = id;
             }
         }
     }

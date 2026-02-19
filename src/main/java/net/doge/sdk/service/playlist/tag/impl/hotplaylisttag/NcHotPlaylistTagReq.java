@@ -43,8 +43,8 @@ public class NcHotPlaylistTagReq {
 
             String name = tagJson.getString("name");
 
-            if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-            Tags.hotPlaylistTag.get(name)[0] = name;
+            if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+            Tags.hotPlaylistTags.get(name)[0] = name;
         }
     }
 
@@ -65,8 +65,8 @@ public class NcHotPlaylistTagReq {
 
             String name = tagJson.getString("name");
 
-            if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-            Tags.hotPlaylistTag.get(name)[1] = name;
+            if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+            Tags.hotPlaylistTags.get(name)[1] = name;
         }
     }
 }

@@ -36,7 +36,7 @@ public class HfHotMusicRecommendReq {
     public CommonResult<NetMusicInfo> getHotMusic(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotSongTag.get(tag);
+        String[] s = Tags.hotSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[5])) {
             String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_HF_API, s[5], page))

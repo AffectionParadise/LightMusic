@@ -98,7 +98,7 @@ public class KgNewMusicReq {
     public CommonResult<NetMusicInfo> getRecommendNewSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, s[2], page, limit))
@@ -150,7 +150,7 @@ public class KgNewMusicReq {
     public CommonResult<NetMusicInfo> getStyleSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[3])) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_SONG_KG_API);

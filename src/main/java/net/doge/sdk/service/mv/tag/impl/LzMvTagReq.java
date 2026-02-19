@@ -41,8 +41,8 @@ public class LzMvTagReq {
             String id = RegexUtil.getGroup1("/live-category/(.*?)/", a.attr("href"));
             String name = n.text();
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[11] = id;
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[11] = id;
         }
     }
 }

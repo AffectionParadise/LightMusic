@@ -40,8 +40,8 @@ public class MeMusicSearchTagReq {
                 String name = obj.getString("catalog_name");
                 String id = obj.getString("id");
 
-                if (!Tags.programSearchTag.containsKey(name)) Tags.programSearchTag.put(name, new String[c]);
-                Tags.programSearchTag.get(name)[0] = id;
+                if (!Tags.programSearchTags.containsKey(name)) Tags.programSearchTags.put(name, new String[c]);
+                Tags.programSearchTags.get(name)[0] = id;
             }
         }
     }

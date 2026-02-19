@@ -45,8 +45,8 @@ public class MeHotPlaylistTagReq {
                 String name = tagJsonArray.getString(1);
                 String id = tagJsonArray.getString(0);
 
-                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[8] = id;
+                if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+                Tags.hotPlaylistTags.get(name)[8] = id;
             }
         }
     }
@@ -69,8 +69,8 @@ public class MeHotPlaylistTagReq {
             String id = t.attr("data-tagid");
             String name = t.getElementsByTag("a").text().trim();
 
-            if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-            Tags.hotPlaylistTag.get(name)[9] = id;
+            if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+            Tags.hotPlaylistTags.get(name)[9] = id;
         }
     }
 }

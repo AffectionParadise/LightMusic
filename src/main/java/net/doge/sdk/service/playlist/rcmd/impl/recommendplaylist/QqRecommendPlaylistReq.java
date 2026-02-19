@@ -124,7 +124,7 @@ public class QqRecommendPlaylistReq {
     public CommonResult<NetPlaylistInfo> getNewPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.recPlaylistTag.get(tag);
+        String[] s = Tags.recPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[2])) {
             String cat = s[2];

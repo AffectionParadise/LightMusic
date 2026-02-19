@@ -38,8 +38,8 @@ public class FsRecPlaylistTagReq {
             String name = tag.text();
             String id = tag.text();
 
-            if (!Tags.recPlaylistTag.containsKey(name)) Tags.recPlaylistTag.put(name, new String[c]);
-            Tags.recPlaylistTag.get(name)[4] = id;
+            if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
+            Tags.recPlaylistTags.get(name)[4] = id;
         }
     }
 }

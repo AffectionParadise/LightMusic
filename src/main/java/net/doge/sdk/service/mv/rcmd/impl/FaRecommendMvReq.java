@@ -41,7 +41,7 @@ public class FaRecommendMvReq {
     public CommonResult<NetMvInfo> getVideo(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         String[] sp = s[10].split(" ", -1);
         if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
@@ -99,7 +99,7 @@ public class FaRecommendMvReq {
     public CommonResult<NetMvInfo> getLive(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         String[] sp = s[10].split(" ", -1);
         if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {

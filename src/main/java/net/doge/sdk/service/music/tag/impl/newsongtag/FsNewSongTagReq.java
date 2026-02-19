@@ -42,8 +42,8 @@ public class FsNewSongTagReq {
             if ("全部".equals(name)) continue;
             String id = RegexUtil.getGroup1("&l=(.*)", a.attr("href"));
 
-            if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
-            Tags.newSongTag.get(name)[7] = " " + id;
+            if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
+            Tags.newSongTags.get(name)[7] = " " + id;
         }
         // 曲风
         tags = dds.last().select("a");
@@ -54,8 +54,8 @@ public class FsNewSongTagReq {
             if ("全部".equals(name)) continue;
             String id = RegexUtil.getGroup1("s=(.*?)&l=", a.attr("href"));
 
-            if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
-            Tags.newSongTag.get(name)[7] = id + " ";
+            if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
+            Tags.newSongTags.get(name)[7] = id + " ";
         }
     }
 }

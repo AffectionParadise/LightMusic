@@ -77,6 +77,9 @@ public class MusicInfoReq {
             case NetMusicSource.LZ:
                 LzMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
+            case NetMusicSource.QS:
+                QsMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
+                break;
         }
     }
 
@@ -126,6 +129,9 @@ public class MusicInfoReq {
                 break;
             case NetMusicSource.LZ:
                 LzMusicInfoReq.getInstance().fillLyric(musicInfo);
+                break;
+            case NetMusicSource.QS:
+                QsMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
             default:
                 musicInfo.setLyric("");

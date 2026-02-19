@@ -32,7 +32,7 @@ public class QqNewMusicReq {
     public CommonResult<NetMusicInfo> getRecommendNewSong(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newSongTag.get(tag);
+        String[] s = Tags.newSongTags.get(tag);
 
         if (StringUtil.notEmpty(s[4])) {
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)

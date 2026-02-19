@@ -22,7 +22,7 @@ public class RecPlaylistTagReq {
      */
     public void initRecPlaylistTag() {
         // 网易云 酷狗 QQ 猫耳 5sing
-        Tags.recPlaylistTag.put("默认", new String[]{"", " ", "10000000", " ", " "});
+        Tags.recPlaylistTags.put("默认", new String[]{"", " ", "10000000", " ", " "});
 
         MultiRunnableExecutor executor = new MultiRunnableExecutor();
         executor.submit(() -> NcRecPlaylistTagReq.getInstance().initRecPlaylistTag());

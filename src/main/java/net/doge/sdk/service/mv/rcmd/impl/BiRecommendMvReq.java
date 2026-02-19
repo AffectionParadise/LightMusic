@@ -90,7 +90,7 @@ public class BiRecommendMvReq {
     public CommonResult<NetMvInfo> getCatRankVideo(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[9])) {
             String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, s[9]))
@@ -140,7 +140,7 @@ public class BiRecommendMvReq {
     public CommonResult<NetMvInfo> getCatNewVideo(String tag, int page, int limit) {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.mvTag.get(tag);
+        String[] s = Tags.mvTags.get(tag);
 
         if (StringUtil.notEmpty(s[9])) {
             String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, s[9], page, limit))

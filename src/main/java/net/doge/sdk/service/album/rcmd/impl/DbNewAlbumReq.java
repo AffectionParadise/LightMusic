@@ -83,7 +83,7 @@ public class DbNewAlbumReq {
     public CommonResult<NetAlbumInfo> getCatAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[6])) {
             String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[6], (page - 1) * limit))

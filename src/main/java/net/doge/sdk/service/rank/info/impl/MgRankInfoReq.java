@@ -40,12 +40,19 @@ public class MgRankInfoReq {
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("columnInfo");
 
+        String coverImgUrl = data.getString("columnSmallpicUrl");
+        if (StringUtil.isEmpty(coverImgUrl)) coverImgUrl = rankInfo.getCoverImgUrl();
+        String description = data.getString("columnDes");
+
         if (!rankInfo.hasPlayCount())
             rankInfo.setPlayCount(data.getJSONObject("opNumItem").getLong("playNum"));
+        if (!rankInfo.hasUpdateFre()) rankInfo.setUpdateFre(data.getString("columnSubtitle"));
         if (!rankInfo.hasUpdateTime()) rankInfo.setUpdateTime(data.getString("columnUpdateTime").split(" ")[0]);
-        GlobalExecutors.imageExecutor.execute(() -> rankInfo.setCoverImg(SdkUtil.getImageFromUrl(rankInfo.getCoverImgUrl())));
+        if (!rankInfo.hasCoverImgUrl()) rankInfo.setCoverImgUrl(coverImgUrl);
+        String finalCoverImgUrl = coverImgUrl;
+        GlobalExecutors.imageExecutor.execute(() -> rankInfo.setCoverImg(SdkUtil.getImageFromUrl(finalCoverImgUrl)));
         // 咪咕需要额外补全榜单描述
-        rankInfo.setDescription(data.getString("columnDes"));
+        rankInfo.setDescription(description);
     }
 
     /**

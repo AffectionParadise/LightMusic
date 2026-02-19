@@ -39,8 +39,8 @@ public class QqArtistTagReq {
             if ("全部".equals(name)) continue;
             String id = tagJson.getString("id");
 
-            if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-            Tags.artistTag.get(name)[5] = String.format("-100 %s -100 -100", id);
+            if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
+            Tags.artistTags.get(name)[5] = String.format("-100 %s -100 -100", id);
         }
         // 首字母
         JSONArray index = data.getJSONArray("index");
@@ -51,21 +51,21 @@ public class QqArtistTagReq {
             if ("热门".equals(name)) continue;
             String id = tagJson.getString("id");
 
-            if (!Tags.artistTag.containsKey(name)) Tags.artistTag.put(name, new String[c]);
-            Tags.artistTag.get(name)[5] = String.format("-100 -100 %s -100", id);
+            if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
+            Tags.artistTags.get(name)[5] = String.format("-100 -100 %s -100", id);
 
             // 此处包含多个平台首字母同时初始化
             // 网易云
-            Tags.artistTag.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
+            Tags.artistTags.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
 
             // 酷我
-            if (!"#".equals(name)) Tags.artistTag.get(name)[7] = String.format("0 %s", name);
+            if (!"#".equals(name)) Tags.artistTags.get(name)[7] = String.format("0 %s", name);
 
             // 千千
-            Tags.artistTag.get(name)[9] = String.format("%s  ", "#".equals(name) ? "other" : name);
+            Tags.artistTags.get(name)[9] = String.format("%s  ", "#".equals(name) ? "other" : name);
 
             // 猫耳
-            Tags.artistTag.get(name)[10] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
+            Tags.artistTags.get(name)[10] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
         }
     }
 }

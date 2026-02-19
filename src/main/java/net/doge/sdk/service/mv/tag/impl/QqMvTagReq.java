@@ -36,9 +36,9 @@ public class QqMvTagReq {
             if ("全部".equals(name)) continue;
             String id = tagJson.getString("id");
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[4] = "15";
-            Tags.mvTag.get(name)[5] = id;
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[4] = "15";
+            Tags.mvTags.get(name)[5] = id;
         }
     }
 }

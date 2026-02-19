@@ -38,7 +38,7 @@ public class FsHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getHotPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[10])) {
             String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[10].trim(), page))

@@ -44,8 +44,8 @@ public class KgMvTagReq {
             String name = tagJson.getString("name");
             String id = tagJson.getString("channel_id");
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[2] = id;
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[2] = id;
         }
     }
 
@@ -67,8 +67,8 @@ public class KgMvTagReq {
             String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
             String name = tag.getString("name");
 
-            if (!Tags.mvTag.containsKey(name)) Tags.mvTag.put(name, new String[c]);
-            Tags.mvTag.get(name)[3] = id;
+            if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
+            Tags.mvTags.get(name)[3] = id;
         }
     }
 }

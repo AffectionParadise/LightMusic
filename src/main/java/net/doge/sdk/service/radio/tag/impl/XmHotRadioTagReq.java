@@ -41,8 +41,8 @@ public class XmHotRadioTagReq {
                 String name = tagJson.getString("displayName");
                 String pinyin = tagJson.getString("pinyin");
 
-                if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-                Tags.radioTag.get(name)[3] = pinyin + " ";
+                if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+                Tags.radioTags.get(name)[3] = pinyin + " ";
 
                 // 子标签
                 JSONArray ssTags = tagJson.getJSONArray("subcategories");
@@ -52,8 +52,8 @@ public class XmHotRadioTagReq {
                     String ssName = name + " - " + ssTagJson.getString("displayValue");
                     String ssId = String.format("%s %s", pinyin, ssTagJson.getString("code"));
 
-                    if (!Tags.radioTag.containsKey(ssName)) Tags.radioTag.put(ssName, new String[c]);
-                    Tags.radioTag.get(ssName)[3] = ssId;
+                    if (!Tags.radioTags.containsKey(ssName)) Tags.radioTags.put(ssName, new String[c]);
+                    Tags.radioTags.get(ssName)[3] = ssId;
                 }
             }
         }
@@ -82,8 +82,8 @@ public class XmHotRadioTagReq {
                 String name = n + tagJson.getString("rankClusterTitle");
                 String id = t + tagJson.getString("rankClusterId");
 
-                if (!Tags.radioTag.containsKey(name)) Tags.radioTag.put(name, new String[c]);
-                Tags.radioTag.get(name)[2] = id;
+                if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
+                Tags.radioTags.get(name)[2] = id;
             }
         }
     }

@@ -47,8 +47,8 @@ public class KgHotPlaylistTagReq {
                 String name = tagJson.getString("name");
                 String id = tagJson.getString("id");
 
-                if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-                Tags.hotPlaylistTag.get(name)[2] = id;
+                if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+                Tags.hotPlaylistTags.get(name)[2] = id;
             }
         }
     }
@@ -71,8 +71,8 @@ public class KgHotPlaylistTagReq {
             String id = RegexUtil.getGroup1("ip_id%3D(\\d+)", tag.getString("special_link"));
             String name = tag.getString("name");
 
-            if (!Tags.hotPlaylistTag.containsKey(name)) Tags.hotPlaylistTag.put(name, new String[c]);
-            Tags.hotPlaylistTag.get(name)[3] = id;
+            if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
+            Tags.hotPlaylistTags.get(name)[3] = id;
         }
     }
 }

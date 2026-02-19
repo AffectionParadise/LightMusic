@@ -7414,9 +7414,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示节目搜索分类标签
-                    if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
+                    if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTags.isEmpty()) {
                         MusicServerUtil.initProgramSearchTag();
-                        for (String tag : Tags.programSearchTag.keySet())
+                        for (String tag : Tags.programSearchTags.keySet())
                             netMusicSearchSubTypeComboBox.addItem(tag);
                     }
 
@@ -7548,9 +7548,9 @@ public class MainFrame extends JFrame {
                 loadingAndRun(() -> {
                     try {
                         // 显示节目搜索分类标签
-                        if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTag.isEmpty()) {
+                        if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTags.isEmpty()) {
                             MusicServerUtil.initProgramSearchTag();
-                            for (String tag : Tags.programSearchTag.keySet())
+                            for (String tag : Tags.programSearchTags.keySet())
                                 netMusicSearchSubTypeComboBox.addItem(tag);
                         }
 
@@ -17245,10 +17245,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.recPlaylistTag.isEmpty()) MusicServerUtil.initRecPlaylistTag();
+                    if (Tags.recPlaylistTags.isEmpty()) MusicServerUtil.initRecPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.recPlaylistTag.keySet()) {
-                        if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistIndices, tag))
+                    for (String tag : Tags.recPlaylistTags.keySet()) {
+                        if (shouldShowTag(Tags.recPlaylistTags, Tags.recPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17302,10 +17302,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.hotPlaylistTag.isEmpty()) MusicServerUtil.initPlaylistTag();
+                    if (Tags.hotPlaylistTags.isEmpty()) MusicServerUtil.initPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.hotPlaylistTag.keySet()) {
-                        if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistIndices, tag))
+                    for (String tag : Tags.hotPlaylistTags.keySet()) {
+                        if (shouldShowTag(Tags.hotPlaylistTags, Tags.hotPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17359,10 +17359,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.hotSongTag.isEmpty()) MusicServerUtil.initHotSongTag();
+                    if (Tags.hotSongTags.isEmpty()) MusicServerUtil.initHotSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.hotSongTag.keySet()) {
-                        if (shouldShowTag(Tags.hotSongTag, Tags.hotSongIndices, tag))
+                    for (String tag : Tags.hotSongTags.keySet()) {
+                        if (shouldShowTag(Tags.hotSongTags, Tags.hotSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17406,10 +17406,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.newSongTag.isEmpty()) MusicServerUtil.initNewSongTag();
+                    if (Tags.newSongTags.isEmpty()) MusicServerUtil.initNewSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.newSongTag.keySet()) {
-                        if (shouldShowTag(Tags.newSongTag, Tags.newSongIndices, tag))
+                    for (String tag : Tags.newSongTags.keySet()) {
+                        if (shouldShowTag(Tags.newSongTags, Tags.newSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17453,10 +17453,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.newAlbumTag.isEmpty()) MusicServerUtil.initNewAlbumTag();
+                    if (Tags.newAlbumTags.isEmpty()) MusicServerUtil.initNewAlbumTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.newAlbumTag.keySet()) {
-                        if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumIndices, tag))
+                    for (String tag : Tags.newAlbumTags.keySet()) {
+                        if (shouldShowTag(Tags.newAlbumTags, Tags.newAlbumIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17509,10 +17509,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.artistTag.isEmpty()) MusicServerUtil.initArtistTag();
+                    if (Tags.artistTags.isEmpty()) MusicServerUtil.initArtistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.artistTag.keySet()) {
-                        if (shouldShowTag(Tags.artistTag, Tags.artistIndices, tag))
+                    for (String tag : Tags.artistTags.keySet()) {
+                        if (shouldShowTag(Tags.artistTags, Tags.artistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17613,10 +17613,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.radioTag.isEmpty()) MusicServerUtil.initRadioTag();
+                    if (Tags.radioTags.isEmpty()) MusicServerUtil.initRadioTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.radioTag.keySet()) {
-                        if (shouldShowTag(Tags.radioTag, Tags.radioIndices, tag))
+                    for (String tag : Tags.radioTags.keySet()) {
+                        if (shouldShowTag(Tags.radioTags, Tags.radioIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17669,10 +17669,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.programTag.isEmpty()) MusicServerUtil.initProgramTag();
+                    if (Tags.programTags.isEmpty()) MusicServerUtil.initProgramTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.programTag.keySet()) {
-                        if (shouldShowTag(Tags.programTag, Tags.programIndices, tag))
+                    for (String tag : Tags.programTags.keySet()) {
+                        if (shouldShowTag(Tags.programTags, Tags.programIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17716,10 +17716,10 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     // 显示分类标签
-                    if (Tags.mvTag.isEmpty()) MusicServerUtil.initMvTag();
+                    if (Tags.mvTags.isEmpty()) MusicServerUtil.initMvTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
-                    for (String tag : Tags.mvTag.keySet()) {
-                        if (shouldShowTag(Tags.mvTag, Tags.mvIndices, tag))
+                    for (String tag : Tags.mvTags.keySet()) {
+                        if (shouldShowTag(Tags.mvTags, Tags.mvIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
 
@@ -17820,48 +17820,48 @@ public class MainFrame extends JFrame {
             // 加载对应源的标签
             ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
             if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND) {
-                for (String tag : Tags.recPlaylistTag.keySet()) {
-                    if (shouldShowTag(Tags.recPlaylistTag, Tags.recPlaylistIndices, tag))
+                for (String tag : Tags.recPlaylistTags.keySet()) {
+                    if (shouldShowTag(Tags.recPlaylistTags, Tags.recPlaylistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND) {
-                for (String tag : Tags.hotPlaylistTag.keySet()) {
-                    if (shouldShowTag(Tags.hotPlaylistTag, Tags.hotPlaylistIndices, tag))
+                for (String tag : Tags.hotPlaylistTags.keySet()) {
+                    if (shouldShowTag(Tags.hotPlaylistTags, Tags.hotPlaylistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND) {
-                for (String tag : Tags.hotSongTag.keySet()) {
-                    if (shouldShowTag(Tags.hotSongTag, Tags.hotSongIndices, tag))
+                for (String tag : Tags.hotSongTags.keySet()) {
+                    if (shouldShowTag(Tags.hotSongTags, Tags.hotSongIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND) {
-                for (String tag : Tags.newSongTag.keySet()) {
-                    if (shouldShowTag(Tags.newSongTag, Tags.newSongIndices, tag))
+                for (String tag : Tags.newSongTags.keySet()) {
+                    if (shouldShowTag(Tags.newSongTags, Tags.newSongIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND) {
-                for (String tag : Tags.newAlbumTag.keySet()) {
-                    if (shouldShowTag(Tags.newAlbumTag, Tags.newAlbumIndices, tag))
+                for (String tag : Tags.newAlbumTags.keySet()) {
+                    if (shouldShowTag(Tags.newAlbumTags, Tags.newAlbumIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND) {
-                for (String tag : Tags.artistTag.keySet()) {
-                    if (shouldShowTag(Tags.artistTag, Tags.artistIndices, tag))
+                for (String tag : Tags.artistTags.keySet()) {
+                    if (shouldShowTag(Tags.artistTags, Tags.artistIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND) {
-                for (String tag : Tags.radioTag.keySet()) {
-                    if (shouldShowTag(Tags.radioTag, Tags.radioIndices, tag))
+                for (String tag : Tags.radioTags.keySet()) {
+                    if (shouldShowTag(Tags.radioTags, Tags.radioIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND) {
-                for (String tag : Tags.programTag.keySet()) {
-                    if (shouldShowTag(Tags.programTag, Tags.programIndices, tag))
+                for (String tag : Tags.programTags.keySet()) {
+                    if (shouldShowTag(Tags.programTags, Tags.programIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             } else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND) {
-                for (String tag : Tags.mvTag.keySet()) {
-                    if (shouldShowTag(Tags.mvTag, Tags.mvIndices, tag))
+                for (String tag : Tags.mvTags.keySet()) {
+                    if (shouldShowTag(Tags.mvTags, Tags.mvIndices, tag))
                         netRecommendTagComboBox.addItem(tag);
                 }
             }
@@ -18357,12 +18357,12 @@ public class MainFrame extends JFrame {
     }
 
     // 判断标签是不是可以显示
-    private boolean shouldShowTag(Map<String, String[]> tags, int[] map, String tag) {
+    private boolean shouldShowTag(Map<String, String[]> tags, int[] indices, String tag) {
         if ("默认".equals(tag)) return true;
         int si = netRecommendSourceComboBox.getSelectedIndex();
         String[] vals = tags.get(tag);
-        for (int i = 0, len = map.length; i < len; i++) {
-            if (map[i] == si && StringUtil.notEmpty(vals[i])) return true;
+        for (int i = 0, len = indices.length; i < len; i++) {
+            if (indices[i] == si && StringUtil.notEmpty(vals[i])) return true;
         }
         return false;
     }

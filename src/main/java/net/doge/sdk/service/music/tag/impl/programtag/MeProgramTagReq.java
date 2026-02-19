@@ -41,8 +41,8 @@ public class MeProgramTagReq {
             String id = t.attr("data-tagid");
             String name = t.getElementsByTag("a").text().trim();
 
-            if (!Tags.programTag.containsKey(name)) Tags.programTag.put(name, new String[c]);
-            Tags.programTag.get(name)[0] = id;
+            if (!Tags.programTags.containsKey(name)) Tags.programTags.put(name, new String[c]);
+            Tags.programTags.get(name)[0] = id;
         }
     }
 
@@ -69,8 +69,8 @@ public class MeProgramTagReq {
             if (href.contains("drama")) continue;
             String id = href.replaceFirst("/sound/m/", "");
 
-            if (!Tags.programTag.containsKey(name)) Tags.programTag.put(name, new String[c]);
-            Tags.programTag.get(name)[1] = id;
+            if (!Tags.programTags.containsKey(name)) Tags.programTags.put(name, new String[c]);
+            Tags.programTags.get(name)[1] = id;
 
             // 子标签
             Elements subTags = tag.select(".vw-topcatalog-subitem-container.fc-topcatalog-subitem-container a");
@@ -80,8 +80,8 @@ public class MeProgramTagReq {
                 String subName = String.format("%s - %s", name, subTag.attr("title"));
                 String subId = subTag.attr("href").replaceFirst("/sound/m/", "");
 
-                if (!Tags.programTag.containsKey(subName)) Tags.programTag.put(subName, new String[c]);
-                Tags.programTag.get(subName)[1] = subId;
+                if (!Tags.programTags.containsKey(subName)) Tags.programTags.put(subName, new String[c]);
+                Tags.programTags.get(subName)[1] = subId;
             }
         }
     }

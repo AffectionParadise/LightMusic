@@ -27,7 +27,7 @@ public class NetMusicSource {
             I18n.getText("yy"),
             I18n.getText("fa"),
             I18n.getText("lz"),
-            I18n.getText("gh"),
+            I18n.getText("qs"),
             I18n.getText("all")
     };
 
@@ -49,7 +49,7 @@ public class NetMusicSource {
     public static final int YY = 15;
     public static final int FA = 16;
     public static final int LZ = 17;
-    public static final int GH = 18;
+    public static final int QS = 18;
 
     public static final int ALL = 19;
 }

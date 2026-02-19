@@ -37,7 +37,7 @@ public class MeHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getCatPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[8])) {
             String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, s[8].trim(), page, limit))
@@ -80,7 +80,7 @@ public class MeHighQualityPlaylistReq {
     public CommonResult<NetPlaylistInfo> getExpPlaylists(String tag, int page, int limit) {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.hotPlaylistTag.get(tag);
+        String[] s = Tags.hotPlaylistTags.get(tag);
 
         if (StringUtil.notEmpty(s[9])) {
             String playlistInfoBody = HttpRequest.get(String.format(EXP_PLAYLIST_ME_API, s[9].trim()))

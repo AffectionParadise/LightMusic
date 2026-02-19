@@ -36,7 +36,7 @@ public class QqNewAlbumReq {
     public CommonResult<NetAlbumInfo> getNewAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[5])) {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)

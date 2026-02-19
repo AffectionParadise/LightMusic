@@ -86,7 +86,7 @@ public class DtNewAlbumReq {
     public CommonResult<NetAlbumInfo> getCatAlbums(String tag, int page, int limit) {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.newAlbumTag.get(tag);
+        String[] s = Tags.newAlbumTags.get(tag);
 
         if (StringUtil.notEmpty(s[7])) {
             HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[7], (page - 1) * limit, limit, System.currentTimeMillis())).execute();

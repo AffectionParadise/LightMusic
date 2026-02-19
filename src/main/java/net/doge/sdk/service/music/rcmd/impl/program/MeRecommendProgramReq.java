@@ -92,7 +92,7 @@ public class MeRecommendProgramReq {
     public CommonResult<NetMusicInfo> getExpPrograms(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.programTag.get(tag);
+        String[] s = Tags.programTags.get(tag);
 
         if (StringUtil.notEmpty(s[0])) {
             String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, s[0], page, Math.min(limit, 20)))
@@ -131,7 +131,7 @@ public class MeRecommendProgramReq {
     public CommonResult<NetMusicInfo> getIndexCatPrograms(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.programTag.get(tag);
+        String[] s = Tags.programTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
@@ -165,7 +165,7 @@ public class MeRecommendProgramReq {
     public CommonResult<NetMusicInfo> getIndexCatNewPrograms(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.programTag.get(tag);
+        String[] s = Tags.programTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
@@ -199,7 +199,7 @@ public class MeRecommendProgramReq {
     public CommonResult<NetMusicInfo> getIndexCatProgramsRank(String tag, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.programTag.get(tag);
+        String[] s = Tags.programTags.get(tag);
 
         if (StringUtil.notEmpty(s[1])) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, limit))

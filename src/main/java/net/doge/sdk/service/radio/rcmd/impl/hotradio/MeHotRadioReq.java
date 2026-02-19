@@ -158,7 +158,7 @@ public class MeHotRadioReq {
     public CommonResult<NetRadioInfo> getCatRadios(String tag, int page, int limit) {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
-        String[] s = Tags.radioTag.get(tag);
+        String[] s = Tags.radioTags.get(tag);
 
         if (StringUtil.notEmpty(s[5])) {
             String[] sp = s[5].split(" ");

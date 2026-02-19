@@ -22,7 +22,7 @@ public class MusicSearchTagReq {
      */
     public void initProgramSearchTag() {
         // 猫耳
-        Tags.programSearchTag.put("默认", new String[]{" "});
+        Tags.programSearchTags.put("默认", new String[]{" "});
 
         MultiRunnableExecutor executor = new MultiRunnableExecutor();
         executor.submit(() -> MeMusicSearchTagReq.getInstance().initProgramSearchTag());

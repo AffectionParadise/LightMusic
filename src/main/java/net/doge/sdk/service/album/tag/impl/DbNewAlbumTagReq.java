@@ -36,8 +36,8 @@ public class DbNewAlbumTagReq {
             String name = tag.text();
             String id = tag.text();
 
-            if (!Tags.newAlbumTag.containsKey(name)) Tags.newAlbumTag.put(name, new String[c]);
-            Tags.newAlbumTag.get(name)[6] = id;
+            if (!Tags.newAlbumTags.containsKey(name)) Tags.newAlbumTags.put(name, new String[c]);
+            Tags.newAlbumTags.get(name)[6] = id;
         }
     }
 }

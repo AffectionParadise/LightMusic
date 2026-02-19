@@ -46,8 +46,8 @@ public class KgNewSongTagReq {
                 String name = tag.getString("name");
                 String id = tag.getString("id");
 
-                if (!Tags.newSongTag.containsKey(name)) Tags.newSongTag.put(name, new String[c]);
-                Tags.newSongTag.get(name)[3] = id;
+                if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
+                Tags.newSongTags.get(name)[3] = id;
             }
         }
     }
