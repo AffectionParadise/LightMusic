@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.info.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -59,7 +59,7 @@ public class MeRadioInfoReq {
         String coverImgThumbUrl = drama.getString("cover");
 
         NetRadioInfo radioInfo = new NetRadioInfo();
-        radioInfo.setSource(NetMusicSource.ME);
+        radioInfo.setSource(NetResourceSource.ME);
         radioInfo.setId(radioId);
         radioInfo.setName(radioName);
         radioInfo.setDj(dj);
@@ -143,7 +143,7 @@ public class MeRadioInfoReq {
             Double duration = programJson.getDouble("duration") / 1000;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(songId);
             musicInfo.setName(name);
 //                musicInfo.setArtist(artist);

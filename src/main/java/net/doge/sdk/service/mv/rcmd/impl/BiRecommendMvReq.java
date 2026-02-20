@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
@@ -65,7 +65,7 @@ public class BiRecommendMvReq {
             String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.BI);
+            mvInfo.setSource(NetResourceSource.BI);
             mvInfo.setId(id);
             mvInfo.setBvId(bvId);
             mvInfo.setName(mvName);
@@ -115,7 +115,7 @@ public class BiRecommendMvReq {
                 String pubTime = mvJson.getString("create").split(" ")[0];
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setSource(NetResourceSource.BI);
 //                    mvInfo.setId(id);
                 mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);
@@ -168,7 +168,7 @@ public class BiRecommendMvReq {
                 String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setSource(NetResourceSource.BI);
                 mvInfo.setId(id);
                 mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);

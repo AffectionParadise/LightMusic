@@ -1,7 +1,7 @@
 package net.doge.sdk.service.album.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -56,7 +56,7 @@ public class LzNewAlbumReq {
             if (StringUtil.isEmpty(coverImgThumbUrl)) coverImgThumbUrl = img.attr("data-src");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.LZ);
+            albumInfo.setSource(NetResourceSource.LZ);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);

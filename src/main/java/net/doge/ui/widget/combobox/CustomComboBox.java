@@ -5,6 +5,7 @@ import net.doge.constant.core.ui.core.Fonts;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.button.CustomButton;
 import net.doge.ui.widget.combobox.popup.CustomComboPopup;
+import net.doge.ui.widget.combobox.renderer.StringComboBoxRenderer;
 import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
 import net.doge.util.ui.SwingUtil;
 
@@ -64,6 +65,13 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
         this.highlightBgIncreasing = drawBgIncreasing;
         if (highlightBgTimer.isRunning()) return;
         highlightBgTimer.start();
+    }
+
+    // 应用支持的 index
+    public void applyIndicesSupported(int[] indicesSupported) {
+        ListCellRenderer<? super T> renderer = getRenderer();
+        if (renderer instanceof StringComboBoxRenderer)
+            ((StringComboBoxRenderer) renderer).applyIndicesSupported(indicesSupported);
     }
 
     public CustomButton getArrowButton() {

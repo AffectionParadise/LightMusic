@@ -1,6 +1,6 @@
 package net.doge.sdk.service.sheet;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetSheetInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -23,7 +23,7 @@ public class SheetReq {
     public CommonResult<NetSheetInfo> getSheets(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcSheetReq.getInstance().getSheets(musicInfo);
             default:
                 return CommonResult.create();
@@ -36,7 +36,7 @@ public class SheetReq {
     public CommonResult<String> getSheetImgUrls(NetSheetInfo sheetInfo) {
         int source = sheetInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcSheetReq.getInstance().getSheetImgUrls(sheetInfo);
             default:
                 return CommonResult.create();

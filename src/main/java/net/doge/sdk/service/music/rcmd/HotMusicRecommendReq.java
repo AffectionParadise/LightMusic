@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -25,37 +25,37 @@ public class HotMusicRecommendReq {
         MultiCommonResultCallableExecutor<NetMusicInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (dt) {
-            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
                 NcHotMusicRecommendReq ncHotMusicRecommendReq = NcHotMusicRecommendReq.getInstance();
                 executor.submit(() -> ncHotMusicRecommendReq.getUpMusic(page, limit));
                 executor.submit(() -> ncHotMusicRecommendReq.getHotMusic(page, limit));
             }
-            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
                 KgHotMusicRecommendReq kgHotMusicRecommendReq = KgHotMusicRecommendReq.getInstance();
                 executor.submit(() -> kgHotMusicRecommendReq.getCardSong(tag, page, limit));
                 executor.submit(() -> kgHotMusicRecommendReq.getUpMusic(page, limit));
                 executor.submit(() -> kgHotMusicRecommendReq.getTop500(page, limit));
             }
-            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
                 QqHotMusicRecommendReq qqHotMusicRecommendReq = QqHotMusicRecommendReq.getInstance();
                 executor.submit(() -> qqHotMusicRecommendReq.getPopularMusic(page, limit));
                 executor.submit(() -> qqHotMusicRecommendReq.getHotMusic(page, limit));
             }
-            if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.KW || src == NetResourceSource.ALL) {
                 KwHotMusicRecommendReq kwHotMusicRecommendReq = KwHotMusicRecommendReq.getInstance();
                 executor.submit(() -> kwHotMusicRecommendReq.getUpMusic(page, limit));
                 executor.submit(() -> kwHotMusicRecommendReq.getHotMusic(page, limit));
             }
-            if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
                 executor.submit(() -> MgHotMusicRecommendReq.getInstance().getHotMusic(page, limit));
             }
-            if (src == NetMusicSource.HF || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.HF || src == NetResourceSource.ALL) {
                 executor.submit(() -> HfHotMusicRecommendReq.getInstance().getHotMusic(tag, page, limit));
             }
-            if (src == NetMusicSource.GG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.GG || src == NetResourceSource.ALL) {
                 executor.submit(() -> GgHotMusicRecommendReq.getInstance().getHotMusic(tag, page, limit));
             }
-            if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.FS || src == NetResourceSource.ALL) {
                 FsHotMusicRecommendReq fsHotMusicRecommendReq = FsHotMusicRecommendReq.getInstance();
                 executor.submit(() -> fsHotMusicRecommendReq.getSpreadYcSong(page, limit));
                 executor.submit(() -> fsHotMusicRecommendReq.getShareYcSong(page, limit));
@@ -64,22 +64,22 @@ public class HotMusicRecommendReq {
                 executor.submit(() -> fsHotMusicRecommendReq.getHotBzSong(page, limit));
                 executor.submit(() -> fsHotMusicRecommendReq.getRankBzSong(page, limit));
             }
-            if (src == NetMusicSource.FA || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.FA || src == NetResourceSource.ALL) {
                 executor.submit(() -> FaHotMusicRecommendReq.getInstance().getHotMusic(page, limit));
             }
         } else {
-            if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+            if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                 executor.submit(() -> NcHotMusicRecommendReq.getInstance().getStyleHotSong(tag, page, limit));
-            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
                 KgHotMusicRecommendReq kgHotMusicRecommendReq = KgHotMusicRecommendReq.getInstance();
                 executor.submit(() -> kgHotMusicRecommendReq.getCardSong(tag, page, limit));
                 executor.submit(() -> kgHotMusicRecommendReq.getThemeSong(tag, page, limit));
                 executor.submit(() -> kgHotMusicRecommendReq.getFmSong(tag, page, limit));
                 executor.submit(() -> kgHotMusicRecommendReq.getIpSong(tag, page, limit));
             }
-            if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
+            if (src == NetResourceSource.HF || src == NetResourceSource.ALL)
                 executor.submit(() -> HfHotMusicRecommendReq.getInstance().getHotMusic(tag, page, limit));
-            if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
+            if (src == NetResourceSource.GG || src == NetResourceSource.ALL)
                 executor.submit(() -> GgHotMusicRecommendReq.getInstance().getHotMusic(tag, page, limit));
         }
         return executor.getResult();

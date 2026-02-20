@@ -1,6 +1,6 @@
 package net.doge.sdk.service.artist.search;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -22,21 +22,21 @@ public class ArtistSearchReq {
      */
     public CommonResult<NetArtistInfo> searchArtists(int src, String keyword, int page, int limit) {
         MultiCommonResultCallableExecutor<NetArtistInfo> executor = new MultiCommonResultCallableExecutor<>();
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
             executor.submit(() -> NcArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
             executor.submit(() -> KgArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
             executor.submit(() -> QqArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL)
             executor.submit(() -> KwArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL)
             executor.submit(() -> MgArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QI || src == NetResourceSource.ALL)
             executor.submit(() -> QiArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.ME || src == NetResourceSource.ALL)
             executor.submit(() -> MeArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
-        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.DB || src == NetResourceSource.ALL)
             executor.submit(() -> DbArtistSearchReq.getInstance().searchArtists(keyword, page));
         return executor.getResult();
     }

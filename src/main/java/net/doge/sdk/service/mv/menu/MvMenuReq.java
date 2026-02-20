@@ -1,6 +1,6 @@
 package net.doge.sdk.service.mv.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -28,9 +28,9 @@ public class MvMenuReq {
     public CommonResult<NetMvInfo> getRelatedMvs(NetMusicInfo musicInfo, int page, int limit) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMvMenuReq.getInstance().getRelatedMvs(musicInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMvMenuReq.getInstance().getRelatedMvs(musicInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -45,13 +45,13 @@ public class MvMenuReq {
     public CommonResult<NetMvInfo> getSimilarMvs(NetMvInfo netMvInfo) {
         int source = netMvInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMvMenuReq.getInstance().getSimilarMvs(netMvInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMvMenuReq.getInstance().getSimilarMvs(netMvInfo);
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 return HkMvMenuReq.getInstance().getSimilarMvs(netMvInfo);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiMvMenuReq.getInstance().getSimilarMvs(netMvInfo);
             default:
                 return CommonResult.create();
@@ -66,7 +66,7 @@ public class MvMenuReq {
     public CommonResult<NetMvInfo> getVideoEpisodes(NetMvInfo netMvInfo, int page, int limit) {
         int source = netMvInfo.getSource();
         switch (source) {
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiMvMenuReq.getInstance().getVideoEpisodes(netMvInfo, page, limit);
             default:
                 return CommonResult.create();

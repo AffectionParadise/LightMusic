@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -84,7 +84,7 @@ public class MgArtistInfoReq {
         String coverImgThumbUrl = artistJson.getString("img3");
 
         NetArtistInfo artistInfo = new NetArtistInfo();
-        artistInfo.setSource(NetMusicSource.MG);
+        artistInfo.setSource(NetResourceSource.MG);
         artistInfo.setId(id);
         artistInfo.setName(name);
         artistInfo.setSongNum(songNum);
@@ -236,7 +236,7 @@ public class MgArtistInfoReq {
             }
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.MG);
+            musicInfo.setSource(NetResourceSource.MG);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

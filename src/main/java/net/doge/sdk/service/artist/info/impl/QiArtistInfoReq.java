@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -51,7 +51,7 @@ public class QiArtistInfoReq {
         Integer mvNum = artistJson.getIntValue("videoTotal");
 
         NetArtistInfo artistInfo = new NetArtistInfo();
-        artistInfo.setSource(NetMusicSource.QI);
+        artistInfo.setSource(NetResourceSource.QI);
         artistInfo.setId(artistId);
         artistInfo.setName(name);
         artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -120,7 +120,7 @@ public class QiArtistInfoReq {
             else if (allRate.contains("128")) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.QI);
+            musicInfo.setSource(NetResourceSource.QI);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

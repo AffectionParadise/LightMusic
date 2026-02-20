@@ -1,6 +1,6 @@
 package net.doge.sdk.service.radio.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -25,7 +25,7 @@ public class NewRadioReq {
      */
     public CommonResult<NetRadioInfo> getNewRadios(int src, int page, int limit) {
         MultiCommonResultCallableExecutor<NetRadioInfo> executor = new MultiCommonResultCallableExecutor<>();
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcNewRadioReq ncNewRadioReq = NcNewRadioReq.getInstance();
             executor.submit(() -> ncNewRadioReq.getNewRadios(page, limit));
             executor.submit(() -> ncNewRadioReq.getPersonalizedRadios(page, limit));
@@ -33,13 +33,13 @@ public class NewRadioReq {
             executor.submit(() -> ncNewRadioReq.getPayRadios(page, limit));
             executor.submit(() -> ncNewRadioReq.getPayGiftRadios(page, limit));
         }
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
             executor.submit(() -> QqNewRadioReq.getInstance().getRecommendRadios(page, limit));
         }
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
             executor.submit(() -> MgNewRadioReq.getInstance().getTimingRadios(page, limit));
         }
-        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.ME || src == NetResourceSource.ALL) {
             MeNewRadioReq meNewRadioReq = MeNewRadioReq.getInstance();
             executor.submit(() -> meNewRadioReq.getRecRadios(page, limit));
             executor.submit(() -> meNewRadioReq.getSummerRadios(page, limit));

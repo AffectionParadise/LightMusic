@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.rcmd.impl.program;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -60,7 +60,7 @@ public class MeRecommendProgramReq {
             String name = programJson.getString("title");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(id);
             musicInfo.setName(name);
 
@@ -77,7 +77,7 @@ public class MeRecommendProgramReq {
             Double duration = programJson.getDouble("duration") / 1000;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(id);
             musicInfo.setName(name);
             musicInfo.setDuration(duration);
@@ -114,7 +114,7 @@ public class MeRecommendProgramReq {
                 Double duration = DurationUtil.chineseToSeconds(box.select("span.video-duration").get(1).text());
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setSource(NetResourceSource.ME);
                 musicInfo.setId(id);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
@@ -151,7 +151,7 @@ public class MeRecommendProgramReq {
                 Double duration = DurationUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setSource(NetResourceSource.ME);
                 musicInfo.setId(id);
                 musicInfo.setName(name);
                 musicInfo.setDuration(duration);
@@ -186,7 +186,7 @@ public class MeRecommendProgramReq {
                 Double duration = DurationUtil.toSeconds(box.select(".vw-frontsound-time.fc-hoverheight").first().text().trim());
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setSource(NetResourceSource.ME);
                 musicInfo.setId(id);
                 musicInfo.setName(name);
                 musicInfo.setDuration(duration);
@@ -220,7 +220,7 @@ public class MeRecommendProgramReq {
                 String name = box.childNodeSize() > 1 ? box.select(".vw-rank-title.floatleft").text().trim() : box.text().trim();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setSource(NetResourceSource.ME);
                 musicInfo.setId(id);
                 musicInfo.setName(name);
 

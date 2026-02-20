@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
@@ -56,7 +56,7 @@ public class MeArtistListReq {
                 String coverImgThumbUrl = artistJson.getString("avatar");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.ME);
+                artistInfo.setSource(NetResourceSource.ME);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -96,7 +96,7 @@ public class MeArtistListReq {
                 String coverImgThumbUrl = artistJson.getString("avatar");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.ME);
+                artistInfo.setSource(NetResourceSource.ME);
                 artistInfo.setOrganization(true);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);

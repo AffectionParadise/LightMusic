@@ -3,7 +3,7 @@ package net.doge.sdk.service.album.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -64,7 +64,7 @@ public class DtAlbumSearchReq {
             Integer songNum = albumJson.getIntValue("count");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.DT);
+            albumInfo.setSource(NetResourceSource.DT);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -110,7 +110,7 @@ public class DtAlbumSearchReq {
             Integer songNum = albumJson.getIntValue("count");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.DT);
+            albumInfo.setSource(NetResourceSource.DT);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);

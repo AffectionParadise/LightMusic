@@ -1,7 +1,7 @@
 package net.doge.sdk.service.user.info.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -78,7 +78,7 @@ public class HfUserInfoReq {
             String artistId = span.attr("uid");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.HF);
+            musicInfo.setSource(NetResourceSource.HF);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
             musicInfo.setArtist(artist);
@@ -116,7 +116,7 @@ public class HfUserInfoReq {
         Integer programCount = Integer.parseInt(RegexUtil.getGroup1("主题数：(\\d+)", sm.text()));
 
         NetUserInfo userInfo = new NetUserInfo();
-        userInfo.setSource(NetMusicSource.HF);
+        userInfo.setSource(NetResourceSource.HF);
         userInfo.setId(userId);
         userInfo.setName(userName);
         userInfo.setGender(gender);

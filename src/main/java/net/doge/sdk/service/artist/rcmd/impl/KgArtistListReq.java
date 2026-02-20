@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
@@ -66,7 +66,7 @@ public class KgArtistListReq {
                 String coverImgThumbUrl = artistJson.getString("imgurl").replace("{size}", "240");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.KG);
+                artistInfo.setSource(NetResourceSource.KG);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
 //            artistInfo.setSongNum(songNum);
@@ -112,7 +112,7 @@ public class KgArtistListReq {
                 String coverImgThumbUrl = artistJson.getString("imgurl").replace("{size}", "240");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.KG);
+                artistInfo.setSource(NetResourceSource.KG);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
 //                    artistInfo.setSongNum(songNum);
@@ -156,7 +156,7 @@ public class KgArtistListReq {
                 String coverImgThumbUrl = base.getString("avatar").replace("{size}", "240");
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.KG);
+                artistInfo.setSource(NetResourceSource.KG);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

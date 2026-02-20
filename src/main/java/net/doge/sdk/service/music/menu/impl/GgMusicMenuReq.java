@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.menu.impl;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.RegexUtil;
@@ -49,7 +49,7 @@ public class GgMusicMenuReq {
             String songName = song.text();
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.GG);
+            musicInfo.setSource(NetResourceSource.GG);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
 

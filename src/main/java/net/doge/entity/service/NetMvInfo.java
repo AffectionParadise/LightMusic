@@ -4,7 +4,7 @@ import lombok.Data;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.service.MvInfoType;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
@@ -21,7 +21,7 @@ import java.util.Objects;
 @Data
 public class NetMvInfo implements NetResource, Downloadable {
     // MV 来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 类型 (网易云分成 MV 视频 Mlog)
     private int type;
     // 格式
@@ -55,7 +55,7 @@ public class NetMvInfo implements NetResource, Downloadable {
     private Runnable invokeLater;
 
     public boolean isRealMV() {
-        return type == MvInfoType.MV && source != NetMusicSource.HK && source != NetMusicSource.BI;
+        return type == MvInfoType.MV && source != NetResourceSource.HK && source != NetResourceSource.BI;
     }
 
     public boolean hasName() {
@@ -156,7 +156,7 @@ public class NetMvInfo implements NetResource, Downloadable {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
+        return NetResourceSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

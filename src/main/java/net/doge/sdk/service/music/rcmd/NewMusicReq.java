@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -24,37 +24,37 @@ public class NewMusicReq {
         final String defaultTag = "默认";
         MultiCommonResultCallableExecutor<NetMusicInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcNewMusicReq ncNewMusicReq = NcNewMusicReq.getInstance();
             if (dt) executor.submit(() -> ncNewMusicReq.getRecommendNewSong(page, limit));
             executor.submit(() -> ncNewMusicReq.getFastNewSong(tag, page, limit));
             if (!dt) executor.submit(() -> ncNewMusicReq.getStyleNewSong(tag, page, limit));
         }
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
             KgNewMusicReq kgNewMusicReq = KgNewMusicReq.getInstance();
             if (dt) executor.submit(() -> kgNewMusicReq.getEverydaySong(page, limit));
             executor.submit(() -> kgNewMusicReq.getRecommendNewSong(tag, page, limit));
             executor.submit(() -> kgNewMusicReq.getStyleSong(tag, page, limit));
         }
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
             executor.submit(() -> QqNewMusicReq.getInstance().getRecommendNewSong(tag, page, limit));
         }
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL) {
             if (dt) executor.submit(() -> KwNewMusicReq.getInstance().getRecommendNewSong(page, limit));
         }
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
             if (dt) executor.submit(() -> MgNewMusicReq.getInstance().getRecommendNewSong(page, limit));
         }
-        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QI || src == NetResourceSource.ALL) {
             if (dt) executor.submit(() -> QiNewMusicReq.getInstance().getRecommendNewSong(page, limit));
         }
-        if (src == NetMusicSource.HF || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.HF || src == NetResourceSource.ALL) {
             executor.submit(() -> HfNewMusicReq.getInstance().getRecommendNewSong(tag, page, limit));
         }
-        if (src == NetMusicSource.GG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.GG || src == NetResourceSource.ALL) {
             executor.submit(() -> GgNewMusicReq.getInstance().getRecommendNewSong(tag, page, limit));
         }
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.FS || src == NetResourceSource.ALL) {
             FsNewMusicReq fsNewMusicReq = FsNewMusicReq.getInstance();
             executor.submit(() -> fsNewMusicReq.getLatestYcSong(tag, page, limit));
             executor.submit(() -> fsNewMusicReq.getWebsiteRecYcSong(tag, page, limit));

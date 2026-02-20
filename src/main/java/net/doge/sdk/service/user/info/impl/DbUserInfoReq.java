@@ -1,7 +1,7 @@
 package net.doge.sdk.service.user.info.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -84,7 +84,7 @@ public class DbUserInfoReq {
                 String avatarThumbUrl = img.attr("src");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.DB);
+                userInfo.setSource(NetResourceSource.DB);
                 userInfo.setId(id);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);

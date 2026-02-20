@@ -3,7 +3,7 @@ package net.doge.sdk.service.rank.info.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -67,7 +67,7 @@ public class MeRankInfoReq {
             Double duration = songJson.getDouble("duration") / 1000;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

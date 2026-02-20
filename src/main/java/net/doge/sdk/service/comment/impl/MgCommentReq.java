@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.NetResource;
@@ -151,7 +151,7 @@ public class MgCommentReq {
                     Integer likedCount = commentJson.getJSONObject("opNumItem").getIntValue("thumbNum");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
-                    commentInfo.setSource(NetMusicSource.MG);
+                    commentInfo.setSource(NetResourceSource.MG);
                     commentInfo.setUserId(userId);
                     commentInfo.setUsername(username);
                     commentInfo.setProfileUrl(profileUrl);
@@ -180,7 +180,7 @@ public class MgCommentReq {
 //                        likedCount = reply.getJSONObject("opNumItem").getIntValue("thumbNum");
 
                         NetCommentInfo rCommentInfo = new NetCommentInfo();
-                        rCommentInfo.setSource(NetMusicSource.MG);
+                        rCommentInfo.setSource(NetResourceSource.MG);
                         rCommentInfo.setSub(true);
                         rCommentInfo.setUserId(userId);
                         rCommentInfo.setUsername(username);

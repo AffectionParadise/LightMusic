@@ -1,7 +1,7 @@
 package net.doge.sdk.service.comment.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
@@ -69,7 +69,7 @@ public class HfCommentReq {
             String time = TimeUtil.strToPhrase(comment.select(".date.text-grey.ml-2").text());
 
             NetCommentInfo commentInfo = new NetCommentInfo();
-            commentInfo.setSource(NetMusicSource.HF);
+            commentInfo.setSource(NetResourceSource.HF);
             commentInfo.setUsername(username);
             commentInfo.setUserId(userId);
             commentInfo.setProfileUrl(profileUrl);
@@ -93,7 +93,7 @@ public class HfCommentReq {
             content = bq.first().ownText();
 
             NetCommentInfo ci = new NetCommentInfo();
-            ci.setSource(NetMusicSource.HF);
+            ci.setSource(NetResourceSource.HF);
             ci.setSub(true);
             ci.setUsername(username);
             ci.setUserId(userId);

@@ -1,7 +1,5 @@
 package net.doge.ui.widget.combobox.renderer;
 
-import lombok.Data;
-import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.LocalPlaylist;
@@ -17,10 +15,7 @@ import java.awt.*;
  * @description 下拉框渲染器
  * @date 2020/12/7
  */
-@Data
 public class LocalPlaylistComboBoxRenderer extends CustomListCellRenderer {
-    // 属性不能用 font，不然重复！
-    protected Font customFont = Fonts.NORMAL;
     protected CustomLabel label = new CustomLabel();
 
     public LocalPlaylistComboBoxRenderer() {
@@ -29,7 +24,6 @@ public class LocalPlaylistComboBoxRenderer extends CustomListCellRenderer {
 
     private void init() {
         label.setBorder(new HDEmptyBorder(5, 0, 5, 0));
-        label.setFont(customFont);
         UIStyle style = UIStyleStorage.currUIStyle;
         label.setForeground(style.getTextColor());
         label.setBgColor(style.getForeColor());

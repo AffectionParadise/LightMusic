@@ -1,7 +1,7 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
 
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 public class NetPlaylistInfo implements NetResource {
     // 歌单来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 歌单 id
     private String id;
     // 歌单名称
@@ -132,7 +132,7 @@ public class NetPlaylistInfo implements NetResource {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
+        return NetResourceSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

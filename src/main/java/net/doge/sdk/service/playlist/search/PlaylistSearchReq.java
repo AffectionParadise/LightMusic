@@ -1,6 +1,6 @@
 package net.doge.sdk.service.playlist.search;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -22,17 +22,17 @@ public class PlaylistSearchReq {
      */
     public CommonResult<NetPlaylistInfo> searchPlaylists(int src, String keyword, int page, int limit) {
         MultiCommonResultCallableExecutor<NetPlaylistInfo> executor = new MultiCommonResultCallableExecutor<>();
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
             executor.submit(() -> NcPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
             executor.submit(() -> KgPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
             executor.submit(() -> QqPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL)
             executor.submit(() -> KwPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL)
             executor.submit(() -> MgPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.FS || src == NetResourceSource.ALL)
             executor.submit(() -> FsPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
         return executor.getResult();
     }

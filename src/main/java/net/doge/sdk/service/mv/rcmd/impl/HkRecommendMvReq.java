@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
@@ -65,7 +65,7 @@ public class HkRecommendMvReq {
             String pubTime = TimeUtil.msToDate(mvJson.getLong("publish_time") * 1000);
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.HK);
+            mvInfo.setSource(NetResourceSource.HK);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
@@ -110,7 +110,7 @@ public class HkRecommendMvReq {
             String pubTime = mvJson.getString("publish_time").replaceAll("[发布时间：日]", "").replaceAll("年|月", "-");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.HK);
+            mvInfo.setSource(NetResourceSource.HK);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
@@ -159,7 +159,7 @@ public class HkRecommendMvReq {
                 String pubTime = mvJson.getString("publish_time").replaceAll("年|月", "-").replace("日", "");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.HK);
+                mvInfo.setSource(NetResourceSource.HK);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);

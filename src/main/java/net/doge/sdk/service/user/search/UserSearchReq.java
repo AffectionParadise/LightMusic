@@ -1,6 +1,6 @@
 package net.doge.sdk.service.user.search;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -22,23 +22,23 @@ public class UserSearchReq {
      */
     public CommonResult<NetUserInfo> searchUsers(int src, String keyword, int page, int limit) {
         MultiCommonResultCallableExecutor<NetUserInfo> executor = new MultiCommonResultCallableExecutor<>();
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
             executor.submit(() -> NcUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
             executor.submit(() -> QqUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.XM || src == NetResourceSource.ALL)
             executor.submit(() -> XmUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.ME || src == NetResourceSource.ALL)
             executor.submit(() -> MeUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.FS || src == NetResourceSource.ALL)
             executor.submit(() -> FsUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.HK || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.HK || src == NetResourceSource.ALL)
             executor.submit(() -> HkUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.DB || src == NetResourceSource.ALL)
             executor.submit(() -> DbUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.DT || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.DT || src == NetResourceSource.ALL)
             executor.submit(() -> DtUserSearchReq.getInstance().searchUsers(keyword, page, limit));
-        if (src == NetMusicSource.BI || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.BI || src == NetResourceSource.ALL)
             executor.submit(() -> BiUserSearchReq.getInstance().searchUsers(keyword, page));
         return executor.getResult();
     }

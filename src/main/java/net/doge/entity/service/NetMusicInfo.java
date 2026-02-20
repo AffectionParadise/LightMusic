@@ -5,7 +5,7 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.Downloadable;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.entity.service.base.NetResource;
@@ -25,7 +25,7 @@ import java.util.Objects;
 @Data
 public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     // 来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 歌曲 id
     private String id;
     // 酷狗的歌曲 hash，这个参数与上面的 id 不同
@@ -96,8 +96,8 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     // 判断是不是电台节目
     public boolean isProgram() {
-        return source == NetMusicSource.XM || source == NetMusicSource.HF || source == NetMusicSource.GG
-                || source == NetMusicSource.FS || source == NetMusicSource.ME || source == NetMusicSource.BI || hasProgramId();
+        return source == NetResourceSource.XM || source == NetResourceSource.HF || source == NetResourceSource.GG
+                || source == NetResourceSource.FS || source == NetResourceSource.ME || source == NetResourceSource.BI || hasProgramId();
     }
 
     // 判断有没有 hash(酷狗)
@@ -220,7 +220,7 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + SEPARATOR + toSimpleString();
+        return NetResourceSource.NAMES[source] + SEPARATOR + toSimpleString();
     }
 
     public String toSimpleString() {

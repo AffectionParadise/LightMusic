@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -51,7 +51,7 @@ public class MeArtistSearchReq {
             String coverImgThumbUrl = artistJson.getString("icon");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.ME);
+            artistInfo.setSource(NetResourceSource.ME);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

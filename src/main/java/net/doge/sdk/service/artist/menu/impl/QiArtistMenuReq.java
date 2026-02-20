@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -56,7 +56,7 @@ public class QiArtistMenuReq {
             Integer songNum = JsonUtil.notEmpty(trackList) ? trackList.size() : null;
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.QI);
+            albumInfo.setSource(NetResourceSource.QI);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);

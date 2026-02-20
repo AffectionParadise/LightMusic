@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.entity.service.NetRadioInfo;
@@ -26,15 +26,15 @@ public class MusicMenuReq {
     public CommonResult<NetMusicInfo> getSimilarSongs(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 return HfMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 return GgMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeMusicMenuReq.getInstance().getSimilarSongs(musicInfo);
             default:
                 return CommonResult.create();
@@ -49,9 +49,9 @@ public class MusicMenuReq {
     public CommonResult<NetPlaylistInfo> getRelatedPlaylists(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMusicMenuReq.getInstance().getRelatedPlaylists(musicInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMusicMenuReq.getInstance().getRelatedPlaylists(musicInfo);
             default:
                 return CommonResult.create();
@@ -66,7 +66,7 @@ public class MusicMenuReq {
     public CommonResult<NetRadioInfo> getRecRadios(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeMusicMenuReq.getInstance().getRecRadios(musicInfo);
             default:
                 return CommonResult.create();

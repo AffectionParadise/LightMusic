@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -93,7 +93,7 @@ public class KgHotMusicRecommendReq {
                 else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
@@ -150,7 +150,7 @@ public class KgHotMusicRecommendReq {
                 else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
@@ -212,7 +212,7 @@ public class KgHotMusicRecommendReq {
                 else if (songJson.getLong("size") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
@@ -267,7 +267,7 @@ public class KgHotMusicRecommendReq {
                 else if (audioInfo.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
@@ -289,7 +289,7 @@ public class KgHotMusicRecommendReq {
      * 飙升榜
      */
     public CommonResult<NetMusicInfo> getUpMusic(int page, int limit) {
-        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(6666), NetMusicSource.KG, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(6666), NetResourceSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;
@@ -342,7 +342,7 @@ public class KgHotMusicRecommendReq {
      * TOP500
      */
     public CommonResult<NetMusicInfo> getTop500(int page, int limit) {
-        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(8888), NetMusicSource.KG, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(8888), NetResourceSource.KG, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;

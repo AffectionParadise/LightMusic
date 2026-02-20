@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -63,7 +63,7 @@ public class HkMvSearchReq {
             String coverImgUrl = mvJson.getString("cover_src");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.HK);
+            mvInfo.setSource(NetResourceSource.HK);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);

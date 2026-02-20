@@ -1,13 +1,13 @@
-package net.doge.constant.service;
+package net.doge.constant.service.source;
 
 import net.doge.constant.core.lang.I18n;
 
 /**
  * @author Doge
- * @description 音乐来源
+ * @description 源
  * @date 2020/12/7
  */
-public class NetMusicSource {
+public class NetResourceSource {
     public static final String[] NAMES = new String[]{
             I18n.getText("nc"),
             I18n.getText("kg"),

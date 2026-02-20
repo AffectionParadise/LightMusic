@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -57,7 +57,7 @@ public class XmRadioSearchReq {
             String category = radioJson.getString("categoryTitle");
 
             NetRadioInfo radioInfo = new NetRadioInfo();
-            radioInfo.setSource(NetMusicSource.XM);
+            radioInfo.setSource(NetResourceSource.XM);
             radioInfo.setId(radioId);
             radioInfo.setName(radioName);
             radioInfo.setDj(dj);

@@ -1,6 +1,6 @@
 package net.doge.sdk.service.user.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.*;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.user.menu.impl.*;
@@ -59,11 +59,11 @@ public class UserMenuReq {
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserMenuReq.getInstance().getUserPlaylists(userInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqUserMenuReq.getInstance().getUserPlaylists(userInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserMenuReq.getInstance().getUserPlaylists(userInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -78,11 +78,11 @@ public class UserMenuReq {
     public CommonResult<NetAlbumInfo> getUserAlbums(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqUserMenuReq.getInstance().getUserAlbums(userInfo, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbUserMenuReq.getInstance().getUserAlbums(userInfo, page);
-            case NetMusicSource.DT:
+            case NetResourceSource.DT:
                 return DtUserMenuReq.getInstance().getUserAlbums(userInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -97,13 +97,13 @@ public class UserMenuReq {
     public CommonResult<NetRadioInfo> getUserRadios(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserMenuReq.getInstance().getUserRadios(userInfo, page, limit);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmUserMenuReq.getInstance().getUserRadios(userInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserMenuReq.getInstance().getUserRadios(userInfo, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbUserMenuReq.getInstance().getUserRadios(userInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -118,9 +118,9 @@ public class UserMenuReq {
     public CommonResult<NetMvInfo> getUserVideos(NetUserInfo userInfo, int sortType, int page, int limit, String cursor) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 return HkUserMenuReq.getInstance().getUserVideos(userInfo, page, limit, cursor);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiUserMenuReq.getInstance().getUserVideos(userInfo, sortType, page, limit);
             default:
                 return CommonResult.create();
@@ -135,17 +135,17 @@ public class UserMenuReq {
     public CommonResult<NetUserInfo> getUserFollows(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
-            case NetMusicSource.DT:
+            case NetResourceSource.DT:
                 return DtUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiUserMenuReq.getInstance().getUserFollows(userInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -160,17 +160,17 @@ public class UserMenuReq {
     public CommonResult<NetUserInfo> getUserFans(NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
-            case NetMusicSource.DT:
+            case NetResourceSource.DT:
                 return DtUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiUserMenuReq.getInstance().getUserFans(userInfo, page, limit);
             default:
                 return CommonResult.create();

@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
@@ -58,7 +58,7 @@ public class MgHighQualityPlaylistReq {
             String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-            playlistInfo.setSource(NetMusicSource.MG);
+            playlistInfo.setSource(NetResourceSource.MG);
             playlistInfo.setId(playlistId);
             playlistInfo.setName(playlistName);
             playlistInfo.setCreator(creator);
@@ -145,7 +145,7 @@ public class MgHighQualityPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("imageUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.MG);
+                playlistInfo.setSource(NetResourceSource.MG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);

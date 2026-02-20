@@ -6,7 +6,7 @@ import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.task.TaskStatus;
 import net.doge.constant.core.task.TaskType;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.Downloadable;
@@ -88,7 +88,7 @@ public class Task {
 
     private Map<String, String> getHeaders() {
         Map<String, String> headers = null;
-        if (isMv() && ((NetMvInfo) resource).getSource() == NetMusicSource.BI || isMusic() && ((NetMusicInfo) resource).getSource() == NetMusicSource.BI) {
+        if (isMv() && ((NetMvInfo) resource).getSource() == NetResourceSource.BI || isMusic() && ((NetMusicInfo) resource).getSource() == NetResourceSource.BI) {
             headers = new HashMap<>();
             headers.put("referer", "https://www.bilibili.com/");
         }

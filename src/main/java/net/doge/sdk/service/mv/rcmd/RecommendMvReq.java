@@ -1,6 +1,6 @@
 package net.doge.sdk.service.mv.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -24,7 +24,7 @@ public class RecommendMvReq {
         final String defaultTag = "默认";
         MultiCommonResultCallableExecutor<NetMvInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcRecommendMvReq ncRecommendMvReq = NcRecommendMvReq.getInstance();
             if (dt) executor.submit(() -> ncRecommendMvReq.getRecommendMv(page, limit));
             executor.submit(() -> ncRecommendMvReq.getMvRank(tag, page, limit));
@@ -32,23 +32,23 @@ public class RecommendMvReq {
             executor.submit(() -> ncRecommendMvReq.getAllMv(tag, page, limit));
             if (dt) executor.submit(() -> ncRecommendMvReq.getExclusiveMv(page, limit));
         }
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
             KgRecommendMvReq kgRecommendMvReq = KgRecommendMvReq.getInstance();
             executor.submit(() -> kgRecommendMvReq.getRecommendMv(tag, page, limit));
             executor.submit(() -> kgRecommendMvReq.getIpMv(tag, page, limit));
         }
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
             QqRecommendMvReq qqRecommendMvReq = QqRecommendMvReq.getInstance();
             executor.submit(() -> qqRecommendMvReq.getRecommendMv(tag, page, limit));
             executor.submit(() -> qqRecommendMvReq.getNewMv(tag, page, limit));
         }
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL) {
             executor.submit(() -> KwRecommendMvReq.getInstance().getRecommendMv(tag, page, limit));
         }
-        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QI || src == NetResourceSource.ALL) {
             if (dt) executor.submit(() -> QiRecommendMvReq.getInstance().getRecommendMv(page, limit));
         }
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.FS || src == NetResourceSource.ALL) {
             if (dt) {
                 FsRecommendMvReq fsRecommendMvReq = FsRecommendMvReq.getInstance();
                 executor.submit(() -> fsRecommendMvReq.getRecommendMv(page, limit));
@@ -56,24 +56,24 @@ public class RecommendMvReq {
                 executor.submit(() -> fsRecommendMvReq.getNewMv(page, limit));
             }
         }
-        if (src == NetMusicSource.HK || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.HK || src == NetResourceSource.ALL) {
             HkRecommendMvReq hkRecommendMvReq = HkRecommendMvReq.getInstance();
             if (dt) executor.submit(() -> hkRecommendMvReq.getGuessVideo(page, limit));
             if (dt) executor.submit(() -> hkRecommendMvReq.getTopVideo(page, limit));
             executor.submit(() -> hkRecommendMvReq.getRecommendVideo(tag, limit));
         }
-        if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.BI || src == NetResourceSource.ALL) {
             BiRecommendMvReq biRecommendMvReq = BiRecommendMvReq.getInstance();
             if (dt) executor.submit(() -> biRecommendMvReq.getHotVideo(page, limit));
             executor.submit(() -> biRecommendMvReq.getCatRankVideo(tag, page, limit));
             executor.submit(() -> biRecommendMvReq.getCatNewVideo(tag, page, limit));
         }
-        if (src == NetMusicSource.FA || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.FA || src == NetResourceSource.ALL) {
             FaRecommendMvReq faRecommendMvReq = FaRecommendMvReq.getInstance();
             executor.submit(() -> faRecommendMvReq.getVideo(tag, page, limit));
             executor.submit(() -> faRecommendMvReq.getLive(tag, page, limit));
         }
-        if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.LZ || src == NetResourceSource.ALL) {
             executor.submit(() -> LzRecommendMvReq.getInstance().getVideo(tag, page, limit));
         }
         return executor.getResult();

@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -63,7 +63,7 @@ public class DtUserMenuReq {
             Integer songNum = albumJson.getIntValue("count");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.DT);
+            albumInfo.setSource(NetResourceSource.DT);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -108,7 +108,7 @@ public class DtUserMenuReq {
             Integer fan = userJson.getIntValue("beFollowCount");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.DT);
+            userInfo.setSource(NetResourceSource.DT);
             userInfo.setId(userId);
             userInfo.setName(userName);
             userInfo.setGender(gender);
@@ -154,7 +154,7 @@ public class DtUserMenuReq {
             Integer fan = userJson.getIntValue("beFollowCount");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.DT);
+            userInfo.setSource(NetResourceSource.DT);
             userInfo.setId(userId);
             userInfo.setName(userName);
             userInfo.setGender(gender);

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -64,7 +64,7 @@ public class KgPlaylistInfoReq {
                 String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KG);
+                playlistInfo.setSource(NetResourceSource.KG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(name);
                 playlistInfo.setCreator(creator);
@@ -149,7 +149,7 @@ public class KgPlaylistInfoReq {
             else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.KG);
+            musicInfo.setSource(NetResourceSource.KG);
             musicInfo.setHash(hash);
             musicInfo.setId(songId);
             musicInfo.setName(name);

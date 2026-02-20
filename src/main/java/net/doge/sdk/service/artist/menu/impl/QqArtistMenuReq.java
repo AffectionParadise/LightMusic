@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMvInfo;
@@ -66,7 +66,7 @@ public class QqArtistMenuReq {
             String coverImgThumbUrl = String.format(SONG_IMG_QQ_API, albumId);
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.QQ);
+            albumInfo.setSource(NetResourceSource.QQ);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -146,7 +146,7 @@ public class QqArtistMenuReq {
             Long playCount = mvJson.getLong("playcnt");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.QQ);
+            mvInfo.setSource(NetResourceSource.QQ);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
@@ -189,7 +189,7 @@ public class QqArtistMenuReq {
                 String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.QQ);
+                artistInfo.setSource(NetResourceSource.QQ);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

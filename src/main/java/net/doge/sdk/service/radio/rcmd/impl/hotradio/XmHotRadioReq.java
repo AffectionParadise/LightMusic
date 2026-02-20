@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
@@ -66,7 +66,7 @@ public class XmHotRadioReq {
                 coverImgThumbUrl = coverImgThumbUrl.substring(0, coverImgThumbUrl.lastIndexOf('!'));
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.XM);
+                radioInfo.setSource(NetResourceSource.XM);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -116,7 +116,7 @@ public class XmHotRadioReq {
                 String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("albumCoverPath");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.XM);
+                radioInfo.setSource(NetResourceSource.XM);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -164,7 +164,7 @@ public class XmHotRadioReq {
                 String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("cover");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.XM);
+                radioInfo.setSource(NetResourceSource.XM);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);

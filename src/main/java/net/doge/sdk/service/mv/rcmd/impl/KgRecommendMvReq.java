@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
@@ -65,7 +65,7 @@ public class KgRecommendMvReq {
                 String coverImgUrl = mvJson.getString("img").replace("/{size}", "");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.KG);
+                mvInfo.setSource(NetResourceSource.KG);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
@@ -117,7 +117,7 @@ public class KgRecommendMvReq {
                 String coverImgUrl = base.getString("hdpic").replace("/{size}", "");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.KG);
+                mvInfo.setSource(NetResourceSource.KG);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);

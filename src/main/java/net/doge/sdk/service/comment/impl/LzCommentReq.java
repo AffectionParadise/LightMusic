@@ -1,7 +1,7 @@
 package net.doge.sdk.service.comment.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
@@ -89,7 +89,7 @@ public class LzCommentReq {
             String time = TimeUtil.strToPhrase(date.text().trim());
 
             NetCommentInfo commentInfo = new NetCommentInfo();
-            commentInfo.setSource(NetMusicSource.LZ);
+            commentInfo.setSource(NetResourceSource.LZ);
             commentInfo.setSub(!comment.hasClass("depth-1"));
             commentInfo.setUsername(username);
             commentInfo.setProfileUrl(profileUrl);

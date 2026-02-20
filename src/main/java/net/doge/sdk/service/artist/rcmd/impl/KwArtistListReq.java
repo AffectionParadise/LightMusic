@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
@@ -62,7 +62,7 @@ public class KwArtistListReq {
                     Integer mvNum = artistJson.getIntValue("mvNum");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
-                    artistInfo.setSource(NetMusicSource.KW);
+                    artistInfo.setSource(NetResourceSource.KW);
                     artistInfo.setId(artistId);
                     artistInfo.setName(artistName);
                     artistInfo.setSongNum(songNum);
@@ -112,7 +112,7 @@ public class KwArtistListReq {
                     Integer mvNum = artistJson.getIntValue("mvNum");
 
                     NetArtistInfo artistInfo = new NetArtistInfo();
-                    artistInfo.setSource(NetMusicSource.KW);
+                    artistInfo.setSource(NetResourceSource.KW);
                     artistInfo.setId(artistId);
                     artistInfo.setName(artistName);
                     artistInfo.setSongNum(songNum);

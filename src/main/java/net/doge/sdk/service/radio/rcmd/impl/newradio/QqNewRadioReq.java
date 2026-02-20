@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.rcmd.impl.newradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -53,7 +53,7 @@ public class QqNewRadioReq {
                     Long playCount = radioJson.getLong("listenNum");
 
                     NetRadioInfo radioInfo = new NetRadioInfo();
-                    radioInfo.setSource(NetMusicSource.QQ);
+                    radioInfo.setSource(NetResourceSource.QQ);
                     radioInfo.setId(radioId);
                     radioInfo.setName(radioName);
                     radioInfo.setPlayCount(playCount);

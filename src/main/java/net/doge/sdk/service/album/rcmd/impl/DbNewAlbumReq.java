@@ -1,7 +1,7 @@
 package net.doge.sdk.service.album.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
@@ -62,7 +62,7 @@ public class DbNewAlbumReq {
             String coverImgThumbUrl = img.attr("src");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.DB);
+            albumInfo.setSource(NetResourceSource.DB);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -109,7 +109,7 @@ public class DbNewAlbumReq {
                 String coverImgThumbUrl = img.attr("src");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.DB);
+                albumInfo.setSource(NetResourceSource.DB);
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);

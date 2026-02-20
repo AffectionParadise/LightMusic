@@ -16,7 +16,7 @@ import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.window.WindowSize;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.util.MusicServerUtil;
@@ -221,7 +221,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
     private void initRequestHeaders() {
         // b 站视频需要设置请求头
-        if (isLocal || mvInfo.getSource() != NetMusicSource.BI) return;
+        if (isLocal || mvInfo.getSource() != NetResourceSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");

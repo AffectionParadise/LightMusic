@@ -3,7 +3,7 @@ package net.doge.sdk.service.rank.fetch.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -58,7 +58,7 @@ public class MgRankFetchReq {
                         String updateFre = item.getJSONArray("barList").getJSONObject(0).getString("title");
 
                         NetRankInfo rankInfo = new NetRankInfo();
-                        rankInfo.setSource(NetMusicSource.MG);
+                        rankInfo.setSource(NetResourceSource.MG);
                         rankInfo.setId(rankId);
                         rankInfo.setName(rankName);
                         rankInfo.setUpdateFre(updateFre);
@@ -104,7 +104,7 @@ public class MgRankFetchReq {
                     if (StringUtil.isEmpty(updateFre)) updateFre = content.getString("desc");
 
                     NetRankInfo rankInfo = new NetRankInfo();
-                    rankInfo.setSource(NetMusicSource.MG);
+                    rankInfo.setSource(NetResourceSource.MG);
                     rankInfo.setId(rankId);
                     rankInfo.setName(rankName);
                     rankInfo.setUpdateFre(updateFre);

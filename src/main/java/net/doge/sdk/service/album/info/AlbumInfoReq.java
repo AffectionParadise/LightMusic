@@ -1,7 +1,7 @@
 package net.doge.sdk.service.album.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -33,17 +33,17 @@ public class AlbumInfoReq {
      */
     public CommonResult<NetAlbumInfo> getAlbumInfo(int source, String id) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcAlbumInfoReq.getInstance().getAlbumInfo(id);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgAlbumInfoReq.getInstance().getAlbumInfo(id);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqAlbumInfoReq.getInstance().getAlbumInfo(id);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwAlbumInfoReq.getInstance().getAlbumInfo(id);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgAlbumInfoReq.getInstance().getAlbumInfo(id);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiAlbumInfoReq.getInstance().getAlbumInfo(id);
             default:
                 return CommonResult.create();
@@ -58,31 +58,31 @@ public class AlbumInfoReq {
         if (albumInfo.isIntegrated()) return;
         int source = albumInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 QiAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 DbAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.DT:
+            case NetResourceSource.DT:
                 DtAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 LzAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
         }
@@ -94,19 +94,19 @@ public class AlbumInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInAlbum(NetAlbumInfo albumInfo, int page, int limit) {
         int source = albumInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 return LzAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -119,7 +119,7 @@ public class AlbumInfoReq {
     public CommonResult<String> getAlbumImgUrls(NetAlbumInfo albumInfo, int page, int limit, String cursor) {
         int source = albumInfo.getSource();
         switch (source) {
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbAlbumInfoReq.getInstance().getAlbumImgUrls(albumInfo, page, limit, cursor);
             default:
                 return CommonResult.create();

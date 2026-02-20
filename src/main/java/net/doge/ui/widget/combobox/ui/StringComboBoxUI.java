@@ -12,12 +12,20 @@ import net.doge.ui.widget.combobox.ui.base.CustomComboBoxUI;
  */
 public class StringComboBoxUI extends CustomComboBoxUI {
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f) {
-        this(comboBox, f, 170);
+        this(comboBox, f, null);
     }
 
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f, int width) {
+        this(comboBox, f, width, null);
+    }
+
+    public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f, int[] indicesSupported) {
+        this(comboBox, f, 170, indicesSupported);
+    }
+
+    public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f, int width, int[] indicesSupported) {
         super(comboBox, f, width);
         // 下拉列表渲染
-        comboBox.setRenderer(new StringComboBoxRenderer());
+        comboBox.setRenderer(new StringComboBoxRenderer(indicesSupported));
     }
 }

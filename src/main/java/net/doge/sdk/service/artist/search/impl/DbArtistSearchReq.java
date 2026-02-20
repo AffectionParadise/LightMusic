@@ -1,7 +1,7 @@
 package net.doge.sdk.service.artist.search.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -56,7 +56,7 @@ public class DbArtistSearchReq {
             String coverImgThumbUrl = img.attr("src");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.DB);
+            artistInfo.setSource(NetResourceSource.DB);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

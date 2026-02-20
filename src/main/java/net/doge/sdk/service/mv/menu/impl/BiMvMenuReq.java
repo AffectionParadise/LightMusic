@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -62,7 +62,7 @@ public class BiMvMenuReq {
             String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.BI);
+            mvInfo.setSource(NetResourceSource.BI);
             mvInfo.setId(mvId);
             mvInfo.setBvId(bvId);
             mvInfo.setName(mvName);
@@ -112,7 +112,7 @@ public class BiMvMenuReq {
                 String pubTime = netMvInfo.getPubTime();
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setSource(NetResourceSource.BI);
                 mvInfo.setId(mvId);
                 mvInfo.setBvId(bvid);
                 mvInfo.setName(mvName);

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -90,7 +90,7 @@ public class QqArtistInfoReq {
         String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
 
         NetArtistInfo artistInfo = new NetArtistInfo();
-        artistInfo.setSource(NetMusicSource.QQ);
+        artistInfo.setSource(NetResourceSource.QQ);
         artistInfo.setId(id);
         artistInfo.setName(name);
         artistInfo.setSongNum(songNum);
@@ -199,7 +199,7 @@ public class QqArtistInfoReq {
             else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.QQ);
+            musicInfo.setSource(NetResourceSource.QQ);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

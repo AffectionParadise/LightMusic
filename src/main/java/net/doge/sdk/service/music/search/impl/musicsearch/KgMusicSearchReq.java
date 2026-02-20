@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.search.impl.musicsearch;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -109,7 +109,7 @@ public class KgMusicSearchReq {
             else if (songJson.getLong("FileSize") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.KG);
+            musicInfo.setSource(NetResourceSource.KG);
             musicInfo.setHash(hash);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
@@ -259,7 +259,7 @@ public class KgMusicSearchReq {
             String lyricMatch = songJson.getString("Lyric");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.KG);
+            musicInfo.setSource(NetResourceSource.KG);
             musicInfo.setHash(hash);
             musicInfo.setId(songId);
             musicInfo.setName(songName);

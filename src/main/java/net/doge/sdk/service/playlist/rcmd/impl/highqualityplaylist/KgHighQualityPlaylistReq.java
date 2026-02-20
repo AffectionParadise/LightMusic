@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
@@ -84,7 +84,7 @@ public class KgHighQualityPlaylistReq {
                     String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.KG);
+                    playlistInfo.setSource(NetResourceSource.KG);
                     playlistInfo.setId(playlistId);
                     playlistInfo.setName(playlistName);
                     playlistInfo.setCreator(creator);
@@ -128,7 +128,7 @@ public class KgHighQualityPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KG);
+                playlistInfo.setSource(NetResourceSource.KG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);
@@ -170,7 +170,7 @@ public class KgHighQualityPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KG);
+                playlistInfo.setSource(NetResourceSource.KG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);
@@ -212,7 +212,7 @@ public class KgHighQualityPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KG);
+                playlistInfo.setSource(NetResourceSource.KG);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);
@@ -253,7 +253,7 @@ public class KgHighQualityPlaylistReq {
             String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-            playlistInfo.setSource(NetMusicSource.KG);
+            playlistInfo.setSource(NetResourceSource.KG);
             playlistInfo.setId(playlistId);
             playlistInfo.setName(playlistName);
             playlistInfo.setCreator(creator);

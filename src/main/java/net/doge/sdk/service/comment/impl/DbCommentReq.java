@@ -2,7 +2,7 @@ package net.doge.sdk.service.comment.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.base.NetResource;
@@ -84,7 +84,7 @@ public class DbCommentReq {
                 String profileUrl = "";
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.DB);
+                commentInfo.setSource(NetResourceSource.DB);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setContent(content);
@@ -130,7 +130,7 @@ public class DbCommentReq {
                 Integer score = StringUtil.isEmpty(r) ? -1 : Integer.parseInt(r) / 10 * 2;
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.DB);
+                commentInfo.setSource(NetResourceSource.DB);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);

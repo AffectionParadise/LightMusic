@@ -1,7 +1,7 @@
 package net.doge.sdk.service.user.menu.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -107,7 +107,7 @@ public class FsUserMenuReq {
                 Integer fan = Integer.parseInt(la.last().text());
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
@@ -134,7 +134,7 @@ public class FsUserMenuReq {
                 String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
@@ -158,7 +158,7 @@ public class FsUserMenuReq {
                 String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
@@ -250,7 +250,7 @@ public class FsUserMenuReq {
                 Integer fan = Integer.parseInt(la.last().text());
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
@@ -277,7 +277,7 @@ public class FsUserMenuReq {
                 String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);
@@ -301,7 +301,7 @@ public class FsUserMenuReq {
                 String avatarThumbUrl = img.attr("src").replaceFirst("_\\d+x\\d+\\.\\w+", "");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);

@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.search;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -26,47 +26,47 @@ public class MusicSearchReq {
         switch (type) {
             // 歌词
             case 1:
-                if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                     executor.submit(() -> NcMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
-                if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
                     executor.submit(() -> KgMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
-                if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
                     executor.submit(() -> QqMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
-                if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.MG || src == NetResourceSource.ALL)
                     executor.submit(() -> MgMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
                 break;
             // 节目
             case 2:
                 if (dt) {
-                    if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+                    if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                         executor.submit(() -> NcMusicSearchReq.getInstance().searchVoice(keyword, page, limit));
-                    if (src == NetMusicSource.XM || src == NetMusicSource.ALL)
+                    if (src == NetResourceSource.XM || src == NetResourceSource.ALL)
                         executor.submit(() -> XmMusicSearchReq.getInstance().searchProgram(keyword, page, limit));
                 }
-                if (src == NetMusicSource.ME || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.ME || src == NetResourceSource.ALL)
                     executor.submit(() -> MeMusicSearchReq.getInstance().searchProgram(subType, keyword, page, limit));
                 break;
             // 常规
             default:
-                if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                     executor.submit(() -> NcMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
                     executor.submit(() -> KgMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
                     executor.submit(() -> QqMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.KW || src == NetResourceSource.ALL)
                     executor.submit(() -> KwMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.MG || src == NetResourceSource.ALL)
                     executor.submit(() -> MgMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.QI || src == NetResourceSource.ALL)
                     executor.submit(() -> QiMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.HF || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.HF || src == NetResourceSource.ALL)
                     executor.submit(() -> HfMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.GG || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.GG || src == NetResourceSource.ALL)
                     executor.submit(() -> GgMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.FS || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.FS || src == NetResourceSource.ALL)
                     executor.submit(() -> FsMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
-                if (src == NetMusicSource.QS || src == NetMusicSource.ALL)
+                if (src == NetResourceSource.QS || src == NetResourceSource.ALL)
                     executor.submit(() -> QsMusicSearchReq.getInstance().searchMusic(keyword, page, limit));
         }
         return executor.getResult();

@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -67,7 +67,7 @@ public class BiUserMenuReq {
                 String pubTime = TimeUtil.msToDate(mvJson.getLong("created") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.BI);
+                mvInfo.setSource(NetResourceSource.BI);
                 mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
@@ -114,7 +114,7 @@ public class BiUserMenuReq {
                 String avatarThumbUrl = userJson.getString("face");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setSource(NetResourceSource.BI);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);
@@ -157,7 +157,7 @@ public class BiUserMenuReq {
                 String avatarThumbUrl = userJson.getString("face");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.BI);
+                userInfo.setSource(NetResourceSource.BI);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setAvatarThumbUrl(avatarThumbUrl);

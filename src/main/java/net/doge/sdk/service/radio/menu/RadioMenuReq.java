@@ -1,6 +1,6 @@
 package net.doge.sdk.service.radio.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
@@ -28,7 +28,7 @@ public class RadioMenuReq {
     public CommonResult<NetUserInfo> getRadioSubscribers(NetRadioInfo radioInfo, int page, int limit) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcRadioMenuReq.getInstance().getRadioSubscribers(radioInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -43,9 +43,9 @@ public class RadioMenuReq {
     public CommonResult<NetRadioInfo> getSimilarRadios(NetRadioInfo radioInfo) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeRadioMenuReq.getInstance().getSimilarRadios(radioInfo);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbRadioMenuReq.getInstance().getSimilarRadios(radioInfo);
             default:
                 return CommonResult.create();
@@ -60,9 +60,9 @@ public class RadioMenuReq {
     public CommonResult<NetArtistInfo> getRadioArtists(NetRadioInfo radioInfo) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeRadioMenuReq.getInstance().getRadioArtists(radioInfo);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbRadioMenuReq.getInstance().getRadioArtists(radioInfo);
             default:
                 return CommonResult.create();

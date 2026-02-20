@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.info;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.service.mv.info.impl.mvinfo.KgMvInfoReq;
 import net.doge.sdk.service.mv.info.impl.mvinfo.KwMvInfoReq;
@@ -54,16 +54,16 @@ public class MvInfoReq {
     public void fillMvDetail(NetMvInfo mvInfo) {
         int source = mvInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcMvInfoReq.getInstance().fillMvDetail(mvInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgMvInfoReq.getInstance().fillMvDetail(mvInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqMvInfoReq.getInstance().fillMvDetail(mvInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwMvInfoReq.getInstance().fillMvDetail(mvInfo);
                 break;
         }

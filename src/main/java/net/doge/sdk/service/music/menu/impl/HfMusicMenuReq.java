@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.menu.impl;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -51,7 +51,7 @@ public class HfMusicMenuReq {
             String songName = song.text();
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.HF);
+            musicInfo.setSource(NetResourceSource.HF);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
 

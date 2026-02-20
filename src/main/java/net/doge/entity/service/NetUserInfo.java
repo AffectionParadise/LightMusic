@@ -1,7 +1,7 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.time.TimeUtil;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetUserInfo implements NetResource {
     // 用户来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 用户 id
     private String id;
     // 用户名称
@@ -79,23 +79,23 @@ public class NetUserInfo implements NetResource {
     }
 
     public boolean fromNetCloud() {
-        return source == NetMusicSource.NC;
+        return source == NetResourceSource.NC;
     }
 
     public boolean fromME() {
-        return source == NetMusicSource.ME;
+        return source == NetResourceSource.ME;
     }
 
     public boolean fromXM() {
-        return source == NetMusicSource.XM;
+        return source == NetResourceSource.XM;
     }
 
     public boolean fromDt() {
-        return source == NetMusicSource.DT;
+        return source == NetResourceSource.DT;
     }
 
     public boolean fromBI() {
-        return source == NetMusicSource.BI;
+        return source == NetResourceSource.BI;
     }
 
     public boolean hasAvatarUrl() {
@@ -221,7 +221,7 @@ public class NetUserInfo implements NetResource {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
+        return NetResourceSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

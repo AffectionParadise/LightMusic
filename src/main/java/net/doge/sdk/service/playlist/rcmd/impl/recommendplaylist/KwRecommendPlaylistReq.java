@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -55,7 +55,7 @@ public class KwRecommendPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KW);
+                playlistInfo.setSource(NetResourceSource.KW);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);
@@ -98,7 +98,7 @@ public class KwRecommendPlaylistReq {
                 String coverImgThumbUrl = playlistJson.getString("img");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.KW);
+                playlistInfo.setSource(NetResourceSource.KW);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.base.NetResource;
@@ -81,7 +81,7 @@ public class XmCommentReq {
                 Integer score = commentJson.getIntValue("newAlbumScore", -1);
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.XM);
+                commentInfo.setSource(NetResourceSource.XM);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);
@@ -114,7 +114,7 @@ public class XmCommentReq {
                     score = cj.getIntValue("newAlbumScore", -1);
 
                     NetCommentInfo ci = new NetCommentInfo();
-                    ci.setSource(NetMusicSource.XM);
+                    ci.setSource(NetResourceSource.XM);
                     ci.setSub(true);
                     ci.setUserId(userId);
                     ci.setUsername(username);

@@ -1,6 +1,6 @@
 package net.doge.sdk.service.album.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -26,59 +26,59 @@ public class NewAlbumReq {
         MultiCommonResultCallableExecutor<NetAlbumInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (dt) {
-            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
                 NcNewAlbumReq ncNewAlbumReq = NcNewAlbumReq.getInstance();
                 executor.submit(() -> ncNewAlbumReq.getNewAlbums(tag, page, limit));
                 executor.submit(() -> ncNewAlbumReq.getNewestAlbums(page, limit));
                 executor.submit(() -> ncNewAlbumReq.getNewestDiAlbums(page, limit));
                 executor.submit(() -> ncNewAlbumReq.getAllNewAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
                 executor.submit(() -> KgNewAlbumReq.getInstance().getNewAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
                 executor.submit(() -> QqNewAlbumReq.getInstance().getNewAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
                 MgNewAlbumReq mgNewAlbumReq = MgNewAlbumReq.getInstance();
                 executor.submit(() -> mgNewAlbumReq.getNewAlbums(page, limit));
                 executor.submit(() -> mgNewAlbumReq.getNewAlbumsRank(page, limit));
             }
-            if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.QI || src == NetResourceSource.ALL) {
                 QiNewAlbumReq qiNewAlbumReq = QiNewAlbumReq.getInstance();
                 executor.submit(() -> qiNewAlbumReq.getIndexNewAlbums(page, limit));
                 executor.submit(() -> qiNewAlbumReq.getNewAlbums(page, limit));
                 executor.submit(() -> qiNewAlbumReq.getXDAlbums(page, limit));
             }
-            if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.DT || src == NetResourceSource.ALL) {
                 executor.submit(() -> DtNewAlbumReq.getInstance().getRecAlbums(page, limit));
             }
-            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.DB || src == NetResourceSource.ALL) {
                 executor.submit(() -> DbNewAlbumReq.getInstance().getTopAlbums(page));
             }
-            if (src == NetMusicSource.LZ || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.LZ || src == NetResourceSource.ALL) {
                 executor.submit(() -> LzNewAlbumReq.getInstance().getAlbums(page, limit));
             }
         } else {
-            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
                 NcNewAlbumReq ncNewAlbumReq = NcNewAlbumReq.getInstance();
                 executor.submit(() -> ncNewAlbumReq.getNewAlbums(tag, page, limit));
                 executor.submit(() -> ncNewAlbumReq.getAllNewAlbums(tag, page, limit));
                 executor.submit(() -> ncNewAlbumReq.getLangDiAlbums(tag, page, limit));
                 executor.submit(() -> ncNewAlbumReq.getStyleAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
                 KgNewAlbumReq kgNewAlbumReq = KgNewAlbumReq.getInstance();
                 executor.submit(() -> kgNewAlbumReq.getNewAlbums(tag, page, limit));
                 executor.submit(() -> kgNewAlbumReq.getIpAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
                 executor.submit(() -> QqNewAlbumReq.getInstance().getNewAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.DT || src == NetResourceSource.ALL) {
                 executor.submit(() -> DtNewAlbumReq.getInstance().getCatAlbums(tag, page, limit));
             }
-            if (src == NetMusicSource.DB || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.DB || src == NetResourceSource.ALL) {
                 executor.submit(() -> DbNewAlbumReq.getInstance().getCatAlbums(tag, page, limit));
             }
         }

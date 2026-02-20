@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -59,7 +59,7 @@ public class KgAlbumInfoReq {
 //                Integer songNum = albumJson.getIntValue("songcount");
 
         NetAlbumInfo albumInfo = new NetAlbumInfo();
-        albumInfo.setSource(NetMusicSource.KG);
+        albumInfo.setSource(NetResourceSource.KG);
         albumInfo.setId(albumId);
         albumInfo.setName(name);
         albumInfo.setArtist(artist);
@@ -175,7 +175,7 @@ public class KgAlbumInfoReq {
             else if (audioInfo.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.KG);
+            musicInfo.setSource(NetResourceSource.KG);
             musicInfo.setHash(hash);
             musicInfo.setId(songId);
             musicInfo.setName(name);

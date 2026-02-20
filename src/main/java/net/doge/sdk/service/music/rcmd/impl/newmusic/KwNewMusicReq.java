@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.rank.info.RankInfoReq;
@@ -23,7 +23,7 @@ public class KwNewMusicReq {
      * 推荐新歌
      */
     public CommonResult<NetMusicInfo> getRecommendNewSong(int page, int limit) {
-        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(16), NetMusicSource.KW, page, limit);
+        return RankInfoReq.getInstance().getMusicInfoInRank(String.valueOf(16), NetResourceSource.KW, page, limit);
 
 //            List<NetMusicInfo> r = new LinkedList<>();
 //            Integer t = 0;

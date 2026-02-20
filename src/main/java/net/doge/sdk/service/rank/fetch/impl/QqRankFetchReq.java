@@ -3,7 +3,7 @@ package net.doge.sdk.service.rank.fetch.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -56,7 +56,7 @@ public class QqRankFetchReq {
                 String updateFre = rankJson.getString("updateTips");
 
                 NetRankInfo rankInfo = new NetRankInfo();
-                rankInfo.setSource(NetMusicSource.QQ);
+                rankInfo.setSource(NetResourceSource.QQ);
                 rankInfo.setId(rankId);
                 rankInfo.setName(rankName);
                 rankInfo.setCoverImgUrl(coverImgUrl);
@@ -94,7 +94,7 @@ public class QqRankFetchReq {
             Long playCount = rankJson.getLong("listenCount");
 
             NetRankInfo rankInfo = new NetRankInfo();
-            rankInfo.setSource(NetMusicSource.QQ);
+            rankInfo.setSource(NetResourceSource.QQ);
             rankInfo.setId(rankId);
             rankInfo.setName(rankName);
             rankInfo.setCoverImgUrl(coverImgUrl);

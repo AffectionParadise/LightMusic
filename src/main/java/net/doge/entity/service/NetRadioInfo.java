@@ -1,8 +1,8 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
 
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetRadioInfo implements NetResource {
     // 电台来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 类型 (豆瓣)
     private int type;
     // 电台 id
@@ -53,11 +53,11 @@ public class NetRadioInfo implements NetResource {
     private Runnable invokeLater;
 
     public boolean fromME() {
-        return source == NetMusicSource.ME;
+        return source == NetResourceSource.ME;
     }
 
     public boolean fromXM() {
-        return source == NetMusicSource.XM;
+        return source == NetResourceSource.XM;
     }
 
     public boolean isBook() {
@@ -158,7 +158,7 @@ public class NetRadioInfo implements NetResource {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
+        return NetResourceSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

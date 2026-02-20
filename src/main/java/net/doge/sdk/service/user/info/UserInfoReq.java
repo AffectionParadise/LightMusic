@@ -1,7 +1,7 @@
 package net.doge.sdk.service.user.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -36,37 +36,37 @@ public class UserInfoReq {
         if (userInfo.isIntegrated()) return;
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 XmUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 HfUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 GgUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 FsUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 HkUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 DbUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.DT:
+            case NetResourceSource.DT:
                 DtUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 BiUserInfoReq.getInstance().fillUserInfo(userInfo);
                 break;
         }
@@ -78,19 +78,19 @@ public class UserInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInUser(int recordType, NetUserInfo userInfo, int page, int limit) {
         int source = userInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, page, limit);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmUserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, page, limit);
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 return HfUserInfoReq.getInstance().getMusicInfoInUser(userInfo, page, limit);
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 return GgUserInfoReq.getInstance().getMusicInfoInUser(userInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, page, limit);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsUserInfoReq.getInstance().getMusicInfoInUser(userInfo, page, limit);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiUserInfoReq.getInstance().getMusicInfoInUser(recordType, userInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -104,23 +104,23 @@ public class UserInfoReq {
      */
     public CommonResult<NetUserInfo> getUserInfo(int source, String id) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 return HfUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 return GgUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 return HkUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbUserInfoReq.getInstance().getUserInfo(id);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiUserInfoReq.getInstance().getUserInfo(id);
             default:
                 return CommonResult.create();

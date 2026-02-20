@@ -1,7 +1,7 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.base.NetResource;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.time.TimeUtil;
@@ -17,7 +17,7 @@ import java.util.Objects;
 @Data
 public class NetArtistInfo implements NetResource {
     // 歌手来源
-    private int source = NetMusicSource.NC;
+    private int source = NetResourceSource.NC;
     // 是否是社团(猫耳)
     private boolean isOrganization;
     // 歌手 id
@@ -76,7 +76,7 @@ public class NetArtistInfo implements NetResource {
     }
 
     public boolean fromME() {
-        return source == NetMusicSource.ME;
+        return source == NetResourceSource.ME;
     }
 
     public boolean isCV() {
@@ -181,7 +181,7 @@ public class NetArtistInfo implements NetResource {
     }
 
     public String toString() {
-        return NetMusicSource.NAMES[source] + " - " + toSimpleString();
+        return NetResourceSource.NAMES[source] + " - " + toSimpleString();
     }
 
     public String toSimpleString() {

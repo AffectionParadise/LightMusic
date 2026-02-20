@@ -1,6 +1,6 @@
 package net.doge.sdk.service.album.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.album.menu.impl.DbAlbumMenuReq;
@@ -24,7 +24,7 @@ public class AlbumMenuReq {
     public CommonResult<NetAlbumInfo> getSimilarAlbums(NetAlbumInfo albumInfo) {
         int source = albumInfo.getSource();
         switch (source) {
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbAlbumMenuReq.getInstance().getSimilarAlbums(albumInfo);
             default:
                 return CommonResult.create();

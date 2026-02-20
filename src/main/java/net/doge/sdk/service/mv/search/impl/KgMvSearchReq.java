@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.MvInfoType;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -60,7 +60,7 @@ public class KgMvSearchReq {
             String coverImgUrl = mvJson.getString("imgurl").replace("/{size}", "");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.KG);
+            mvInfo.setSource(NetResourceSource.KG);
             // 酷狗搜索 MV 只给了用户 id，默认全是视频
             mvInfo.setType(MvInfoType.VIDEO);
             mvInfo.setId(mvId);

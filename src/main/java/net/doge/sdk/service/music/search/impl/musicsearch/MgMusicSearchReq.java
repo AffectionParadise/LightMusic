@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.search.impl.musicsearch;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -105,7 +105,7 @@ public class MgMusicSearchReq {
                     }
 
                     NetMusicInfo musicInfo = new NetMusicInfo();
-                    musicInfo.setSource(NetMusicSource.MG);
+                    musicInfo.setSource(NetResourceSource.MG);
                     musicInfo.setId(songId);
                     musicInfo.setName(songName);
                     musicInfo.setArtist(artist);
@@ -199,7 +199,7 @@ public class MgMusicSearchReq {
                 String lyricMatch = songJson.getString("multiLyricStr").replace("\n", " / ");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.MG);
+                musicInfo.setSource(NetResourceSource.MG);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);

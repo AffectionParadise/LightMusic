@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -76,7 +76,7 @@ public class KgNewMusicReq {
             else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.KG);
+            musicInfo.setSource(NetResourceSource.KG);
             musicInfo.setHash(hash);
             musicInfo.setId(songId);
             musicInfo.setName(name);
@@ -128,7 +128,7 @@ public class KgNewMusicReq {
                 else if (songJson.getLong("filesize") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
@@ -184,7 +184,7 @@ public class KgNewMusicReq {
                 else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.KG);
+                musicInfo.setSource(NetResourceSource.KG);
                 musicInfo.setHash(hash);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);

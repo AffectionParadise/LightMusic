@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
@@ -60,7 +60,7 @@ public class MeArtistMenuReq {
             String avatarThumbUrl = userJson.getString("avatar");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.ME);
+            userInfo.setSource(NetResourceSource.ME);
             userInfo.setId(userId);
             userInfo.setName(userName);
             userInfo.setGender(gender);
@@ -101,7 +101,7 @@ public class MeArtistMenuReq {
             String coverImgThumbUrl = artistJson.getString("avatar");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.ME);
+            artistInfo.setSource(NetResourceSource.ME);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -143,7 +143,7 @@ public class MeArtistMenuReq {
                 String coverImgThumbUrl = "https:" + radioJson.getString("cover");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.ME);
+                radioInfo.setSource(NetResourceSource.ME);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -173,7 +173,7 @@ public class MeArtistMenuReq {
                 String coverImgThumbUrl = radioJson.getString("cover");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.ME);
+                radioInfo.setSource(NetResourceSource.ME);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);

@@ -1,7 +1,5 @@
 package net.doge.ui.widget.combobox.renderer;
 
-import lombok.Data;
-import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -10,34 +8,55 @@ import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Doge
  * @description 下拉框渲染器
  * @date 2020/12/7
  */
-@Data
 public class StringComboBoxRenderer extends CustomListCellRenderer {
-    // 属性不能用 font，不然重复！
-    protected Font customFont = Fonts.NORMAL;
+    // 支持的 index 高亮显示
+    private boolean opacitySensitive;
+    private Set<Integer> indicesSupported;
+
     protected CustomLabel label = new CustomLabel();
 
     public StringComboBoxRenderer() {
+        this(null);
+    }
+
+    public StringComboBoxRenderer(int[] indicesSupported) {
+        applyIndicesSupported(indicesSupported);
         init();
     }
 
     private void init() {
         label.setBorder(new HDEmptyBorder(5, 0, 5, 0));
-        label.setFont(customFont);
         UIStyle style = UIStyleStorage.currUIStyle;
         label.setForeground(style.getTextColor());
         label.setBgColor(style.getForeColor());
+    }
+
+    // 应用支持的 index
+    public void applyIndicesSupported(int[] indicesSupported) {
+        if (indicesSupported != null) {
+            this.indicesSupported = new HashSet<>();
+            for (int index : indicesSupported) this.indicesSupported.add(index);
+            opacitySensitive = true;
+        } else {
+            opacitySensitive = false;
+            this.indicesSupported = null;
+        }
     }
 
     @Override
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         label.setDrawBg(isSelected);
         label.setText((String) value);
+        // combobox 当前值 index < 0
+        label.setOpacity(!opacitySensitive || indicesSupported.contains(index) || index < 0 ? 1f : 0.5f);
         return label;
     }
 

@@ -3,7 +3,7 @@ package net.doge.sdk.service.rank.fetch.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -56,7 +56,7 @@ public class KwRankFetchReq {
                     String updateFre = rankJson.getString("pub");
 
                     NetRankInfo rankInfo = new NetRankInfo();
-                    rankInfo.setSource(NetMusicSource.KW);
+                    rankInfo.setSource(NetResourceSource.KW);
                     rankInfo.setId(rankId);
                     rankInfo.setName(rankName);
                     rankInfo.setCoverImgUrl(coverImgUrl);
@@ -95,7 +95,7 @@ public class KwRankFetchReq {
                 String updateTime = rankJson.getString("info").replaceFirst("更新于", "");
 
                 NetRankInfo rankInfo = new NetRankInfo();
-                rankInfo.setSource(NetMusicSource.KW);
+                rankInfo.setSource(NetResourceSource.KW);
                 rankInfo.setId(rankId);
                 rankInfo.setName(rankName);
                 rankInfo.setCoverImgUrl(coverImgUrl);

@@ -2,7 +2,7 @@ package net.doge.sdk.service.artist.info.impl;
 
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -118,7 +118,7 @@ public class MeArtistInfoReq {
 //                String artistId = a.attr("href").replaceFirst("/", "");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(songId);
             musicInfo.setName(name);
 //                musicInfo.setArtist(artist);

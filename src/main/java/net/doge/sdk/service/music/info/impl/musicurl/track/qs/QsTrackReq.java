@@ -37,7 +37,7 @@ public class QsTrackReq {
     }
 
     /**
-     * 获取网易云音乐歌曲链接
+     * 获取汽水音乐歌曲链接
      *
      * @param id      歌曲 id
      * @param quality 品质

@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -55,7 +55,7 @@ public class MeRadioMenuReq {
             Long playCount = radioJson.getLong("view_count");
 
             NetRadioInfo ri = new NetRadioInfo();
-            ri.setSource(NetMusicSource.ME);
+            ri.setSource(NetResourceSource.ME);
             ri.setId(radioId);
             ri.setName(radioName);
             ri.setPlayCount(playCount);
@@ -95,7 +95,7 @@ public class MeRadioMenuReq {
             String avatarThumbUrl = artistJson.getString("icon");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.ME);
+            artistInfo.setSource(NetResourceSource.ME);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(avatarThumbUrl);

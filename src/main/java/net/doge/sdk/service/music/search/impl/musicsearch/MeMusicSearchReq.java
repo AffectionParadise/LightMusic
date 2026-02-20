@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.search.impl.musicsearch;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -57,7 +57,7 @@ public class MeMusicSearchReq {
                 Double duration = songJson.getDouble("duration") / 1000;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.ME);
+                musicInfo.setSource(NetResourceSource.ME);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);

@@ -1,6 +1,6 @@
 package net.doge.sdk.service.comment;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.entity.CommonResult;
@@ -23,35 +23,35 @@ public class CommentReq {
     public CommonResult<NetCommentInfo> getComments(NetResource resource, String type, int page, int limit, String cursor) {
         int source = resource.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcCommentReq.getInstance().getComments(resource, type, page, limit, cursor);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgCommentReq.getInstance().getComments(resource, type, page, limit, cursor);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 return HfCommentReq.getInstance().getComments(resource, page, limit);
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 return GgCommentReq.getInstance().getComments(resource, page, limit);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 return HkCommentReq.getInstance().getComments(resource, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbCommentReq.getInstance().getComments(resource, type, page, limit);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiCommentReq.getInstance().getComments(resource, type, page, limit);
 //            case NetMusicSource.YY:
 //                return YyCommentReq.getInstance().getComments(resource, type, page, limit, cursor);
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 return LzCommentReq.getInstance().getComments(resource, page, limit, cursor);
             default:
                 return CommonResult.create();

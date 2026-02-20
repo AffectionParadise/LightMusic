@@ -1,7 +1,7 @@
 package net.doge.sdk.service.artist.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -27,7 +27,7 @@ public class ArtistInfoReq {
         if (artistInfo.isIntegrated()) return;
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwArtistInfoReq.getInstance().preloadArtistInfo(artistInfo);
                 break;
             default:
@@ -41,17 +41,17 @@ public class ArtistInfoReq {
      */
     public CommonResult<NetArtistInfo> getArtistInfo(int source, String id) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistInfoReq.getInstance().getArtistInfo(id);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgArtistInfoReq.getInstance().getArtistInfo(id);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqArtistInfoReq.getInstance().getArtistInfo(id);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwArtistInfoReq.getInstance().getArtistInfo(id);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgArtistInfoReq.getInstance().getArtistInfo(id);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiArtistInfoReq.getInstance().getArtistInfo(id);
 //            case NetMusicSource.DB:
 //                return DbArtistInfoReq.getInstance().getArtistInfo(id);
@@ -68,28 +68,28 @@ public class ArtistInfoReq {
         if (artistInfo.isIntegrated()) return;
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 QiArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 DbArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
         }
@@ -101,19 +101,19 @@ public class ArtistInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
             default:
                 return CommonResult.create();

@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMvInfo;
@@ -67,7 +67,7 @@ public class KgArtistMenuReq {
             Integer songNum = albumJson.getIntValue("songcount");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.KG);
+            albumInfo.setSource(NetResourceSource.KG);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -186,7 +186,7 @@ public class KgArtistMenuReq {
             Long playCount = mvJson.getLong("history_heat");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.KG);
+            mvInfo.setSource(NetResourceSource.KG);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
@@ -232,7 +232,7 @@ public class KgArtistMenuReq {
             String coverImgThumbUrl = artistJson.getString("sizable_avatar").replace("{size}", "240");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.KG);
+            artistInfo.setSource(NetResourceSource.KG);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

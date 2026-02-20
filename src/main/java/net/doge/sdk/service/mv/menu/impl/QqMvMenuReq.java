@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -63,7 +63,7 @@ public class QqMvMenuReq {
             Long playCount = mvJson.getLong("playcnt");
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.QQ);
+            mvInfo.setSource(NetResourceSource.QQ);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
@@ -116,7 +116,7 @@ public class QqMvMenuReq {
             String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
 
             NetMvInfo mvInfo = new NetMvInfo();
-            mvInfo.setSource(NetMusicSource.QQ);
+            mvInfo.setSource(NetResourceSource.QQ);
             mvInfo.setId(mvId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);

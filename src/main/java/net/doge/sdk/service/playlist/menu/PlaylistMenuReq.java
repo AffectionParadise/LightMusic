@@ -1,6 +1,6 @@
 package net.doge.sdk.service.playlist.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -25,7 +25,7 @@ public class PlaylistMenuReq {
     public CommonResult<NetPlaylistInfo> getSimilarPlaylists(NetPlaylistInfo netPlaylistInfo) {
         int source = netPlaylistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcPlaylistMenuReq.getInstance().getSimilarPlaylists(netPlaylistInfo);
             default:
                 return CommonResult.create();
@@ -40,7 +40,7 @@ public class PlaylistMenuReq {
     public CommonResult<NetUserInfo> getPlaylistSubscribers(NetPlaylistInfo playlistInfo, int page, int limit) {
         int source = playlistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcPlaylistMenuReq.getInstance().getPlaylistSubscribers(playlistInfo, page, limit);
             default:
                 return CommonResult.create();

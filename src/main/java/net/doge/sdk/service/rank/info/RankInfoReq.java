@@ -1,7 +1,7 @@
 package net.doge.sdk.service.rank.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -36,13 +36,13 @@ public class RankInfoReq {
         if (rankInfo.isIntegrated()) return;
         int source = rankInfo.getSource();
         switch (source) {
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqRankInfoReq.getInstance().fillRankInfo(rankInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgRankInfoReq.getInstance().fillRankInfo(rankInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeRankInfoReq.getInstance().fillRankInfo(rankInfo);
                 break;
             default:
@@ -56,19 +56,19 @@ public class RankInfoReq {
      */
     public CommonResult<NetMusicInfo> getMusicInfoInRank(String id, int source, int page, int limit) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcRankInfoReq.getInstance().getMusicInfoInRank(id, source, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
             default:
                 return CommonResult.create();

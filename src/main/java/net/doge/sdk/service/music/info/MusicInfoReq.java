@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.info;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.impl.musicinfo.*;
 
@@ -21,7 +21,7 @@ public class MusicInfoReq {
     public void fillDuration(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgMusicInfoReq.getInstance().fillDuration(musicInfo);
                 break;
         }
@@ -35,49 +35,49 @@ public class MusicInfoReq {
         if (musicInfo.isIntegrated()) return;
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 QiMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 HfMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 GgMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 FsMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 XmMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 BiMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.FA:
+            case NetResourceSource.FA:
                 FaMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 LzMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
-            case NetMusicSource.QS:
+            case NetResourceSource.QS:
                 QsMusicInfoReq.getInstance().fillMusicInfo(musicInfo);
                 break;
         }
@@ -91,46 +91,46 @@ public class MusicInfoReq {
         if (musicInfo.isLyricIntegrated()) return;
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 QiMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 HfMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 GgMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 FsMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 BiMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.FA:
+            case NetResourceSource.FA:
                 FaMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 LzMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
-            case NetMusicSource.QS:
+            case NetResourceSource.QS:
                 QsMusicInfoReq.getInstance().fillLyric(musicInfo);
                 break;
             default:

@@ -46,7 +46,8 @@ import net.doge.constant.core.ui.tab.TabIndex;
 import net.doge.constant.core.ui.window.CloseWindowOptions;
 import net.doge.constant.core.ui.window.WindowSize;
 import net.doge.constant.core.ui.window.WindowState;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
+import net.doge.constant.service.source.SourceSupported;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.core.lyric.LyricData;
 import net.doge.entity.core.lyric.Statement;
@@ -7591,7 +7592,7 @@ public class MainFrame extends JFrame {
             }
         });
 
-        for (String name : NetMusicSource.NAMES) netMusicSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netMusicSourceComboBox.addItem(name);
         netMusicSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -9690,7 +9691,7 @@ public class MainFrame extends JFrame {
         netPlaylistToolBar.add(netPlaylistSearchButton);
         netPlaylistLeftBox.add(netPlaylistToolBar);
 
-        for (String name : NetMusicSource.NAMES) netPlaylistSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netPlaylistSourceComboBox.addItem(name);
         netPlaylistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -10624,7 +10625,7 @@ public class MainFrame extends JFrame {
         netAlbumToolBar.add(netAlbumSearchButton);
         netAlbumLeftBox.add(netAlbumToolBar);
 
-        for (String name : NetMusicSource.NAMES) netAlbumSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netAlbumSourceComboBox.addItem(name);
         netAlbumSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -11585,7 +11586,7 @@ public class MainFrame extends JFrame {
         netArtistToolBar.add(netArtistSearchButton);
         netArtistLeftBox.add(netArtistToolBar);
 
-        for (String name : NetMusicSource.NAMES) netArtistSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netArtistSourceComboBox.addItem(name);
         netArtistSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -12739,7 +12740,7 @@ public class MainFrame extends JFrame {
         netRadioToolBar.add(netRadioSearchButton);
         netRadioLeftBox.add(netRadioToolBar);
 
-        for (String name : NetMusicSource.NAMES) netRadioSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netRadioSourceComboBox.addItem(name);
         netRadioSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -13668,7 +13669,7 @@ public class MainFrame extends JFrame {
         netMvToolBar.add(netMvSearchButton);
         netMvLeftBox.add(netMvToolBar);
 
-        for (String name : NetMusicSource.NAMES) netMvSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netMvSourceComboBox.addItem(name);
         netMvSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -14371,7 +14372,7 @@ public class MainFrame extends JFrame {
         netRankToolBar.add(CustomBox.createHorizontalGlue());
         netRankLeftBox.add(netRankToolBar);
 
-        for (String name : NetMusicSource.NAMES) netRankSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netRankSourceComboBox.addItem(name);
         netRankSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -15101,7 +15102,7 @@ public class MainFrame extends JFrame {
         netUserToolBar.add(netUserSearchButton);
         netUserLeftBox.add(netUserToolBar);
 
-        for (String name : NetMusicSource.NAMES) netUserSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netUserSourceComboBox.addItem(name);
         netUserSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -17244,6 +17245,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.RECOMMEND_PLAYLIST);
                     // 显示分类标签
                     if (Tags.recPlaylistTags.isEmpty()) MusicServerUtil.initRecPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17301,6 +17303,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.HIGH_QUALITY_PLAYLIST);
                     // 显示分类标签
                     if (Tags.hotPlaylistTags.isEmpty()) MusicServerUtil.initPlaylistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17358,6 +17361,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.HOT_MUSIC);
                     // 显示分类标签
                     if (Tags.hotSongTags.isEmpty()) MusicServerUtil.initHotSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17405,6 +17409,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.NEW_MUSIC);
                     // 显示分类标签
                     if (Tags.newSongTags.isEmpty()) MusicServerUtil.initNewSongTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17452,6 +17457,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.NEW_ALBUM);
                     // 显示分类标签
                     if (Tags.newAlbumTags.isEmpty()) MusicServerUtil.initNewAlbumTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17508,6 +17514,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.ARTIST_LIST);
                     // 显示分类标签
                     if (Tags.artistTags.isEmpty()) MusicServerUtil.initArtistTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17565,6 +17572,8 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.NEW_RADIO);
+
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
@@ -17612,6 +17621,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.HOT_RADIO);
                     // 显示分类标签
                     if (Tags.radioTags.isEmpty()) MusicServerUtil.initRadioTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17668,6 +17678,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.RECOMMEND_PROGRAM);
                     // 显示分类标签
                     if (Tags.programTags.isEmpty()) MusicServerUtil.initProgramTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17715,6 +17726,7 @@ public class MainFrame extends JFrame {
             updateTabButtonStyle();
             loadingAndRun(() -> {
                 try {
+                    netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.RECOMMEND_MV);
                     // 显示分类标签
                     if (Tags.mvTags.isEmpty()) MusicServerUtil.initMvTag();
                     ((DefaultComboBoxModel) netRecommendTagComboBox.getModel()).removeAllElements();
@@ -17812,7 +17824,7 @@ public class MainFrame extends JFrame {
         musicRecommendToolBar.add(recommendBackwardButton);
         musicRecommendToolBar.add(CustomBox.createHorizontalGlue());
 
-        for (String name : NetMusicSource.NAMES) netRecommendSourceComboBox.addItem(name);
+        for (String name : NetResourceSource.NAMES) netRecommendSourceComboBox.addItem(name);
         netRecommendSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
@@ -21411,7 +21423,7 @@ public class MainFrame extends JFrame {
         searchTextField.setCaretColor(textColor);
         searchTextField.setSelectedTextColor(textColor);
         searchTextField.setSelectionColor(darkerTextAlphaColor);
-        netMusicSourceComboBox.setUI(new StringComboBoxUI(netMusicSourceComboBox, THIS));
+        netMusicSourceComboBox.setUI(new StringComboBoxUI(netMusicSourceComboBox, THIS, SourceSupported.NET_MUSIC_SEARCH));
         netMusicSearchTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchTypeComboBox, THIS));
         netMusicSearchSubTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
         netMusicPageTextField.setForeground(textColor);
@@ -21426,7 +21438,7 @@ public class MainFrame extends JFrame {
         netPlaylistSearchTextField.setCaretColor(textColor);
         netPlaylistSearchTextField.setSelectedTextColor(textColor);
         netPlaylistSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netPlaylistSourceComboBox.setUI(new StringComboBoxUI(netPlaylistSourceComboBox, THIS));
+        netPlaylistSourceComboBox.setUI(new StringComboBoxUI(netPlaylistSourceComboBox, THIS, SourceSupported.NET_PLAYLIST_SEARCH));
         netPlaylistPageTextField.setForeground(textColor);
         netPlaylistPageTextField.setCaretColor(textColor);
         netPlaylistPageTextField.setSelectedTextColor(textColor);
@@ -21438,7 +21450,7 @@ public class MainFrame extends JFrame {
         netAlbumSearchTextField.setCaretColor(textColor);
         netAlbumSearchTextField.setSelectedTextColor(textColor);
         netAlbumSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netAlbumSourceComboBox.setUI(new StringComboBoxUI(netAlbumSourceComboBox, THIS));
+        netAlbumSourceComboBox.setUI(new StringComboBoxUI(netAlbumSourceComboBox, THIS, SourceSupported.NET_ALBUM_SEARCH));
         netAlbumPageTextField.setForeground(textColor);
         netAlbumPageTextField.setCaretColor(textColor);
         netAlbumPageTextField.setSelectedTextColor(textColor);
@@ -21450,7 +21462,7 @@ public class MainFrame extends JFrame {
         netArtistSearchTextField.setCaretColor(textColor);
         netArtistSearchTextField.setSelectedTextColor(textColor);
         netArtistSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netArtistSourceComboBox.setUI(new StringComboBoxUI(netArtistSourceComboBox, THIS));
+        netArtistSourceComboBox.setUI(new StringComboBoxUI(netArtistSourceComboBox, THIS, SourceSupported.NET_ARTIST_SEARCH));
         netArtistPageTextField.setForeground(textColor);
         netArtistPageTextField.setCaretColor(textColor);
         netArtistPageTextField.setSelectedTextColor(textColor);
@@ -21462,7 +21474,7 @@ public class MainFrame extends JFrame {
         netRadioSearchTextField.setCaretColor(textColor);
         netRadioSearchTextField.setSelectedTextColor(textColor);
         netRadioSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netRadioSourceComboBox.setUI(new StringComboBoxUI(netRadioSourceComboBox, THIS));
+        netRadioSourceComboBox.setUI(new StringComboBoxUI(netRadioSourceComboBox, THIS, SourceSupported.NET_RADIO_SEARCH));
         netRadioPageTextField.setForeground(textColor);
         netRadioPageTextField.setCaretColor(textColor);
         netRadioPageTextField.setSelectedTextColor(textColor);
@@ -21474,12 +21486,13 @@ public class MainFrame extends JFrame {
         netMvSearchTextField.setCaretColor(textColor);
         netMvSearchTextField.setSelectedTextColor(textColor);
         netMvSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netMvSourceComboBox.setUI(new StringComboBoxUI(netMvSourceComboBox, THIS));
+        netMvSourceComboBox.setUI(new StringComboBoxUI(netMvSourceComboBox, THIS, SourceSupported.NET_MV_SEARCH));
         netMvPageTextField.setForeground(textColor);
         netMvPageTextField.setCaretColor(textColor);
         netMvPageTextField.setSelectedTextColor(textColor);
         netMvPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 榜单搜索栏透明
+        netRankSourceComboBox.setUI(new StringComboBoxUI(netRankSourceComboBox, THIS, SourceSupported.NET_RANK));
         netRankPageTextField.setForeground(textColor);
         netRankPageTextField.setCaretColor(textColor);
         netRankPageTextField.setSelectedTextColor(textColor);
@@ -21491,15 +21504,13 @@ public class MainFrame extends JFrame {
         netUserSearchTextField.setCaretColor(textColor);
         netUserSearchTextField.setSelectedTextColor(textColor);
         netUserSearchTextField.setSelectionColor(darkerTextAlphaColor);
-        netUserSourceComboBox.setUI(new StringComboBoxUI(netUserSourceComboBox, THIS));
+        netUserSourceComboBox.setUI(new StringComboBoxUI(netUserSourceComboBox, THIS, SourceSupported.NET_USER_SEARCH));
         netUserRecordTypeComboBox.setUI(new StringComboBoxUI(netUserRecordTypeComboBox, THIS));
         netUserPageTextField.setForeground(textColor);
         netUserPageTextField.setCaretColor(textColor);
         netUserPageTextField.setSelectedTextColor(textColor);
         netUserPageTextField.setSelectionColor(darkerTextAlphaColor);
         netUserPlayAllButton.setForeground(textColor);
-        // 榜单栏
-        netRankSourceComboBox.setUI(new StringComboBoxUI(netRankSourceComboBox, THIS));
         // 评论栏透明
         netCommentTypeComboBox.setUI(new StringComboBoxUI(netCommentTypeComboBox, THIS));
         netCommentPageTextField.setForeground(textColor);
@@ -21512,7 +21523,28 @@ public class MainFrame extends JFrame {
         netSheetPageTextField.setSelectedTextColor(textColor);
         netSheetPageTextField.setSelectionColor(darkerTextAlphaColor);
         // 推荐页码文本框
-        netRecommendSourceComboBox.setUI(new StringComboBoxUI(netRecommendSourceComboBox, THIS));
+        int[] indicesSupported = null;
+        if (currRecommendTab == RecommendTabIndex.PLAYLIST_RECOMMEND)
+            indicesSupported = SourceSupported.RECOMMEND_PLAYLIST;
+        else if (currRecommendTab == RecommendTabIndex.HIGH_QUALITY_PLAYLIST_RECOMMEND)
+            indicesSupported = SourceSupported.HIGH_QUALITY_PLAYLIST;
+        else if (currRecommendTab == RecommendTabIndex.HOT_MUSIC_RECOMMEND)
+            indicesSupported = SourceSupported.HOT_MUSIC;
+        else if (currRecommendTab == RecommendTabIndex.NEW_MUSIC_RECOMMEND)
+            indicesSupported = SourceSupported.NEW_MUSIC;
+        else if (currRecommendTab == RecommendTabIndex.NEW_ALBUM_RECOMMEND)
+            indicesSupported = SourceSupported.NEW_ALBUM;
+        else if (currRecommendTab == RecommendTabIndex.ARTIST_LIST_RECOMMEND)
+            indicesSupported = SourceSupported.ARTIST_LIST;
+        else if (currRecommendTab == RecommendTabIndex.NEW_RADIO_RECOMMEND)
+            indicesSupported = SourceSupported.NEW_RADIO;
+        else if (currRecommendTab == RecommendTabIndex.HOT_RADIO_RECOMMEND)
+            indicesSupported = SourceSupported.HOT_RADIO;
+        else if (currRecommendTab == RecommendTabIndex.PROGRAM_RECOMMEND)
+            indicesSupported = SourceSupported.RECOMMEND_PROGRAM;
+        else if (currRecommendTab == RecommendTabIndex.MV_RECOMMEND)
+            indicesSupported = SourceSupported.RECOMMEND_MV;
+        netRecommendSourceComboBox.setUI(new StringComboBoxUI(netRecommendSourceComboBox, THIS, indicesSupported));
         netRecommendSortTypeComboBox.setUI(new StringComboBoxUI(netRecommendSortTypeComboBox, THIS));
         netRecommendPageTextField.setForeground(textColor);
         netRecommendPageTextField.setCaretColor(textColor);
@@ -22282,7 +22314,7 @@ public class MainFrame extends JFrame {
                             dialog.updateSize();
                             dialog.setLocationRelativeTo(null);
                             Map<String, String> headers = null;
-                            if (mvInfo.getSource() == NetMusicSource.BI) {
+                            if (mvInfo.getSource() == NetResourceSource.BI) {
                                 headers = new HashMap<>();
                                 headers.put("referer", "https://www.bilibili.com/");
                             }

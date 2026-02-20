@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -65,7 +65,7 @@ public class HfHotMusicRecommendReq {
                 String artistId = span.attr("uid");
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.HF);
+                musicInfo.setSource(NetResourceSource.HF);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);

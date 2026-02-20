@@ -1,8 +1,8 @@
 package net.doge.sdk.service.user.menu.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
@@ -72,7 +72,7 @@ public class DbUserMenuReq {
             String pubTime = sp[1];
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.DB);
+            albumInfo.setSource(NetResourceSource.DB);
             albumInfo.setId(radioId);
             albumInfo.setName(radioName);
             albumInfo.setArtist(artist);
@@ -120,7 +120,7 @@ public class DbUserMenuReq {
                 String category = "电影";
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -161,7 +161,7 @@ public class DbUserMenuReq {
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setType(RadioType.BOOK);
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);

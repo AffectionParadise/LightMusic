@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -60,7 +60,7 @@ public class GgNewMusicReq {
                 String songName = a.text();
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.GG);
+                musicInfo.setSource(NetResourceSource.GG);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
 

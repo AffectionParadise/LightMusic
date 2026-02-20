@@ -1,7 +1,7 @@
 package net.doge.sdk.service.artist.menu.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
@@ -93,7 +93,7 @@ public class DbArtistMenuReq {
             String avatarThumbUrl = src.contains("/user") ? src.replaceFirst("normal", "large") : src.replaceFirst("/u", "/ul");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.DB);
+            userInfo.setSource(NetResourceSource.DB);
             userInfo.setId(userId);
             userInfo.setName(userName);
             userInfo.setGender(gender);
@@ -137,7 +137,7 @@ public class DbArtistMenuReq {
             String coverImgThumbUrl = img.attr("src");
 
             NetArtistInfo artistInfo = new NetArtistInfo();
-            artistInfo.setSource(NetMusicSource.DB);
+            artistInfo.setSource(NetResourceSource.DB);
             artistInfo.setId(artistId);
             artistInfo.setName(artistName);
             artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -183,7 +183,7 @@ public class DbArtistMenuReq {
             String category = RegexUtil.getGroup1("(\\d+)", span.text());
 
             NetRadioInfo radioInfo = new NetRadioInfo();
-            radioInfo.setSource(NetMusicSource.DB);
+            radioInfo.setSource(NetResourceSource.DB);
             radioInfo.setId(radioId);
             radioInfo.setName(radioName);
             radioInfo.setDj(dj);

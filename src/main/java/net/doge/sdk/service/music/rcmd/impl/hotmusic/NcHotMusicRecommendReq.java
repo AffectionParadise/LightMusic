@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
@@ -40,7 +40,7 @@ public class NcHotMusicRecommendReq {
      */
     public CommonResult<NetMusicInfo> getUpMusic(int page, int limit) {
         // 榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页
-        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(String.valueOf(19723756), NetMusicSource.NC, page, limit);
+        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(String.valueOf(19723756), NetResourceSource.NC, page, limit);
     }
 
     /**
@@ -48,7 +48,7 @@ public class NcHotMusicRecommendReq {
      */
     public CommonResult<NetMusicInfo> getHotMusic(int page, int limit) {
         // 榜单就是歌单，固定榜单 id 直接请求歌单音乐接口，接口分页
-        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(String.valueOf(3778678), NetMusicSource.NC, page, limit);
+        return PlaylistInfoReq.getInstance().getMusicInfoInPlaylist(String.valueOf(3778678), NetResourceSource.NC, page, limit);
     }
 
     /**

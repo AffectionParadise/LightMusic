@@ -1,6 +1,6 @@
 package net.doge.sdk.service.mv.info;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.service.mv.info.impl.mvurl.*;
 
@@ -21,27 +21,27 @@ public class MvUrlReq {
     public String fetchMvUrl(NetMvInfo mvInfo) {
         int source = mvInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.HK:
+            case NetResourceSource.HK:
                 return HkMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.YY:
+            case NetResourceSource.YY:
                 return YyMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.FA:
+            case NetResourceSource.FA:
                 return FaMvUrlReq.getInstance().fetchMvUrl(mvInfo);
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 return LzMvUrlReq.getInstance().fetchMvUrl(mvInfo);
             default:
                 return "";

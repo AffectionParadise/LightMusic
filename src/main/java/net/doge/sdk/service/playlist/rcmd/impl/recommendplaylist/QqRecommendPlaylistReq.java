@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
@@ -59,7 +59,7 @@ public class QqRecommendPlaylistReq {
             String coverImgThumbUrl = playlistJson.getString("cover");
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-            playlistInfo.setSource(NetMusicSource.QQ);
+            playlistInfo.setSource(NetResourceSource.QQ);
             playlistInfo.setId(playlistId);
             playlistInfo.setName(playlistName);
             playlistInfo.setCreator(creator);
@@ -169,7 +169,7 @@ public class QqRecommendPlaylistReq {
                     String coverImgThumbUrl = playlistJson.getString("cover_url_small");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
+                    playlistInfo.setSource(NetResourceSource.QQ);
                     playlistInfo.setId(playlistId);
                     playlistInfo.setName(playlistName);
                     playlistInfo.setCreator(creator);
@@ -196,7 +196,7 @@ public class QqRecommendPlaylistReq {
                     String coverImgThumbUrl = playlistJson.getJSONObject("cover").getString("small_url");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                    playlistInfo.setSource(NetMusicSource.QQ);
+                    playlistInfo.setSource(NetResourceSource.QQ);
                     playlistInfo.setId(playlistId);
                     playlistInfo.setName(playlistName);
                     playlistInfo.setCreator(creator);

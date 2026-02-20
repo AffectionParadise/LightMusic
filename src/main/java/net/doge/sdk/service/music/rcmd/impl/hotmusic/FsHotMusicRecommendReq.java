@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.RegexUtil;
@@ -62,7 +62,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
@@ -99,7 +99,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
@@ -136,7 +136,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
@@ -173,7 +173,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
@@ -214,7 +214,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);
@@ -255,7 +255,7 @@ public class FsHotMusicRecommendReq {
                 String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", pa.attr("href"));
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(songName);
                 musicInfo.setArtist(artist);

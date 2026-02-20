@@ -1,7 +1,7 @@
 package net.doge.sdk.service.user.info.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -155,7 +155,7 @@ public class FsUserInfoReq {
                 String artistId = id;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
@@ -229,7 +229,7 @@ public class FsUserInfoReq {
                 String artistId = id;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
@@ -303,7 +303,7 @@ public class FsUserInfoReq {
                 String artistId = id;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
-                musicInfo.setSource(NetMusicSource.FS);
+                musicInfo.setSource(NetResourceSource.FS);
                 musicInfo.setId(songId);
                 musicInfo.setName(name);
                 musicInfo.setArtist(artist);
@@ -362,7 +362,7 @@ public class FsUserInfoReq {
         Integer fan = Integer.parseInt(fanElem.text());
 
         NetUserInfo userInfo = new NetUserInfo();
-        userInfo.setSource(NetMusicSource.FS);
+        userInfo.setSource(NetResourceSource.FS);
         userInfo.setId(id);
         userInfo.setName(name);
         userInfo.setAvatarThumbUrl(avatarThumbUrl);

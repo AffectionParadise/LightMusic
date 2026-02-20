@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -66,7 +66,7 @@ public class DbUserSearchReq {
                 Integer fan = Integer.parseInt(RegexUtil.getGroup1("(\\d+)人关注", info.text()));
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.DB);
+                userInfo.setSource(NetResourceSource.DB);
                 userInfo.setId(userId);
                 userInfo.setName(userName);
                 userInfo.setGender(gender);

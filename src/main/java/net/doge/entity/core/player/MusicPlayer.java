@@ -15,7 +15,7 @@ import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.player.PlayerStatus;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.MusicResource;
@@ -269,7 +269,7 @@ public class MusicPlayer {
     }
 
     private void initRequestHeaders(NetMusicInfo musicInfo, Media media) {
-        if (musicInfo == null || musicInfo.getSource() != NetMusicSource.BI) return;
+        if (musicInfo == null || musicInfo.getSource() != NetResourceSource.BI) return;
         try {
             // 由于 Media 类不能重写，只能通过反射机制设置请求头
             Field field = Media.class.getDeclaredField("jfxLocator");

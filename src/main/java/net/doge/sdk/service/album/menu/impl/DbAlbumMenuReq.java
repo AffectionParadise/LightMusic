@@ -1,7 +1,7 @@
 package net.doge.sdk.service.album.menu.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -55,7 +55,7 @@ public class DbAlbumMenuReq {
             String coverImgThumbUrl = img.attr("src");
 
             NetAlbumInfo ai = new NetAlbumInfo();
-            ai.setSource(NetMusicSource.DB);
+            ai.setSource(NetResourceSource.DB);
             ai.setId(albumId);
             ai.setName(albumName);
             ai.setCoverImgThumbUrl(coverImgThumbUrl);

@@ -3,7 +3,7 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
@@ -66,7 +66,7 @@ public class KgNewAlbumReq {
                 String coverImgThumbUrl = albumJson.getString("imgurl").replace("/{size}", "");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.KG);
+                albumInfo.setSource(NetResourceSource.KG);
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
@@ -113,7 +113,7 @@ public class KgNewAlbumReq {
                 String coverImgThumbUrl = base.getString("cover").replace("/{size}", "");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.KG);
+                albumInfo.setSource(NetResourceSource.KG);
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);

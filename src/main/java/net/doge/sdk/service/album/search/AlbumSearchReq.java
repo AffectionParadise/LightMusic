@@ -1,6 +1,6 @@
 package net.doge.sdk.service.album.search;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -22,21 +22,21 @@ public class AlbumSearchReq {
      */
     public CommonResult<NetAlbumInfo> searchAlbums(int src, String keyword, int page, int limit) {
         MultiCommonResultCallableExecutor<NetAlbumInfo> executor = new MultiCommonResultCallableExecutor<>();
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
             executor.submit(() -> NcAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
             executor.submit(() -> KgAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL)
             executor.submit(() -> QqAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL)
             executor.submit(() -> KwAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL)
             executor.submit(() -> MgAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.QI || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.QI || src == NetResourceSource.ALL)
             executor.submit(() -> QiAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.DB || src == NetMusicSource.ALL)
+        if (src == NetResourceSource.DB || src == NetResourceSource.ALL)
             executor.submit(() -> DbAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
-        if (src == NetMusicSource.DT || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.DT || src == NetResourceSource.ALL) {
             DtAlbumSearchReq dtAlbumSearchReq = DtAlbumSearchReq.getInstance();
             executor.submit(() -> dtAlbumSearchReq.searchAlbums(keyword, page, limit));
             executor.submit(() -> dtAlbumSearchReq.searchAlbums2(keyword, page, limit));

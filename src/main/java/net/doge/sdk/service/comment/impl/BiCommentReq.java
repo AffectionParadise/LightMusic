@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
@@ -73,7 +73,7 @@ public class BiCommentReq {
                 Integer likedCount = commentJson.getIntValue("like");
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.BI);
+                commentInfo.setSource(NetResourceSource.BI);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);
@@ -104,7 +104,7 @@ public class BiCommentReq {
                     likedCount = cj.getIntValue("like");
 
                     NetCommentInfo ci = new NetCommentInfo();
-                    ci.setSource(NetMusicSource.BI);
+                    ci.setSource(NetResourceSource.BI);
                     ci.setSub(true);
                     ci.setUserId(userId);
                     ci.setUsername(username);

@@ -1,7 +1,7 @@
 package net.doge.sdk.service.mv.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
@@ -63,7 +63,7 @@ public class LzRecommendMvReq {
                 String pubTime = time.text();
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.LZ);
+                mvInfo.setSource(NetResourceSource.LZ);
                 mvInfo.setId(id);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);

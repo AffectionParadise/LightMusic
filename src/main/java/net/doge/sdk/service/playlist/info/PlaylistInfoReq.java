@@ -1,7 +1,7 @@
 package net.doge.sdk.service.playlist.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -33,21 +33,21 @@ public class PlaylistInfoReq {
      */
     public CommonResult<NetPlaylistInfo> getPlaylistInfo(int source, String id) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiPlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MePlaylistInfoReq.getInstance().getPlaylistInfo(id);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiPlaylistInfoReq.getInstance().getPlaylistInfo(id);
             default:
                 return CommonResult.create();
@@ -62,31 +62,31 @@ public class PlaylistInfoReq {
         if (playlistInfo.isIntegrated()) return;
         int source = playlistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 KgPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 KwPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 QiPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 FsPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MePlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 BiPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
         }
@@ -105,23 +105,23 @@ public class PlaylistInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInPlaylist(NetPlaylistInfo playlistInfo, int page, int limit) {
         int source = playlistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MePlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
             default:
                 return CommonResult.create();

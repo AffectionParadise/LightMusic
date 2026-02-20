@@ -1,7 +1,7 @@
 package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
@@ -65,7 +65,7 @@ public class FsRecommendPlaylistReq {
                 String coverImgThumbUrl = img.attr("src");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.FS);
+                playlistInfo.setSource(NetResourceSource.FS);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);

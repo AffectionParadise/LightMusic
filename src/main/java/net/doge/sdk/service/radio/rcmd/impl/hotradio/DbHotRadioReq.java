@@ -3,8 +3,8 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
@@ -70,7 +70,7 @@ public class DbHotRadioReq {
             String category = "电影";
 
             NetRadioInfo radioInfo = new NetRadioInfo();
-            radioInfo.setSource(NetMusicSource.DB);
+            radioInfo.setSource(NetResourceSource.DB);
             radioInfo.setId(radioId);
             radioInfo.setName(radioName);
             radioInfo.setDj(dj);
@@ -110,7 +110,7 @@ public class DbHotRadioReq {
                 String category = SdkUtil.joinString(radioJson.getJSONArray("types"));
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -154,7 +154,7 @@ public class DbHotRadioReq {
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setType(RadioType.GAME);
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);

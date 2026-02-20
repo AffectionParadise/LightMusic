@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -58,7 +58,7 @@ public class FsUserSearchReq {
                 Integer programCount = userJson.getIntValue("totalSong");
 
                 NetUserInfo userInfo = new NetUserInfo();
-                userInfo.setSource(NetMusicSource.FS);
+                userInfo.setSource(NetResourceSource.FS);
                 userInfo.setId(userId);
                 userInfo.setName(name);
                 userInfo.setGender(gender);

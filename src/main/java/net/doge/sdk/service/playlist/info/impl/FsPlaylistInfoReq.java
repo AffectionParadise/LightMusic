@@ -1,7 +1,7 @@
 package net.doge.sdk.service.playlist.info.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -79,7 +79,7 @@ public class FsPlaylistInfoReq {
             String artistId = RegexUtil.getGroup1("http://5sing.kugou.com/(\\d+)", aa.attr("href"));
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.FS);
+            musicInfo.setSource(NetResourceSource.FS);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

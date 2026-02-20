@@ -1,6 +1,6 @@
 package net.doge.sdk.service.playlist.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -24,33 +24,33 @@ public class RecommendPlaylistReq {
         final String defaultTag = "默认";
         MultiCommonResultCallableExecutor<NetPlaylistInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
-        if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcRecommendPlaylistReq ncRecommendPlaylistReq = NcRecommendPlaylistReq.getInstance();
             if (dt) executor.submit(() -> ncRecommendPlaylistReq.getDiscoverPlaylists(page, limit));
             if (dt) executor.submit(() -> ncRecommendPlaylistReq.getRecommendPlaylists(page, limit));
             if (!dt) executor.submit(() -> ncRecommendPlaylistReq.getStylePlaylists(tag, page, limit));
         }
-        if (src == NetMusicSource.KG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
             KgRecommendPlaylistReq kgRecommendPlaylistReq = KgRecommendPlaylistReq.getInstance();
             if (dt) executor.submit(() -> kgRecommendPlaylistReq.getRecommendPlaylists(page));
             if (dt) executor.submit(() -> kgRecommendPlaylistReq.getTopPlaylists(page, limit));
             executor.submit(() -> kgRecommendPlaylistReq.getRecommendTagPlaylists(tag, page, limit));
             executor.submit(() -> kgRecommendPlaylistReq.getNewTagPlaylists(tag, page, limit));
         }
-        if (src == NetMusicSource.QQ || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
             QqRecommendPlaylistReq qqRecommendPlaylistReq = QqRecommendPlaylistReq.getInstance();
             if (dt) executor.submit(() -> qqRecommendPlaylistReq.getRecommendPlaylistsQqDaily(page, limit));
 //            executor.submit(() -> qqRecommendPlaylistReq.getRecommendPlaylists(page, limit));
             executor.submit(() -> qqRecommendPlaylistReq.getNewPlaylists(tag, page, limit));
         }
-        if (src == NetMusicSource.KW || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.KW || src == NetResourceSource.ALL) {
             KwRecommendPlaylistReq kwRecommendPlaylistReq = KwRecommendPlaylistReq.getInstance();
             if (dt) {
                 executor.submit(() -> kwRecommendPlaylistReq.getRecommendPlaylists(page, limit));
                 executor.submit(() -> kwRecommendPlaylistReq.getNewPlaylists(page, limit));
             }
         }
-        if (src == NetMusicSource.MG || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
             MgRecommendPlaylistReq mgRecommendPlaylistReq = MgRecommendPlaylistReq.getInstance();
             if (dt) {
                 executor.submit(() -> mgRecommendPlaylistReq.getSquarePlaylists(limit));
@@ -60,19 +60,23 @@ public class RecommendPlaylistReq {
 //                executor.submit(() -> mgRecommendPlaylistReq.getNewPlaylists(page));
             }
         }
-        if (src == NetMusicSource.QI || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.QI || src == NetResourceSource.ALL) {
             if (dt) executor.submit(() -> QiRecommendPlaylistReq.getInstance().getRecPlaylists(page, limit));
         }
-        if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.ME || src == NetResourceSource.ALL) {
             MeRecommendPlaylistReq meRecommendPlaylistReq = MeRecommendPlaylistReq.getInstance();
             if (dt) executor.submit(() -> meRecommendPlaylistReq.getRecPlaylists(page, limit));
             executor.submit(() -> meRecommendPlaylistReq.getNewPlaylists(tag, page, limit));
         }
-        if (src == NetMusicSource.FS || src == NetMusicSource.ALL) {
+        if (src == NetResourceSource.FS || src == NetResourceSource.ALL) {
             executor.submit(() -> FsRecommendPlaylistReq.getInstance().getNewPlaylists(tag, page, limit));
         }
-        if (src == NetMusicSource.BI || src == NetMusicSource.ALL) {
-            if (dt) executor.submit(() -> BiRecommendPlaylistReq.getInstance().getRecPlaylists(page, limit));
+        if (src == NetResourceSource.BI || src == NetResourceSource.ALL) {
+            if (dt) {
+                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getRecPlaylists(page, limit));
+                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getHotPlaylists(page, limit));
+                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getAllPlaylists(page, limit));
+            }
         }
         return executor.getResult();
     }

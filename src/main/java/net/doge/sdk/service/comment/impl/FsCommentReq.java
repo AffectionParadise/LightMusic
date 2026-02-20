@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
@@ -95,7 +95,7 @@ public class FsCommentReq {
                 String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.FS);
+                commentInfo.setSource(NetResourceSource.FS);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);
@@ -124,7 +124,7 @@ public class FsCommentReq {
                     time = TimeUtil.strToPhrase(cj.getString("createTime"));
 
                     NetCommentInfo ci = new NetCommentInfo();
-                    ci.setSource(NetMusicSource.FS);
+                    ci.setSource(NetResourceSource.FS);
                     ci.setSub(true);
                     ci.setUserId(userId);
                     ci.setUsername(username);
@@ -153,7 +153,7 @@ public class FsCommentReq {
                 String time = TimeUtil.strToPhrase(commentJson.getString("createTime"));
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
-                commentInfo.setSource(NetMusicSource.FS);
+                commentInfo.setSource(NetResourceSource.FS);
                 commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);

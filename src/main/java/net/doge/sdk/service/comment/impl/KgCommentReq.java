@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetCommentInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.NetResource;
@@ -139,7 +139,7 @@ public class KgCommentReq {
                     Integer likedCount = commentJson.getJSONObject("like").getIntValue("likenum");
 
                     NetCommentInfo commentInfo = new NetCommentInfo();
-                    commentInfo.setSource(NetMusicSource.KG);
+                    commentInfo.setSource(NetResourceSource.KG);
                     commentInfo.setUsername(username);
                     commentInfo.setProfileUrl(profileUrl);
                     commentInfo.setContent(content);

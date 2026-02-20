@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -91,7 +91,7 @@ public class MgNewMusicReq {
             else qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.MG);
+            musicInfo.setSource(NetResourceSource.MG);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
             musicInfo.setArtist(artist);

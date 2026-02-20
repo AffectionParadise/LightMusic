@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -59,7 +59,7 @@ public class QqHotMusicRecommendReq {
             else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.QQ);
+            musicInfo.setSource(NetResourceSource.QQ);
             musicInfo.setId(id);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);
@@ -110,7 +110,7 @@ public class QqHotMusicRecommendReq {
             else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.QQ);
+            musicInfo.setSource(NetResourceSource.QQ);
             musicInfo.setId(id);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

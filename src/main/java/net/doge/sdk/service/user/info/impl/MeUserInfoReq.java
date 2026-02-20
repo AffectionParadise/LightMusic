@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.info.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -108,7 +108,7 @@ public class MeUserInfoReq {
             Double duration = songJson.getDouble("duration") / 1000;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.ME);
+            musicInfo.setSource(NetResourceSource.ME);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);
@@ -144,7 +144,7 @@ public class MeUserInfoReq {
                     .executeAsStr();
             Document doc = Jsoup.parse(userInfoBody);
 
-            userInfo.setSource(NetMusicSource.ME);
+            userInfo.setSource(NetResourceSource.ME);
             userInfo.setId(id);
             Element tun = doc.getElementById("t_u_n");
             // 判断账号是否已注销

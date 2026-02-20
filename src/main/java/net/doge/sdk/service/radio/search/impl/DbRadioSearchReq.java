@@ -3,8 +3,8 @@ package net.doge.sdk.service.radio.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -69,7 +69,7 @@ public class DbRadioSearchReq {
                 String category = RegexUtil.getGroup1("\\[(.*?)\\]", span.text());
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -117,7 +117,7 @@ public class DbRadioSearchReq {
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setType(RadioType.BOOK);
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -165,7 +165,7 @@ public class DbRadioSearchReq {
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setType(RadioType.GAME);
-                radioInfo.setSource(NetMusicSource.DB);
+                radioInfo.setSource(NetResourceSource.DB);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);

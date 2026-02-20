@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.rcmd.impl.newradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -50,7 +50,7 @@ public class MgNewRadioReq {
             String coverImgUrl = coverImgThumbUrl;
 
             NetRadioInfo radioInfo = new NetRadioInfo();
-            radioInfo.setSource(NetMusicSource.MG);
+            radioInfo.setSource(NetResourceSource.MG);
             radioInfo.setId(radioId);
             radioInfo.setName(radioName);
             // 咪咕无电台详情接口，提前写入封面图片 url

@@ -3,7 +3,7 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -66,7 +66,7 @@ public class QiNewAlbumReq {
             Integer songNum = JsonUtil.notEmpty(trackList) ? trackList.size() : null;
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.QI);
+            albumInfo.setSource(NetResourceSource.QI);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -108,7 +108,7 @@ public class QiNewAlbumReq {
             Integer songNum = albumJson.getIntValue("trackCount");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.QI);
+            albumInfo.setSource(NetResourceSource.QI);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);
@@ -150,7 +150,7 @@ public class QiNewAlbumReq {
             Integer songNum = albumJson.getIntValue("trackCount");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
-            albumInfo.setSource(NetMusicSource.QI);
+            albumInfo.setSource(NetResourceSource.QI);
             albumInfo.setId(albumId);
             albumInfo.setName(albumName);
             albumInfo.setArtist(artist);

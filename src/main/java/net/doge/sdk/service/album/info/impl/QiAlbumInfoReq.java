@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -51,7 +51,7 @@ public class QiAlbumInfoReq {
         Integer songNum = albumJson.getJSONArray("trackList").size();
 
         NetAlbumInfo albumInfo = new NetAlbumInfo();
-        albumInfo.setSource(NetMusicSource.QI);
+        albumInfo.setSource(NetResourceSource.QI);
         albumInfo.setId(albumId);
         albumInfo.setName(name);
         albumInfo.setArtist(artist);
@@ -125,7 +125,7 @@ public class QiAlbumInfoReq {
             else if (rateFileInfo.containsKey("128")) qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.QI);
+            musicInfo.setSource(NetResourceSource.QI);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

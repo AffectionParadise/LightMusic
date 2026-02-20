@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -66,7 +66,7 @@ public class XmUserMenuReq {
                 String coverImgThumbUrl = "https:" + radioJson.getString("coverPath");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.XM);
+                radioInfo.setSource(NetResourceSource.XM);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -108,7 +108,7 @@ public class XmUserMenuReq {
                 String coverImgThumbUrl = "https://imagev2.xmcdn.com/" + radioJson.getString("coverPath");
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
-                radioInfo.setSource(NetMusicSource.XM);
+                radioInfo.setSource(NetResourceSource.XM);
                 radioInfo.setId(radioId);
                 radioInfo.setName(radioName);
                 radioInfo.setDj(dj);
@@ -165,7 +165,7 @@ public class XmUserMenuReq {
             Integer programCount = userJson.getIntValue("trackCount");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.XM);
+            userInfo.setSource(NetResourceSource.XM);
             userInfo.setId(userId);
             userInfo.setName(userName);
 //                userInfo.setGender(gender);
@@ -216,7 +216,7 @@ public class XmUserMenuReq {
             Integer programCount = userJson.getIntValue("trackCount");
 
             NetUserInfo userInfo = new NetUserInfo();
-            userInfo.setSource(NetMusicSource.XM);
+            userInfo.setSource(NetResourceSource.XM);
             userInfo.setId(userId);
             userInfo.setName(userName);
 //                userInfo.setGender(gender);

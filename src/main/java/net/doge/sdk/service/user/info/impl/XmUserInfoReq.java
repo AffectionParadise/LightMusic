@@ -3,7 +3,7 @@ package net.doge.sdk.service.user.info.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -93,7 +93,7 @@ public class XmUserInfoReq {
             Double duration = songJson.getDouble("length");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.XM);
+            musicInfo.setSource(NetResourceSource.XM);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);
@@ -132,7 +132,7 @@ public class XmUserInfoReq {
         Integer programCount = data.getIntValue("tracksCount");
 
         NetUserInfo userInfo = new NetUserInfo();
-        userInfo.setSource(NetMusicSource.XM);
+        userInfo.setSource(NetResourceSource.XM);
         userInfo.setId(userId);
         userInfo.setName(userName);
         userInfo.setGender(gender);

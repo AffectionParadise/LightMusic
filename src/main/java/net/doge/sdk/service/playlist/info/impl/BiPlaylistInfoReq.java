@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.info.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -54,7 +54,7 @@ public class BiPlaylistInfoReq {
             String coverImgThumbUrl = playlistJson.getString("cover");
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-            playlistInfo.setSource(NetMusicSource.BI);
+            playlistInfo.setSource(NetResourceSource.BI);
             playlistInfo.setId(playlistId);
             playlistInfo.setName(name);
             playlistInfo.setCreator(creator);
@@ -116,7 +116,7 @@ public class BiPlaylistInfoReq {
             Double duration = songJson.getDouble("duration");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
-            musicInfo.setSource(NetMusicSource.BI);
+            musicInfo.setSource(NetResourceSource.BI);
             musicInfo.setId(songId);
             musicInfo.setName(name);
             musicInfo.setArtist(artist);

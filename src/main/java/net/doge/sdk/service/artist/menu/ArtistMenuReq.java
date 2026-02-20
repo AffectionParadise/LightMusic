@@ -1,6 +1,6 @@
 package net.doge.sdk.service.artist.menu;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.*;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.artist.menu.impl.*;
@@ -22,17 +22,17 @@ public class ArtistMenuReq {
     public CommonResult<NetAlbumInfo> getAlbumInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -45,13 +45,13 @@ public class ArtistMenuReq {
     public CommonResult<NetMvInfo> getMvInfoInArtist(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwArtistMenuReq.getInstance().getMvInfoInArtist(artistInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -64,7 +64,7 @@ public class ArtistMenuReq {
     public CommonResult<String> getArtistImgUrls(NetArtistInfo artistInfo, int page) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistImgUrls(artistInfo, page);
             default:
                 return CommonResult.create();
@@ -79,11 +79,11 @@ public class ArtistMenuReq {
     public CommonResult<NetArtistInfo> getSimilarArtists(NetArtistInfo netArtistInfo) {
         int source = netArtistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqArtistMenuReq.getInstance().getSimilarArtists(netArtistInfo);
             default:
                 return CommonResult.create();
@@ -98,11 +98,11 @@ public class ArtistMenuReq {
     public CommonResult<NetUserInfo> getArtistFans(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcArtistMenuReq.getInstance().getArtistFans(artistInfo, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistFans(artistInfo, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistFans(artistInfo, page);
             default:
                 return CommonResult.create();
@@ -117,9 +117,9 @@ public class ArtistMenuReq {
     public CommonResult<NetArtistInfo> getArtistBuddies(NetArtistInfo netArtistInfo, int page, int limit) {
         int source = netArtistInfo.getSource();
         switch (source) {
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistBuddies(netArtistInfo, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistBuddies(netArtistInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -134,9 +134,9 @@ public class ArtistMenuReq {
     public CommonResult<NetRadioInfo> getArtistRadios(NetArtistInfo artistInfo, int page, int limit) {
         int source = artistInfo.getSource();
         switch (source) {
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeArtistMenuReq.getInstance().getArtistRadios(artistInfo, page, limit);
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbArtistMenuReq.getInstance().getArtistRadios(artistInfo, page, limit);
             default:
                 return CommonResult.create();

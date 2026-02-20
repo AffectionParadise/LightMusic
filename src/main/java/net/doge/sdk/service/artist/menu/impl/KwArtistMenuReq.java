@@ -3,7 +3,7 @@ package net.doge.sdk.service.artist.menu.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMvInfo;
@@ -63,7 +63,7 @@ public class KwArtistMenuReq {
                 String coverImgThumbUrl = albumJson.getString("pic");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
-                albumInfo.setSource(NetMusicSource.KW);
+                albumInfo.setSource(NetResourceSource.KW);
                 albumInfo.setId(albumId);
                 albumInfo.setName(albumName);
                 albumInfo.setArtist(artist);
@@ -110,7 +110,7 @@ public class KwArtistMenuReq {
                 Double duration = mvJson.getDouble("duration");
 
                 NetMvInfo mvInfo = new NetMvInfo();
-                mvInfo.setSource(NetMusicSource.KW);
+                mvInfo.setSource(NetResourceSource.KW);
                 mvInfo.setId(mvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);

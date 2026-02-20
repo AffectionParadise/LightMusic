@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.rcmd;
 
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
@@ -26,18 +26,18 @@ public class RecommendProgramReq {
         MultiCommonResultCallableExecutor<NetMusicInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = tag.equals(defaultTag);
         if (dt) {
-            if (src == NetMusicSource.NC || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
                 NcRecommendProgramReq ncRecommendProgramReq = NcRecommendProgramReq.getInstance();
                 executor.submit(() -> ncRecommendProgramReq.getRecommendPrograms(page, limit));
                 executor.submit(() -> ncRecommendProgramReq.getPersonalizedPrograms(page, limit));
                 executor.submit(() -> ncRecommendProgramReq.get24HoursPrograms(page, limit));
                 executor.submit(() -> ncRecommendProgramReq.getProgramsRank(page, limit));
             }
-            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.ME || src == NetResourceSource.ALL) {
                 executor.submit(() -> MeRecommendProgramReq.getInstance().getRecPrograms(page, limit));
             }
         } else {
-            if (src == NetMusicSource.ME || src == NetMusicSource.ALL) {
+            if (src == NetResourceSource.ME || src == NetResourceSource.ALL) {
                 MeRecommendProgramReq meRecommendProgramReq = MeRecommendProgramReq.getInstance();
                 executor.submit(() -> meRecommendProgramReq.getExpPrograms(tag, page, limit));
                 executor.submit(() -> meRecommendProgramReq.getIndexCatPrograms(tag, page, limit));

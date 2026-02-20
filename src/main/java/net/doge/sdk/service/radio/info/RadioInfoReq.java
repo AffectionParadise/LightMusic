@@ -1,7 +1,7 @@
 package net.doge.sdk.service.radio.info;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -33,11 +33,11 @@ public class RadioInfoReq {
      */
     public CommonResult<NetRadioInfo> getRadioInfo(int source, String id) {
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcRadioInfoReq.getInstance().getRadioInfo(id);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmRadioInfoReq.getInstance().getRadioInfo(id);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeRadioInfoReq.getInstance().getRadioInfo(id);
             default:
                 return CommonResult.create();
@@ -52,22 +52,22 @@ public class RadioInfoReq {
         if (radioInfo.isIntegrated()) return;
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 NcRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 QqRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 MgRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 XmRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 MeRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 DbRadioInfoReq.getInstance().fillRadioInfo(radioInfo);
                 break;
         }
@@ -79,15 +79,15 @@ public class RadioInfoReq {
     public CommonResult<NetMusicInfo> getMusicInfoInRadio(NetRadioInfo radioInfo, int sortType, int page, int limit) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, sortType, page, limit);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeRadioInfoReq.getInstance().getMusicInfoInRadio(radioInfo, page, limit);
             default:
                 return CommonResult.create();
@@ -100,7 +100,7 @@ public class RadioInfoReq {
     public CommonResult<String> getRadioImgUrls(NetRadioInfo radioInfo, int page) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbRadioInfoReq.getInstance().getRadioImgUrls(radioInfo, page);
             default:
                 return CommonResult.create();
@@ -113,7 +113,7 @@ public class RadioInfoReq {
     public CommonResult<String> getRadioPosterUrls(NetRadioInfo radioInfo, int page) {
         int source = radioInfo.getSource();
         switch (source) {
-            case NetMusicSource.DB:
+            case NetResourceSource.DB:
                 return DbRadioInfoReq.getInstance().getRadioPosterUrls(radioInfo, page);
             default:
                 return CommonResult.create();

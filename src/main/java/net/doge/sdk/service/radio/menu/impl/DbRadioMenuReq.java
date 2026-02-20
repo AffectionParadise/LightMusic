@@ -1,8 +1,8 @@
 package net.doge.sdk.service.radio.menu.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -68,7 +68,7 @@ public class DbRadioMenuReq {
 
             NetRadioInfo ri = new NetRadioInfo();
             ri.setType(isBook ? RadioType.BOOK : isGame ? RadioType.GAME : RadioType.RADIO);
-            ri.setSource(NetMusicSource.DB);
+            ri.setSource(NetResourceSource.DB);
             ri.setId(radioId);
             ri.setName(radioName);
             ri.setCoverImgThumbUrl(coverImgThumbUrl);
@@ -109,7 +109,7 @@ public class DbRadioMenuReq {
                 String coverImgThumbUrl = RegexUtil.getGroup1("url\\((.*?)\\)", img.attr("style"));
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
-                artistInfo.setSource(NetMusicSource.DB);
+                artistInfo.setSource(NetResourceSource.DB);
                 artistInfo.setId(artistId);
                 artistInfo.setName(artistName);
                 artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);

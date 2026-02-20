@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.search.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -57,7 +57,7 @@ public class FsPlaylistSearchReq {
                 String coverImgThumbUrl = playlistJson.getString("pictureUrl");
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-                playlistInfo.setSource(NetMusicSource.FS);
+                playlistInfo.setSource(NetResourceSource.FS);
                 playlistInfo.setId(playlistId);
                 playlistInfo.setName(playlistName);
                 playlistInfo.setCreator(creator);

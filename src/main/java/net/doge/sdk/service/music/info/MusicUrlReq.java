@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.info;
 
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.music.info.entity.MusicCandidate;
@@ -51,35 +51,35 @@ public class MusicUrlReq {
     public String fetchMusicUrl(NetMusicInfo musicInfo) {
         int source = musicInfo.getSource();
         switch (source) {
-            case NetMusicSource.NC:
+            case NetResourceSource.NC:
                 return NcMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.KG:
+            case NetResourceSource.KG:
                 return KgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.QQ:
+            case NetResourceSource.QQ:
                 return QqMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.KW:
+            case NetResourceSource.KW:
                 return KwMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.MG:
+            case NetResourceSource.MG:
                 return MgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.QI:
+            case NetResourceSource.QI:
                 return QiMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.HF:
+            case NetResourceSource.HF:
                 return HfMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.GG:
+            case NetResourceSource.GG:
                 return GgMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.FS:
+            case NetResourceSource.FS:
                 return FsMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.XM:
+            case NetResourceSource.XM:
                 return XmMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.ME:
+            case NetResourceSource.ME:
                 return MeMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.BI:
+            case NetResourceSource.BI:
                 return BiMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.FA:
+            case NetResourceSource.FA:
                 return FaMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.LZ:
+            case NetResourceSource.LZ:
                 return LzMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
-            case NetMusicSource.QS:
+            case NetResourceSource.QS:
                 return QsMusicUrlReq.getInstance().fetchMusicUrl(musicInfo);
             default:
                 return "";
@@ -93,7 +93,7 @@ public class MusicUrlReq {
      * @return
      */
     public void fillAvailableMusicUrl(NetMusicInfo musicInfo) {
-        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetMusicSource.ALL, 0, "默认", musicInfo.toKeywords(), 1, 20);
+        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetResourceSource.ALL, 0, "默认", musicInfo.toKeywords(), 1, 20);
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
         MusicInfoReq musicInfoReq = MusicInfoReq.getInstance();
