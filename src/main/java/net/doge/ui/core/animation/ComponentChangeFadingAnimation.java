@@ -64,15 +64,19 @@ public class ComponentChangeFadingAnimation {
     // 执行淡入淡出切换组件动画
     public void transition() {
         if (changePaneFadingTimer.isRunning()) return;
-        if (srcFadingComp == targetFadingComp) {
-            if (onFadingOutStopped != null) onFadingOutStopped.handle(srcFadingComp, targetFadingComp);
-            if (onFadingInStopped != null) onFadingInStopped.handle(srcFadingComp, targetFadingComp);
-        } else {
+        if (srcFadingComp == targetFadingComp) force();
+        else {
             ((ExtendedOpacitySupported) srcFadingComp).setTreeExtendedOpacity(1f);
             ((ExtendedOpacitySupported) targetFadingComp).setTreeExtendedOpacity(0f);
             changePaneFadeOut = true;
             changePaneFadingTimer.start();
         }
+    }
+
+    // 强行执行动画后的操作，不过渡
+    public void force() {
+        if (onFadingOutStopped != null) onFadingOutStopped.handle(srcFadingComp, targetFadingComp);
+        if (onFadingInStopped != null) onFadingInStopped.handle(srcFadingComp, targetFadingComp);
     }
 
     // 是否正在执行动画

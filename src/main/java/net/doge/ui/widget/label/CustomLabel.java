@@ -63,6 +63,12 @@ public class CustomLabel extends JLabel implements ExtendedOpacitySupported {
         opacityTimer.start();
     }
 
+    public void setOpacity(float opacity) {
+        // 设置透明度时打断透明度动画
+        if (opacityTimer.isRunning()) opacityTimer.stop();
+        this.opacity = opacity;
+    }
+
     // 根据主题色更新图标
     public void updateIconStyle() {
         Icon icon = getIcon();

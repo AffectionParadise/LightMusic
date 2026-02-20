@@ -6,6 +6,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
 public class QsLyricReq {
@@ -48,7 +49,9 @@ public class QsLyricReq {
             }
             musicInfo.setLyric(sb.toString());
         }
-        musicInfo.setTrans("");
+        // 翻译
+        JSONObject transJson = lyricJson.getJSONObject("translations");
+        if (JsonUtil.notEmpty(transJson)) musicInfo.setTrans(transJson.getString("cn"));
         musicInfo.setRoma("");
     }
 }

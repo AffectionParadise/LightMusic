@@ -658,8 +658,8 @@ public class MainFrame extends JFrame {
     private final String MINIMIZE_WINDOW_TIP = I18n.getText("minimizeWindowTip");
     private final String MAXIMIZE_WINDOW_TIP = I18n.getText("maximizeWindowTip");
     private final String CLOSE_WINDOW_TIP = I18n.getText("closeWindowTip");
-    private final String CHANGE_TO_LYRIC_PANE_TIP = I18n.getText("changeToLyricPaneTip");
-    private final String CHANGE_TO_MUSIC_PANE_TIP = I18n.getText("changeToMusicPaneTip");
+    private final String CHANGE_TO_LYRIC_VIEW_TIP = I18n.getText("changeToLyricViewTip");
+    private final String CHANGE_TO_TAB_VIEW_TIP = I18n.getText("changeToTabViewTip");
     private final String COLLECT_TIP = I18n.getText("collectTip");
     private final String COLLECTED_TIP = I18n.getText("collectedTip");
     private final String DOWNLOAD_TIP = I18n.getText("downloadTip");
@@ -1328,11 +1328,11 @@ public class MainFrame extends JFrame {
     // 在线音乐工具栏
     private CustomToolBar netMusicToolBar = new CustomToolBar();
     // 在线音乐搜索框
-    private CustomTextField searchTextField = new CustomTextField(8);
+    private CustomTextField netMusicSearchTextField = new CustomTextField(8);
     // 在线音乐清除输入按钮
     private CustomButton netMusicClearInputButton = new CustomButton(clearInputIcon);
     // 在线音乐搜索按钮
-    private CustomButton searchButton = new CustomButton(searchIcon);
+    private CustomButton netMusicSearchButton = new CustomButton(searchIcon);
     // 在线音乐标题标签
     private CustomLabel netMusicTitleLabel = new CustomLabel();
     // 歌曲数量面板
@@ -2947,7 +2947,7 @@ public class MainFrame extends JFrame {
             } else {
                 // 搜索框输入时不受影响
                 if (!collectionPageTextField.hasFocus()
-                        && !searchTextField.hasFocus() && !netMusicPageTextField.hasFocus()
+                        && !netMusicSearchTextField.hasFocus() && !netMusicPageTextField.hasFocus()
                         && !netPlaylistSearchTextField.hasFocus() && !netPlaylistPageTextField.hasFocus()
                         && !netAlbumSearchTextField.hasFocus() && !netAlbumPageTextField.hasFocus()
                         && !netArtistSearchTextField.hasFocus() && !netArtistPageTextField.hasFocus()
@@ -2989,7 +2989,7 @@ public class MainFrame extends JFrame {
                     else {
                         // 回车搜索
                         int selectedIndex = tabbedPane.getSelectedIndex();
-                        if (selectedIndex == TabIndex.NET_MUSIC) searchButton.doClick();
+                        if (selectedIndex == TabIndex.NET_MUSIC) netMusicSearchButton.doClick();
                         else if (selectedIndex == TabIndex.NET_PLAYLIST) netPlaylistSearchButton.doClick();
                         else if (selectedIndex == TabIndex.NET_ALBUM) netAlbumSearchButton.doClick();
                         else if (selectedIndex == TabIndex.NET_ARTIST) netArtistSearchButton.doClick();
@@ -3419,10 +3419,10 @@ public class MainFrame extends JFrame {
                 String keyword = historySearchJsonArray.getString(i);
                 DialogButton b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(keyword);
+                    netMusicSearchTextField.requestFocus();
+                    netMusicSearchTextField.setText(keyword);
                     netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
+                    netMusicSearchButton.doClick();
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
                 });
@@ -4478,7 +4478,7 @@ public class MainFrame extends JFrame {
         trayPopupMenu.add(openMainFrameMenuItem);
         trayPopupMenu.addSeparator();
         trayPopupMenu.add(exitMenuItem);
-        searchButton.addFocusListener(new FocusAdapter() {
+        netMusicSearchButton.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 trayPopupMenu.setVisible(false);
@@ -4502,7 +4502,7 @@ public class MainFrame extends JFrame {
                     trayPopupMenu.setLocation(e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(89) : h));
                     trayPopupMenu.setInvoker(trayPopupMenu);
                     trayPopupMenu.setVisible(true);
-                    searchButton.requestFocus();
+                    netMusicSearchButton.requestFocus();
                 }
             }
         });
@@ -6262,8 +6262,8 @@ public class MainFrame extends JFrame {
 
         // 透明度
         float opacity = 0.5f;
-        artistLabel.transitionOpacity(opacity);
-        albumLabel.transitionOpacity(opacity);
+        artistLabel.setOpacity(opacity);
+        albumLabel.setOpacity(opacity);
         artistLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -6282,7 +6282,7 @@ public class MainFrame extends JFrame {
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
                     artistLabel.transitionOpacity(opacity);
                     netMusicAuthorMenuItem.doClick();
-                    changePaneButton.doClick();
+                    toTabView(true);
                 }
             }
         });
@@ -6304,7 +6304,7 @@ public class MainFrame extends JFrame {
                 } else if (e.getButton() == MouseEvent.BUTTON1 && player.loadedNetMusic()) {
                     albumLabel.transitionOpacity(opacity);
                     netMusicAlbumMenuItem.doClick();
-                    changePaneButton.doClick();
+                    toTabView(true);
                 }
             }
         });
@@ -7330,12 +7330,12 @@ public class MainFrame extends JFrame {
             MusicResource resource = musicList.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
-            searchTextField.requestFocus();
+            netMusicSearchTextField.requestFocus();
             if (resource instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) resource).toKeywords());
-            } else searchTextField.setText(((AudioFile) resource).toKeywords());
+                netMusicSearchTextField.setText(((NetMusicInfo) resource).toKeywords());
+            } else netMusicSearchTextField.setText(((AudioFile) resource).toKeywords());
             netMusicClearInputButton.setVisible(true);
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         // 右键菜单查看相似歌曲
         similarSongMenuItem.addActionListener(e -> netMusicSimilarSongMenuItem.doClick());
@@ -7459,17 +7459,17 @@ public class MainFrame extends JFrame {
 
     // 初始化在线音乐工具栏
     private void initNetMusicToolBar() {
-        searchTextField.setHintText("单曲/歌手/专辑/歌词/节目");
-        searchTextField.getDocument().addDocumentListener(new DocumentListener() {
+        netMusicSearchTextField.setHintText("单曲/歌手/专辑/歌词/节目");
+        netMusicSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!searchTextField.isHintHolding()) netMusicClearInputButton.setVisible(true);
+                if (!netMusicSearchTextField.isHintHolding()) netMusicClearInputButton.setVisible(true);
                 updateSearchSug();
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if (searchTextField.isTextEmpty()) netMusicClearInputButton.setVisible(false);
+                if (netMusicSearchTextField.isTextEmpty()) netMusicClearInputButton.setVisible(false);
                 updateSearchSug();
             }
 
@@ -7479,7 +7479,7 @@ public class MainFrame extends JFrame {
             }
 
             private void updateSearchSug() {
-                if (!searchTextField.isTextEmpty() && searchSuggestionProcessing) return;
+                if (!netMusicSearchTextField.isTextEmpty() && searchSuggestionProcessing) return;
                 searchSuggestionProcessing = true;
                 searchSuggestionTimer.start();
             }
@@ -7499,104 +7499,104 @@ public class MainFrame extends JFrame {
             netMusicToolBar.removeAll();
             netMusicToolBar.add(netMusicBackwardButton);
             // 删除标题标签
-            netMusicToolBar.add(searchTextField);
+            netMusicToolBar.add(netMusicSearchTextField);
             netMusicToolBar.add(netMusicClearInputButton);
-            netMusicToolBar.add(searchButton);
+            netMusicToolBar.add(netMusicSearchButton);
             currMusicMusicInfo = null;
 
             netLeftBox.repaint();
         });
         // 清除输入事件
         netMusicClearInputButton.addActionListener(e -> {
-            searchTextField.requestFocus();
-            searchTextField.setText("");
+            netMusicSearchTextField.requestFocus();
+            netMusicSearchTextField.setText("");
             netMusicBackwardButton.requestFocus();
         });
         // 搜索按钮事件
-        searchButton.addActionListener(e -> {
-            netMusicCurrKeyword = searchTextField.getText().trim();
-            if (!netMusicCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netMusicCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(b.getPlainText());
-                    netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
+        netMusicSearchButton.addActionListener(e -> {
+            String keyword = netMusicSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netMusicCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netMusicCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netMusicSearchTextField.requestFocus();
+                netMusicSearchTextField.setText(b.getPlainText());
+                netMusicClearInputButton.setVisible(true);
+                netMusicSearchButton.doClick();
+                netLeftBox.remove(netMusicKeywordsPanelScrollPane);
+                netLeftBox.add(netMusicScrollPane);
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netMusicHistorySearchInnerPanel2.remove(b);
+                    netMusicHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netMusicCurrKeyword, HistorySearchType.NET_MUSIC);
+            netMusicHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netMusicHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netMusicHistorySearchInnerPanel2.remove(c - 1);
+            netMusicHistorySearchPanel.repaint();
+
+            loadingAndRun(() -> {
+                try {
+                    // 显示节目搜索分类标签
+                    if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTags.isEmpty()) {
+                        MusicServerUtil.initProgramSearchTag();
+                        for (String tag : Tags.programSearchTags.keySet())
+                            netMusicSearchSubTypeComboBox.addItem(tag);
+                    }
+
+                    // 搜索歌曲并显示在在线歌曲列表
+                    CommonResult<NetMusicInfo> result = MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
+                            netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage = 1, limit);
+                    List<NetMusicInfo> musicInfos = result.data;
+                    Integer total = result.total;
+                    netMusicMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
+                    netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
+                    netMusicCountPanel.setVisible(true);
+                    netMusicSearchTypeComboBox.setVisible(true);
+                    netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMusicList.setModel(emptyListModel);
+                    netMusicListModel.clear();
+                    musicInfos.forEach(musicInfo -> {
+                        globalExecutor.execute(() -> updateCollection(musicInfo));
+                        netMusicListModel.addElement(musicInfo);
+                    });
+                    netMusicList.setModel(netMusicListModel);
+                    netMusicBackwardButton.setEnabled(true);
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                    netLeftBox.add(netMusicScrollPane);
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netMusicHistorySearchInnerPanel2.remove(b);
-                        netMusicHistorySearchInnerPanel2.repaint();
+                    if (netMusicListModel.isEmpty()) {
+                        netLeftBox.remove(netMusicScrollPane);
+                        netLeftBox.add(emptyHintPanel);
+                    } else {
+                        netLeftBox.remove(emptyHintPanel);
+                        netLeftBox.add(netMusicScrollPane);
                     }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netMusicCurrKeyword, HistorySearchType.NET_MUSIC);
-                netMusicHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netMusicHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netMusicHistorySearchInnerPanel2.remove(c - 1);
-                netMusicHistorySearchPanel.repaint();
-
-                loadingAndRun(() -> {
-                    try {
-                        // 显示节目搜索分类标签
-                        if (netMusicSearchTypeComboBox.getSelectedIndex() == 2 && Tags.programSearchTags.isEmpty()) {
-                            MusicServerUtil.initProgramSearchTag();
-                            for (String tag : Tags.programSearchTags.keySet())
-                                netMusicSearchSubTypeComboBox.addItem(tag);
-                        }
-
-                        // 搜索歌曲并显示在在线歌曲列表
-                        CommonResult<NetMusicInfo> result = MusicServerUtil.searchMusic(netMusicSourceComboBox.getSelectedIndex(),
-                                netMusicSearchTypeComboBox.getSelectedIndex(), (String) netMusicSearchSubTypeComboBox.getSelectedItem(), netMusicCurrKeyword, netMusicCurrPage = 1, limit);
-                        List<NetMusicInfo> musicInfos = result.data;
-                        Integer total = result.total;
-                        netMusicMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
-                        netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
-                        netMusicCountPanel.setVisible(true);
-                        netMusicSearchTypeComboBox.setVisible(true);
-                        netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMusicList.setModel(emptyListModel);
-                        netMusicListModel.clear();
-                        musicInfos.forEach(musicInfo -> {
-                            globalExecutor.execute(() -> updateCollection(musicInfo));
-                            netMusicListModel.addElement(musicInfo);
-                        });
-                        netMusicList.setModel(netMusicListModel);
-                        netMusicBackwardButton.setEnabled(true);
-                        netLeftBox.remove(netMusicKeywordsPanelScrollPane);
-                        if (netMusicListModel.isEmpty()) {
-                            netLeftBox.remove(netMusicScrollPane);
-                            netLeftBox.add(emptyHintPanel);
-                        } else {
-                            netLeftBox.remove(emptyHintPanel);
-                            netLeftBox.add(netMusicScrollPane);
-                        }
-                        netMusicScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
-                    }
-                });
-            }
+                    netMusicScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         for (String name : NetResourceSource.NAMES) netMusicSourceComboBox.addItem(name);
         netMusicSourceComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         netMusicSearchTypeComboBox.addItem(I18n.getText("general"));
         netMusicSearchTypeComboBox.addItem(I18n.getText("lyric"));
@@ -7604,14 +7604,12 @@ public class MainFrame extends JFrame {
         netMusicSearchTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicCurrKeyword = searchTextField.getText().trim();
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         netMusicSearchSubTypeComboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
-            netMusicCurrKeyword = searchTextField.getText().trim();
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         netMusicSearchSubTypeComboBox.setVisible(false);
         // 刷新按钮事件
@@ -7673,7 +7671,7 @@ public class MainFrame extends JFrame {
         // 帮助提示
         netMusicBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
-        searchButton.setToolTipText(SEARCH_TIP);
+        netMusicSearchButton.setToolTipText(SEARCH_TIP);
         netMusicRefreshButton.setToolTipText(REFRESH_TIP);
         netMusicStartPageButton.setToolTipText(START_PAGE_TIP);
         netMusicLastPageButton.setToolTipText(LAST_PAGE_TIP);
@@ -7690,9 +7688,9 @@ public class MainFrame extends JFrame {
         netMusicClearInputButton.setVisible(false);
 
         netMusicToolBar.add(netMusicBackwardButton);
-        netMusicToolBar.add(searchTextField);
+        netMusicToolBar.add(netMusicSearchTextField);
         netMusicToolBar.add(netMusicClearInputButton);
-        netMusicToolBar.add(searchButton);
+        netMusicToolBar.add(netMusicSearchButton);
         netLeftBox.add(netMusicToolBar);
 
         // 歌曲数量标签
@@ -7842,10 +7840,10 @@ public class MainFrame extends JFrame {
             NetMusicInfo musicInfo = netMusicList.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
-            searchTextField.requestFocus();
-            searchTextField.setText(musicInfo.toKeywords());
+            netMusicSearchTextField.requestFocus();
+            netMusicSearchTextField.setText(musicInfo.toKeywords());
             netMusicClearInputButton.setVisible(true);
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         // 查看相似歌曲
         netMusicSimilarSongMenuItem.addActionListener(e -> {
@@ -9453,83 +9451,83 @@ public class MainFrame extends JFrame {
         });
         // 搜索歌单按钮事件
         netPlaylistSearchButton.addActionListener(e -> {
-            netPlaylistCurrKeyword = netPlaylistSearchTextField.getText().trim();
-            if (!netPlaylistCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netPlaylistCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netPlaylistSearchTextField.requestFocus();
-                    netPlaylistSearchTextField.setText(b.getPlainText());
-                    netPlaylistClearInputButton.setVisible(true);
-                    netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
-                    netPlaylistLeftBox.add(netPlaylistScrollPane);
-                    netPlaylistSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netPlaylistHistorySearchInnerPanel2.remove(b);
-                        netPlaylistHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netPlaylistCurrKeyword, HistorySearchType.NET_PLAYLIST);
-                netPlaylistHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netPlaylistHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netPlaylistHistorySearchInnerPanel2.remove(c - 1);
-                netPlaylistHistorySearchPanel.repaint();
+            String keyword = netPlaylistSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netPlaylistCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netPlaylistCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netPlaylistSearchTextField.requestFocus();
+                netPlaylistSearchTextField.setText(b.getPlainText());
+                netPlaylistClearInputButton.setVisible(true);
+                netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
+                netPlaylistLeftBox.add(netPlaylistScrollPane);
+                netPlaylistSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netPlaylistHistorySearchInnerPanel2.remove(b);
+                    netPlaylistHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netPlaylistCurrKeyword, HistorySearchType.NET_PLAYLIST);
+            netPlaylistHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netPlaylistHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netPlaylistHistorySearchInnerPanel2.remove(c - 1);
+            netPlaylistHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索歌单并显示歌单列表
-                        netPlaylistCurrPage = 1;
-                        CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
-                                MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
-                        List<NetPlaylistInfo> playlistInfos = result.data;
-                        Integer total = result.total;
-                        netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
-                        netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
-                        netPlaylistCountPanel.setVisible(true);
-                        netPlaylistSourceComboBox.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netPlaylistList.setModel(emptyListModel);
-                        netPlaylistListModel.clear();
-                        playlistInfos.forEach(playlistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(playlistInfo));
-                            // 设置图片加载后重绘的事件
-                            playlistInfo.setInvokeLater(() -> {
-                                updateRenderer(netPlaylistList);
-                                updateRenderer(collectionList);
-                                netPlaylistList.repaint();
-                                collectionList.repaint();
-                            });
-                            netPlaylistListModel.addElement(playlistInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索歌单并显示歌单列表
+                    netPlaylistCurrPage = 1;
+                    CommonResult<NetPlaylistInfo> result = netPlaylistIdCheckBox.isSelected() ?
+                            MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                            : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, netPlaylistCurrPage, limit);
+                    List<NetPlaylistInfo> playlistInfos = result.data;
+                    Integer total = result.total;
+                    netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netPlaylistCountLabel.setText(String.format(PAGINATION_MSG, netPlaylistCurrPage, netPlaylistMaxPage));
+                    netPlaylistCountPanel.add(netPlaylistCountLabel, netPlaylistCountPanel.getComponentIndex(netPlaylistCountLabel));
+                    netPlaylistCountPanel.setVisible(true);
+                    netPlaylistSourceComboBox.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netPlaylistList.setModel(emptyListModel);
+                    netPlaylistListModel.clear();
+                    playlistInfos.forEach(playlistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(playlistInfo));
+                        // 设置图片加载后重绘的事件
+                        playlistInfo.setInvokeLater(() -> {
+                            updateRenderer(netPlaylistList);
+                            updateRenderer(collectionList);
+                            netPlaylistList.repaint();
+                            collectionList.repaint();
                         });
-                        netPlaylistList.setModel(netPlaylistListModel);
-                        netPlaylistBackwardButton.setEnabled(true);
-                        netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
-                        if (netPlaylistListModel.isEmpty()) {
-                            netPlaylistLeftBox.remove(netPlaylistScrollPane);
-                            netPlaylistLeftBox.add(emptyHintPanel);
-                        } else {
-                            netPlaylistLeftBox.remove(emptyHintPanel);
-                            netPlaylistLeftBox.add(netPlaylistScrollPane);
-                        }
-                        netPlaylistScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netPlaylistListModel.addElement(playlistInfo);
+                    });
+                    netPlaylistList.setModel(netPlaylistListModel);
+                    netPlaylistBackwardButton.setEnabled(true);
+                    netPlaylistLeftBox.remove(netPlaylistKeywordsPanelScrollPane);
+                    if (netPlaylistListModel.isEmpty()) {
+                        netPlaylistLeftBox.remove(netPlaylistScrollPane);
+                        netPlaylistLeftBox.add(emptyHintPanel);
+                    } else {
+                        netPlaylistLeftBox.remove(emptyHintPanel);
+                        netPlaylistLeftBox.add(netPlaylistScrollPane);
                     }
-                });
-            }
+                    netPlaylistScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         // 播放全部
@@ -10390,81 +10388,81 @@ public class MainFrame extends JFrame {
         });
         // 搜索专辑按钮事件
         netAlbumSearchButton.addActionListener(e -> {
-            netAlbumCurrKeyword = netAlbumSearchTextField.getText().trim();
-            if (!netAlbumCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netAlbumCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netAlbumSearchTextField.requestFocus();
-                    netAlbumSearchTextField.setText(b.getPlainText());
-                    netAlbumClearInputButton.setVisible(true);
-                    netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
-                    netAlbumLeftBox.add(netAlbumScrollPane);
-                    netAlbumSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netAlbumHistorySearchInnerPanel2.remove(b);
-                        netAlbumHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netAlbumCurrKeyword, HistorySearchType.NET_ALBUM);
-                netAlbumHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netAlbumHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netAlbumHistorySearchInnerPanel2.remove(c - 1);
-                netAlbumHistorySearchPanel.repaint();
+            String keyword = netAlbumSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netAlbumCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netAlbumCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netAlbumSearchTextField.requestFocus();
+                netAlbumSearchTextField.setText(b.getPlainText());
+                netAlbumClearInputButton.setVisible(true);
+                netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
+                netAlbumLeftBox.add(netAlbumScrollPane);
+                netAlbumSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netAlbumHistorySearchInnerPanel2.remove(b);
+                    netAlbumHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netAlbumCurrKeyword, HistorySearchType.NET_ALBUM);
+            netAlbumHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netAlbumHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netAlbumHistorySearchInnerPanel2.remove(c - 1);
+            netAlbumHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索专辑并显示专辑列表
-                        CommonResult<NetAlbumInfo> result = MusicServerUtil.searchAlbums(
-                                netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage = 1, limit);
-                        List<NetAlbumInfo> albumInfos = result.data;
-                        Integer total = result.total;
-                        netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
-                        netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
-                        netAlbumCountPanel.setVisible(true);
-                        netAlbumSourceComboBox.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netAlbumList.setModel(emptyListModel);
-                        netAlbumListModel.clear();
-                        albumInfos.forEach(albumInfo -> {
-                            globalExecutor.execute(() -> updateCollection(albumInfo));
-                            // 设置图片加载后重绘的事件
-                            albumInfo.setInvokeLater(() -> {
-                                updateRenderer(netAlbumList);
-                                updateRenderer(collectionList);
-                                netAlbumList.repaint();
-                                collectionList.repaint();
-                            });
-                            netAlbumListModel.addElement(albumInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索专辑并显示专辑列表
+                    CommonResult<NetAlbumInfo> result = MusicServerUtil.searchAlbums(
+                            netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, netAlbumCurrPage = 1, limit);
+                    List<NetAlbumInfo> albumInfos = result.data;
+                    Integer total = result.total;
+                    netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netAlbumCountLabel.setText(String.format(PAGINATION_MSG, netAlbumCurrPage, netAlbumMaxPage));
+                    netAlbumCountPanel.add(netAlbumCountLabel, netAlbumCountPanel.getComponentIndex(netAlbumCountLabel));
+                    netAlbumCountPanel.setVisible(true);
+                    netAlbumSourceComboBox.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netAlbumList.setModel(emptyListModel);
+                    netAlbumListModel.clear();
+                    albumInfos.forEach(albumInfo -> {
+                        globalExecutor.execute(() -> updateCollection(albumInfo));
+                        // 设置图片加载后重绘的事件
+                        albumInfo.setInvokeLater(() -> {
+                            updateRenderer(netAlbumList);
+                            updateRenderer(collectionList);
+                            netAlbumList.repaint();
+                            collectionList.repaint();
                         });
-                        netAlbumList.setModel(netAlbumListModel);
-                        netAlbumBackwardButton.setEnabled(true);
-                        netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
-                        if (netAlbumListModel.isEmpty()) {
-                            netAlbumLeftBox.remove(netAlbumScrollPane);
-                            netAlbumLeftBox.add(emptyHintPanel);
-                        } else {
-                            netAlbumLeftBox.remove(emptyHintPanel);
-                            netAlbumLeftBox.add(netAlbumScrollPane);
-                        }
-                        netAlbumScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netAlbumListModel.addElement(albumInfo);
+                    });
+                    netAlbumList.setModel(netAlbumListModel);
+                    netAlbumBackwardButton.setEnabled(true);
+                    netAlbumLeftBox.remove(netAlbumKeywordsPanelScrollPane);
+                    if (netAlbumListModel.isEmpty()) {
+                        netAlbumLeftBox.remove(netAlbumScrollPane);
+                        netAlbumLeftBox.add(emptyHintPanel);
+                    } else {
+                        netAlbumLeftBox.remove(emptyHintPanel);
+                        netAlbumLeftBox.add(netAlbumScrollPane);
                     }
-                });
-            }
+                    netAlbumScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         // 播放全部
@@ -11351,81 +11349,81 @@ public class MainFrame extends JFrame {
         });
         // 搜索歌手按钮事件
         netArtistSearchButton.addActionListener(e -> {
-            netArtistCurrKeyword = netArtistSearchTextField.getText().trim();
-            if (!netArtistCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netArtistCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netArtistSearchTextField.requestFocus();
-                    netArtistSearchTextField.setText(b.getPlainText());
-                    netArtistClearInputButton.setVisible(true);
-                    netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
-                    netArtistLeftBox.add(netArtistScrollPane);
-                    netArtistSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netArtistHistorySearchInnerPanel2.remove(b);
-                        netArtistHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netArtistCurrKeyword, HistorySearchType.NET_ARTIST);
-                netArtistHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netArtistHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netArtistHistorySearchInnerPanel2.remove(c - 1);
-                netArtistHistorySearchPanel.repaint();
+            String keyword = netArtistSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netArtistCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netArtistCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netArtistSearchTextField.requestFocus();
+                netArtistSearchTextField.setText(b.getPlainText());
+                netArtistClearInputButton.setVisible(true);
+                netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
+                netArtistLeftBox.add(netArtistScrollPane);
+                netArtistSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netArtistHistorySearchInnerPanel2.remove(b);
+                    netArtistHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netArtistCurrKeyword, HistorySearchType.NET_ARTIST);
+            netArtistHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netArtistHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netArtistHistorySearchInnerPanel2.remove(c - 1);
+            netArtistHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索歌手并显示歌手列表
-                        CommonResult<NetArtistInfo> result = MusicServerUtil.searchArtists(
-                                netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage = 1, limit);
-                        List<NetArtistInfo> artistInfos = result.data;
-                        Integer total = result.total;
-                        netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
-                        netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
-                        netArtistCountPanel.setVisible(true);
-                        netArtistSourceComboBox.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netArtistList.setModel(emptyListModel);
-                        netArtistListModel.clear();
-                        artistInfos.forEach(artistInfo -> {
-                            globalExecutor.execute(() -> updateCollection(artistInfo));
-                            // 设置图片加载后重绘的事件
-                            artistInfo.setInvokeLater(() -> {
-                                updateRenderer(netArtistList);
-                                updateRenderer(collectionList);
-                                netArtistList.repaint();
-                                collectionList.repaint();
-                            });
-                            netArtistListModel.addElement(artistInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索歌手并显示歌手列表
+                    CommonResult<NetArtistInfo> result = MusicServerUtil.searchArtists(
+                            netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, netArtistCurrPage = 1, limit);
+                    List<NetArtistInfo> artistInfos = result.data;
+                    Integer total = result.total;
+                    netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netArtistCountLabel.setText(String.format(PAGINATION_MSG, netArtistCurrPage, netArtistMaxPage));
+                    netArtistCountPanel.add(netArtistCountLabel, netArtistCountPanel.getComponentIndex(netArtistCountLabel));
+                    netArtistCountPanel.setVisible(true);
+                    netArtistSourceComboBox.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netArtistList.setModel(emptyListModel);
+                    netArtistListModel.clear();
+                    artistInfos.forEach(artistInfo -> {
+                        globalExecutor.execute(() -> updateCollection(artistInfo));
+                        // 设置图片加载后重绘的事件
+                        artistInfo.setInvokeLater(() -> {
+                            updateRenderer(netArtistList);
+                            updateRenderer(collectionList);
+                            netArtistList.repaint();
+                            collectionList.repaint();
                         });
-                        netArtistList.setModel(netArtistListModel);
-                        netArtistBackwardButton.setEnabled(true);
-                        netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
-                        if (netArtistListModel.isEmpty()) {
-                            netArtistLeftBox.remove(netArtistScrollPane);
-                            netArtistLeftBox.add(emptyHintPanel);
-                        } else {
-                            netArtistLeftBox.remove(emptyHintPanel);
-                            netArtistLeftBox.add(netArtistScrollPane);
-                        }
-                        netArtistScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netArtistListModel.addElement(artistInfo);
+                    });
+                    netArtistList.setModel(netArtistListModel);
+                    netArtistBackwardButton.setEnabled(true);
+                    netArtistLeftBox.remove(netArtistKeywordsPanelScrollPane);
+                    if (netArtistListModel.isEmpty()) {
+                        netArtistLeftBox.remove(netArtistScrollPane);
+                        netArtistLeftBox.add(emptyHintPanel);
+                    } else {
+                        netArtistLeftBox.remove(emptyHintPanel);
+                        netArtistLeftBox.add(netArtistScrollPane);
                     }
-                });
-            }
+                    netArtistScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         // 播放全部
@@ -12504,81 +12502,81 @@ public class MainFrame extends JFrame {
         });
         // 搜索电台按钮事件
         netRadioSearchButton.addActionListener(e -> {
-            netRadioCurrKeyword = netRadioSearchTextField.getText().trim();
-            if (!netRadioCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netRadioCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netRadioSearchTextField.requestFocus();
-                    netRadioSearchTextField.setText(b.getPlainText());
-                    netRadioClearInputButton.setVisible(true);
-                    netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
-                    netRadioLeftBox.add(netRadioScrollPane);
-                    netRadioSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netRadioHistorySearchInnerPanel2.remove(b);
-                        netRadioHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netRadioCurrKeyword, HistorySearchType.NET_RADIO);
-                netRadioHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netRadioHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netRadioHistorySearchInnerPanel2.remove(c - 1);
-                netRadioHistorySearchPanel.repaint();
+            String keyword = netRadioSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netRadioCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netRadioCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netRadioSearchTextField.requestFocus();
+                netRadioSearchTextField.setText(b.getPlainText());
+                netRadioClearInputButton.setVisible(true);
+                netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
+                netRadioLeftBox.add(netRadioScrollPane);
+                netRadioSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netRadioHistorySearchInnerPanel2.remove(b);
+                    netRadioHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netRadioCurrKeyword, HistorySearchType.NET_RADIO);
+            netRadioHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netRadioHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netRadioHistorySearchInnerPanel2.remove(c - 1);
+            netRadioHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索电台并显示电台列表
-                        CommonResult<NetRadioInfo> result = MusicServerUtil.searchRadios(
-                                netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage = 1, limit);
-                        List<NetRadioInfo> radioInfos = result.data;
-                        Integer total = result.total;
-                        netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
-                        netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
-                        netRadioCountPanel.setVisible(true);
-                        netRadioSourceComboBox.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netRadioList.setModel(emptyListModel);
-                        netRadioListModel.clear();
-                        radioInfos.forEach(radioInfo -> {
-                            globalExecutor.execute(() -> updateCollection(radioInfo));
-                            // 设置图片加载后重绘的事件
-                            radioInfo.setInvokeLater(() -> {
-                                updateRenderer(netRadioList);
-                                updateRenderer(collectionList);
-                                netRadioList.repaint();
-                                collectionList.repaint();
-                            });
-                            netRadioListModel.addElement(radioInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索电台并显示电台列表
+                    CommonResult<NetRadioInfo> result = MusicServerUtil.searchRadios(
+                            netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, netRadioCurrPage = 1, limit);
+                    List<NetRadioInfo> radioInfos = result.data;
+                    Integer total = result.total;
+                    netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netRadioCountLabel.setText(String.format(PAGINATION_MSG, netRadioCurrPage, netRadioMaxPage));
+                    netRadioCountPanel.add(netRadioCountLabel, netRadioCountPanel.getComponentIndex(netRadioCountLabel));
+                    netRadioCountPanel.setVisible(true);
+                    netRadioSourceComboBox.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netRadioList.setModel(emptyListModel);
+                    netRadioListModel.clear();
+                    radioInfos.forEach(radioInfo -> {
+                        globalExecutor.execute(() -> updateCollection(radioInfo));
+                        // 设置图片加载后重绘的事件
+                        radioInfo.setInvokeLater(() -> {
+                            updateRenderer(netRadioList);
+                            updateRenderer(collectionList);
+                            netRadioList.repaint();
+                            collectionList.repaint();
                         });
-                        netRadioList.setModel(netRadioListModel);
-                        netRadioBackwardButton.setEnabled(true);
-                        netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
-                        if (netRadioListModel.isEmpty()) {
-                            netRadioLeftBox.remove(netRadioScrollPane);
-                            netRadioLeftBox.add(emptyHintPanel);
-                        } else {
-                            netRadioLeftBox.remove(emptyHintPanel);
-                            netRadioLeftBox.add(netRadioScrollPane);
-                        }
-                        netRadioScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netRadioListModel.addElement(radioInfo);
+                    });
+                    netRadioList.setModel(netRadioListModel);
+                    netRadioBackwardButton.setEnabled(true);
+                    netRadioLeftBox.remove(netRadioKeywordsPanelScrollPane);
+                    if (netRadioListModel.isEmpty()) {
+                        netRadioLeftBox.remove(netRadioScrollPane);
+                        netRadioLeftBox.add(emptyHintPanel);
+                    } else {
+                        netRadioLeftBox.remove(emptyHintPanel);
+                        netRadioLeftBox.add(netRadioScrollPane);
                     }
-                });
-            }
+                    netRadioScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         // 播放全部
@@ -13500,82 +13498,82 @@ public class MainFrame extends JFrame {
         });
         // 搜索 MV 按钮事件
         netMvSearchButton.addActionListener(e -> {
-            netMvCurrKeyword = netMvSearchTextField.getText().trim();
-            if (!netMvCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netMvCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netMvSearchTextField.requestFocus();
-                    netMvSearchTextField.setText(b.getPlainText());
-                    netMvClearInputButton.setVisible(true);
-                    netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
-                    netMvLeftBox.add(netMvScrollPane);
-                    netMvSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netMvHistorySearchInnerPanel2.remove(b);
-                        netMvHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netMvCurrKeyword, HistorySearchType.NET_MV);
-                netMvHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netMvHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netMvHistorySearchInnerPanel2.remove(c - 1);
-                netMvHistorySearchPanel.repaint();
+            String keyword = netMvSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netMvCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netMvCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netMvSearchTextField.requestFocus();
+                netMvSearchTextField.setText(b.getPlainText());
+                netMvClearInputButton.setVisible(true);
+                netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
+                netMvLeftBox.add(netMvScrollPane);
+                netMvSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netMvHistorySearchInnerPanel2.remove(b);
+                    netMvHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netMvCurrKeyword, HistorySearchType.NET_MV);
+            netMvHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netMvHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netMvHistorySearchInnerPanel2.remove(c - 1);
+            netMvHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索 MV 并显示 MV 列表
-                        CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
-                                netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, netMvCurrPage = 1, limit, mvCursor = "");
-                        List<NetMvInfo> mvInfos = result.data;
-                        Integer total = result.total;
-                        mvCursor = result.cursor;
-                        netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
-                        netMvCountPanel.setVisible(true);
-                        netMvSourceComboBox.setVisible(true);
-                        netMvSortTypeComboBox.setVisible(false);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netMvList.setModel(emptyListModel);
-                        netMvListModel.clear();
-                        mvInfos.forEach(mvInfo -> {
-                            globalExecutor.execute(() -> updateCollection(mvInfo));
-                            // 设置图片加载后重绘的事件
-                            mvInfo.setInvokeLater(() -> {
-                                updateRenderer(netMvList);
-                                updateRenderer(collectionList);
-                                netMvList.repaint();
-                                collectionList.repaint();
-                            });
-                            netMvListModel.addElement(mvInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索 MV 并显示 MV 列表
+                    CommonResult<NetMvInfo> result = MusicServerUtil.searchMvs(
+                            netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, netMvCurrPage = 1, limit, mvCursor = "");
+                    List<NetMvInfo> mvInfos = result.data;
+                    Integer total = result.total;
+                    mvCursor = result.cursor;
+                    netMvMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netMvCountLabel.setText(String.format(PAGINATION_MSG, netMvCurrPage, netMvMaxPage));
+                    netMvCountPanel.setVisible(true);
+                    netMvSourceComboBox.setVisible(true);
+                    netMvSortTypeComboBox.setVisible(false);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netMvList.setModel(emptyListModel);
+                    netMvListModel.clear();
+                    mvInfos.forEach(mvInfo -> {
+                        globalExecutor.execute(() -> updateCollection(mvInfo));
+                        // 设置图片加载后重绘的事件
+                        mvInfo.setInvokeLater(() -> {
+                            updateRenderer(netMvList);
+                            updateRenderer(collectionList);
+                            netMvList.repaint();
+                            collectionList.repaint();
                         });
-                        netMvList.setModel(netMvListModel);
-                        netMvBackwardButton.setEnabled(true);
-                        netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
-                        if (netMvListModel.isEmpty()) {
-                            netMvLeftBox.remove(netMvScrollPane);
-                            netMvLeftBox.add(emptyHintPanel);
-                        } else {
-                            netMvLeftBox.remove(emptyHintPanel);
-                            netMvLeftBox.add(netMvScrollPane);
-                        }
-                        netMvScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netMvListModel.addElement(mvInfo);
+                    });
+                    netMvList.setModel(netMvListModel);
+                    netMvBackwardButton.setEnabled(true);
+                    netMvLeftBox.remove(netMvKeywordsPanelScrollPane);
+                    if (netMvListModel.isEmpty()) {
+                        netMvLeftBox.remove(netMvScrollPane);
+                        netMvLeftBox.add(emptyHintPanel);
+                    } else {
+                        netMvLeftBox.remove(emptyHintPanel);
+                        netMvLeftBox.add(netMvScrollPane);
                     }
-                });
-            }
+                    netMvScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         netMvSortTypeComboBox.addItem(I18n.getText("latest"));
@@ -14851,81 +14849,81 @@ public class MainFrame extends JFrame {
         });
         // 搜索用户按钮事件
         netUserSearchButton.addActionListener(e -> {
-            netUserCurrKeyword = netUserSearchTextField.getText().trim();
-            if (!netUserCurrKeyword.isEmpty()) {
-                // 关键词加入搜索历史
-                Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-                DialogButton b = new DialogButton(netUserCurrKeyword, textColor, true);
-                b.addActionListener(event -> {
-                    netUserSearchTextField.requestFocus();
-                    netUserSearchTextField.setText(b.getPlainText());
-                    netUserClearInputButton.setVisible(true);
-                    netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
-                    netUserLeftBox.add(netUserScrollPane);
-                    netUserSearchButton.doClick();
-                });
-                // 右击删除历史
-                b.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        if (e.getButton() != MouseEvent.BUTTON3) return;
-                        netUserHistorySearchInnerPanel2.remove(b);
-                        netUserHistorySearchInnerPanel2.repaint();
-                    }
-                });
-                b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
-                // 先删除重复的关键词
-                removeKeywordInHistorySearch(netUserCurrKeyword, HistorySearchType.NET_USER);
-                netUserHistorySearchInnerPanel2.add(b, 0);
-                // 删除超出上限的最后一个关键词
-                int c = netUserHistorySearchInnerPanel2.getComponentCount();
-                if (c > maxSearchHistoryCount)
-                    netUserHistorySearchInnerPanel2.remove(c - 1);
-                netUserHistorySearchPanel.repaint();
+            String keyword = netUserSearchTextField.getText().trim();
+            if (keyword.isEmpty()) return;
+            netUserCurrKeyword = keyword;
+            // 关键词加入搜索历史
+            Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+            DialogButton b = new DialogButton(netUserCurrKeyword, textColor, true);
+            b.addActionListener(event -> {
+                netUserSearchTextField.requestFocus();
+                netUserSearchTextField.setText(b.getPlainText());
+                netUserClearInputButton.setVisible(true);
+                netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
+                netUserLeftBox.add(netUserScrollPane);
+                netUserSearchButton.doClick();
+            });
+            // 右击删除历史
+            b.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    if (e.getButton() != MouseEvent.BUTTON3) return;
+                    netUserHistorySearchInnerPanel2.remove(b);
+                    netUserHistorySearchInnerPanel2.repaint();
+                }
+            });
+            b.setToolTipText(REMOVE_HISTORY_KEYWORD_TIP);
+            // 先删除重复的关键词
+            removeKeywordInHistorySearch(netUserCurrKeyword, HistorySearchType.NET_USER);
+            netUserHistorySearchInnerPanel2.add(b, 0);
+            // 删除超出上限的最后一个关键词
+            int c = netUserHistorySearchInnerPanel2.getComponentCount();
+            if (c > maxSearchHistoryCount)
+                netUserHistorySearchInnerPanel2.remove(c - 1);
+            netUserHistorySearchPanel.repaint();
 
-                loadingAndRun(() -> {
-                    try {
-                        // 搜索用户并显示用户列表
-                        CommonResult<NetUserInfo> result = MusicServerUtil.searchUsers(
-                                netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage = 1, limit);
-                        List<NetUserInfo> userInfos = result.data;
-                        Integer total = result.total;
-                        netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
-                        // 更新数量显示
-                        netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
-                        netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
-                        netUserCountPanel.setVisible(true);
-                        netUserSourceComboBox.setVisible(true);
-                        // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
-                        netUserList.setModel(emptyListModel);
-                        netUserListModel.clear();
-                        userInfos.forEach(userInfo -> {
-                            globalExecutor.execute(() -> updateCollection(userInfo));
-                            // 设置图片加载后重绘的事件
-                            userInfo.setInvokeLater(() -> {
-                                updateRenderer(netUserList);
-                                updateRenderer(collectionList);
-                                netUserList.repaint();
-                                collectionList.repaint();
-                            });
-                            netUserListModel.addElement(userInfo);
+            loadingAndRun(() -> {
+                try {
+                    // 搜索用户并显示用户列表
+                    CommonResult<NetUserInfo> result = MusicServerUtil.searchUsers(
+                            netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, netUserCurrPage = 1, limit);
+                    List<NetUserInfo> userInfos = result.data;
+                    Integer total = result.total;
+                    netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
+                    // 更新数量显示
+                    netUserCountLabel.setText(String.format(PAGINATION_MSG, netUserCurrPage, netUserMaxPage));
+                    netUserCountPanel.add(netUserCountLabel, netUserCountPanel.getComponentIndex(netUserCountLabel));
+                    netUserCountPanel.setVisible(true);
+                    netUserSourceComboBox.setVisible(true);
+                    // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
+                    netUserList.setModel(emptyListModel);
+                    netUserListModel.clear();
+                    userInfos.forEach(userInfo -> {
+                        globalExecutor.execute(() -> updateCollection(userInfo));
+                        // 设置图片加载后重绘的事件
+                        userInfo.setInvokeLater(() -> {
+                            updateRenderer(netUserList);
+                            updateRenderer(collectionList);
+                            netUserList.repaint();
+                            collectionList.repaint();
                         });
-                        netUserList.setModel(netUserListModel);
-                        netUserBackwardButton.setEnabled(true);
-                        netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
-                        if (netUserListModel.isEmpty()) {
-                            netUserLeftBox.remove(netUserScrollPane);
-                            netUserLeftBox.add(emptyHintPanel);
-                        } else {
-                            netUserLeftBox.remove(emptyHintPanel);
-                            netUserLeftBox.add(netUserScrollPane);
-                        }
-                        netUserScrollPane.setVBarValue(0);
-                    } catch (Exception exception) {
-                        ExceptionUtil.handleResourceException(exception, THIS);
+                        netUserListModel.addElement(userInfo);
+                    });
+                    netUserList.setModel(netUserListModel);
+                    netUserBackwardButton.setEnabled(true);
+                    netUserLeftBox.remove(netUserKeywordsPanelScrollPane);
+                    if (netUserListModel.isEmpty()) {
+                        netUserLeftBox.remove(netUserScrollPane);
+                        netUserLeftBox.add(emptyHintPanel);
+                    } else {
+                        netUserLeftBox.remove(emptyHintPanel);
+                        netUserLeftBox.add(netUserScrollPane);
                     }
-                });
-            }
+                    netUserScrollPane.setVBarValue(0);
+                } catch (Exception exception) {
+                    ExceptionUtil.handleResourceException(exception, THIS);
+                }
+            });
         });
 
         recordTypeComboBoxModel.addElement(I18n.getText("recentWeek"));
@@ -16185,9 +16183,8 @@ public class MainFrame extends JFrame {
                     }
                     netUserScrollPane.setVBarValue(0);
                     netUserLeftBox.remove(userListBox);
-                    netCommentBackwardButton.doClick();
-                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_USER);
+                    toTabView(true);
                 } catch (Exception exception) {
                     ExceptionUtil.handleResourceException(exception, THIS);
                 }
@@ -16244,9 +16241,8 @@ public class MainFrame extends JFrame {
                     }
                     netPlaylistScrollPane.setVBarValue(0);
                     netPlaylistLeftBox.remove(playlistListBox);
-                    netCommentBackwardButton.doClick();
-                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_PLAYLIST);
+                    toTabView(true);
                 } catch (Exception exception) {
                     ExceptionUtil.handleResourceException(exception, THIS);
                 }
@@ -16303,9 +16299,8 @@ public class MainFrame extends JFrame {
                     }
                     netAlbumScrollPane.setVBarValue(0);
                     netAlbumLeftBox.remove(albumListBox);
-                    netCommentBackwardButton.doClick();
-                    if (currPaneType == CenterPaneType.LYRIC) changePaneButton.doClick();
                     tabbedPane.setSelectedIndex(TabIndex.NET_ALBUM);
+                    toTabView(true);
                 } catch (Exception exception) {
                     ExceptionUtil.handleResourceException(exception, THIS);
                 }
@@ -18984,12 +18979,12 @@ public class MainFrame extends JFrame {
             MusicResource resource = playQueue.getSelectedValue();
             tabbedPane.setSelectedIndex(TabIndex.NET_MUSIC);
             if (currMusicMusicInfo != null) netMusicBackwardButton.doClick();
-            searchTextField.requestFocus();
+            netMusicSearchTextField.requestFocus();
             if (resource instanceof NetMusicInfo) {
-                searchTextField.setText(((NetMusicInfo) resource).toKeywords());
-            } else searchTextField.setText(((AudioFile) resource).toKeywords());
+                netMusicSearchTextField.setText(((NetMusicInfo) resource).toKeywords());
+            } else netMusicSearchTextField.setText(((AudioFile) resource).toKeywords());
             netMusicClearInputButton.setVisible(true);
-            searchButton.doClick();
+            netMusicSearchButton.doClick();
         });
         // 查看相似歌曲菜单项
         playQueueSimilarSongMenuItem.addActionListener(e -> netMusicSimilarSongMenuItem.doClick());
@@ -19517,7 +19512,19 @@ public class MainFrame extends JFrame {
     }
 
     // 切到标签面板
+    private void toTabView() {
+        toTabView(null, false);
+    }
+
     private void toTabView(Runnable extraOperation) {
+        toTabView(extraOperation, false);
+    }
+
+    private void toTabView(boolean force) {
+        toTabView(null, force);
+    }
+
+    private void toTabView(Runnable extraOperation, boolean force) {
 //        // 滑入动画之后处理
 //        globalPanel.setOnAfterSlide(() -> {
 //            globalPanel.remove(infoAndLyricBox);
@@ -19535,24 +19542,31 @@ public class MainFrame extends JFrame {
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
         ComponentChangeHandler onFadingOutStopped = (s, t) -> {
             if (extraOperation != null) extraOperation.run();
-
             globalPanel.remove(s);
             globalPanel.add(t, BorderLayout.CENTER);
             globalPanel.revalidate();
-
+            // 重置标签透明度
+            float opacity = 0.5f;
+            artistLabel.setOpacity(opacity);
+            albumLabel.setOpacity(opacity);
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
             hideDetailButton.setVisible(false);
             // 防止事件不起作用
             globalPanel.requestFocus();
-            changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
+            changePaneButton.setToolTipText(CHANGE_TO_LYRIC_VIEW_TIP);
         };
         componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, tabbedPane, onFadingOutStopped);
-        componentChangeFadingAnimation.transition();
+        if (force) componentChangeFadingAnimation.force();
+        else componentChangeFadingAnimation.transition();
     }
 
     // 切到歌词面板
+    private void toLyricView() {
+        toLyricView(null);
+    }
+
     private void toLyricView(Runnable extraOperation) {
 //        // 滑入动画之后处理
 //        globalPanel.setOnAfterSlide(() -> {
@@ -19576,17 +19590,15 @@ public class MainFrame extends JFrame {
         Component src = SwingUtil.getBorderLayoutComponent(globalPanel, BorderLayout.CENTER);
         ComponentChangeHandler onFadingOutStopped = (s, t) -> {
             if (extraOperation != null) extraOperation.run();
-
             globalPanel.remove(s);
             globalPanel.add(t, BorderLayout.CENTER);
             globalPanel.revalidate();
-
             if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
             if (!netSheetListModel.isEmpty()) netSheetListModel.clear();
             hideDetailButton.setVisible(true);
-            changePaneButton.setToolTipText(CHANGE_TO_MUSIC_PANE_TIP);
+            changePaneButton.setToolTipText(CHANGE_TO_TAB_VIEW_TIP);
         };
         // 有时切换到歌词面板，歌词自动滚动失败，在动画结束后再试
         ComponentChangeHandler onFadingInStopped = (s, t) -> {
@@ -19599,7 +19611,7 @@ public class MainFrame extends JFrame {
     // 初始化控制面板
     private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
-        changePaneButton.setToolTipText(CHANGE_TO_LYRIC_PANE_TIP);
+        changePaneButton.setToolTipText(CHANGE_TO_LYRIC_VIEW_TIP);
         changePaneButton.setIconTextGap(ScaleUtil.scale(10));
         changePaneButton.setPreferredSize(new HDDimension(280, 66));
         changePaneButton.setText(NO_LYRIC_MSG);
@@ -19608,9 +19620,9 @@ public class MainFrame extends JFrame {
             // 动画状态无响应
 //            if (globalPanel.isSlideAnimating()) return;
             // 歌词页面切到列表
-            if (currPaneType == CenterPaneType.LYRIC || lastPaneType == CenterPaneType.LYRIC) toTabView(null);
+            if (currPaneType == CenterPaneType.LYRIC || lastPaneType == CenterPaneType.LYRIC) toTabView();
                 // 列表切到歌词页面
-            else if (currPaneType == CenterPaneType.TAB || lastPaneType == CenterPaneType.TAB) toLyricView(null);
+            else if (currPaneType == CenterPaneType.TAB || lastPaneType == CenterPaneType.TAB) toLyricView();
         });
         // MV
         mvButton.setToolTipText(MV_TIP);
@@ -20325,7 +20337,7 @@ public class MainFrame extends JFrame {
             // 随着播放，设置进度条和时间标签的值
             try {
                 // 未被操作时频繁更新时间条
-                if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrScale() * TIME_BAR_MAX));
+                if (!timeBar.getValueIsAdjusting()) timeBar.setValue((int) (player.getCurrProgress() * TIME_BAR_MAX));
                 // 监听并更新歌词(若有歌词)
                 if (nextLyric < 0) return;
                 double currTimeSeconds = newValue.toSeconds();
@@ -21418,11 +21430,11 @@ public class MainFrame extends JFrame {
         filterTextField.setSelectedTextColor(textColor);
         filterTextField.setSelectionColor(darkerTextAlphaColor);
         // 在线音乐搜索栏透明
-        searchTextField.updateStyle();
-        searchTextField.setForeground(!searchTextField.isHintHolding() ? textColor : darkerTextColor);
-        searchTextField.setCaretColor(textColor);
-        searchTextField.setSelectedTextColor(textColor);
-        searchTextField.setSelectionColor(darkerTextAlphaColor);
+        netMusicSearchTextField.updateStyle();
+        netMusicSearchTextField.setForeground(!netMusicSearchTextField.isHintHolding() ? textColor : darkerTextColor);
+        netMusicSearchTextField.setCaretColor(textColor);
+        netMusicSearchTextField.setSelectedTextColor(textColor);
+        netMusicSearchTextField.setSelectionColor(darkerTextAlphaColor);
         netMusicSourceComboBox.setUI(new StringComboBoxUI(netMusicSourceComboBox, THIS, SourceSupported.NET_MUSIC_SEARCH));
         netMusicSearchTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchTypeComboBox, THIS));
         netMusicSearchSubTypeComboBox.setUI(new StringComboBoxUI(netMusicSearchSubTypeComboBox, THIS));
@@ -21595,7 +21607,7 @@ public class MainFrame extends JFrame {
         // 在线音乐搜索栏按钮颜色
         netMusicBackwardButton.updateIconStyle();
         netMusicClearInputButton.updateIconStyle();
-        searchButton.updateIconStyle();
+        netMusicSearchButton.updateIconStyle();
         netMusicRefreshButton.updateIconStyle();
         netMusicStartPageButton.updateIconStyle();
         netMusicLastPageButton.updateIconStyle();
@@ -22608,9 +22620,9 @@ public class MainFrame extends JFrame {
     }
 
     // 加载搜索建议
-    private synchronized void updateSearchSuggestion() {
+    private void updateSearchSuggestion() {
         try {
-            String part = searchTextField.getText();
+            String part = netMusicSearchTextField.getText();
             Set<String> suggestions = MusicServerUtil.getSearchSuggestion(part);
             if (!suggestions.isEmpty()) {
                 if (!netMusicSearchSuggestionPanel.isShowing()) {
@@ -22627,10 +22639,10 @@ public class MainFrame extends JFrame {
             for (String keyword : suggestions) {
                 b = new DialogButton(keyword, textColor, true);
                 b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(keyword);
+                    netMusicSearchTextField.requestFocus();
+                    netMusicSearchTextField.setText(keyword);
                     netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
+                    netMusicSearchButton.doClick();
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
                 });
@@ -22662,7 +22674,7 @@ public class MainFrame extends JFrame {
     }
 
     // 加载热搜词
-    private synchronized void updateHotSearch() {
+    private void updateHotSearch() {
         try {
             Set<String> hotSearch = MusicServerUtil.getHotSearch();
             // 显示 “热门搜索” 面板
@@ -22676,10 +22688,10 @@ public class MainFrame extends JFrame {
                 b = new DialogButton(keyword, textColor, true);
                 DialogButton finalB = b;
                 b.addActionListener(event -> {
-                    searchTextField.requestFocus();
-                    searchTextField.setText(keyword);
+                    netMusicSearchTextField.requestFocus();
+                    netMusicSearchTextField.setText(keyword);
                     netMusicClearInputButton.setVisible(true);
-                    searchButton.doClick();
+                    netMusicSearchButton.doClick();
                     netLeftBox.remove(netMusicKeywordsPanelScrollPane);
                     netLeftBox.add(netMusicScrollPane);
                     // 热搜词搜索后取消悬停状态

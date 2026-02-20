@@ -7,7 +7,6 @@ package net.doge.exception.core;
  */
 public class InvalidPackageFileException extends RuntimeException {
     public InvalidPackageFileException() {
-
     }
 
     public InvalidPackageFileException(String msg) {

@@ -7,7 +7,6 @@ package net.doge.exception.media;
  */
 public class IllegalMediaException extends RuntimeException {
     public IllegalMediaException() {
-
     }
 
     public IllegalMediaException(String msg) {

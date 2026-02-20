@@ -8,8 +8,9 @@ import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
-import lombok.Data;
+import lombok.Getter;
 import net.doge.constant.core.async.GlobalExecutors;
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.core.player.EqualizerData;
 import net.doge.constant.core.player.PlayerStatus;
@@ -32,7 +33,7 @@ import java.lang.reflect.Field;
  * @description
  * @date 2020/12/7
  */
-@Data
+@Getter
 public class MusicPlayer {
     // 播放界面
     private MainFrame f;
@@ -118,9 +119,8 @@ public class MusicPlayer {
     }
 
     // 判断播放器是否载入了指定文件
-    public boolean loadedAudioFile(AudioFile file) {
-        if (!loadedAudioFile()) return false;
-        return audioFile.equals(file);
+    public boolean loadedAudioFile(AudioFile audioFile) {
+        return loadedAudioFile() && this.audioFile.equals(audioFile);
     }
 
     // 判断播放器是否载入了在线音乐
@@ -130,8 +130,7 @@ public class MusicPlayer {
 
     // 判断播放器是否载入了指定在线音乐
     public boolean loadedNetMusic(NetMusicInfo musicInfo) {
-        if (!loadedNetMusic()) return false;
-        return musicInfo.equals(this.musicInfo);
+        return loadedNetMusic() && this.musicInfo.equals(musicInfo);
     }
 
     // 判断播放器是否载入了音乐资源
@@ -181,6 +180,7 @@ public class MusicPlayer {
         // 时长(优先考虑 NetMusicInfo 的 duration 属性，有时 getDuration 方法返回的时长不准确)
         metaMusicInfo.setDuration(musicInfo != null ? musicInfo.hasDuration() ? musicInfo.getDuration() : 0 : source.getDuration());
 
+        String unknown = I18n.getText("unknown");
         // 在线音乐的信息
         if (musicInfo != null) {
             String name = musicInfo.getName();
@@ -188,11 +188,11 @@ public class MusicPlayer {
             String albumName = musicInfo.getAlbumName();
 
             // 歌曲名称
-            metaMusicInfo.setName(StringUtil.isEmpty(name) ? "未知" : name);
+            metaMusicInfo.setName(StringUtil.isEmpty(name) ? unknown : name);
             // 艺术家
-            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
+            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? unknown : artist);
             // 专辑名称
-            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
+            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? unknown : albumName);
             // 专辑图片
             GlobalExecutors.requestExecutor.execute(() -> {
                 if (!musicInfo.hasAlbumImage()) {
@@ -216,9 +216,9 @@ public class MusicPlayer {
             // 歌曲名称
             metaMusicInfo.setName(source.hasSongName() ? source.getSongName() : source.getPrefix());
             // 艺术家
-            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? "未知" : artist);
+            metaMusicInfo.setArtist(StringUtil.isEmpty(artist) ? unknown : artist);
             // 专辑
-            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? "未知" : albumName);
+            metaMusicInfo.setAlbumName(StringUtil.isEmpty(albumName) ? unknown : albumName);
 
             // 获取 MP3 专辑图片
             GlobalExecutors.requestExecutor.execute(() -> {
@@ -229,14 +229,6 @@ public class MusicPlayer {
                 f.showAlbumImage();
             });
         }
-//        // 其他类型的文件信息
-//        else {
-//            metaMusicInfo.setName(source.getPrefix());
-//            metaMusicInfo.setArtist("未知");
-//            metaMusicInfo.setAlbumName("未知");
-//            metaMusicInfo.setAlbumImage(ImageConstants.DEFAULT_IMG);
-//            f.showAlbumImage();
-//        }
     }
 
     // 错误计数
@@ -392,7 +384,7 @@ public class MusicPlayer {
     }
 
     // 获取当前进度比例
-    public double getCurrScale() {
+    public double getCurrProgress() {
         double s = getCurrTimeSeconds() / metaMusicInfo.getDuration();
         return s <= 1 ? s : Double.isInfinite(s) ? 0 : 1;
     }

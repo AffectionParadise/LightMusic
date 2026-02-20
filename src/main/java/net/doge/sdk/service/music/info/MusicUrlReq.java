@@ -30,17 +30,16 @@ public class MusicUrlReq {
     public void fillMusicUrl(NetMusicInfo musicInfo) {
         // 歌曲信息是完整的且音质与设置的音质相同
         if (musicInfo.isIntegrated() && musicInfo.isQualityMatch()) return;
-
-        // 无链接，直接换源
+        // 若无链接，直接换源
         String url = fetchMusicUrl(musicInfo);
         if (StringUtil.notEmpty(url)) musicInfo.setUrl(url);
         else fillAvailableMusicUrl(musicInfo);
-
         String realUrl = musicInfo.getUrl();
+        // 未找到任何链接，跳出
+        if (StringUtil.isEmpty(realUrl)) return;
         if (realUrl.contains(".mp3") || realUrl.contains(".wav")) musicInfo.setFormat(Format.MP3);
         else if (realUrl.contains(".flac")) musicInfo.setFormat(Format.FLAC);
         else if (realUrl.contains(".m4a")) musicInfo.setFormat(Format.M4A);
-
         // 更新音质
         musicInfo.setQuality(AudioQuality.quality);
     }
@@ -98,14 +97,14 @@ public class MusicUrlReq {
         List<MusicCandidate> candidates = new LinkedList<>();
         MusicInfoReq musicInfoReq = MusicInfoReq.getInstance();
         for (NetMusicInfo info : data) {
+            if (info.equals(musicInfo)) continue;
             // 部分歌曲没有时长，先填充时长，准备判断
             if (!info.hasDuration()) musicInfoReq.fillDuration(info);
             double nameSimi = StringUtil.similar(info.getName(), musicInfo.getName());
             double artistSimi = StringUtil.similar(info.getArtist(), musicInfo.getArtist());
             double albumSimi = StringUtil.similar(info.getAlbumName(), musicInfo.getAlbumName());
             // 匹配依据：歌名、歌手相似度，时长之差绝对值。如果合适，纳入候选者
-            if (info.equals(musicInfo)
-                    || nameSimi == 0
+            if (nameSimi == 0
                     || artistSimi == 0
                     || info.hasDuration() && musicInfo.hasDuration() && Math.abs(info.getDuration() - musicInfo.getDuration()) > 3)
                 continue;

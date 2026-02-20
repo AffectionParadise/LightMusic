@@ -60,10 +60,10 @@ public class CustomTabbedPane extends JTabbedPane implements ExtendedOpacitySupp
                 panel.transitionDrawBg(false);
             }
 
-            // Panel 本身的鼠标事件会覆盖 TabbedPane 的，因此手动触发选择
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (getSelectedIndex() == index) return;
+                // Panel 本身的鼠标事件会覆盖 TabbedPane 的，因此手动触发选择
                 setSelectedIndex(index);
             }
         });

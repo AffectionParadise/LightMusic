@@ -27,6 +27,7 @@ public class I18n {
 //        LANG_MAP.put("songName", new String[]{"歌曲名：", "Title: "});
 //        LANG_MAP.put("artist", new String[]{"艺术家：", "Artist: "});
 //        LANG_MAP.put("albumName", new String[]{"专辑名：", "Album: "});
+        LANG_MAP.put("unknown", new String[]{"未知", "Unknown"});
 
         LANG_MAP.put("paginationMsg", new String[]{"第 %s 页，共 %s 页", "Page %s of %s"});
         LANG_MAP.put("lyricLoadingMsg", new String[]{"加载歌词中......", "Loading lyric..."});
@@ -175,8 +176,8 @@ public class I18n {
         LANG_MAP.put("minimizeWindowTip", new String[]{"最小化", "Minimize"});
         LANG_MAP.put("maximizeWindowTip", new String[]{"最大化", "Maximize"});
         LANG_MAP.put("closeWindowTip", new String[]{"关闭", "Close"});
-        LANG_MAP.put("changeToLyricPaneTip", new String[]{"切换到歌曲详情页", "Switch to track detail page"});
-        LANG_MAP.put("changeToMusicPaneTip", new String[]{"切换到列表页", "Switch to track list page"});
+        LANG_MAP.put("changeToLyricViewTip", new String[]{"切换到歌曲详情页", "Switch to track detail page"});
+        LANG_MAP.put("changeToTabViewTip", new String[]{"切换到列表页", "Switch to track list page"});
         LANG_MAP.put("collectTip", new String[]{"收藏", "Collect"});
         LANG_MAP.put("collectedTip", new String[]{"已收藏", "Collected"});
         LANG_MAP.put("downloadTip", new String[]{"下载", "Download"});

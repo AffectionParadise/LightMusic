@@ -7,7 +7,6 @@ package net.doge.exception.io;
  */
 public class TimeoutRuntimeException extends RuntimeException {
     public TimeoutRuntimeException() {
-
     }
 
     public TimeoutRuntimeException(String msg) {

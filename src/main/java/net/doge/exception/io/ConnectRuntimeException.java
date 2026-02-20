@@ -7,7 +7,6 @@ package net.doge.exception.io;
  */
 public class ConnectRuntimeException extends RuntimeException {
     public ConnectRuntimeException() {
-
     }
 
     public ConnectRuntimeException(String msg) {
