@@ -1,6 +1,7 @@
 package net.doge.sdk.service.radio.tag.impl;
 
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
@@ -42,7 +43,7 @@ public class DbHotRadioTagReq {
             String id = RegexUtil.getGroup1("type=(\\d+)", tag.attr("href"));
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[6] = id;
+            Tags.radioTags.get(name)[TagType.CAT_RADIO_DB] = id;
         }
     }
 
@@ -65,7 +66,7 @@ public class DbHotRadioTagReq {
             String id = tag.getElementsByTag("input").attr("value");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[7] = id + " ";
+            Tags.radioTags.get(name)[TagType.CAT_GAME_RADIO_DB] = id + " ";
         }
         tags = fieldset.last().select("label:not(.is-active)");
         for (int i = 0, len = tags.size(); i < len; i++) {
@@ -75,7 +76,7 @@ public class DbHotRadioTagReq {
             String id = tag.getElementsByTag("input").attr("value");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[7] = " " + id;
+            Tags.radioTags.get(name)[TagType.CAT_GAME_RADIO_DB] = " " + id;
         }
     }
 }

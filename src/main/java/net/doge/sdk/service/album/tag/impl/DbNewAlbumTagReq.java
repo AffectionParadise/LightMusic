@@ -1,6 +1,7 @@
 package net.doge.sdk.service.album.tag.impl;
 
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -37,7 +38,7 @@ public class DbNewAlbumTagReq {
             String id = tag.text();
 
             if (!Tags.newAlbumTags.containsKey(name)) Tags.newAlbumTags.put(name, new String[c]);
-            Tags.newAlbumTags.get(name)[6] = id;
+            Tags.newAlbumTags.get(name)[TagType.CAT_ALBUM_DB] = id;
         }
     }
 }

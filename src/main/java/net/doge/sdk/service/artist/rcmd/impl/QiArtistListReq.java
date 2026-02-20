@@ -3,8 +3,9 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -82,9 +83,10 @@ public class QiArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[9])) {
+        String param = s[TagType.CAT_ARTIST_QI];
+        if (StringUtil.notEmpty(param)) {
             // 分割时保留空串
-            String[] sp = s[9].split(" ", -1);
+            String[] sp = param.split(" ", -1);
             String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

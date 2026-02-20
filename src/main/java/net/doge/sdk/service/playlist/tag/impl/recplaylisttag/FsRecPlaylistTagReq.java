@@ -1,6 +1,7 @@
 package net.doge.sdk.service.playlist.tag.impl.recplaylisttag;
 
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,7 +40,7 @@ public class FsRecPlaylistTagReq {
             String id = tag.text();
 
             if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
-            Tags.recPlaylistTags.get(name)[4] = id;
+            Tags.recPlaylistTags.get(name)[TagType.NEW_PLAYLIST_FS] = id;
         }
     }
 }

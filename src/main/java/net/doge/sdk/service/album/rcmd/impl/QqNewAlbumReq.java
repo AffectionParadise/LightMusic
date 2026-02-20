@@ -3,8 +3,9 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -38,10 +39,11 @@ public class QqNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[5])) {
+        String param = s[TagType.NEW_ALBUM_QQ];
+        if (StringUtil.notEmpty(param)) {
             String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"new_album\":{\"module\":\"newalbum.NewAlbumServer\",\"method\":\"get_new_album_info\"," +
-                            "\"param\":{\"area\":%s,\"sin\":0,\"num\":100}}}", s[5]))
+                            "\"param\":{\"area\":%s,\"sin\":0,\"num\":100}}}", param))
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONArray albumArray = albumInfoJson.getJSONObject("new_album").getJSONObject("data").getJSONArray("albums");

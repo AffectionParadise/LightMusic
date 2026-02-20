@@ -3,8 +3,9 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -38,8 +39,9 @@ public class KwRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, s[7], page, limit)).execute();
+        String param = s[TagType.RECOMMEND_MV_KW];
+        if (StringUtil.notEmpty(param)) {
+            HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, param, page, limit)).execute();
             if (resp.isSuccessful()) {
                 String mvInfoBody = resp.body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

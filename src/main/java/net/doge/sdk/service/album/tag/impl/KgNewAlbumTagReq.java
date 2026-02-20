@@ -2,7 +2,8 @@ package net.doge.sdk.service.album.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
@@ -41,7 +42,7 @@ public class KgNewAlbumTagReq {
             String name = tag.getString("name");
 
             if (!Tags.newAlbumTags.containsKey(name)) Tags.newAlbumTags.put(name, new String[c]);
-            Tags.newAlbumTags.get(name)[4] = id;
+            Tags.newAlbumTags.get(name)[TagType.IP_ALBUM_KG] = id;
         }
     }
 }

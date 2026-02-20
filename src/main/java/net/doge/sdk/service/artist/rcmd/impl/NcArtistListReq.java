@@ -3,7 +3,8 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -46,10 +47,11 @@ public class NcArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.ARTIST_RANK_LIST_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_RANK_LIST_NC_API,
-                            String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", s[0]), options)
+                            String.format("{\"type\":\"%s\",\"offset\":0,\"limit\":100,\"total\":true}", param), options)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONArray artistArray = artistInfoJson.getJSONObject("list").getJSONArray("artists");
@@ -127,8 +129,9 @@ public class NcArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String[] sp = s[1].split(" ");
+        String param = s[TagType.CAT_ARTIST_NC];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ");
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, CAT_ARTIST_NC_API,
                             String.format("{\"type\":\"%s\",\"area\":\"%s\",\"initial\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
@@ -171,10 +174,11 @@ public class NcArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
+        String param = s[TagType.STYLE_ARTIST_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String artistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ARTIST_NC_API,
-                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
+                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");

@@ -3,8 +3,9 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -136,8 +137,9 @@ public class HkRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[8])) {
-            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, s[8], limit))
+        String param = s[TagType.RECOMMEND_VIDEO_HK];
+        if (StringUtil.notEmpty(param)) {
+            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, param, limit))
                     .cookie(SdkCommon.HK_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

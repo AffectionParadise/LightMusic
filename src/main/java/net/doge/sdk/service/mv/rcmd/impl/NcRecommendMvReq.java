@@ -3,7 +3,8 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -48,10 +49,11 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.MV_RANK_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_NC_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
-                            s[0].replace("全部", ""), (page - 1) * limit, limit), options)
+                            param.replace("全部", ""), (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
@@ -97,9 +99,10 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.MV_RANK_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_NC_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", s[0]), options)
+            String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_NC_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", param), options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");
@@ -139,11 +142,13 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0]) || StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.MV_RANK_NC];
+        String param2 = s[TagType.ALL_MV_NC];
+        if (StringUtil.notEmpty(param) || StringUtil.notEmpty(param2)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_NC_API,
                             String.format("{\"tags\":\"{'area':'%s','type':'%s','order':'上升最快'}\",\"offset\":%s,\"limit\":%s,\"total\":true}",
-                                    s[0], s[1], (page - 1) * limit, limit), options)
+                                    param, param2, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONArray("data");

@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -39,9 +40,9 @@ public class QqHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
-            String cat = s[4];
-            boolean isAll = "10000000".equals(cat);
+        String param = s[TagType.CAT_PLAYLIST_QQ];
+        if (StringUtil.notEmpty(param)) {
+            boolean isAll = "10000000".equals(param);
             String url;
             if (isAll) {
                 url = CAT_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
@@ -62,7 +63,7 @@ public class QqHighQualityPlaylistReq {
                                 "\"size\":%s," +
                                 "\"page\":%s," +
                                 "\"use_page\":1}," +
-                                "\"module\":\"playlist.PlayListCategoryServer\"}}", cat, cat, limit, page - 1));
+                                "\"module\":\"playlist.PlayListCategoryServer\"}}", param, param, limit, page - 1));
             }
             String playlistInfoBody = HttpRequest.get(url)
                     .executeAsStr();

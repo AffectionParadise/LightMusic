@@ -3,8 +3,9 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.builder.KugouReqBuilder;
@@ -43,14 +44,15 @@ public class KgNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
+        String param = s[TagType.NEW_ALBUM_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
             String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KugouReqBuilder.apiver, page, limit);
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");
-            JSONArray albumArray = data.getJSONArray(s[3]);
+            JSONArray albumArray = data.getJSONArray(param);
             t = albumArray.size();
             for (int i = (page - 1) * limit, len = Math.min(albumArray.size(), page * limit); i < len; i++) {
                 JSONObject albumJson = albumArray.getJSONObject(i);
@@ -91,9 +93,10 @@ public class KgNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
+        String param = s[TagType.IP_ALBUM_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ALBUM_KG_API);
-            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
+            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.builder.KugouReqBuilder;
@@ -90,8 +91,9 @@ public class KgRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, s[1].trim(), page))
+        String param = s[TagType.RECOMMEND_CAT_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -131,8 +133,9 @@ public class KgRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, s[1].trim(), page))
+        String param = s[TagType.RECOMMEND_CAT_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;

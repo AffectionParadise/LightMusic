@@ -1,8 +1,9 @@
 package net.doge.sdk.service.album.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -85,8 +86,9 @@ public class DbNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[6])) {
-            String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, s[6], (page - 1) * limit))
+        String param = s[TagType.CAT_ALBUM_DB];
+        if (StringUtil.notEmpty(param)) {
+            String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, param, (page - 1) * limit))
                     .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements as = doc.select("tr.item");

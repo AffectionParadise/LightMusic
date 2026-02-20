@@ -1,8 +1,9 @@
 package net.doge.sdk.service.mv.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -40,8 +41,9 @@ public class LzRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[11])) {
-            String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, s[11]))
+        String param = s[TagType.VIDEO_LZ];
+        if (StringUtil.notEmpty(param)) {
+            String mvInfoBody = HttpRequest.get(String.format(VIDEO_LZ_API, param))
                     .executeAsStr();
             Document doc = Jsoup.parse(mvInfoBody);
             Elements mvArray = doc.select(".tile-content");

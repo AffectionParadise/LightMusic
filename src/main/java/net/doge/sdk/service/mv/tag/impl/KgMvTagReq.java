@@ -2,7 +2,8 @@ package net.doge.sdk.service.mv.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
@@ -45,7 +46,7 @@ public class KgMvTagReq {
             String id = tagJson.getString("channel_id");
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[2] = id;
+            Tags.mvTags.get(name)[TagType.RECOMMEND_MV_KG] = id;
         }
     }
 
@@ -68,7 +69,7 @@ public class KgMvTagReq {
             String name = tag.getString("name");
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[3] = id;
+            Tags.mvTags.get(name)[TagType.IP_MV_KG] = id;
         }
     }
 }

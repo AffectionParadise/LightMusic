@@ -1,7 +1,8 @@
 package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.RegexUtil;
@@ -49,8 +50,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(LATEST_YC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -88,8 +90,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -127,8 +130,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -166,8 +170,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(LATEST_FC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -205,8 +210,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
@@ -244,8 +250,9 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);

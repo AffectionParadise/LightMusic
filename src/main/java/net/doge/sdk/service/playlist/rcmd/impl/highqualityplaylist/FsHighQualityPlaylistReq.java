@@ -1,8 +1,9 @@
 package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -40,8 +41,9 @@ public class FsHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[10])) {
-            String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, s[10].trim(), page))
+        String param = s[TagType.HOT_PLAYLIST_FS];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, param.trim(), page))
                     .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements as = doc.select("span.pagecon a");

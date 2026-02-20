@@ -2,8 +2,9 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.media.AudioQuality;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -95,9 +96,10 @@ public class NcNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.FAST_NEW_SONG_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_NC_API, String.format("{\"areaId\":\"%s\",\"total\":true}", s[0]), options)
+            String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_NC_API, String.format("{\"areaId\":\"%s\",\"total\":true}", param), options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONArray("data");
@@ -149,10 +151,11 @@ public class NcNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.STYLE_NEW_SONG_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_NEW_SONG_NC_API,
-                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":1}", s[1], (page - 1) * limit, limit), options)
+                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":1}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");

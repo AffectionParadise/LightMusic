@@ -2,9 +2,10 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -58,10 +59,11 @@ public class NcHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.STYLE_HOT_SONG_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_HOT_SONG_NC_API,
-                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[0], (page - 1) * limit, limit), options)
+                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");

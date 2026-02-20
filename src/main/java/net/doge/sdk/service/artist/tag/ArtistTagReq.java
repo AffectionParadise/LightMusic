@@ -1,6 +1,6 @@
 package net.doge.sdk.service.artist.tag;
 
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.artist.tag.impl.KgArtistTagReq;
 import net.doge.sdk.service.artist.tag.impl.NcArtistTagReq;

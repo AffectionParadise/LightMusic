@@ -1,8 +1,9 @@
 package net.doge.sdk.service.mv.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -43,7 +44,8 @@ public class FaRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String[] sp = s[10].split(" ", -1);
+        String param = s[TagType.VIDEO_FA];
+        String[] sp = param.split(" ", -1);
         if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
             String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, page, sp[0]))
                     .executeAsStr();
@@ -101,7 +103,8 @@ public class FaRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String[] sp = s[10].split(" ", -1);
+        String param = s[TagType.VIDEO_FA];
+        String[] sp = param.split(" ", -1);
         if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {
             String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, page, sp[1]))
                     .executeAsStr();

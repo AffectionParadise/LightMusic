@@ -2,8 +2,9 @@ package net.doge.sdk.service.music.rcmd.impl.program;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.RegexUtil;
@@ -94,8 +95,9 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
-            String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, s[0], page, Math.min(limit, 20)))
+        String param = s[TagType.EXP_PROGRAM_ME];
+        if (StringUtil.notEmpty(param)) {
+            String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -133,8 +135,9 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
+        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        if (StringUtil.notEmpty(param)) {
+            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -167,8 +170,9 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, s[1], page, Math.min(limit, 20)))
+        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        if (StringUtil.notEmpty(param)) {
+            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -201,8 +205,9 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, s[1], page, limit))
+        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        if (StringUtil.notEmpty(param)) {
+            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, limit))
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             Elements boxes = doc.select(".vw-weibo-title.floatleft a");

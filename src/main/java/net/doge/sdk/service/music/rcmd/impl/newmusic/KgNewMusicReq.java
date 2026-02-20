@@ -2,9 +2,10 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -100,8 +101,9 @@ public class KgNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, s[2], page, limit))
+        String param = s[TagType.RECOMMEND_NEW_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
+            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, param, page, limit))
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");
@@ -152,10 +154,11 @@ public class KgNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
+        String param = s[TagType.STYLE_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_SONG_KG_API);
             Map<String, Object> params = new TreeMap<>();
-            params.put("tagids", s[3]);
+            params.put("tagids", param);
             String musicInfoBody = SdkCommon.kgRequest(params, "{}", options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

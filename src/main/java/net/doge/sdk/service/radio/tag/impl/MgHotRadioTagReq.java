@@ -2,7 +2,8 @@ package net.doge.sdk.service.radio.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
@@ -41,7 +42,7 @@ public class MgHotRadioTagReq {
             String id = tag.getString("txt2");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[8] = id;
+            Tags.radioTags.get(name)[TagType.CAT_RADIO_MG] = id;
         }
     }
 }

@@ -3,8 +3,9 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -43,8 +44,9 @@ public class KgRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, s[2], page, limit))
+        String param = s[TagType.RECOMMEND_MV_KG];
+        if (StringUtil.notEmpty(param)) {
+            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, param, page, limit))
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");
@@ -91,9 +93,10 @@ public class KgRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
+        String param = s[TagType.IP_MV_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_MV_KG_API);
-            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[3], page, limit);
+            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String mvInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

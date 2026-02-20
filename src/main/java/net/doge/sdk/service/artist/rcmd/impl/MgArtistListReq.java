@@ -3,8 +3,9 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -116,8 +117,9 @@ public class MgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[8])) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_LIST_MG_API, s[8]))
+        String param = s[TagType.CAT_ARTIST_MG];
+        if (StringUtil.notEmpty(param)) {
+            String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_LIST_MG_API, param))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");

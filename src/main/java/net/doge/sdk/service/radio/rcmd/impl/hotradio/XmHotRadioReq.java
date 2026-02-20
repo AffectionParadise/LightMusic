@@ -3,8 +3,9 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -42,8 +43,9 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
-            String[] sp = s[3].split(" ", -1);
+        String param = s[TagType.CAT_RADIO_XM];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -94,8 +96,9 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
-            String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, s[4], page, limit))
+        String param = s[TagType.CHANNEL_RADIO_XM];
+        if (StringUtil.notEmpty(param)) {
+            String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, param, page, limit))
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
@@ -140,8 +143,9 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String[] sp = s[2].split(" ");
+        String param = s[TagType.CAT_RADIO_XM];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ");
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANK_XM_API, sp[0], sp[1]))
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);

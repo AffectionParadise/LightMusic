@@ -2,7 +2,8 @@ package net.doge.sdk.service.music.tag.impl.hotsongtag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.builder.KugouReqBuilder;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
@@ -49,7 +50,7 @@ public class KgHotSongTagReq {
             String id = tag.getString("id");
 
             if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
-            Tags.hotSongTags.get(name)[2] = id;
+            Tags.hotSongTags.get(name)[TagType.THEME_SONG_KG] = id;
         }
     }
 
@@ -79,7 +80,7 @@ public class KgHotSongTagReq {
                 String name = tag.getString("fmname");
 
                 if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
-                Tags.hotSongTags.get(name)[3] = fmid + " " + fmtype;
+                Tags.hotSongTags.get(name)[TagType.FM_SONG_KG] = fmid + " " + fmtype;
             }
         }
     }
@@ -103,7 +104,7 @@ public class KgHotSongTagReq {
             String name = tag.getString("name");
 
             if (!Tags.hotSongTags.containsKey(name)) Tags.hotSongTags.put(name, new String[c]);
-            Tags.hotSongTags.get(name)[4] = id;
+            Tags.hotSongTags.get(name)[TagType.IP_SONG_KG] = id;
         }
     }
 }

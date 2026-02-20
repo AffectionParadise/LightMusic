@@ -3,9 +3,10 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
 import net.doge.constant.service.RadioType;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -93,11 +94,12 @@ public class DbHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[6])) {
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, s[6], (page - 1) * limit, limit))
+        String param = s[TagType.CAT_RADIO_DB];
+        if (StringUtil.notEmpty(param)) {
+            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, param, (page - 1) * limit, limit))
                     .executeAsStr();
             JSONArray radioArray = JSONArray.parseArray(radioInfoBody);
-            t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, s[6])).executeAsStr()).getIntValue("total");
+            t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, param)).executeAsStr()).getIntValue("total");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -133,8 +135,9 @@ public class DbHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.CAT_GAME_RADIO_DB];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(radioInfoBody);

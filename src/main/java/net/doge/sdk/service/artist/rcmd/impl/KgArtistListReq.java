@@ -3,8 +3,9 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -45,8 +46,9 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
-            String[] split = s[3].split(" ");
+        String param = s[TagType.HOT_ARTIST_LIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String[] split = param.split(" ");
             String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -90,8 +92,9 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
-            String[] split = s[3].split(" ");
+        String param = s[TagType.HOT_ARTIST_LIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String[] split = param.split(" ");
             String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -135,9 +138,10 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
+        String param = s[TagType.IP_ARTIST_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ARTIST_KG_API);
-            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
+            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

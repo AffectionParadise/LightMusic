@@ -2,7 +2,8 @@ package net.doge.sdk.service.playlist.tag.impl.recplaylisttag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
@@ -44,7 +45,7 @@ public class NcRecPlaylistTagReq {
             String id = tag.getString("tagId");
 
             if (!Tags.recPlaylistTags.containsKey(name)) Tags.recPlaylistTags.put(name, new String[c]);
-            Tags.recPlaylistTags.get(name)[0] = id;
+            Tags.recPlaylistTags.get(name)[TagType.STYLE_PLAYLIST_NC] = id;
             // 子标签
             JSONArray subTags = tag.getJSONArray("childrenTags");
             if (JsonUtil.isEmpty(subTags)) continue;
@@ -55,7 +56,7 @@ public class NcRecPlaylistTagReq {
                 String subId = subTag.getString("tagId");
 
                 if (!Tags.recPlaylistTags.containsKey(subName)) Tags.recPlaylistTags.put(subName, new String[c]);
-                Tags.recPlaylistTags.get(subName)[0] = subId;
+                Tags.recPlaylistTags.get(subName)[TagType.STYLE_PLAYLIST_NC] = subId;
                 // 孙子标签
                 JSONArray ssTags = subTag.getJSONArray("childrenTags");
                 if (JsonUtil.isEmpty(ssTags)) continue;
@@ -66,7 +67,7 @@ public class NcRecPlaylistTagReq {
                     String ssId = ssTag.getString("tagId");
 
                     if (!Tags.recPlaylistTags.containsKey(ssName)) Tags.recPlaylistTags.put(ssName, new String[c]);
-                    Tags.recPlaylistTags.get(ssName)[0] = ssId;
+                    Tags.recPlaylistTags.get(ssName)[TagType.STYLE_PLAYLIST_NC] = ssId;
                 }
             }
         }

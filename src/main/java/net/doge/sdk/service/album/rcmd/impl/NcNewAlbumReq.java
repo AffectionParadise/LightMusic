@@ -3,7 +3,8 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -54,11 +55,12 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.NEW_ALBUM_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_NC_API,
                             String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
-                                    s[0], TimeUtil.currYear(), TimeUtil.currMonth()),
+                                    param, TimeUtil.currYear(), TimeUtil.currMonth()),
                             options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -151,10 +153,11 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.NEW_ALBUM_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_NC_API,
-                            String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[0], (page - 1) * limit, limit),
+                            String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit),
                             options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -279,10 +282,11 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.LANG_DI_ALBUM_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_NC_API,
-                            String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit),
+                            String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit),
                             options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -320,10 +324,11 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
+        String param = s[TagType.STYLE_ALBUM_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_NC_API,
-                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", s[2], (page - 1) * limit, limit), options)
+                            String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");

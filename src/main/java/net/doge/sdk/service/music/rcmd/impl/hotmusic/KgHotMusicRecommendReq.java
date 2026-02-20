@@ -2,9 +2,10 @@ package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.builder.KugouReqBuilder;
@@ -53,10 +54,11 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.CARD_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(CARD_SONG_KG_API);
             Map<String, Object> params = new TreeMap<>();
-            params.put("card_id", s[1]);
+            params.put("card_id", param);
             params.put("fakem", "60f7ebf1f812edbac3c63a7310001701760f");
             params.put("area_code", 1);
             params.put("platform", "android");
@@ -117,11 +119,12 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
+        String param = s[TagType.THEME_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(THEME_SONG_KG_API);
             long ct = System.currentTimeMillis() / 1000;
             String dat = String.format("{\"platform\":\"android\",\"clienttime\":%s,\"theme_category_id\":\"%s\"," +
-                    "\"show_theme_category_id\":0,\"userid\":0,\"module_id\":508}", ct, s[2]);
+                    "\"show_theme_category_id\":0,\"userid\":0,\"module_id\":508}", ct, param);
             String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -173,8 +176,9 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
-            String[] sp = s[3].split(" ");
+        String param = s[TagType.FM_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ");
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(FM_SONG_KG_API);
             String ct = String.valueOf(System.currentTimeMillis() / 1000);
             String dat = String.format("{\"appid\":%s,\"area_code\":1,\"clienttime\":%s,\"clientver\":%s," +
@@ -233,9 +237,10 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
+        String param = s[TagType.IP_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_SONG_KG_API);
-            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", s[4], page, limit);
+            String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

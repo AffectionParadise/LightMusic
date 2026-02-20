@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -37,8 +38,9 @@ public class QiHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, s[7].trim(), System.currentTimeMillis()))
+        String param = s[TagType.CAT_PLAYLIST_QI];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = SdkCommon.qiRequest(String.format(CAT_PLAYLIST_QI_API, page, limit, param.trim(), System.currentTimeMillis()))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");

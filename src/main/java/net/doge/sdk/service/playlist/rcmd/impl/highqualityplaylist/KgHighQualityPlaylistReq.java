@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.builder.KugouReqBuilder;
@@ -55,8 +56,9 @@ public class KgHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String cid = s[2].trim();
+        String param = s[TagType.TOP_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String cid = param.trim();
             Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
             String ct = String.valueOf(System.currentTimeMillis() / 1000);
             String dat = String.format("{\"appid\":%s,\"mid\":\"%s\",\"clientver\":%s," +
@@ -109,8 +111,9 @@ public class KgHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, s[2].trim(), page))
+        String param = s[TagType.TOP_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -150,8 +153,9 @@ public class KgHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, s[2].trim(), page))
+        String param = s[TagType.TOP_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -191,8 +195,9 @@ public class KgHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[2])) {
-            String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, s[2].trim(), page))
+        String param = s[TagType.TOP_PLAYLIST_KG];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -273,10 +278,11 @@ public class KgHighQualityPlaylistReq {
 //        int t = 0;
 //        String[] s = Tags.hotPlaylistTag.get(tag);
 
-//        if (StringUtil.notEmpty(s[3])) {
+//    String param = s[TagType.IP_PLAYLIST_KG];
+//        if (StringUtil.notEmpty(param)) {
 //                Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_PLAYLIST_KG_API);
 //                Map<String, Object> params = new TreeMap<>();
-//                params.put("ip", s[3]);
+//                params.put("ip", param);
 //                params.put("page", page);
 //                params.put("pagesize", limit);
 //                String playlistInfoBody = SdkCommon.kgRequest(params, null, options)

@@ -1,6 +1,7 @@
 package net.doge.sdk.service.mv.tag.impl;
 
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -44,7 +45,7 @@ public class FaMvTagReq {
             String name = a.text();
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[10] = id + " ";
+            Tags.mvTags.get(name)[TagType.VIDEO_FA] = id + " ";
         }
     }
 
@@ -67,7 +68,7 @@ public class FaMvTagReq {
             String name = a.text();
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[10] = " " + id;
+            Tags.mvTags.get(name)[TagType.VIDEO_FA] = " " + id;
         }
     }
 }

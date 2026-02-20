@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -82,8 +83,9 @@ public class MeRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[3])) {
-            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, s[3].trim(), page, limit))
+        String param = s[TagType.NEW_PLAYLIST_ME];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, param.trim(), page, limit))
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");

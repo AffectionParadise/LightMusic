@@ -2,9 +2,10 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -34,10 +35,11 @@ public class QqNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
+        String param = s[TagType.RECOMMEND_NEW_SONG_QQ];
+        if (StringUtil.notEmpty(param)) {
             String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +
-                            "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", s[4]))
+                            "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", param))
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONArray songArray = musicInfoJson.getJSONObject("new_song").getJSONObject("data").getJSONArray("songlist");

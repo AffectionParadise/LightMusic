@@ -1,4 +1,4 @@
-package net.doge.constant.core.data;
+package net.doge.constant.service.tag;
 
 import net.doge.constant.service.NetMusicSource;
 

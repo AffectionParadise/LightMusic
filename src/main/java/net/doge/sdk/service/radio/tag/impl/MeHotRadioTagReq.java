@@ -2,7 +2,8 @@ package net.doge.sdk.service.radio.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
@@ -45,7 +46,7 @@ public class MeHotRadioTagReq {
                 if (i == 0) id = String.format("%s 0 0", id);
                 else if (i == 1) id = String.format("0 %s 0", id);
                 else id = String.format("0 0 %s", id);
-                Tags.radioTags.get(name)[5] = id;
+                Tags.radioTags.get(name)[TagType.CAT_RADIO_ME] = id;
             }
         }
     }

@@ -1,8 +1,9 @@
 package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -40,8 +41,9 @@ public class FsRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
-            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, s[4].trim(), page))
+        String param = s[TagType.NEW_PLAYLIST_FS];
+        if (StringUtil.notEmpty(param)) {
+            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, param.trim(), page))
                     .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements as = doc.select("span.pagecon a");

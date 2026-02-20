@@ -2,7 +2,8 @@ package net.doge.sdk.service.artist.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.http.HttpRequest;
 
@@ -40,7 +41,7 @@ public class QqArtistTagReq {
             String id = tagJson.getString("id");
 
             if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
-            Tags.artistTags.get(name)[5] = String.format("-100 %s -100 -100", id);
+            Tags.artistTags.get(name)[TagType.ARTIST_RANK_QQ] = String.format("-100 %s -100 -100", id);
         }
         // 首字母
         JSONArray index = data.getJSONArray("index");
@@ -52,20 +53,20 @@ public class QqArtistTagReq {
             String id = tagJson.getString("id");
 
             if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
-            Tags.artistTags.get(name)[5] = String.format("-100 -100 %s -100", id);
+            Tags.artistTags.get(name)[TagType.ARTIST_RANK_QQ] = String.format("-100 -100 %s -100", id);
 
             // 此处包含多个平台首字母同时初始化
             // 网易云
-            Tags.artistTags.get(name)[1] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
+            Tags.artistTags.get(name)[TagType.CAT_ARTIST_NC] = String.format("-1 -1 %s", "#".equals(name) ? "0" : String.valueOf((int) name.toUpperCase().charAt(0)));
 
             // 酷我
-            if (!"#".equals(name)) Tags.artistTags.get(name)[7] = String.format("0 %s", name);
+            if (!"#".equals(name)) Tags.artistTags.get(name)[TagType.ALL_ARTIST_KW] = String.format("0 %s", name);
 
             // 千千
-            Tags.artistTags.get(name)[9] = String.format("%s  ", "#".equals(name) ? "other" : name);
+            Tags.artistTags.get(name)[TagType.CAT_ARTIST_QI] = String.format("%s  ", "#".equals(name) ? "other" : name);
 
             // 猫耳
-            Tags.artistTags.get(name)[10] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
+            Tags.artistTags.get(name)[TagType.CAT_CV_ME] = String.format("%s", "#".equals(name) ? "0" : String.valueOf(name.charAt(0) - 64));
         }
     }
 }

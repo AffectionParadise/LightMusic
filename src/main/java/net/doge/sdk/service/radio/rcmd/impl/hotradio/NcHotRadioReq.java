@@ -3,7 +3,8 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -260,10 +261,11 @@ public class NcHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.CAT_HOT_RADIO_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_HOT_RADIO_NC_API,
-                            String.format("{\"cateId\":\"%s\",\"offset\":%s,\"limit\":%s}", s[0], (page - 1) * limit, limit), options)
+                            String.format("{\"cateId\":\"%s\",\"offset\":%s,\"limit\":%s}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             t = radioInfoJson.getIntValue("count");
@@ -310,9 +312,10 @@ public class NcHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.CAT_REC_RADIO_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
-            String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_NC_API, String.format("{\"cateId\":\"%s\"}", s[1]), options)
+            String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_NC_API, String.format("{\"cateId\":\"%s\"}", param), options)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONArray("djRadios");

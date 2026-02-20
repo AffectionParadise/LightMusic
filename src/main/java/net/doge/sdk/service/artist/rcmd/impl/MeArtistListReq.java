@@ -3,8 +3,9 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -39,8 +40,9 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[10])) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, s[9].trim(), page, limit))
+        String param = s[TagType.CAT_CV_ME];
+        if (StringUtil.notEmpty(param)) {
+            String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, param.trim(), page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject info = artistInfoJson.getJSONObject("info");
@@ -78,8 +80,9 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[10])) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, s[9].trim(), page, limit))
+        String param = s[TagType.CAT_CV_ME];
+        if (StringUtil.notEmpty(param)) {
+            String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, param.trim(), page, limit))
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject info = artistInfoJson.getJSONObject("info");

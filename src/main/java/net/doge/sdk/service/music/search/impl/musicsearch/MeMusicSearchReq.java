@@ -2,8 +2,9 @@ package net.doge.sdk.service.music.search.impl.musicsearch;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.StringUtil;
@@ -38,8 +39,9 @@ public class MeMusicSearchReq {
 
         // 先对关键词编码，避免特殊符号的干扰
         String encodedKeyword = UrlUtil.encodeAll(keyword);
-        if (StringUtil.notEmpty(s[0])) {
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, s[0].trim(), encodedKeyword, page, limit))
+        String param = s[TagType.PROGRAM_SEARCH_ME];
+        if (StringUtil.notEmpty(param)) {
+            String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, param.trim(), encodedKeyword, page, limit))
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("info");

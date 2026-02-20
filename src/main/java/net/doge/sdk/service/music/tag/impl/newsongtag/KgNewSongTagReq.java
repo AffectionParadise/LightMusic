@@ -2,7 +2,8 @@ package net.doge.sdk.service.music.tag.impl.newsongtag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
 import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
@@ -47,7 +48,7 @@ public class KgNewSongTagReq {
                 String id = tag.getString("id");
 
                 if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
-                Tags.newSongTags.get(name)[3] = id;
+                Tags.newSongTags.get(name)[TagType.STYLE_SONG_KG] = id;
             }
         }
     }

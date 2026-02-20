@@ -2,7 +2,8 @@ package net.doge.sdk.service.mv.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.http.HttpRequest;
 
@@ -37,8 +38,8 @@ public class QqMvTagReq {
             String id = tagJson.getString("id");
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[4] = "15";
-            Tags.mvTags.get(name)[5] = id;
+            Tags.mvTags.get(name)[TagType.RECOMMEND_MV_QQ] = "15";
+            Tags.mvTags.get(name)[TagType.RECOMMEND_MV_QQ_2] = id;
         }
     }
 }

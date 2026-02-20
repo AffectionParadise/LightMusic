@@ -3,8 +3,9 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -39,11 +40,12 @@ public class QqRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[4])) {
+        String param = s[TagType.RECOMMEND_MV_QQ];
+        if (StringUtil.notEmpty(param)) {
             String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
                             "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
-                            "\"order\":1}}}", s[4], s[5], (page - 1) * limit, limit))
+                            "\"order\":1}}}", param, s[TagType.RECOMMEND_MV_QQ_2], (page - 1) * limit, limit))
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("mv_list").getJSONObject("data");
@@ -90,8 +92,9 @@ public class QqRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        if (StringUtil.notEmpty(s[6])) {
-            String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, s[6]))
+        String param = s[TagType.NEW_MV_QQ];
+        if (StringUtil.notEmpty(param)) {
+            String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, param))
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("mvlist");

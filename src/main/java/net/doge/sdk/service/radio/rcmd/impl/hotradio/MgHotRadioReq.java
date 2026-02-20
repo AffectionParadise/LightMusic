@@ -3,8 +3,9 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -37,12 +38,13 @@ public class MgHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        if (StringUtil.notEmpty(s[8])) {
+        String param = s[TagType.CAT_RADIO_MG];
+        if (StringUtil.notEmpty(param)) {
             String radioInfoBody = HttpRequest.get(CAT_RADIO_MG_API)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
-            JSONArray radioArray = data.getJSONArray(s[8]);
+            JSONArray radioArray = data.getJSONArray(param);
             t = radioArray.size();
             for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);

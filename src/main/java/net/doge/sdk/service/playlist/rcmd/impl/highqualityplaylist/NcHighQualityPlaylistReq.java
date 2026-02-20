@@ -3,7 +3,8 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -43,10 +44,11 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[0])) {
+        String param = s[TagType.HIGH_QUALITY_PLAYLIST_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_NC_API,
-                            String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", s[0], limit), options)
+                            String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", param, limit), options)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONArray playlistArray = playlistInfoJson.getJSONArray("playlists");
@@ -90,10 +92,11 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.PICKED_PLAYLIST_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,
-                            String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
+                            String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getIntValue("total");
@@ -137,10 +140,11 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[1])) {
+        String param = s[TagType.PICKED_PLAYLIST_NC];
+        if (StringUtil.notEmpty(param)) {
             Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,
-                            String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", s[1], (page - 1) * limit, limit), options)
+                            String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getIntValue("total");

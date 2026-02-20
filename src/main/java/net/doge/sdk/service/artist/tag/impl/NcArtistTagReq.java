@@ -2,7 +2,8 @@ package net.doge.sdk.service.artist.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.core.data.Tags;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
 import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
@@ -44,7 +45,7 @@ public class NcArtistTagReq {
             String id = tag.getString("tagId");
 
             if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
-            Tags.artistTags.get(name)[2] = id;
+            Tags.artistTags.get(name)[TagType.STYLE_ARTIST_NC] = id;
             // 子标签
             JSONArray subTags = tag.getJSONArray("childrenTags");
             if (JsonUtil.isEmpty(subTags)) continue;
@@ -55,7 +56,7 @@ public class NcArtistTagReq {
                 String subId = subTag.getString("tagId");
 
                 if (!Tags.artistTags.containsKey(subName)) Tags.artistTags.put(subName, new String[c]);
-                Tags.artistTags.get(subName)[2] = subId;
+                Tags.artistTags.get(subName)[TagType.STYLE_ARTIST_NC] = subId;
                 // 孙子标签
                 JSONArray ssTags = subTag.getJSONArray("childrenTags");
                 if (JsonUtil.isEmpty(ssTags)) continue;
@@ -66,7 +67,7 @@ public class NcArtistTagReq {
                     String ssId = ssTag.getString("tagId");
 
                     if (!Tags.artistTags.containsKey(ssName)) Tags.artistTags.put(ssName, new String[c]);
-                    Tags.artistTags.get(ssName)[2] = ssId;
+                    Tags.artistTags.get(ssName)[TagType.STYLE_ARTIST_NC] = ssId;
                 }
             }
         }

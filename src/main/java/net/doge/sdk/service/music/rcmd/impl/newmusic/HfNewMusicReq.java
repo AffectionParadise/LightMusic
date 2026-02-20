@@ -1,7 +1,8 @@
 package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -38,8 +39,9 @@ public class HfNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        if (StringUtil.notEmpty(s[5])) {
-            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, s[5], page))
+        String param = s[TagType.RECOMMEND_NEW_SONG_HF];
+        if (StringUtil.notEmpty(param)) {
+            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, param, page))
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);

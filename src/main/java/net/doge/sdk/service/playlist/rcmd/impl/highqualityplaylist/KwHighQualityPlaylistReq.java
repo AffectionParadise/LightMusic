@@ -3,8 +3,9 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -131,8 +132,9 @@ public class KwHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[5])) {
-            String[] sp = s[5].split(" ");
+        String param = s[TagType.CAT_PLAYLIST_KW];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ");
             // 根据 digest 信息请求不同的分类歌单接口
             if ("43".equals(sp[1])) {
                 HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API_2, sp[0])).execute();

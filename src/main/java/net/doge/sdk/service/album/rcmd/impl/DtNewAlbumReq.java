@@ -3,8 +3,9 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
@@ -88,8 +89,9 @@ public class DtNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, s[7], (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+        String param = s[TagType.CAT_ALBUM_DT];
+        if (StringUtil.notEmpty(param)) {
+            HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, param, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");

@@ -3,8 +3,9 @@ package net.doge.sdk.service.artist.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.core.data.Tags;
 import net.doge.constant.service.NetMusicSource;
+import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
@@ -41,8 +42,9 @@ public class KwArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[6])) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, s[6], page, limit)).execute();
+        String param = s[TagType.ARTIST_LIST_KW];
+        if (StringUtil.notEmpty(param)) {
+            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, param, page, limit)).execute();
             if (resp.isSuccessful()) {
                 String artistInfoBody = resp.body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -87,8 +89,9 @@ public class KwArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        if (StringUtil.notEmpty(s[7])) {
-            String[] sp = s[7].split(" ", -1);
+        String param = s[TagType.ALL_ARTIST_KW];
+        if (StringUtil.notEmpty(param)) {
+            String[] sp = param.split(" ", -1);
             HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
                     .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "https://kuwo.cn/singers" : "")
                     .execute();
