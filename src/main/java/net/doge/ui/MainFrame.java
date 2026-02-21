@@ -105,7 +105,7 @@ import net.doge.ui.widget.slider.ui.TimeSliderUI;
 import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.document.LimitedDocument;
+import net.doge.ui.widget.textfield.filter.LimitedDocumentFilter;
 import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.StringUtil;
@@ -4024,10 +4024,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.SORT_ORDER, currSortOrder.getIndex());
         // 存入当前所有歌曲目录
         JSONArray catalogJsonArray = new JSONArray();
-        for (int i = 0, len = catalogs.size(); i < len; i++) {
-            File dir = catalogs.get(i);
-            catalogJsonArray.add(dir.getAbsolutePath());
-        }
+        for (File dir : catalogs) catalogJsonArray.add(dir.getAbsolutePath());
         config.put(ConfigConstants.CATALOGS, catalogJsonArray);
         // 存入当前歌曲列表(文件路径)
         putLocalMusicList(config);
@@ -5461,7 +5458,7 @@ public class MainFrame extends JFrame {
 //        collectionPageTextField.addFocusListener(
 //                new JTextFieldHintListener(collectionPageTextField, "", UIStyleStorage.currUIStyle.getForeColor()));
         // 只能输入数字
-        collectionPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        collectionPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 收藏后退按钮事件
         collectionBackwardButton.addActionListener(e -> {
             collectionBackwardButton.transitionDrawBg(false);
@@ -6961,10 +6958,9 @@ public class MainFrame extends JFrame {
         filterTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!filterTextField.isHintHolding()) {
-                    clearInputToolButton.setVisible(true);
-                    filterPersonalMusic();
-                }
+                if (filterTextField.isHintHolding()) return;
+                clearInputToolButton.setVisible(true);
+                filterPersonalMusic();
             }
 
             @Override
@@ -7465,7 +7461,8 @@ public class MainFrame extends JFrame {
         netMusicSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netMusicSearchTextField.isHintHolding()) netMusicClearInputButton.setVisible(true);
+                if (netMusicSearchTextField.isHintHolding()) return;
+                netMusicClearInputButton.setVisible(true);
                 updateSearchSug();
             }
 
@@ -7487,7 +7484,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netMusicPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netMusicPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 返回关键词面板事件
         netMusicBackwardButton.addActionListener(e -> {
             netMusicListModel.clear();
@@ -9385,7 +9382,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netPlaylistPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netPlaylistPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netPlaylistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netPlaylistLeftBox.getComponentCount() - 1;
@@ -10311,9 +10308,7 @@ public class MainFrame extends JFrame {
         netAlbumSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netAlbumSearchTextField.isHintHolding()) {
-                    netAlbumClearInputButton.setVisible(true);
-                }
+                if (!netAlbumSearchTextField.isHintHolding()) netAlbumClearInputButton.setVisible(true);
             }
 
             @Override
@@ -10327,7 +10322,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netAlbumPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netAlbumPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netAlbumBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netAlbumLeftBox.getComponentCount() - 1;
@@ -11265,9 +11260,7 @@ public class MainFrame extends JFrame {
         netArtistSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netArtistSearchTextField.isHintHolding()) {
-                    netArtistClearInputButton.setVisible(true);
-                }
+                if (!netArtistSearchTextField.isHintHolding()) netArtistClearInputButton.setVisible(true);
             }
 
             @Override
@@ -11281,7 +11274,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netArtistPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netArtistPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netArtistBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netArtistLeftBox.getComponentCount() - 1;
@@ -12419,9 +12412,7 @@ public class MainFrame extends JFrame {
         netRadioSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netRadioSearchTextField.isHintHolding()) {
-                    netRadioClearInputButton.setVisible(true);
-                }
+                if (!netRadioSearchTextField.isHintHolding()) netRadioClearInputButton.setVisible(true);
             }
 
             @Override
@@ -12435,7 +12426,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netRadioPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netRadioPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRadioBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netRadioLeftBox.getComponentCount() - 1;
@@ -13475,9 +13466,7 @@ public class MainFrame extends JFrame {
         netMvSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netMvSearchTextField.isHintHolding()) {
-                    netMvClearInputButton.setVisible(true);
-                }
+                if (!netMvSearchTextField.isHintHolding()) netMvClearInputButton.setVisible(true);
             }
 
             @Override
@@ -13491,7 +13480,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netMvPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netMvPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 清除输入事件
         netMvClearInputButton.addActionListener(e -> {
             netMvSearchTextField.requestFocus();
@@ -14202,7 +14191,7 @@ public class MainFrame extends JFrame {
     // 初始化榜单工具栏
     private void initNetRankToolBar() {
         // 只能输入数字
-        netRankPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netRankPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netRankBackwardButton.addActionListener(e -> {
             netMusicListForRankModel.clear();
@@ -14765,9 +14754,7 @@ public class MainFrame extends JFrame {
         netUserSearchTextField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if (!netUserSearchTextField.isHintHolding()) {
-                    netUserClearInputButton.setVisible(true);
-                }
+                if (!netUserSearchTextField.isHintHolding()) netUserClearInputButton.setVisible(true);
             }
 
             @Override
@@ -14781,7 +14768,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 只能输入数字
-        netUserPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netUserPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netUserBackwardButton.addActionListener(e -> {
             int lastComponentIndex = netUserLeftBox.getComponentCount() - 1;
@@ -15940,7 +15927,7 @@ public class MainFrame extends JFrame {
     // 初始化评论工具栏
     private void initNetCommentToolBar() {
         // 只能输入数字
-        netCommentPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netCommentPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netCommentBackwardButton.addActionListener(e -> {
             Runnable extraOperation = () -> {
@@ -16325,7 +16312,7 @@ public class MainFrame extends JFrame {
     // 初始化乐谱工具栏
     private void initNetSheetToolBar() {
         // 只能输入数字
-        netSheetPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netSheetPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 后退按钮事件
         netSheetBackwardButton.addActionListener(e -> {
             Runnable extraOperation = () -> {
@@ -17072,7 +17059,7 @@ public class MainFrame extends JFrame {
     // 初始化推荐工具条
     private void initRecommendToolBar() {
         // 只能输入数字
-        netRecommendPageTextField.setDocument(new LimitedDocument(0, Integer.MAX_VALUE));
+        netRecommendPageTextField.setDocumentFilter(new LimitedDocumentFilter(0, Integer.MAX_VALUE));
         // 推荐后退按钮事件
         recommendBackwardButton.addActionListener(e -> {
             recommendBackwardButton.transitionDrawBg(false);
@@ -17252,7 +17239,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17310,7 +17297,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17368,7 +17355,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17416,7 +17403,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17464,7 +17451,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17521,7 +17508,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17628,7 +17615,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17685,7 +17672,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
-                            netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMusicInfo> musicInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -17733,7 +17720,7 @@ public class MainFrame extends JFrame {
                     }
 
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
-                            netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? "默认" : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
+                            netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
                     List<NetMvInfo> mvInfos = result.data;
                     int total = result.total;
                     netRecommendMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -18367,7 +18354,7 @@ public class MainFrame extends JFrame {
 
     // 判断标签是不是可以显示
     private boolean shouldShowTag(Map<String, String[]> tags, int[] indices, String tag) {
-        if ("默认".equals(tag)) return true;
+        if (I18n.getText("defaultTag").equals(tag)) return true;
         int si = netRecommendSourceComboBox.getSelectedIndex();
         String[] vals = tags.get(tag);
         for (int i = 0, len = indices.length; i < len; i++) {
@@ -20245,7 +20232,7 @@ public class MainFrame extends JFrame {
         if (state == BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
         else if (state == NO_LYRIC) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
         if (ListUtil.notEmpty(statements)) {
-            for (int i = 0, s = statements.size(); i < s; i++) lyricListModel.addElement(statements.get(i));
+            for (Statement statement : statements) lyricListModel.addElement(statement);
         }
         // 标记为无歌词 / 不支持滚动
         nextLyric = state == BAD_FORMAT ? NextLyric.BAD_FORMAT : state == NO_LYRIC ? NextLyric.NOT_EXISTS : 0;

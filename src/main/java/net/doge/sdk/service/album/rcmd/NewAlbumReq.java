@@ -1,5 +1,6 @@
 package net.doge.sdk.service.album.rcmd;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -22,7 +23,7 @@ public class NewAlbumReq {
      * 获取新碟上架
      */
     public CommonResult<NetAlbumInfo> getNewAlbums(int src, String tag, int page, int limit) {
-        final String defaultTag = "默认";
+        final String defaultTag = I18n.getText("defaultTag");
         MultiCommonResultCallableExecutor<NetAlbumInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (dt) {

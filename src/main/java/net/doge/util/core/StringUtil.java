@@ -44,6 +44,21 @@ public class StringUtil {
     }
 
     /**
+     * 替换某范围内的字符串为新串
+     *
+     * @param s
+     * @param start
+     * @param len
+     * @param content
+     * @return
+     */
+    public static String replace(String s, int start, int len, String content) {
+        StringBuilder sb = new StringBuilder(s);
+        sb.replace(start, start + len, content);
+        return sb.toString();
+    }
+
+    /**
      * 缩短字符串
      *
      * @param s

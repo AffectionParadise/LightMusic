@@ -15,6 +15,9 @@ import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.DocumentFilter;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -113,6 +116,15 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
 
     public void setCaretVisible(boolean visible) {
         getCaret().setVisible(visible);
+    }
+
+    // 设置文本筛选器
+    public void setDocumentFilter(DocumentFilter documentFilter) {
+        ((AbstractDocument) getDocument()).setDocumentFilter(documentFilter);
+    }
+
+    public void addDocumentListener(DocumentListener documentListener) {
+        getDocument().addDocumentListener(documentListener);
     }
 
     @Override

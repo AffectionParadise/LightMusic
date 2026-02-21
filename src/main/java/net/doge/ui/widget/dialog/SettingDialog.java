@@ -34,11 +34,12 @@ import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.tabbedpane.CustomTabbedPane;
 import net.doge.ui.widget.tabbedpane.ui.CustomTabbedPaneUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.document.LimitedDocument;
+import net.doge.ui.widget.textfield.filter.LimitedDocumentFilter;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.collection.ListUtil;
 import net.doge.util.core.io.FileUtil;
 import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.os.DesktopUtil;
 import net.doge.util.core.os.KeyUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -46,9 +47,9 @@ import net.doge.util.ui.ScaleUtil;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -211,10 +212,6 @@ public class SettingDialog extends AbstractTitledDialog {
     private DialogButton applyButton;
     private DialogButton cancelButton;
 
-    private Object currKeyComp;
-    private AWTEventListener keyBindListener;
-    private AWTEventListener mouseListener;
-
     public SettingDialog(MainFrame f) {
         super(f, I18n.getText("settingTitle"));
 
@@ -236,12 +233,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
         okButton.addActionListener(e -> {
             if (!applySettings()) return;
-            f.currDialogs.remove(this);
-            // 移除监听器
-            Toolkit toolkit = Toolkit.getDefaultToolkit();
-            toolkit.removeAWTEventListener(keyBindListener);
-            toolkit.removeAWTEventListener(mouseListener);
-            dispose();
+            close();
         });
         applyButton.addActionListener(e -> {
             applySettings();
@@ -433,8 +425,7 @@ public class SettingDialog extends AbstractTitledDialog {
         specMaxHeightTextField.setCaretColor(textColor);
         specMaxHeightTextField.setSelectedTextColor(textColor);
         specMaxHeightTextField.setSelectionColor(darkerTextAlphaColor);
-        LimitedDocument doc = new LimitedDocument(0, specMaxHeightLimit);
-        specMaxHeightTextField.setDocument(doc);
+        specMaxHeightTextField.setDocumentFilter(new LimitedDocumentFilter(0, specMaxHeightLimit));
         musicDownPathTextField.setForeground(textColor);
         musicDownPathTextField.setCaretColor(textColor);
         musicDownPathTextField.setSelectedTextColor(textColor);
@@ -451,86 +442,81 @@ public class SettingDialog extends AbstractTitledDialog {
         maxCacheSizeTextField.setCaretColor(textColor);
         maxCacheSizeTextField.setSelectedTextColor(textColor);
         maxCacheSizeTextField.setSelectionColor(darkerTextAlphaColor);
-        doc = new LimitedDocument(0, maxCacheSizeLimit);
-        maxCacheSizeTextField.setDocument(doc);
+        maxCacheSizeTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxCacheSizeLimit));
         maxHistoryCountTextField.setForeground(textColor);
         maxHistoryCountTextField.setCaretColor(textColor);
         maxHistoryCountTextField.setSelectedTextColor(textColor);
         maxHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
-        doc = new LimitedDocument(0, maxHistoryCountLimit);
-        maxHistoryCountTextField.setDocument(doc);
+        maxHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxHistoryCountLimit));
         maxSearchHistoryCountTextField.setForeground(textColor);
         maxSearchHistoryCountTextField.setCaretColor(textColor);
         maxSearchHistoryCountTextField.setSelectedTextColor(textColor);
         maxSearchHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
-        doc = new LimitedDocument(0, maxSearchHistoryLimit);
-        maxSearchHistoryCountTextField.setDocument(doc);
+        maxSearchHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxSearchHistoryLimit));
         maxConcurrentTaskCountTextField.setForeground(textColor);
         maxConcurrentTaskCountTextField.setCaretColor(textColor);
         maxConcurrentTaskCountTextField.setSelectedTextColor(textColor);
         maxConcurrentTaskCountTextField.setSelectionColor(darkerTextAlphaColor);
-        doc = new LimitedDocument(1, maxConcurrentTaskCountLimit);
-        maxConcurrentTaskCountTextField.setDocument(doc);
-        keyBindListener = new AWTEventListener() {
+        maxConcurrentTaskCountTextField.setDocumentFilter(new LimitedDocumentFilter(1, maxConcurrentTaskCountLimit));
+
+        KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
-            public void eventDispatched(AWTEvent event) {
-                if (!(event instanceof KeyEvent) || currKeyComp == null) return;
-                KeyEvent e = (KeyEvent) event;
+            public void keyPressed(KeyEvent e) {
                 int code = e.getKeyCode();
-                boolean released = e.getID() == KeyEvent.KEY_RELEASED, pressed = e.getID() == KeyEvent.KEY_PRESSED;
-                if (!released && !pressed) return;
-
-                if (released && !currKeys.isEmpty()) currKeys.removeLast();
-
-                if (pressed) {
-                    CustomTextField tf = (CustomTextField) currKeyComp;
-                    if (currKeys.contains(code)) return;
-                    currKeys.add(code);
-                    // 检查重复按键
-                    List<Integer> keyList = checkKeyDuplicated();
-                    if (keyList != null) {
-                        if (keyList == playOrPauseKeys) {
-                            playOrPauseKeys.clear();
-                            playOrPauseTextField.setText("");
-                        } else if (keyList == playLastKeys) {
-                            playLastKeys.clear();
-                            playLastTextField.setText("");
-                        } else if (keyList == playNextKeys) {
-                            playNextKeys.clear();
-                            playNextTextField.setText("");
-                        } else if (keyList == backwardKeys) {
-                            backwardKeys.clear();
-                            backwardTextField.setText("");
-                        } else if (keyList == forwardKeys) {
-                            forwardKeys.clear();
-                            forwardTextField.setText("");
-                        } else if (keyList == videoFullScreenKeys) {
-                            videoFullScreenKeys.clear();
-                            videoFullScreenTextField.setText("");
-                        }
-                    }
-                    // 暂存快捷键
-                    if (tf == playOrPauseTextField) {
+                // 保持按下状态会多次出发，屏蔽多余的按键
+                if (currKeys.contains(code)) return;
+                currKeys.add(code);
+                // 检查重复按键
+                List<Integer> keyList = checkKeyDuplicated();
+                if (keyList != null) {
+                    if (keyList == playOrPauseKeys) {
                         playOrPauseKeys.clear();
-                        playOrPauseKeys.addAll(currKeys);
-                    } else if (tf == playLastTextField) {
+                        playOrPauseTextField.setText("");
+                    } else if (keyList == playLastKeys) {
                         playLastKeys.clear();
-                        playLastKeys.addAll(currKeys);
-                    } else if (tf == playNextTextField) {
+                        playLastTextField.setText("");
+                    } else if (keyList == playNextKeys) {
                         playNextKeys.clear();
-                        playNextKeys.addAll(currKeys);
-                    } else if (tf == backwardTextField) {
+                        playNextTextField.setText("");
+                    } else if (keyList == backwardKeys) {
                         backwardKeys.clear();
-                        backwardKeys.addAll(currKeys);
-                    } else if (tf == forwardTextField) {
+                        backwardTextField.setText("");
+                    } else if (keyList == forwardKeys) {
                         forwardKeys.clear();
-                        forwardKeys.addAll(currKeys);
-                    } else if (tf == videoFullScreenTextField) {
+                        forwardTextField.setText("");
+                    } else if (keyList == videoFullScreenKeys) {
                         videoFullScreenKeys.clear();
-                        videoFullScreenKeys.addAll(currKeys);
+                        videoFullScreenTextField.setText("");
                     }
-                    tf.setText(KeyUtil.join(currKeys));
                 }
+                // 暂存快捷键
+                CustomTextField tf = (CustomTextField) e.getSource();
+                if (tf == playOrPauseTextField) {
+                    playOrPauseKeys.clear();
+                    playOrPauseKeys.addAll(currKeys);
+                } else if (tf == playLastTextField) {
+                    playLastKeys.clear();
+                    playLastKeys.addAll(currKeys);
+                } else if (tf == playNextTextField) {
+                    playNextKeys.clear();
+                    playNextKeys.addAll(currKeys);
+                } else if (tf == backwardTextField) {
+                    backwardKeys.clear();
+                    backwardKeys.addAll(currKeys);
+                } else if (tf == forwardTextField) {
+                    forwardKeys.clear();
+                    forwardKeys.addAll(currKeys);
+                } else if (tf == videoFullScreenTextField) {
+                    videoFullScreenKeys.clear();
+                    videoFullScreenKeys.addAll(currKeys);
+                }
+                tf.setText(KeyUtil.toStr(currKeys));
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (currKeys.isEmpty()) return;
+                currKeys.removeLast();
             }
 
             // 检查是否有重复按键
@@ -544,58 +530,42 @@ public class SettingDialog extends AbstractTitledDialog {
                 return null;
             }
         };
-        mouseListener = event -> {
-            if (event instanceof MouseEvent) {
-                MouseEvent me = (MouseEvent) event;
-                if (me.getID() == MouseEvent.MOUSE_PRESSED) currKeyComp = null;
-            }
-        };
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        toolkit.addAWTEventListener(keyBindListener, AWTEvent.KEY_EVENT_MASK);
-        toolkit.addAWTEventListener(mouseListener, AWTEvent.MOUSE_EVENT_MASK);
-        FocusAdapter focusAdapter = new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                currKeyComp = e.getSource();
-                currKeys.clear();
-            }
-        };
         playOrPauseTextField.setForeground(textColor);
         playOrPauseTextField.setCaretColor(textColor);
         playOrPauseTextField.setSelectedTextColor(textColor);
         playOrPauseTextField.setSelectionColor(darkerTextAlphaColor);
         playOrPauseTextField.setEditable(false);
-        playOrPauseTextField.addFocusListener(focusAdapter);
+        playOrPauseTextField.addKeyListener(keyAdapter);
         playLastTextField.setForeground(textColor);
         playLastTextField.setCaretColor(textColor);
         playLastTextField.setSelectedTextColor(textColor);
         playLastTextField.setSelectionColor(darkerTextAlphaColor);
         playLastTextField.setEditable(false);
-        playLastTextField.addFocusListener(focusAdapter);
+        playLastTextField.addKeyListener(keyAdapter);
         playNextTextField.setForeground(textColor);
         playNextTextField.setCaretColor(textColor);
         playNextTextField.setSelectedTextColor(textColor);
         playNextTextField.setSelectionColor(darkerTextAlphaColor);
         playNextTextField.setEditable(false);
-        playNextTextField.addFocusListener(focusAdapter);
+        playNextTextField.addKeyListener(keyAdapter);
         backwardTextField.setForeground(textColor);
         backwardTextField.setCaretColor(textColor);
         backwardTextField.setSelectedTextColor(textColor);
         backwardTextField.setSelectionColor(darkerTextAlphaColor);
         backwardTextField.setEditable(false);
-        backwardTextField.addFocusListener(focusAdapter);
+        backwardTextField.addKeyListener(keyAdapter);
         forwardTextField.setForeground(textColor);
         forwardTextField.setCaretColor(textColor);
         forwardTextField.setSelectedTextColor(textColor);
         forwardTextField.setSelectionColor(darkerTextAlphaColor);
         forwardTextField.setEditable(false);
-        forwardTextField.addFocusListener(focusAdapter);
+        forwardTextField.addKeyListener(keyAdapter);
         videoFullScreenTextField.setForeground(textColor);
         videoFullScreenTextField.setCaretColor(textColor);
         videoFullScreenTextField.setSelectedTextColor(textColor);
         videoFullScreenTextField.setSelectionColor(darkerTextAlphaColor);
         videoFullScreenTextField.setEditable(false);
-        videoFullScreenTextField.addFocusListener(focusAdapter);
+        videoFullScreenTextField.addKeyListener(keyAdapter);
 
         // 下拉框 UI
         lyricAlignmentComboBox.setUI(new StringComboBoxUI(lyricAlignmentComboBox, f));
@@ -622,21 +592,16 @@ public class SettingDialog extends AbstractTitledDialog {
                 // 文件夹不存在直接跳出
                 if (!dir.exists()) return;
                 musicDownPathTextField.setText(dir.getAbsolutePath());
-                pack();
             });
         });
         openMusicDownPathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
         openMusicDownPathButton.addActionListener(e -> {
-            try {
-                File dir = new File(musicDownPathTextField.getText());
-                if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                    return;
-                }
-                Desktop.getDesktop().open(dir);
-            } catch (IOException ex) {
-
+            File dir = new File(musicDownPathTextField.getText());
+            if (!dir.exists()) {
+                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
+                return;
             }
+            DesktopUtil.open(dir);
         });
 
         changeMvDownPathButton = new DialogButton(I18n.getText("change"), textColor);
@@ -647,21 +612,16 @@ public class SettingDialog extends AbstractTitledDialog {
                 // 文件夹不存在直接跳出
                 if (!dir.exists()) return;
                 mvDownPathTextField.setText(dir.getAbsolutePath());
-                pack();
             });
         });
         openMvDownPathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
         openMvDownPathButton.addActionListener(e -> {
-            try {
-                File dir = new File(mvDownPathTextField.getText());
-                if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                    return;
-                }
-                Desktop.getDesktop().open(dir);
-            } catch (IOException ex) {
-
+            File dir = new File(mvDownPathTextField.getText());
+            if (!dir.exists()) {
+                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
+                return;
             }
+            DesktopUtil.open(dir);
         });
 
         changeCachePathButton = new DialogButton(I18n.getText("change"), textColor);
@@ -672,21 +632,16 @@ public class SettingDialog extends AbstractTitledDialog {
                 // 文件夹不存在直接跳出
                 if (!dir.exists()) return;
                 cachePathTextField.setText(dir.getAbsolutePath());
-                pack();
             });
         });
         openCachePathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
         openCachePathButton.addActionListener(e -> {
-            try {
-                File dir = new File(cachePathTextField.getText());
-                if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                    return;
-                }
-                Desktop.getDesktop().open(dir);
-            } catch (IOException ex) {
-
+            File dir = new File(cachePathTextField.getText());
+            if (!dir.exists()) {
+                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
+                return;
             }
+            DesktopUtil.open(dir);
         });
 
         FileChooser fileChooser = new FileChooser();
@@ -938,17 +893,17 @@ public class SettingDialog extends AbstractTitledDialog {
 
         enableKeyCheckBox.setSelected(f.keyEnabled);
         playOrPauseKeys.addAll(f.playOrPauseKeys);
-        playOrPauseTextField.setText(KeyUtil.join(f.playOrPauseKeys));
+        playOrPauseTextField.setText(KeyUtil.toStr(f.playOrPauseKeys));
         playLastKeys.addAll(f.playLastKeys);
-        playLastTextField.setText(KeyUtil.join(f.playLastKeys));
+        playLastTextField.setText(KeyUtil.toStr(f.playLastKeys));
         playNextKeys.addAll(f.playNextKeys);
-        playNextTextField.setText(KeyUtil.join(f.playNextKeys));
+        playNextTextField.setText(KeyUtil.toStr(f.playNextKeys));
         backwardKeys.addAll(f.backwardKeys);
-        backwardTextField.setText(KeyUtil.join(f.backwardKeys));
+        backwardTextField.setText(KeyUtil.toStr(f.backwardKeys));
         forwardKeys.addAll(f.forwardKeys);
-        forwardTextField.setText(KeyUtil.join(f.forwardKeys));
+        forwardTextField.setText(KeyUtil.toStr(f.forwardKeys));
         videoFullScreenKeys.addAll(f.videoFullScreenKeys);
-        videoFullScreenTextField.setText(KeyUtil.join(f.videoFullScreenKeys));
+        videoFullScreenTextField.setText(KeyUtil.toStr(f.videoFullScreenKeys));
     }
 
     // 应用设置
@@ -1048,11 +1003,9 @@ public class SettingDialog extends AbstractTitledDialog {
                 f.netRadioHistorySearchInnerPanel2,
                 f.netMvHistorySearchInnerPanel2,
                 f.netUserHistorySearchInnerPanel2};
-        for (int i = 0, len = ips.length; i < len; i++) {
-            CustomPanel ip = ips[i];
-            for (int j = f.maxSearchHistoryCount, c = ip.getComponentCount(); j < c; j++) {
+        for (CustomPanel ip : ips) {
+            for (int i = f.maxSearchHistoryCount, c = ip.getComponentCount(); i < c; i++)
                 ip.remove(f.maxSearchHistoryCount);
-            }
         }
 
         I18n.currLang = langComboBox.getSelectedIndex();

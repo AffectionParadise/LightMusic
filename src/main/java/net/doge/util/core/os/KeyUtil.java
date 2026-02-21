@@ -238,8 +238,8 @@ public class KeyUtil {
         }
 
         if ((code & 0x01000000) != 0) return String.valueOf((char) (code ^ 0x01000000));
-        String unknown = "Unknown";
-        return unknown + " code: 0x" + Integer.toString(code, 16);
+
+        return "Unknown code: 0x" + Integer.toString(code, 16);
     }
 
     /**
@@ -248,7 +248,7 @@ public class KeyUtil {
      * @param keys
      * @return
      */
-    public static String join(List<Integer> keys) {
+    public static String toStr(List<Integer> keys) {
         StringJoiner sj = new StringJoiner(" + ");
         for (Integer key : keys) sj.add(toStr(key));
         return sj.toString();

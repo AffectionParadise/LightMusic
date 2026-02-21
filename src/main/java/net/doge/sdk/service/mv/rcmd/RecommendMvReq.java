@@ -1,5 +1,6 @@
 package net.doge.sdk.service.mv.rcmd;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -21,7 +22,7 @@ public class RecommendMvReq {
      * 获取推荐 MV
      */
     public CommonResult<NetMvInfo> getRecommendMvs(int src, String tag, int page, int limit) {
-        final String defaultTag = "默认";
+        final String defaultTag = I18n.getText("defaultTag");
         MultiCommonResultCallableExecutor<NetMvInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {

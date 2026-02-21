@@ -172,8 +172,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 }
             }
             confirmed = true;
-            f.currDialogs.remove(this);
-            dispose();
+            close();
         });
         cancelButton.addActionListener(e -> close());
         buttonPanel.add(okButton);

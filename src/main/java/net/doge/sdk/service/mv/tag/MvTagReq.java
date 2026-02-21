@@ -1,5 +1,6 @@
 package net.doge.sdk.service.mv.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.mv.tag.impl.FaMvTagReq;
@@ -25,7 +26,7 @@ public class MvTagReq {
      */
     public void initMvTag() {
         // 网易云 网易云 酷狗 酷狗 QQ QQ QQ 酷我 好看 哔哩哔哩 发姐 李志
-        Tags.mvTags.put("默认", new String[]{"全部", "全部", "0", "", "15", "7", "all", "236682871", "", "", " ", ""});
+        Tags.mvTags.put(I18n.getText("defaultTag"), new String[]{"全部", "全部", "0", "", "15", "7", "all", "236682871", "", "", " ", ""});
 
         Tags.mvTags.put("精选", new String[]{"", "", "", "", "", "", "all", "", "", "", "", ""});
         Tags.mvTags.put("内地", new String[]{"内地", "全部", "", "", "16", "7", "neidi", "", "", "", "", ""});

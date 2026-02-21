@@ -1,5 +1,6 @@
 package net.doge.sdk.service.music.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.music.tag.impl.hotsongtag.KgHotSongTagReq;
@@ -23,7 +24,7 @@ public class HotSongTagReq {
      */
     public void initHotSongTag() {
         // 网易云 酷狗 酷狗 酷狗 酷狗 音乐磁场 咕咕咕音乐
-        Tags.hotSongTags.put("默认", new String[]{"", "1", "", "", "", "index", "index"});
+        Tags.hotSongTags.put(I18n.getText("defaultTag"), new String[]{"", "1", "", "", "", "index", "index"});
 
         // 酷狗
         Tags.hotSongTags.put("精选好歌随心听", new String[]{"", "1", "", "", "", "", ""});

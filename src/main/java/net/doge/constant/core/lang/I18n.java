@@ -403,6 +403,7 @@ public class I18n {
         LANG_MAP.put("general", new String[]{"常规", "General"});
         LANG_MAP.put("lyric", new String[]{"歌词", "Lyric"});
         LANG_MAP.put("program", new String[]{"节目", "Program"});
+        LANG_MAP.put("defaultTag", new String[]{"默认", "Default"});
 
         LANG_MAP.put("hotComment", new String[]{"热门", "Hot"});
         LANG_MAP.put("newComment", new String[]{"最新", "Latest"});

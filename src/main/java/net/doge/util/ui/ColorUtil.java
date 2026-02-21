@@ -2,7 +2,7 @@ package net.doge.util.ui;
 
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
-import net.doge.util.core.log.LogUtil;
+import net.doge.util.core.StringUtil;
 import net.doge.util.ui.quantizer.MMCQ;
 
 import java.awt.*;
@@ -22,10 +22,11 @@ public class ColorUtil {
      * @return
      */
     public static Color hexToColor(String hex) {
+        if (StringUtil.isEmpty(hex)) return null;
         try {
             return cn.hutool.core.img.ColorUtil.hexToColor(hex);
         } catch (Exception e) {
-            LogUtil.error(e);
+            // 文本框传入的 hex 可能不是正确的颜色，忽略
             return null;
         }
     }

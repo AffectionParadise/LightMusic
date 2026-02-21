@@ -84,9 +84,4 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         topPanel.setBorder(new HDEmptyBorder(5, 15, 0, 15));
         globalPanel.add(topPanel, BorderLayout.NORTH);
     }
-
-    protected void close() {
-        f.currDialogs.remove(this);
-        dispose();
-    }
 }

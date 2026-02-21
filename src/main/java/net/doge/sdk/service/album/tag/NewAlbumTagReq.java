@@ -1,5 +1,6 @@
 package net.doge.sdk.service.album.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.album.tag.impl.DbNewAlbumTagReq;
@@ -24,7 +25,7 @@ public class NewAlbumTagReq {
      */
     public void initNewAlbumTag() {
         // 网易云 网易云 网易云 酷狗 酷狗 QQ 豆瓣 堆糖
-        Tags.newAlbumTags.put("默认", new String[]{"ALL", "", "", "chn", "", "1", "", ""});
+        Tags.newAlbumTags.put(I18n.getText("defaultTag"), new String[]{"ALL", "", "", "chn", "", "1", "", ""});
 
         Tags.newAlbumTags.put("华语", new String[]{"ZH", "Z_H", "", "chn", "", "", "", ""});
         Tags.newAlbumTags.put("内地", new String[]{"", "", "", "", "", "1", "", ""});

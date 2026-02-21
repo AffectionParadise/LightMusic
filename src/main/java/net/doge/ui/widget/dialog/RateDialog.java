@@ -48,11 +48,6 @@ public class RateDialog extends AbstractShadowDialog {
         reset = new DialogButton(I18n.getText("reset"), textColor);
     }
 
-    public void close() {
-        f.currDialogs.remove(this);
-        dispose();
-    }
-
     public void showDialog() {
         addWindowFocusListener(new WindowAdapter() {
             @Override

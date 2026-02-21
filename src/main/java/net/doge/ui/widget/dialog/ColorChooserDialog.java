@@ -19,10 +19,9 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.slider.CustomSlider;
 import net.doge.ui.widget.slider.ui.ColorSliderUI;
 import net.doge.ui.widget.textfield.CustomTextField;
-import net.doge.ui.widget.textfield.document.LimitedDocument;
+import net.doge.ui.widget.textfield.filter.LimitedDocumentFilter;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.img.ImageUtil;
-import net.doge.util.core.log.LogUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -326,9 +325,8 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         hexTextField.setCaretColor(textColor);
         hexTextField.setSelectedTextColor(textColor);
         hexTextField.setSelectionColor(darkerTextAlphaColor);
-        LimitedDocument doc = new LimitedDocument(7);
-        doc.addDocumentListener(this);
-        hexTextField.setDocument(doc);
+        hexTextField.setDocumentFilter(new LimitedDocumentFilter(7));
+        hexTextField.addDocumentListener(this);
 
         updateColorModel();
     }
@@ -396,15 +394,12 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         gSlider.setMaximum(max2);
         bSlider.setMaximum(max3);
 
-        LimitedDocument doc = new LimitedDocument(0, max1);
-        doc.addDocumentListener(this);
-        rTextField.setDocument(doc);
-        doc = new LimitedDocument(0, max2);
-        doc.addDocumentListener(this);
-        gTextField.setDocument(doc);
-        doc = new LimitedDocument(0, max3);
-        doc.addDocumentListener(this);
-        bTextField.setDocument(doc);
+        rTextField.setDocumentFilter(new LimitedDocumentFilter(0, max1));
+        rTextField.addDocumentListener(this);
+        gTextField.setDocumentFilter(new LimitedDocumentFilter(0, max2));
+        gTextField.addDocumentListener(this);
+        bTextField.setDocumentFilter(new LimitedDocumentFilter(0, max3));
+        bTextField.addDocumentListener(this);
 
         updateColor(makeColor());
         updating = false;
@@ -423,7 +418,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
             bTextField.setText(String.valueOf(isRGB ? b : isHSV ? (int) v : (int) nl));
             hexTextField.setText(ColorUtil.colorToHex(makeColor()));
         } catch (Exception e) {
-            LogUtil.error(e);
+            // 此处抛出的异常是 Document 中修改 TextField 造成，忽略
         }
     }
 

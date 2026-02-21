@@ -167,7 +167,6 @@ public class UpdateDialog extends AbstractShadowDialog {
 
     private void close(boolean canceled) {
         this.canceled = canceled;
-        f.currDialogs.remove(this);
-        dispose();
+        close();
     }
 }

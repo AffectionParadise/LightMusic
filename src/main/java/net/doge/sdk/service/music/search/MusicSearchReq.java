@@ -1,5 +1,6 @@
 package net.doge.sdk.service.music.search;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -22,7 +23,7 @@ public class MusicSearchReq {
      */
     public CommonResult<NetMusicInfo> searchMusic(int src, int type, String subType, String keyword, int page, int limit) {
         MultiCommonResultCallableExecutor<NetMusicInfo> executor = new MultiCommonResultCallableExecutor<>();
-        boolean dt = "默认".equals(subType);
+        boolean dt = I18n.getText("defaultTag").equals(subType);
         switch (type) {
             // 歌词
             case 1:

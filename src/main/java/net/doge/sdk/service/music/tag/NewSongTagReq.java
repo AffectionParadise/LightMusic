@@ -1,5 +1,6 @@
 package net.doge.sdk.service.music.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.music.tag.impl.newsongtag.FsNewSongTagReq;
@@ -24,7 +25,7 @@ public class NewSongTagReq {
      */
     public void initNewSongTag() {
         // 网易云 网易云 酷狗 酷狗 QQ 音乐磁场 咕咕咕音乐 5sing
-        Tags.newSongTags.put("默认", new String[]{"0", "", "1", "", "5", "", "", " "});
+        Tags.newSongTags.put(I18n.getText("defaultTag"), new String[]{"0", "", "1", "", "5", "", "", " "});
 
         Tags.newSongTags.put("华语", new String[]{"7", "", "1", "", "5", "forum-1", "forum-1", ""});
         Tags.newSongTags.put("内地", new String[]{"", "", "", "", "1", "", "", ""});

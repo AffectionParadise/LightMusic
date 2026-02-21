@@ -18,6 +18,20 @@ import java.net.URISyntaxException;
  */
 public class DesktopUtil {
     /**
+     * 打开文件(夹)
+     *
+     * @param file
+     */
+    public static void open(File file) {
+        try {
+            Desktop desktop = Desktop.getDesktop();
+            desktop.open(file);
+        } catch (IOException e) {
+            LogUtil.error(e);
+        }
+    }
+
+    /**
      * 浏览器打开 url
      *
      * @param url

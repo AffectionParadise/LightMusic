@@ -169,9 +169,4 @@ public class ConfirmDialog extends AbstractShadowDialog {
         f.currDialogs.add(this);
         setVisible(true);
     }
-
-    private void close() {
-        f.currDialogs.remove(this);
-        dispose();
-    }
 }

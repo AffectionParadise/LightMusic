@@ -17,7 +17,7 @@ import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.CatalogListRenderer;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
-import net.doge.util.core.log.LogUtil;
+import net.doge.util.core.os.DesktopUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
@@ -25,7 +25,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -119,17 +118,13 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         dirChooser.setTitle(I18n.getText("chooseTrackFolder"));
         // 打开文件夹事件
         locateButton.addActionListener(e -> {
-            try {
-                File dir = catalogList.getSelectedValue();
-                if (dir == null) return;
-                if (!dir.exists()) {
-                    new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                    return;
-                }
-                Desktop.getDesktop().open(dir);
-            } catch (IOException ex) {
-                LogUtil.error(ex);
+            File dir = catalogList.getSelectedValue();
+            if (dir == null) return;
+            if (!dir.exists()) {
+                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
+                return;
             }
+            DesktopUtil.open(dir);
         });
         // 添加事件
         addButton.addActionListener(e -> {

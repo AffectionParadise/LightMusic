@@ -1,5 +1,6 @@
 package net.doge.sdk.service.radio.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.radio.tag.impl.*;
@@ -22,7 +23,7 @@ public class HotRadioTagReq {
      */
     public void initRadioTag() {
         // 网易云 网易云 喜马拉雅 喜马拉雅 喜马拉雅 猫耳 豆瓣 豆瓣 咪咕
-        Tags.radioTags.put("默认", new String[]{"", "", "", "", "", "0 0 0", "", " ", ""});
+        Tags.radioTags.put(I18n.getText("defaultTag"), new String[]{"", "", "", "", "", "0 0 0", "", " ", ""});
 
         // 喜马拉雅频道
         Tags.radioTags.put("小说", new String[]{"", "", "", "", "7", "", "", "", ""});

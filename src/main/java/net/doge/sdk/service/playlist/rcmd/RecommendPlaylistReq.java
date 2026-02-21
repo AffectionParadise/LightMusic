@@ -1,5 +1,6 @@
 package net.doge.sdk.service.playlist.rcmd;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -21,7 +22,7 @@ public class RecommendPlaylistReq {
      * 获取推荐歌单
      */
     public CommonResult<NetPlaylistInfo> getRecommendPlaylists(int src, String tag, int page, int limit) {
-        final String defaultTag = "默认";
+        final String defaultTag = I18n.getText("defaultTag");
         MultiCommonResultCallableExecutor<NetPlaylistInfo> executor = new MultiCommonResultCallableExecutor<>();
         boolean dt = defaultTag.equals(tag);
         if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {

@@ -95,6 +95,11 @@ public abstract class AbstractShadowDialog extends JDialog {
         repaint();
     }
 
+    protected void close() {
+        if (f != null) f.currDialogs.remove(this);
+        dispose();
+    }
+
     protected class DialogPanel extends JPanel {
         private BufferedImage bgImg;
 

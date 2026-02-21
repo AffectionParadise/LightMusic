@@ -105,12 +105,8 @@ public class TipDialog extends AbstractShadowDialog {
             setOpacity(opacity);
             if (closing && opacity <= 0f || !closing && opacity >= 1f) {
                 showTimer.stop();
-                if (closing) {
-                    f.currDialogs.remove(THIS);
-                    dispose();
-                } else if (ms > 0) {
-                    closeTimer.start();
-                }
+                if (closing) close();
+                else if (ms > 0) closeTimer.start();
             }
         });
         // 停留时间

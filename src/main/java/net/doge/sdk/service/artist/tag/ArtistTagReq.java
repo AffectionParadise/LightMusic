@@ -1,5 +1,6 @@
 package net.doge.sdk.service.artist.tag;
 
+import net.doge.constant.core.lang.I18n;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
 import net.doge.sdk.service.artist.tag.impl.KgArtistTagReq;
@@ -24,7 +25,7 @@ public class ArtistTagReq {
      */
     public void initArtistTag() {
         // 网易云 网易云 网易云 酷狗 酷狗 QQ 酷我 酷我 咪咕 千千 猫耳
-        Tags.artistTags.put("默认", new String[]{"1", "", "", "0 0", "", "-100 -100 -100 -100", "11", "0 ", "huayu-nan", "  ", " "});
+        Tags.artistTags.put(I18n.getText("defaultTag"), new String[]{"1", "", "", "0 0", "", "-100 -100 -100 -100", "11", "0 ", "huayu-nan", "  ", " "});
 
         Tags.artistTags.put("男", new String[]{"", "1 -1 -1", "", "1 0", "", "0 -100 -100 -100", "", "", "", "  男", ""});
         Tags.artistTags.put("女", new String[]{"", "2 -1 -1", "", "2 0", "", "1 -100 -100 -100", "", "", "", "  女", ""});
