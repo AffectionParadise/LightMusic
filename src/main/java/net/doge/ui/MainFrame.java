@@ -843,6 +843,8 @@ public class MainFrame extends JFrame {
     public boolean showSpectrum;
     // 是否自动下载歌词
     public boolean autoDownloadLyric;
+    // 是否带逐字时间轴
+    public boolean verbatimTimeline;
     // 是否显示桌面歌词
     public boolean showDesktopLyric;
     // 是否锁定桌面歌词
@@ -963,7 +965,6 @@ public class MainFrame extends JFrame {
     };
     // 歌词
     private List<Statement> statements;
-    private String lyricStr;
     private int nextLyric = NextLyric.NOT_EXISTS;
 
     public ChangePaneButton changePaneButton = new ChangePaneButton();
@@ -3145,8 +3146,8 @@ public class MainFrame extends JFrame {
                 : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         autoDownloadLyric = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
-//        // 载入是否添加逐字时间轴
-//        LyricType.verbatimTimeline = config.getBooleanValue(ConfigConstants.VERBATIM_TIMELINE, LyricType.verbatimTimeline);
+        // 载入是否使用逐字时间轴
+        verbatimTimeline = config.getBooleanValue(ConfigConstants.VERBATIM_TIMELINE, false);
         // 载入歌词偏移
         lyricOffset = config.getDoubleValue(ConfigConstants.LYRIC_OFFSET);
         currLyricOffsetMenuItem.setText(String.format(LYRIC_OFFSET_MSG, lyricOffset).replace(".0", ""));
@@ -3326,14 +3327,15 @@ public class MainFrame extends JFrame {
                     musicInfo.setArtist(jo.getString(ConfigConstants.NET_MUSIC_ARTIST));
                     task = new Task(downloadList, type, musicInfo);
 
-                    task.setInvokeLater(() -> {
+                    task.setOnFinished(() -> {
                         String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                        String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+                        String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + (verbatimTimeline ? musicInfo.toSimpleLmlFileName() : musicInfo.toSimpleLyricFileName());
                         // 写入歌曲信息
                         MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                         // 自动下载歌词
-                        if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                            FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
+                        String lyricStr = LyricUtil.getAppropriateLyricStr(musicInfo.getLyric(), verbatimTimeline);
+                        if (autoDownloadLyric && StringUtil.notEmpty(lyricStr))
+                            FileUtil.writeStr(lyricStr, destLyricPath);
                     });
                 } else if (type == TaskType.MV) {
                     JSONObject jo = jsonObject.getJSONObject(ConfigConstants.TASK_MV_INFO);
@@ -3968,8 +3970,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.BLUR_TYPE, blurType);
         // 存入是否自动下载歌词
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, autoDownloadLyric);
-//        // 存入是否添加逐字时间轴
-//        config.put(ConfigConstants.VERBATIM_TIMELINE, LyricType.verbatimTimeline);
+        // 存入是否使用逐字时间轴
+        config.put(ConfigConstants.VERBATIM_TIMELINE, verbatimTimeline);
         // 存入歌词偏移
         config.put(ConfigConstants.LYRIC_OFFSET, lyricOffset);
         // 存入频谱透明渐变
@@ -18603,8 +18605,12 @@ public class MainFrame extends JFrame {
                 if (task.isMusic()) {
                     NetMusicInfo musicInfo = (NetMusicInfo) task.getResource();
                     FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
+                    FileUtil.delete(SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLmlFileName());
                 }
-                FileUtil.delete(task.getDest());
+                AudioFile audioFile = new AudioFile(task.getDest());
+                // 卸载正在播放的文件
+                if (player.loadedAudioFile(audioFile)) unload();
+                FileUtil.delete(audioFile);
             }
             downloadList.setModel(downloadListModel);
             new TipDialog(THIS, REMOVE_SUCCESS_MSG).showDialog();
@@ -19106,14 +19112,18 @@ public class MainFrame extends JFrame {
             // 在线音乐先将歌词存为临时文件再查看
             if (player.loadedNetMusic()) {
                 NetMusicInfo musicInfo = player.getMusicInfo();
-                lyricPath = new File(SimplePath.CACHE_PATH + musicInfo.toLyricFileName()).getAbsolutePath();
+                String lyricFileName = verbatimTimeline ? musicInfo.toLmlFileName() : musicInfo.toLyricFileName();
+                lyricPath = new File(SimplePath.CACHE_PATH + lyricFileName).getAbsolutePath();
+                String lyricStr = LyricUtil.getAppropriateLyricStr(musicInfo.getLyric(), verbatimTimeline);
                 FileUtil.writeStr(lyricStr, lyricPath);
             }
-            // 本地音乐直接打开 lrc 文件
+            // 本地音乐直接打开 lml / lrc 文件
             else {
-                File file = player.getAudioFile();
-                String filePath = file.getAbsolutePath();
-                lyricPath = filePath.substring(0, filePath.lastIndexOf('.')) + "." + Format.LRC;
+                AudioFile audioFile = player.getAudioFile();
+                // 优先读取 LML 歌词
+                File lyricFile = audioFile.toLmlFile();
+                if (!lyricFile.exists()) lyricFile = audioFile.toLyricFile();
+                lyricPath = lyricFile.getAbsolutePath();
             }
             DesktopUtil.edit(lyricPath);
         });
@@ -20149,7 +20159,9 @@ public class MainFrame extends JFrame {
 
         // 本地音乐歌词
         if (isFile) {
-            File lyricFile = file.toLyricFile();
+            // 优先读取 LML 歌词
+            File lyricFile = file.toLmlFile();
+            if (!lyricFile.exists()) lyricFile = file.toLyricFile();
             boolean exists = lyricFile.exists();
             String embeddedLyric = null;
             // 从歌词文件读取歌词，若不存在，读取内嵌歌词
@@ -20226,8 +20238,9 @@ public class MainFrame extends JFrame {
                     break;
             }
         }
-        lyricStr = lyricData == null ? "" : lyricData.getLyricStr();
-        if (StringUtil.isEmpty(LyricUtil.cleanLyricStr(lyricStr))) state = NO_LYRIC;
+        String lyricStr = lyricData == null ? "" : lyricData.getLyricStr();
+        String cleaned = LyricUtil.cleanLyricStr(LyricUtil.getAppropriateLyricStr(lyricStr, verbatimTimeline));
+        if (StringUtil.isEmpty(cleaned)) state = NO_LYRIC;
 
         if (state == BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
         else if (state == NO_LYRIC) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
@@ -22158,7 +22171,8 @@ public class MainFrame extends JFrame {
         globalExecutor.execute(() -> {
             try {
                 FileUtil.mkDir(SimplePath.DOWNLOAD_MUSIC_PATH);
-                FileUtil.writeStr(lyricStr, SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName());
+                String lyricStr = LyricUtil.getAppropriateLyricStr(musicInfo.getLyric(), verbatimTimeline);
+                FileUtil.writeStr(lyricStr, SimplePath.DOWNLOAD_MUSIC_PATH + (verbatimTimeline ? musicInfo.toSimpleLmlFileName() : musicInfo.toSimpleLyricFileName()));
                 new TipDialog(THIS, DOWNLOAD_COMPLETED_MSG).showDialog();
             } catch (Exception e) {
                 ExceptionUtil.handleResourceException(e, THIS);
@@ -22170,14 +22184,15 @@ public class MainFrame extends JFrame {
     private void singleDownload(NetMusicInfo musicInfo) {
         // 创建下载任务，并加入队列
         Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
-        task.setInvokeLater(() -> {
+        task.setOnFinished(() -> {
             String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-            String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+            String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + (verbatimTimeline ? musicInfo.toSimpleLmlFileName() : musicInfo.toSimpleLyricFileName());
             // 写入歌曲信息
             MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
             // 自动下载歌词
-            if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
+            String lyricStr = LyricUtil.getAppropriateLyricStr(musicInfo.getLyric(), verbatimTimeline);
+            if (autoDownloadLyric && StringUtil.notEmpty(lyricStr))
+                FileUtil.writeStr(lyricStr, destLyricPath);
         });
         task.start();
         downloadListModel.add(0, task);
@@ -22196,14 +22211,15 @@ public class MainFrame extends JFrame {
 
             // 创建下载任务，并加入队列
             Task task = new Task(downloadList, TaskType.MUSIC, musicInfo);
-            task.setInvokeLater(() -> {
+            task.setOnFinished(() -> {
                 String destMusicPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleFileName();
-                String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + musicInfo.toSimpleLyricFileName();
+                String destLyricPath = SimplePath.DOWNLOAD_MUSIC_PATH + (verbatimTimeline ? musicInfo.toSimpleLmlFileName() : musicInfo.toSimpleLyricFileName());
                 // 写入歌曲信息
                 MediaUtil.writeAudioFileInfo(destMusicPath, musicInfo);
                 // 自动下载歌词
-                if (autoDownloadLyric && StringUtil.notEmpty(musicInfo.getLyricFileText()))
-                    FileUtil.writeStr(musicInfo.getLyricFileText(), destLyricPath);
+                String lyricStr = LyricUtil.getAppropriateLyricStr(musicInfo.getLyric(), verbatimTimeline);
+                if (autoDownloadLyric && StringUtil.notEmpty(lyricStr))
+                    FileUtil.writeStr(lyricStr, destLyricPath);
             });
             tasks.add(task);
             downloadListModel.add(0, task);

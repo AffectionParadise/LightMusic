@@ -54,7 +54,7 @@ public class Task {
     // 任务对应的 Future 对象
     private Future<?> future;
     // 完成后调用
-    private Runnable invokeLater;
+    private Runnable onFinished;
 
     public Task(JList<?> downloadList, int type, Downloadable resource) {
         this.downloadList = downloadList;
@@ -122,7 +122,7 @@ public class Task {
                     }
                 });
                 if (isInterrupted()) return;
-                if (invokeLater != null) invokeLater.run();
+                if (onFinished != null) onFinished.run();
                 setStatus(TaskStatus.FINISHED);
             } catch (Exception e) {
                 setStatus(TaskStatus.FAILED);

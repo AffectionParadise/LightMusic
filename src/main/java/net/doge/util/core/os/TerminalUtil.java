@@ -1,6 +1,7 @@
 package net.doge.util.core.os;
 
 import cn.hutool.core.util.RuntimeUtil;
+import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.util.core.io.IoUtil;
 import net.doge.util.core.log.LogUtil;
 
@@ -29,6 +30,16 @@ public class TerminalUtil {
         } finally {
             p.destroy();
         }
+    }
+
+    /**
+     * 异步执行命令
+     *
+     * @param commands
+     * @return
+     */
+    public static void execAsync(String... commands) {
+        GlobalExecutors.requestExecutor.execute(() -> exec(commands));
     }
 
     /**

@@ -594,7 +594,7 @@ public class I18n {
         LANG_MAP.put("gsFactor", new String[]{"高斯模糊半径（半径越大越模糊）：", "Gaussian blur radius(Bigger radius, blurrier): "});
         LANG_MAP.put("darkerFactor", new String[]{"暗角滤镜因子（因子越小越暗）：", "Darker mode factor(Smaller factor, darker): "});
         LANG_MAP.put("autoDownloadLyric", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});
-//        LANG_MAP.put("verbatimTimeline", new String[]{"歌词文件添加逐字时间轴", "Lyric files add verbatim timelines"});
+        LANG_MAP.put("verbatimTimeline", new String[]{"优先下载带逐字时间轴的歌词文件(LML 格式)", "Download lyrics with verbatim timelines (LML Format) preferentially"});
         LANG_MAP.put("musicDown", new String[]{"歌曲下载路径：", "Track download path: "});
         LANG_MAP.put("mvDown", new String[]{"MV 下载路径：", "MV download path: "});
         LANG_MAP.put("cache", new String[]{"缓存路径：", "Cache path: "});

@@ -23,6 +23,7 @@ public class Format {
 
     // 歌词文件格式
     public static final String LRC = "lrc";
+    public static final String LML = "lml";
 
     // 图片文件格式
     public static final String JPG = "jpg";

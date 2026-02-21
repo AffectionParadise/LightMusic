@@ -41,9 +41,9 @@ public class DesktopUtil {
      */
     public static void explore(File file) {
         String path = file.getAbsolutePath();
-        if (OsUtil.isWindows()) TerminalUtil.exec(String.format("explorer /select, \"%s\"", path));
-        else if (OsUtil.isMac()) TerminalUtil.exec(String.format("open \"%s\"", path));
-        else if (OsUtil.isUnix()) TerminalUtil.exec(String.format("nautilus \"%s\"", path));
+        if (OsUtil.isWindows()) TerminalUtil.execAsync(String.format("explorer /select, \"%s\"", path));
+        else if (OsUtil.isMac()) TerminalUtil.execAsync(String.format("open \"%s\"", path));
+        else if (OsUtil.isUnix()) TerminalUtil.execAsync(String.format("nautilus \"%s\"", path));
     }
 
     /**
@@ -53,9 +53,9 @@ public class DesktopUtil {
      * @return
      */
     public static void edit(String path) {
-        if (OsUtil.isWindows()) TerminalUtil.exec(String.format("notepad \"%s\"", path));
-        else if (OsUtil.isMac()) TerminalUtil.exec(String.format("open -e \"%s\"", path));
-        else if (OsUtil.isUnix()) TerminalUtil.exec(String.format("vim \"%s\"", path));
+        if (OsUtil.isWindows()) TerminalUtil.execAsync(String.format("notepad \"%s\"", path));
+        else if (OsUtil.isMac()) TerminalUtil.execAsync(String.format("open -e \"%s\"", path));
+        else if (OsUtil.isUnix()) TerminalUtil.execAsync(String.format("vim \"%s\"", path));
     }
 
     /**
@@ -65,7 +65,7 @@ public class DesktopUtil {
      * @return
      */
     public static void updater(String keyMD5) {
-        TerminalUtil.exec(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
+        TerminalUtil.execAsync(SoftInfo.UPDATER_FILE_NAME + " " + keyMD5);
     }
 
     /**

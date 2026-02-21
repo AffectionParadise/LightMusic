@@ -1,7 +1,6 @@
 package net.doge.entity.core.lyric;
 
 import lombok.Data;
-import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.io.FileUtil;
@@ -49,7 +48,7 @@ public class LyricData {
 
     // 初始化歌词数据
     private void initData(String lyricStr, boolean badFormat) {
-        this.lyricStr = lyricStr.replaceAll(LyricPattern.PAIR, "");
+        this.lyricStr = lyricStr;
         String[] lyricArray = lyricStr.split("\r?\n");
         // 不支持滚动的歌词，直接读取整行作为歌词
         if (badFormat) {

@@ -1,7 +1,6 @@
 package net.doge.entity.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import net.doge.constant.core.os.Format;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.util.core.StringUtil;
@@ -9,26 +8,17 @@ import net.doge.util.core.io.FileUtil;
 
 import java.io.File;
 
+@Data
 public class AudioFile extends File implements MusicResource {
     // 格式
-    @Getter
-    @Setter
     private String format;
     // 曲名
-    @Getter
-    @Setter
     private String songName;
     // 艺术家
-    @Getter
-    @Setter
     private String artist;
     // 专辑
-    @Getter
-    @Setter
     private String album;
     // 时长
-    @Getter
-    @Setter
     private double duration;
 
     public AudioFile(String path) {
@@ -96,6 +86,18 @@ public class AudioFile extends File implements MusicResource {
     }
 
     public File toLyricFile() {
-        return new File(FileUtil.getPathWithoutSuffix(this) + "." + Format.LRC);
+        return new File(toLyricPath());
+    }
+
+    public String toLyricPath() {
+        return FileUtil.getPathWithoutSuffix(this) + "." + Format.LRC;
+    }
+
+    public File toLmlFile() {
+        return new File(toLmlPath());
+    }
+
+    public String toLmlPath() {
+        return FileUtil.getPathWithoutSuffix(this) + "." + Format.LML;
     }
 }

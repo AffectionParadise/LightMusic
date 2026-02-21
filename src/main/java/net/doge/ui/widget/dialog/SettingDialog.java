@@ -127,8 +127,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
     private CustomPanel autoDownloadLyricPanel = new CustomPanel();
     private CustomCheckBox autoDownloadLyricCheckBox = new CustomCheckBox(I18n.getText("autoDownloadLyric"));
-    //    private CustomPanel verbatimTimelinePanel = new CustomPanel();
-//    private CustomCheckBox verbatimTimelineCheckBox = new CustomCheckBox(I18n.getText("verbatimTimeline"));
+    private CustomPanel verbatimTimelinePanel = new CustomPanel();
+    private CustomCheckBox verbatimTimelineCheckBox = new CustomCheckBox(I18n.getText("verbatimTimeline"));
     private CustomPanel musicDownPanel = new CustomPanel();
     private CustomLabel musicDownLabel = new CustomLabel(I18n.getText("musicDown"));
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
@@ -329,7 +329,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorPanel.setLayout(fl);
         darkerFactorPanel.setLayout(fl);
         autoDownloadLyricPanel.setLayout(fl);
-//        verbatimTimelinePanel.setLayout(fl);
+        verbatimTimelinePanel.setLayout(fl);
         musicDownPanel.setLayout(fl);
         mvDownPanel.setLayout(fl);
         cachePanel.setLayout(fl);
@@ -364,7 +364,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorPanel.setMaximumSize(d);
         darkerFactorPanel.setMaximumSize(d);
         autoDownloadLyricPanel.setMaximumSize(d);
-//        verbatimTimelinePanel.setMaximumSize(d);
+        verbatimTimelinePanel.setMaximumSize(d);
         musicDownPanel.setMaximumSize(d);
         mvDownPanel.setMaximumSize(d);
         cachePanel.setMaximumSize(d);
@@ -401,7 +401,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorLabel.setForeground(textColor);
         darkerFactorLabel.setForeground(textColor);
         autoDownloadLyricCheckBox.setForeground(textColor);
-//        verbatimTimelineCheckBox.setForeground(textColor);
+        verbatimTimelineCheckBox.setForeground(textColor);
         musicDownLabel.setForeground(textColor);
         mvDownLabel.setForeground(textColor);
         cacheLabel.setForeground(textColor);
@@ -722,7 +722,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoOnlyCheckBox.updateIconStyle();
         showTabTextCheckBox.updateIconStyle();
         autoDownloadLyricCheckBox.updateIconStyle();
-//        verbatimTimelineCheckBox.updateIconStyle();
+        verbatimTimelineCheckBox.updateIconStyle();
         enableKeyCheckBox.updateIconStyle();
 
         autoUpdatePanel.add(autoUpdateCheckBox);
@@ -748,7 +748,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
         autoDownloadLyricPanel.add(autoDownloadLyricCheckBox);
 
-//        verbatimTimelinePanel.add(verbatimTimelineCheckBox);
+        verbatimTimelinePanel.add(verbatimTimelineCheckBox);
 
         musicDownPanel.add(musicDownLabel);
         musicDownPanel.add(musicDownPathTextField);
@@ -861,8 +861,8 @@ public class SettingDialog extends AbstractTitledDialog {
 
         downloadAndCacheContentBox.add(autoDownloadLyricPanel);
         downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-//        downloadAndCacheContentBox.add(verbatimTimelinePanel);
-//        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
+        downloadAndCacheContentBox.add(verbatimTimelinePanel);
+        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
         downloadAndCacheContentBox.add(musicDownPanel);
         downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
         downloadAndCacheContentBox.add(mvDownPanel);
@@ -920,7 +920,7 @@ public class SettingDialog extends AbstractTitledDialog {
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
         autoDownloadLyricCheckBox.setSelected(f.autoDownloadLyric);
-//        verbatimTimelineCheckBox.setSelected(LyricType.verbatimTimeline);
+        verbatimTimelineCheckBox.setSelected(f.verbatimTimeline);
         musicDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MUSIC_PATH).getAbsolutePath());
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         cachePathTextField.setText(new File(SimplePath.CACHE_PATH).getAbsolutePath());
@@ -989,7 +989,7 @@ public class SettingDialog extends AbstractTitledDialog {
 
         f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();
 
-//        LyricType.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
+        f.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
 
         SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
         SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;

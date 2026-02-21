@@ -1,7 +1,6 @@
 package net.doge.entity.service;
 
 import lombok.Data;
-import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.os.Format;
 import net.doge.constant.core.os.SimplePath;
@@ -179,11 +178,6 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
         return Format.FLAC.equalsIgnoreCase(format);
     }
 
-    // 歌词文件内容
-    public String getLyricFileText() {
-        return hasLyric() ? lyric.replaceAll(LyricPattern.PAIR, "") : lyric;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o instanceof NetMusicInfo) {
@@ -217,6 +211,14 @@ public class NetMusicInfo implements MusicResource, NetResource, Downloadable {
 
     public String toSimpleLyricFileName() {
         return FileUtil.filterFileName(toSimpleString() + "." + Format.LRC);
+    }
+
+    public String toLmlFileName() {
+        return FileUtil.filterFileName(toSimpleString() + SEPARATOR + id + "." + Format.LML);
+    }
+
+    public String toSimpleLmlFileName() {
+        return FileUtil.filterFileName(toSimpleString() + "." + Format.LML);
     }
 
     public String toString() {
