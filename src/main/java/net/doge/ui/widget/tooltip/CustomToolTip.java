@@ -47,20 +47,16 @@ public class CustomToolTip extends JToolTip {
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
-
         int w = getWidth(), h = getHeight();
-
         g2d.setColor(Colors.LIGHT_GRAY);
         int arc = ScaleUtil.scale(4);
         g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);
-
         // 画边框阴影
         int step = TOP_OPACITY / pixels;
         for (int i = 0; i < pixels; i++) {
             g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
             g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
         }
-
         super.paintComponent(g);
     }
 }

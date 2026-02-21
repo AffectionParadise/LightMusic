@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
@@ -55,18 +54,10 @@ public class RateDialog extends AbstractShadowDialog {
                 close();
             }
         });
-        setResizable(false);
         setLocation(400, 200);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initView();
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
-        setContentPane(globalPanel);
-
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         pack();
 
         // 调整位置使之在按钮上方
@@ -121,5 +112,7 @@ public class RateDialog extends AbstractShadowDialog {
 
         centerPanel.add(slider, BorderLayout.CENTER);
         centerPanel.add(reset, BorderLayout.SOUTH);
+
+        globalPanel.add(centerPanel, BorderLayout.CENTER);
     }
 }

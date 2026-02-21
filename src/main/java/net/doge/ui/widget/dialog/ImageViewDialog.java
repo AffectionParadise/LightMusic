@@ -6,7 +6,6 @@ import javafx.stage.FileChooser;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.sdk.common.entity.CommonResult;
@@ -132,23 +131,16 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         TipDialog dialog = new TipDialog(f, LOADING_IMG_MSG, 0);
         dialog.showDialog();
         // 组装界面
         initView();
-        dialog.close();
+        dialog.transitionClose();
 
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);

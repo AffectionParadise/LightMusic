@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
@@ -170,16 +169,9 @@ public class MiniDialog extends AbstractMiniDialog {
             setLocation(f.miniX, f.miniY);
             popOut();
         }
-        setUndecorated(true);
         setAlwaysOnTop(true);
-        setResizable(false);
-        globalPanel.setLayout(new BorderLayout());
 
         initView();
-
-        // Dialog 背景透明
-        setBackground(Colors.TRANSPARENT);
-        setContentPane(globalPanel);
     }
 
     public void showDialog() {

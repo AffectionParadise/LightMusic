@@ -2,7 +2,6 @@ package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.border.HDEmptyBorder;
@@ -54,35 +53,12 @@ public class CreateLocalPlaylistDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
-        okButton.addActionListener(e -> {
-            result = textField.getText();
-            if (result.trim().isEmpty()) {
-                new TipDialog(f, NAME_NOT_NULL_MSG, true).showDialog();
-                return;
-            }
-            confirmed = true;
-            close();
-        });
-        cancelButton.addActionListener(e -> close());
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);
@@ -118,5 +94,21 @@ public class CreateLocalPlaylistDialog extends AbstractTitledDialog {
         centerPanel.add(CustomBox.createVerticalGlue());
         centerPanel.add(panel);
         centerPanel.add(CustomBox.createVerticalGlue());
+
+        globalPanel.add(centerPanel, BorderLayout.CENTER);
+        okButton.addActionListener(e -> {
+            result = textField.getText();
+            if (result.trim().isEmpty()) {
+                new TipDialog(f, NAME_NOT_NULL_MSG, true).showDialog();
+                return;
+            }
+            confirmed = true;
+            close();
+        });
+        cancelButton.addActionListener(e -> close());
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 }

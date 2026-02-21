@@ -1,5 +1,6 @@
 package net.doge.ui.widget.dialog.base;
 
+import lombok.Setter;
 import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
@@ -21,14 +22,13 @@ import java.awt.image.BufferedImage;
  * @description 抽象阴影对话框
  * @date 2021/1/5
  */
-public abstract class AbstractShadowDialog extends JDialog {
+public abstract class AbstractShadowDialog extends BaseDialog {
     // 最大阴影透明度
     private final int TOP_OPACITY = Math.min(100, ScaleUtil.scale(30));
     // 阴影大小像素
     protected final int pixels = ScaleUtil.scale(10);
 
     protected DialogPanel globalPanel = new DialogPanel();
-
     protected MainFrame f;
 
     public AbstractShadowDialog(Window owner) {
@@ -36,9 +36,14 @@ public abstract class AbstractShadowDialog extends JDialog {
     }
 
     public AbstractShadowDialog(Window owner, boolean modal) {
-        super(owner);
+        super(owner, modal);
         if (owner instanceof MainFrame) this.f = (MainFrame) owner;
-        setModal(modal);
+        init();
+    }
+
+    private void init() {
+        globalPanel.setLayout(new BorderLayout());
+        setContentPane(globalPanel);
     }
 
     public void updateBlur() {
@@ -100,6 +105,7 @@ public abstract class AbstractShadowDialog extends JDialog {
         dispose();
     }
 
+    @Setter
     protected class DialogPanel extends JPanel {
         private BufferedImage bgImg;
 
@@ -116,20 +122,13 @@ public abstract class AbstractShadowDialog extends JDialog {
             setBorder(null);
         }
 
-        public void setBgImg(BufferedImage bgImg) {
-            this.bgImg = bgImg;
-        }
-
         protected void paintComponent(Graphics g) {
             Graphics2D g2d = GraphicsUtil.setup(g);
-
             int w = getWidth(), h = getHeight();
-
             if (bgImg != null) {
 //            GraphicsUtil.srcOver(g2d, 0.8f);
                 g2d.drawImage(bgImg, pixels, pixels, w - 2 * pixels, h - 2 * pixels, this);
             }
-
             // 画边框阴影
             int step = TOP_OPACITY / pixels;
             for (int i = 0; i < pixels; i++) {

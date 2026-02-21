@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Getter;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
@@ -84,12 +83,43 @@ public class ConfirmDialog extends AbstractShadowDialog {
     }
 
     public void showDialog() {
+        initView();
+        pack();
+        boolean wc = false, hc = false;
+        Dimension size = getSize();
+        if (size.width > MAX_WIDTH) {
+            size.width = MAX_WIDTH;
+            wc = true;
+        }
+        if (size.height > MAX_HEIGHT) {
+            size.height = MAX_HEIGHT;
+            hc = true;
+        }
+        int thickness = messageScrollPane.getThickness();
+        if (wc) size.height += thickness;
+        if (hc) size.width += thickness;
+        boolean c = wc || hc;
+        int top = ScaleUtil.scale(30), left = ScaleUtil.scale(c ? 35 : 55), bottom = ScaleUtil.scale(25), right = ScaleUtil.scale(c ? 10 : 55);
+        globalPanel.setBorder(new EmptyBorder(top, left, bottom, right));
+        if (c) {
+            size.width += left + right;
+            size.height += top + bottom;
+            setSize(size);
+        } else {
+            pack();
+        }
+
+        updateBlur();
+        setLocationRelativeTo(null);
+
+        f.currDialogs.add(this);
+        setVisible(true);
+    }
+
+    private void initView() {
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();
 
-        // Dialog 背景透明
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         checkBox.setForeground(textColor);
         checkBox.updateIconStyle();
         checkPanel.add(checkBox);
@@ -120,7 +150,6 @@ public class ConfirmDialog extends AbstractShadowDialog {
         controlPanel.add(checkPanel, BorderLayout.CENTER);
         controlPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        globalPanel.setLayout(new BorderLayout());
         globalPanel.add(messageScrollPane, BorderLayout.CENTER);
         globalPanel.add(controlPanel, BorderLayout.SOUTH);
 
@@ -136,37 +165,5 @@ public class ConfirmDialog extends AbstractShadowDialog {
             response = JOptionPane.CANCEL_OPTION;
             close();
         });
-
-        setContentPane(globalPanel);
-        pack();
-        boolean wc = false, hc = false;
-        Dimension size = getSize();
-        if (size.width > MAX_WIDTH) {
-            size.width = MAX_WIDTH;
-            wc = true;
-        }
-        if (size.height > MAX_HEIGHT) {
-            size.height = MAX_HEIGHT;
-            hc = true;
-        }
-        if (wc) size.height += thickness;
-        if (hc) size.width += thickness;
-        boolean c = wc || hc;
-        int top = ScaleUtil.scale(30), left = ScaleUtil.scale(c ? 35 : 55), bottom = ScaleUtil.scale(25), right = ScaleUtil.scale(c ? 10 : 55);
-        globalPanel.setBorder(new EmptyBorder(top, left, bottom, right));
-        if (c) {
-            size.width += left + right;
-            size.height += top + bottom;
-            setSize(size);
-        } else {
-            pack();
-        }
-
-        updateBlur();
-
-        setLocationRelativeTo(null);
-
-        f.currDialogs.add(this);
-        setVisible(true);
     }
 }

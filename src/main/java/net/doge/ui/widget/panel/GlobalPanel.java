@@ -144,13 +144,10 @@ public class GlobalPanel extends BasePanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         if (bgImg == null) return;
-
 //        int pw = getWidth() - 2 * pixels, ph = getHeight() - 2 * pixels;
         int pw = getWidth(), ph = getHeight();
         Graphics2D g2d = GraphicsUtil.setup(g);
-
         // 律动动画
         if (grooveOn) {
             if (lImgScaled != null) {
@@ -173,7 +170,6 @@ public class GlobalPanel extends BasePanel {
 //            g2d.drawImage(bgImg, pixels, pixels, pw, ph, this);
             g2d.drawImage(bgImg, 0, 0, pw, ph, this);
         }
-
 //        // 画边框阴影
 //        int step = TOP_OPACITY / pixels;
 //        for (int i = 0; i < pixels; i++) {
@@ -181,7 +177,6 @@ public class GlobalPanel extends BasePanel {
 //            int arc = ScaleUtil.scale(10);
 //            g2d.drawRoundRect(i, i, pw - (i * 2 + 1), ph - (i * 2 + 1), arc, arc);
 //        }
-
         GraphicsUtil.srcOver(g2d);
     }
 }

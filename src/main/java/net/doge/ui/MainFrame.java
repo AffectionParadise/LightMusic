@@ -4406,7 +4406,7 @@ public class MainFrame extends JFrame {
             try {
                 if (!mute) td.showDialog();
                 String body = HttpRequest.get(SoftInfo.RELEASE).executeAsStr();
-                if (!mute) td.close();
+                if (!mute) td.transitionClose();
                 Document doc = Jsoup.parse(body);
                 String latest = doc.select("h1.d-inline.mr-3").first().text().split(" ")[1], now = SoftInfo.VERSION;
                 String keyMD5 = doc.select("tbody tr td").last().text();
@@ -4454,7 +4454,7 @@ public class MainFrame extends JFrame {
             } catch (Exception ex) {
                 if (!mute) new TipDialog(THIS, UPDATE_CHECK_FAILED_MSG).showDialog();
             } finally {
-                if (!mute) td.close();
+                if (!mute) td.transitionClose();
             }
         });
     }
@@ -22285,7 +22285,7 @@ public class MainFrame extends JFrame {
                 String url = mvInfo.getUrl();
                 if (StringUtil.isEmpty(url)) throw new InvalidResourceException(" MV 资源获取失败");
                 if (player.isPlaying()) playOrPause();
-                dialog.close();
+                dialog.transitionClose();
                 if (videoOnly) setVisible(false);
                 videoDialog = new VideoDialog(mvInfo, null, THIS);
                 videoDialog.showDialog();
@@ -22294,7 +22294,7 @@ public class MainFrame extends JFrame {
             } catch (Exception e) {
                 ExceptionUtil.handleResourceException(e, THIS);
             } finally {
-                dialog.close();
+                dialog.transitionClose();
                 if (videoOnly) setVisible(true);
             }
         }
@@ -22346,7 +22346,7 @@ public class MainFrame extends JFrame {
                 }
 
                 if (player.isPlaying()) playOrPause();
-                dialog.close();
+                dialog.transitionClose();
                 if (videoOnly) setVisible(false);
                 videoDialog = new VideoDialog(mvInfo, file == null ? null : file.getPath(), THIS);
                 videoDialog.showDialog();
@@ -22355,7 +22355,7 @@ public class MainFrame extends JFrame {
             } catch (Exception e) {
                 ExceptionUtil.handleResourceException(e, THIS);
             } finally {
-                dialog.close();
+                dialog.transitionClose();
                 if (videoOnly) setVisible(true);
             }
         }

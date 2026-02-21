@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
@@ -60,11 +59,18 @@ public class DonateDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        initTitleBar();
+        initView();
+        pack();
+        updateBlur();
+        setLocationRelativeTo(null);
 
-        // Dialog 背景透明
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
+        f.currDialogs.add(this);
+        setVisible(true);
+    }
+
+    private void initView() {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
 
         messageLabel.setForeground(textColor);
         weixinLabel.setForeground(textColor);
@@ -80,7 +86,7 @@ public class DonateDialog extends AbstractTitledDialog {
         alipayLabel.setVerticalTextPosition(SwingConstants.TOP);
         weixinLabel.setHorizontalTextPosition(SwingConstants.CENTER);
         alipayLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-        final int gap = ScaleUtil.scale(15);
+        int gap = ScaleUtil.scale(15);
         weixinLabel.setIconTextGap(gap);
         alipayLabel.setIconTextGap(gap);
         weixinLabel.setIcon(weixinIcon);
@@ -105,21 +111,9 @@ public class DonateDialog extends AbstractTitledDialog {
         buttonPanel.add(yes);
         buttonPanel.setBorder(new HDEmptyBorder(15, 0, 10, 0));
 
-        globalPanel.setLayout(new BorderLayout());
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         yes.addActionListener(e -> close());
-
-        initTitleBar();
-        setContentPane(globalPanel);
-        pack();
-
-        updateBlur();
-
-        setLocationRelativeTo(null);
-
-        f.currDialogs.add(this);
-        setVisible(true);
     }
 }

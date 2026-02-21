@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.tab.PersonalMusicTabIndex;
 import net.doge.entity.core.ui.UIStyle;
@@ -79,10 +78,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         // 组装界面
@@ -90,15 +86,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         // 初始化数据
         initLocalPlaylists();
 
-        bottomPanel.add(addButton);
-        bottomPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);
@@ -231,6 +219,10 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         bottomBox.add(sp);
         bottomBox.add(rightBox);
         centerPanel.add(bottomBox, BorderLayout.CENTER);
+
+        bottomPanel.add(addButton);
+        bottomPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     // 复选

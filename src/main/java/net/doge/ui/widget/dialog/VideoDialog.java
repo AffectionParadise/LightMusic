@@ -12,7 +12,6 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.constant.core.ui.window.WindowSize;
@@ -196,10 +195,7 @@ public class VideoDialog extends AbstractTitledDialog {
             }
         });
 
-        setUndecorated(true);
-        setResizable(false);
         setSize(mediaWidth + 2 * pixels, mediaHeight + 2 * pixels);
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initCloseResponse();
@@ -209,10 +205,6 @@ public class VideoDialog extends AbstractTitledDialog {
         playVideo();
 
         updateBlur();
-
-        // Dialog 背景透明
-        setBackground(Colors.TRANSPARENT);
-        setContentPane(globalPanel);
     }
 
     public void showDialog() {

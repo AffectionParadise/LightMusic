@@ -9,7 +9,6 @@ import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.os.SimplePath;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
@@ -222,35 +221,13 @@ public class SettingDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
         initSettings();
 
-        okButton.addActionListener(e -> {
-            if (!applySettings()) return;
-            close();
-        });
-        applyButton.addActionListener(e -> {
-            applySettings();
-            new TipDialog(f, I18n.getText("applySuccess"), true).showDialog();
-        });
-        cancelButton.addActionListener(e -> close());
-        buttonPanel.add(okButton);
-        buttonPanel.add(applyButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);
@@ -516,7 +493,7 @@ public class SettingDialog extends AbstractTitledDialog {
             @Override
             public void keyReleased(KeyEvent e) {
                 if (currKeys.isEmpty()) return;
-                currKeys.removeLast();
+                currKeys.removeLastOccurrence(e.getKeyCode());
             }
 
             // 检查是否有重复按键
@@ -861,8 +838,22 @@ public class SettingDialog extends AbstractTitledDialog {
 
         centerPanel.setLayout(new BorderLayout());
         centerPanel.add(tabbedPane, BorderLayout.CENTER);
-
         globalPanel.add(centerPanel, BorderLayout.CENTER);
+
+        okButton.addActionListener(e -> {
+            if (!applySettings()) return;
+            close();
+        });
+        applyButton.addActionListener(e -> {
+            if (!applySettings()) return;
+            new TipDialog(f, I18n.getText("applySuccess"), true).showDialog();
+        });
+        cancelButton.addActionListener(e -> close());
+        buttonPanel.add(okButton);
+        buttonPanel.add(applyButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     // 加载设置

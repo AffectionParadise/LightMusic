@@ -1,7 +1,6 @@
 package net.doge.ui.widget.dialog;
 
 import lombok.Setter;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
@@ -20,9 +19,7 @@ import java.awt.*;
  * @date 2021/1/5
  */
 public class TipDialog extends AbstractShadowDialog {
-    private TipDialog THIS = this;
-    private Font font = Fonts.NORMAL_MEDIUM;
-    private Color themeColor;
+    private final Font font = Fonts.NORMAL_MEDIUM;
     @Setter
     private int ms;
     private boolean closing;
@@ -30,7 +27,7 @@ public class TipDialog extends AbstractShadowDialog {
     private String message = "";
     private CustomLabel messageLabel = new CustomLabel(message);
 
-    private Timer showTimer;
+    private Timer opacityTimer;
     private Timer closeTimer;
 
     public TipDialog(MainFrame f, int ms) {
@@ -80,38 +77,30 @@ public class TipDialog extends AbstractShadowDialog {
     }
 
     private void initView() {
-        // 设置主题色
-        themeColor = UIStyleStorage.currUIStyle.getTextColor();
-        setUndecorated(true);
-        // Dialog 背景透明
-        setBackground(Colors.TRANSPARENT);
-
-        messageLabel.setForeground(themeColor);
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        messageLabel.setForeground(textColor);
         messageLabel.setFont(font);
-        globalPanel.setLayout(new BorderLayout());
         globalPanel.add(messageLabel, BorderLayout.CENTER);
-
-        setContentPane(globalPanel);
 
         initTimer();
     }
 
     private void initTimer() {
-        showTimer = new Timer(2, e -> {
+        opacityTimer = new Timer(2, e -> {
             // 渐隐效果
             float opacity = getOpacity();
             if (closing) opacity = Math.max(0f, opacity - 0.02f);
             else opacity = Math.min(1f, opacity + 0.02f);
             setOpacity(opacity);
             if (closing && opacity <= 0f || !closing && opacity >= 1f) {
-                showTimer.stop();
+                opacityTimer.stop();
                 if (closing) close();
                 else if (ms > 0) closeTimer.start();
             }
         });
         // 停留时间
         closeTimer = new Timer(ms, ev -> {
-            close();
+            transitionClose();
             closeTimer.stop();
         });
     }
@@ -126,11 +115,11 @@ public class TipDialog extends AbstractShadowDialog {
         setOpacity(0);
         setVisible(true);
         closing = false;
-        showTimer.start();
+        opacityTimer.start();
     }
 
-    public void close() {
+    public void transitionClose() {
         closing = true;
-        showTimer.start();
+        opacityTimer.start();
     }
 }

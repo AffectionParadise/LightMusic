@@ -3,7 +3,6 @@ package net.doge.ui.widget.dialog;
 import javafx.application.Platform;
 import javafx.stage.DirectoryChooser;
 import net.doge.constant.core.lang.I18n;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.ui.MainFrame;
@@ -70,10 +69,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         // 组装界面
@@ -81,11 +77,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 初始化数据
         initCatalogs();
 
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);

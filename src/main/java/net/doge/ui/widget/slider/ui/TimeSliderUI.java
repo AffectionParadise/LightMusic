@@ -158,8 +158,9 @@ public class TimeSliderUI extends BasicSliderUI {
                     drawThumb = false;
                     slider.repaint();
                 }
-                if (dialog.isShowing()) dialog.close();
-                if (lyricDialog != null && lyricDialog.notEmpty() && lyricDialog.isShowing()) lyricDialog.close();
+                if (dialog.isShowing()) dialog.transitionClose();
+                if (lyricDialog != null && lyricDialog.notEmpty() && lyricDialog.isShowing())
+                    lyricDialog.transitionClose();
             }
 
             @Override

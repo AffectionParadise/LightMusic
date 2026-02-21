@@ -95,7 +95,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     private DialogButton cancelButton;
 
     // 面板展示的样式
-    private UIStyle showedStyle;
+    private UIStyle shownStyle;
 
     @Getter
     private boolean confirmed = false;
@@ -103,9 +103,9 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     private Object[] results = new Object[components.length];
 
     // 父窗口，传入 OK 按钮文字，要展示的样式(添加则用当前样式，编辑则用选中样式)
-    public CustomStyleDialog(MainFrame f, String okButtonText, UIStyle showedStyle) {
+    public CustomStyleDialog(MainFrame f, String okButtonText, UIStyle shownStyle) {
         super(f, I18n.getText("customStyleTitle"));
-        this.showedStyle = showedStyle;
+        this.shownStyle = shownStyle;
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         okButton = new DialogButton(okButtonText, textColor);
@@ -114,77 +114,12 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
 
-        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
-        okButton.addActionListener(e -> {
-            // 主题名称不为空
-            if ("".equals(results[0])) {
-                new TipDialog(f, STYLE_NAME_NOT_NULL_MSG, true).showDialog();
-                return;
-            }
-            // 主题名称不重复
-            List<UIStyle> styles = UIStyleStorage.styles;
-            boolean isAdd = okButton.getPlainText().contains(I18n.getText("addStyle"));
-            for (UIStyle style : styles) {
-                // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
-                if (style.getName().equals(results[0])
-                        && (style != showedStyle || isAdd)) {
-                    new TipDialog(f, STYLE_NAME_DUPLICATE_MSG, true).showDialog();
-                    return;
-                }
-            }
-            // 文件夹不存在就创建
-            File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
-            FileUtil.mkDir(dir);
-            // 图片路径
-            if (results[1] instanceof String) {
-                String str = (String) results[1];
-                // 图片 key
-                if (LMStyleManager.contains(str)) {
-                    BufferedImage img = LMStyleManager.getImage(str);
-                    String dest = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + Format.JPG;
-                    ImageUtil.toFile(img, dest);
-                    // 设置路径
-                    results[1] = dest;
-                }
-                // 图片路径
-                else {
-                    File imgFile = new File(str);
-                    if (imgFile.exists()) {
-                        String newPath = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + FileUtil.getSuffix(imgFile);
-                        FileUtil.copy(imgFile.getPath(), newPath);
-                        // 设置新的路径
-                        results[1] = newPath;
-                        // 更新时删除原来的图片
-                        String ik = showedStyle.getImgKey();
-                        FileUtil.delete(ik);
-                    } else {
-                        new TipDialog(f, IMG_FILE_NOT_EXIST_MSG, true).showDialog();
-                        return;
-                    }
-                }
-            }
-            confirmed = true;
-            close();
-        });
-        cancelButton.addActionListener(e -> close());
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);
@@ -195,19 +130,19 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         centerPanel.setLayout(new GridLayout(6, 2));
 
         // 获得传入的界面样式
-        results[0] = showedStyle.getName();
-        String imgKey = showedStyle.getImgKey();
-        results[1] = StringUtil.isEmpty(imgKey) ? showedStyle.getBgColor() : imgKey;
-        results[2] = showedStyle.getForeColor();
-        results[3] = showedStyle.getSelectedColor();
-        results[4] = showedStyle.getLyricColor();
-        results[5] = showedStyle.getHighlightColor();
-        results[6] = showedStyle.getTextColor();
-        results[7] = showedStyle.getTimeBarColor();
-        results[8] = showedStyle.getIconColor();
-        results[9] = showedStyle.getScrollBarColor();
-        results[10] = showedStyle.getSliderColor();
-        results[11] = showedStyle.getSpectrumColor();
+        results[0] = shownStyle.getName();
+        String imgKey = shownStyle.getImgKey();
+        results[1] = StringUtil.isEmpty(imgKey) ? shownStyle.getBgColor() : imgKey;
+        results[2] = shownStyle.getForeColor();
+        results[3] = shownStyle.getSelectedColor();
+        results[4] = shownStyle.getLyricColor();
+        results[5] = shownStyle.getHighlightColor();
+        results[6] = shownStyle.getTextColor();
+        results[7] = shownStyle.getTimeBarColor();
+        results[8] = shownStyle.getIconColor();
+        results[9] = shownStyle.getScrollBarColor();
+        results[10] = shownStyle.getSliderColor();
+        results[11] = shownStyle.getSpectrumColor();
 
         Border eb = new HDEmptyBorder(0, 20, 0, 20);
 
@@ -239,7 +174,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 if (results[i] != null) {
                     if (results[i] instanceof String) {
                         String ik = (String) results[i];
-                        BufferedImage img = showedStyle.isPreDefined() ? LMStyleManager.getImage(ik) : ImageUtil.read(ik);
+                        BufferedImage img = shownStyle.isPreDefined() ? LMStyleManager.getImage(ik) : ImageUtil.read(ik);
                         if (img != null) {
                             if (img.getWidth() >= img.getHeight())
                                 labels[i].setIcon(new ImageIcon(ImageUtil.width(img, imgWidth)));
@@ -326,6 +261,63 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         ((CustomPanel) ((CustomPanel) centerPanel.getComponent(1)).getComponent(1)).add(pureColor);
 
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
+        okButton.addActionListener(e -> {
+            // 主题名称不为空
+            if ("".equals(results[0])) {
+                new TipDialog(f, STYLE_NAME_NOT_NULL_MSG, true).showDialog();
+                return;
+            }
+            // 主题名称不重复
+            List<UIStyle> styles = UIStyleStorage.styles;
+            boolean isAdd = okButton.getPlainText().contains(I18n.getText("addStyle"));
+            for (UIStyle style : styles) {
+                // 添加时，名称一定不相等；编辑时，只允许同一样式名称相等
+                if (style.getName().equals(results[0])
+                        && (style != shownStyle || isAdd)) {
+                    new TipDialog(f, STYLE_NAME_DUPLICATE_MSG, true).showDialog();
+                    return;
+                }
+            }
+            // 文件夹不存在就创建
+            File dir = new File(SimplePath.CUSTOM_STYLE_PATH);
+            FileUtil.mkDir(dir);
+            // 图片路径
+            if (results[1] instanceof String) {
+                String str = (String) results[1];
+                // 图片 key
+                if (LMStyleManager.contains(str)) {
+                    BufferedImage img = LMStyleManager.getImage(str);
+                    String dest = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + Format.JPG;
+                    ImageUtil.toFile(img, dest);
+                    // 设置路径
+                    results[1] = dest;
+                }
+                // 图片路径
+                else {
+                    File imgFile = new File(str);
+                    if (imgFile.exists()) {
+                        String newPath = SimplePath.CUSTOM_STYLE_PATH + System.currentTimeMillis() + "." + FileUtil.getSuffix(imgFile);
+                        FileUtil.copy(imgFile.getPath(), newPath);
+                        // 设置新的路径
+                        results[1] = newPath;
+                        // 更新时删除原来的图片
+                        String ik = shownStyle.getImgKey();
+                        FileUtil.delete(ik);
+                    } else {
+                        new TipDialog(f, IMG_FILE_NOT_EXIST_MSG, true).showDialog();
+                        return;
+                    }
+                }
+            }
+            confirmed = true;
+            close();
+        });
+        cancelButton.addActionListener(e -> close());
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     @Override

@@ -2,7 +2,6 @@ package net.doge.ui.widget.dialog;
 
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.meta.SoftInfo;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
@@ -52,11 +51,19 @@ public class AboutDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        initView();
+        initTitleBar();
 
-        // Dialog 背景透明
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
+        pack();
+        updateBlur();
+        setLocationRelativeTo(null);
+
+        f.currDialogs.add(this);
+        setVisible(true);
+    }
+
+    private void initView() {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
 
         appLabel.setText(f.TITLE);
         appLabel.setIcon(ImageUtil.dye(appIcon, textColor));
@@ -106,21 +113,9 @@ public class AboutDialog extends AbstractTitledDialog {
         buttonPanel.add(yes);
         buttonPanel.setBorder(new HDEmptyBorder(15, 0, 10, 0));
 
-        globalPanel.setLayout(new BorderLayout());
         globalPanel.add(centerPanel, BorderLayout.CENTER);
         globalPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         yes.addActionListener(e -> close());
-
-        initTitleBar();
-        setContentPane(globalPanel);
-        pack();
-
-        updateBlur();
-
-        setLocationRelativeTo(null);
-
-        f.currDialogs.add(this);
-        setVisible(true);
     }
 }

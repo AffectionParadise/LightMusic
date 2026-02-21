@@ -133,19 +133,11 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
-        setContentPane(globalPanel);
-
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
         updateBlur();
 
@@ -307,18 +299,21 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         rTextField.setCaretColor(textColor);
         rTextField.setSelectedTextColor(textColor);
         rTextField.setSelectionColor(darkerTextAlphaColor);
+        rTextField.addDocumentListener(this);
 
         gLabel.setForeground(textColor);
         gTextField.setForeground(textColor);
         gTextField.setCaretColor(textColor);
         gTextField.setSelectedTextColor(textColor);
         gTextField.setSelectionColor(darkerTextAlphaColor);
+        gTextField.addDocumentListener(this);
 
         bLabel.setForeground(textColor);
         bTextField.setForeground(textColor);
         bTextField.setCaretColor(textColor);
         bTextField.setSelectedTextColor(textColor);
         bTextField.setSelectionColor(darkerTextAlphaColor);
+        bTextField.addDocumentListener(this);
 
         hexLabel.setForeground(textColor);
         hexTextField.setForeground(textColor);
@@ -395,11 +390,8 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         bSlider.setMaximum(max3);
 
         rTextField.setDocumentFilter(new LimitedDocumentFilter(0, max1));
-        rTextField.addDocumentListener(this);
         gTextField.setDocumentFilter(new LimitedDocumentFilter(0, max2));
-        gTextField.addDocumentListener(this);
         bTextField.setDocumentFilter(new LimitedDocumentFilter(0, max3));
-        bTextField.addDocumentListener(this);
 
         updateColor(makeColor());
         updating = false;

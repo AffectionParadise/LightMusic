@@ -5,7 +5,6 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.meta.SoftInfo;
 import net.doge.constant.core.os.SimplePath;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.core.Fonts;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
@@ -66,18 +65,9 @@ public class UpdateDialog extends AbstractShadowDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
-
-        globalPanel.setLayout(new BorderLayout());
-
         initView();
         GlobalExecutors.requestExecutor.execute(() -> prepareUpdate());
 
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
-        setContentPane(globalPanel);
-
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         pack();
         setLocationRelativeTo(null);
 
@@ -122,6 +112,8 @@ public class UpdateDialog extends AbstractShadowDialog {
 
         centerPanel.add(progressPanel, BorderLayout.CENTER);
         centerPanel.setBorder(new HDEmptyBorder(10, 20, 10, 20));
+
+        globalPanel.add(centerPanel, BorderLayout.CENTER);
     }
 
     // 准备更新包

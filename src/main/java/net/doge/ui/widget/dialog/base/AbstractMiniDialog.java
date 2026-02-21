@@ -10,6 +10,7 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,17 +20,17 @@ import java.util.concurrent.Executors;
  * @description 抽象迷你对话框
  * @date 2021/1/5
  */
-public abstract class AbstractMiniDialog extends JDialog {
+public abstract class AbstractMiniDialog extends BaseDialog {
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
     private Timer globalPanelTimer;
 
     protected GlobalPanel globalPanel = new GlobalPanel();
-
     protected MainFrame f;
 
     public AbstractMiniDialog(MainFrame f) {
-        super(f);
+        super(f, false);
         this.f = f;
+        init();
 
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
@@ -37,6 +38,11 @@ public abstract class AbstractMiniDialog extends JDialog {
                 if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
             });
         });
+    }
+
+    private void init() {
+        globalPanel.setLayout(new BorderLayout());
+        setContentPane(globalPanel);
     }
 
     public void updateBlur() {

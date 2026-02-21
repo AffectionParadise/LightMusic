@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.core.ui.core.Colors;
 import net.doge.constant.core.ui.style.UIStyleStorage;
 import net.doge.entity.core.ui.UIStyle;
 import net.doge.entity.service.AudioFile;
@@ -139,67 +138,12 @@ public class EditInfoDialog extends AbstractTitledDialog {
     }
 
     public void showDialog() {
-        setResizable(false);
         setSize(WIDTH, HEIGHT);
-
-        globalPanel.setLayout(new BorderLayout());
 
         initTitleBar();
         initView();
 
-        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
-        okButton.addActionListener(e -> {
-            if (f.player.loadedAudioFile(file)) {
-                new TipDialog(f, FILE_USED_MSG, true).showDialog();
-                return;
-            } else {
-                for (int i = 0, size = labels.length; i < size; i++) {
-                    if (components[i] instanceof CustomTextField) {
-                        results[i] = ((CustomTextField) components[i]).getText();
-                    } else if (components[i] instanceof CustomScrollPane) {
-                        CustomScrollPane sp = (CustomScrollPane) components[i];
-                        CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
-                        results[i] = textArea.getText();
-                    }
-                }
-                MediaInfo mediaInfo = new MediaInfo();
-                mediaInfo.setTitle((String) results[7]);
-                mediaInfo.setArtist((String) results[8]);
-                mediaInfo.setAlbum((String) results[9]);
-                mediaInfo.setAlbumImage((BufferedImage) results[10]);
-                mediaInfo.setGenre((String) results[11]);
-                mediaInfo.setLyrics((String) results[12]);
-                mediaInfo.setLyricist((String) results[13]);
-                mediaInfo.setYear((String) results[14]);
-                mediaInfo.setRating((String) results[15]);
-                mediaInfo.setBpm((String) results[16]);
-                mediaInfo.setKey((String) results[17]);
-                mediaInfo.setComment((String) results[18]);
-                mediaInfo.setRecordLabel((String) results[19]);
-                mediaInfo.setMood((String) results[20]);
-                mediaInfo.setOccasion((String) results[21]);
-                mediaInfo.setLanguage((String) results[22]);
-                mediaInfo.setCountry((String) results[23]);
-                mediaInfo.setVersion((String) results[24]);
-                mediaInfo.setCopyright((String) results[25]);
-                mediaInfo.setFormat(file.getFormat());
-                MediaUtil.writeAudioFileInfo(file, mediaInfo);
-                // 歌曲信息更改后重新填充
-                MediaUtil.fillAudioFileInfo(file);
-            }
-            close();
-        });
-        cancelButton.addActionListener(e -> close());
-        buttonPanel.add(okButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        setContentPane(globalPanel);
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         setLocationRelativeTo(null);
-
         updateBlur();
 
         f.currDialogs.add(this);
@@ -371,5 +315,53 @@ public class EditInfoDialog extends AbstractTitledDialog {
             centerPanel.add(outer);
         }
         centerScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(centerScrollPane, BorderLayout.CENTER);
+
+        okButton.addActionListener(e -> {
+            if (f.player.loadedAudioFile(file)) {
+                new TipDialog(f, FILE_USED_MSG, true).showDialog();
+                return;
+            } else {
+                for (int i = 0, size = labels.length; i < size; i++) {
+                    if (components[i] instanceof CustomTextField) {
+                        results[i] = ((CustomTextField) components[i]).getText();
+                    } else if (components[i] instanceof CustomScrollPane) {
+                        CustomScrollPane sp = (CustomScrollPane) components[i];
+                        CustomTextArea textArea = (CustomTextArea) sp.getViewportView();
+                        results[i] = textArea.getText();
+                    }
+                }
+                MediaInfo mediaInfo = new MediaInfo();
+                mediaInfo.setTitle((String) results[7]);
+                mediaInfo.setArtist((String) results[8]);
+                mediaInfo.setAlbum((String) results[9]);
+                mediaInfo.setAlbumImage((BufferedImage) results[10]);
+                mediaInfo.setGenre((String) results[11]);
+                mediaInfo.setLyrics((String) results[12]);
+                mediaInfo.setLyricist((String) results[13]);
+                mediaInfo.setYear((String) results[14]);
+                mediaInfo.setRating((String) results[15]);
+                mediaInfo.setBpm((String) results[16]);
+                mediaInfo.setKey((String) results[17]);
+                mediaInfo.setComment((String) results[18]);
+                mediaInfo.setRecordLabel((String) results[19]);
+                mediaInfo.setMood((String) results[20]);
+                mediaInfo.setOccasion((String) results[21]);
+                mediaInfo.setLanguage((String) results[22]);
+                mediaInfo.setCountry((String) results[23]);
+                mediaInfo.setVersion((String) results[24]);
+                mediaInfo.setCopyright((String) results[25]);
+                mediaInfo.setFormat(file.getFormat());
+                MediaUtil.writeAudioFileInfo(file, mediaInfo);
+                // 歌曲信息更改后重新填充
+                MediaUtil.fillAudioFileInfo(file);
+            }
+            close();
+        });
+        cancelButton.addActionListener(e -> close());
+        buttonPanel.add(okButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 }

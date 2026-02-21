@@ -11,6 +11,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.core.layout.HDFlowLayout;
 import net.doge.ui.widget.border.HDEmptyBorder;
 import net.doge.ui.widget.button.CustomButton;
+import net.doge.ui.widget.dialog.base.BaseDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -28,7 +29,7 @@ import java.awt.event.*;
  * @description 桌面歌词对话框
  * @date 2021/1/5
  */
-public class DesktopLyricDialog extends JDialog {
+public class DesktopLyricDialog extends BaseDialog {
     private int width;
     private Font font = Fonts.NORMAL_HUGE;
     private final int MIN_FONT_SIZE = Fonts.HUGE_SIZE - ScaleUtil.scale(20);
@@ -141,6 +142,7 @@ public class DesktopLyricDialog extends JDialog {
     }
 
     public DesktopLyricDialog(MainFrame f) {
+        super(f);
         this.f = f;
 
         UIStyle style = UIStyleStorage.currUIStyle;
@@ -153,9 +155,6 @@ public class DesktopLyricDialog extends JDialog {
 
         // 设置主题色
         bgColor = style.getLyricColor();
-        // Dialog 背景透明
-        setUndecorated(true);
-        setBackground(Colors.TRANSPARENT);
         tempLabel.setForeground(bgColor);
         tempLabel.setFont(font);
         updateLyric(new Statement(" "), 0);
