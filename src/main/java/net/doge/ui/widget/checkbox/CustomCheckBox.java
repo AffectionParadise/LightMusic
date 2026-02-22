@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class CustomCheckBox extends JCheckBox {
     // 复选框图标
-    public static ImageIcon uncheckedIcon = LMIconManager.getIcon("dialog.unchecked");
-    public static ImageIcon checkedIcon = LMIconManager.getIcon("dialog.checked");
+    private static ImageIcon uncheckedIcon = LMIconManager.getIcon("dialog.unchecked");
+    private static ImageIcon checkedIcon = LMIconManager.getIcon("dialog.checked");
 
     public CustomCheckBox() {
         this(null);

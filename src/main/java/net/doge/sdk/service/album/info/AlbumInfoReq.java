@@ -112,17 +112,4 @@ public class AlbumInfoReq {
                 return CommonResult.create();
         }
     }
-
-    /**
-     * 获取专辑照片链接
-     */
-    public CommonResult<String> getAlbumImgUrls(NetAlbumInfo albumInfo, int page, int limit, String cursor) {
-        int source = albumInfo.getSource();
-        switch (source) {
-            case NetResourceSource.DB:
-                return DbAlbumInfoReq.getInstance().getAlbumImgUrls(albumInfo, page, limit, cursor);
-            default:
-                return CommonResult.create();
-        }
-    }
 }

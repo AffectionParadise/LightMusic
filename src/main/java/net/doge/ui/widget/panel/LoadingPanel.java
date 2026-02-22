@@ -112,6 +112,5 @@ public class LoadingPanel extends BasePanel {
         g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
         GraphicsUtil.srcOver(g2d, bgAlpha);
         g2d.fillRect(0, 0, pw, ph);
-        super.paintComponent(g);
     }
 }

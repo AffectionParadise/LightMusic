@@ -32,10 +32,6 @@ public class QqArtistMenuReq {
 //    private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
     // 相似歌手 API (QQ)
     private final String SIMILAR_ARTIST_QQ_API = "http://c.y.qq.com/v8/fcg-bin/fcg_v8_simsinger.fcg?singer_mid=%s&num=10&utf8=1";
-    // 歌手图片 API (QQ)
-    private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
-    // 歌曲封面信息 API (QQ)
-    private final String SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
@@ -63,7 +59,7 @@ public class QqArtistMenuReq {
             String artistId = SdkUtil.parseArtistId(albumJson);
             String publishTime = albumJson.getString("pub_time");
             Integer songNum = albumJson.getJSONObject("latest_song").getIntValue("song_count");
-            String coverImgThumbUrl = String.format(SONG_IMG_QQ_API, albumId);
+            String coverImgThumbUrl = String.format(SdkCommon.SONG_IMG_QQ_API, albumId);
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
             albumInfo.setSource(NetResourceSource.QQ);
@@ -186,7 +182,7 @@ public class QqArtistMenuReq {
 
                 String artistId = artistJson.getString("mid");
                 String artistName = artistJson.getString("name");
-                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
+                String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, artistId);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetResourceSource.QQ);

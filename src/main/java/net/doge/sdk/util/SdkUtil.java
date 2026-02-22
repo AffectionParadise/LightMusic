@@ -104,7 +104,7 @@ public class SdkUtil {
      * 根据链接获取图片
      */
     public static BufferedImage getImageFromUrl(String url) {
-        BufferedImage img = ImageUtil.readByUrl(url);
+        BufferedImage img = ImageUtil.readFromUrl(url);
         return img == null ? ImageConstants.DEFAULT_IMG : img;
     }
 

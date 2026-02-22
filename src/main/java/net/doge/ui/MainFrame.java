@@ -19448,8 +19448,8 @@ public class MainFrame extends JFrame {
         });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
-                float opacity = Math.min(1, globalPanel.getOpacity() + 0.05f);
-                globalPanel.setOpacity(opacity);
+                float opacity = Math.min(1, globalPanel.getImgOpacity() + 0.05f);
+                globalPanel.setImgOpacity(opacity);
                 if (opacity >= 1f) globalPanelTimer.stop();
             });
         });

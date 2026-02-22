@@ -273,7 +273,7 @@ public class MusicServerUtil {
      * 获取专辑照片链接
      */
     public static CommonResult<String> getAlbumImgUrls(NetAlbumInfo albumInfo, int page, int limit, String cursor) {
-        return AlbumInfoReq.getInstance().getAlbumImgUrls(albumInfo, page, limit, cursor);
+        return AlbumMenuReq.getInstance().getAlbumImgUrls(albumInfo, page, limit, cursor);
     }
 
     /**

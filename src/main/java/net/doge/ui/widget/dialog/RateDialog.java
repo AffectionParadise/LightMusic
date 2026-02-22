@@ -60,10 +60,9 @@ public class RateDialog extends AbstractShadowDialog {
 
         pack();
 
-        // 调整位置使之在按钮上方
-        Point p = comp.getLocation();
+        // 调整位置使之在按钮上方(注意该位置相对于屏幕)
+        Point p = comp.getLocationOnScreen();
         Dimension s = getSize();
-        SwingUtilities.convertPointToScreen(p, comp.getParent());
         setLocation(p.x - s.width / 2 + comp.getWidth() / 2, p.y - s.height - 5);
 
         updateBlur();

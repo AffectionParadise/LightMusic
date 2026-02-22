@@ -61,7 +61,6 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
     @Override
     protected void paintComponent(Graphics g) {
         if (drawSpectrum) paintSpectrum(g);
-        super.paintComponent(g);
     }
 
     private void paintSpectrum(Graphics g) {

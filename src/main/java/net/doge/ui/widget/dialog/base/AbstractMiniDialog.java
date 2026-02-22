@@ -34,8 +34,8 @@ public abstract class AbstractMiniDialog extends BaseDialog {
 
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
-                globalPanel.setOpacity((float) Math.min(1, globalPanel.getOpacity() + 0.05));
-                if (globalPanel.getOpacity() >= 1) globalPanelTimer.stop();
+                globalPanel.setImgOpacity((float) Math.min(1, globalPanel.getImgOpacity() + 0.05));
+                if (globalPanel.getImgOpacity() >= 1) globalPanelTimer.stop();
             });
         });
     }

@@ -27,7 +27,7 @@ public class GlobalPanel extends BasePanel {
     // 放大后的背景图，用于旋转
     private BufferedImage lImgScaled;
     private BufferedImage bgImgScaled;
-    private float opacity;
+    private float imgOpacity;
     // 旋转律动
     private boolean grooveOn;
     private double angle;
@@ -54,11 +54,11 @@ public class GlobalPanel extends BasePanel {
             this.bgImgScaled = ImageUtil.scale(bgImg, (float) (Math.sqrt(w * w + h * h) / Math.min(w, h)));
             if (onImgScaledReady != null) onImgScaledReady.run();
         });
-        this.opacity = 0;
+        this.imgOpacity = 0;
     }
 
-    public void setOpacity(float opacity) {
-        this.opacity = opacity;
+    public void setImgOpacity(float imgOpacity) {
+        this.imgOpacity = imgOpacity;
         repaint();
     }
 
@@ -136,14 +136,13 @@ public class GlobalPanel extends BasePanel {
         // 旋转
         g2d.rotate(Math.toRadians(angle), cx, cy);
         // 绘制图像（坐标需调整为以中心点为基准）
-        g2d.drawImage(img, cx - img.getWidth() / 2, cy - img.getHeight() / 2, this);
+        g2d.drawImage(img, cx - img.getWidth() / 2, cy - img.getHeight() / 2, null);
         // 恢复原始变换（重要！）
         g2d.setTransform(originalTransform);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
         if (bgImg == null) return;
 //        int pw = getWidth() - 2 * pixels, ph = getHeight() - 2 * pixels;
         int pw = getWidth(), ph = getHeight();
@@ -152,31 +151,30 @@ public class GlobalPanel extends BasePanel {
         if (grooveOn) {
             if (lImgScaled != null) {
                 // opacity < 1 时绘制底图，避免不必要的操作占用 CPU！
-                if (opacity < 1) {
+                if (imgOpacity < 1) {
                     paintRotatedImg(g2d, lImgScaled);
-                    GraphicsUtil.srcOver(g2d, opacity);
+                    GraphicsUtil.srcOver(g2d, imgOpacity);
                 } else lImgScaled = null;
             }
             paintRotatedImg(g2d, bgImgScaled);
         } else {
             if (lImg != null) {
-                if (opacity < 1) {
+                if (imgOpacity < 1) {
                     // 宽高设置为组件的宽高，observer 设置成组件就可以自适应
-//                    g2d.drawImage(lImg, pixels, pixels, pw, ph, this);
-                    g2d.drawImage(lImg, 0, 0, pw, ph, this);
-                    GraphicsUtil.srcOver(g2d, opacity);
+//                    g2d.drawImage(lImg, pixels, pixels, pw, ph, null);
+                    g2d.drawImage(lImg, 0, 0, pw, ph, null);
+                    GraphicsUtil.srcOver(g2d, imgOpacity);
                 } else lImg = null;
             }
-//            g2d.drawImage(bgImg, pixels, pixels, pw, ph, this);
-            g2d.drawImage(bgImg, 0, 0, pw, ph, this);
+//            g2d.drawImage(bgImg, pixels, pixels, pw, ph, null);
+            g2d.drawImage(bgImg, 0, 0, pw, ph, null);
         }
 //        // 画边框阴影
 //        int step = TOP_OPACITY / pixels;
 //        for (int i = 0; i < pixels; i++) {
 //            g2d.setColor(ColorUtil.deriveAlphaColor(Colors.BLACK, step * i));
 //            int arc = ScaleUtil.scale(10);
-//            g2d.drawRoundRect(i, i, pw - (i * 2 + 1), ph - (i * 2 + 1), arc, arc);
+//            g2d.drawRoundRect(i, i, pw - i * 2, ph - i * 2, arc, arc);
 //        }
-        GraphicsUtil.srcOver(g2d);
     }
 }

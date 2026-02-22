@@ -31,7 +31,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -157,18 +156,15 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
             panel.add(labels[i]);
             // 组件配置
             if (components[i] instanceof CustomTextField) {
-                CustomTextField component = (CustomTextField) components[i];
-                component.setForeground(textColor);
-                component.setCaretColor(textColor);
-                component.setSelectedTextColor(textColor);
-                component.setSelectionColor(darkerTextAlphaColor);
-                // 加载主题名称
-                component.setText((String) results[i]);
-                Document document = component.getDocument();
-                // 添加文本改变监听器
-                document.addDocumentListener(this);
+                CustomTextField textField = (CustomTextField) components[i];
+                textField.setForeground(textColor);
+                textField.setCaretColor(textColor);
+                textField.setSelectedTextColor(textColor);
+                textField.setSelectionColor(darkerTextAlphaColor);
+                textField.addDocumentListener(this);
+                textField.setText((String) results[i]);
             } else if (components[i] instanceof DialogButton) {
-                DialogButton component = (DialogButton) components[i];
+                DialogButton dialogButton = (DialogButton) components[i];
                 labels[i].setHorizontalTextPosition(SwingConstants.LEFT);
                 // 加载当前样式背景图(显示一个缩略图)
                 if (results[i] != null) {
@@ -186,7 +182,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                 }
                 int finalI = i;
                 // 图片文件选择
-                component.addActionListener(e -> {
+                dialogButton.addActionListener(e -> {
                     FileChooser fileChooser = new FileChooser();
                     fileChooser.setTitle(I18n.getText("chooseImg"));
                     ObservableList<FileChooser.ExtensionFilter> filters = fileChooser.getExtensionFilters();
@@ -214,14 +210,14 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                     });
                 });
             } else if (components[i] instanceof CustomLabel) {
-                CustomLabel component = (CustomLabel) components[i];
+                CustomLabel label = (CustomLabel) components[i];
                 // 鼠标光标
-                component.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 // 获取主题颜色并显示成小方格
-                component.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, ((Color) results[i])));
+                label.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, ((Color) results[i])));
                 int finalI = i;
                 // 颜色选择
-                component.addMouseListener(new MouseAdapter() {
+                label.addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseReleased(MouseEvent e) {
                         if (e.getButton() == MouseEvent.BUTTON1) {
@@ -230,7 +226,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
                             if (!d.isConfirmed()) return;
                             Color color = d.getResult();
                             // 更改方框内颜色并保存
-                            component.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, color));
+                            label.setIcon(ImageUtil.dyeRoundRect(rectWidth, rectHeight, color));
                             results[finalI] = color;
                         }
                     }

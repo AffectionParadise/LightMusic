@@ -109,7 +109,7 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
         int step = TOP_OPACITY / pixels;
         for (int i = 0; i < pixels; i++) {
             g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
-            g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
+            g2d.drawRoundRect(i, i, w - i * 2, h - i * 2, arc, arc);
         }
     }
 }

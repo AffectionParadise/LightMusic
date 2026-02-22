@@ -75,8 +75,6 @@ public class CustomPanel extends BasePanel implements ExtendedOpacitySupported {
             GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
             int arc = ScaleUtil.scale(8);
             g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
-            GraphicsUtil.srcOver(g2d, extendedOpacity);
         }
-        super.paintComponent(g);
     }
 }

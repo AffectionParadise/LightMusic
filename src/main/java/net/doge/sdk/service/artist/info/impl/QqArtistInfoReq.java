@@ -29,8 +29,6 @@ public class QqArtistInfoReq {
 
     // 歌手信息 API (QQ)
 //    private final String ARTIST_DETAIL_QQ_API = "https://y.qq.com/n/ryqq/singer/%s";
-    // 歌手图片 API (QQ)
-    private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
 
     /**
      * 根据歌手 id 获取歌手
@@ -50,7 +48,7 @@ public class QqArtistInfoReq {
 //                Integer songNum = !sn.isEmpty() ? Integer.parseInt(sn.get(0).text()) : 0;
 //                Integer albumNum = sn.size() > 1 ? Integer.parseInt(sn.get(1).text()) : 0;
 //                Integer mvNum = sn.size() > 2 ? Integer.parseInt(sn.get(2).text()) : 0;
-//                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
+//                String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, id);
 //
 //                NetArtistInfo artistInfo = new NetArtistInfo();
 //                artistInfo.setSource(NetMusicSource.QQ);
@@ -87,7 +85,7 @@ public class QqArtistInfoReq {
         Integer songNum = songJson.getIntValue("totalNum");
         Integer albumNum = albumJson.getIntValue("total");
         Integer mvNum = mvJson.getIntValue("total");
-        String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, id);
+        String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, id);
 
         NetArtistInfo artistInfo = new NetArtistInfo();
         artistInfo.setSource(NetResourceSource.QQ);
@@ -120,7 +118,7 @@ public class QqArtistInfoReq {
 //            Elements sn = doc.select(".data_statistic__number");
 //            Elements ps = doc.select("#popup_data_detail .popup_data_detail__cont p");
 //
-//            String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
+//            String coverImgUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, id);
 //            StringJoiner sj = new StringJoiner("\n");
 //            ps.forEach(p -> sj.add(p.text()));
 //            String description = sj.toString();
@@ -153,7 +151,7 @@ public class QqArtistInfoReq {
         Integer albumNum = albumJson.getIntValue("total");
         Integer mvNum = mvJson.getIntValue("total");
         String description = exInfo.getString("desc");
-        String coverImgUrl = String.format(ARTIST_IMG_QQ_API, id);
+        String coverImgUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, id);
 
         if (!artistInfo.hasSongNum()) artistInfo.setSongNum(songNum);
         if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(albumNum);

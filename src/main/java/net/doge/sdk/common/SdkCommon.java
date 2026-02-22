@@ -20,6 +20,10 @@ public class SdkCommon {
     // 小丘
     public static final String QQ_MAIN_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     public static final String QQ_SEARCH_JSON = "{\"music.search.SearchCgiService\": {\"method\": \"DoSearchForQQMusicDesktop\",\"module\": \"music.search.SearchCgiService\",\"param\":{\"page_num\": %s,\"num_per_page\": %s,\"query\": \"%s\",\"search_type\": %s}}}";
+    // 歌曲封面信息 API (QQ)
+    public static final String SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
+    // 歌手图片 API (QQ)
+    public static final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
     // 发姐
     public static final String FA_RADIO_API = "https://www.chatcyf.com/radio/";
 

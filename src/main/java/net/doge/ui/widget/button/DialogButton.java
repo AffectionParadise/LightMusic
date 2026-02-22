@@ -90,7 +90,6 @@ public class DialogButton extends BaseButton implements ExtendedOpacitySupported
         int arc = ScaleUtil.scale(8);
         g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
         GraphicsUtil.srcOver(g2d, extendedOpacity);
-
         super.paintComponent(g);
 
 //        // 画文字

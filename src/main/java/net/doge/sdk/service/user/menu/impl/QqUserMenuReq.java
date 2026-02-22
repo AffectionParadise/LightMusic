@@ -7,6 +7,7 @@ import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.entity.service.NetUserInfo;
+import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
 import net.doge.sdk.util.SdkUtil;
@@ -38,8 +39,6 @@ public class QqUserMenuReq {
     private final String USER_COLLECTED_PLAYLIST_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=3&sin=%s&ein=%s";
     // 用户收藏专辑 API (QQ)
     private final String USER_COLLECTED_ALBUM_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=2&sin=%s&ein=%s";
-    // 歌曲封面信息 API (QQ)
-    private final String SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
 
     /**
      * 获取用户歌单（通过用户）
@@ -166,7 +165,7 @@ public class QqUserMenuReq {
                 String artistId = SdkUtil.parseArtistId(albumJson);
                 String publishTime = TimeUtil.msToDate(albumJson.getLong("pubtime") * 1000);
                 Integer songNum = albumJson.getIntValue("songnum");
-                String coverImgThumbUrl = String.format(SONG_IMG_QQ_API, albumId);
+                String coverImgThumbUrl = String.format(SdkCommon.SONG_IMG_QQ_API, albumId);
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetResourceSource.QQ);

@@ -19,7 +19,6 @@ public class CustomLabel extends JLabel implements ExtendedOpacitySupported {
     private boolean drawBg;
     @Setter
     private Color bgColor;
-    @Setter
     @Getter
     protected float opacity = 1f;
     private float destOpacity = 1f;

@@ -28,9 +28,6 @@ public class QqArtistListReq {
         return instance;
     }
 
-    // 歌手图片 API (QQ)
-    private final String ARTIST_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T001R500x500M000%s.jpg";
-
     /**
      * 歌手榜单
      */
@@ -56,7 +53,7 @@ public class QqArtistListReq {
 
                 String artistId = artistJson.getString("singer_mid");
                 String artistName = artistJson.getString("singer_name");
-                String coverImgThumbUrl = String.format(ARTIST_IMG_QQ_API, artistId);
+                String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, artistId);
 
                 NetArtistInfo artistInfo = new NetArtistInfo();
                 artistInfo.setSource(NetResourceSource.QQ);

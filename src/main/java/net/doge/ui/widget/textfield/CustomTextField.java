@@ -142,14 +142,12 @@ public class CustomTextField extends JTextField implements ExtendedOpacitySuppor
     public void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
-
         // 画背景
         g2d.setColor(getForeground());
         GraphicsUtil.srcOver(g2d, extendedOpacity * 0.2f);
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(0, 0, w, h, arc, arc);
         GraphicsUtil.srcOver(g2d, extendedOpacity);
-
         super.paintComponent(g);
 
         // 画文字(由于 JTextField 只支持纯文本，对于特殊字符不支持显示，因此以下代码用于画出特殊字符，此方法无法准确推测特殊字符的位置，弃用)

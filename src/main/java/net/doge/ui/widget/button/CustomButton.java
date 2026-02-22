@@ -104,10 +104,10 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
                 g2d.fillRoundRect(0, 0, w, h, arc, arc);
             } else {
                 BufferedImage img = ImageUtil.width(maskImg, w);
-                g2d.drawImage(img, 0, 0, w, h, this);
+                g2d.drawImage(img, 0, 0, w, h, null);
             }
-            GraphicsUtil.srcOver(g2d, extendedOpacity);
         }
+        GraphicsUtil.srcOver(g, extendedOpacity);
         super.paintComponent(g);
     }
 }

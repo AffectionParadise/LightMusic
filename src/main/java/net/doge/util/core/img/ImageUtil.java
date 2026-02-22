@@ -120,17 +120,12 @@ public class ImageUtil {
             if (in == null) return null;
             // Obtain a WebP ImageReader instance
             ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
-
             // Configure decoding parameters
             WebPReadParam readParam = new WebPReadParam();
             readParam.setBypassFiltering(true);
-
             // Configure the input on the ImageReader
-            reader.setInput(
-                    // 读取网络流用 MemoryCacheImageInputStream
-                    new MemoryCacheImageInputStream(in)
-            );
-
+            // 读取网络流用 MemoryCacheImageInputStream
+            reader.setInput(new MemoryCacheImageInputStream(in));
             // Decode the image
             return reader.read(0, readParam);
         } catch (Exception e) {
@@ -144,7 +139,7 @@ public class ImageUtil {
      * @param imgUrl 图片 url
      * @return
      */
-    public static BufferedImage readByUrl(String imgUrl) {
+    public static BufferedImage readFromUrl(String imgUrl) {
         if (StringUtil.isEmpty(imgUrl)) return null;
         if (imgUrl.endsWith(Format.WEBP)) return readWebp(imgUrl);
         return read(getImgStream(imgUrl));
@@ -427,7 +422,7 @@ public class ImageUtil {
      */
     public static BufferedImage quality(BufferedImage img, double q) {
         try {
-            return Thumbnails.of(img).scale(1f).outputQuality(q).asBufferedImage();
+            return Thumbnails.of(img).scale(1).outputQuality(q).asBufferedImage();
         } catch (Exception e) {
             LogUtil.error(e);
             return null;
@@ -547,7 +542,7 @@ public class ImageUtil {
      */
     public static BufferedImage region(BufferedImage img, int x, int y, int w, int h) {
         try {
-            return Thumbnails.of(img).scale(1f).sourceRegion(x, y, w, h).asBufferedImage();
+            return Thumbnails.of(img).scale(1).sourceRegion(x, y, w, h).asBufferedImage();
         } catch (Exception e) {
             LogUtil.error(e);
             return null;
@@ -561,7 +556,7 @@ public class ImageUtil {
      * @param scale
      * @return
      */
-    public static BufferedImage scale(BufferedImage img, float scale) {
+    public static BufferedImage scale(BufferedImage img, double scale) {
         try {
             return Thumbnails.of(img).scale(scale).asBufferedImage();
         } catch (Exception e) {
@@ -579,21 +574,11 @@ public class ImageUtil {
      */
     public static BufferedImage rotate(BufferedImage img, double angle) {
         try {
-            return Thumbnails.of(img).scale(1f).rotate(angle).asBufferedImage();
+            return Thumbnails.of(img).scale(1).rotate(angle).asBufferedImage();
         } catch (Exception e) {
             LogUtil.error(e);
             return null;
         }
-    }
-
-    /**
-     * 图片添加阴影
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage shadow(BufferedImage img) {
-        return shadow(img, Colors.SHADOW);
     }
 
     /**

@@ -127,14 +127,14 @@ public abstract class AbstractShadowDialog extends BaseDialog {
             int w = getWidth(), h = getHeight();
             if (bgImg != null) {
 //            GraphicsUtil.srcOver(g2d, 0.8f);
-                g2d.drawImage(bgImg, pixels, pixels, w - 2 * pixels, h - 2 * pixels, this);
+                g2d.drawImage(bgImg, pixels, pixels, w - 2 * pixels, h - 2 * pixels, null);
             }
             // 画边框阴影
             int step = TOP_OPACITY / pixels;
             for (int i = 0; i < pixels; i++) {
                 g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
                 int arc = ScaleUtil.scale(10);
-                g2d.drawRoundRect(i, i, w - (i * 2 + 1), h - (i * 2 + 1), arc, arc);
+                g2d.drawRoundRect(i, i, w - i * 2, h - i * 2, arc, arc);
             }
         }
     }

@@ -342,7 +342,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
             if (ListUtil.indexOf(cursors, next) < 0) cursors.add(next);
         }
         String url = results.data.size() > di ? results.data.get(di) : "";
-        BufferedImage img = ImageUtil.readByUrl(url);
+        BufferedImage img = ImageUtil.readFromUrl(url);
         // 单独处理 Webp 类型图片
 //            if (img == null) img = ImageUtils.readWebp(url);
         return img;

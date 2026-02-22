@@ -30,8 +30,6 @@ public class QqAlbumInfoReq {
     // 专辑信息 API (QQ)
     private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json&inCharset=utf-8" +
             "&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page&albummid=%s&albumid=0";
-    // 歌曲封面信息 API (QQ)
-    private final String SONG_IMG_QQ_API = "https://y.gtimg.cn/music/photo_new/T002R500x500M000%s.jpg";
 
     /**
      * 根据专辑 id 获取专辑
@@ -50,7 +48,7 @@ public class QqAlbumInfoReq {
         String artist = SdkUtil.parseArtist(albumJson);
         String artistId = SdkUtil.parseArtistId(albumJson);
         String publishTime = albumJson.getString("publictime");
-        String coverImgThumbUrl = String.format(SONG_IMG_QQ_API, albumId);
+        String coverImgThumbUrl = String.format(SdkCommon.SONG_IMG_QQ_API, albumId);
         Integer songNum = albumJson.getJSONArray("songlist").size();
 
         NetAlbumInfo albumInfo = new NetAlbumInfo();
@@ -83,7 +81,7 @@ public class QqAlbumInfoReq {
         JSONObject data = albumInfoJson.getJSONObject("data");
 
         // QQ 专辑封面图片 url 获取方式与歌曲相同
-        String coverImgUrl = String.format(SONG_IMG_QQ_API, id);
+        String coverImgUrl = String.format(SdkCommon.SONG_IMG_QQ_API, id);
         String description = data.getString("desc");
 
         if (!albumInfo.hasCoverImgUrl()) albumInfo.setCoverImgUrl(coverImgUrl);
