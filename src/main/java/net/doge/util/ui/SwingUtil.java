@@ -69,4 +69,24 @@ public class SwingUtil {
         }
         return null;
     }
+
+    /**
+     * 调整数组中所有组件为同一尺寸(与最大的组件一致)
+     *
+     * @param components
+     */
+    public static void ensureAppropriateSize(Component... components) {
+        int mw = 0, mh = 0;
+        for (Component component : components) {
+            Dimension size = component.getPreferredSize();
+            mw = Math.max(mw, size.width);
+            mh = Math.max(mh, size.height);
+        }
+        Dimension d = new Dimension(mw, mh);
+        for (Component component : components) {
+            component.setPreferredSize(d);
+            // 此处很重要，如果空间有余，会放大到 MaximumSize
+            component.setMaximumSize(d);
+        }
+    }
 }

@@ -57,7 +57,7 @@ public class UpdateDialog extends AbstractShadowDialog {
     private String keyMD5;
 
     public UpdateDialog(MainFrame f, String keyMD5) {
-        super(f);
+        super(f, true);
         this.keyMD5 = keyMD5;
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();

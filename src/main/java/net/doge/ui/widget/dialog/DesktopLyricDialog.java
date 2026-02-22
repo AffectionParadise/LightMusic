@@ -142,7 +142,6 @@ public class DesktopLyricDialog extends BaseDialog {
     }
 
     public DesktopLyricDialog(MainFrame f) {
-        super(f);
         this.f = f;
 
         UIStyle style = UIStyleStorage.currUIStyle;

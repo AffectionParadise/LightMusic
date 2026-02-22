@@ -197,7 +197,7 @@ public class I18n {
         LANG_MAP.put("soundTip", new String[]{"声音开启", "Sound on"});
         LANG_MAP.put("muteTip", new String[]{"静音", "Mute"});
         LANG_MAP.put("rateTip", new String[]{"倍速", "Rate"});
-        LANG_MAP.put("fobTimeTip", new String[]{"快进/快退时间", "Fast forward/Rewind time"});
+        LANG_MAP.put("fobTimeTip", new String[]{"快进/快退时间", "Fast forward/rewind time"});
         LANG_MAP.put("fullScreenTip", new String[]{"全屏", "Full screen"});
         LANG_MAP.put("switchSpectrumTip", new String[]{"频谱", "Spectrum"});
         LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
@@ -602,7 +602,7 @@ public class I18n {
         LANG_MAP.put("maxCacheSize", new String[]{"最大缓存大小(≤%sMB)：", "Max cache size(≤%sMB): "});
         LANG_MAP.put("audioQuality", new String[]{"优先音质（如果可用）：", "Preferred audio quality(If available): "});
         LANG_MAP.put("videoQuality", new String[]{"优先画质（如果可用）：", "Preferred video quality(If available): "});
-        LANG_MAP.put("fob", new String[]{"快进/快退时间：", "Fast forward/Rewind interval: "});
+        LANG_MAP.put("fob", new String[]{"快进/快退时间：", "Fast forward/rewind interval: "});
         LANG_MAP.put("balance", new String[]{"声道平衡：", "Audio channel: "});
         LANG_MAP.put("maxHistoryCount", new String[]{"最大播放历史数量(≤%s)：", "Max playback history count(≤%s): "});
         LANG_MAP.put("maxSearchHistoryCount", new String[]{"最大搜索历史数量(≤%s)：", "Max search history count(≤%s): "});

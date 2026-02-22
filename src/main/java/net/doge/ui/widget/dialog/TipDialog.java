@@ -47,7 +47,7 @@ public class TipDialog extends AbstractShadowDialog {
     }
 
     public TipDialog(MainFrame f, String message, int ms, boolean onTop) {
-        super(f, false);
+        super(f);
         setMessage(message);
         this.ms = ms;
         initView();

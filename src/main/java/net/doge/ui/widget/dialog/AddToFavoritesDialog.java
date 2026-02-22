@@ -22,6 +22,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.core.collection.ListUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -136,10 +137,20 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            localPlaylistList.getSelectionModel().setSelectionInterval(0, localPlaylistListModel.size() - 1);
+            localPlaylistList.setSelectionInterval(0, localPlaylistListModel.size() - 1);
+            for (int i = 0, s = localPlaylistListModel.size(); i < s; i++) {
+                ChoosableListItem<LocalPlaylist> item = localPlaylistListModel.get(i);
+                item.setSelected(true);
+            }
         });
         // 取消全选事件
-        nonSelectButton.addActionListener(e -> localPlaylistList.clearSelection());
+        nonSelectButton.addActionListener(e -> {
+            localPlaylistList.clearSelection();
+            for (int i = 0, s = localPlaylistListModel.size(); i < s; i++) {
+                ChoosableListItem<LocalPlaylist> item = localPlaylistListModel.get(i);
+                item.setSelected(false);
+            }
+        });
         // 添加事件
         addButton.addActionListener(e -> {
             for (int i = 0, len = localPlaylistListModel.size(); i < len; i++) {
@@ -160,7 +171,8 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
             }
             close();
         });
-
+        Component[] minimumSizeComponents = {newButton, allSelectButton, nonSelectButton};
+        SwingUtil.ensureAppropriateSize(minimumSizeComponents);
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
         Dimension area = new HDDimension(1, 10);

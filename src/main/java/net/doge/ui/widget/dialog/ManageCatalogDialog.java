@@ -18,6 +18,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.core.os.DesktopUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,7 +103,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            catalogList.getSelectionModel().setSelectionInterval(0, catalogListModel.size() - 1);
+            catalogList.setSelectionInterval(0, catalogListModel.size() - 1);
         });
         // 取消全选事件
         nonSelectButton.addActionListener(e -> catalogList.clearSelection());
@@ -147,7 +148,8 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
                 catalogs.remove(dir);
             }
         });
-
+        Component[] minimumSizeComponents = {allSelectButton, nonSelectButton, locateButton, addButton, removeButton};
+        SwingUtil.ensureAppropriateSize(minimumSizeComponents);
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
         Dimension area = new HDDimension(1, 10);
@@ -189,20 +191,19 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         });
         catalogList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseExited(MouseEvent e) {
-                CatalogListRenderer renderer = (CatalogListRenderer) catalogList.getCellRenderer();
-                if (renderer == null) return;
-                renderer.setHoverIndex(-1);
-                repaint();
-            }
-        });
-        catalogList.addMouseListener(new MouseAdapter() {
-            @Override
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击打开资源管理器
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     locateButton.doClick();
                 }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                CatalogListRenderer renderer = (CatalogListRenderer) catalogList.getCellRenderer();
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                repaint();
             }
         });
         // 注意：将 JList 加到 JScrollPane 时必须使用构造器，而不是 add ！！！

@@ -67,7 +67,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
     }
 
     public ConfirmDialog(MainFrame f, String message, String yesText, String noText, String cancelText, boolean showCheck, String checkText) {
-        super(f);
+        super(f, true);
         this.message = message;
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();

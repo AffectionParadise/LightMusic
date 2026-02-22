@@ -32,7 +32,7 @@ public abstract class AbstractShadowDialog extends BaseDialog {
     protected MainFrame f;
 
     public AbstractShadowDialog(Window owner) {
-        this(owner, true);
+        this(owner, false);
     }
 
     public AbstractShadowDialog(Window owner, boolean modal) {

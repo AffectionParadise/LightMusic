@@ -35,10 +35,10 @@ public class RateDialog extends AbstractShadowDialog {
     private DialogButton reset;
 
     private VideoDialog d;
-    private JComponent comp;
+    private Component comp;
 
-    public RateDialog(MainFrame f, VideoDialog d, JComponent comp) {
-        super(d == null ? f : d, false);
+    public RateDialog(MainFrame f, VideoDialog d, Component comp) {
+        super(d == null ? f : d);
         this.f = f;
         this.d = d;
         this.comp = comp;

@@ -28,7 +28,7 @@ public abstract class AbstractMiniDialog extends BaseDialog {
     protected MainFrame f;
 
     public AbstractMiniDialog(MainFrame f) {
-        super(f, false);
+        super(f);
         this.f = f;
         init();
 

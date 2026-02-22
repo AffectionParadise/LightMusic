@@ -18,6 +18,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.core.io.FileUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -122,7 +123,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         // 全选事件
         allSelectButton.addActionListener(e -> {
             // 选择开始到结束(包含)的节点！
-            styleList.getSelectionModel().setSelectionInterval(0, styleListModel.size() - 1);
+            styleList.setSelectionInterval(0, styleListModel.size() - 1);
         });
         // 取消全选事件
         nonSelectButton.addActionListener(e -> {
@@ -248,6 +249,8 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
                 }
             }
         });
+        Component[] minimumSizeComponents = {allSelectButton, nonSelectButton, applyButton, addButton, editButton, removeButton};
+        SwingUtil.ensureAppropriateSize(minimumSizeComponents);
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
         Dimension area = new HDDimension(1, 10);
@@ -293,20 +296,19 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         });
         styleList.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseExited(MouseEvent e) {
-                StyleListRenderer renderer = (StyleListRenderer) styleList.getCellRenderer();
-                if (renderer == null) return;
-                renderer.setHoverIndex(-1);
-                repaint();
-            }
-        });
-        styleList.addMouseListener(new MouseAdapter() {
-            @Override
             public void mouseReleased(MouseEvent e) {
                 // 鼠标左键双击应用主题
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     applyButton.doClick();
                 }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                StyleListRenderer renderer = (StyleListRenderer) styleList.getCellRenderer();
+                if (renderer == null) return;
+                renderer.setHoverIndex(-1);
+                repaint();
             }
         });
         styleListScrollPane.setBorder(new HDEmptyBorder(10, 0, 10, 0));

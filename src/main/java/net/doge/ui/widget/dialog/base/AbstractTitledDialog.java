@@ -33,7 +33,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
     private String title;
 
     public AbstractTitledDialog(MainFrame f, String title) {
-        super(f);
+        super(f, true);
         this.title = title;
     }
 
