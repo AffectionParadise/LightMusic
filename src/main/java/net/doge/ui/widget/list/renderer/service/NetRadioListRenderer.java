@@ -42,6 +42,7 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
     private CustomLabel playCountLabel = new CustomLabel();
 //    private CustomLabel createTimeLabel = new CustomLabel();
 
+    private ImageIcon coverIcon = new ImageIcon();
     private static ImageIcon radioIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.radioItem"), ImageConstants.MEDIUM_WIDTH));
 
     public NetRadioListRenderer() {
@@ -68,6 +69,8 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
         trackCountLabel.setOpacity(opacity);
         playCountLabel.setOpacity(opacity);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -88,7 +91,10 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetRadioInfo radioInfo = (NetRadioInfo) value;
 
-        iconLabel.setIcon(radioInfo.hasCoverImgThumb() ? new ImageIcon(radioInfo.getCoverImgThumb()) : radioIcon);
+        if (radioInfo.hasCoverImgThumb()) {
+            coverIcon.setImage(radioInfo.getCoverImgThumb());
+            iconLabel.setIcon(coverIcon);
+        } else iconLabel.setIcon(radioIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -98,9 +104,6 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
         trackCountLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
 //        createTimeLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
@@ -123,6 +126,8 @@ public class NetRadioListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(pw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 解决部分 Cell 显示不全问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }

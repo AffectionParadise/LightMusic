@@ -147,7 +147,7 @@ public class StringUtil {
     }
 
     /**
-     * 用 padStr 右填充字符 str 到指定长度
+     * 用字符右填充字符串 str 到指定长度
      *
      * @param str
      * @param len

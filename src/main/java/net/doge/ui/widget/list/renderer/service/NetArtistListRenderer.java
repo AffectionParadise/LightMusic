@@ -39,6 +39,7 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
     private CustomLabel albumNumLabel = new CustomLabel();
     private CustomLabel mvNumLabel = new CustomLabel();
 
+    private ImageIcon coverIcon = new ImageIcon();
     private static ImageIcon artistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.artistItem"), ImageConstants.MEDIUM_WIDTH));
 
     public NetArtistListRenderer() {
@@ -62,6 +63,8 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
         albumNumLabel.setOpacity(opacity);
         mvNumLabel.setOpacity(opacity);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -80,7 +83,10 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetArtistInfo artistInfo = (NetArtistInfo) value;
 
-        iconLabel.setIcon(artistInfo.hasCoverImgThumb() ? new ImageIcon(artistInfo.getCoverImgThumb()) : artistIcon);
+        if (artistInfo.hasCoverImgThumb()) {
+            coverIcon.setImage(artistInfo.getCoverImgThumb());
+            iconLabel.setIcon(coverIcon);
+        } else iconLabel.setIcon(artistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -88,9 +94,6 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
         songNumLabel.setForeground(textColor);
         albumNumLabel.setForeground(textColor);
         mvNumLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
@@ -108,6 +111,8 @@ public class NetArtistListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(pw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 解决部分 Cell 显示不全问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }

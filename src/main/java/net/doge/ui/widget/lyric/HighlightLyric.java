@@ -9,6 +9,7 @@ import net.doge.util.core.RegexUtil;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.collection.ListUtil;
 import net.doge.util.core.img.ImageUtil;
+import net.doge.util.core.math.MathUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -46,9 +47,9 @@ public class HighlightLyric {
     // 渐隐宽度
     private int fadeWidth;
 
-    private BufferedImage buffImg;
-    private BufferedImage buffImg1;
-    private BufferedImage buffImg2;
+    private BufferedImage img;
+    private BufferedImage imgL;
+    private BufferedImage imgR;
     private ImageIcon imgIcon;
 
     private FontMetrics[] metricsArray;
@@ -142,12 +143,12 @@ public class HighlightLyric {
         width = Math.max(1, width);
 
         // 构造一个具有指定尺寸及类型为预定义图像类型之一的 BufferedImage
-        buffImg1 = ImageUtil.createTransparentImage(width, height);
-        buffImg2 = ImageUtil.createTransparentImage(width, height);
+        imgL = ImageUtil.createTransparentImage(width, height);
+        imgR = ImageUtil.createTransparentImage(width, height);
 
         // 通过 BufferedImage 创建 Graphics2D 对象
-        Graphics2D g1 = GraphicsUtil.setup(buffImg1.createGraphics());
-        Graphics2D g2 = GraphicsUtil.setup(buffImg2.createGraphics());
+        Graphics2D g1 = GraphicsUtil.setup(imgL.createGraphics());
+        Graphics2D g2 = GraphicsUtil.setup(imgR.createGraphics());
 
         int dy = height - (int) fontSize;
         if (!isDesktopLyric) dy += ScaleUtil.scale(5);
@@ -177,7 +178,7 @@ public class HighlightLyric {
             }
         }
         // 文字阴影
-        if (isDesktopLyric) buffImg1 = ImageUtil.shadow(buffImg1, c1);
+        if (isDesktopLyric) imgL = ImageUtil.shadow(imgL, c1);
 
         g1.dispose();
         g2.dispose();
@@ -269,7 +270,7 @@ public class HighlightLyric {
             int wordStart = wordStartList.get(i);
             int wordDuration = wordDurationList.get(i);
             // Drop 动画进度，控制在 0-1 之间
-            double progress = Math.max(0, Math.min(1, (double) (lineCurrTimeMs - wordStart) / Math.max(minDropDuration, wordDuration)));
+            double progress = MathUtil.clamp((double) (lineCurrTimeMs - wordStart) / Math.max(minDropDuration, wordDuration), 0, 1);
             // 超出最大简单动画时间，使用曲线动画
             int wordDropOrigin = computeWordDrop(progress, wordDuration >= maxSimpleDropDuration);
             wordDropOriginList.set(i, wordDropOrigin);
@@ -291,18 +292,18 @@ public class HighlightLyric {
         if (t <= t1) {
             // 第一段：正弦缓入
             double u = t / t1;
-            double sin_factor = Math.sin(u * Math.PI / 2);
-            return a + (c - a) * sin_factor;
+            double sinFactor = Math.sin(u * Math.PI / 2);
+            return a + (c - a) * sinFactor;
         } else {
             // 第二段：正弦缓出
             double v = (t - t1) / (1 - t1);
-            double sin_factor = Math.sin((1 - v) * Math.PI / 2);
-            return b + (c - b) * sin_factor;
+            double sinFactor = Math.sin((1 - v) * Math.PI / 2);
+            return b + (c - b) * sinFactor;
         }
     }
 
-    // 画 buffImg1 作为左侧，带 Drop
-    private void paintBuffImg1WithDrop(Graphics2D g2d, int t) {
+    // 画 imgL 作为左侧，带 Drop
+    private void paintImgLWithDrop(Graphics2D g2d, int t) {
         for (int i = 0, len = wordDropList.size(); i < len; i++) {
             int wordDrop = wordDropList.get(i);
             int wordWidth = wordWidthList.get(i);
@@ -310,12 +311,12 @@ public class HighlightLyric {
             int dx1 = shadowHOffset + prefix, dy1 = wordDrop, dx2 = Math.min(shadowHOffset + prefix + wordWidth, t + fadeWidth), dy2 = height + wordDrop;
             if (dx1 > t + fadeWidth) break;
             int sx1 = dx1, sy1 = 0, sx2 = dx2, sy2 = height;
-            g2d.drawImage(buffImg1, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+            g2d.drawImage(imgL, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
         }
     }
 
-    // 画 buffImg2 作为右侧，带 Drop
-    private void paintBuffImg2WithDrop(Graphics2D g2d, int t) {
+    // 画 ImgR 作为右侧，带 Drop
+    private void paintImgRWithDrop(Graphics2D g2d, int t) {
         for (int i = wordDropList.size() - 1; i >= 0; i--) {
             int wordDrop = wordDropList.get(i);
             int wordWidth = wordWidthList.get(i);
@@ -323,20 +324,20 @@ public class HighlightLyric {
             int dx1 = Math.max(t, shadowHOffset + prefix), dy1 = wordDrop, dx2 = shadowHOffset + prefix + wordWidth, dy2 = height + wordDrop;
             if (dx2 < t) break;
             int sx1 = dx1, sy1 = 0, sx2 = dx2, sy2 = height;
-            g2d.drawImage(buffImg2, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
+            g2d.drawImage(imgR, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
         }
     }
 
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
         int pw = width - 2 * shadowHOffset, t = (int) (shadowHOffset + pw * ratio + 0.5);
-        // 虽然不断创建新的图像存在性能开销，但是单例清除图像时会闪烁
-        buffImg = ImageUtil.createTransparentImage(width, height);
-        Graphics2D g2d = GraphicsUtil.setup(buffImg.createGraphics());
+        // 由于单例清除图像时会闪烁，因此需要不断创建新的图像，尽管存在性能开销
+        img = ImageUtil.createTransparentImage(width, height);
+        Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
         if (ratio > 0) {
-            // 将 buffImg 的左半部分用 buffImg1 的左半部分替换
-            paintBuffImg1WithDrop(g2d, t);
-//            g2d.drawImage(buffImg1, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
+            // 将 img 的左半部分用 imgL 的左半部分替换
+            paintImgLWithDrop(g2d, t);
+//            g2d.drawImage(imgL, shadowHOffset, 0, t + fadeWidth, height, shadowHOffset, 0, t + fadeWidth, height, null);
             // 创建渐变覆盖层（使用黑色到透明的渐变，然后使用 DST_OUT）
             GradientPaint fadeOverlay = new GradientPaint(t, 0, Colors.TRANSPARENT, t + fadeWidth, 0, Colors.BLACK, false);
             // 使用 DST_OUT：目标在源外（移除黑色覆盖的部分）
@@ -346,9 +347,9 @@ public class HighlightLyric {
             // 背景覆盖前景的模式
             g2d.setComposite(AlphaComposite.DstOver);
         }
-        // 将 buffImg 的右半部分用 buffImg2 的右半部分替换
-        paintBuffImg2WithDrop(g2d, t);
-//        g2d.drawImage(buffImg2, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
+        // 将 img 的右半部分用 imgR 的右半部分替换
+        paintImgRWithDrop(g2d, t);
+//        g2d.drawImage(imgR, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
         g2d.dispose();
 
         cropImg();
@@ -361,14 +362,14 @@ public class HighlightLyric {
     private void cropImg() {
         if (width <= widthThreshold) return;
         int pw = (int) (width * ratio + 0.5);
-        if (pw <= widthThreshold / 2) buffImg = ImageUtil.region(buffImg, 0, 0, widthThreshold, height);
+        if (pw <= widthThreshold / 2) img = ImageUtil.region(img, 0, 0, widthThreshold, height);
         else if (width - pw > widthThreshold / 2)
-            buffImg = ImageUtil.region(buffImg, pw - widthThreshold / 2, 0, widthThreshold, height);
-        else buffImg = ImageUtil.region(buffImg, width - widthThreshold, 0, widthThreshold, height);
+            img = ImageUtil.region(img, pw - widthThreshold / 2, 0, widthThreshold, height);
+        else img = ImageUtil.region(img, width - widthThreshold, 0, widthThreshold, height);
     }
 
     private void makeIcon() {
-        if (imgIcon == null) imgIcon = new ImageIcon(buffImg);
-        imgIcon.setImage(buffImg);
+        if (imgIcon == null) imgIcon = new ImageIcon(img);
+        imgIcon.setImage(img);
     }
 }

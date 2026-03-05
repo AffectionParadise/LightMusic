@@ -58,6 +58,8 @@ public class StyleListRenderer extends CustomListCellRenderer {
         typeLabel.setFont(tinyFont);
         inUseLabel.setFont(tinyFont);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -82,9 +84,6 @@ public class StyleListRenderer extends CustomListCellRenderer {
         nameLabel.setForeground(textColor);
         typeLabel.setForeground(textColor);
         inUseLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";

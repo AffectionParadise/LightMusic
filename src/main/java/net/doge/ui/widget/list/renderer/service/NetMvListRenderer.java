@@ -42,6 +42,7 @@ public class NetMvListRenderer extends CustomListCellRenderer {
     private CustomLabel playCountLabel = new CustomLabel();
     private CustomLabel pubTimeLabel = new CustomLabel();
 
+    private ImageIcon coverIcon = new ImageIcon();
     private static ImageIcon mvIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.mvItem"), ImageConstants.MEDIUM_WIDTH));
 
     public NetMvListRenderer() {
@@ -67,6 +68,8 @@ public class NetMvListRenderer extends CustomListCellRenderer {
         playCountLabel.setOpacity(opacity);
         pubTimeLabel.setOpacity(opacity);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -87,7 +90,10 @@ public class NetMvListRenderer extends CustomListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetMvInfo mvInfo = (NetMvInfo) value;
 
-        iconLabel.setIcon(mvInfo.hasCoverImgThumb() ? new ImageIcon(mvInfo.getCoverImgThumb()) : mvIcon);
+        if (mvInfo.hasCoverImgThumb()) {
+            coverIcon.setImage(mvInfo.getCoverImgThumb());
+            iconLabel.setIcon(coverIcon);
+        } else iconLabel.setIcon(mvIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -96,9 +102,6 @@ public class NetMvListRenderer extends CustomListCellRenderer {
         durationLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
         pubTimeLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
@@ -118,6 +121,8 @@ public class NetMvListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(pw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 解决部分 Cell 显示不全问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }

@@ -25,6 +25,8 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
 
     private static Color maskColor;
     private static BufferedImage maskImg = LMIconManager.getImage("mask");
+    // 缓存遮罩图像
+    private static BufferedImage cachedMaskImg;
 
     public CustomButton() {
         this(null, null);
@@ -74,6 +76,10 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
     @Override
     public void setForeground(Color fg) {
         super.setForeground(fg);
+        updateMaskImgStyle(fg);
+    }
+
+    private void updateMaskImgStyle(Color fg) {
         // 更新遮罩颜色
         if (maskColor != null && maskColor.equals(fg)) return;
         maskImg = ImageUtil.dye(maskImg, fg);
@@ -103,8 +109,9 @@ public class CustomButton extends BaseButton implements ExtendedOpacitySupported
                 int arc = ScaleUtil.scale(10);
                 g2d.fillRoundRect(0, 0, w, h, arc, arc);
             } else {
-                BufferedImage img = ImageUtil.width(maskImg, w);
-                g2d.drawImage(img, 0, 0, w, h, null);
+                // 此处使用缓存图像，避免每次绘制重新生成
+                if (cachedMaskImg == null || cachedMaskImg.getWidth() != w) cachedMaskImg = ImageUtil.width(maskImg, w);
+                g2d.drawImage(cachedMaskImg, 0, 0, w, h, null);
             }
         }
         GraphicsUtil.srcOver(g, extendedOpacity);

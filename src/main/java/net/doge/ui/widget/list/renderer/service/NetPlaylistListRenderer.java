@@ -40,6 +40,7 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
     private CustomLabel playCountLabel = new CustomLabel();
     private CustomLabel trackCountLabel = new CustomLabel();
 
+    private ImageIcon coverIcon = new ImageIcon();
     private static ImageIcon playlistIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.playlistItem"), ImageConstants.MEDIUM_WIDTH));
 
     public NetPlaylistListRenderer() {
@@ -63,6 +64,8 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
         playCountLabel.setOpacity(opacity);
         trackCountLabel.setOpacity(opacity);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -81,7 +84,10 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetPlaylistInfo playlistInfo = (NetPlaylistInfo) value;
 
-        iconLabel.setIcon(playlistInfo.hasCoverImgThumb() ? new ImageIcon(playlistInfo.getCoverImgThumb()) : playlistIcon);
+        if (playlistInfo.hasCoverImgThumb()) {
+            coverIcon.setImage(playlistInfo.getCoverImgThumb());
+            iconLabel.setIcon(coverIcon);
+        } else iconLabel.setIcon(playlistIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
 
@@ -90,9 +96,6 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
         creatorLabel.setForeground(textColor);
         playCountLabel.setForeground(textColor);
         trackCountLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
@@ -111,6 +114,8 @@ public class NetPlaylistListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(pw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 解决部分 Cell 显示不全问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }

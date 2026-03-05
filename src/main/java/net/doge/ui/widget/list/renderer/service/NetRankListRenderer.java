@@ -40,6 +40,7 @@ public class NetRankListRenderer extends CustomListCellRenderer {
     private CustomLabel updateFreLabel = new CustomLabel();
     private CustomLabel updateTimeLabel = new CustomLabel();
 
+    private ImageIcon coverIcon = new ImageIcon();
     private ImageIcon rankIcon = new ImageIcon(ImageUtil.width(LMIconManager.getImage("list.rankItem"), ImageConstants.MEDIUM_WIDTH));
 
     public NetRankListRenderer() {
@@ -63,6 +64,8 @@ public class NetRankListRenderer extends CustomListCellRenderer {
         updateFreLabel.setOpacity(opacity);
         updateTimeLabel.setOpacity(opacity);
 
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.Y_AXIS));
+
         int sh = ScaleUtil.scale(10);
         outerPanel.add(CustomBox.createVerticalStrut(sh));
         outerPanel.add(iconLabel);
@@ -81,7 +84,10 @@ public class NetRankListRenderer extends CustomListCellRenderer {
     public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         NetRankInfo rankInfo = (NetRankInfo) value;
 
-        iconLabel.setIcon(rankInfo.hasCoverImgThumb() ? new ImageIcon(rankInfo.getCoverImgThumb()) : rankIcon);
+        if (rankInfo.hasCoverImgThumb()) {
+            coverIcon.setImage(rankInfo.getCoverImgThumb());
+            iconLabel.setIcon(coverIcon);
+        } else iconLabel.setIcon(rankIcon);
 
         outerPanel.setForeground(isSelected ? selectedColor : foreColor);
         iconLabel.setForeground(textColor);
@@ -89,9 +95,6 @@ public class NetRankListRenderer extends CustomListCellRenderer {
         playCountLabel.setForeground(textColor);
         updateFreLabel.setForeground(textColor);
         updateTimeLabel.setForeground(textColor);
-
-        BoxLayout layout = new BoxLayout(outerPanel, BoxLayout.Y_AXIS);
-        outerPanel.setLayout(layout);
 
         int pw = RendererConstants.CELL_WIDTH, tw = RendererConstants.TEXT_WIDTH;
         String source = "<html></html>";
@@ -109,6 +112,8 @@ public class NetRankListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(pw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 解决部分 Cell 显示不全问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }

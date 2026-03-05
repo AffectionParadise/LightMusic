@@ -3117,7 +3117,7 @@ public class MainFrame extends JFrame {
         maxSearchHistoryCount = config.getIntValue(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, 50);
         // 载入同时下载的最大任务数
         int maxConcurrentTaskCount = config.getIntValue(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, 3);
-        GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(maxConcurrentTaskCount);
+        GlobalExecutors.downloadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(maxConcurrentTaskCount);
         // 载入是否显示频谱
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
@@ -22833,8 +22833,8 @@ public class MainFrame extends JFrame {
     private void loadingAndRun(Runnable runnable) {
         globalExecutor.execute(() -> {
             try {
-                loading.start();
                 loading.setText(LOADING_MSG);
+                loading.start();
                 runnable.run();
             } catch (Exception ex) {
                 LogUtil.error(ex);

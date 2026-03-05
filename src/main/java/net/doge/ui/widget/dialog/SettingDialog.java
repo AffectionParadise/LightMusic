@@ -1011,7 +1011,7 @@ public class SettingDialog extends AbstractTitledDialog {
             new TipDialog(f, I18n.getText("invalidConcurrentTaskCount"), true).showDialog();
             return false;
         }
-        GlobalExecutors.downloadExecutor = Executors.newFixedThreadPool(Integer.parseInt(text));
+        GlobalExecutors.downloadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(text));
 
         // 删除多余的播放历史记录
         for (int i = f.maxHistoryCount, s = f.historyModel.size(); i < s; i++)
