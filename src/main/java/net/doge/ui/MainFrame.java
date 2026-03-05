@@ -110,6 +110,7 @@ import net.doge.ui.widget.toolbar.CustomToolBar;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.VersionUtil;
+import net.doge.util.core.async.AsyncUtil;
 import net.doge.util.core.collection.ListUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.exception.ExceptionUtil;
@@ -16662,6 +16663,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
@@ -16705,6 +16709,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
@@ -16748,6 +16755,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
@@ -16781,6 +16791,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
@@ -16814,6 +16827,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
@@ -16858,6 +16874,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetArtistInfo> artistInfos = result.data;
@@ -16902,6 +16921,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(
                             netRecommendSourceComboBox.getSelectedIndex(), page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
@@ -16946,6 +16968,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
@@ -16990,6 +17015,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMusicInfo> musicInfos = result.data;
@@ -17023,6 +17051,9 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 // 搜索歌曲并显示在在线歌曲列表
                 try {
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
+
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                             netRecommendSourceComboBox.getSelectedIndex(), (String) netRecommendTagComboBox.getSelectedItem(), page, limit);
                     List<NetMvInfo> mvInfos = result.data;
@@ -17245,6 +17276,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.recPlaylistTags, Tags.recPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getRecommendPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17303,6 +17336,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.hotPlaylistTags, Tags.hotPlaylistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetPlaylistInfo> result = MusicServerUtil.getHighQualityPlaylists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17361,6 +17396,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.hotSongTags, Tags.hotSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getHotMusicRecommend(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17409,6 +17446,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.newSongTags, Tags.newSongIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getNewMusic(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17457,6 +17496,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.newAlbumTags, Tags.newAlbumIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetAlbumInfo> result = MusicServerUtil.getNewAlbums(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17514,6 +17555,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.artistTags, Tags.artistIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetArtistInfo> result = MusicServerUtil.getArtistLists(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17565,6 +17608,8 @@ public class MainFrame extends JFrame {
             loadingAndRun(() -> {
                 try {
                     netRecommendSourceComboBox.applyIndicesSupported(SourceSupported.NEW_RADIO);
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getNewRadios(netRecommendSourceComboBox.getSelectedIndex(), netRecommendCurrPage = 1, limit);
                     List<NetRadioInfo> radioInfos = result.data;
@@ -17621,6 +17666,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.radioTags, Tags.radioIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetRadioInfo> result = MusicServerUtil.getHotRadios(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17678,6 +17725,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.programTags, Tags.programIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetMusicInfo> result = MusicServerUtil.getRecommendPrograms(netRecommendSourceComboBox.getSelectedIndex(),
                             netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
@@ -17726,6 +17775,8 @@ public class MainFrame extends JFrame {
                         if (shouldShowTag(Tags.mvTags, Tags.mvIndices, tag))
                             netRecommendTagComboBox.addItem(tag);
                     }
+                    // 清空异步加载图片的任务，避免提交多余图片的加载
+                    AsyncUtil.clearBlockingQueue(GlobalExecutors.imageExecutor);
 
                     CommonResult<NetMvInfo> result = MusicServerUtil.getRecommendMvs(
                             netRecommendSourceComboBox.getSelectedIndex(), netRecommendTagComboBox.getItemCount() <= 1 ? I18n.getText("defaultTag") : (String) netRecommendTagComboBox.getSelectedItem(), netRecommendCurrPage = 1, limit);
