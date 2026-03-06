@@ -28,7 +28,7 @@ public class ArtistListReq {
         if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcArtistListReq ncArtistListReq = NcArtistListReq.getInstance();
             executor.submit(() -> ncArtistListReq.getArtistRank(tag, page, limit));
-            executor.submit(() -> ncArtistListReq.getHotArtist(page, limit));
+            if (dt) executor.submit(() -> ncArtistListReq.getHotArtist(page, limit));
             executor.submit(() -> ncArtistListReq.getCatArtist(tag, page, limit));
             executor.submit(() -> ncArtistListReq.getStyleArtist(tag, page, limit));
         }

@@ -95,6 +95,8 @@ public class NetCommentListRenderer extends CustomListCellRenderer {
         list.setFixedCellWidth(lw);
 
         outerPanel.setDrawBg(isSelected || hoverIndex == index);
+        // 避免 Cell 高度参差不齐问题
+        outerPanel.revalidate();
 
         return outerPanel;
     }
