@@ -73,7 +73,9 @@ public class VkeysQqTrackReq {
         try {
             String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, mid, qualityMap.get(quality)))
                     .executeAsStr();
-            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
+            JSONObject songJson = JSONObject.parseObject(songBody);
+            if (songJson.getIntValue("code") != 200) return "";
+            JSONObject data = songJson.getJSONObject("data");
             if (JsonUtil.isEmpty(data)) return "";
             String trackUrl = data.getString("url");
             if (StringUtil.isEmpty(trackUrl)) return "";
@@ -85,7 +87,7 @@ public class VkeysQqTrackReq {
     }
 
 //    public static void main(String[] args) {
-//        VkeysQqTrackHero trackHero = getInstance();
+//        VkeysQqTrackReq trackHero = getInstance();
 //        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.STANDARD]));
 //        System.out.println(trackHero.getTrackUrl("001CnSwn2xF1ee", AudioQuality.KEYS[AudioQuality.HIGH]));
 //        System.out.println(trackHero.getTrackUrl("0039MnYb0qxYhV", AudioQuality.KEYS[AudioQuality.LOSSLESS]));

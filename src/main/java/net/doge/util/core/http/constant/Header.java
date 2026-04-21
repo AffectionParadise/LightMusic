@@ -10,4 +10,5 @@ public class Header {
     public static final String CONTENT_TYPE = "Content-Type";
     public static final String HOST = "Host";
     public static final String ORIGIN = "Origin";
+    public static final String X_REQUEST_KEY = "X-Request-Key";
 }
