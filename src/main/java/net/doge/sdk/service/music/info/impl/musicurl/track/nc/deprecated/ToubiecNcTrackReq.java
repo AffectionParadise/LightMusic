@@ -1,28 +1,30 @@
-//package net.doge.sdk.service.music.info.trackhero.nc;
+//package net.doge.sdk.service.music.info.impl.musicurl.track.nc.deprecated;
 //
-//import cn.hutool.http.HttpRequest;
 //import com.alibaba.fastjson2.JSONArray;
 //import com.alibaba.fastjson2.JSONObject;
-//import net.doge.util.core.json.JsonUtil;
+//import net.doge.constant.core.media.AudioQuality;
 //import net.doge.util.core.StringUtil;
+//import net.doge.util.core.crypto.CryptoUtil;
+//import net.doge.util.core.http.HttpRequest;
+//import net.doge.util.core.json.JsonUtil;
 //
 //import java.util.HashMap;
 //import java.util.Map;
 //
-//public class ToubiecNcTrackHero {
-//    private static ToubiecNcTrackHero instance;
+//public class ToubiecNcTrackReq {
+//    private static ToubiecNcTrackReq instance;
 //
-//    private ToubiecNcTrackHero() {
+//    private ToubiecNcTrackReq() {
 //        initMap();
 //    }
 //
-//    public static ToubiecNcTrackHero getInstance() {
-//        if (instance == null) instance = new ToubiecNcTrackHero();
+//    public static ToubiecNcTrackReq getInstance() {
+//        if (instance == null) instance = new ToubiecNcTrackReq();
 //        return instance;
 //    }
 //
 //    // 歌曲 URL 获取 API
-//    private final String SONG_URL_API = "https://wyapi-eo.toubiec.cn/api/getSongUrl";
+//    private final String SONG_URL_API = "https://nextmusic.toubiec.cn/api/getSongUrl";
 //
 //    private Map<String, String> qualityMap = new HashMap<>();
 //
@@ -46,10 +48,10 @@
 //     * @return
 //     */
 //    public String getTrackUrl(String id, String quality) {
+//        String token = CryptoUtil.md5("suxiaoqings:" + System.currentTimeMillis() / 1000 / 60);
 //        String songBody = HttpRequest.post(SONG_URL_API)
-//                .body(String.format("{\"id\":\"%s\",\"level\":\"%s\"}", id, qualityMap.get(quality)))
-//                .executeAsync()
-//                .body();
+//                .jsonBody(String.format("{\"id\":\"%s\",\"level\":\"%s\",\"token\":\"%s\"}", id, qualityMap.get(quality), token))
+//                .executeAsStr();
 //        JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
 //        if (JsonUtil.isEmpty(data)) return "";
 //        JSONObject urlJson = data.getJSONObject(0);
@@ -62,7 +64,7 @@
 //    }
 //
 //    public static void main(String[] args) {
-//        ToubiecNcTrackHero trackHero = getInstance();
+//        ToubiecNcTrackReq trackHero = getInstance();
 //        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.STANDARD]));
 //        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.HIGH]));
 //        System.out.println(trackHero.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.LOSSLESS]));

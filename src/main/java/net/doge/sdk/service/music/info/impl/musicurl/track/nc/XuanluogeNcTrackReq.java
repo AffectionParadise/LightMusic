@@ -1,30 +1,28 @@
 package net.doge.sdk.service.music.info.impl.musicurl.track.nc;
 
-import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.log.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CyruiNcTrackReq {
-    private static CyruiNcTrackReq instance;
+public class XuanluogeNcTrackReq {
+    private static XuanluogeNcTrackReq instance;
 
-    private CyruiNcTrackReq() {
+    private XuanluogeNcTrackReq() {
         initMap();
     }
 
-    public static CyruiNcTrackReq getInstance() {
-        if (instance == null) instance = new CyruiNcTrackReq();
+    public static XuanluogeNcTrackReq getInstance() {
+        if (instance == null) instance = new XuanluogeNcTrackReq();
         return instance;
     }
 
     // 歌曲 URL 获取 API (网易云)
-    private final String SONG_URL_NC_API = "https://blog.cyrui.cn/netease/api/getMusicUrl.php?id=%s&level=%s";
+    private final String SONG_URL_NC_API = "https://music.xuanluoge.top/api.php?miss=getMusicUrl&id=%s&level=%s";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -37,6 +35,7 @@ public class CyruiNcTrackReq {
         qualityMap.put("jyeffect", "jyeffect");
         qualityMap.put(AudioQuality.KEYS[AudioQuality.ATMOSPHERE], "sky");
         qualityMap.put(AudioQuality.KEYS[AudioQuality.MASTER], "jymaster");
+        qualityMap.put("dolby", "dolby");
     }
 
     /**
@@ -50,15 +49,12 @@ public class CyruiNcTrackReq {
         try {
             String songBody = HttpRequest.get(String.format(SONG_URL_NC_API, id, qualityMap.get(quality)))
                     .executeAsStr();
-            JSONArray data = JSONObject.parseObject(songBody).getJSONArray("data");
-            if (JsonUtil.isEmpty(data)) return "";
-            JSONObject urlJson = data.getJSONObject(0);
-            // 排除试听部分，直接换源
-            if (JsonUtil.isEmpty(urlJson.getJSONObject("freeTrialInfo"))) {
-                String url = urlJson.getString("url");
-                if (StringUtil.notEmpty(url)) return url;
-            }
-            return "";
+            JSONObject urlJson = JSONObject.parseObject(songBody);
+            if (urlJson.getIntValue("message") != 200) return "";
+            JSONObject data = urlJson.getJSONArray("data").getJSONObject(0);
+            String trackUrl = data.getString("url");
+            if (StringUtil.isEmpty(trackUrl)) return "";
+            return trackUrl;
         } catch (Exception e) {
             LogUtil.error(e);
             return "";
@@ -66,7 +62,7 @@ public class CyruiNcTrackReq {
     }
 
 //    public static void main(String[] args) {
-//        CyruiNcTrackReq trackReq = getInstance();
+//        XuanluogeNcTrackReq trackReq = getInstance();
 //        System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.STANDARD]));
 //        System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.HIGH]));
 //        System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
