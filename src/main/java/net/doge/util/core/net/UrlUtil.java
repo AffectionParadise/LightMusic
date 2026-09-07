@@ -2,6 +2,9 @@ package net.doge.util.core.net;
 
 import cn.hutool.core.util.URLUtil;
 
+import java.util.Arrays;
+import java.util.StringJoiner;
+
 /**
  * @author Doge
  * @description URL 工具类
@@ -36,5 +39,21 @@ public class UrlUtil {
      */
     public static String decode(String s) {
         return URLUtil.decode(s);
+    }
+
+    /**
+     * 对 query 按字典序排序
+     *
+     * @param query
+     * @return
+     */
+    public static String sortQuery(String query) {
+        // 将参数按照字典序排序
+        String[] sp = query.split("&");
+        Arrays.sort(sp);
+        // 合并排序后的参数
+        StringJoiner sj = new StringJoiner("&");
+        for (String s : sp) sj.add(s);
+        return sj.toString();
     }
 }

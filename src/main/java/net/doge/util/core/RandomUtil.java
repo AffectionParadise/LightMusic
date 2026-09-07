@@ -1,6 +1,7 @@
 package net.doge.util.core;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @author Doge
@@ -35,6 +36,15 @@ public class RandomUtil {
      */
     public static String randomIpv4() {
         return String.format("%d.%d.%d.%d", random.nextInt(256), random.nextInt(256), random.nextInt(256), random.nextInt(256));
+    }
+
+    /**
+     * 生成随机 4 类型的 UUID
+     *
+     * @return
+     */
+    public static String randomUuid() {
+        return UUID.randomUUID().toString();
     }
 
     /**

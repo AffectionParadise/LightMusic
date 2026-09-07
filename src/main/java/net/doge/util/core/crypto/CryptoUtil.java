@@ -50,11 +50,11 @@ public class CryptoUtil {
      * 计算 HMAC-SHA256，返回 16 进制字符串
      *
      * @param data
-     * @param secret
+     * @param key
      * @return
      */
-    public static String hmacSha256Hex(String data, String secret) {
-        byte[] res = hmacSha256(data.getBytes(StandardCharsets.UTF_8), secret.getBytes(StandardCharsets.UTF_8));
+    public static String hmacSha256Hex(String data, String key) {
+        byte[] res = hmacSha256(data.getBytes(StandardCharsets.UTF_8), key.getBytes(StandardCharsets.UTF_8));
         return res == null ? null : bytesToHex(res);
     }
 
@@ -75,6 +75,14 @@ public class CryptoUtil {
             LogUtil.error(e);
             return null;
         }
+    }
+
+    /**
+     * HMAC-SHA256 加密并转换为 Base64 URL 编码（不带填充 '='）
+     */
+    public static String hmacSha256Base64Url(String data, String key) {
+        byte[] hmac = hmacSha256(data.getBytes(StandardCharsets.UTF_8), key.getBytes(StandardCharsets.UTF_8));
+        return Base64.encodeUrlSafe(hmac);
     }
 
     /**

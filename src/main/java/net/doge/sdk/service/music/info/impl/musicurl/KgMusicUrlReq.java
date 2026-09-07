@@ -4,6 +4,7 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.impl.musicurl.track.kg.ChkszKgTrackReq;
 import net.doge.sdk.service.music.info.impl.musicurl.track.kg.KgTrackReqV2;
+import net.doge.sdk.service.music.info.impl.musicurl.track.kg.QqovoKgTrackReq;
 import net.doge.sdk.service.music.info.impl.musicurl.track.kg.XuanluogeKgTrackReq;
 import net.doge.util.core.StringUtil;
 
@@ -45,7 +46,8 @@ public class KgMusicUrlReq {
                 quality = AudioQuality.KEYS[AudioQuality.STANDARD];
                 break;
         }
-        String trackUrl = ChkszKgTrackReq.getInstance().getTrackUrl(hash, quality);
+        String trackUrl = QqovoKgTrackReq.getInstance().getTrackUrl(hash, quality);
+        if (StringUtil.isEmpty(trackUrl)) trackUrl = ChkszKgTrackReq.getInstance().getTrackUrl(hash, quality);
         if (StringUtil.isEmpty(trackUrl)) trackUrl = XuanluogeKgTrackReq.getInstance().getTrackUrl(hash, quality);
         if (StringUtil.isEmpty(trackUrl)) trackUrl = KgTrackReqV2.getInstance().getTrackUrl(hash, quality);
         return trackUrl;

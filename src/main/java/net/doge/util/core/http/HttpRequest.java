@@ -4,6 +4,7 @@ import net.doge.util.core.exception.ExceptionUtil;
 import net.doge.util.core.http.constant.ContentType;
 import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.http.constant.Method;
+import net.doge.util.core.http.cookiejar.CustomCookieJar;
 import okhttp3.*;
 import okhttp3.internal.http.HttpMethod;
 
@@ -133,11 +134,30 @@ public class HttpRequest {
 
     public HttpRequest timeout(int connectTimeout, int readTimeout, int writeTimeout) {
         // 基于全局 CLIENT 创建一个新的 Client，只修改超时配置
-        this.customClient = HttpClient.CLIENT.newBuilder()
+        this.customClient = client().newBuilder()
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .build();
+        return this;
+    }
+
+    // 会话
+    public HttpRequest session() {
+        this.customClient = client().newBuilder()
+                .cookieJar(new CustomCookieJar())
+                .build();
+        return this;
+    }
+
+    // 获取 Client
+    public OkHttpClient client() {
+        return customClient == null ? HttpClient.CLIENT : customClient;
+    }
+
+    // 设置 Client
+    public HttpRequest client(OkHttpClient client) {
+        this.customClient = client;
         return this;
     }
 
@@ -147,10 +167,8 @@ public class HttpRequest {
         buildForm();
 
         Request request = requestBuilder.build();
-        // 优先使用自定义 Client
-        OkHttpClient client = customClient == null ? HttpClient.CLIENT : customClient;
         try {
-            Response response = client.newCall(request).execute();
+            Response response = client().newCall(request).execute();
             return HttpResponse.of(response);
         } catch (IOException e) {
             ExceptionUtil.throwRuntimeException(e);
