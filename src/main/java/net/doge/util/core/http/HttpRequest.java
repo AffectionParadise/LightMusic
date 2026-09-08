@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * HTTP 请求封装
  */
 public class HttpRequest {
-    private OkHttpClient customClient;
+    private OkHttpClient client;
 
     private Request.Builder requestBuilder;
     private FormBody.Builder formBuilder;
@@ -25,6 +25,7 @@ public class HttpRequest {
 
     // 私有构造器
     private HttpRequest(Method method, String url) {
+        this.client = HttpClient.CLIENT;
         this.method = method;
         this.requestBuilder = new Request.Builder().url(url);
         String methodStr = method.getValue();
@@ -134,7 +135,7 @@ public class HttpRequest {
 
     public HttpRequest timeout(int connectTimeout, int readTimeout, int writeTimeout) {
         // 基于全局 CLIENT 创建一个新的 Client，只修改超时配置
-        this.customClient = client().newBuilder()
+        this.client = client.newBuilder()
                 .connectTimeout(connectTimeout, TimeUnit.SECONDS)
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
@@ -144,7 +145,7 @@ public class HttpRequest {
 
     // 会话
     public HttpRequest session() {
-        this.customClient = client().newBuilder()
+        this.client = client.newBuilder()
                 .cookieJar(new CustomCookieJar())
                 .build();
         return this;
@@ -152,12 +153,12 @@ public class HttpRequest {
 
     // 获取 Client
     public OkHttpClient client() {
-        return customClient == null ? HttpClient.CLIENT : customClient;
+        return client;
     }
 
     // 设置 Client
     public HttpRequest client(OkHttpClient client) {
-        this.customClient = client;
+        this.client = client;
         return this;
     }
 
@@ -168,7 +169,7 @@ public class HttpRequest {
 
         Request request = requestBuilder.build();
         try {
-            Response response = client().newCall(request).execute();
+            Response response = client.newCall(request).execute();
             return HttpResponse.of(response);
         } catch (IOException e) {
             ExceptionUtil.throwRuntimeException(e);
