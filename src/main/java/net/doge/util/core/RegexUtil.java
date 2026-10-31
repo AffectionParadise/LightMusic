@@ -1,6 +1,7 @@
 package net.doge.util.core;
 
 import cn.hutool.core.util.ReUtil;
+import org.intellij.lang.annotations.Language;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class RegexUtil {
      * @param content
      * @return
      */
-    public static String getGroup0(String regex, CharSequence content) {
+    public static String getGroup0(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.getGroup0(regex, content);
     }
 
@@ -28,29 +29,29 @@ public class RegexUtil {
      * @param content
      * @return
      */
-    public static String getGroup1(String regex, CharSequence content) {
+    public static String getGroup1(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.getGroup1(regex, content);
     }
 
     /**
-     * 匹配全部，返回 0 组字符串列表
+     * 匹配全部，返回组 0 字符串列表
      *
      * @param regex
      * @param content
      * @return
      */
-    public static List<String> findAllGroup0(String regex, CharSequence content) {
+    public static List<String> findAllGroup0(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.findAllGroup0(regex, content);
     }
 
     /**
-     * 匹配全部，返回 1 组字符串列表
+     * 匹配全部，返回组 1 字符串列表
      *
      * @param regex
      * @param content
      * @return
      */
-    public static List<String> findAllGroup1(String regex, CharSequence content) {
+    public static List<String> findAllGroup1(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.findAllGroup1(regex, content);
     }
 
@@ -61,7 +62,7 @@ public class RegexUtil {
      * @param content
      * @return
      */
-    public static boolean test(String regex, CharSequence content) {
+    public static boolean test(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.isMatch(regex, content);
     }
 
@@ -72,7 +73,7 @@ public class RegexUtil {
      * @param content
      * @return
      */
-    public static boolean contains(String regex, CharSequence content) {
+    public static boolean contains(@Language("RegExp") String regex, CharSequence content) {
         return ReUtil.contains(regex, content);
     }
 }

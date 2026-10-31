@@ -28,7 +28,7 @@ public class HttpRequest {
         this.client = HttpClient.CLIENT;
         this.method = method;
         this.requestBuilder = new Request.Builder().url(url);
-        String methodStr = method.getValue();
+        String methodStr = method.toString();
         requestBuilder.method(methodStr, HttpMethod.requiresRequestBody(methodStr) ? createEmptyBody() : null);
     }
 
@@ -95,7 +95,7 @@ public class HttpRequest {
 
     // Body
     public HttpRequest body(RequestBody body) {
-        requestBuilder.method(method.getValue(), body);
+        requestBuilder.method(method.toString(), body);
         return this;
     }
 

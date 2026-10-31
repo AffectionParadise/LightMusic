@@ -24,14 +24,18 @@ public class QsMusicInfoReq {
     }
 
     // 歌曲信息 API (汽水)
-    private final String SONG_DETAIL_QS_API = "https://api.qishui.com/luna/h5/track?track_id=%s";
+    private final String SONG_DETAIL_QS_API = "https://api.qishui.com/luna/pc/track_v2?aid=386088&app_name=luna_pc&region=cn&geo_region=cn&os_region=cn&sim_region=" +
+            "&device_id=3753066532709850&cdid=&iid=850377327519292&version_name=3.4.0&version_code=30040000&channel=official&build_mode=master&network_carrier=&ac=wifi" +
+            "&tz_name=Asia/Shanghai&resolution=&device_platform=windows&device_type=Windows&os_version=Windows 10 Education&fp=3753066532709850";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_QS_API, id))
+        // 需要 PC 端登录 Cookie，否则返回空 Body
+        String songBody = HttpRequest.post(SONG_DETAIL_QS_API)
+                .jsonBody(String.format("{\"track_id\":\"%s\",\"media_type\":\"track\",\"queue_type\":\"search_one_track\",\"scene_name\":\"search\"}", id))
                 .executeAsStr();
         JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("track");
         JSONObject albumJson = songJson.getJSONObject("album");

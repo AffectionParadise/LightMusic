@@ -1,5 +1,7 @@
 package net.doge.util.core;
 
+import cn.hutool.core.util.IdUtil;
+
 import java.util.Random;
 import java.util.UUID;
 
@@ -48,6 +50,15 @@ public class RandomUtil {
     }
 
     /**
+     * 生成随机 32 位不带 - 的 GUID
+     *
+     * @return
+     */
+    public static String randomGuid() {
+        return IdUtil.simpleUUID().toUpperCase();
+    }
+
+    /**
      * 生成随机指定位数字
      *
      * @return
@@ -62,8 +73,7 @@ public class RandomUtil {
      * @param array
      */
     public static <T> T randomChoose(T[] array) {
-        int num = random.nextInt(array.length);
-        return array[num];
+        return array[random.nextInt(array.length)];
     }
 
     /**

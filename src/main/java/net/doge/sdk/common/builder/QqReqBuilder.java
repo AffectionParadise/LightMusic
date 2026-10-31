@@ -18,12 +18,11 @@ public class QqReqBuilder {
     }
 
     public HttpRequest buildSearchRequest(QqSearchDevice device, QqSearchType type, String keyword, int page, int limit) {
-        String json = "{\"comm\":{\"ct\":\"11\",\"cv\":\"14090508\",\"v\":\"14090508\",\"tmeAppID\":\"qqmusic\",\"phonetype\":\"EBG-AN10\",\"deviceScore\":\"553.47\"," +
-                "\"devicelevel\":\"50\",\"newdevicelevel\":\"20\",\"rom\":\"HuaWei/EMOTION/EmotionUI_14.2.0\",\"os_ver\":\"12\",\"OpenUDID\":\"0\",\"OpenUDID2\":\"0\"," +
-                "\"QIMEI36\":\"0\",\"udid\":\"0\",\"chid\":\"0\",\"aid\":\"0\",\"oaid\":\"0\",\"taid\":\"0\",\"tid\":\"0\",\"wid\":\"0\",\"uid\":\"0\",\"sid\":\"0\"," +
-                "\"modeSwitch\":\"6\",\"teenMode\":\"0\",\"ui_mode\":\"2\",\"nettype\":\"1020\",\"v4ip\":\"\"},\"req\":{\"module\":\"music.search.SearchCgiService\"," +
-                "\"method\":\"%s\",\"param\":{\"searchid\":\"%s\",\"search_type\":%s,\"query\":\"%s\",\"page_num\":%s,\"num_per_page\":%s,\"highlight\":0," +
-                "\"nqc_flag\":0,\"multi_zhida\":0,\"cat\":2,\"grp\":1,\"sin\":0,\"sem\":0}}}";
+        String json = "{\"comm\":{\"_channelid\":\"0\",\"_os_version\":\"6.2.9200-2\",\"ct\":\"19\",\"cv\":\"2151\",\"guid\":\"1F70E520B2EAA7D25E11760783C53CA9\"," +
+                "\"patch\":\"118\",\"psrf_access_token_expiresAt\":0,\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\"," +
+                "\"tmeLoginType\":0,\"uin\":\"0\",\"wid\":\"7223299733393904640\"},\"req\":{\"module\":\"music.search.SearchCgiService\"," +
+                "\"method\":\"%s\",\"param\":{\"searchid\":\"%s\",\"search_type\":%s,\"query\":\"%s\",\"page_num\":%s,\"num_per_page\":%s," +
+                "\"highlight\":0,\"grp\":1,\"remoteplace\":\"txt.newclient.top\"}}}";
         int t;
         switch (type) {
             case SONG:
@@ -59,8 +58,18 @@ public class QqReqBuilder {
                 method = "DoSearchForQQMusicDesktop";
                 break;
         }
-        String searchId = RandomUtil.randomNumbers(16);
+        String searchId = getSearchId();
         return HttpRequest.post(SdkCommon.QQ_MAIN_API)
                 .jsonBody(String.format(json, method, searchId, t, keyword, page, limit));
+    }
+
+    /**
+     * PC 客户端版 searchid：32 位大写十六进制 GUID + 5 位补零随机数 = 37 字符
+     * 对应 QQ 音乐 PC 端 searchid 形状（服务端只需要唯一的会话 ID，形状一致即可）
+     */
+    private String getSearchId() {
+        String guid = RandomUtil.randomGuid();
+        String randomPart = String.format("%05d", RandomUtil.randomInt(100000));
+        return guid + randomPart;
     }
 }

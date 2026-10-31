@@ -56,7 +56,7 @@ public class QqovoQqTrackReq {
             String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
             String nonce = RandomUtil.randomUuid();
 
-            String payload = String.join("\n", Method.GET.getValue(), path, sortedQuery, "", timestamp, nonce);
+            String payload = String.join("\n", Method.GET.toString(), path, sortedQuery, "", timestamp, nonce);
             String signature = CryptoUtil.hmacSha256Base64Url(payload, apiSignKey);
 
             Map<String, String> headers = new HashMap<>(baseHeaders);
@@ -99,6 +99,7 @@ public class QqovoQqTrackReq {
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);
             String trackUrl = urlJson.getString("url");
+            // 此 url 未知原因无法播放
             if (StringUtil.isEmpty(trackUrl)) return "";
             return trackUrl;
         } catch (Exception e) {

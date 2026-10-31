@@ -26,10 +26,13 @@ public class QsMusicSearchReq {
     }
 
     // 关键词搜索歌曲 API (汽水)
-    private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/pc/search/track?aid=386088&app_name=luna_pc&region=cn&geo_region=cn&os_region=cn&sim_region=" +
-            "&device_id=1088932190113307&cdid=&iid=2332504177791808&version_name=3.0.0&version_code=30000000&channel=official&build_mode=master&network_carrier=&ac=wifi" +
-            "&tz_name=Asia/Shanghai&resolution=&device_platform=windows&device_type=Windows&os_version=Windows+11+Home+China&fp=1088932190113307&q=%s&cursor=%s" +
-            "&search_id=4ee2bc52-db9b-42c3-85cf-cdac2fe02efe&search_method=input&debug_params=&from_search_id=1aa21093-d49e-4d29-b6c7-548b170d12a0&search_scene=";
+    private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/search/track?device_platform=android&os=android&ssmix=a&cdid=46556f98-1720-4248-83da-62b74b60b46a" +
+            "&channel=xiaomi_8478_64&aid=386088&app_name=luna&version_code=100198030&version_name=19.8.0&manifest_version_code=100198030&update_version_code=100198030" +
+            "&resolution=1080*1920&dpi=480&device_type=ABR-AL80&device_brand=HUAWEI&language=zh&os_api=35&os_version=15&ac=wifi&device_model=ABR-AL80&save_power=0&font_size=1.00" +
+            "&luna_first_launch_apk_type=normal_apk&diversion_channel_name=xiaomi_8478_64&is_car_play=0&battery=0.99&network_speed=10156&hybrid_version_code=100198030" +
+            "&tz_name=Asia/Shanghai&tz_offset=28800&luna_register_time=1784311292&diversion_category_level_two=Xiaomi商店-自然&package=com.luna.music" +
+            "&charge=0&luna_apk_type=normal_apk&output_device_type=Phone&volume=1.00&brightness=0.08&need_personal_recommend=1&is_teen_mode=0&sim_region=cn" +
+            "&diversion_category_level_one=厂商商店-自然&android_device_type=default&iid=2204957404569386&device_id=2204957404565290&_rticket=%s&q=%s&cursor=%s&count=%s";
 
     /**
      * 根据关键词获取歌曲
@@ -41,7 +44,7 @@ public class QsMusicSearchReq {
         // 对关键词编码
         String encodedKeyword = UrlUtil.encodeAll(keyword);
         // 每页固定 20 条
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_QS_API, encodedKeyword, (page - 1) * 20))
+        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_QS_API, System.currentTimeMillis(), encodedKeyword, (page - 1) * limit, limit))
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");

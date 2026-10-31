@@ -46,6 +46,7 @@ public class BakaKgTrackReq {
         try {
             String url = String.format(SONG_URL_KG_API, hash, qualityMap.get(quality));
             String trackUrl = HttpUtil.getRedirectUrl(url);
+            // 此 url 未知原因无法播放
             if (StringUtil.isEmpty(trackUrl)) return "";
             return trackUrl;
         } catch (Exception e) {
@@ -54,10 +55,10 @@ public class BakaKgTrackReq {
         }
     }
 
-//    public static void main(String[] args) {
-//        BakaKgTrackReq trackReq = getInstance();
-//        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
-//        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.HIGH]));
-//        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
-//    }
+    public static void main(String[] args) {
+        BakaKgTrackReq trackReq = getInstance();
+        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.STANDARD]));
+        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.HIGH]));
+        System.out.println(trackReq.getTrackUrl("38A1E141897E5E5A01B914A90F8A1EA9", AudioQuality.KEYS[AudioQuality.LOSSLESS]));
+    }
 }
