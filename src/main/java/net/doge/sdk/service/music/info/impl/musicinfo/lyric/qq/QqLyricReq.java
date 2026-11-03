@@ -15,6 +15,7 @@ import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.media.DurationUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.parser.Parser;
 
 import java.util.List;
 
@@ -90,9 +91,12 @@ public class QqLyricReq {
         // 获取歌词
         String lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
                 .executeAsStr();
-        Document doc = Jsoup.parse(lyricBody.replaceAll("(<!--)|(-->)", ""));
+        lyricBody = lyricBody.replaceAll("<!--|-->", "");
+        // 此处用 XMLParser 解析，否则 CDATA 无法获取！
+        Document doc = Jsoup.parse(lyricBody, Parser.xmlParser());
         String lyricHex = doc.select("content").text();
-        String transHex = doc.select("contentts").text();
+        // 翻译是明文不需要解密
+        String transText = doc.select("contentts").text();
         String romaHex = doc.select("contentroma").text();
         QrcDecoder qrcDecoder = QrcDecoder.getInstance();
         String qrcXml = qrcDecoder.decode(lyricHex);
@@ -113,10 +117,7 @@ public class QqLyricReq {
             String lyric = parseQrcXml(qrcXml);
             musicInfo.setLyric(lyric);
             // 翻译
-            if (StringUtil.notEmpty(transHex)) {
-                String trans = qrcDecoder.decode(transHex);
-                musicInfo.setTrans(trans);
-            }
+            musicInfo.setTrans(transText);
             // 罗马音
             if (StringUtil.notEmpty(romaHex)) {
                 String romaXml = qrcDecoder.decode(romaHex);
