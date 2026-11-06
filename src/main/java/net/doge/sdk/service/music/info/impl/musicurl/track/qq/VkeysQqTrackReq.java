@@ -26,6 +26,7 @@ public class VkeysQqTrackReq {
     }
 
     // 歌曲 URL 获取 API (QQ)
+    // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/qq.py
     private final String SONG_URL_QQ_API = "https://api.vkeys.cn/music/tencent/song/link?mid=%s&quality=%s";
 
     private Map<String, String> qualityMap = new HashMap<>();

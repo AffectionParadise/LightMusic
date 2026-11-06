@@ -2,6 +2,7 @@
 //
 //import com.alibaba.fastjson2.JSONObject;
 //import net.doge.constant.core.media.AudioQuality;
+//import net.doge.util.core.RandomUtil;
 //import net.doge.util.core.StringUtil;
 //import net.doge.util.core.crypto.CryptoUtil;
 //import net.doge.util.core.http.HttpRequest;
@@ -23,10 +24,13 @@
 //    }
 //
 //    // 歌曲 URL 获取 API (QQ)
-//    // 参考 https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/qq.py
+//    // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/qq.py
 //    private final String SONG_URL_QQ_API = "https://api.317ak.cn/api/yinyue/qqyinyue?ckey=%s&i=%s&br=%s&type=json&lrc=1";
 //
-//    private final String REQUEST_KEY = "Wk83NlFKQ0lINVBQSUNKT09YVUg=";
+//    private final String[] REQUEST_KEYS = {
+//            "Wk83NlFKQ0lINVBQSUNKT09YVUg=",
+//            "UUkyNzZXTTgwNzFaT1JKS0JFMTQ="
+//    };
 //
 //    private Map<String, String> qualityMap = new HashMap<>();
 //
@@ -58,7 +62,8 @@
 //     */
 //    public String getTrackUrl(String mid, String quality) {
 //        try {
-//            String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, decodeRequestKey(REQUEST_KEY), mid, qualityMap.get(quality)))
+//            String ckey = decodeRequestKey(RandomUtil.randomChoose(REQUEST_KEYS));
+//            String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, ckey, mid, qualityMap.get(quality)))
 //                    .executeAsStr();
 //            JSONObject songJson = JSONObject.parseObject(songBody);
 //            if (songJson.getIntValue("code") != 1) return "";

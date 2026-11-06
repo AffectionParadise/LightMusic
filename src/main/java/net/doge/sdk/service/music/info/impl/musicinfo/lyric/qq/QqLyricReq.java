@@ -100,7 +100,7 @@ public class QqLyricReq {
         String romaHex = doc.select("contentroma").text();
         QrcDecoder qrcDecoder = QrcDecoder.getInstance();
         String qrcXml = qrcDecoder.decode(lyricHex);
-        // 没有 qrc 用 lrc 代替
+        // 没有 qrc (lyric 密文存在但无法解密出明文) 用 lrc 代替
         if (StringUtil.isEmpty(qrcXml) && StringUtil.notEmpty(lyricHex)) {
             lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API_2, mid))
                     .header(Header.REFERER, "https://y.qq.com/portal/player.html")

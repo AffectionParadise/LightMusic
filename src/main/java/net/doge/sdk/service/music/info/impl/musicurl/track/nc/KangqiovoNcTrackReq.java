@@ -4,26 +4,27 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.log.LogUtil;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class XuanluogeNcTrackReq {
-    private static XuanluogeNcTrackReq instance;
+public class KangqiovoNcTrackReq {
+    private static KangqiovoNcTrackReq instance;
 
-    private XuanluogeNcTrackReq() {
+    private KangqiovoNcTrackReq() {
         initMap();
     }
 
-    public static XuanluogeNcTrackReq getInstance() {
-        if (instance == null) instance = new XuanluogeNcTrackReq();
+    public static KangqiovoNcTrackReq getInstance() {
+        if (instance == null) instance = new KangqiovoNcTrackReq();
         return instance;
     }
 
     // 歌曲 URL 获取 API (网易云)
     // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/netease.py
-    private final String SONG_URL_NC_API = "http://118.24.104.108:3456/api.php?miss=getMusicUrl&id=%s&level=%s";
+    private final String SONG_URL_NC_API = "https://ncm.kangqiovo.com/Song_V1";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -48,11 +49,13 @@ public class XuanluogeNcTrackReq {
      */
     public String getTrackUrl(String id, String quality) {
         try {
-            String songBody = HttpRequest.get(String.format(SONG_URL_NC_API, id, qualityMap.get(quality)))
+            String songBody = HttpRequest.post(SONG_URL_NC_API)
+                    .header(Header.REFERER, "https://ncm.kangqiovo.com/")
+                    .jsonBody(String.format("{\"url\":\"%s\",\"level\":\"%s\",\"type\":\"json\"}", id, qualityMap.get(quality)))
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);
-            if (!"200".equals(urlJson.getString("message"))) return "";
-            JSONObject data = urlJson.getJSONArray("data").getJSONObject(0);
+            if (urlJson.getIntValue("status") != 200) return "";
+            JSONObject data = urlJson.getJSONObject("data");
             String trackUrl = data.getString("url");
             if (StringUtil.isEmpty(trackUrl)) return "";
             return trackUrl;
@@ -63,7 +66,7 @@ public class XuanluogeNcTrackReq {
     }
 
     public static void main(String[] args) {
-        XuanluogeNcTrackReq trackReq = getInstance();
+        KangqiovoNcTrackReq trackReq = getInstance();
         System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.STANDARD]));
         System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.HIGH]));
         System.out.println(trackReq.getTrackUrl("2600493765", AudioQuality.KEYS[AudioQuality.LOSSLESS]));

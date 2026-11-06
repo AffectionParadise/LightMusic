@@ -8,7 +8,6 @@ import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -26,7 +25,8 @@ public class KwLyricReq {
 
     // 歌词 API (酷我)
 //    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
-    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
+//    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
+    private final String LYRIC_KW_API = "http://mlyric.kuwo.cn/mobi.s?f=web&type=lyric&lrcx=1&rid=%s&encode=utf8";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
@@ -34,25 +34,28 @@ public class KwLyricReq {
         // 请求参数加密
         byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
         int keyLen = keyBytes.length;
-        String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
-        byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
-        int paramsLen = paramsBytes.length;
-        byte[] output = new byte[paramsLen];
-        int i = 0;
-        while (i < paramsLen) {
-            int j = 0;
-            while (j < keyLen && i < paramsLen) {
-                output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
-                i++;
-                j++;
-            }
-        }
-        params = CryptoUtil.base64Encode(output);
+//        String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
+//        byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
+//        int paramsLen = paramsBytes.length;
+//        byte[] output = new byte[paramsLen];
+//        int i = 0;
+//        while (i < paramsLen) {
+//            int j = 0;
+//            while (j < keyLen && i < paramsLen) {
+//                output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
+//                i++;
+//                j++;
+//            }
+//        }
+//        params = CryptoUtil.base64Encode(output);
 
         // 获取歌词
-        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
+//        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
+//                .executeAsBytes();
+        // 新接口参数不需要加密，且使用 utf8 解码歌词
+        byte[] bodyBytes = HttpRequest.get(String.format(LYRIC_KW_API, id))
                 .executeAsBytes();
-        if (!"tp=content".equals(new String(bodyBytes, 0, 10))) return;
+        if (!"tp=content".equalsIgnoreCase(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
         byte[] lyricData = CryptoUtil.decompress(nBytes);
@@ -61,8 +64,8 @@ public class KwLyricReq {
         String lyricDataStr = new String(lyricData, StandardCharsets.UTF_8);
         byte[] lyricBytes = CryptoUtil.base64Decode(lyricDataStr);
         int lyricLen = lyricBytes.length;
-        output = new byte[lyricLen];
-        i = 0;
+        byte[] output = new byte[lyricLen];
+        int i = 0;
         while (i < lyricLen) {
             int j = 0;
             while (j < keyLen && i < lyricLen) {
@@ -71,7 +74,8 @@ public class KwLyricReq {
                 j++;
             }
         }
-        String lyricStr = new String(output, Charset.forName("gb18030"));
+//        String lyricStr = new String(output, Charset.forName("gb18030"));
+        String lyricStr = new String(output, StandardCharsets.UTF_8);
 
         // 解析酷我的偏移值
         int offset = 1, offset2 = 1;
