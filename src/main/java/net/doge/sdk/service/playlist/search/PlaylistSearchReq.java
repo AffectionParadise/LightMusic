@@ -34,6 +34,8 @@ public class PlaylistSearchReq {
             executor.submit(() -> MgPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
         if (src == NetResourceSource.FS || src == NetResourceSource.ALL)
             executor.submit(() -> FsPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
+        if (src == NetResourceSource.QS || src == NetResourceSource.ALL)
+            executor.submit(() -> QsPlaylistSearchReq.getInstance().searchPlaylists(keyword, page, limit));
         return executor.getResult();
     }
 }

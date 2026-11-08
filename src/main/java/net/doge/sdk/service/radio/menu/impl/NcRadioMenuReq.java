@@ -7,8 +7,8 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 
@@ -41,7 +41,7 @@ public class NcRadioMenuReq {
         int t;
 
         String id = radioInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String userInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_SUBSCRIBERS_NC_API,
                         String.format("{\"id\":\"%s\",\"time\":-1,\"limit\":1000,\"total\":true}", id), options)
                 .executeAsStr();

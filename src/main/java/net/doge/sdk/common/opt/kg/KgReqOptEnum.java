@@ -3,7 +3,7 @@ package net.doge.sdk.common.opt.kg;
 /**
  * 酷狗请求选项参数
  */
-public enum KugouReqOptEnum {
+public enum KgReqOptEnum {
     // url
     URL,
     // 请求方式

@@ -7,8 +7,8 @@ import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 
 import java.awt.image.BufferedImage;
@@ -79,7 +79,7 @@ public class KgAlbumSearchReq {
         params.put("page", page);
         params.put("pagesize", limit);
         params.put("category", 1);
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGet(SEARCH_ALBUM_KG_API);
         String albumInfoBody = SdkCommon.kgRequest(params, null, options)
                 .header("x-router", "complexsearch.kugou.com")
                 .executeAsStr();

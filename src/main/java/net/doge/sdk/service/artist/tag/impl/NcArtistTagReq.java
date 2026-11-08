@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
 
@@ -33,7 +33,7 @@ public class NcArtistTagReq {
      */
     public void initStyleArtistTag() {
         int c = Tags.artistIndices.length;
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String tagBody = SdkCommon.ncRequest(Method.POST, STYLE_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject tagJson = JSONObject.parseObject(tagBody);

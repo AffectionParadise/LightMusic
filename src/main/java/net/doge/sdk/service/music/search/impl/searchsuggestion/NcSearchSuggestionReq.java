@@ -3,8 +3,8 @@ package net.doge.sdk.service.music.search.impl.searchsuggestion;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
 
@@ -36,7 +36,7 @@ public class NcSearchSuggestionReq {
     public List<String> getSimpleSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SIMPLE_SEARCH_SUGGESTION_NC_API, String.format("{\"s\":\"%s\"}", keyword), options)
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
@@ -61,7 +61,7 @@ public class NcSearchSuggestionReq {
     public List<String> getSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String searchSuggestionBody = SdkCommon.ncRequest(Method.POST, SEARCH_SUGGESTION_NC_API, String.format("{\"s\":\"%s\"}", keyword), options)
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);

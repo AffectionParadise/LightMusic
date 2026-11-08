@@ -9,8 +9,8 @@ import net.doge.entity.service.*;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -66,7 +66,7 @@ public class NcCommentReq {
 
             // Mlog 需要先获取视频 id，并转为视频类型
             if (isMlog) {
-                Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+                Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
                 String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_NC_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                         .executeAsStr();
                 id = JSONObject.parseObject(body).getString("data");
@@ -88,7 +88,7 @@ public class NcCommentReq {
                     cur = StringUtil.isEmpty(cursor) ? "0" : cursor;
                     break;
             }
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/v2/resource/comments");
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/v2/resource/comments");
             String commentInfoBody = SdkCommon.ncRequest(Method.POST, COMMENTS_NC_API,
                             String.format("{\"threadId\":\"%s\",\"showInner\":true,\"pageNo\":%s,\"pageSize\":%s,\"cursor\":\"%s\",\"sortType\":%s}",
                                     threadId, page, limit, cur, sortType), options)

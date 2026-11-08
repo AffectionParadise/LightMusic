@@ -9,8 +9,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -46,7 +46,7 @@ public class KgNewMusicReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(EVERYDAY_SONG_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(EVERYDAY_SONG_KG_API);
         Map<String, Object> params = new TreeMap<>();
         params.put("platform", "android");
         params.put("userid", "0");
@@ -156,7 +156,7 @@ public class KgNewMusicReq {
 
         String param = s[TagType.STYLE_SONG_KG];
         if (StringUtil.notEmpty(param)) {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_SONG_KG_API);
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(STYLE_SONG_KG_API);
             Map<String, Object> params = new TreeMap<>();
             params.put("tagids", param);
             String musicInfoBody = SdkCommon.kgRequest(params, "{}", options)

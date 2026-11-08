@@ -241,6 +241,17 @@ public class CryptoUtil {
     }
 
     /**
+     * 用 key 循环异或 data (原地操作)
+     *
+     * @param data
+     * @param key
+     */
+    public static void xorCipher(byte[] data, byte[] key) {
+        for (int i = 0, dataLen = data.length, keyLen = key.length; i < dataLen; i++)
+            data[i] ^= key[i % keyLen];
+    }
+
+    /**
      * zlib 压缩 bytes
      *
      * @param data

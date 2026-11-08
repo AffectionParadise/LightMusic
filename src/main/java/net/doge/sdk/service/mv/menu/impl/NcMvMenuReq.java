@@ -8,8 +8,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
@@ -51,7 +51,7 @@ public class NcMvMenuReq {
         int t;
 
         String id = musicInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_MLOG_NC_API,
                         String.format("{\"id\":\"0\",\"type\":2,\"rcmdType\":20,\"limit\":500,\"extInfo\":\"{'songId':'%s'}\"}", id), options)
                 .executeAsStr();
@@ -108,7 +108,7 @@ public class NcMvMenuReq {
         boolean isMlog = netMvInfo.isMlog();
         // Mlog 需要先获取视频 id，并转为视频类型
         if (isMlog) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_NC_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                     .executeAsStr();
             id = JSONObject.parseObject(body).getString("data");
@@ -117,7 +117,7 @@ public class NcMvMenuReq {
         }
         // 视频
         if (isVideo) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_VIDEO_NC_API,
                             String.format("{\"id\":\"%s\",\"type\":%s}", id, RegexUtil.test("^\\d+$", id) ? 0 : 1), options)
                     .executeAsStr();
@@ -154,7 +154,7 @@ public class NcMvMenuReq {
         }
         // MV
         else {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_MV_NC_API, String.format("{\"mvid\":\"%s\"}", id), options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

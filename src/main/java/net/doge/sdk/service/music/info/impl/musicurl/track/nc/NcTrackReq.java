@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -52,7 +52,7 @@ public class NcTrackReq {
      */
     public String getTrackUrl(String id, String quality) {
         try {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/song/enhance/player/url/v1");
             String songBody = SdkCommon.ncRequest(Method.POST, SONG_URL_NC_API,
                             String.format("{\"ids\":\"['%s']\",\"level\":\"%s\",\"encodeType\":\"flac\",\"immerseType\":\"c51\"}", id, qualityMap.get(quality)), options)
                     .executeAsStr();

@@ -8,10 +8,10 @@ import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.builder.KugouReqBuilder;
+import net.doge.sdk.common.builder.KgReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 
@@ -46,8 +46,8 @@ public class KgNewAlbumReq {
 
         String param = s[TagType.NEW_ALBUM_KG];
         if (StringUtil.notEmpty(param)) {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
-            String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KugouReqBuilder.apiver, page, limit);
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
+            String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KgReqBuilder.apiver, page, limit);
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -95,7 +95,7 @@ public class KgNewAlbumReq {
 
         String param = s[TagType.IP_ALBUM_KG];
         if (StringUtil.notEmpty(param)) {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_ALBUM_KG_API);
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_ALBUM_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();

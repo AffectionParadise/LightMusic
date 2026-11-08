@@ -3,7 +3,7 @@ package net.doge.sdk.common.opt.nc;
 /**
  * 网易云请求选项参数
  */
-public enum NeteaseReqOptEnum {
+public enum NcReqOptEnum {
     // 加密方式
     CRYPTO,
     // eapi 加密所需参数

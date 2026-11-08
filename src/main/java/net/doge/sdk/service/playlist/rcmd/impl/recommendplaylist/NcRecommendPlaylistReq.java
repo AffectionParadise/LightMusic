@@ -8,8 +8,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
@@ -96,7 +96,7 @@ public class NcRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PLAYLIST_NC_API, "{\"n\":1000,\"limit\":100,\"total\":true}", options)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -137,7 +137,7 @@ public class NcRecommendPlaylistReq {
 
         String param = s[TagType.STYLE_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_PLAYLIST_NC_API,
                             String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();

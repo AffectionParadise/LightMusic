@@ -7,8 +7,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetSheetInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -42,7 +42,7 @@ public class NcSheetReq {
         int total = 0;
 
         String id = musicInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String sheetInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_NC_API, String.format("{\"id\":\"%s\",\"abTest\":\"b\"}", id), options)
                 .executeAsStr();
         JSONObject sheetInfoJson = JSONObject.parseObject(sheetInfoBody);
@@ -93,7 +93,7 @@ public class NcSheetReq {
         int total;
 
         String id = sheetInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api//music/sheet/preview/info");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api//music/sheet/preview/info");
         String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_NC_API, id), String.format("{\"id\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);

@@ -6,8 +6,8 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.entity.service.NetRankInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -39,7 +39,7 @@ public class NcRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String rankInfoBody = SdkCommon.ncRequest(Method.POST, GET_RANK_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);

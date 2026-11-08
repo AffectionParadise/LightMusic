@@ -1,8 +1,8 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.sdk.common.crypto.NeteaseCrypto;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptConstants;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.crypto.NcCrypto;
+import net.doge.sdk.common.opt.nc.NcReqOptConstants;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.array.ArrayUtil;
@@ -15,14 +15,14 @@ import net.doge.util.core.net.UrlUtil;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NeteaseReqBuilder {
-    private static NeteaseReqBuilder instance;
+public class NcReqBuilder {
+    private static NcReqBuilder instance;
 
-    private NeteaseReqBuilder() {
+    private NcReqBuilder() {
     }
 
-    public static NeteaseReqBuilder getInstance() {
-        if (instance == null) instance = new NeteaseReqBuilder();
+    public static NcReqBuilder getInstance() {
+        if (instance == null) instance = new NcReqBuilder();
         return instance;
     }
 
@@ -53,17 +53,17 @@ public class NeteaseReqBuilder {
             // Linux 就算了
     };
 
-    public HttpRequest buildRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
+    public HttpRequest buildRequest(Method method, String url, String data, Map<NcReqOptEnum, String> options) {
         Map<String, String> headers = new HashMap<>();
-        String device = options.getOrDefault(NeteaseReqOptEnum.UA, NeteaseReqOptConstants.BOTH);
+        String device = options.getOrDefault(NcReqOptEnum.UA, NcReqOptConstants.BOTH);
         switch (device) {
-            case NeteaseReqOptConstants.MOBILE:
+            case NcReqOptConstants.MOBILE:
                 headers.put(Header.USER_AGENT, RandomUtil.randomChoose(MOBILE_USER_AGENTS));
                 break;
-            case NeteaseReqOptConstants.PC:
+            case NcReqOptConstants.PC:
                 headers.put(Header.USER_AGENT, RandomUtil.randomChoose(PC_USER_AGENTS));
                 break;
-            case NeteaseReqOptConstants.BOTH:
+            case NcReqOptConstants.BOTH:
                 headers.put(Header.USER_AGENT, RandomUtil.randomChoose(ArrayUtil.concat(MOBILE_USER_AGENTS, PC_USER_AGENTS)));
                 break;
         }
@@ -82,17 +82,17 @@ public class NeteaseReqBuilder {
         String csrfToken = "";
 
         String body = "";
-        switch (options.get(NeteaseReqOptEnum.CRYPTO)) {
-            case NeteaseReqOptConstants.WEAPI:
+        switch (options.get(NcReqOptEnum.CRYPTO)) {
+            case NcReqOptConstants.WEAPI:
                 headers.put(Header.REFERER, "https://music.163.com");
                 String cookie = String.format("__remember_me=true; ntes_kaola_ad=1; _ntes_nuid=%s; _ntes_nnid=%s; WNMCID=%s; WEVNSM=%s; NMTID=%s; osver=%s; deviceId=%s; " +
                                 "os=%s; channel=%s; appver=%s; MUSIC_A=%s;",
                         _ntes_nuid, _ntes_nnid, WNMCID, WEVNSM, NMTID, osver, deviceId, os, channel, appver, anonymousToken);
                 headers.put(Header.COOKIE, cookie);
-                body = NeteaseCrypto.getInstance().weapi(data);
+                body = NcCrypto.getInstance().weapi(data);
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
-            case NeteaseReqOptConstants.EAPI:
+            case NcReqOptConstants.EAPI:
                 String requestId = System.currentTimeMillis() + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
                 headers.put("osver", osver);
                 headers.put("deviceId", deviceId);
@@ -107,7 +107,7 @@ public class NeteaseReqBuilder {
                 headers.put("requestId", requestId);
                 headers.put("MUSIC_A", anonymousToken);
                 headers.put(Header.COOKIE, getCookie(headers));
-                body = NeteaseCrypto.getInstance().eapi(options.get(NeteaseReqOptEnum.PATH), data);
+                body = NcCrypto.getInstance().eapi(options.get(NcReqOptEnum.PATH), data);
                 url = url.replaceFirst("\\w*api", "eapi");
                 break;
         }

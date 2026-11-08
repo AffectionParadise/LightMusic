@@ -8,8 +8,8 @@ import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -43,7 +43,7 @@ public class NcArtistInfoReq {
         List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -78,7 +78,7 @@ public class NcArtistInfoReq {
      */
     public void fillArtistInfo(NetArtistInfo artistInfo) {
         String id = artistInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -104,7 +104,7 @@ public class NcArtistInfoReq {
         int total;
 
         String id = artistInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String artistInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_SONGS_NC_API,
                         String.format("{\"id\":\"%s\",\"private_cloud\":true,\"work_type\":1,\"order\":\"hot\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit),
                         options)

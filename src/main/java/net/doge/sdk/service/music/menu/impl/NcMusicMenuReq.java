@@ -8,8 +8,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -45,7 +45,7 @@ public class NcMusicMenuReq {
         int t;
 
         String id = netMusicInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String musicInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_SONG_NC_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -97,7 +97,7 @@ public class NcMusicMenuReq {
         int t;
 
         String id = musicInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistInfoBody = SdkCommon.ncRequest(Method.POST, RELATED_PLAYLIST_NC_API, String.format("{\"songid\":\"%s\",\"offset\":0,\"limit\":50}", id), options)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

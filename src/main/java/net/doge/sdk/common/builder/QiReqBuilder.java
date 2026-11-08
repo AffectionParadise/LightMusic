@@ -8,14 +8,14 @@ import net.doge.util.core.net.UrlUtil;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class QianReqBuilder {
-    private static QianReqBuilder instance;
+public class QiReqBuilder {
+    private static QiReqBuilder instance;
 
-    private QianReqBuilder() {
+    private QiReqBuilder() {
     }
 
-    public static QianReqBuilder getInstance() {
-        if (instance == null) instance = new QianReqBuilder();
+    public static QiReqBuilder getInstance() {
+        if (instance == null) instance = new QiReqBuilder();
         return instance;
     }
 

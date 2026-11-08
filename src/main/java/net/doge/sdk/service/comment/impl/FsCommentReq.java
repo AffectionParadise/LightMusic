@@ -12,8 +12,8 @@ import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
-import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
+import net.doge.sdk.common.opt.fs.FsReqOptEnum;
+import net.doge.sdk.common.opt.fs.FsReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.time.TimeUtil;
@@ -69,7 +69,7 @@ public class FsCommentReq {
             params.put("mvId", id);
             params.put("page", page);
         }
-        Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(url);
+        Map<FsReqOptEnum, Object> options = FsReqOptsBuilder.get(url);
         String commentInfoBody = SdkCommon.fsRequest(params, null, options)
                 .executeAsStr();
         JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);

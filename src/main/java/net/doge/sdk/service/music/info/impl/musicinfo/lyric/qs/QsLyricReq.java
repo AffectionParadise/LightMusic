@@ -21,7 +21,7 @@ public class QsLyricReq {
     }
 
     // 歌词 API (汽水)
-    private final String LYRIC_QS_API = "https://api.qishui.com/luna/h5/track?track_id=%s";
+    private final String LYRIC_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track?track_id=%s&device_platform=web";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();

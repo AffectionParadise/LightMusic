@@ -32,9 +32,9 @@ public class FaRecommendMvReq {
     }
 
     // 视频 API (发姐)
-    private final String VIDEO_FA_API = "https://www.chatcyf.com/video/page/%s/?c2=%s&c3&c4&t";
+    private final String VIDEO_FA_API = "https://www.chatcyf.com/video/%s/page/%s/";
     // 直播 API (发姐)
-    private final String LIVE_FA_API = "https://www.chatcyf.com/teaparty/page/%s/?c2=%s&c3&c4&t";
+    private final String LIVE_FA_API = "https://www.chatcyf.com/teaparty/%s/page/%s/";
 
     /**
      * 视频
@@ -47,7 +47,7 @@ public class FaRecommendMvReq {
         String param = s[TagType.VIDEO_FA];
         String[] sp = param.split(" ", -1);
         if (StringUtil.notEmpty(sp[0]) || StringUtil.isEmpty(sp[1])) {
-            String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, page, sp[0]))
+            String mvInfoBody = HttpRequest.get(String.format(VIDEO_FA_API, sp[0], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(mvInfoBody);
             Elements as = doc.select(".pagination ul li");
@@ -106,7 +106,7 @@ public class FaRecommendMvReq {
         String param = s[TagType.VIDEO_FA];
         String[] sp = param.split(" ", -1);
         if (StringUtil.notEmpty(sp[1]) || StringUtil.isEmpty(sp[0])) {
-            String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, page, sp[1]))
+            String mvInfoBody = HttpRequest.get(String.format(LIVE_FA_API, sp[1], page))
                     .executeAsStr();
             Document doc = Jsoup.parse(mvInfoBody);
             Elements as = doc.select(".pagination ul li");

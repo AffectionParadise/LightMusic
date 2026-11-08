@@ -1,6 +1,6 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
+import net.doge.sdk.common.opt.fs.FsReqOptEnum;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 
-public class FiveSingReqBuilder {
-    private static FiveSingReqBuilder instance;
+public class FsReqBuilder {
+    private static FsReqBuilder instance;
 
-    private FiveSingReqBuilder() {
+    private FsReqBuilder() {
     }
 
-    public static FiveSingReqBuilder getInstance() {
-        if (instance == null) instance = new FiveSingReqBuilder();
+    public static FsReqBuilder getInstance() {
+        if (instance == null) instance = new FsReqBuilder();
         return instance;
     }
 
@@ -30,9 +30,9 @@ public class FiveSingReqBuilder {
     // 5sing 的签名算法和 kugou 一致，只不过 key 不一样
     public static final String signKey = "5uytoxQewcvIc1gn1PlNF0T2jbbOzRl5";
 
-    public HttpRequest buildRequest(Map<String, Object> params, String data, Map<FiveSingReqOptEnum, Object> options) {
-        String url = (String) options.getOrDefault(FiveSingReqOptEnum.URL, "");
-        Method method = (Method) options.get(FiveSingReqOptEnum.METHOD);
+    public HttpRequest buildRequest(Map<String, Object> params, String data, Map<FsReqOptEnum, Object> options) {
+        String url = (String) options.getOrDefault(FsReqOptEnum.URL, "");
+        Method method = (Method) options.get(FsReqOptEnum.METHOD);
 
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();

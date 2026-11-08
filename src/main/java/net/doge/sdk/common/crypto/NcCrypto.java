@@ -7,14 +7,14 @@ import net.doge.util.core.net.UrlUtil;
 
 import java.nio.charset.StandardCharsets;
 
-public class NeteaseCrypto {
-    private static NeteaseCrypto instance;
+public class NcCrypto {
+    private static NcCrypto instance;
 
-    private NeteaseCrypto() {
+    private NcCrypto() {
     }
 
-    public static NeteaseCrypto getInstance() {
-        if (instance == null) instance = new NeteaseCrypto();
+    public static NcCrypto getInstance() {
+        if (instance == null) instance = new NcCrypto();
         return instance;
     }
 

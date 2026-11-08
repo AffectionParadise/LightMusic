@@ -10,8 +10,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
@@ -121,7 +121,7 @@ public class KgCommentReq {
             params.put("pagesize", limit);
             params.put("uuid", 0);
             params.put("ver", 10);
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(hotOnly ? HOT_COMMENTS_KG_API : NEW_COMMENTS_KG_API);
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGet(hotOnly ? HOT_COMMENTS_KG_API : NEW_COMMENTS_KG_API);
             String commentInfoBody = SdkCommon.kgRequest(params, null, options)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);

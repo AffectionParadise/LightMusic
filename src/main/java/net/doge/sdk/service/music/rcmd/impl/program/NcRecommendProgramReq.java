@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 
 import java.util.LinkedList;
@@ -40,7 +40,7 @@ public class NcRecommendProgramReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String programInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_PROGRAM_NC_API, "{\"cateId\":\"\",\"offset\":0,\"limit\":10}", options)
                 .executeAsStr();
         JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -83,7 +83,7 @@ public class NcRecommendProgramReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String programInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_PROGRAM_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -126,7 +126,7 @@ public class NcRecommendProgramReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_24_HOURS_TOPLIST_NC_API, "{\"limit\":100}", options)
                 .executeAsStr();
         JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);
@@ -169,7 +169,7 @@ public class NcRecommendProgramReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String programInfoBody = SdkCommon.ncRequest(Method.POST, PROGRAM_TOPLIST_NC_API, "{\"offset\":0,\"limit\":200}", options)
                 .executeAsStr();
         JSONObject programInfoJson = JSONObject.parseObject(programInfoBody);

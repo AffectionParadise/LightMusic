@@ -3,14 +3,14 @@ package net.doge.sdk.common.builder;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.constant.Header;
 
-public class KuwoReqBuilder {
-    private static KuwoReqBuilder instance;
+public class KwReqBuilder {
+    private static KwReqBuilder instance;
 
-    private KuwoReqBuilder() {
+    private KwReqBuilder() {
     }
 
-    public static KuwoReqBuilder getInstance() {
-        if (instance == null) instance = new KuwoReqBuilder();
+    public static KwReqBuilder getInstance() {
+        if (instance == null) instance = new KwReqBuilder();
         return instance;
     }
 

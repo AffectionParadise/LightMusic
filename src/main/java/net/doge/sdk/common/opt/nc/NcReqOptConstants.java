@@ -3,7 +3,7 @@ package net.doge.sdk.common.opt.nc;
 /**
  * 网易云请求选项值
  */
-public class NeteaseReqOptConstants {
+public class NcReqOptConstants {
     // 加密方式
     public static final String WEAPI = "weapi";
     public static final String EAPI = "eapi";

@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 
@@ -31,7 +31,7 @@ public class NcMvInfoReq {
      */
     public void fillMvDetail(NetMvInfo mvInfo) {
         String mvId = mvInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String mvBody = SdkCommon.ncRequest(Method.POST, MV_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", mvId), options)
                 .executeAsStr();
         JSONObject mvJson = JSONObject.parseObject(mvBody);

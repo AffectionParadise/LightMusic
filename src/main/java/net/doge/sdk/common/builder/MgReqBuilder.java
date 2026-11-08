@@ -5,16 +5,19 @@ import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.net.UrlUtil;
 
-public class MiguReqBuilder {
-    private static MiguReqBuilder instance;
+public class MgReqBuilder {
+    private static MgReqBuilder instance;
 
-    private MiguReqBuilder() {
+    private MgReqBuilder() {
     }
 
-    public static MiguReqBuilder getInstance() {
-        if (instance == null) instance = new MiguReqBuilder();
+    public static MgReqBuilder getInstance() {
+        if (instance == null) instance = new MgReqBuilder();
         return instance;
     }
+
+    // 搜索 API (咪咕)
+    private final String SEARCH_MG_API = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=0&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0&sid=USS";
 
     public HttpRequest buildSearchRequest(MgSearchType type, String keyword, int page, int limit) {
         String deviceId = "963B7AA0D21511ED807EE5846EC87D20";
@@ -41,8 +44,7 @@ public class MiguReqBuilder {
                 json = "{\"song\":0,\"album\":0,\"singer\":1,\"tagSong\":0,\"mvSong\":0,\"bestShow\":0,\"songlist\":0,\"lyricSong\":0}";
                 break;
         }
-        String url = "https://jadeite.migu.cn/music_search/v3/search/searchAll?isCorrect=0&isCopyright=1&searchSwitch=%s&text=%s&pageNo=%s&pageSize=%s&sort=0&sid=USS";
-        return HttpRequest.get(String.format(url, UrlUtil.encodeAll(json), UrlUtil.encodeAll(keyword), page, limit))
+        return HttpRequest.get(String.format(SEARCH_MG_API, UrlUtil.encodeAll(json), UrlUtil.encodeAll(keyword), page, limit))
                 .header("uiVersion", "A_music_3.6.1")
                 .header("deviceId", deviceId)
                 .header("timestamp", time)

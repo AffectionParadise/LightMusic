@@ -4,9 +4,10 @@ import net.doge.sdk.common.builder.*;
 import net.doge.sdk.common.constant.mg.MgSearchType;
 import net.doge.sdk.common.constant.qq.QqSearchDevice;
 import net.doge.sdk.common.constant.qq.QqSearchType;
-import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
+import net.doge.sdk.common.constant.qs.QsSearchType;
+import net.doge.sdk.common.opt.fs.FsReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.constant.Method;
 
@@ -30,18 +31,18 @@ public class SdkCommon {
     public static final String FA_RADIO_API = "https://www.chatcyf.com/radio/";
 
     // 构造网易云音乐请求
-    public static HttpRequest ncRequest(Method method, String url, String data, Map<NeteaseReqOptEnum, String> options) {
-        return NeteaseReqBuilder.getInstance().buildRequest(method, url, data, options);
+    public static HttpRequest ncRequest(Method method, String url, String data, Map<NcReqOptEnum, String> options) {
+        return NcReqBuilder.getInstance().buildRequest(method, url, data, options);
     }
 
     // 构造酷狗音乐请求
-    public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
-        return KugouReqBuilder.getInstance().buildRequest(params, data, options);
+    public static HttpRequest kgRequest(Map<String, Object> params, String data, Map<KgReqOptEnum, Object> options) {
+        return KgReqBuilder.getInstance().buildRequest(params, data, options);
     }
 
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
-        return KuwoReqBuilder.getInstance().buildRequest(url);
+        return KwReqBuilder.getInstance().buildRequest(url);
     }
 
     // 构造 QQ 音乐搜索请求
@@ -51,16 +52,21 @@ public class SdkCommon {
 
     // 构造咪咕音乐搜索请求
     public static HttpRequest mgSearchRequest(MgSearchType type, String keyword, int page, int limit) {
-        return MiguReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
+        return MgReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
     }
 
     // 构造千千音乐请求
     public static HttpRequest qiRequest(String url) {
-        return QianReqBuilder.getInstance().buildRequest(url);
+        return QiReqBuilder.getInstance().buildRequest(url);
     }
 
     // 构造 5sing 请求
-    public static HttpRequest fsRequest(Map<String, Object> params, String data, Map<FiveSingReqOptEnum, Object> options) {
-        return FiveSingReqBuilder.getInstance().buildRequest(params, data, options);
+    public static HttpRequest fsRequest(Map<String, Object> params, String data, Map<FsReqOptEnum, Object> options) {
+        return FsReqBuilder.getInstance().buildRequest(params, data, options);
+    }
+
+    // 构造汽水音乐搜索请求
+    public static HttpRequest qsSearchRequest(QsSearchType type, String keyword, int page, int limit) {
+        return QsReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
     }
 }

@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,7 +32,7 @@ public class KgNewSongTagReq {
      */
     public void initNewSongTag() {
         int c = Tags.newSongIndices.length;
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(STYLE_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(STYLE_KG_API);
         Map<String, Object> params = new TreeMap<>();
         params.put("tagids", "");
         String tagBody = SdkCommon.kgRequest(params, "{}", options)

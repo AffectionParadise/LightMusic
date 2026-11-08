@@ -8,8 +8,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -46,7 +46,7 @@ public class NcHighQualityPlaylistReq {
 
         String param = s[TagType.HIGH_QUALITY_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_NC_API,
                             String.format("{\"cat\":\"%s\",\"lasttime\":0,\"limit\":%s,\"total\":true}", param, limit), options)
                     .executeAsStr();
@@ -94,7 +94,7 @@ public class NcHighQualityPlaylistReq {
 
         String param = s[TagType.PICKED_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,
                             String.format("{\"cat\":\"%s\",\"order\":\"hot\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();
@@ -142,7 +142,7 @@ public class NcHighQualityPlaylistReq {
 
         String param = s[TagType.PICKED_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,
                             String.format("{\"cat\":\"%s\",\"order\":\"new\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();

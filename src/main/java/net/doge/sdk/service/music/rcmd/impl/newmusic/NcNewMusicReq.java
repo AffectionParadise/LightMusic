@@ -8,8 +8,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -44,7 +44,7 @@ public class NcNewMusicReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String musicInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_NEW_SONG_NC_API, "{\"type\":\"recommend\",\"limit\":100,\"areaId\":0}", options)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -98,7 +98,7 @@ public class NcNewMusicReq {
 
         String param = s[TagType.FAST_NEW_SONG_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_NC_API, String.format("{\"areaId\":\"%s\",\"total\":true}", param), options)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -153,7 +153,7 @@ public class NcNewMusicReq {
 
         String param = s[TagType.STYLE_NEW_SONG_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_NEW_SONG_NC_API,
                             String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":1}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();

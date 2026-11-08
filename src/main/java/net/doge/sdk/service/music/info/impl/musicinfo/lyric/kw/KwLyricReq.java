@@ -33,21 +33,10 @@ public class KwLyricReq {
 
         // 请求参数加密
         byte[] keyBytes = "yeelion".getBytes(StandardCharsets.UTF_8);
-        int keyLen = keyBytes.length;
 //        String params = "user=12345,web,web,web&requester=localhost&req=1&rid=MUSIC_" + id + "&lrcx=1";
 //        byte[] paramsBytes = params.getBytes(StandardCharsets.UTF_8);
-//        int paramsLen = paramsBytes.length;
-//        byte[] output = new byte[paramsLen];
-//        int i = 0;
-//        while (i < paramsLen) {
-//            int j = 0;
-//            while (j < keyLen && i < paramsLen) {
-//                output[i] = (byte) (keyBytes[j] ^ paramsBytes[i]);
-//                i++;
-//                j++;
-//            }
-//        }
-//        params = CryptoUtil.base64Encode(output);
+//        CryptoUtil.xorCipher(paramsBytes, keyBytes);
+//        params = CryptoUtil.base64Encode(paramsBytes);
 
         // 获取歌词
 //        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
@@ -58,24 +47,14 @@ public class KwLyricReq {
         if (!"tp=content".equalsIgnoreCase(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
-        byte[] lyricData = CryptoUtil.decompress(nBytes);
+        byte[] lyricRawData = CryptoUtil.decompress(nBytes);
         // 无 lrcx 参数时，此处直接获得 lrc 歌词
-//        String lyricStr = new String(lyricData, Charset.forName("gb18030"));
-        String lyricDataStr = new String(lyricData, StandardCharsets.UTF_8);
-        byte[] lyricBytes = CryptoUtil.base64Decode(lyricDataStr);
-        int lyricLen = lyricBytes.length;
-        byte[] output = new byte[lyricLen];
-        int i = 0;
-        while (i < lyricLen) {
-            int j = 0;
-            while (j < keyLen && i < lyricLen) {
-                output[i] = (byte) (lyricBytes[i] ^ keyBytes[j]);
-                i++;
-                j++;
-            }
-        }
+//        String lyricStr = new String(lyricRawData, Charset.forName("gb18030"));
+        String lyricRawDataStr = new String(lyricRawData, StandardCharsets.UTF_8);
+        byte[] lyricData = CryptoUtil.base64Decode(lyricRawDataStr);
+        CryptoUtil.xorCipher(lyricData, keyBytes);
 //        String lyricStr = new String(output, Charset.forName("gb18030"));
-        String lyricStr = new String(output, StandardCharsets.UTF_8);
+        String lyricStr = new String(lyricData, StandardCharsets.UTF_8);
 
         // 解析酷我的偏移值
         int offset = 1, offset2 = 1;
@@ -136,7 +115,7 @@ public class KwLyricReq {
         sb = new StringBuilder();
         hasTrans = false;
         String lastTime = null;
-        for (i = 0; i < s; i++) {
+        for (int i = 0; i < s; i++) {
             String sentence = sp[i], nextSentence = i + 1 < s ? sp[i + 1] : null;
             String time = RegexUtil.getGroup0(lineTimeExp, sentence);
             if (StringUtil.isEmpty(time)) continue;

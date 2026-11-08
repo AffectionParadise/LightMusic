@@ -3,8 +3,8 @@ package net.doge.sdk.service.music.search.impl.hotsearch;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 
 import java.util.LinkedList;
@@ -33,7 +33,7 @@ public class NcHotSearchReq {
     public List<String> getHotSearch() {
         List<String> r = new LinkedList<>();
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/search/chart/detail");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/search/chart/detail");
         String hotSearchBody = SdkCommon.ncRequest(Method.POST, HOT_SEARCH_NC_API, "{\"id\":\"HOT_SEARCH_SONG#@#\"}", options)
                 .executeAsStr();
         JSONObject hotSearchJson = JSONObject.parseObject(hotSearchBody);

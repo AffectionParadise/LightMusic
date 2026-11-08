@@ -8,10 +8,10 @@ import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.builder.KugouReqBuilder;
+import net.doge.sdk.common.builder.KgReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -174,13 +174,13 @@ public class KgRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(TOP_PLAYLIST_KG_API);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         String dat = String.format("{\"appid\":%s,\"mid\":\"%s\",\"clientver\":%s," +
                         "\"platform\":\"android\",\"clienttime\":\"%s\",\"userid\":%s,\"module_id\":4,\"page\":1,\"pagesize\":30," +
                         "\"key\":\"%s\",\"special_recommend\":{\"withtag\":1,\"withsong\":1,\"sort\":1,\"ugc\":1," +
                         "\"is_selected\":0,\"withrecommend\":1,\"area_code\":1,\"categoryid\":\"0\"}}",
-                KugouReqBuilder.appid, KugouReqBuilder.mid, KugouReqBuilder.clientver, ct, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct));
+                KgReqBuilder.appid, KgReqBuilder.mid, KgReqBuilder.clientver, ct, KgReqBuilder.userid, KgReqBuilder.signParamsKey(ct));
         String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

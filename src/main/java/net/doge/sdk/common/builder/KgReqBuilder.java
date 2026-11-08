@@ -1,7 +1,7 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.sdk.common.opt.kg.KugouReqOptConstants;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptConstants;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 
-public class KugouReqBuilder {
-    private static KugouReqBuilder instance;
+public class KgReqBuilder {
+    private static KgReqBuilder instance;
 
-    private KugouReqBuilder() {
+    private KgReqBuilder() {
     }
 
-    public static KugouReqBuilder getInstance() {
-        if (instance == null) instance = new KugouReqBuilder();
+    public static KgReqBuilder getInstance() {
+        if (instance == null) instance = new KgReqBuilder();
         return instance;
     }
 
@@ -33,10 +33,10 @@ public class KugouReqBuilder {
     public static final String uuid = "15e772e1213bdd0718d0c1d10d64e06f";
     public static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
 
-    public HttpRequest buildRequest(Map<String, Object> params, String data, Map<KugouReqOptEnum, Object> options) {
-        String url = (String) options.getOrDefault(KugouReqOptEnum.URL, "");
+    public HttpRequest buildRequest(Map<String, Object> params, String data, Map<KgReqOptEnum, Object> options) {
+        String url = (String) options.getOrDefault(KgReqOptEnum.URL, "");
         if (!url.startsWith("http")) url = "https://gateway.kugou.com" + url;
-        Method method = (Method) options.get(KugouReqOptEnum.METHOD);
+        Method method = (Method) options.get(KgReqOptEnum.METHOD);
 
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();
@@ -51,12 +51,12 @@ public class KugouReqBuilder {
         params.put("clienttime", ct);
 
         // 带加密 key
-        if ((Boolean) options.getOrDefault(KugouReqOptEnum.ENCRYPT_KEY, false))
+        if ((Boolean) options.getOrDefault(KgReqOptEnum.ENCRYPT_KEY, false))
             params.put("key", CryptoUtil.md5Hex(params.get("hash") + pidversec + appid + mid + userid));
 
-        String crypto = (String) options.get(KugouReqOptEnum.CRYPTO);
+        String crypto = (String) options.get(KgReqOptEnum.CRYPTO);
         switch (crypto) {
-            case KugouReqOptConstants.ANDROID:
+            case KgReqOptConstants.ANDROID:
                 params.put("signature", signAndroid(params, data));
                 break;
         }

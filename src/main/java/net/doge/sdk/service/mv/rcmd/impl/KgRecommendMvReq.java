@@ -9,8 +9,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -95,7 +95,7 @@ public class KgRecommendMvReq {
 
         String param = s[TagType.IP_MV_KG];
         if (StringUtil.notEmpty(param)) {
-            Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(IP_MV_KG_API);
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_MV_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);
             String mvInfoBody = SdkCommon.kgRequest(null, dat, options)
                     .executeAsStr();

@@ -9,8 +9,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.service.playlist.info.PlaylistInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
@@ -61,7 +61,7 @@ public class NcHotMusicRecommendReq {
 
         String param = s[TagType.STYLE_HOT_SONG_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_HOT_SONG_NC_API,
                             String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();

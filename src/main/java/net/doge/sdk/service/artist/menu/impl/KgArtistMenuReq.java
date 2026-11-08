@@ -8,10 +8,10 @@ import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.builder.KugouReqBuilder;
+import net.doge.sdk.common.builder.KgReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
@@ -162,7 +162,7 @@ public class KgArtistMenuReq {
 //                res.add(mvInfo);
 //            }
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(ARTIST_MVS_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGet(ARTIST_MVS_KG_API);
         Map<String, Object> params = new TreeMap<>();
         params.put("author_id", id);
         params.put("is_fanmade", "");
@@ -214,11 +214,11 @@ public class KgArtistMenuReq {
         int t;
 
         String id = netArtistInfo.getId();
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(SIMILAR_ARTIST_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(SIMILAR_ARTIST_KG_API);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         String dat = String.format("{\"clientver\":\"%s\",\"mid\":\"%s\",\"clienttime\":\"%s\",\"key\":\"%s\"," +
                         "\"appid\":\"%s\",\"data\":[{\"author_id\":\"%s\"}]}",
-                KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.signParamsKey(ct), KugouReqBuilder.appid, id);
+                KgReqBuilder.clientver, KgReqBuilder.mid, ct, KgReqBuilder.signParamsKey(ct), KgReqBuilder.appid, id);
         String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);

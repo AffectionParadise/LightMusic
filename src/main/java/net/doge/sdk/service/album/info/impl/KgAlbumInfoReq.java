@@ -9,8 +9,8 @@ import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
@@ -142,7 +142,7 @@ public class KgAlbumInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ALBUM_SONGS_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(ALBUM_SONGS_KG_API);
         String dat = String.format("{\"album_id\":\"%s\",\"is_buy\":\"\",\"page\":%s,\"pagesize\":%s}", id, page, limit);
         String albumInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .header("x-router", "openapi.kugou.com")

@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
 
@@ -61,7 +61,7 @@ public class KgHotPlaylistTagReq {
      */
     public void initIpTag() {
         int c = Tags.hotPlaylistIndices.length;
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")
                 .executeAsStr();

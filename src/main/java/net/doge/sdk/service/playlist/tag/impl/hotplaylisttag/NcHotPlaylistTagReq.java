@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public class NcHotPlaylistTagReq {
      */
     public void initHighQualityPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistTagBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_TAG_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
@@ -56,7 +56,7 @@ public class NcHotPlaylistTagReq {
      */
     public void initPickedPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistTagBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_TAG_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);

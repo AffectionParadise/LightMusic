@@ -8,8 +8,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.AreaUtil;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
@@ -42,7 +42,7 @@ public class NcUserInfoReq {
      */
     public void fillUserInfo(NetUserInfo userInfo) {
         String id = userInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_NC_API, id), "{}", options)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -75,7 +75,7 @@ public class NcUserInfoReq {
 
         boolean isAll = recordType == 1;
         String id = userInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String userInfoBody = SdkCommon.ncRequest(Method.POST, USER_SONGS_NC_API,
                         String.format("{\"uid\":\"%s\",\"type\":%s}", id, recordType ^ 1), options)
                 .executeAsStr();
@@ -129,7 +129,7 @@ public class NcUserInfoReq {
         List<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_DETAIL_NC_API, id), "{}", options)
                 .executeAsStr();
         JSONObject userJson = JSONObject.parseObject(userInfoBody).getJSONObject("profile");

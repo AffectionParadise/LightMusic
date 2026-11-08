@@ -8,8 +8,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -57,7 +57,7 @@ public class NcNewAlbumReq {
 
         String param = s[TagType.NEW_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_NC_API,
                             String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
                                     param, TimeUtil.currYear(), TimeUtil.currMonth()),
@@ -155,7 +155,7 @@ public class NcNewAlbumReq {
 
         String param = s[TagType.NEW_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_NC_API,
                             String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit),
                             options)
@@ -200,7 +200,7 @@ public class NcNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_ALBUM_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -242,7 +242,7 @@ public class NcNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEWEST_DI_ALBUM_NC_API,
                         "{\"area\":\"ALL\",\"offset\":0,\"limit\":200,\"total\":true,\"type\":\"\"}", options)
                 .executeAsStr();
@@ -284,7 +284,7 @@ public class NcNewAlbumReq {
 
         String param = s[TagType.LANG_DI_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_NC_API,
                             String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", param, (page - 1) * limit, limit),
                             options)
@@ -326,7 +326,7 @@ public class NcNewAlbumReq {
 
         String param = s[TagType.STYLE_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_NC_API,
                             String.format("{\"tagId\":\"%s\",\"cursor\":%s,\"size\":%s,\"sort\":0}", param, (page - 1) * limit, limit), options)
                     .executeAsStr();

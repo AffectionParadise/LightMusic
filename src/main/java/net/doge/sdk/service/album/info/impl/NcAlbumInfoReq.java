@@ -8,8 +8,8 @@ import net.doge.entity.service.NetAlbumInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -41,7 +41,7 @@ public class NcAlbumInfoReq {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_NC_API, id), "{}", options)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -78,7 +78,7 @@ public class NcAlbumInfoReq {
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_NC_API, id), "{}", options)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
@@ -103,7 +103,7 @@ public class NcAlbumInfoReq {
         int total;
 
         String id = albumInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ALBUM_DETAIL_NC_API, id), "{}", options)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

@@ -8,10 +8,10 @@ import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.builder.KugouReqBuilder;
+import net.doge.sdk.common.builder.KgReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 
 import java.awt.image.BufferedImage;
@@ -70,7 +70,7 @@ public class KgArtistInfoReq {
 //                    artistInfo.setCoverImgThumb(coverImgThumb);
 //                });
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ARTIST_DETAIL_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(ARTIST_DETAIL_KG_API);
         String dat = String.format("{\"author_id\":%s}", id);
         String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .header("x-router", "openapi.kugou.com")
@@ -125,7 +125,7 @@ public class KgArtistInfoReq {
 //            if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(data.getIntValue("albumcount"));
 //            if (!artistInfo.hasMvNum()) artistInfo.setMvNum(data.getIntValue("mvcount"));
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ARTIST_DETAIL_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(ARTIST_DETAIL_KG_API);
         String dat = String.format("{\"author_id\":%s}", id);
         String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .header("x-router", "openapi.kugou.com")
@@ -196,11 +196,11 @@ public class KgArtistInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(ARTIST_SONGS_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(ARTIST_SONGS_KG_API);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         String dat = String.format("{\"appid\":%s,\"clientver\":%s,\"mid\":\"%s\",\"clienttime\":%s," +
                         "\"key\":\"%s\",\"author_id\":\"%s\",\"page\":%s,\"pagesize\":%s,\"sort\":1,\"area_code\":\"all\"}",
-                KugouReqBuilder.appid, KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.signParamsKey(ct), id, page, limit);
+                KgReqBuilder.appid, KgReqBuilder.clientver, KgReqBuilder.mid, ct, KgReqBuilder.signParamsKey(ct), id, page, limit);
         String artistInfoBody = SdkCommon.kgRequest(null, dat, options)
                 .header("x-router", "openapi.kugou.com")
                 .header("kg-tid", "220")

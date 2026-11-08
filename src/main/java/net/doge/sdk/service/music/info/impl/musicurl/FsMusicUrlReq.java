@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.fs.FiveSingReqOptEnum;
-import net.doge.sdk.common.opt.fs.FiveSingReqOptsBuilder;
+import net.doge.sdk.common.opt.fs.FsReqOptEnum;
+import net.doge.sdk.common.opt.fs.FsReqOptsBuilder;
 import net.doge.util.core.StringUtil;
 
 import java.util.Map;
@@ -35,7 +35,7 @@ public class FsMusicUrlReq {
         params.put("songtype", sp[0]);
         params.put("songid", sp[1]);
         params.put("version", "6.6.72");
-        Map<FiveSingReqOptEnum, Object> options = FiveSingReqOptsBuilder.get(SONG_URL_FS_API);
+        Map<FsReqOptEnum, Object> options = FsReqOptsBuilder.get(SONG_URL_FS_API);
         String songBody = SdkCommon.fsRequest(params, null, options)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

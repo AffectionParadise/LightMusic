@@ -6,8 +6,8 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 
@@ -45,7 +45,7 @@ public class NcNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, NEW_RADIO_NC_API, "{\"type\":0,\"offset\":0,\"limit\":200}", options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -92,7 +92,7 @@ public class NcNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, PERSONALIZED_RADIO_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -141,7 +141,7 @@ public class NcNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -188,7 +188,7 @@ public class NcNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_RADIO_NC_API, "{\"limit\":100}", options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -232,7 +232,7 @@ public class NcNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_NC_API,
                         String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                 .executeAsStr();

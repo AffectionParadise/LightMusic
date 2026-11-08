@@ -7,8 +7,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -41,7 +41,7 @@ public class NcRadioInfoReq {
         List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -82,7 +82,7 @@ public class NcRadioInfoReq {
      */
     public void fillRadioInfo(NetRadioInfo radioInfo) {
         String id = radioInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -113,7 +113,7 @@ public class NcRadioInfoReq {
         int total;
 
         String id = radioInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, RADIO_PROGRAM_DETAIL_NC_API,
                         String.format("{\"radioId\":\"%s\",\"offset\":%s,\"limit\":%s,\"asc\":false}", id, (page - 1) * limit, limit), options)
                 .executeAsStr();

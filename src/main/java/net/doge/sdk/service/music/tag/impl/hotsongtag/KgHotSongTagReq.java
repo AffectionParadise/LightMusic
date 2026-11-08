@@ -5,9 +5,9 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.builder.KugouReqBuilder;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.builder.KgReqBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.RegexUtil;
 
 import java.util.Map;
@@ -37,7 +37,7 @@ public class KgHotSongTagReq {
      */
     public void initThemeSongTag() {
         int c = Tags.hotSongIndices.length;
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(THEME_SONG_TAG_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(THEME_SONG_TAG_KG_API);
         long ct = System.currentTimeMillis() / 1000;
         String dat = String.format("{\"platform\":\"android\",\"clienttime\":%s,\"userid\":0,\"module_id\":508}", ct);
         String tagBody = SdkCommon.kgRequest(null, dat, options)
@@ -61,11 +61,11 @@ public class KgHotSongTagReq {
      */
     public void initFmTag() {
         int c = Tags.hotSongIndices.length;
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidPost(FM_TAG_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(FM_TAG_KG_API);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         String dat = String.format("{\"kguid\":0,\"clienttime\":%s,\"mid\":\"%s\",\"platform\":\"android\",\"clientver\":%s," +
                         "\"uid\":%s,\"get_tracker\":1,\"key\":\"%s\",\"appid\":%s}",
-                ct, KugouReqBuilder.mid, KugouReqBuilder.clientver, KugouReqBuilder.userid, KugouReqBuilder.signParamsKey(ct), KugouReqBuilder.appid);
+                ct, KgReqBuilder.mid, KgReqBuilder.clientver, KgReqBuilder.userid, KgReqBuilder.signParamsKey(ct), KgReqBuilder.appid);
         String tagBody = SdkCommon.kgRequest(null, dat, options)
                 .header("x-router", "fm.service.kugou.com")
                 .executeAsStr();
@@ -92,7 +92,7 @@ public class KgHotSongTagReq {
      */
     public void initIpTag() {
         int c = Tags.hotSongIndices.length;
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGet(IP_TAG_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGet(IP_TAG_KG_API);
         String tagBody = SdkCommon.kgRequest(null, null, options)
                 .header("x-router", "yuekucategory.kugou.com")
                 .executeAsStr();

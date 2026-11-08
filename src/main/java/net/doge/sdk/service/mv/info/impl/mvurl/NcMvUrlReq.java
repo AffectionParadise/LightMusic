@@ -6,8 +6,8 @@ import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.service.MvInfoType;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
 
@@ -58,7 +58,7 @@ public class NcMvUrlReq {
         }
         // Mlog 需要先获取视频 id，并转为视频类型
         if (isMlog) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String body = SdkCommon.ncRequest(Method.POST, MLOG_TO_VIDEO_NC_API, String.format("{\"mlogId\":\"%s\"}", id), options)
                     .executeAsStr();
             id = JSONObject.parseObject(body).getString("data");
@@ -66,7 +66,7 @@ public class NcMvUrlReq {
             mvInfo.setType(MvInfoType.VIDEO);
         }
         if (isVideo) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvBody = SdkCommon.ncRequest(Method.POST, VIDEO_URL_NC_API, String.format("{\"ids\":\"['%s']\",\"resolution\":\"%s\"}", id, quality), options)
                     .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);
@@ -97,7 +97,7 @@ public class NcMvUrlReq {
 //                if (StringUtil.notEmpty(url)) return url;
 //            }
         else {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvBody = SdkCommon.ncRequest(Method.POST, MV_URL_NC_API, String.format("{\"id\":\"%s\",\"r\":\"%s\"}", id, quality), options)
                     .executeAsStr();
             JSONObject mvJson = JSONObject.parseObject(mvBody);

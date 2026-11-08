@@ -49,6 +49,8 @@ public class PlaylistInfoReq {
                 return MePlaylistInfoReq.getInstance().getPlaylistInfo(id);
             case NetResourceSource.BI:
                 return BiPlaylistInfoReq.getInstance().getPlaylistInfo(id);
+            case NetResourceSource.QS:
+                return QsPlaylistInfoReq.getInstance().getPlaylistInfo(id);
             default:
                 return CommonResult.create();
         }
@@ -89,6 +91,9 @@ public class PlaylistInfoReq {
             case NetResourceSource.BI:
                 BiPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
                 break;
+            case NetResourceSource.QS:
+                QsPlaylistInfoReq.getInstance().fillPlaylistInfo(playlistInfo);
+                break;
         }
     }
 
@@ -123,6 +128,8 @@ public class PlaylistInfoReq {
                 return MePlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
             case NetResourceSource.BI:
                 return BiPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
+            case NetResourceSource.QS:
+                return QsPlaylistInfoReq.getInstance().getMusicInfoInPlaylist(playlistInfo, page, limit);
             default:
                 return CommonResult.create();
         }

@@ -8,8 +8,8 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -51,7 +51,7 @@ public class NcRecommendMvReq {
 
         String param = s[TagType.MV_RANK_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_NC_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                             param.replace("全部", ""), (page - 1) * limit, limit), options)
                     .executeAsStr();
@@ -101,7 +101,7 @@ public class NcRecommendMvReq {
 
         String param = s[TagType.MV_RANK_NC];
         if (StringUtil.notEmpty(param)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_NC_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", param), options)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -145,7 +145,7 @@ public class NcRecommendMvReq {
         String param = s[TagType.MV_RANK_NC];
         String param2 = s[TagType.ALL_MV_NC];
         if (StringUtil.notEmpty(param) || StringUtil.notEmpty(param2)) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_NC_API,
                             String.format("{\"tags\":\"{'area':'%s','type':'%s','order':'上升最快'}\",\"offset\":%s,\"limit\":%s,\"total\":true}",
                                     param, param2, (page - 1) * limit, limit), options)
@@ -189,7 +189,7 @@ public class NcRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_MV_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -230,7 +230,7 @@ public class NcRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, EXCLUSIVE_MV_NC_API,
                         String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
                 .executeAsStr();

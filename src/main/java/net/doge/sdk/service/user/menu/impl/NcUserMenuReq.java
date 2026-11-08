@@ -8,8 +8,8 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -50,7 +50,7 @@ public class NcUserMenuReq {
         int total;
 
         String id = userInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistInfoBody = SdkCommon.ncRequest(Method.POST, USER_PLAYLIST_NC_API,
                         String.format("{\"uid\":\"%s\",\"offset\":%s,\"limit\":%s,\"includeVideo\":true}", id, (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -98,7 +98,7 @@ public class NcUserMenuReq {
         int total;
 
         String id = userInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, USER_RADIO_NC_API, String.format("{\"userId\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
@@ -150,7 +150,7 @@ public class NcUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FOLLOWS_NC_API, id),
                         String.format("{\"offset\":%s,\"limit\":%s,\"order\":true}", (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -202,7 +202,7 @@ public class NcUserMenuReq {
         int t = 0;
 
         String id = netUserInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/user/getfolloweds");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/user/getfolloweds");
         String userInfoBody = SdkCommon.ncRequest(Method.POST, String.format(USER_FANS_NC_API, id),
                         String.format("{\"userId\":\"%s\",\"time\":0,\"offset\":%s,\"limit\":%s,\"getcounts\":true}", id, (page - 1) * limit, limit), options)
                 .executeAsStr();

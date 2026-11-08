@@ -7,8 +7,8 @@ import net.doge.constant.service.MvInfoType;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -39,7 +39,7 @@ public class NcMvSearchReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/cloudsearch/pc");
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_NC_API,
                         String.format("{\"s\":\"%s\",\"type\":1004,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -85,7 +85,7 @@ public class NcMvSearchReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/cloudsearch/pc");
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_NC_API,
                         String.format("{\"s\":\"%s\",\"type\":1014,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                 .executeAsStr();

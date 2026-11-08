@@ -40,7 +40,7 @@ public class FaMvTagReq {
         for (int i = 0, len = tags.size(); i < len; i++) {
             Element a = tags.get(i);
 
-            String id = RegexUtil.getGroup1("c2=(\\d+)", a.attr("href"));
+            String id = RegexUtil.getGroup1("video/(.*?)/", a.attr("href"));
             if (StringUtil.isEmpty(id)) continue;
             String name = a.text();
 
@@ -63,7 +63,7 @@ public class FaMvTagReq {
         for (int i = 0, len = tags.size(); i < len; i++) {
             Element a = tags.get(i);
 
-            String id = RegexUtil.getGroup1("c2=(\\d+)", a.attr("href"));
+            String id = RegexUtil.getGroup1("teaparty/(.*?)/", a.attr("href"));
             if (StringUtil.isEmpty(id)) continue;
             String name = a.text();
 

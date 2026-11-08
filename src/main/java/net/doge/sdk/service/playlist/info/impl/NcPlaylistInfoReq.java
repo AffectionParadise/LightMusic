@@ -8,8 +8,8 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -44,7 +44,7 @@ public class NcPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         int t = 1;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_NC_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -84,7 +84,7 @@ public class NcPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_NC_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -114,7 +114,7 @@ public class NcPlaylistInfoReq {
 
         String id = playlistInfo.getId();
         // 先获取 trackId 列表
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String trackIdBody = SdkCommon.ncRequest(Method.POST, PLAYLIST_DETAIL_NC_API, String.format("{\"id\":\"%s\",\"n\":100000,\"s\":8}", id), options)
                 .executeAsStr();
         JSONObject playlistJson = JSONObject.parseObject(trackIdBody).getJSONObject("playlist");

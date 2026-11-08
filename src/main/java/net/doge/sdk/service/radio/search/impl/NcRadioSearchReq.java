@@ -6,8 +6,8 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.constant.Method;
@@ -39,7 +39,7 @@ public class NcRadioSearchReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/cloudsearch/pc");
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_NC_API,
                         String.format("{\"s\":\"%s\",\"type\":1009,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                 .executeAsStr();

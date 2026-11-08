@@ -5,8 +5,8 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.util.core.http.constant.Method;
 
 import java.util.Map;
@@ -34,7 +34,7 @@ public class NcHotRadioTagReq {
      */
     public void initHotRadioTag() {
         int c = Tags.radioIndices.length;
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioTagBody = SdkCommon.ncRequest(Method.POST, HOT_RADIO_TAG_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
@@ -57,7 +57,7 @@ public class NcHotRadioTagReq {
      */
     public void initRecRadioTag() {
         int c = Tags.radioIndices.length;
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String radioTagBody = SdkCommon.ncRequest(Method.POST, RECOMMEND_RADIO_TAG_NC_API, "{}", options)
                 .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);

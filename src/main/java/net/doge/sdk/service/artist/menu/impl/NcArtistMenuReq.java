@@ -10,8 +10,8 @@ import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiRunnableExecutor;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
@@ -55,7 +55,7 @@ public class NcArtistMenuReq {
         int total;
 
         String id = artistInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String albumInfoBody = SdkCommon.ncRequest(Method.POST, String.format(ARTIST_ALBUMS_NC_API, id),
                         String.format("{\"offset\":%s,\"limit\":%s,\"total\":true}", (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -100,7 +100,7 @@ public class NcArtistMenuReq {
 
         String id = artistInfo.getId();
         // 歌手 MV
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String mvInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_MVS_NC_API,
                         String.format("{\"artistId\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}", id, (page - 1) * limit, limit),
                         options)
@@ -186,7 +186,7 @@ public class NcArtistMenuReq {
         int t = 0;
 
         String id = netArtistInfo.getId();
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String artistInfoBody = SdkCommon.ncRequest(Method.POST, SIMILAR_ARTIST_NC_API, String.format("{\"artistid\":\"%s\"}", id), options)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -232,7 +232,7 @@ public class NcArtistMenuReq {
 
         String id = artistInfo.getId();
         Runnable getFans = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String userInfoBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_NC_API,
                             String.format("{\"id\":\"%s\",\"offset\":%s,\"limit\":%s}", id, (page - 1) * limit, limit), options)
                     .executeAsStr();
@@ -267,7 +267,7 @@ public class NcArtistMenuReq {
             }
         };
         Runnable getFansCnt = () -> {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String tBody = SdkCommon.ncRequest(Method.POST, ARTIST_FANS_TOTAL_NC_API, String.format("{\"id\":\"%s\"}", id), options)
                     .executeAsStr();
             t.set(JSONObject.parseObject(tBody).getJSONObject("data").getIntValue("fansCnt"));

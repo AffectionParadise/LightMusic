@@ -6,8 +6,8 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.http.constant.Method;
@@ -41,7 +41,7 @@ public class NcMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/cloudsearch/pc");
         String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_NC_API,
                         String.format("{\"s\":\"%s\",\"type\":1,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -95,7 +95,7 @@ public class NcMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
 
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.eapi("/api/cloudsearch/pc");
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api/cloudsearch/pc");
         String musicInfoBody = SdkCommon.ncRequest(Method.POST, CLOUD_SEARCH_NC_API,
                         String.format("{\"s\":\"%s\",\"type\":1006,\"offset\":%s,\"limit\":%s,\"total\":true}", keyword, (page - 1) * limit, limit), options)
                 .executeAsStr();
@@ -161,7 +161,7 @@ public class NcMusicSearchReq {
         int t;
 
         final int lim = Math.min(20, limit);
-        Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+        Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
         String musicInfoBody = SdkCommon.ncRequest(Method.POST, SEARCH_VOICE_NC_API,
                         String.format("{\"keyword\":\"%s\",\"scene\":\"normal\",\"offset\":%s,\"limit\":%s}", keyword, (page - 1) * lim, lim), options)
                 .executeAsStr();

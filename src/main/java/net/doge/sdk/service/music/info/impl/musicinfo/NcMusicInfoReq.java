@@ -6,8 +6,8 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptEnum;
-import net.doge.sdk.common.opt.nc.NeteaseReqOptsBuilder;
+import net.doge.sdk.common.opt.nc.NcReqOptEnum;
+import net.doge.sdk.common.opt.nc.NcReqOptsBuilder;
 import net.doge.sdk.service.music.info.impl.musicinfo.lyric.nc.NcLyricReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
@@ -41,7 +41,7 @@ public class NcMusicInfoReq {
         String id = musicInfo.getId();
         boolean isProgram = musicInfo.isProgram();
         if (isProgram) {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String songBody = SdkCommon.ncRequest(Method.POST, PROGRAM_DETAIL_NC_API, String.format("{\"id\":\"%s\"}", musicInfo.getProgramId()), options)
                     .executeAsStr();
             JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("program");
@@ -62,7 +62,7 @@ public class NcMusicInfoReq {
                 });
             }
         } else {
-            Map<NeteaseReqOptEnum, String> options = NeteaseReqOptsBuilder.weapi();
+            Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String songBody = SdkCommon.ncRequest(Method.POST, SONG_DETAIL_NC_API, String.format("{\"c\":\"[{'id':'%s'}]\"}", id), options)
                     .executeAsStr();
             JSONArray array = JSONObject.parseObject(songBody).getJSONArray("songs");

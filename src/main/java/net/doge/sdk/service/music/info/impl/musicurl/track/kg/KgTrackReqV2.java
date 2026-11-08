@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.opt.kg.KugouReqOptEnum;
-import net.doge.sdk.common.opt.kg.KugouReqOptsBuilder;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.json.JsonUtil;
 
 import java.util.HashMap;
@@ -81,7 +81,7 @@ public class KgTrackReqV2 {
         params.put("cdnBackup", 1);
         params.put("kcard", 0);
         params.put("module", "collection");
-        Map<KugouReqOptEnum, Object> options = KugouReqOptsBuilder.androidGetWithKey(SONG_URL_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGetWithKey(SONG_URL_KG_API);
         String respBody = SdkCommon.kgRequest(params, null, options)
                 .header("x-router", "trackercdn.kugou.com")
                 .executeAsStr();

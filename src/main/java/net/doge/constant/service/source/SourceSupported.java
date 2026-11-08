@@ -41,6 +41,7 @@ public class SourceSupported {
             NetResourceSource.KW,
             NetResourceSource.MG,
             NetResourceSource.FS,
+            NetResourceSource.QS,
             NetResourceSource.ALL
     };
 
