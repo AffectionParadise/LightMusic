@@ -27,7 +27,7 @@ public class GgMusicSearchReq {
     }
 
     // 关键词搜索歌曲 API (咕咕咕音乐)
-    private final String SEARCH_MUSIC_GG_API = "http://www.gggmusic.com/search-%s-1-%s.htm";
+    private final String SEARCH_MUSIC_GG_API = "http://www.gggmusic.com/search-%s-%s.htm";
 
     /**
      * 根据关键词获取歌曲
@@ -51,16 +51,18 @@ public class GgMusicSearchReq {
         else t = limit;
         for (int i = 0, len = songs.size(); i < len; i++) {
             Element song = songs.get(i);
-
-            Elements a = song.select(".subject.break-all a");
+            Elements a = song.select(".break-all a");
+            Elements m = song.select(".d-flex.justify-content-between.small.mt-1");
 
             String songId = RegexUtil.getGroup1("thread-(.*?)\\.htm", a.attr("href"));
             String songName = a.text();
+            String artist = m.text();
 
             NetMusicInfo musicInfo = new NetMusicInfo();
             musicInfo.setSource(NetResourceSource.GG);
             musicInfo.setId(songId);
             musicInfo.setName(songName);
+            musicInfo.setArtist(artist);
 
             r.add(musicInfo);
         }

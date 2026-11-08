@@ -6,13 +6,14 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.constant.qs.QsSearchType;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QsMusicSearchReq {
     private static QsMusicSearchReq instance;
@@ -25,6 +26,9 @@ public class QsMusicSearchReq {
         return instance;
     }
 
+    // 搜索歌曲 API (汽水)
+    private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/search/track";
+
     /**
      * 根据关键词获取歌曲
      */
@@ -33,7 +37,12 @@ public class QsMusicSearchReq {
         int t = 0;
 
         // 每页固定 20 条
-        String musicInfoBody = SdkCommon.qsSearchRequest(QsSearchType.SONG, keyword, page, limit)
+        int lim = Math.min(20, limit);
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", keyword);
+        params.put("cursor", (page - 1) * lim);
+        params.put("count", lim);
+        String musicInfoBody = SdkCommon.qsRequest(SEARCH_MUSIC_QS_API, params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");

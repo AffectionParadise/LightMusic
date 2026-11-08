@@ -4,7 +4,6 @@ import net.doge.sdk.common.builder.*;
 import net.doge.sdk.common.constant.mg.MgSearchType;
 import net.doge.sdk.common.constant.qq.QqSearchDevice;
 import net.doge.sdk.common.constant.qq.QqSearchType;
-import net.doge.sdk.common.constant.qs.QsSearchType;
 import net.doge.sdk.common.opt.fs.FsReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.nc.NcReqOptEnum;
@@ -65,8 +64,8 @@ public class SdkCommon {
         return FsReqBuilder.getInstance().buildRequest(params, data, options);
     }
 
-    // 构造汽水音乐搜索请求
-    public static HttpRequest qsSearchRequest(QsSearchType type, String keyword, int page, int limit) {
-        return QsReqBuilder.getInstance().buildSearchRequest(type, keyword, page, limit);
+    // 构造汽水音乐请求
+    public static HttpRequest qsRequest(String baseUrl, Map<String, Object> params) {
+        return QsReqBuilder.getInstance().buildRequest(baseUrl, params);
     }
 }

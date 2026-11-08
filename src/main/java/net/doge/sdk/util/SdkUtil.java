@@ -149,6 +149,26 @@ public class SdkUtil {
     }
 
     /**
+     * 提取汽水 entity JSON 中的封面图片 url
+     *
+     * @param entityJson
+     * @return
+     */
+    public static String parseQsCoverImgUrl(JSONObject entityJson) {
+        String[] keys = {"url_cover", "url_avatar"};
+        for (String key : keys) {
+            if (!entityJson.containsKey(key)) continue;
+            JSONObject coverJson = entityJson.getJSONObject(key);
+            String uri = coverJson.getString("uri");
+            String url = coverJson.getJSONArray("urls").getString(0);
+            String templatePrefix = coverJson.getString("template_prefix");
+            String coverImgUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+            return coverImgUrl;
+        }
+        return null;
+    }
+
+    /**
      * 连接 Json 数组中的所有字符串
      */
     public static String joinString(JSONArray array) {

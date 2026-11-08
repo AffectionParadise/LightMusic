@@ -38,6 +38,8 @@ public class ArtistSearchReq {
             executor.submit(() -> MeArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
         if (src == NetResourceSource.DB || src == NetResourceSource.ALL)
             executor.submit(() -> DbArtistSearchReq.getInstance().searchArtists(keyword, page));
+        if (src == NetResourceSource.QS || src == NetResourceSource.ALL)
+            executor.submit(() -> QsArtistSearchReq.getInstance().searchArtists(keyword, page, limit));
         return executor.getResult();
     }
 }

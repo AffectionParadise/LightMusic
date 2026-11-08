@@ -63,6 +63,7 @@ public class MeArtistSearchReq {
 
             r.add(artistInfo);
         }
+
         return new CommonResult<>(r, t);
     }
 }

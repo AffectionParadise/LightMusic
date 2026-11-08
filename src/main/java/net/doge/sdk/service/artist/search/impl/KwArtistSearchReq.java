@@ -67,6 +67,7 @@ public class KwArtistSearchReq {
                 r.add(artistInfo);
             }
         }
+
         return new CommonResult<>(r, t);
     }
 }

@@ -51,12 +51,7 @@ public class QsPlaylistInfoReq {
             String creatorId = JsonUtil.isEmpty(owner) ? "" : owner.getString("id");
             Long playCount = stats.getLong("count_visible");
             Integer trackCount = playlistJson.getIntValue("count_tracks");
-            // 封面
-            JSONObject coverJson = playlistJson.getJSONObject("url_cover");
-            String uri = coverJson.getString("uri");
-            String url = coverJson.getJSONArray("urls").getString(0);
-            String templatePrefix = coverJson.getString("template_prefix");
-            String coverImgThumbUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+            String coverImgThumbUrl = SdkUtil.parseQsCoverImgUrl(playlistJson);
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
             playlistInfo.setSource(NetResourceSource.QS);
@@ -86,13 +81,9 @@ public class QsPlaylistInfoReq {
         String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QS_API, id))
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-        JSONObject data = playlistInfoJson.getJSONObject("playlist");
+        JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
 
-        JSONObject coverJson = data.getJSONObject("url_cover");
-        String uri = coverJson.getString("uri");
-        String url = coverJson.getJSONArray("urls").getString(0);
-        String templatePrefix = coverJson.getString("template_prefix");
-        String coverImgUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+        String coverImgUrl = SdkUtil.parseQsCoverImgUrl(playlistJson);
 
         if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
         GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));

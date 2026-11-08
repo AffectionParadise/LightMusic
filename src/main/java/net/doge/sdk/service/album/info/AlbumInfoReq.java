@@ -45,6 +45,8 @@ public class AlbumInfoReq {
                 return MgAlbumInfoReq.getInstance().getAlbumInfo(id);
             case NetResourceSource.QI:
                 return QiAlbumInfoReq.getInstance().getAlbumInfo(id);
+            case NetResourceSource.QS:
+                return QsAlbumInfoReq.getInstance().getAlbumInfo(id);
             default:
                 return CommonResult.create();
         }
@@ -85,6 +87,9 @@ public class AlbumInfoReq {
             case NetResourceSource.LZ:
                 LzAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
                 break;
+            case NetResourceSource.QS:
+                QsAlbumInfoReq.getInstance().fillAlbumInfo(albumInfo);
+                break;
         }
     }
 
@@ -108,6 +113,8 @@ public class AlbumInfoReq {
                 return QiAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
             case NetResourceSource.LZ:
                 return LzAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
+            case NetResourceSource.QS:
+                return QsAlbumInfoReq.getInstance().getMusicInfoInAlbum(albumInfo, page, limit);
             default:
                 return CommonResult.create();
         }

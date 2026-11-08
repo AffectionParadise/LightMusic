@@ -66,6 +66,7 @@ public class DbArtistSearchReq {
             });
             r.add(artistInfo);
         }
+
         return new CommonResult<>(r, t);
     }
 }

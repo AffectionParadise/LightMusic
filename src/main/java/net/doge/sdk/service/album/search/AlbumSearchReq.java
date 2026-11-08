@@ -41,6 +41,8 @@ public class AlbumSearchReq {
             executor.submit(() -> dtAlbumSearchReq.searchAlbums(keyword, page, limit));
             executor.submit(() -> dtAlbumSearchReq.searchAlbums2(keyword, page, limit));
         }
+        if (src == NetResourceSource.QS || src == NetResourceSource.ALL)
+            executor.submit(() -> QsAlbumSearchReq.getInstance().searchAlbums(keyword, page, limit));
         return executor.getResult();
     }
 }

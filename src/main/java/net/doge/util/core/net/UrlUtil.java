@@ -1,8 +1,12 @@
 package net.doge.util.core.net;
 
 import cn.hutool.core.util.URLUtil;
+import net.doge.util.core.log.LogUtil;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -42,6 +46,22 @@ public class UrlUtil {
     }
 
     /**
+     * 获取 url 的 query
+     *
+     * @param url
+     * @return
+     */
+    public static String getQuery(String url) {
+        try {
+            URI uri = new URI(url);
+            return uri.getQuery();
+        } catch (URISyntaxException e) {
+            LogUtil.error(e);
+            return null;
+        }
+    }
+
+    /**
      * 对 query 按字典序排序
      *
      * @param query
@@ -54,6 +74,22 @@ public class UrlUtil {
         // 合并排序后的参数
         StringJoiner sj = new StringJoiner("&");
         for (String s : sp) sj.add(s);
+        return sj.toString();
+    }
+
+    /**
+     * 构造请求 query
+     *
+     * @param params
+     * @return
+     */
+    public static String buildQuery(Map<String, Object> params) {
+        StringJoiner sj = new StringJoiner("&");
+        for (Map.Entry<String, Object> e : params.entrySet()) {
+            String k = e.getKey();
+            Object v = e.getValue();
+            sj.add(k + "=" + encodeAll(v instanceof String ? (String) v : v.toString()));
+        }
         return sj.toString();
     }
 }

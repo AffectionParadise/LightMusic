@@ -1,6 +1,7 @@
 package net.doge.sdk.service.music.search;
 
 import net.doge.constant.core.lang.I18n;
+import net.doge.constant.service.MusicSearchType;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -26,7 +27,7 @@ public class MusicSearchReq {
         boolean dt = I18n.getText("defaultTag").equals(subType);
         switch (type) {
             // 歌词
-            case 1:
+            case MusicSearchType.LYRIC:
                 if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                     executor.submit(() -> NcMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
                 if (src == NetResourceSource.KG || src == NetResourceSource.ALL)
@@ -37,7 +38,7 @@ public class MusicSearchReq {
                     executor.submit(() -> MgMusicSearchReq.getInstance().searchMusicByLyric(keyword, page, limit));
                 break;
             // 节目
-            case 2:
+            case MusicSearchType.PROGRAM:
                 if (dt) {
                     if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                         executor.submit(() -> NcMusicSearchReq.getInstance().searchVoice(keyword, page, limit));
@@ -48,6 +49,7 @@ public class MusicSearchReq {
                     executor.submit(() -> MeMusicSearchReq.getInstance().searchProgram(subType, keyword, page, limit));
                 break;
             // 常规
+            case MusicSearchType.NORMAL:
             default:
                 if (src == NetResourceSource.NC || src == NetResourceSource.ALL)
                     executor.submit(() -> NcMusicSearchReq.getInstance().searchMusic(keyword, page, limit));

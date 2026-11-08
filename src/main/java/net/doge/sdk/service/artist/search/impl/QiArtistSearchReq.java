@@ -63,6 +63,7 @@ public class QiArtistSearchReq {
             });
             r.add(artistInfo);
         }
+
         return new CommonResult<>(r, t);
     }
 }

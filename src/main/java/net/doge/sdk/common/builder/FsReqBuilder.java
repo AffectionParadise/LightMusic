@@ -8,7 +8,6 @@ import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.net.UrlUtil;
 
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.TreeMap;
 
 public class FsReqBuilder {
@@ -45,23 +44,12 @@ public class FsReqBuilder {
         params.put("clienttime", ct);
         // 签名
         params.put("signature", sign(params, data));
-        url += "?" + buildRequestParams(params);
+        url += "?" + UrlUtil.buildQuery(params);
         return HttpRequest.createRequest(method, url)
                 .header("dfid", dfid)
                 .header("mid", mid)
                 .header("clienttime", ct)
                 .jsonBody(data);
-    }
-
-    // 构造请求参数
-    private String buildRequestParams(Map<String, Object> params) {
-        StringJoiner sj = new StringJoiner("&");
-        for (String k : params.keySet()) {
-            Object o = params.get(k);
-            Object v = o instanceof String ? UrlUtil.encodeAll((String) o) : o;
-            sj.add(k + "=" + v);
-        }
-        return sj.toString();
     }
 
     // 构造签名参数

@@ -55,6 +55,7 @@ public class SourceSupported {
             NetResourceSource.QI,
             NetResourceSource.DB,
             NetResourceSource.DT,
+            NetResourceSource.QS,
             NetResourceSource.ALL
     };
 
@@ -68,6 +69,7 @@ public class SourceSupported {
             NetResourceSource.QI,
             NetResourceSource.ME,
             NetResourceSource.DB,
+            NetResourceSource.QS,
             NetResourceSource.ALL
     };
 

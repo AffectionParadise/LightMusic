@@ -71,6 +71,7 @@ public class NcArtistSearchReq {
                 }
             }
         }
+
         return new CommonResult<>(r, t);
     }
 }

@@ -34,6 +34,8 @@ public class ArtistMenuReq {
                 return MgArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
             case NetResourceSource.QI:
                 return QiArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
+            case NetResourceSource.QS:
+                return QsArtistMenuReq.getInstance().getAlbumInfoInArtist(artistInfo, page, limit);
             default:
                 return CommonResult.create();
         }

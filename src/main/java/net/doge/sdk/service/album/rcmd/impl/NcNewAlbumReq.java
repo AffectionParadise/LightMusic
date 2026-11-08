@@ -60,7 +60,7 @@ public class NcNewAlbumReq {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_NC_API,
                             String.format("{\"area\":\"%s\",\"type\":\"new\",\"offset\":0,\"limit\":50,\"year\":%s,\"month\":%s,\"total\":false,\"rcmd\":true}",
-                                    param, TimeUtil.currYear(), TimeUtil.currMonth()),
+                                    param, TimeUtil.thisYear(), TimeUtil.thisMonth()),
                             options)
                     .executeAsStr();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

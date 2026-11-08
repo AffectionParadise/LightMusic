@@ -55,6 +55,8 @@ public class ArtistInfoReq {
                 return QiArtistInfoReq.getInstance().getArtistInfo(id);
 //            case NetMusicSource.DB:
 //                return DbArtistInfoReq.getInstance().getArtistInfo(id);
+            case NetResourceSource.QS:
+                return QsArtistInfoReq.getInstance().getArtistInfo(id);
             default:
                 return CommonResult.create();
         }
@@ -92,6 +94,9 @@ public class ArtistInfoReq {
             case NetResourceSource.DB:
                 DbArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
                 break;
+            case NetResourceSource.QS:
+                QsArtistInfoReq.getInstance().fillArtistInfo(artistInfo);
+                break;
         }
     }
 
@@ -115,6 +120,8 @@ public class ArtistInfoReq {
                 return QiArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
             case NetResourceSource.ME:
                 return MeArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
+            case NetResourceSource.QS:
+                return QsArtistInfoReq.getInstance().getMusicInfoInArtist(artistInfo, page, limit);
             default:
                 return CommonResult.create();
         }

@@ -3,6 +3,7 @@ package net.doge.sdk.service.music.info;
 import net.doge.constant.core.lang.I18n;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.os.Format;
+import net.doge.constant.service.MusicSearchType;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -110,7 +111,8 @@ public class MusicUrlReq {
      * @return
      */
     public void fillAvailableMusicUrl(NetMusicInfo musicInfo, boolean forDownload) {
-        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetResourceSource.ALL, 0, I18n.getText("defaultTag"), musicInfo.toKeywords(), 1, 20);
+        CommonResult<NetMusicInfo> result = MusicSearchReq.getInstance().searchMusic(NetResourceSource.ALL, MusicSearchType.NORMAL,
+                I18n.getText("defaultTag"), musicInfo.toKeywords(), 1, 20);
         List<NetMusicInfo> data = result.data;
         List<MusicCandidate> candidates = new LinkedList<>();
         MusicInfoReq musicInfoReq = MusicInfoReq.getInstance();

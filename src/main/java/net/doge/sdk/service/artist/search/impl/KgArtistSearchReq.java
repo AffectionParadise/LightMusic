@@ -79,6 +79,7 @@ public class KgArtistSearchReq {
             });
             r.add(artistInfo);
         }
+
         return new CommonResult<>(r, t);
     }
 }

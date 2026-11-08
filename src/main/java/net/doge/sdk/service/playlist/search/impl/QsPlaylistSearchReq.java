@@ -6,14 +6,15 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
-import net.doge.sdk.common.constant.qs.QsSearchType;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QsPlaylistSearchReq {
     private static QsPlaylistSearchReq instance;
@@ -26,6 +27,9 @@ public class QsPlaylistSearchReq {
         return instance;
     }
 
+    // 搜索歌单 API (汽水)
+    private final String SEARCH_PLAYLIST_QS_API = "https://api.qishui.com/luna/search/playlist";
+
     /**
      * 根据关键词获取歌单
      */
@@ -33,7 +37,13 @@ public class QsPlaylistSearchReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
 
-        String playlistInfoBody = SdkCommon.qsSearchRequest(QsSearchType.PLAYLIST, keyword, page, limit)
+        // 每页固定 20 条
+        int lim = Math.min(20, limit);
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", keyword);
+        params.put("cursor", (page - 1) * lim);
+        params.put("count", lim);
+        String playlistInfoBody = SdkCommon.qsRequest(SEARCH_PLAYLIST_QS_API, params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray resultGroups = playlistInfoJson.getJSONArray("result_groups");
@@ -52,12 +62,7 @@ public class QsPlaylistSearchReq {
                 String creatorId = JsonUtil.isEmpty(owner) ? "" : owner.getString("id");
                 Long playCount = stats.getLong("count_visible");
                 Integer trackCount = playlistJson.getIntValue("count_tracks");
-                // 封面
-                JSONObject coverJson = playlistJson.getJSONObject("url_cover");
-                String uri = coverJson.getString("uri");
-                String url = coverJson.getJSONArray("urls").getString(0);
-                String templatePrefix = coverJson.getString("template_prefix");
-                String coverImgThumbUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+                String coverImgThumbUrl = SdkUtil.parseQsCoverImgUrl(playlistJson);
 
                 NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
                 playlistInfo.setSource(NetResourceSource.QS);

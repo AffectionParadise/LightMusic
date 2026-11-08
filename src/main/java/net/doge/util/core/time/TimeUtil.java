@@ -6,7 +6,6 @@ import net.doge.util.core.log.LogUtil;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2020/12/15
  */
 public class TimeUtil {
-    private static final DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat datetimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat dateShortTimeFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private static final DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateFormat shortDateFormatter = new SimpleDateFormat("MM-dd");
@@ -58,11 +57,11 @@ public class TimeUtil {
             int index = str.indexOf('-');
             if (index < 0) return str;
             // MM-dd 转为 yyyy-MM-dd
-            if (index < 3) str = Calendar.getInstance().get(Calendar.YEAR) + "-" + str;
+            if (index < 3) str = thisYear() + "-" + str;
             // yyyy-MM-dd 或 yyyy-MM-dd HH:mm:ss 或 yyyy-MM-dd HH:mm
             DateFormat fmt;
             if (!str.contains(" ")) fmt = dateFormatter;
-            else if (str.split(":").length > 2) fmt = formatter;
+            else if (str.split(":").length > 2) fmt = datetimeFormatter;
             else fmt = dateShortTimeFormatter;
             Date date = fmt.parse(str);
             return msToPhrase(date.getTime());
@@ -79,7 +78,7 @@ public class TimeUtil {
      */
     public static String msToDatetime(long ms) {
         if (ms < 0) return null;
-        return formatter.format(new Date(ms));
+        return datetimeFormatter.format(new Date(ms));
     }
 
     /**
@@ -167,8 +166,8 @@ public class TimeUtil {
      * @param
      * @return
      */
-    public static int currYear() {
-        return DateUtil.year(new Date());
+    public static int thisYear() {
+        return DateUtil.thisYear();
     }
 
     /**
@@ -177,8 +176,8 @@ public class TimeUtil {
      * @param
      * @return
      */
-    public static int currMonth() {
-        return DateUtil.month(new Date()) + 1;
+    public static int thisMonth() {
+        return DateUtil.thisMonth() + 1;
     }
 
     /**

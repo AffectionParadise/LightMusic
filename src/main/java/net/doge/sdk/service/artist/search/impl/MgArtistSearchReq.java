@@ -65,6 +65,7 @@ public class MgArtistSearchReq {
                 r.add(artistInfo);
             }
         }
+
         return new CommonResult<>(r, t);
 
 //            String artistInfoBody = SdkCommon.mgSearchRequest(MgSearchType.ARTIST, keyword, page, limit)

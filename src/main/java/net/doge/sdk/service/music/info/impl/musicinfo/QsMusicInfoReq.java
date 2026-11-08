@@ -43,11 +43,7 @@ public class QsMusicInfoReq {
         if (!musicInfo.hasAlbumId()) musicInfo.setAlbumId(albumJson.getString("id"));
         if (!musicInfo.hasAlbumImage()) {
             GlobalExecutors.imageExecutor.execute(() -> {
-                JSONObject coverJson = albumJson.getJSONObject("url_cover");
-                String uri = coverJson.getString("uri");
-                String url = coverJson.getJSONArray("urls").getString(0);
-                String templatePrefix = coverJson.getString("template_prefix");
-                String coverImgUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+                String coverImgUrl = SdkUtil.parseQsCoverImgUrl(albumJson);
                 BufferedImage albumImage = SdkUtil.getImageFromUrl(coverImgUrl);
                 FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
                 ImageUtil.toFile(albumImage, SimplePath.IMG_CACHE_PATH + musicInfo.toAlbumImageFileName());
