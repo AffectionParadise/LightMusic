@@ -4,6 +4,9 @@ import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.net.UrlUtil;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class QiReqBuilder {
     private static QiReqBuilder instance;
 
@@ -15,13 +18,18 @@ public class QiReqBuilder {
         return instance;
     }
 
-    private final String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
+    public HttpRequest buildRequest(String baseUrl, Map<String, Object> params) {
+        // 公共 query
+        if (params == null) params = new TreeMap<>();
+        params.put("appid", "16073360");
+        params.put("timestamp", System.currentTimeMillis());
 
-    public HttpRequest buildRequest(String url) {
-        // 提取参数并解码
-        String query = UrlUtil.getQuery(url);
-        String sortedQuery = UrlUtil.sortQuery(query);
-        String sign = CryptoUtil.md5Hex(sortedQuery + secret);
-        return HttpRequest.get(url + "&sign=" + sign);
+        String query = UrlUtil.buildQuery(params);
+
+        String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
+        // 签名需要参数有序，使用 TreeMap 保持有序化
+        String sign = CryptoUtil.md5Hex(UrlUtil.decode(query) + secret);
+        String url = baseUrl + "?" + query + "&sign=" + sign;
+        return HttpRequest.get(url);
     }
 }

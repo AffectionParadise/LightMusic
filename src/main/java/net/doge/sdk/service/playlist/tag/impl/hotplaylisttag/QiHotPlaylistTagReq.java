@@ -18,7 +18,7 @@ public class QiHotPlaylistTagReq {
     }
 
     // 歌单标签 API (千千)
-    private final String PLAYLIST_TAG_QI_API = "https://music.91q.com/v1/tracklist/category?appid=16073360&timestamp=%s";
+    private final String PLAYLIST_TAG_QI_API = "https://music.91q.com/v1/tracklist/category";
 
     /**
      * 歌单标签
@@ -27,7 +27,7 @@ public class QiHotPlaylistTagReq {
      */
     public void initHotPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
-        String playlistTagBody = SdkCommon.qiRequest(String.format(PLAYLIST_TAG_QI_API, System.currentTimeMillis()))
+        String playlistTagBody = SdkCommon.qiRequest(PLAYLIST_TAG_QI_API, null)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
         JSONArray tags = playlistTagJson.getJSONArray("data");

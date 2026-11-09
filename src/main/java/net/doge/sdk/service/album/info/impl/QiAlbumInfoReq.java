@@ -15,6 +15,8 @@ import net.doge.util.core.json.JsonUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiAlbumInfoReq {
     private static QiAlbumInfoReq instance;
@@ -28,7 +30,7 @@ public class QiAlbumInfoReq {
     }
 
     // 专辑信息 API (千千)
-    private final String ALBUM_DETAIL_QI_API = "https://music.91q.com/v1/album/info?albumAssetCode=%s&appid=16073360&timestamp=%s";
+    private final String ALBUM_DETAIL_QI_API = "https://music.91q.com/v1/album/info";
 
     /**
      * 根据专辑 id 获取专辑
@@ -37,7 +39,9 @@ public class QiAlbumInfoReq {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("albumAssetCode", id);
+        String albumInfoBody = SdkCommon.qiRequest(ALBUM_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");
@@ -74,7 +78,9 @@ public class QiAlbumInfoReq {
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("albumAssetCode", id);
+        String albumInfoBody = SdkCommon.qiRequest(ALBUM_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");
@@ -102,7 +108,9 @@ public class QiAlbumInfoReq {
         int total;
 
         String id = albumInfo.getId();
-        String albumInfoBody = SdkCommon.qiRequest(String.format(ALBUM_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("albumAssetCode", id);
+        String albumInfoBody = SdkCommon.qiRequest(ALBUM_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

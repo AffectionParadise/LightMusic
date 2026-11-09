@@ -9,13 +9,13 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.http.HttpResponse;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiAlbumSearchReq {
     private static QiAlbumSearchReq instance;
@@ -29,7 +29,7 @@ public class QiAlbumSearchReq {
     }
 
     // 关键词搜索专辑 API (千千)
-    private final String SEARCH_ALBUM_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=3&word=%s";
+    private final String SEARCH_ALBUM_QI_API = "https://music.91q.com/v1/search";
 
     /**
      * 根据关键词获取专辑
@@ -38,10 +38,13 @@ public class QiAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_ALBUM_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword)).execute();
-        String albumInfoBody = resp.body();
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        params.put("type", 3);
+        params.put("word", keyword);
+        String albumInfoBody = SdkCommon.qiRequest(SEARCH_ALBUM_QI_API, params)
+                .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
         t = data.getIntValue("total");

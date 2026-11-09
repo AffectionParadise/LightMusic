@@ -4,10 +4,11 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.net.UrlUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiSearchSuggestionReq {
     private static QiSearchSuggestionReq instance;
@@ -21,7 +22,7 @@ public class QiSearchSuggestionReq {
     }
 
     // 搜索建议 API (千千)
-    private final String SEARCH_SUGGESTION_QI_API = "https://music.91q.com/v1/search/sug?appid=16073360&timestamp=%s&type=&word=%s";
+    private final String SEARCH_SUGGESTION_QI_API = "https://music.91q.com/v1/search/sug";
 
     /**
      * 获取搜索建议
@@ -31,9 +32,10 @@ public class QiSearchSuggestionReq {
     public List<String> getSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = SdkCommon.qiRequest(String.format(SEARCH_SUGGESTION_QI_API, System.currentTimeMillis(), encodedKeyword)).execute();
+        Map<String, Object> params = new TreeMap<>();
+        params.put("type", "");
+        params.put("word", keyword);
+        HttpResponse resp = SdkCommon.qiRequest(SEARCH_SUGGESTION_QI_API, params).execute();
         if (resp.isSuccessful()) {
             JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
             JSONArray data = searchSuggestionJson.getJSONArray("data");

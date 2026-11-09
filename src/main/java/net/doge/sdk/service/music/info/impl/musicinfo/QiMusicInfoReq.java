@@ -12,6 +12,8 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiMusicInfoReq {
     private static QiMusicInfoReq instance;
@@ -25,16 +27,18 @@ public class QiMusicInfoReq {
     }
 
     // 歌曲信息 API (千千)
-    private final String SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info?TSID=%s&appid=16073360&timestamp=%s";
+    private final String SONG_DETAIL_QI_API = "https://music.91q.com/v1/song/info";
     // 歌曲 URL 获取 API (千千)
-    private final String GET_SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink?TSID=%s&appid=16073360&timestamp=%s";
+    private final String SONG_URL_QI_API = "https://music.91q.com/v1/song/tracklink";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = SdkCommon.qiRequest(String.format(SONG_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("TSID", id);
+        String songBody = SdkCommon.qiRequest(SONG_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);
 
@@ -59,7 +63,9 @@ public class QiMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String playUrlBody = SdkCommon.qiRequest(String.format(GET_SONG_URL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("TSID", id);
+        String playUrlBody = SdkCommon.qiRequest(SONG_URL_QI_API, params)
                 .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(playUrlBody);
         String lyricUrl = urlJson.getJSONObject("data").getString("lyric");

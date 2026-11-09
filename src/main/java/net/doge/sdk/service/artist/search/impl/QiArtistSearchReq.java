@@ -8,11 +8,12 @@ import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiArtistSearchReq {
     private static QiArtistSearchReq instance;
@@ -26,7 +27,7 @@ public class QiArtistSearchReq {
     }
 
     // 关键词搜索歌手 API (千千)
-    private final String SEARCH_ARTIST_QI_API = "https://music.91q.com/v1/search?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s&type=2&word=%s";
+    private final String SEARCH_ARTIST_QI_API = "https://music.91q.com/v1/search";
 
     /**
      * 根据关键词获取歌手
@@ -35,9 +36,12 @@ public class QiArtistSearchReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String artistInfoBody = SdkCommon.qiRequest(String.format(SEARCH_ARTIST_QI_API, page, limit, System.currentTimeMillis(), encodedKeyword))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        params.put("type", 2);
+        params.put("word", keyword);
+        String artistInfoBody = SdkCommon.qiRequest(SEARCH_ARTIST_QI_API, params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");

@@ -78,17 +78,21 @@ public class UrlUtil {
     }
 
     /**
-     * 构造请求 query
+     * 构造请求 query (默认进行 url 编码)
      *
      * @param params
      * @return
      */
     public static String buildQuery(Map<String, Object> params) {
+        return buildQuery(params, true);
+    }
+
+    public static String buildQuery(Map<String, Object> params, boolean encode) {
         StringJoiner sj = new StringJoiner("&");
         for (Map.Entry<String, Object> e : params.entrySet()) {
             String k = e.getKey();
             Object v = e.getValue();
-            sj.add(k + "=" + encodeAll(v instanceof String ? (String) v : v.toString()));
+            sj.add(k + "=" + (encode ? encodeAll(v instanceof String ? (String) v : v.toString()) : v));
         }
         return sj.toString();
     }

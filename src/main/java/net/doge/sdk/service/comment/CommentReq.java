@@ -53,6 +53,8 @@ public class CommentReq {
 //                return YyCommentReq.getInstance().getComments(resource, type, page, limit, cursor);
             case NetResourceSource.LZ:
                 return LzCommentReq.getInstance().getComments(resource, page, limit, cursor);
+            case NetResourceSource.QS:
+                return QsCommentReq.getInstance().getComments(resource, type, page, limit);
             default:
                 return CommonResult.create();
         }

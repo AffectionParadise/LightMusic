@@ -15,6 +15,8 @@ import net.doge.util.core.json.JsonUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiPlaylistInfoReq {
     private static QiPlaylistInfoReq instance;
@@ -28,7 +30,7 @@ public class QiPlaylistInfoReq {
     }
 
     // 歌单信息 API (千千)
-    private final String PLAYLIST_DETAIL_QI_API = "https://music.91q.com/v1/tracklist/info?appid=16073360&id=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String PLAYLIST_DETAIL_QI_API = "https://music.91q.com/v1/tracklist/info";
 
     /**
      * 根据歌单 id 获取歌单
@@ -37,7 +39,11 @@ public class QiPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("id", id);
+        params.put("pageNo", 1);
+        params.put("pageSize", 1);
+        String playlistInfoBody = SdkCommon.qiRequest(PLAYLIST_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
@@ -69,7 +75,11 @@ public class QiPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, 1, 1, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("id", id);
+        params.put("pageNo", 1);
+        params.put("pageSize", 1);
+        String playlistInfoBody = SdkCommon.qiRequest(PLAYLIST_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
@@ -92,7 +102,11 @@ public class QiPlaylistInfoReq {
         int total;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = SdkCommon.qiRequest(String.format(PLAYLIST_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("id", id);
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String playlistInfoBody = SdkCommon.qiRequest(PLAYLIST_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");

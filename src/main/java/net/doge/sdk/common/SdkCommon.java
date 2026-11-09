@@ -55,8 +55,8 @@ public class SdkCommon {
     }
 
     // 构造千千音乐请求
-    public static HttpRequest qiRequest(String url) {
-        return QiReqBuilder.getInstance().buildRequest(url);
+    public static HttpRequest qiRequest(String baseUrl, Map<String, Object> params) {
+        return QiReqBuilder.getInstance().buildRequest(baseUrl, params);
     }
 
     // 构造 5sing 请求

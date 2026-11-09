@@ -7,6 +7,9 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.array.ArrayUtil;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 public class QiMvUrlReq {
     private static QiMvUrlReq instance;
 
@@ -19,14 +22,16 @@ public class QiMvUrlReq {
     }
 
     // MV 视频链接获取 API (千千)
-    private final String MV_URL_QI_API = "https://music.91q.com/v1/video/info?appid=16073360&assetCode=%s&timestamp=%s";
+    private final String MV_URL_QI_API = "https://music.91q.com/v1/video/info";
 
     /**
      * 根据 MV id 获取 MV 视频链接
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = SdkCommon.qiRequest(String.format(MV_URL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("assetCode", id);
+        String mvBody = SdkCommon.qiRequest(MV_URL_QI_API, params)
                 .executeAsStr();
         JSONArray data = JSONObject.parseObject(mvBody).getJSONArray("data");
         JSONArray urlArray = data.getJSONObject(0).getJSONArray("allRate");

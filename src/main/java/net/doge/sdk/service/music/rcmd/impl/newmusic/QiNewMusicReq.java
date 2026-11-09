@@ -11,6 +11,8 @@ import net.doge.sdk.util.SdkUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiNewMusicReq {
     private static QiNewMusicReq instance;
@@ -24,7 +26,7 @@ public class QiNewMusicReq {
     }
 
     // 推荐新歌 API (千千)
-    private final String RECOMMEND_NEW_SONG_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
+    private final String RECOMMEND_NEW_SONG_QI_API = "https://music.91q.com/v1/index";
 
     /**
      * 推荐新歌
@@ -33,7 +35,10 @@ public class QiNewMusicReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        String musicInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_NEW_SONG_QI_API, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageSize", 12);
+        params.put("type", "song");
+        String musicInfoBody = SdkCommon.qiRequest(RECOMMEND_NEW_SONG_QI_API, params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONArray dataArray = musicInfoJson.getJSONArray("data");

@@ -25,7 +25,7 @@ public class QiRankFetchReq {
     }
 
     // 获取榜单 API (千千)
-    private final String GET_RANK_QI_API = "https://music.91q.com/v1/bd/category?appid=16073360&timestamp=%s";
+    private final String GET_RANK_QI_API = "https://music.91q.com/v1/bd/category";
 
     /**
      * 获取所有榜单
@@ -34,7 +34,7 @@ public class QiRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
-        String rankInfoBody = SdkCommon.qiRequest(String.format(GET_RANK_QI_API, System.currentTimeMillis()))
+        String rankInfoBody = SdkCommon.qiRequest(GET_RANK_QI_API, null)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONArray rankArray = rankInfoJson.getJSONArray("data");

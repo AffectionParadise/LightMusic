@@ -12,6 +12,8 @@ import net.doge.sdk.util.SdkUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiRecommendMvReq {
     private static QiRecommendMvReq instance;
@@ -25,7 +27,7 @@ public class QiRecommendMvReq {
     }
 
     // 推荐 MV API (千千)
-    private final String RECOMMEND_MV_QI_API = "https://music.91q.com/v1/video/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String RECOMMEND_MV_QI_API = "https://music.91q.com/v1/video/list";
 
     /**
      * 推荐 MV
@@ -34,7 +36,10 @@ public class QiRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = SdkCommon.qiRequest(String.format(RECOMMEND_MV_QI_API, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String mvInfoBody = SdkCommon.qiRequest(RECOMMEND_MV_QI_API, params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");

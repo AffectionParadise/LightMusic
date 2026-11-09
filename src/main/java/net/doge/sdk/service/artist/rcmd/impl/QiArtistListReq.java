@@ -16,6 +16,8 @@ import net.doge.util.core.http.HttpResponse;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiArtistListReq {
     private static QiArtistListReq instance;
@@ -29,10 +31,9 @@ public class QiArtistListReq {
     }
 
     // 推荐歌手 API (千千)
-    private final String REC_ARTISTS_LIST_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
+    private final String REC_ARTISTS_LIST_QI_API = "https://music.91q.com/v1/index";
     // 分类歌手 API (千千)
-    private final String CAT_ARTISTS_LIST_QI_API = "https://music.91q.com/v1/artist/list?appid=16073360&" +
-            "artistFristLetter=%s&artistGender=%s&artistRegion=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String CAT_ARTISTS_LIST_QI_API = "https://music.91q.com/v1/artist/list";
 
     /**
      * 推荐歌手
@@ -41,7 +42,10 @@ public class QiArtistListReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t;
 
-        HttpResponse resp = SdkCommon.qiRequest(String.format(REC_ARTISTS_LIST_QI_API, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageSize", 12);
+        params.put("type", "song");
+        HttpResponse resp = SdkCommon.qiRequest(REC_ARTISTS_LIST_QI_API, params)
                 .execute();
         String artistInfoBody = resp.body();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -87,7 +91,13 @@ public class QiArtistListReq {
         if (StringUtil.notEmpty(param)) {
             // 分割时保留空串
             String[] sp = param.split(" ", -1);
-            String artistInfoBody = SdkCommon.qiRequest(String.format(CAT_ARTISTS_LIST_QI_API, sp[0], sp[2], sp[1], page, limit, System.currentTimeMillis()))
+            Map<String, Object> params = new TreeMap<>();
+            params.put("artistFristLetter", sp[0]);
+            params.put("artistGender", sp[2]);
+            params.put("artistRegion", sp[1]);
+            params.put("pageNo", page);
+            params.put("pageSize", limit);
+            String artistInfoBody = SdkCommon.qiRequest(CAT_ARTISTS_LIST_QI_API, params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");

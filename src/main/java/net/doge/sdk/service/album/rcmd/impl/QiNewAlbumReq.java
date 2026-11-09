@@ -14,6 +14,8 @@ import net.doge.util.core.json.JsonUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiNewAlbumReq {
     private static QiNewAlbumReq instance;
@@ -27,12 +29,11 @@ public class QiNewAlbumReq {
     }
 
     // 首页最新专辑 API (千千)
-    private final String INDEX_NEW_ALBUM_QI_API = "https://music.91q.com/v1/index?appid=16073360&pageSize=12&timestamp=%s&type=song";
+    private final String INDEX_NEW_ALBUM_QI_API = "https://music.91q.com/v1/index";
     // 秀动发行 API (千千)
-    private final String XD_ALBUM_QI_API = "https://music.91q.com/v1//album/xdpublish?appid=16073360&module_name=秀动发行&moreApi=v1%%2Falbum%%2Fxdpublish" +
-            "&pageNo=%s&pageSize=%s&timestamp=%s&type=showstart";
+    private final String XD_ALBUM_QI_API = "https://music.91q.com/v1//album/xdpublish";
     // 新专辑推荐 API (千千)
-    private final String NEW_ALBUM_QI_API = "https://music.91q.com/v1/album/list?appid=16073360&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String NEW_ALBUM_QI_API = "https://music.91q.com/v1/album/list";
 
     /**
      * 首页新专辑
@@ -41,7 +42,10 @@ public class QiNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        String albumInfoBody = SdkCommon.qiRequest(String.format(INDEX_NEW_ALBUM_QI_API, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageSize", 12);
+        params.put("type", "song");
+        String albumInfoBody = SdkCommon.qiRequest(INDEX_NEW_ALBUM_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONArray dataArray = albumInfoJson.getJSONArray("data");
@@ -90,7 +94,13 @@ public class QiNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        String albumInfoBody = SdkCommon.qiRequest(String.format(XD_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("module_name", "秀动发行");
+        params.put("moreApi", "v1/album/xdpublish");
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        params.put("type", "showstart");
+        String albumInfoBody = SdkCommon.qiRequest(XD_ALBUM_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
@@ -132,7 +142,10 @@ public class QiNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        String albumInfoBody = SdkCommon.qiRequest(String.format(NEW_ALBUM_QI_API, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String albumInfoBody = SdkCommon.qiRequest(NEW_ALBUM_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

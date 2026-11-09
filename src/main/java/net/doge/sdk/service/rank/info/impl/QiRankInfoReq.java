@@ -11,6 +11,8 @@ import net.doge.sdk.util.SdkUtil;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiRankInfoReq {
     private static QiRankInfoReq instance;
@@ -24,7 +26,7 @@ public class QiRankInfoReq {
     }
 
     // 榜单信息 API (千千)
-    private final String RANK_DETAIL_QI_API = "https://music.91q.com/v1/bd/list?appid=16073360&bdid=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String RANK_DETAIL_QI_API = "https://music.91q.com/v1/bd/list";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
@@ -33,7 +35,11 @@ public class QiRankInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankInfoBody = SdkCommon.qiRequest(String.format(RANK_DETAIL_QI_API, id, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("bdid", id);
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String rankInfoBody = SdkCommon.qiRequest(RANK_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("data");

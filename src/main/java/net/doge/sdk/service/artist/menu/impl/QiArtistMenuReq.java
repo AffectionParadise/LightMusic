@@ -14,6 +14,8 @@ import net.doge.util.core.json.JsonUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiArtistMenuReq {
     private static QiArtistMenuReq instance;
@@ -27,7 +29,7 @@ public class QiArtistMenuReq {
     }
 
     // 歌手专辑 API (千千)
-    private final String ARTIST_ALBUMS_QI_API = "https://music.91q.com/v1/artist/album?appid=16073360&artistCode=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String ARTIST_ALBUMS_QI_API = "https://music.91q.com/v1/artist/album";
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
@@ -37,7 +39,11 @@ public class QiArtistMenuReq {
         int total;
 
         String id = artistInfo.getId();
-        String albumInfoBody = SdkCommon.qiRequest(String.format(ARTIST_ALBUMS_QI_API, id, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("artistCode", id);
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String albumInfoBody = SdkCommon.qiRequest(ARTIST_ALBUMS_QI_API, params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

@@ -14,6 +14,8 @@ import net.doge.sdk.util.SdkUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class QiArtistInfoReq {
     private static QiArtistInfoReq instance;
@@ -27,9 +29,9 @@ public class QiArtistInfoReq {
     }
 
     // 歌手信息 API (千千)
-    private final String ARTIST_DETAIL_QI_API = "https://music.91q.com/v1/artist/info?appid=16073360&artistCode=%s&timestamp=%s";
+    private final String ARTIST_DETAIL_QI_API = "https://music.91q.com/v1/artist/info";
     // 歌手歌曲 API (千千)
-    private final String ARTIST_SONGS_QI_API = "https://music.91q.com/v1/artist/song?appid=16073360&artistCode=%s&pageNo=%s&pageSize=%s&timestamp=%s";
+    private final String ARTIST_SONGS_QI_API = "https://music.91q.com/v1/artist/song";
 
     /**
      * 根据歌手 id 获取歌手
@@ -38,7 +40,9 @@ public class QiArtistInfoReq {
         List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("artistCode", id);
+        String artistInfoBody = SdkCommon.qiRequest(ARTIST_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject artistJson = artistInfoJson.getJSONObject("data");
@@ -73,7 +77,9 @@ public class QiArtistInfoReq {
      */
     public void fillArtistInfo(NetArtistInfo artistInfo) {
         String id = artistInfo.getId();
-        String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_DETAIL_QI_API, id, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("artistCode", id);
+        String artistInfoBody = SdkCommon.qiRequest(ARTIST_DETAIL_QI_API, params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");
@@ -97,7 +103,11 @@ public class QiArtistInfoReq {
         int total;
 
         String id = artistInfo.getId();
-        String artistInfoBody = SdkCommon.qiRequest(String.format(ARTIST_SONGS_QI_API, id, page, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new TreeMap<>();
+        params.put("artistCode", id);
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String artistInfoBody = SdkCommon.qiRequest(ARTIST_SONGS_QI_API, params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");
