@@ -117,7 +117,6 @@ public class QsArtistInfoReq {
             String albumName = albumJson.getString("name");
             String albumId = albumJson.getString("id");
             Double duration = songJson.getDouble("duration") / 1000;
-            String mvId = songJson.getString("vid");
             int qualityType = AudioQuality.UNKNOWN;
             JSONArray bitRates = songJson.getJSONArray("bit_rates");
             if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "hi_res")))
@@ -140,7 +139,6 @@ public class QsArtistInfoReq {
             musicInfo.setAlbumName(albumName);
             musicInfo.setAlbumId(albumId);
             musicInfo.setDuration(duration);
-            musicInfo.setMvId(mvId);
             musicInfo.setQualityType(qualityType);
 
             res.add(musicInfo);

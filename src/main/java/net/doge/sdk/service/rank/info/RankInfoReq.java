@@ -70,6 +70,8 @@ public class RankInfoReq {
                 return QiRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
             case NetResourceSource.ME:
                 return MeRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
+            case NetResourceSource.QS:
+                return QsRankInfoReq.getInstance().getMusicInfoInRank(id, page, limit);
             default:
                 return CommonResult.create();
         }

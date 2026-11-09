@@ -73,10 +73,18 @@ public class RecommendPlaylistReq {
             executor.submit(() -> FsRecommendPlaylistReq.getInstance().getNewPlaylists(tag, page, limit));
         }
         if (src == NetResourceSource.BI || src == NetResourceSource.ALL) {
+            BiRecommendPlaylistReq biRecommendPlaylistReq = BiRecommendPlaylistReq.getInstance();
             if (dt) {
-                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getRecPlaylists(page, limit));
-                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getHotPlaylists(page, limit));
-                executor.submit(() -> BiRecommendPlaylistReq.getInstance().getAllPlaylists(page, limit));
+                executor.submit(() -> biRecommendPlaylistReq.getRecPlaylists(page, limit));
+                executor.submit(() -> biRecommendPlaylistReq.getHotPlaylists(page, limit));
+                executor.submit(() -> biRecommendPlaylistReq.getAllPlaylists(page, limit));
+            }
+        }
+        if (src == NetResourceSource.QS || src == NetResourceSource.ALL) {
+            QsRecommendPlaylistReq qsRecommendPlaylistReq = QsRecommendPlaylistReq.getInstance();
+            if (dt) {
+                executor.submit(() -> qsRecommendPlaylistReq.getRecPlaylists(page, limit));
+                executor.submit(() -> qsRecommendPlaylistReq.getDiscoverPlaylists(page, limit));
             }
         }
         return executor.getResult();

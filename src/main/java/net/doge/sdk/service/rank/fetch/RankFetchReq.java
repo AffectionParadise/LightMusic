@@ -38,13 +38,16 @@ public class RankFetchReq {
 //            executor.submit(()-> kwRankFetchReq.getRecRanks());
         }
         if (src == NetResourceSource.MG || src == NetResourceSource.ALL) {
-            executor.submit(() -> MgRankFetchReq.getInstance().getRanks());
-            executor.submit(() -> MgRankFetchReq.getInstance().getRanksV2());
+            MgRankFetchReq mgRankFetchReq = MgRankFetchReq.getInstance();
+            executor.submit(() -> mgRankFetchReq.getRanks());
+            executor.submit(() -> mgRankFetchReq.getRanksV2());
         }
         if (src == NetResourceSource.QI || src == NetResourceSource.ALL)
             executor.submit(() -> QiRankFetchReq.getInstance().getRanks());
         if (src == NetResourceSource.ME || src == NetResourceSource.ALL)
             executor.submit(() -> MeRankFetchReq.getInstance().getRanks());
+        if (src == NetResourceSource.QS || src == NetResourceSource.ALL)
+            executor.submit(() -> QsRankFetchReq.getInstance().getRanks());
         return executor.getResult();
     }
 }

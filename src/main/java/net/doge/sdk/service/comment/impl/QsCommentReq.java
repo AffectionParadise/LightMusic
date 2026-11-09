@@ -61,6 +61,7 @@ public class QsCommentReq {
                 JSONObject commentJson = commentArray.getJSONObject(i);
                 JSONObject userJson = commentJson.getJSONObject("user");
 
+                String userId = userJson.getString("id");
                 String username = userJson.getString("nickname");
                 String profileUrl = userJson.getJSONObject("medium_avatar_url").getJSONArray("urls").getString(0);
                 String content = commentJson.getString("content");
@@ -70,6 +71,7 @@ public class QsCommentReq {
 
                 NetCommentInfo commentInfo = new NetCommentInfo();
                 commentInfo.setSource(NetResourceSource.QS);
+                commentInfo.setUserId(userId);
                 commentInfo.setUsername(username);
                 commentInfo.setProfileUrl(profileUrl);
                 commentInfo.setContent(content);

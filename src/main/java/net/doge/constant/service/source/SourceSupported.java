@@ -30,6 +30,7 @@ public class SourceSupported {
             NetResourceSource.MG,
             NetResourceSource.QI,
             NetResourceSource.ME,
+            NetResourceSource.QS,
             NetResourceSource.ALL
     };
 
@@ -120,6 +121,7 @@ public class SourceSupported {
             NetResourceSource.ME,
             NetResourceSource.FS,
             NetResourceSource.BI,
+            NetResourceSource.QS,
             NetResourceSource.ALL
     };
     // 精品歌单
