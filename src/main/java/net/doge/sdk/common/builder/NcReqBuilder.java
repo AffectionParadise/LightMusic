@@ -4,7 +4,6 @@ import net.doge.sdk.common.crypto.NcCrypto;
 import net.doge.sdk.common.opt.nc.NcReqOptConstants;
 import net.doge.sdk.common.opt.nc.NcReqOptEnum;
 import net.doge.util.core.RandomUtil;
-import net.doge.util.core.StringUtil;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -93,7 +92,7 @@ public class NcReqBuilder {
                 url = url.replaceFirst("\\w*api", "weapi");
                 break;
             case NcReqOptConstants.EAPI:
-                String requestId = System.currentTimeMillis() + "_" + StringUtil.padPre(String.valueOf(Math.floor(Math.random() * 1000)), 4, "0");
+                String requestId = System.currentTimeMillis() + "_" + RandomUtil.randomNumbers(4);
                 headers.put("osver", osver);
                 headers.put("deviceId", deviceId);
                 headers.put("os", os);

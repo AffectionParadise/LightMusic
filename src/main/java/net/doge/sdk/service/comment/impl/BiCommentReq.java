@@ -10,7 +10,6 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.entity.service.base.NetResource;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.util.BvAvConverter;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.PageUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -32,10 +31,8 @@ public class BiCommentReq {
         return instance;
     }
 
-    // 视频评论 API (哔哩哔哩)
-    private final String VIDEO_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=1&oid=%s&sort=%s&pn=%s&ps=%s";
-    // 音频评论 API (哔哩哔哩)
-    private final String SONG_COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=14&oid=%s&sort=%s&pn=%s&ps=%s";
+    // 评论 API (哔哩哔哩)
+    private final String COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=%s&oid=%s&sort=%s&pn=%s&ps=%s";
 
     /**
      * 获取评论
@@ -44,17 +41,15 @@ public class BiCommentReq {
         List<NetCommentInfo> res = new LinkedList<>();
         int total;
 
+        boolean isVideo = resource instanceof NetMvInfo;
         String id = resource.getId();
         boolean hotOnly = I18n.getText("hotComment").equals(type);
 
         int lim = Math.min(20, limit);
-        String url = resource instanceof NetMvInfo ? String.format(VIDEO_COMMENTS_BI_API, BvAvConverter.getInstance().convertBv2Av(id), hotOnly ? 1 : 0, page, lim)
-                : String.format(SONG_COMMENTS_BI_API, id, hotOnly ? 1 : 0, page, lim);
+        String url = String.format(COMMENTS_BI_API, isVideo ? 1 : 14, id, hotOnly ? 1 : 0, page, lim);
         String commentInfoBody = HttpRequest.get(url)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
-//                    // 貌似解析不了，触及到什么特殊字符了？
-//                    .replaceAll("\"\\[\\d+.*?\\]\"", "\"\"");
         JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
         JSONObject data = commentInfoJson.getJSONObject("data");
         int count = data.getJSONObject("page").getIntValue("count");

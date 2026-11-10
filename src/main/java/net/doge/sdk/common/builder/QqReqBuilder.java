@@ -69,7 +69,7 @@ public class QqReqBuilder {
      */
     private String getSearchId() {
         String guid = RandomUtil.randomGuid();
-        String randomPart = String.format("%05d", RandomUtil.randomInt(100000));
+        String randomPart = RandomUtil.randomNumbers(5);
         return guid + randomPart;
     }
 }

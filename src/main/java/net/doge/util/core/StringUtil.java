@@ -127,8 +127,7 @@ public class StringUtil {
     public static String trimStringWith(String str, char... cs) {
         if (str == null) return null;
         char[] chars = str.toCharArray();
-        int len = chars.length;
-        int st = 0;
+        int st = 0, len = chars.length;
         while (st < len && ArrayUtil.in(cs, chars[st])) st++;
         while (st < len && ArrayUtil.in(cs, chars[len - 1])) len--;
         return st > 0 || len < chars.length ? str.substring(st, len) : str;
@@ -155,10 +154,9 @@ public class StringUtil {
      * @return
      */
     public static String padAfter(String str, int len, char padChar) {
-        StringBuilder sb = new StringBuilder(str);
-        // hutool 自带的 padAfter 算法有问题
-        while (sb.length() < len) sb.append(padChar);
-        return sb.toString();
+        // hutool 自带的 padAfter 会在 len 参数小于 str 本身长度时截断，而此处跳过此操作
+        if (str == null || str.length() >= len) return str;
+        return StrUtil.padAfter(str, len, padChar);
     }
 
     /**

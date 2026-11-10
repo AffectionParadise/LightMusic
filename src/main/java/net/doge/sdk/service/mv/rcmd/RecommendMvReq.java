@@ -65,7 +65,11 @@ public class RecommendMvReq {
         }
         if (src == NetResourceSource.BI || src == NetResourceSource.ALL) {
             BiRecommendMvReq biRecommendMvReq = BiRecommendMvReq.getInstance();
-            if (dt) executor.submit(() -> biRecommendMvReq.getHotVideo(page, limit));
+            if (dt) {
+                executor.submit(() -> biRecommendMvReq.getIndexRecVideo(page, limit));
+                executor.submit(() -> biRecommendMvReq.getHotVideo(page, limit));
+                executor.submit(() -> biRecommendMvReq.getPopPreciousVideo(page, limit));
+            }
             executor.submit(() -> biRecommendMvReq.getCatRankVideo(tag, page, limit));
             executor.submit(() -> biRecommendMvReq.getCatNewVideo(tag, page, limit));
         }

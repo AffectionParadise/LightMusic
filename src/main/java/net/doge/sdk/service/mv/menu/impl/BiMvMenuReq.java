@@ -41,8 +41,8 @@ public class BiMvMenuReq {
         List<NetMvInfo> res = new LinkedList<>();
         int t;
 
-        String bvid = netMvInfo.getBvId();
-        String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvid))
+        String bvId = netMvInfo.getBvId();
+        String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvId))
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
@@ -51,8 +51,8 @@ public class BiMvMenuReq {
             JSONObject mvJson = mvArray.getJSONObject(i);
             JSONObject owner = mvJson.getJSONObject("owner");
 
-            String mvId = mvJson.getString("cid");
-            String bvId = mvJson.getString("bvid");
+            String mvId = mvJson.getString("aid");
+            String bId = mvJson.getString("bvid");
             String mvName = mvJson.getString("title");
             String artistName = owner.getString("name");
             String creatorId = owner.getString("mid");
@@ -64,7 +64,7 @@ public class BiMvMenuReq {
             NetMvInfo mvInfo = new NetMvInfo();
             mvInfo.setSource(NetResourceSource.BI);
             mvInfo.setId(mvId);
-            mvInfo.setBvId(bvId);
+            mvInfo.setBvId(bId);
             mvInfo.setName(mvName);
             mvInfo.setArtist(artistName);
             mvInfo.setCreatorId(creatorId);
@@ -92,8 +92,9 @@ public class BiMvMenuReq {
         List<NetMvInfo> res = new LinkedList<>();
         int t = 0;
 
-        String bvid = netMvInfo.getBvId();
-        String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvid))
+        String id = netMvInfo.getId();
+        String bvId = netMvInfo.getBvId();
+        String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvId))
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
@@ -102,7 +103,6 @@ public class BiMvMenuReq {
             for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
-                String mvId = mvJson.getString("cid");
                 String mvName = mvJson.getString("part");
                 String artistName = netMvInfo.getArtist();
                 String creatorId = netMvInfo.getCreatorId();
@@ -113,8 +113,8 @@ public class BiMvMenuReq {
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetResourceSource.BI);
-                mvInfo.setId(mvId);
-                mvInfo.setBvId(bvid);
+                mvInfo.setId(id);
+                mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
                 mvInfo.setCreatorId(creatorId);

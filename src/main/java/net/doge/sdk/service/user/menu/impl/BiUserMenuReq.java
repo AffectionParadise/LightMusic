@@ -17,6 +17,8 @@ import net.doge.util.media.DurationUtil;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class BiUserMenuReq {
     private static BiUserMenuReq instance;
@@ -30,7 +32,7 @@ public class BiUserMenuReq {
     }
 
     // 用户视频 API (哔哩哔哩)
-    private final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search?order=%s&mid=%s&pn=%s&ps=%s";
+    private final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search";
     // 用户关注 API (哔哩哔哩)
     private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
     // 用户粉丝 API (哔哩哔哩)
@@ -47,8 +49,12 @@ public class BiUserMenuReq {
 
         String[] orders = {"pubdate", "click", "stow"};
         String id = userInfo.getId();
-        String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_BI_API, orders[sortType], id, page, limit))
-                .cookie(SdkCommon.BI_COOKIE)
+        Map<String, Object> params = new TreeMap<>();
+        params.put("order", orders[sortType]);
+        params.put("mid", id);
+        params.put("pn", page);
+        params.put("ps", limit);
+        String mvInfoBody = SdkCommon.biRequest(USER_VIDEO_BI_API, params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
         if (JsonUtil.notEmpty(data)) {
@@ -57,6 +63,7 @@ public class BiUserMenuReq {
             for (int i = 0, len = mvArray.size(); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
 
+                String aid = mvJson.getString("aid");
                 String bvId = mvJson.getString("bvid");
                 String mvName = mvJson.getString("title");
                 String artistName = mvJson.getString("author");
@@ -68,6 +75,7 @@ public class BiUserMenuReq {
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetResourceSource.BI);
+                mvInfo.setId(aid);
                 mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);

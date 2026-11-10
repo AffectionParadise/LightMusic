@@ -35,7 +35,7 @@ public class MvSearchReq {
         if (src == NetResourceSource.HK || src == NetResourceSource.ALL)
             executor.submit(() -> HkMvSearchReq.getInstance().searchMvs(keyword, page, limit));
         if (src == NetResourceSource.BI || src == NetResourceSource.ALL)
-            executor.submit(() -> BiMvSearchReq.getInstance().searchMvs(keyword, page));
+            executor.submit(() -> BiMvSearchReq.getInstance().searchMvs(keyword, page, limit));
         if (src == NetResourceSource.YY || src == NetResourceSource.ALL)
             executor.submit(() -> YyMvSearchReq.getInstance().searchMvs(keyword, page, limit, cursor));
         return executor.getResult();

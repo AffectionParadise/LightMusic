@@ -59,12 +59,12 @@ public class RandomUtil {
     }
 
     /**
-     * 生成随机指定位数字
+     * 生成随机指定位补零数字
      *
      * @return
      */
-    public static String randomNumbers(int n) {
-        return cn.hutool.core.util.RandomUtil.randomNumbers(n);
+    public static String randomNumbers(int len) {
+        return cn.hutool.core.util.RandomUtil.randomNumbers(len);
     }
 
     /**
@@ -79,12 +79,12 @@ public class RandomUtil {
     /**
      * 随机生成指定位 bytes
      *
-     * @param n
+     * @param len
      * @return
      */
-    public static byte[] randomBytes(int n) {
-        byte[] bytes = new byte[n];
-        for (int i = 0; i < n; i++) bytes[i] = (byte) random.nextInt(128);
+    public static byte[] randomBytes(int len) {
+        byte[] bytes = new byte[len];
+        for (int i = 0; i < len; i++) bytes[i] = (byte) random.nextInt(128);
         return bytes;
     }
 }

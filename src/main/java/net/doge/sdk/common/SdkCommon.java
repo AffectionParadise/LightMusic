@@ -59,6 +59,11 @@ public class SdkCommon {
         return QiReqBuilder.getInstance().buildRequest(baseUrl, params);
     }
 
+    // 构造哔哩哔哩请求
+    public static HttpRequest biRequest(String baseUrl, Map<String, Object> params) {
+        return BiReqBuilder.getInstance().buildRequest(baseUrl, params);
+    }
+
     // 构造 5sing 请求
     public static HttpRequest fsRequest(Map<String, Object> params, String data, Map<FsReqOptEnum, Object> options) {
         return FsReqBuilder.getInstance().buildRequest(params, data, options);

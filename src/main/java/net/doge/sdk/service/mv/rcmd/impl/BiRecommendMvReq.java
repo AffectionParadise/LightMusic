@@ -13,7 +13,6 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
-import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -30,12 +29,65 @@ public class BiRecommendMvReq {
         return instance;
     }
 
+    // 首页推荐视频 API (哔哩哔哩)
+    private final String INDEX_REC_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd";
     // 热门视频 API (哔哩哔哩)
     private final String HOT_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
+    // 入站必刷视频 API (哔哩哔哩)
+    private final String POPULAR_PRECIOUS_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular/precious";
     // 分区排行榜视频 API (哔哩哔哩)
-    private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/region?rid=%s";
+    private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/v2?rid=%s&type=all";
     // 分区最新视频 API (哔哩哔哩)
     private final String CAT_NEW_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
+
+    /**
+     * 首页推荐视频
+     */
+    public CommonResult<NetMvInfo> getIndexRecVideo(int page, int limit) {
+        List<NetMvInfo> r = new LinkedList<>();
+        int t;
+
+        String mvInfoBody = SdkCommon.biRequest(INDEX_REC_VIDEO_BI_API, null)
+                .cookie(SdkCommon.BI_COOKIE)
+                .executeAsStr();
+        JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+        JSONObject data = mvInfoJson.getJSONObject("data");
+        JSONArray mvArray = data.getJSONArray("item");
+        t = mvArray.size();
+        for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
+            JSONObject mvJson = mvArray.getJSONObject(i);
+            JSONObject owner = mvJson.getJSONObject("owner");
+
+            String id = mvJson.getString("id");
+            String bvId = mvJson.getString("bvid");
+            String mvName = mvJson.getString("title");
+            String artistName = owner.getString("name");
+            String creatorId = owner.getString("mid");
+            String coverImgUrl = mvJson.getString("pic");
+            Long playCount = mvJson.getJSONObject("stat").getLong("view");
+            Double duration = mvJson.getDouble("duration");
+            String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
+
+            NetMvInfo mvInfo = new NetMvInfo();
+            mvInfo.setSource(NetResourceSource.BI);
+            mvInfo.setId(id);
+            mvInfo.setBvId(bvId);
+            mvInfo.setName(mvName);
+            mvInfo.setArtist(artistName);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            GlobalExecutors.imageExecutor.execute(() -> {
+                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                mvInfo.setCoverImgThumb(coverImgThumb);
+            });
+
+            r.add(mvInfo);
+        }
+        return new CommonResult<>(r, t);
+    }
 
     /**
      * 热门视频
@@ -54,7 +106,56 @@ public class BiRecommendMvReq {
             JSONObject mvJson = mvArray.getJSONObject(i);
             JSONObject owner = mvJson.getJSONObject("owner");
 
-            String id = mvJson.getString("cid");
+            String id = mvJson.getString("aid");
+            String bvId = mvJson.getString("bvid");
+            String mvName = mvJson.getString("title");
+            String artistName = owner.getString("name");
+            String creatorId = owner.getString("mid");
+            String coverImgUrl = mvJson.getString("pic");
+            Long playCount = mvJson.getJSONObject("stat").getLong("view");
+            Double duration = mvJson.getDouble("duration");
+            String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
+
+            NetMvInfo mvInfo = new NetMvInfo();
+            mvInfo.setSource(NetResourceSource.BI);
+            mvInfo.setId(id);
+            mvInfo.setBvId(bvId);
+            mvInfo.setName(mvName);
+            mvInfo.setArtist(artistName);
+            mvInfo.setCreatorId(creatorId);
+            mvInfo.setCoverImgUrl(coverImgUrl);
+            mvInfo.setPlayCount(playCount);
+            mvInfo.setDuration(duration);
+            mvInfo.setPubTime(pubTime);
+            GlobalExecutors.imageExecutor.execute(() -> {
+                BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
+                mvInfo.setCoverImgThumb(coverImgThumb);
+            });
+
+            r.add(mvInfo);
+        }
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 入站必刷视频
+     */
+    public CommonResult<NetMvInfo> getPopPreciousVideo(int page, int limit) {
+        List<NetMvInfo> r = new LinkedList<>();
+        int t;
+
+        String mvInfoBody = HttpRequest.get(POPULAR_PRECIOUS_VIDEO_BI_API)
+                .cookie(SdkCommon.BI_COOKIE)
+                .executeAsStr();
+        JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
+        JSONObject data = mvInfoJson.getJSONObject("data");
+        JSONArray mvArray = data.getJSONArray("list");
+        t = mvArray.size();
+        for (int i = (page - 1) * limit, len = Math.min(mvArray.size(), page * limit); i < len; i++) {
+            JSONObject mvJson = mvArray.getJSONObject(i);
+            JSONObject owner = mvJson.getJSONObject("owner");
+
+            String id = mvJson.getString("aid");
             String bvId = mvJson.getString("bvid");
             String mvName = mvJson.getString("title");
             String artistName = owner.getString("name");
@@ -99,24 +200,26 @@ public class BiRecommendMvReq {
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
-            JSONArray mvArray = mvInfoJson.getJSONArray("data");
+            JSONObject data = mvInfoJson.getJSONObject("data");
+            JSONArray mvArray = data.getJSONArray("list");
             t = mvArray.size();
             for (int i = (page - 1) * limit, len = Math.min(page * limit, mvArray.size()); i < len; i++) {
                 JSONObject mvJson = mvArray.getJSONObject(i);
+                JSONObject owner = mvJson.getJSONObject("owner");
 
-//                    String id = mvJson.getString("cid");
+                String id = mvJson.getString("aid");
                 String bvId = mvJson.getString("bvid");
                 String mvName = mvJson.getString("title");
-                String artistName = mvJson.getString("author");
-                String creatorId = mvJson.getString("mid");
+                String artistName = owner.getString("name");
+                String creatorId = owner.getString("mid");
                 String coverImgUrl = mvJson.getString("pic");
-                Long playCount = mvJson.getLong("play");
-                Double duration = DurationUtil.toSeconds(mvJson.getString("duration"));
-                String pubTime = mvJson.getString("create").split(" ")[0];
+                Long playCount = mvJson.getJSONObject("stat").getLong("view");
+                Double duration = mvJson.getDouble("duration");
+                String pubTime = TimeUtil.msToDate(mvJson.getLong("pubdate") * 1000);
 
                 NetMvInfo mvInfo = new NetMvInfo();
                 mvInfo.setSource(NetResourceSource.BI);
-//                    mvInfo.setId(id);
+                mvInfo.setId(id);
                 mvInfo.setBvId(bvId);
                 mvInfo.setName(mvName);
                 mvInfo.setArtist(artistName);
@@ -157,7 +260,7 @@ public class BiRecommendMvReq {
                 JSONObject mvJson = mvArray.getJSONObject(i);
                 JSONObject owner = mvJson.getJSONObject("owner");
 
-                String id = mvJson.getString("cid");
+                String id = mvJson.getString("aid");
                 String bvId = mvJson.getString("bvid");
                 String mvName = mvJson.getString("title");
                 String artistName = owner.getString("name");

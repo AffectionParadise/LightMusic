@@ -15,7 +15,8 @@ public class PageUtil {
      */
     public static int totalPage(int total, int limit) {
         if (limit <= 0) return 0;
-        return total % limit == 0 ? total / limit : total / limit + 1;
+        int pageIntPart = total / limit;
+        return total % limit == 0 ? pageIntPart : pageIntPart + 1;
     }
 
     /**
