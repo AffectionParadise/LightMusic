@@ -11,7 +11,6 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
@@ -44,7 +43,7 @@ public class KwArtistMenuReq {
 
         String id = artistInfo.getId();
         HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, id, page, limit))
-                .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/album")
+                .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/album")
                 .execute();
         if (resp.isSuccessful()) {
             String albumInfoBody = resp.body();
@@ -90,7 +89,7 @@ public class KwArtistMenuReq {
 
         String id = artistInfo.getId();
         HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, id, page, limit))
-                .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/mv")
+                .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/mv")
                 .execute();
         if (resp.isSuccessful()) {
             String mvInfoBody = resp.body();

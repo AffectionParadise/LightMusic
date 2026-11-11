@@ -46,5 +46,5 @@ public class Tags {
 
     public static final Map<String, String[]> mvTags = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final int[] mvIndices = {NetResourceSource.NC, NetResourceSource.NC, NetResourceSource.KG, NetResourceSource.KG, NetResourceSource.QQ, NetResourceSource.QQ,
-            NetResourceSource.QQ, NetResourceSource.KW, NetResourceSource.HK, NetResourceSource.BI, NetResourceSource.FA, NetResourceSource.LZ};
+            NetResourceSource.QQ, NetResourceSource.KW, NetResourceSource.HK, NetResourceSource.BI, NetResourceSource.BI, NetResourceSource.FA, NetResourceSource.LZ};
 }

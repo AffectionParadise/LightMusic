@@ -53,8 +53,8 @@
 //    public String getTrackUrl(String mid, String quality) {
 //        try {
 //            String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, mid, qualityMap.get(quality)))
-//                    .header(Header.CONTENT_TYPE, "application/json")
-//                    .header(Header.USER_AGENT, "lx-music-request/2.6.0")
+//                    .contentType("application/json")
+//                    .userAgent("lx-music-request/2.6.0")
 //                    .header(Header.X_REQUEST_KEY, "lxmusic")
 //                    .executeAsStr();
 //            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

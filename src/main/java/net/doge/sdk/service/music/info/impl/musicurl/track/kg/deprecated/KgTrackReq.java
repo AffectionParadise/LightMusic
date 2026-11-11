@@ -68,7 +68,7 @@
 /// /        String albumAudioId = bodyJson.getString("album_audio_id");
 //
 //        String body = HttpRequest.post("http://gateway.kugou.com/v3/album_audio/audio")
-//                .header(Header.USER_AGENT, "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
+//                .userAgent("Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
 //                .header("KG-THash", "13a3164")
 //                .header("KG-RC", "1")
 //                .header("KG-Fake", "0")
@@ -115,7 +115,7 @@
 //
 //        String url = "https://gateway.kugou.com/v5/url?" + requestParams(params) + "&signature=" + sign(params);
 //        String respBody = HttpRequest.get(url)
-//                .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-NetMusic-wifi")
+//                .userAgent("Android712-AndroidPhone-8983-18-0-NetMusic-wifi")
 //                .header("KG-THash", "3e5ec6b")
 //                .header("KG-Rec", "1")
 //                .header("KG-RC", "1")

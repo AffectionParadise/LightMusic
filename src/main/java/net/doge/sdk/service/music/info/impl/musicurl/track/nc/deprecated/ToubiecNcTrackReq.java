@@ -95,7 +95,7 @@
 //    public String getTrackUrl(String id, String quality) {
 //        // 获取认证参数
 //        String authBody = HttpRequest.post(AUTH_API)
-//                .header(Header.REFERER, "https://wyapi.toubiec.cn/")
+//                .referer("https://wyapi.toubiec.cn/")
 //                .executeAsStr();
 //        JSONObject authJson = JSONObject.parseObject(authBody);
 //        if (authJson.getIntValue("code") != 200) return "";
@@ -106,7 +106,7 @@
 //        // 获取 url
 //        String payload = String.format("{\"id\":\"%s\",\"level\":\"%s\",\"timestamp\":%s}", id, qualityMap.get(quality), System.currentTimeMillis());
 //        String rawBody = HttpRequest.post(SONG_URL_API)
-//                .header(Header.REFERER, "https://wyapi.toubiec.cn/")
+//                .referer("https://wyapi.toubiec.cn/")
 //                .jsonBody(String.format("{\"keyId\":\"%s\",\"keyToken\":\"%s\",\"data\":\"%s\"}", keyId, keyToken, encryptPayload(payload, key)))
 //                .executeAsStr();
 //        JSONObject rawJson = JSONObject.parseObject(rawBody);

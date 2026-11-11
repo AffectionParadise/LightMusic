@@ -10,7 +10,6 @@ import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.service.music.info.impl.musicinfo.lyric.kg.KgLyricReq;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
 
@@ -44,7 +43,7 @@ public class KgMusicInfoReq {
 //                KugouReqBuilder.appid, KugouReqBuilder.clientver, KugouReqBuilder.mid, KugouReqBuilder.dfid, System.currentTimeMillis() / 1000,
 //                KugouReqBuilder.androidSignKey, hash);
 //        String songBody = SdkCommon.kgRequest(null, dat, options)
-//                .header(Header.USER_AGENT, "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
+//                .userAgent("Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
 //                .header("KG-THash", "13a3164")
 //                .header("KG-RC", "1")
 //                .header("KG-Fake", "0")
@@ -73,7 +72,7 @@ public class KgMusicInfoReq {
                         "\"support_verify\":1,\"resource\":[{\"type\":\"audio\",\"page_id\":0,\"hash\":\"%s\",\"album_id\":0}]}",
                 KgReqBuilder.appid, KgReqBuilder.clientver, hash);
         String songBody = SdkCommon.kgRequest(null, dat, options)
-                .header(Header.CONTENT_TYPE, "application/json")
+                .contentType("application/json")
                 .header("x-router", "media.store.kugou.com")
                 .executeAsStr();
         JSONObject songData = JSONObject.parseObject(songBody).getJSONArray("data").getJSONObject(0);

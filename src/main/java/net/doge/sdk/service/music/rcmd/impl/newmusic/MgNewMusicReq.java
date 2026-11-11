@@ -36,7 +36,7 @@ public class MgNewMusicReq {
         int t;
 
 //        String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_MG_API, page - 1, limit))
-//                .header(Header.REFERER, "https://m.music.migu.cn/")
+//                .referer("https://m.music.migu.cn/")
 //                .executeAsStr();
 //        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
 //        JSONObject data = musicInfoJson.getJSONObject("result");

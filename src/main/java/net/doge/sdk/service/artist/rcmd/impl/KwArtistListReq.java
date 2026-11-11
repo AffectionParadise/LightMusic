@@ -12,7 +12,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.http.constant.Header;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -93,7 +92,7 @@ public class KwArtistListReq {
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
-                    .header(Header.REFERER, StringUtil.notEmpty(sp[1]) ? "https://kuwo.cn/singers" : "")
+                    .referer(StringUtil.notEmpty(sp[1]) ? "https://kuwo.cn/singers" : "")
                     .execute();
             if (resp.isSuccessful()) {
                 String artistInfoBody = resp.body();

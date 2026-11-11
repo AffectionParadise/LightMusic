@@ -3,7 +3,6 @@ package net.doge.sdk.service.music.search.impl.searchsuggestion;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.net.UrlUtil;
 
@@ -36,7 +35,7 @@ public class QqSearchSuggestionReq {
         // 先对关键词编码，避免特殊符号的干扰
         String encodedKeyword = UrlUtil.encodeAll(keyword);
         String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_QQ_API, encodedKeyword))
-                .header(Header.REFERER, "https://y.qq.com/portal/player.html")
+                .referer("https://y.qq.com/portal/player.html")
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
         JSONObject data = searchSuggestionJson.getJSONObject("data");

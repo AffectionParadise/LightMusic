@@ -7,7 +7,6 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.log.LogUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -90,7 +89,7 @@ public class ZnnuNcTrackReq {
             params.put("domain", domain);
             params.put("signature", signature);
             String rawBody = HttpRequest.post(SONG_URL_API)
-                    .header(Header.REFERER, "https://music.znnu.com/")
+                    .referer("https://music.znnu.com/")
                     .header("X-Key-Token", keyToken)
                     .header("X-Referer", "musicParser")
                     // 注意此处以表单形式传入！

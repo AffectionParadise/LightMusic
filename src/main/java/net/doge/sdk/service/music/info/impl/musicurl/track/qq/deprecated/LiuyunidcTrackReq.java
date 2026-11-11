@@ -54,12 +54,12 @@
 //    public String getTrackUrl(String mid, String quality) {
 //        try {
 //            String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, mid, qualityMap.get(quality)))
-//                    .header(Header.USER_AGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
-//                    .header(Header.HOST, "api.liuyunidc.cn")
+//                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36")
+//                    .host("api.liuyunidc.cn")
 //                    .header("accept", "*/*")
 //                    .header("accept-encoding", "gzip, deflate")
 //                    .header("accept-language", "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7")
-//                    .header(Header.REFERER, "http://api.liuyunidc.cn/baimusic/")
+//                    .referer("http://api.liuyunidc.cn/baimusic/")
 //                    .executeAsStr();
 //            JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
 //            if (JsonUtil.isEmpty(data)) return "";

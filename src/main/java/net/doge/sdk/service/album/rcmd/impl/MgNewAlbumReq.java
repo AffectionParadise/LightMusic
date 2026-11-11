@@ -40,7 +40,7 @@ public class MgNewAlbumReq {
         int t;
 
 //        String albumInfoBody = HttpRequest.get(String.format(NEW_ALBUM_MG_API, page - 1, limit))
-//                .header(Header.REFERER, "https://m.music.migu.cn/")
+//                .referer("https://m.music.migu.cn/")
 //                .executeAsStr();
 //        JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
 //        JSONObject data = albumInfoJson.getJSONObject("result");

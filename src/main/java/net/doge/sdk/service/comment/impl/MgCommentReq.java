@@ -57,7 +57,7 @@ public class MgCommentReq {
             // 评论
 //            String url = hotOnly ? HOT_COMMENTS_MG_API : NEW_COMMENTS_MG_API;
 //            String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
-//                    .header(Header.REFERER, "https://music.migu.cn")
+//                    .referer("https://music.migu.cn")
 //                    .executeAsStr();
 //            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
 //            JSONObject data = commentInfoJson.getJSONObject("data");

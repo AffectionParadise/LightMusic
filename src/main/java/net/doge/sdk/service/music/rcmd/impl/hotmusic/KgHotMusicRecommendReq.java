@@ -15,7 +15,6 @@ import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.service.rank.info.RankInfoReq;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.http.constant.Header;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -186,7 +185,7 @@ public class KgHotMusicRecommendReq {
                             "\"key\":\"%s\",\"mid\":\"%s\"}",
                     KgReqBuilder.appid, ct, KgReqBuilder.clientver, sp[0], sp[1], KgReqBuilder.signParamsKey(ct), KgReqBuilder.mid);
             String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
-                    .header(Header.CONTENT_TYPE, "application/json")
+                    .contentType("application/json")
                     .header("x-router", "fm.service.kugou.com")
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

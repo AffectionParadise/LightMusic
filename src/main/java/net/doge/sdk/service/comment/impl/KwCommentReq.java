@@ -11,7 +11,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.time.TimeUtil;
@@ -70,7 +69,7 @@ public class KwCommentReq {
             String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;
             // 最新评论
             String commentInfoBody = HttpRequest.get(String.format(url, typeStr, id, page, limit))
-                    .header(Header.REFERER, ref)
+                    .referer(ref)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONArray commentArray = null;

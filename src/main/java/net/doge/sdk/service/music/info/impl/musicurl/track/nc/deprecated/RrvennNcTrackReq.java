@@ -49,7 +49,7 @@
 //    public String getTrackUrl(String id, String quality) {
 //        try {
 //            String urlBody = HttpRequest.post(SONG_URL_NC_API)
-//                    .header(Header.REFERER, "https://music.rrvenn.cn/")
+//                    .referer("https://music.rrvenn.cn/")
 //                    .jsonBody(String.format("{\"url\":\"%s\",\"level\":\"%s\",\"type\":\"json\"}", id, qualityMap.get(quality)))
 //                    .executeAsStr();
 //            JSONObject urlJson = JSONObject.parseObject(urlBody);

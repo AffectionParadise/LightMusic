@@ -71,7 +71,7 @@ public class SwingUtil {
     }
 
     /**
-     * 调整数组中所有组件为同一尺寸(与最大的组件一致)
+     * 调整数组中所有组件为同一尺寸(宽度与高度取最大值)
      *
      * @param components
      */

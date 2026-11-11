@@ -10,7 +10,6 @@ import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
@@ -39,7 +38,7 @@ public class QqPlaylistInfoReq {
         Integer t = 1;
 
         String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
-                .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
+                .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
@@ -77,7 +76,7 @@ public class QqPlaylistInfoReq {
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
         String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
-                .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
+                .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");
@@ -103,7 +102,7 @@ public class QqPlaylistInfoReq {
 
         String id = playlistInfo.getId();
         String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
-                .header(Header.REFERER, "https://y.qq.com/n/yqq/playlist")
+                .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray cdlist = playlistInfoJson.getJSONArray("cdlist");

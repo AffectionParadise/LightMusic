@@ -10,7 +10,6 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
@@ -113,7 +112,7 @@ public class KwArtistInfoReq {
 
         String id = artistInfo.getId();
         String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
-                .header(Header.REFERER, "https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id))
+                .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id))
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");

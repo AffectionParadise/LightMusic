@@ -50,7 +50,7 @@
 //    public String getTrackUrl(String id, String quality) {
 //        try {
 //            String songBody = HttpRequest.post(SONG_URL_NC_API)
-//                    .header(Header.REFERER, "https://music.lzmhhh.com/")
+//                    .referer("https://music.lzmhhh.com/")
 //                    .header(Header.ORIGIN, "https://music.lzmhhh.com")
 //                    .jsonBody(String.format("{\"id\":\"%s\",\"type\":\"wy\"}", id))
 //                    .executeAsStr();

@@ -167,8 +167,10 @@ public class TagType {
     public static final int RECOMMEND_VIDEO_HK = 8;
     // 分区排行榜视频 (哔哩哔哩)
     public static final int CAT_RANK_VIDEO_BI = 9;
+    // 每周必看视频 (哔哩哔哩)
+    public static final int POP_SERIES_VIDEO_BI = 10;
     // 视频 (发姐)
-    public static final int VIDEO_FA = 10;
+    public static final int VIDEO_FA = 11;
     // 视频 (李志)
-    public static final int VIDEO_LZ = 11;
+    public static final int VIDEO_LZ = 12;
 }

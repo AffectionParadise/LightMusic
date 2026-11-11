@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.log.LogUtil;
 
 import java.util.HashMap;
@@ -47,7 +46,7 @@ public class ChkszKgTrackReq {
     public String getTrackUrl(String hash, String quality) {
         try {
             String songBody = HttpRequest.get(String.format(SONG_URL_KG_API, hash, qualityMap.get(quality)))
-                    .header(Header.REFERER, "https://cp.chksz.top/")
+                    .referer("https://cp.chksz.top/")
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);
             if (urlJson.getIntValue("code") != 200) return "";

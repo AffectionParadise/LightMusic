@@ -76,7 +76,7 @@ public class MgLyricReq {
 
         // lrc
 //            String lyricBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
-//                    .header(Header.REFERER, "https://music.migu.cn/v3/music/player/audio?from=migu")
+//                    .referer("https://music.migu.cn/v3/music/player/audio?from=migu")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject data = JSONObject.parseObject(lyricBody);

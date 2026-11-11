@@ -12,7 +12,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.entity.executor.MultiCommonResultCallableExecutor;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
@@ -53,7 +52,7 @@ public class QqUserMenuReq {
             int t = 0;
 
             String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, id))
-                    .header(Header.REFERER, "https://y.qq.com/portal/profile.html")
+                    .referer("https://y.qq.com/portal/profile.html")
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");

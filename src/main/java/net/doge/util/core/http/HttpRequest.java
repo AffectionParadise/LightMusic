@@ -74,14 +74,10 @@ public class HttpRequest {
         return new HttpRequest(method, url);
     }
 
-    // Header
+    // 请求头
     public HttpRequest header(String name, String value) {
         requestBuilder.header(name, value);
         return this;
-    }
-
-    public HttpRequest header(String name, Object value) {
-        return header(name, String.valueOf(value));
     }
 
     public HttpRequest headers(Map<String, String> headers) {
@@ -89,11 +85,32 @@ public class HttpRequest {
         return this;
     }
 
-    public HttpRequest cookie(Object value) {
-        return header(Header.COOKIE, String.valueOf(value));
+    // UA
+    public HttpRequest userAgent(String value) {
+        return header(Header.USER_AGENT, value);
     }
 
-    // Body
+    // Cookie
+    public HttpRequest cookie(String value) {
+        return header(Header.COOKIE, value);
+    }
+
+    // Referer
+    public HttpRequest referer(String value) {
+        return header(Header.REFERER, value);
+    }
+
+    // Content-Type
+    public HttpRequest contentType(String value) {
+        return header(Header.CONTENT_TYPE, value);
+    }
+
+    // Host
+    public HttpRequest host(String value) {
+        return header(Header.HOST, value);
+    }
+
+    // 请求体
     public HttpRequest body(RequestBody body) {
         requestBuilder.method(method.toString(), body);
         return this;

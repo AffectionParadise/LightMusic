@@ -39,14 +39,14 @@ public class SdkCommon {
         return KgReqBuilder.getInstance().buildRequest(params, data, options);
     }
 
-    // 构造酷我音乐请求
-    public static HttpRequest kwRequest(String url) {
-        return KwReqBuilder.getInstance().buildRequest(url);
-    }
-
     // 构造 QQ 音乐搜索请求
     public static HttpRequest qqSearchRequest(QqSearchDevice device, QqSearchType type, String keyword, int page, int limit) {
         return QqReqBuilder.getInstance().buildSearchRequest(device, type, keyword, page, limit);
+    }
+
+    // 构造酷我音乐请求
+    public static HttpRequest kwRequest(String url) {
+        return KwReqBuilder.getInstance().buildRequest(url);
     }
 
     // 构造咪咕音乐搜索请求

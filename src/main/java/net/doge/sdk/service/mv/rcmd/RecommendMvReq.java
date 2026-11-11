@@ -72,6 +72,7 @@ public class RecommendMvReq {
             }
             executor.submit(() -> biRecommendMvReq.getCatRankVideo(tag, page, limit));
             executor.submit(() -> biRecommendMvReq.getCatNewVideo(tag, page, limit));
+            executor.submit(() -> biRecommendMvReq.getPopSeriesVideo(tag, page, limit));
         }
         if (src == NetResourceSource.FA || src == NetResourceSource.ALL) {
             FaRecommendMvReq faRecommendMvReq = FaRecommendMvReq.getInstance();

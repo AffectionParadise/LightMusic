@@ -9,7 +9,6 @@ import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.media.DurationUtil;
@@ -41,7 +40,7 @@ public class KgLyricReq {
 
         // 搜索歌词
         String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, UrlUtil.encodeAll(name), hash, duration))
-                .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+                .userAgent("KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
                 .executeAsStr();
@@ -61,7 +60,7 @@ public class KgLyricReq {
 
         // 获取歌词
         String lyricBody = HttpRequest.get(String.format(LYRIC_KG_API, lyricId, accessKey))
-                .header(Header.USER_AGENT, "KuGou2012-9020-ExpandSearchManager")
+                .userAgent("KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
                 .executeAsStr();

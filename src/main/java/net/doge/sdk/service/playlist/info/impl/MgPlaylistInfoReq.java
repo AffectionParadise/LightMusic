@@ -11,7 +11,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
@@ -106,7 +105,7 @@ public class MgPlaylistInfoReq {
 
         String id = playlistInfo.getId();
         String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_MG_API, id, page, limit))
-                .header(Header.REFERER, "https://m.music.migu.cn/")
+                .referer("https://m.music.migu.cn/")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray songArray = playlistInfoJson.getJSONArray("list");

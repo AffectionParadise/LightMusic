@@ -120,7 +120,7 @@ public class KwRankFetchReq {
 //        int t = 0;
 //
     //            HttpResponse resp = kwRequest(GET_REC_RANK_KW_API)
-//                    .header(Header.REFERER, "https://kuwo.cn/rankList")
+//                    .referer("https://kuwo.cn/rankList")
 //                    .executeAsync();
 //            if (resp.isSuccessful()) {
 //                String rankInfoBody = resp.body();

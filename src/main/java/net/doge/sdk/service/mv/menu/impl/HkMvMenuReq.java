@@ -8,7 +8,6 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.media.DurationUtil;
 
@@ -42,7 +41,7 @@ public class HkMvMenuReq {
         String id = netMvInfo.getId();
         String name = UrlUtil.encodeAll(netMvInfo.getName());
         String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_HK_API, name, id))
-                .header(Header.REFERER, String.format("https://haokan.baidu.com/v?vid=%s", id))
+                .referer(String.format("https://haokan.baidu.com/v?vid=%s", id))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data").getJSONObject("response");
         JSONArray mvArray = data.getJSONArray("videos");

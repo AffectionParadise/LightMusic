@@ -50,7 +50,7 @@
 //    public String getTrackUrl(String id, String quality) {
 //        try {
 //            String songBody = HttpRequest.get(String.format(SONG_URL_NC_API, id, qualityMap.get(quality)))
-//                    .header(Header.REFERER, "https://cp.chksz.top/")
+//                    .referer("https://cp.chksz.top/")
 //                    .executeAsStr();
 //            JSONObject urlJson = JSONObject.parseObject(songBody);
 //            if (urlJson.getIntValue("code") != 200) return "";

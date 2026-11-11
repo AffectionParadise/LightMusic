@@ -57,7 +57,7 @@ public class KgCommentReq {
         if (resource instanceof NetMusicInfo) {
 //            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_KG_API, id, page, limit))
 //                    // 注意此处必须加 header 才能请求到正确的数据！
-//                    .header(Header.USER_AGENT, "Android712-AndroidPhone-8983-18-0-COMMENT-wifi")
+//                    .userAgent("Android712-AndroidPhone-8983-18-0-COMMENT-wifi")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
@@ -98,7 +98,7 @@ public class KgCommentReq {
 //                            "\"clientver\":\"%s\",\"mid\":\"%s\",\"dfid\":\"-\",\"clienttime\":\"%s\",\"key\":\"%s\",\"appid\":\"%s\",\"data\":[{\"hash\":\"%s\"}]}",
 //                    KugouReqBuilder.clientver, KugouReqBuilder.mid, ct, KugouReqBuilder.androidSignKey, KugouReqBuilder.appid, id);
 //            String audioInfoBody = SdkCommon.kgRequest(null, dat, options)
-//                    .header(Header.USER_AGENT, "Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
+//                    .userAgent("Android712-AndroidPhone-11451-376-0-FeeCacheUpdate-wifi")
 //                    .header("KG-THash", "13a3164")
 //                    .header("KG-RC", "1")
 //                    .header("KG-Fake", "0")

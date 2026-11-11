@@ -47,7 +47,7 @@
 //    public String getTrackUrl(String hash, String quality) {
 //        try {
 //            String songBody = HttpRequest.post(SONG_URL_KG_API)
-//                    .header(Header.REFERER, "https://www.jbsou.cn/")
+//                    .referer("https://www.jbsou.cn/")
 //                    .header("X-Requested-With", "XMLHttpRequest")
 //                    .jsonBody(String.format("{\"input\":\"%s\",\"filter\":\"id\",\"type\":\"kugou\",\"page\":\"1\"}", hash))
 //                    .executeAsStr();

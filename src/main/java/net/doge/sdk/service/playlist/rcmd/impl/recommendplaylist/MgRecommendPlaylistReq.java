@@ -186,7 +186,7 @@ public class MgRecommendPlaylistReq {
 //        int t;
 //
 //        String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_MG_API, (page - 1) * 10))
-//                .header(Header.REFERER, "https://m.music.migu.cn/")
+//                .referer("https://m.music.migu.cn/")
 //                .executeAsStr();
 //        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
 //        JSONObject data = playlistInfoJson.getJSONObject("retMsg");
@@ -228,7 +228,7 @@ public class MgRecommendPlaylistReq {
 //        int t;
 //
 //        String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_MG_API, (page - 1) * 10))
-//                .header(Header.REFERER, "https://m.music.migu.cn/")
+//                .referer("https://m.music.migu.cn/")
 //                .executeAsStr();
 //        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
 //        JSONObject data = playlistInfoJson.getJSONObject("retMsg");

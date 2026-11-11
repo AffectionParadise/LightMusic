@@ -10,7 +10,6 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.media.DurationUtil;
 import org.jsoup.Jsoup;
@@ -41,7 +40,7 @@ public class QqLyricReq {
 //        String artist = musicInfo.getArtist();
 
 //        String lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
-//                .header(Header.REFERER, "https://y.qq.com/portal/player.html")
+//                .referer("https://y.qq.com/portal/player.html")
 //                .executeAsync()
 //                .body();
 //        JSONObject lyricJson = JSONObject.parseObject(lyricBody);
@@ -59,7 +58,7 @@ public class QqLyricReq {
 //        // 没有 qrc 用 lrc 代替
 //        if (songInfos.isEmpty()) {
 //            String lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
-//                    .header(Header.REFERER, "https://y.qq.com/portal/player.html")
+//                    .referer("https://y.qq.com/portal/player.html")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject lyricJson = JSONObject.parseObject(lyricBody);
@@ -76,7 +75,7 @@ public class QqLyricReq {
 //                        "\"module\":\"music.musichallSong.PlayLyricInfo\",\"param\":{\"format\":\"json\",\"crypt\":1,\"ct\":19," +
 //                        "\"cv\":1873,\"interval\":0,\"lrc_t\":0,\"qrc\":1,\"qrc_t\":0,\"roma\":1,\"roma_t\":0,\"songID\":%s," +
 //                        "\"trans\":1,\"trans_t\":0,\"type\":-1}}}", songId))
-//                .header(Header.REFERER, "https://y.qq.com")
+//                .referer("https://y.qq.com")
 //                .executeAsync()
 //                .body();
 //        JSONObject data = JSONObject.parseObject(lyricBody).getJSONObject("req").getJSONObject("data");
@@ -103,7 +102,7 @@ public class QqLyricReq {
         // 没有 qrc (lyric 密文存在但无法解密出明文) 用 lrc 代替
         if (StringUtil.isEmpty(qrcXml) && StringUtil.notEmpty(lyricHex)) {
             lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API_2, mid))
-                    .header(Header.REFERER, "https://y.qq.com/portal/player.html")
+                    .referer("https://y.qq.com/portal/player.html")
                     .executeAsStr();
             JSONObject lyricJson = JSONObject.parseObject(lyricBody);
             String lyric = lyricJson.getString("lyric");

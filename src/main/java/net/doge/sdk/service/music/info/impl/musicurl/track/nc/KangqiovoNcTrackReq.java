@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.log.LogUtil;
 
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class KangqiovoNcTrackReq {
     public String getTrackUrl(String id, String quality) {
         try {
             String songBody = HttpRequest.post(SONG_URL_NC_API)
-                    .header(Header.REFERER, "https://ncm.kangqiovo.com/")
+                    .referer("https://ncm.kangqiovo.com/")
                     .jsonBody(String.format("{\"url\":\"%s\",\"level\":\"%s\",\"type\":\"json\"}", id, qualityMap.get(quality)))
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);

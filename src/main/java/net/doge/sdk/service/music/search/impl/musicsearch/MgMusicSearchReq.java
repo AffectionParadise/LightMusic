@@ -38,7 +38,7 @@ public class MgMusicSearchReq {
 //            Integer t = 0;
 //
 //            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_MG_API, encodedKeyword, page, limit))
-//                    .header(Header.REFERER, "https://m.music.migu.cn/")
+//                    .referer("https://m.music.migu.cn/")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
@@ -133,7 +133,7 @@ public class MgMusicSearchReq {
 //            Integer t = 0;
 //
 //            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_BY_LYRIC_MG_API, encodedKeyword, page, limit))
-//                    .header(Header.REFERER, "https://m.music.migu.cn/")
+//                    .referer("https://m.music.migu.cn/")
 //                    .executeAsync()
 //                    .body();
 //            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
