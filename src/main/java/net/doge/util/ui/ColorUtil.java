@@ -3,7 +3,7 @@ package net.doge.util.ui;
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
 import net.doge.util.core.StringUtil;
-import net.doge.util.ui.quantizer.MMCQ;
+import net.doge.util.ui.helper.PaletteHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -136,22 +136,17 @@ public class ColorUtil {
     }
 
     /**
-     * 获取颜色亮度
+     * 计算颜色亮度
      *
-     * @param rgb
+     * @param color
      * @return
      */
-    public static double computeLuminance(int rgb) {
-        double red = red(rgb) / 255d;
-        red = red < 0.03928 ? red / 12.92 : Math.pow((red + 0.055) / 1.055, 2.4);
+    public static double luminance(Color color) {
+        return luminance(color.getRGB());
+    }
 
-        double green = green(rgb) / 255d;
-        green = green < 0.03928 ? green / 12.92 : Math.pow((green + 0.055) / 1.055, 2.4);
-
-        double blue = blue(rgb) / 255d;
-        blue = blue < 0.03928 ? blue / 12.92 : Math.pow((blue + 0.055) / 1.055, 2.4);
-
-        return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+    public static double luminance(int rgb) {
+        return (0.2126 * red(rgb) + 0.7152 * green(rgb) + 0.0722 * blue(rgb)) / 255.0;
     }
 
     /**
@@ -464,36 +459,23 @@ public class ColorUtil {
     }
 
     /**
-     * 获取图像主色调 Palette
+     * 提取图像主色调 Palette
      *
      * @param img
      * @return
      */
-    public static List<MMCQ.ThemeColor> getThemeColors(BufferedImage img) {
-        return getThemeColors(img, 3);
+    public static List<Color> extractPalette(BufferedImage img) {
+        return PaletteHelper.extractPalette(img);
     }
 
     /**
-     * 获取图像主色调 Palette
+     * 从图像主色调提取一对视觉美观的颜色
      *
      * @param img
      * @return
      */
-    public static List<MMCQ.ThemeColor> getThemeColors(BufferedImage img, int maxColor) {
-        MMCQ mmcq = new MMCQ(img, maxColor);
-        return mmcq.quantize();
-    }
-
-    /**
-     * 根据图片和颜色数量生成 Palette，并找到最佳色块返回
-     *
-     * @param img
-     * @return
-     */
-    public static Color getBestColor(BufferedImage img) {
-        List<MMCQ.ThemeColor> themeColors = getThemeColors(img);
-        Color mc = makeBestColor(themeColors.get(0).getRgb());
-        return mc;
+    public static List<Color> extractPairVisualAppeal(BufferedImage img) {
+        return PaletteHelper.extractPairVisualAppeal(img);
     }
 
     /**

@@ -32,6 +32,15 @@ public class RandomUtil {
     }
 
     /**
+     * 生成随机 [0, max) 双浮点
+     *
+     * @return
+     */
+    public static double randomDouble(double maxExclude) {
+        return cn.hutool.core.util.RandomUtil.randomDouble(maxExclude);
+    }
+
+    /**
      * 生成随机 Ipv4 地址
      *
      * @return

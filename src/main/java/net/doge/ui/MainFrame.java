@@ -829,7 +829,7 @@ public class MainFrame extends JFrame {
     private int preRecommendTab;
     // 是否静音
     public boolean isMute;
-    // 是否旋转流体
+    // 是否流光溢彩
     public boolean fluidOn;
     // 是否高斯模糊
     public boolean gsOn;
@@ -3123,7 +3123,7 @@ public class MainFrame extends JFrame {
         // 载入是否显示频谱
         showSpectrum = config.getBooleanValue(ConfigConstants.SHOW_SPECTRUM, true);
         switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
-        // 载入是否旋转流体
+        // 载入是否流光溢彩
         fluidOn = config.getBooleanValue(ConfigConstants.FLUID_ON, true);
         fluidMenuItem.setSelected(fluidOn);
         // 载入是否高斯模糊
@@ -3143,9 +3143,9 @@ public class MainFrame extends JFrame {
         blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.CV);
         blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
                 : blurType == BlurConstants.MC ? mcBlurIcon
-                  : blurType == BlurConstants.LG ? lgBlurIcon
-                    : blurType == BlurConstants.FBM ? fbmBlurIcon
-                      : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
+                : blurType == BlurConstants.LG ? lgBlurIcon
+                : blurType == BlurConstants.FBM ? fbmBlurIcon
+                : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         autoDownloadLyric = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入是否使用逐字时间轴
@@ -3962,7 +3962,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.PLAY_MODE, currPlayMode.getCode());
         // 存入是否显示频谱
         config.put(ConfigConstants.SHOW_SPECTRUM, showSpectrum);
-        // 存入是否旋转流体
+        // 存入是否流光溢彩
         config.put(ConfigConstants.FLUID_ON, fluidOn);
         // 存入是否高斯模糊
         config.put(ConfigConstants.GS_ON, gsOn);
@@ -9296,10 +9296,10 @@ public class MainFrame extends JFrame {
                     // 搜索歌单并显示歌单列表
                     CommonResult<NetPlaylistInfo> result = songRequest ? MusicServerUtil.getRelatedPlaylists(currPlaylistMusicInfo)
                             : playlistRequest ? MusicServerUtil.getSimilarPlaylists(currPlaylistPlaylistInfo)
-                              : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, page, limit)
-                                : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, page, limit)
-                                  : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
-                                    : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, page, limit);
+                            : commentRequest ? MusicServerUtil.getUserPlaylists(currPlaylistCommentInfo, page, limit)
+                            : userRequest ? MusicServerUtil.getUserPlaylists(currPlaylistUserInfo, page, limit)
+                            : netPlaylistIdCheckBox.isSelected() ? MusicServerUtil.getPlaylistInfo(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword)
+                            : MusicServerUtil.searchPlaylists(netPlaylistSourceComboBox.getSelectedIndex(), netPlaylistCurrKeyword, page, limit);
                     List<NetPlaylistInfo> playlistInfos = result.data;
                     Integer total = result.total;
                     netPlaylistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -10236,10 +10236,10 @@ public class MainFrame extends JFrame {
                     // 搜索专辑并显示专辑列表
                     CommonResult<NetAlbumInfo> result = artistRequest ? MusicServerUtil.getAlbumInfoInArtist(currAlbumArtistInfo, page, limit)
                             : albumRequest ? MusicServerUtil.getSimilarAlbums(currAlbumAlbumInfo)
-                              : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, page, limit)
-                                : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, page, limit)
-                                  : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getSource(), currAlbumMusicInfo.getAlbumId())
-                                    : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, page, limit);
+                            : userRequest ? MusicServerUtil.getUserAlbums(currAlbumUserInfo, page, limit)
+                            : commentRequest ? MusicServerUtil.getUserAlbums(currAlbumCommentInfo, page, limit)
+                            : songRequest ? MusicServerUtil.getAlbumInfo(currAlbumMusicInfo.getSource(), currAlbumMusicInfo.getAlbumId())
+                            : MusicServerUtil.searchAlbums(netAlbumSourceComboBox.getSelectedIndex(), netAlbumCurrKeyword, page, limit);
                     List<NetAlbumInfo> albumInfos = result.data;
                     Integer total = result.total;
                     netAlbumMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -11186,12 +11186,12 @@ public class MainFrame extends JFrame {
                     // 搜索歌手并显示歌手列表
                     CommonResult<NetArtistInfo> result = artistRequest ? MusicServerUtil.getSimilarArtists(currArtistArtistInfo)
                             : buddyRequest ? MusicServerUtil.getArtistBuddies(currBuddyArtistInfo, page, limit)
-                              : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
-                                : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
-                                  : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getSource(), currArtistMusicInfo.getArtistId())
-                                    : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getSource(), currArtistAlbumInfo.getArtistId())
-                                      : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getSource(), currArtistMvInfo.getCreatorId())
-                                        : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, page, limit);
+                            : radioRequest ? MusicServerUtil.getRadioArtists(currArtistRadioInfo)
+                            : radioCVRequest ? MusicServerUtil.getRadioArtists(currCVRadioInfo)
+                            : songRequest ? MusicServerUtil.getArtistInfo(currArtistMusicInfo.getSource(), currArtistMusicInfo.getArtistId())
+                            : albumRequest ? MusicServerUtil.getArtistInfo(currArtistAlbumInfo.getSource(), currArtistAlbumInfo.getArtistId())
+                            : mvRequest ? MusicServerUtil.getArtistInfo(currArtistMvInfo.getSource(), currArtistMvInfo.getCreatorId())
+                            : MusicServerUtil.searchArtists(netArtistSourceComboBox.getSelectedIndex(), netArtistCurrKeyword, page, limit);
                     List<NetArtistInfo> artistInfos = result.data;
                     Integer total = result.total;
                     netArtistMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -12340,10 +12340,10 @@ public class MainFrame extends JFrame {
                     // 搜索电台并显示电台列表
                     CommonResult<NetRadioInfo> result = userRequest ? MusicServerUtil.getUserRadios(currRadioUserInfo, page, limit)
                             : artistRequest ? MusicServerUtil.getArtistRadios(currRadioArtistInfo, page, limit)
-                              : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
-                                : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getSource(), currRadioMusicInfo.getAlbumId())
-                                  : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
-                                    : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, page, limit);
+                            : radioRequest ? MusicServerUtil.getSimilarRadios(currRadioRadioInfo)
+                            : songRequest ? MusicServerUtil.getRadioInfo(currRadioMusicInfo.getSource(), currRadioMusicInfo.getAlbumId())
+                            : songRecRequest ? MusicServerUtil.getRecRadios(currRecRadioMusicInfo)
+                            : MusicServerUtil.searchRadios(netRadioSourceComboBox.getSelectedIndex(), netRadioCurrKeyword, page, limit);
                     List<NetRadioInfo> radioInfos = result.data;
                     Integer total = result.total;
                     netRadioMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -13412,10 +13412,10 @@ public class MainFrame extends JFrame {
                     // 搜索 MV 并显示 MV 列表
                     CommonResult<NetMvInfo> result = artistRequest ? MusicServerUtil.getMvInfoInArtist(currMvArtistInfo, page, limit)
                             : songRequest ? MusicServerUtil.getRelatedMvs(currMvMusicInfo, page, limit)
-                              : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
-                                : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, page, limit)
-                                  : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), page, limit, mvCursor)
-                                    : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, page, limit, mvCursor);
+                            : mvRequest ? MusicServerUtil.getSimilarMvs(currMvMvInfo)
+                            : episodeRequest ? MusicServerUtil.getVideoEpisodes(currEpisodesMvInfo, page, limit)
+                            : userRequest ? MusicServerUtil.getUserVideos(currMvUserInfo, netMvSortTypeComboBox.getSelectedIndex(), page, limit, mvCursor)
+                            : MusicServerUtil.searchMvs(netMvSourceComboBox.getSelectedIndex(), netMvCurrKeyword, page, limit, mvCursor);
                     List<NetMvInfo> mvInfos = result.data;
                     Integer total = result.total;
                     mvCursor = result.cursor;
@@ -14677,16 +14677,16 @@ public class MainFrame extends JFrame {
                     // 搜索用户并显示用户列表
                     CommonResult<NetUserInfo> result = followUserRequest ? MusicServerUtil.getUserFollows(currFollowUserUserInfo, page, limit)
                             : fanUserRequest ? MusicServerUtil.getUserFans(currFanUserUserInfo, page, limit)
-                              : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, page, limit)
-                                : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, page, limit)
-                                  : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, page, limit)
-                                    : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getSource(), currUserPlaylistInfo.getCreatorId())
-                                      : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getSource(), currUserMvInfo.getCreatorId())
-                                        : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getSource(), currUserRadioInfo.getDjId())
-                                          : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getSource(), currUserCommentInfo.getUserId())
-                                            : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getSource(), currAuthorMusicInfo.getArtistId())
-                                              : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getSource(), currAuthorAlbumInfo.getArtistId())
-                                                : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, page, limit);
+                            : playlistSubRequest ? MusicServerUtil.getPlaylistSubscribers(currSubscriberPlaylistInfo, page, limit)
+                            : radioSubRequest ? MusicServerUtil.getRadioSubscribers(currSubscriberRadioInfo, page, limit)
+                            : artistRequest ? MusicServerUtil.getArtistFans(currUserArtistInfo, page, limit)
+                            : playlistRequest ? MusicServerUtil.getUserInfo(currUserPlaylistInfo.getSource(), currUserPlaylistInfo.getCreatorId())
+                            : mvRequest ? MusicServerUtil.getUserInfo(currUserMvInfo.getSource(), currUserMvInfo.getCreatorId())
+                            : radioRequest ? MusicServerUtil.getUserInfo(currUserRadioInfo.getSource(), currUserRadioInfo.getDjId())
+                            : commentRequest ? MusicServerUtil.getUserInfo(currUserCommentInfo.getSource(), currUserCommentInfo.getUserId())
+                            : songRequest ? MusicServerUtil.getUserInfo(currAuthorMusicInfo.getSource(), currAuthorMusicInfo.getArtistId())
+                            : albumRequest ? MusicServerUtil.getUserInfo(currAuthorAlbumInfo.getSource(), currAuthorAlbumInfo.getArtistId())
+                            : MusicServerUtil.searchUsers(netUserSourceComboBox.getSelectedIndex(), netUserCurrKeyword, page, limit);
                     List<NetUserInfo> userInfos = result.data;
                     Integer total = result.total;
                     netUserMaxPage = PageUtil.totalPageAtLeastOne(total, limit);
@@ -20475,7 +20475,7 @@ public class MainFrame extends JFrame {
             Statement ns = nextLyric < statements.size() ? statements.get(nextLyric) : null;
             double lineEndTime = ls.hasEndTime() ? ls.getEndTime() - lyricOffset
                     : ns != null ? ns.getTime() - lyricOffset
-                      : player.getDurationSeconds();
+                    : player.getDurationSeconds();
             hl.updateNormalWordEffects(t, lineStartTime - lyricOffset, lineEndTime);
             if (rhl != null) rhl.updateNormalWordEffects(t, lineStartTime - lyricOffset, lineEndTime);
         }
@@ -20495,7 +20495,7 @@ public class MainFrame extends JFrame {
                 tempRatio = (t - lineStartTime + lyricOffset) /
                         ((ls.hasEndTime() ? ls.getEndTime() - lyricOffset
                                 : (ns != null ? ns.getTime() - lyricOffset
-                                   : player.getDurationSeconds())) - lineStartTime + lyricOffset);
+                                : player.getDurationSeconds())) - lineStartTime + lyricOffset);
             }
         }
         originalRatio = tempRatio > 1 ? (statements.get(nextLyric - 1).hasEndTime() ? 1 : 0) : tempRatio;
@@ -22563,7 +22563,7 @@ public class MainFrame extends JFrame {
             // 缩小
             img = ImageUtil.width(img, 256);
             // 流体图
-            if (fluidOn) img = ImageUtil.fluid(img);
+            if (fluidOn) img = ImageUtil.fluid(img, gw, gh);
             // 活力色彩
             if (vibrantOn) img = ImageUtil.vibrant(img);
             // 高斯模糊

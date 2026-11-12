@@ -282,7 +282,7 @@ public class I18n {
         LANG_MAP.put("roma", new String[]{"罗马音", "Roma"});
         LANG_MAP.put("tradChinese", new String[]{"繁体", "Traditional Chinese"});
 
-        LANG_MAP.put("fluid", new String[]{"旋转流体", "Fluid"});
+        LANG_MAP.put("fluid", new String[]{"流光溢彩", "Fluid"});
         LANG_MAP.put("gs", new String[]{"高斯模糊", "Gaussian blur"});
         LANG_MAP.put("darker", new String[]{"暗角滤镜", "Darker mode"});
         LANG_MAP.put("vibrant", new String[]{"活力色彩", "Vibrant"});

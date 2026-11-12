@@ -83,7 +83,7 @@ public class ConfigConstants {
     public static final String MAX_CONCURRENT_TASK_COUNT = "maxConcurrentTaskCount";
     // 是否显示频谱
     public static final String SHOW_SPECTRUM = "showSpectrum";
-    // 是否旋转流体
+    // 是否流光溢彩
     public static final String FLUID_ON = "fluidOn";
     // 是否高斯模糊
     public static final String GS_ON = "gsOn";

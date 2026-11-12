@@ -10,23 +10,21 @@ import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.img.helper.FluidBackground;
 import net.doge.util.core.log.LogUtil;
 import net.doge.util.core.math.MathUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
-import net.doge.util.ui.quantizer.MMCQ;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,8 +36,6 @@ import java.util.List;
 public class ImageUtil {
     // 高斯模糊过滤器
     private static final GaussianFilter gaussianFilter = new GaussianFilter();
-    // 涟漪过滤器
-    private static final RippleFilter rippleFilter = new RippleFilter();
     // 分析布朗运动过滤器
     private static final FBMFilter fbmFilter = new FBMFilter();
     // 曝光过滤器
@@ -56,9 +52,6 @@ public class ImageUtil {
     private static final int SHADOW_THICKNESS = 30;
 
     static {
-        rippleFilter.setWaveType(RippleFilter.NOISE);
-        rippleFilter.setEdgeAction(TransformFilter.ZERO);
-
         fbmFilter.setLacunarity(0.35f);
         fbmFilter.setH(5f);
         fbmFilter.setBasisType(FBMFilter.RIDGED);
@@ -619,7 +612,7 @@ public class ImageUtil {
         for (float dw : dots) {
             for (float dh : dots) {
                 int rgb = img.getRGB((int) (w * dw), (int) (h * dh));
-                t += ColorUtil.computeLuminance(rgb);
+                t += ColorUtil.luminance(rgb);
             }
         }
         int s = dots.size();
@@ -628,67 +621,21 @@ public class ImageUtil {
     }
 
     /**
-     * 按照 x 行 y 列宫格化图片
+     * 根据指定面板尺寸生成流体图
      *
      * @param img
      * @return
      */
-    public static List<BufferedImage> gridify(BufferedImage img, int x, int y) {
+    public static BufferedImage fluid(BufferedImage img, int canvasWidth, int canvasHeight) {
         if (img == null) return null;
-        List<BufferedImage> res = new LinkedList<>();
-        int sw = img.getWidth() / y, sh = img.getHeight() / x;
-        for (int i = 0; i < x; i++) {
-            for (int j = 0; j < y; j++) {
-                BufferedImage subImg = img.getSubimage(j * sw, i * sh, sw, sh);
-                res.add(createTransparentImage(subImg));
-            }
-        }
-        return res;
-    }
-
-    /**
-     * 使图像产生涟漪效果
-     *
-     * @param img
-     * @return
-     */
-    public static synchronized BufferedImage ripple(BufferedImage img) {
-        if (img == null) return null;
-        rippleFilter.setXAmplitude(RandomUtil.randomInt(15, 30));
-        rippleFilter.setYAmplitude(RandomUtil.randomInt(15, 30));
-        rippleFilter.setXWavelength(RandomUtil.randomInt(50, 80));
-        rippleFilter.setYWavelength(RandomUtil.randomInt(50, 80));
-        return rippleFilter.filter(img, null);
-    }
-
-    /**
-     * 生成流体图
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage fluid(BufferedImage img) {
-        if (img == null) return null;
-        int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(img);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
-        // 提取宫格图
-        List<BufferedImage> subImgList = gridify(img, 2, 2);
-        Collections.shuffle(subImgList);
-        float[][] p = {{0.5f, 0.25f}, {0.25f, 0.5f}, {0.75f, 0.5f}, {0.5f, 0.75f}};
-        for (int i = 0, s = subImgList.size(); i < s; i++) {
-            // 涟漪并旋转
-            BufferedImage subImg = ripple(subImgList.get(i));
-            AffineTransform transform = new AffineTransform();
-            transform.translate(w * p[i][0], h * p[i][1]);
-            transform.rotate(Math.toRadians(RandomUtil.randomInt(30, 330)));
-            transform.translate(-subImg.getWidth() / 2, -subImg.getHeight() / 2);
-            g2d.drawImage(subImg, transform, null);
-        }
-        g2d.dispose();
+        FluidBackground fluidBackground = FluidBackground.from(img);
+        double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
+        int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
+        int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
+        double ts = RandomUtil.randomDouble(Double.MAX_VALUE);
+        BufferedImage outputImg = fluidBackground.render(rw, rh, ts);
         return outputImg;
     }
-
 
     /**
      * 对图像进行高斯模糊处理
@@ -832,9 +779,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage fbmImage(BufferedImage img, int w, int h) {
-        List<MMCQ.ThemeColor> themeColors = ColorUtil.getThemeColors(img);
-        int ca = ColorUtil.makeBestColor(themeColors.get(0).getRgb()).getRGB();
-        int cb = ColorUtil.makeBestColor(themeColors.size() > 1 ? themeColors.get(1).getRgb() : Colors.THEME.getRGB()).getRGB();
+        List<Color> palette = ColorUtil.extractPalette(img);
+        int ca = palette.get(0).getRGB();
+        int cb = (palette.size() > 1 ? palette.get(1) : Colors.THEME).getRGB();
         fbmFilter.setAngle((float) Math.toRadians(RandomUtil.randomInt(360)));
         fbmFilter.setColormap(new LinearColormap(cb, ca));
         return fbmFilter.filter(createTransparentImage(w, h), null);
@@ -846,15 +793,9 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage gradientImage(BufferedImage img, int w, int h) {
-        Color mc = ColorUtil.getBestColor(img);
-        double l = ColorUtil.computeLuminance(mc.getRGB());
-        if (l >= 0.25) {
-            Color ca = ColorUtil.rotate(mc, -10), cb = ColorUtil.rotate(ColorUtil.hslDarken(mc, 0.3f), 10);
-            return linearGradient(w, h, ca, cb);
-        } else {
-            Color ca = ColorUtil.rotate(mc, 10), cb = ColorUtil.rotate(ColorUtil.hslLighten(mc, 0.1f), -10);
-            return linearGradient(w, h, cb, ca);
-        }
+        List<Color> pair = ColorUtil.extractPairVisualAppeal(img);
+        Color ca = pair.get(0), cb = pair.get(1);
+        return linearGradient(w, h, ca, cb);
     }
 
     /**

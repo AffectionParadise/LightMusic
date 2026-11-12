@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.info.impl.musicinfo.lyric.qq.decoder;
 
-import net.doge.sdk.service.music.info.impl.musicinfo.lyric.qq.helper.QrcDecodeHelper;
+import net.doge.sdk.service.music.info.impl.musicinfo.lyric.qq.decoder.helper.QrcDecodeHelper;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 
@@ -57,7 +57,8 @@ public class QrcDecoder {
             des(data, KEY2, dataLen);
             ddes(data, KEY3, dataLen);
 
-            String result = new String(CryptoUtil.decompress(ArrayUtil.shortsToBytes(data)), StandardCharsets.UTF_8);
+            byte[] decompressed = CryptoUtil.decompress(ArrayUtil.shortsToBytes(data));
+            String result = new String(decompressed, StandardCharsets.UTF_8);
             return result;
         } catch (Exception e) {
             return "";
