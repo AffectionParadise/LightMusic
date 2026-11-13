@@ -10,7 +10,9 @@ import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.img.helper.FluidBackground;
+import net.doge.util.core.img.helper.FluidHelper;
+import net.doge.util.core.img.helper.GaussianBlurHelper;
+import net.doge.util.core.img.helper.PaletteHelper;
 import net.doge.util.core.log.LogUtil;
 import net.doge.util.core.math.MathUtil;
 import net.doge.util.ui.ColorUtil;
@@ -34,8 +36,6 @@ import java.util.List;
  * @date 2020/12/9
  */
 public class ImageUtil {
-    // 高斯模糊过滤器
-    private static final GaussianFilter gaussianFilter = new GaussianFilter();
     // 分析布朗运动过滤器
     private static final FBMFilter fbmFilter = new FBMFilter();
     // 曝光过滤器
@@ -300,6 +300,7 @@ public class ImageUtil {
      */
     public static BufferedImage eraseTransparency(BufferedImage img) {
         if (img == null) return null;
+        if (!img.getColorModel().hasAlpha()) return img;
         int w = img.getWidth(), h = img.getHeight();
         BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
@@ -628,13 +629,12 @@ public class ImageUtil {
      */
     public static BufferedImage fluid(BufferedImage img, int canvasWidth, int canvasHeight) {
         if (img == null) return null;
-        FluidBackground fluidBackground = FluidBackground.from(img);
+        FluidHelper fluidHelper = FluidHelper.from(img);
         double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
         int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
         int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
-        double ts = RandomUtil.randomDouble(Double.MAX_VALUE);
-        BufferedImage outputImg = fluidBackground.render(rw, rh, ts);
-        return outputImg;
+        double ts = RandomUtil.randomDouble(10);
+        return fluidHelper.render(rw, rh, ts);
     }
 
     /**
@@ -645,8 +645,8 @@ public class ImageUtil {
      */
     public static BufferedImage gaussianBlur(BufferedImage img) {
         if (img == null) return null;
-        gaussianFilter.setRadius(Math.max(1, img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]));
-        return gaussianFilter.filter(img, null);
+        int radius = (int) (img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]);
+        return GaussianBlurHelper.blur(img, Math.max(1, radius));
     }
 
     /**
@@ -774,12 +774,32 @@ public class ImageUtil {
     }
 
     /**
+     * 提取图像主色调 Palette
+     *
+     * @param img
+     * @return
+     */
+    public static List<Color> extractPalette(BufferedImage img) {
+        return PaletteHelper.extractPalette(img);
+    }
+
+    /**
+     * 从图像主色调提取一对视觉美观的颜色
+     *
+     * @param img
+     * @return
+     */
+    public static List<Color> extractPairVisualAppeal(BufferedImage img) {
+        return PaletteHelper.extractPairVisualAppeal(img);
+    }
+
+    /**
      * 提取图像主色调，并生成指定宽高的分形布朗运动图像
      *
      * @return
      */
     public static BufferedImage fbmImage(BufferedImage img, int w, int h) {
-        List<Color> palette = ColorUtil.extractPalette(img);
+        List<Color> palette = extractPalette(img);
         int ca = palette.get(0).getRGB();
         int cb = (palette.size() > 1 ? palette.get(1) : Colors.THEME).getRGB();
         fbmFilter.setAngle((float) Math.toRadians(RandomUtil.randomInt(360)));
@@ -793,7 +813,7 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage gradientImage(BufferedImage img, int w, int h) {
-        List<Color> pair = ColorUtil.extractPairVisualAppeal(img);
+        List<Color> pair = extractPairVisualAppeal(img);
         Color ca = pair.get(0), cb = pair.get(1);
         return linearGradient(w, h, ca, cb);
     }

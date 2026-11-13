@@ -373,7 +373,7 @@ public class HighlightLyric {
 
     public void setRatio(double ratio) {
         if (width == 0 || height == 0) return;
-        int pw = width - 2 * shadowHOffset, t = (int) (shadowHOffset + pw * ratio + 0.5);
+        int pw = width - 2 * shadowHOffset, t = (int) Math.round(shadowHOffset + pw * ratio);
         // 由于单例清除图像时会闪烁，因此需要不断创建新的图像，尽管存在性能开销
         img = ImageUtil.createTransparentImage(width, height);
         Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
@@ -404,7 +404,7 @@ public class HighlightLyric {
     // 裁剪图片使之宽度不超过阈值
     private void cropImg() {
         if (width <= widthThreshold) return;
-        int pw = (int) (width * ratio + 0.5);
+        int pw = (int) Math.round(width * ratio);
         if (pw <= widthThreshold / 2) img = ImageUtil.region(img, 0, 0, widthThreshold, height);
         else if (width - pw > widthThreshold / 2)
             img = ImageUtil.region(img, pw - widthThreshold / 2, 0, widthThreshold, height);

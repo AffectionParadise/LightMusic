@@ -19369,7 +19369,7 @@ public class MainFrame extends JFrame {
                 String text = mi.getText();
                 float so = specOpacity + Float.parseFloat(text.replaceFirst("%", "")) / 100;
                 specOpacity = Math.min(1, Math.max(0.1f, so));
-                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100 + 0.5)));
+                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) Math.round(specOpacity * 100)));
             });
             spectrumPopupMenu.add(mi);
         }
@@ -22560,14 +22560,14 @@ public class MainFrame extends JFrame {
                     // 迷幻纹理
                 else if (blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, gw, gh);
             }
-            // 缩小
-            img = ImageUtil.width(img, 256);
             // 流体图
             if (fluidOn) img = ImageUtil.fluid(img, gw, gh);
             // 活力色彩
             if (vibrantOn) img = ImageUtil.vibrant(img);
             // 高斯模糊
             if (gsOn) img = ImageUtil.gaussianBlur(img);
+            // 暗角滤镜
+            if (darkerOn) img = ImageUtil.darker(img);
             // 缩放至窗口大小
             img = ImageUtil.width(img, gw);
             if (gh > img.getHeight())
@@ -22576,12 +22576,9 @@ public class MainFrame extends JFrame {
             if (!loadedMusicResource || blurType == BlurConstants.CV || blurType == BlurConstants.OFF) {
                 int iw = img.getWidth(), ih = img.getHeight();
                 img = ImageUtil.region(img, iw > gw ? (iw - gw) / 2 : 0, iw > gw ? 0 : (ih - gh) / 2, gw, gh);
-                img = ImageUtil.quality(img, 0.1);
             } else {
                 img = ImageUtil.forceSize(img, gw, gh);
             }
-            // 暗角滤镜
-            if (darkerOn) img = ImageUtil.darker(img);
             // 设置圆角
 //            img = ImageUtil.radius(img, WIN_ARC);
             globalPanel.setBgImg(img);

@@ -98,8 +98,8 @@ public class TimeSliderUI extends BasicSliderUI {
         g2d.fillRoundRect(thx, thy, trackRect.width - thx + trackRect.x, height, arc, arc);
         // 在时间条画出缓冲完成的部分
         if (isTimeBar) {
-            int w = mp == null ? (int) (player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width + 0.5)
-                    : (int) (mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width + 0.5);
+            int w = mp == null ? (int) Math.round(player.getBufferedSeconds() / player.getDurationSeconds() * trackRect.width)
+                    : (int) Math.round(mp.getBufferProgressTime() == null ? 0 : mp.getBufferProgressTime().toSeconds() / mp.getMedia().getDuration().toSeconds() * trackRect.width);
             GraphicsUtil.srcOver(g2d, 0.2f);
             g2d.fillRoundRect(thx, thy,
                     // 缓冲长度没超过已填充长度时可以不画；缓冲长度超出轨道长度时取轨道长度

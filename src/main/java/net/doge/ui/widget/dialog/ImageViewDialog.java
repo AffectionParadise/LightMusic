@@ -319,7 +319,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         if (h > IMG_MAX_HEIGHT) img = ImageUtil.height(img, IMG_MAX_HEIGHT);
         // 调整后重新计算比例
         scale = (float) img.getWidth() / this.img.getWidth();
-        scaleLabel.setText(String.format("%d%%", (int) (scale * 100 + 0.5)));
+        scaleLabel.setText(String.format("%d%%", Math.round(scale * 100)));
         imgLabel.setIcon(new ImageIcon(img));
         imgLabel.setText("");
         return true;

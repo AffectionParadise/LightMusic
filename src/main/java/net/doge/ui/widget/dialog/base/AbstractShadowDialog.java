@@ -73,14 +73,14 @@ public abstract class AbstractShadowDialog extends BaseDialog {
                 // 迷幻纹理
             else if (f.blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, dw, dh);
         }
-        // 缩小
-        img = ImageUtil.width(img, 256);
         // 流体图
         if (f.fluidOn) img = ImageUtil.fluid(img, dw, dh);
         // 活力色彩
         if (f.vibrantOn) img = ImageUtil.vibrant(img);
         // 高斯模糊
         if (f.gsOn) img = ImageUtil.gaussianBlur(img);
+        // 暗角滤镜
+        if (f.darkerOn) img = ImageUtil.darker(img);
         // 缩放至窗口大小
         img = ImageUtil.width(img, dw);
         if (dh > img.getHeight())
@@ -89,12 +89,9 @@ public abstract class AbstractShadowDialog extends BaseDialog {
         if (!loadedMusicResource || f.blurType == BlurConstants.CV || f.blurType == BlurConstants.OFF) {
             int iw = img.getWidth(), ih = img.getHeight();
             img = ImageUtil.region(img, iw > dw ? (iw - dw) / 2 : 0, iw > dw ? 0 : (ih - dh) / 2, dw, dh);
-            img = ImageUtil.quality(img, 0.1);
         } else {
             img = ImageUtil.forceSize(img, dw, dh);
         }
-        // 暗角滤镜
-        if (f.darkerOn) img = ImageUtil.darker(img);
         // 设置圆角
         img = ImageUtil.radius(img, ScaleUtil.scale(10));
         globalPanel.setBgImg(img);

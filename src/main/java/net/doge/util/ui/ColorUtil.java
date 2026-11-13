@@ -3,11 +3,8 @@ package net.doge.util.ui;
 import net.doge.entity.core.color.HSL;
 import net.doge.entity.core.color.HSV;
 import net.doge.util.core.StringUtil;
-import net.doge.util.ui.helper.PaletteHelper;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 /**
  * @author Doge
@@ -45,11 +42,11 @@ public class ColorUtil {
     /**
      * 返回 RGB 颜色值中的 Alpha
      *
-     * @param rgb
+     * @param argb
      * @return
      */
-    public static int alpha(int rgb) {
-        return rgb >> 24 & 0xFF;
+    public static int alpha(int argb) {
+        return argb >>> 24 & 0xFF;
     }
 
     /**
@@ -83,7 +80,7 @@ public class ColorUtil {
     }
 
     /**
-     * 计算两个 RGB 值的距离
+     * 计算两个 RGB 值的欧几里得距离
      *
      * @param rgb1
      * @param rgb2
@@ -114,7 +111,7 @@ public class ColorUtil {
     }
 
     /**
-     * 获取具有透明度的 Color
+     * 获取具有透明度(0-1)的 Color
      *
      * @param color
      * @param alpha
@@ -125,7 +122,7 @@ public class ColorUtil {
     }
 
     /**
-     * 获取具有透明度的 Color
+     * 获取具有透明度(0-255)的 Color
      *
      * @param color
      * @param alpha
@@ -185,7 +182,7 @@ public class ColorUtil {
      * @param
      * @return
      */
-    public static HSV rgbValToHsv(int rgb) {
+    public static HSV rgbToHsv(int rgb) {
         int r = red(rgb), g = green(rgb), b = blue(rgb);
         float r1 = (float) r / 255, g1 = (float) g / 255, b1 = (float) b / 255;
         float max = Math.max(r1, Math.max(g1, b1)), min = Math.min(r1, Math.min(g1, b1));
@@ -211,7 +208,7 @@ public class ColorUtil {
      * @return
      */
     public static HSV colorToHsv(Color color) {
-        return rgbValToHsv(color.getRGB());
+        return rgbToHsv(color.getRGB());
     }
 
     /**
@@ -220,7 +217,7 @@ public class ColorUtil {
      * @param
      * @return
      */
-    public static Color hsvValToColor(float h, float s, float v) {
+    public static Color hsvToColor(float h, float s, float v) {
         s /= 100;
         v /= 100;
         float f, p, q, t;
@@ -271,20 +268,6 @@ public class ColorUtil {
     }
 
     /**
-     * 更亮的颜色(HSL 算法)，带因子
-     *
-     * @param color
-     * @return
-     */
-    public static Color hslLighten(Color color, float factor) {
-        HSL hsl = colorToHsl(color);
-        hsl.l *= 1 + factor;
-        if (hsl.l < 0) hsl.l = 0;
-        else if (hsl.l > 100) hsl.l = 100;
-        return hslToColor(hsl);
-    }
-
-    /**
      * 更暗的颜色(RGB 算法)
      *
      * @param color
@@ -308,20 +291,6 @@ public class ColorUtil {
     }
 
     /**
-     * 更暗的颜色，带因子(HSL 算法)
-     *
-     * @param color
-     * @return
-     */
-    public static Color hslDarken(Color color, float factor) {
-        HSL hsl = colorToHsl(color);
-        hsl.l *= 1 - factor;
-        if (hsl.l < 0) hsl.l = 0;
-        else if (hsl.l > 100) hsl.l = 100;
-        return hslToColor(hsl);
-    }
-
-    /**
      * 旋转颜色，改变颜色色相
      *
      * @param color
@@ -340,8 +309,8 @@ public class ColorUtil {
      * @param rgb
      * @return
      */
-    public static HSL rgbValToHsl(int rgb) {
-        return rgbValToHsl(red(rgb), green(rgb), blue(rgb));
+    public static HSL rgbToHsl(int rgb) {
+        return rgbToHsl(red(rgb), green(rgb), blue(rgb));
     }
 
     /**
@@ -352,7 +321,7 @@ public class ColorUtil {
      * @param blue
      * @return
      */
-    public static HSL rgbValToHsl(int red, int green, int blue) {
+    public static HSL rgbToHsl(int red, int green, int blue) {
         float r, g, b, delta, max, min;
         float h, s, l;
         /*
@@ -386,7 +355,7 @@ public class ColorUtil {
      * @return
      */
     public static HSL colorToHsl(Color color) {
-        return rgbValToHsl(color.getRed(), color.getGreen(), color.getBlue());
+        return rgbToHsl(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
@@ -397,17 +366,17 @@ public class ColorUtil {
      * @param l
      * @return
      */
-    public static Color hslValToColor(float h, float s, float l) {
-        h = h / 360;
-        s = s / 100;
-        l = l / 100;
+    public static Color hslToColor(float h, float s, float l) {
+        h /= 360;
+        s /= 100;
+        l /= 100;
         float r, g, b, v, x, y, z;
 
         /*
          * Convert HSL to RGB colorspace.
          */
         v = l <= 0.5f ? l * (1 + s) : l + s - l * s;
-        if (s == 0) return new Color((int) (255 * l + 0.5f), (int) (255 * l + 0.5f), (int) (255 * l + 0.5f));
+        if (s == 0) return new Color(Math.round(255 * l), Math.round(255 * l), Math.round(255 * l));
         y = 2 * l - v;
         float v1 = (float) ((v - y) * (6 * h - Math.floor(6 * h)));
         x = y + v1;
@@ -445,7 +414,7 @@ public class ColorUtil {
                 b = y;
                 break;
         }
-        return new Color((int) (255 * r + 0.5f), (int) (255 * g + 0.5f), (int) (255 * b + 0.5f));
+        return new Color(Math.round(255 * r), Math.round(255 * g), Math.round(255 * b));
     }
 
     /**
@@ -455,27 +424,7 @@ public class ColorUtil {
      * @return
      */
     public static Color hslToColor(HSL hsl) {
-        return hslValToColor(hsl.h, hsl.s, hsl.l);
-    }
-
-    /**
-     * 提取图像主色调 Palette
-     *
-     * @param img
-     * @return
-     */
-    public static List<Color> extractPalette(BufferedImage img) {
-        return PaletteHelper.extractPalette(img);
-    }
-
-    /**
-     * 从图像主色调提取一对视觉美观的颜色
-     *
-     * @param img
-     * @return
-     */
-    public static List<Color> extractPairVisualAppeal(BufferedImage img) {
-        return PaletteHelper.extractPairVisualAppeal(img);
+        return hslToColor(hsl.h, hsl.s, hsl.l);
     }
 
     /**
@@ -485,7 +434,7 @@ public class ColorUtil {
      * @return
      */
     public static Color makeBestColor(int rgb) {
-        HSL hsl = rgbValToHsl(rgb);
+        HSL hsl = rgbToHsl(rgb);
         float maxS = 50, minL = 50, maxL = 70;
         if (hsl.s > maxS) hsl.s = maxS;
         if (hsl.l < minL) hsl.l = minL;

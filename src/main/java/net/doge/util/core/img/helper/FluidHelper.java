@@ -1,12 +1,11 @@
 package net.doge.util.core.img.helper;
 
+import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.math.MathUtil;
-import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ import java.util.Objects;
  * 一个不可变、线程安全的艺术作品调色板与流体背景渲染器
  * 仅使用 Java 8 / Java2D，源图像仅被采样，绝不会被修改或保留
  */
-public class FluidBackground {
+public class FluidHelper {
     private static final int MAX_FIELD_SIZE = 256;
     private static final int COLOR_COUNT = 6;
     private static final int[] SRGB = new int[4097];
@@ -30,11 +29,11 @@ public class FluidBackground {
     private final List<Color> palette;
     private final double[][] linearColors;
 
-    private FluidBackground(List<Color> palette) {
-        this.palette = Collections.unmodifiableList(palette);
+    private FluidHelper(List<Color> palette) {
+        this.palette = palette;
         linearColors = new double[COLOR_COUNT][3];
-        for (int i = 0; i < COLOR_COUNT; i++) {
-            Color color = palette.get(i % palette.size());
+        for (int i = 0, s = palette.size(); i < COLOR_COUNT; i++) {
+            Color color = palette.get(i % s);
             float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
             // 保留单色艺术作品，温和地提亮暗色调和浓郁色彩
             Color lifted = Color.getHSBColor(hsb[0], Math.min(1f, hsb[1] * 1.08f),
@@ -48,9 +47,9 @@ public class FluidBackground {
     /**
      * 提取最多 COLOR_COUNT 种代表性颜色，忽略完全透明的像素
      */
-    public static FluidBackground from(BufferedImage img) {
+    public static FluidHelper from(BufferedImage img) {
         Objects.requireNonNull(img, "img");
-        return new FluidBackground(ColorUtil.extractPalette(img));
+        return new FluidHelper(ImageUtil.extractPalette(img));
     }
 
     /**

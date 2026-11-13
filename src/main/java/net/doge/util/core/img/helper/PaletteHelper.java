@@ -1,4 +1,4 @@
-package net.doge.util.ui.helper;
+package net.doge.util.core.img.helper;
 
 import net.doge.util.ui.ColorUtil;
 
@@ -21,11 +21,9 @@ public class PaletteHelper {
                 int px = (int) ((x + 0.5) * img.getWidth() / sw);
                 int py = (int) ((y + 0.5) * img.getHeight() / sh);
                 int argb = img.getRGB(px, py);
-                int alpha = (argb >>> 24) & 255;
-                if (alpha < 24) {
-                    continue;
-                }
-                int r = (argb >> 16) & 255, g = (argb >> 8) & 255, b = argb & 255;
+                int alpha = ColorUtil.alpha(argb);
+                if (alpha < 24) continue;
+                int r = ColorUtil.red(argb), g = ColorUtil.green(argb), b = ColorUtil.blue(argb);
                 double chroma = (Math.max(r, Math.max(g, b)) - Math.min(r, Math.min(g, b))) / 255.0;
                 samples.add(new double[]{r, g, b, alpha / 255.0 * (0.35 + chroma * 1.65)});
             }
@@ -109,7 +107,7 @@ public class PaletteHelper {
         List<Candidate> candidates = extractPaletteAsCandidate(img);
         if (candidates.size() == 1) {
             Color color = candidates.get(0).color;
-            return makeColorListWithPriority(color, color);
+            return makeColorListByLuminance(color, color);
         }
         double total = 0;
         for (Candidate candidate : candidates) {
@@ -126,7 +124,7 @@ public class PaletteHelper {
         }
         // 在最多 8 个聚类的情况下，至少有一个聚类必然覆盖 2%
         if (dominant.size() == 1) {
-            return makeColorListWithPriority(dominant.get(0).color, dominant.get(0).color);
+            return makeColorListByLuminance(dominant.get(0).color, dominant.get(0).color);
         }
         Candidate first = dominant.get(0), second = dominant.get(1);
         double bestScore = -1;
@@ -139,7 +137,7 @@ public class PaletteHelper {
                 double distinctness = 0.2 + 0.8 * Math.min(1, separation / 0.32);
                 double hueDistance = Math.abs(a.hsb[0] - b.hsb[0]);
                 hueDistance = Math.min(hueDistance, 1 - hueDistance);
-                // Gently favor neighboring hues; neutrals can accompany any hue.
+                // 温和地偏向邻近色相，中性色可与任何色相搭配
                 double harmony = Math.min(a.hsb[1], b.hsb[1]) < 0.12 ? 1
                         : 0.65 + 0.35 * Math.max(0, 1 - Math.abs(hueDistance - 0.14) / 0.36);
                 double quality = Math.sqrt(colorQuality(a, hasColor) * colorQuality(b, hasColor));
@@ -151,10 +149,10 @@ public class PaletteHelper {
                 }
             }
         }
-        return makeColorListWithPriority(first.color, second.color);
+        return makeColorListByLuminance(first.color, second.color);
     }
 
-    private static List<Color> makeColorListWithPriority(Color first, Color second) {
+    private static List<Color> makeColorListByLuminance(Color first, Color second) {
         return Collections.unmodifiableList(ColorUtil.luminance(first) <= ColorUtil.luminance(second)
                 ? Arrays.asList(first, second) : Arrays.asList(second, first));
     }
@@ -163,8 +161,13 @@ public class PaletteHelper {
         double saturation = Math.max(0, 1 - Math.abs(candidate.hsb[1] - 0.60) / 0.75);
         double lightness = Math.max(0, 1 - Math.abs(ColorUtil.luminance(candidate.color) - 0.50) / 0.50);
         double quality = 0.2 + 0.4 * saturation + 0.4 * lightness;
-        // De-emphasize white borders and black text when substantial color is present.
+        // 当存在大量色彩时，弱化白色边框和黑色文字
         return hasColor && candidate.hsb[1] < 0.08f ? quality * 0.55 : quality;
+    }
+
+    private static double colorDistance(double[] a, double[] b) {
+        double r = a[0] - b[0], g = a[1] - b[1], bl = a[2] - b[2];
+        return 2 * r * r + 4 * g * g + 3 * bl * bl;
     }
 
     private static class Candidate {
@@ -173,17 +176,12 @@ public class PaletteHelper {
         public float[] hsb;
         public double weight;
 
-        Candidate(double[] center) {
+        public Candidate(double[] center) {
             rgb = center;
             color = new Color((int) Math.round(center[0]), (int) Math.round(center[1]),
                     (int) Math.round(center[2]));
             hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
             weight = center[3];
         }
-    }
-
-    private static double colorDistance(double[] a, double[] b) {
-        double r = a[0] - b[0], g = a[1] - b[1], bl = a[2] - b[2];
-        return 2 * r * r + 4 * g * g + 3 * bl * bl;
     }
 }

@@ -343,11 +343,11 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     }
 
     public Color makeColorFromHsv(float h, float s, float v) {
-        return ColorUtil.hsvValToColor(h, s, v);
+        return ColorUtil.hsvToColor(h, s, v);
     }
 
     public Color makeColorFromHsl(float h, float s, float l) {
-        return ColorUtil.hslValToColor(h, s, l);
+        return ColorUtil.hslToColor(h, s, l);
     }
 
     public Color makeColor() {
