@@ -97,7 +97,7 @@ public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySuppor
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
-        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
+        g2d.setColor(ImageUtil.getDominantColor(f.globalPanel.getBgImg()));
         GraphicsUtil.srcOver(g2d, extendedOpacity);
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);

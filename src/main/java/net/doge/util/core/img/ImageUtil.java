@@ -2,7 +2,6 @@ package net.doge.util.core.img;
 
 import cn.hutool.core.img.ImgUtil;
 import com.jhlabs.image.ExposureFilter;
-import com.jhlabs.image.GradientFilter;
 import com.jhlabs.image.SaturationFilter;
 import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
@@ -12,10 +11,7 @@ import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.img.helper.FbmHelper;
-import net.doge.util.core.img.helper.FluidHelper;
-import net.doge.util.core.img.helper.GaussianBlurHelper;
-import net.doge.util.core.img.helper.PaletteHelper;
+import net.doge.util.core.img.helper.*;
 import net.doge.util.core.log.LogUtil;
 import net.doge.util.core.math.MathUtil;
 import net.doge.util.ui.ColorUtil;
@@ -50,7 +46,7 @@ public class ImageUtil {
     // 边框阴影过滤器
     private static final ShadowFilter borderShadowFilter = new ShadowFilter();
     // 阴影厚度
-    private static final int SHADOW_THICKNESS = 30;
+    private static final int SHADOW_RADIUS = 30;
 
     static {
         shadowFilter.setRadius(20f);
@@ -62,8 +58,7 @@ public class ImageUtil {
         glowShadowFilter.setOpacity(1f);
         glowShadowFilter.setShadowOnly(true);
 
-        borderShadowFilter.setRadius(SHADOW_THICKNESS);
-        borderShadowFilter.setDistance(0f);
+        borderShadowFilter.setDistance(5f);
         borderShadowFilter.setOpacity(0.65f);
     }
 
@@ -286,13 +281,14 @@ public class ImageUtil {
     }
 
     /**
-     * 消去图片透明度，换成黑底
+     * 移除图片的透明通道
      *
      * @param img
      * @return
      */
-    public static BufferedImage eraseTransparency(BufferedImage img) {
+    public static BufferedImage removeAlphaChannel(BufferedImage img) {
         if (img == null) return null;
+        // 没有透明通道直接返回
         if (!img.getColorModel().hasAlpha()) return img;
         int w = img.getWidth(), h = img.getHeight();
         BufferedImage outputImg = createOpaqueImage(w, h);
@@ -486,11 +482,11 @@ public class ImageUtil {
      * @param img
      * @return
      */
-    public static BufferedImage cropCenter(BufferedImage img) {
+    public static BufferedImage cropCenterSquare(BufferedImage img) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
-        if (w < h) return region(img, 0, (h - w) / 2, w, w);
-        else if (w > h) return region(img, (w - h) / 2, 0, h, h);
+        if (w < h) return cut(img, 0, (h - w) / 2, w, w);
+        else if (w > h) return cut(img, (w - h) / 2, 0, h, h);
         return img;
     }
 
@@ -504,7 +500,7 @@ public class ImageUtil {
      * @param h   高
      * @return
      */
-    public static BufferedImage region(BufferedImage img, int x, int y, int w, int h) {
+    public static BufferedImage cut(BufferedImage img, int x, int y, int w, int h) {
         try {
             return Thumbnails.of(img).scale(1).sourceRegion(x, y, w, h).asBufferedImage();
         } catch (Exception e) {
@@ -577,13 +573,52 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage borderShadow(BufferedImage img) {
+        return borderShadow(img, SHADOW_RADIUS);
+    }
+
+    /**
+     * 为图片添加边框阴影
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage borderShadow(BufferedImage img, int radius) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(w + 2 * SHADOW_THICKNESS, h + 2 * SHADOW_THICKNESS);
+        BufferedImage outputImg = createTransparentImage(w, h);
         Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
-        g2d.drawImage(img, SHADOW_THICKNESS, SHADOW_THICKNESS, null);
+        g2d.drawImage(img, radius, radius, w - 2 * radius, h - 2 * radius, null);
         g2d.dispose();
-        return width(borderShadowFilter.filter(outputImg, null), w);
+        borderShadowFilter.setRadius(radius);
+        return borderShadowFilter.filter(outputImg, null);
+    }
+
+    /**
+     * 根据指定面板尺寸生成流体图
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage fluid(BufferedImage img, int canvasWidth, int canvasHeight) {
+        if (img == null) return null;
+        FluidHelper fluidHelper = FluidHelper.from(img);
+        double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
+        int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
+        int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
+        double ts = RandomUtil.randomDouble(120);
+        return fluidHelper.render(rw, rh, ts);
+    }
+
+    /**
+     * 对图像进行高斯模糊处理
+     *
+     * @param img
+     * @return
+     */
+    public static BufferedImage gaussianBlur(BufferedImage img) {
+        if (img == null) return null;
+        int radius = (int) (img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]);
+        return GaussianBlurHelper.blur(img, Math.max(1, radius));
     }
 
     /**
@@ -607,34 +642,6 @@ public class ImageUtil {
         int s = dots.size();
         t /= s * s;
         return t;
-    }
-
-    /**
-     * 根据指定面板尺寸生成流体图
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage fluid(BufferedImage img, int canvasWidth, int canvasHeight) {
-        if (img == null) return null;
-        FluidHelper fluidHelper = FluidHelper.from(img);
-        double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
-        int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
-        int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
-        double ts = RandomUtil.randomDouble(30);
-        return fluidHelper.render(rw, rh, ts);
-    }
-
-    /**
-     * 对图像进行高斯模糊处理
-     *
-     * @param img
-     * @return
-     */
-    public static BufferedImage gaussianBlur(BufferedImage img) {
-        if (img == null) return null;
-        int radius = (int) (img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]);
-        return GaussianBlurHelper.blur(img, Math.max(1, radius));
     }
 
     /**
@@ -717,48 +724,34 @@ public class ImageUtil {
     }
 
     /**
-     * 获取图片均值颜色
+     * 获取图片主要颜色
      *
      * @param img
      * @return
      */
-    public static Color getAvgColor(BufferedImage img) {
-        return getAvgColor(img, false);
+    public static Color getDominantColor(BufferedImage img) {
+        return getDominantColor(img, false);
     }
 
     /**
-     * 获取图片均值颜色，调整为最佳颜色
+     * 获取图片主要颜色，并调节明暗
      *
      * @param img
      * @return
      */
-    public static Color getBestAvgColor(BufferedImage img) {
-        return getAvgColor(img, true);
+    public static Color getDominantColorLuminanceSuitable(BufferedImage img) {
+        return getDominantColor(img, true);
     }
 
     /**
-     * 获取图片均值颜色，带透明度
+     * 获取图片主要颜色，可调节明暗
      *
      * @param img
      * @return
      */
-    public static Color getAvgColor(BufferedImage img, boolean best) {
-        int w = img.getWidth(), h = img.getHeight();
-        List<Float> dots = new LinkedList<>();
-        for (float i = 0; i < 1; i += 0.05f) dots.add(i);
-        int R = 0, G = 0, B = 0, s = dots.size();
-        for (float dw : dots) {
-            for (float dh : dots) {
-                int rgbVal = img.getRGB((int) (w * dw), (int) (h * dh));
-                Color color = new Color(rgbVal);
-                R += color.getRed();
-                G += color.getGreen();
-                B += color.getBlue();
-            }
-        }
-        int cn = s * s;
-        return best ? ColorUtil.makeBestColor(ColorUtil.merge(R / cn, G / cn, B / cn))
-                : new Color(R / cn, G / cn, B / cn);
+    public static Color getDominantColor(BufferedImage img, boolean luminanceSuitable) {
+        Color color = PaletteHelper.extractPalette(img).get(0);
+        return luminanceSuitable ? ColorUtil.luminanceSuitable(color) : color;
     }
 
     /**
@@ -777,30 +770,15 @@ public class ImageUtil {
     }
 
     /**
-     * 生成两种颜色的渐变图像
+     * 提取图像一对视觉美观的颜色，并根据指定面板尺寸生成线性渐变图像
      *
      * @return
      */
-    public static BufferedImage gradient(int w, int h, Color c1, Color c2) {
-        BufferedImage img = createTransparentImage(w, h);
-        GradientFilter gf = new GradientFilter(new Point(0, 0), new Point(w, h), c1.getRGB(), c2.getRGB(), false, GradientFilter.LINEAR, GradientFilter.INT_LINEAR);
-//        Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
-//        GradientPaint gp = new GradientPaint(0, 0, c1, w, 0, c2);
-//        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, new float[]{0, 0.5f, 1}, new Color[]{c1, c2, c3});
-//        g2d.setPaint(lgp);
-//        g2d.fillRect(0, 0, w, h);
-//        g2d.dispose();
-        return gf.filter(img, null);
-    }
-
-    /**
-     * 图像提取主色调，并生成指定宽高的线性渐变图像
-     *
-     * @return
-     */
-    public static BufferedImage gradient(BufferedImage img, int w, int h) {
-        List<Color> pair = PaletteHelper.extractPairVisualAppeal(img);
-        Color ca = pair.get(0), cb = pair.get(1);
-        return gradient(w, h, ca, cb);
+    public static BufferedImage gradient(BufferedImage img, int canvasWidth, int canvasHeight) {
+        if (img == null) return null;
+        double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
+        int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
+        int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
+        return GradientHelper.render(img, rw, rh);
     }
 }

@@ -139,7 +139,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
         initView();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

@@ -80,7 +80,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         initCatalogs();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

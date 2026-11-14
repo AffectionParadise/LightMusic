@@ -65,7 +65,7 @@ public class RateDialog extends AbstractShadowDialog {
         Dimension s = getSize();
         setLocation(p.x - s.width / 2 + comp.getWidth() / 2, p.y - s.height - 5);
 
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

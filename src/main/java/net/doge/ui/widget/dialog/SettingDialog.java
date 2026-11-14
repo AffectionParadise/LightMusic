@@ -234,7 +234,7 @@ public class SettingDialog extends AbstractTitledDialog {
         initSettings();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);
@@ -959,7 +959,7 @@ public class SettingDialog extends AbstractTitledDialog {
         BlurConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
 
         if (gsFactorIndex != BlurConstants.gsFactorIndex || darkerFactorIndex != BlurConstants.darkerFactorIndex)
-            f.doBlur();
+            f.updateBgImg();
 
         f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();
 

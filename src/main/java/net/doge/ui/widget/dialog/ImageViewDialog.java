@@ -141,7 +141,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         dialog.transitionClose();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

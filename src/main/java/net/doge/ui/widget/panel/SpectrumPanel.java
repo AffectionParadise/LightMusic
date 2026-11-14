@@ -36,7 +36,7 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int num = (getWidth() - SPACE * 2 + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                int num = (getWidth() - SPACE + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
                 SpectrumConstants.barNum = Math.min(num, SpectrumConstants.NUM_BANDS);
             }
         });
@@ -67,8 +67,9 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
         double[] specs = f.player.getSpecs();
         int pw = getWidth(), ph = getHeight();
         if (pw == 0 || ph == 0) return;
-        int barNum = SpectrumConstants.barNum, barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP,
-                viewX = (pw - barWidth * barNum - barGap * (barNum - 1)) / 2;
+        int barNum = SpectrumConstants.barNum, barWidth = SpectrumConstants.BAR_WIDTH, barGap = SpectrumConstants.BAR_GAP;
+//        int viewX = (pw - barWidth * barNum - barGap * (barNum - 1)) / 2;
+        int viewX = 0;
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, extendedOpacity * f.specOpacity);
         Color spectrumColor = UIStyleStorage.currUIStyle.getSpectrumColor();

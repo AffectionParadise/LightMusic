@@ -23,7 +23,7 @@ import java.awt.*;
  */
 @Data
 public class LyricListRenderer extends CustomListCellRenderer {
-    private final Font defaultFont = Fonts.NORMAL_TITLE;
+    private final Font defaultFont = Fonts.NORMAL_SUPER;
     private Font shrinkFont = defaultFont;
     private Font highlightFont = Fonts.NORMAL_BIG;
     // 字体大小动画数组
@@ -60,16 +60,9 @@ public class LyricListRenderer extends CustomListCellRenderer {
     private Timer fontTimer;
 //    private Map<Integer, Float> alphas = new HashMap<>();
 
-    private final int SPACE = ScaleUtil.scale(90);
-    private final int SPACE_UD = ScaleUtil.scale(25);
-    private final Border[] BORDERS = {
-            // 居左
-            new EmptyBorder(SPACE_UD, SPACE, SPACE_UD, 0),
-            // 居中
-            new EmptyBorder(SPACE_UD, 0, SPACE_UD, 0),
-            // 局右
-            new EmptyBorder(SPACE_UD, 0, SPACE_UD, SPACE)
-    };
+    private final int HORIZONTAL_SPACE = ScaleUtil.scale(90);
+    private final int VERTICAL_SPACE = ScaleUtil.scale(25);
+    private final Border BORDER = new EmptyBorder(VERTICAL_SPACE, 0, VERTICAL_SPACE, 0);
 
     public LyricListRenderer() {
         createFontAnimation();
@@ -109,7 +102,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
 
-        int maxWidth = list.getVisibleRect().width - SPACE;
+        int maxWidth = list.getVisibleRect().width - HORIZONTAL_SPACE;
         if (maxWidth <= 0) return label;
         list.setFixedCellWidth(maxWidth);
 
@@ -119,7 +112,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
 
         // 标签
         label.setOpaque(false);
-        label.setBorder(BORDERS[LyricAlignment.lyricAlignmentIndex]);
+        label.setBorder(BORDER);
         label.setHorizontalAlignment(LyricAlignment.VALUES[LyricAlignment.lyricAlignmentIndex]);
         label.setForeground(bgColor);
         label.setUI(labelUI);

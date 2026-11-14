@@ -109,7 +109,7 @@ public class LoadingPanel extends BasePanel {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int pw = getWidth(), ph = getHeight();
         // 画背景
-        g2d.setColor(ImageUtil.getAvgColor(f.globalPanel.getBgImg()));
+        g2d.setColor(ImageUtil.getDominantColor(f.globalPanel.getBgImg()));
         GraphicsUtil.srcOver(g2d, bgAlpha);
         g2d.fillRect(0, 0, pw, ph);
     }

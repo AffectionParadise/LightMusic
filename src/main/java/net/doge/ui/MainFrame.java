@@ -171,9 +171,6 @@ public class MainFrame extends JFrame {
     // 窗口宽高
     public int windowWidth;
     public int windowHeight;
-    //    private final String SONG_NAME_LABEL = I18n.getText("songName");
-//    private final String ARTIST_LABEL = I18n.getText("artist");
-//    private final String ALBUM_NAME_LABEL = I18n.getText("albumName");
     // 进度条最大值
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     // 默认音量
@@ -196,7 +193,6 @@ public class MainFrame extends JFrame {
     private final double TINY_ARC = ScaleUtil.scale(0.2);
     private final double MIDDLE_ARC = ScaleUtil.scale(0.1);
     private final double LARGE_ARC = ScaleUtil.scale(0.03);
-    //    private final double WIN_ARC = ScaleUtil.scale(0.01);
     private final String PAGINATION_MSG = I18n.getText("paginationMsg");
     private final String TOTAL_MSG = I18n.getText("totalMsg");
     private final String LYRIC_LOADING_MSG = I18n.getText("lyricLoadingMsg");
@@ -2220,8 +2216,6 @@ public class MainFrame extends JFrame {
     private CustomBox lyricAndSpecBox = new CustomBox(BoxLayout.Y_AXIS);
     // 左边专辑和标签盒子
     private CustomBox leftInfoBox = new CustomBox(BoxLayout.Y_AXIS);
-    // 左下标签纵向排列盒子
-    private CustomBox leftBottomBox = new CustomBox(BoxLayout.Y_AXIS);
     // 列表盒子(除搜索工具框，下面所有部分)
     private CustomBox playlistListBox = new CustomBox(BoxLayout.X_AXIS);
     private CustomBox albumListBox = new CustomBox(BoxLayout.X_AXIS);
@@ -2447,7 +2441,7 @@ public class MainFrame extends JFrame {
 
     // 执行多个动画的线程池，是使用多个 Timer 造成卡顿的替代方案！
     private ExecutorService spectrumExecutor = Executors.newSingleThreadExecutor();
-    private ExecutorService blurExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService bgImgExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService playExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService lyricExecutor = Executors.newSingleThreadExecutor();
     private ExecutorService globalPanelExecutor = Executors.newSingleThreadExecutor();
@@ -2551,27 +2545,31 @@ public class MainFrame extends JFrame {
                     SwingUtilities.invokeLater(() -> setShape(windowState == WindowState.MAXIMIZED ? new Rectangle2D.Double(0, 0, w, h)
                             : new RoundRectangle2D.Double(0, 0, w, h, arc, arc)));
                     // 歌词面板
-                    Dimension d = new Dimension((int) (w * 0.6), h);
-                    Dimension d2 = new Dimension((int) (w * 0.6), ScaleUtil.scale(SpectrumConstants.barMaxHeight));
+                    int lw = (int) Math.round(w * 0.6);
+                    Dimension d = new Dimension(lw, h);
+                    Dimension d2 = new Dimension(lw, ScaleUtil.scale(SpectrumConstants.barMaxHeight));
                     lyricScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
                     currTimeLabel.revalidate();
                     timeBar.setPreferredSize(new Dimension(w - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - ScaleUtil.scale(30 * 2), ScaleUtil.scale(30)));
                     // 专辑图片
-                    albumImageWidth = (int) (w * 0.33);
-                    Dimension ad = new Dimension((int) (w * 0.4), Integer.MAX_VALUE);
+                    albumImageWidth = (int) Math.round(w * 0.31);
+                    Dimension ad = new Dimension((int) Math.round(w * 0.4), Integer.MAX_VALUE);
                     albumImageLabel.setMaximumSize(ad);
                     // 避免标签字太多超宽！！！
-                    Dimension ld = new Dimension((int) (w * 0.3), (int) (h * 0.077));
+                    Dimension ld = new Dimension((int) Math.round(w * 0.3), (int) Math.round(h * 0.077));
                     songNameLabel.setPreferredSize(ld);
                     artistLabel.setPreferredSize(ld);
                     albumLabel.setPreferredSize(ld);
                     songNameLabel.revalidate();
+                    // 歌曲信息面板
+                    int hi = (int) Math.round(w * 0.05), vi = (int) Math.round(h * 0.05);
+                    leftInfoBox.setBorder(new HDEmptyBorder(vi, hi, vi, hi));
                     if (player.loadedMusicResource()) {
                         showAlbumImage();
                     }
-                    if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) doBlur();
+                    if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) updateBgImg();
                 });
             }
         });
@@ -6318,21 +6316,16 @@ public class MainFrame extends JFrame {
             }
         });
 
-        // 添加左下的标签
-        leftBottomBox.add(CustomBox.createVerticalGlue());
-        leftBottomBox.add(songNameLabel);
-        leftBottomBox.add(CustomBox.createVerticalGlue());
-        leftBottomBox.add(artistLabel);
-        leftBottomBox.add(CustomBox.createVerticalGlue());
-        leftBottomBox.add(albumLabel);
-        leftBottomBox.add(CustomBox.createVerticalGlue());
         // 专辑图片和下边所有标签整体
         leftInfoBox.add(CustomBox.createVerticalGlue());
         leftInfoBox.add(albumImageLabel);
         leftInfoBox.add(CustomBox.createVerticalGlue());
-        leftInfoBox.add(leftBottomBox);
+        leftInfoBox.add(songNameLabel);
         leftInfoBox.add(CustomBox.createVerticalGlue());
-        leftInfoBox.setBorder(new HDEmptyBorder(0, 30, 0, 0));
+        leftInfoBox.add(artistLabel);
+        leftInfoBox.add(CustomBox.createVerticalGlue());
+        leftInfoBox.add(albumLabel);
+        leftInfoBox.add(CustomBox.createVerticalGlue());
         infoAndLyricBox.add(leftInfoBox);
 
         // 列表为空提示
@@ -19850,48 +19843,48 @@ public class MainFrame extends JFrame {
         blurPopupMenu.add(fbmBlurMenuItem);
         fluidMenuItem.addActionListener(e -> {
             fluidMenuItem.setSelected(fluidOn = !fluidOn);
-            doBlur();
+            updateBgImg();
         });
         gsMenuItem.addActionListener(e -> {
             gsMenuItem.setSelected(gsOn = !gsOn);
-            doBlur();
+            updateBgImg();
         });
         darkerMenuItem.addActionListener(e -> {
             darkerMenuItem.setSelected(darkerOn = !darkerOn);
-            doBlur();
+            updateBgImg();
         });
         vibrantMenuItem.addActionListener(e -> {
             vibrantMenuItem.setSelected(vibrantOn = !vibrantOn);
-            doBlur();
+            updateBgImg();
         });
         grooveMenuItem.addActionListener(e -> {
             globalPanel.setGrooveOn(grooveOn = !grooveOn);
             grooveMenuItem.setSelected(grooveOn);
-            doBlur();
+            updateBgImg();
         });
         blurOffMenuItem.addActionListener(e -> {
             blurType = BlurConstants.OFF;
-            doBlur();
+            updateBgImg();
             blurButton.setIcon(ImageUtil.dye(blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         cvBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.CV;
-            doBlur();
+            updateBgImg();
             blurButton.setIcon(ImageUtil.dye(cvBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         mcBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.MC;
-            doBlur();
+            updateBgImg();
             blurButton.setIcon(ImageUtil.dye(mcBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         lgBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.LG;
-            doBlur();
+            updateBgImg();
             blurButton.setIcon(ImageUtil.dye(lgBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         fbmBlurMenuItem.addActionListener(e -> {
             blurType = BlurConstants.FBM;
-            doBlur();
+            updateBgImg();
             blurButton.setIcon(ImageUtil.dye(fbmBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊按钮
@@ -20099,16 +20092,13 @@ public class MainFrame extends JFrame {
 
         MetaMusicInfo metaMusicInfo = player.getMetaMusicInfo();
         // 设置歌曲名称
-//        songNameLabel.setText(StringUtil.textToHtml(SONG_NAME_LABEL + metaMusicInfo.getName()));
         songNameLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getName()));
         songNameLabel.revalidate();
         // 设置艺术家
-//        artistLabel.setText(StringUtil.textToHtml(StringUtil.shorten(ARTIST_LABEL + metaMusicInfo.getArtist(), 50)));
         artistLabel.setText(HtmlUtil.textToHtml(StringUtil.shorten(metaMusicInfo.getArtist(), 50)));
         artistLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         artistLabel.revalidate();
         // 设置专辑名称
-//        albumLabel.setText(StringUtil.textToHtml(ALBUM_NAME_LABEL + metaMusicInfo.getAlbumName()));
         albumLabel.setText(HtmlUtil.textToHtml(metaMusicInfo.getAlbumName()));
         albumLabel.setCursor(Cursor.getPredefinedCursor(isNetMusic ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR));
         albumLabel.revalidate();
@@ -20144,7 +20134,7 @@ public class MainFrame extends JFrame {
             miniDialog.infoLabel.setText(changePaneButton.getText());
         }
         // 恢复背景
-        doBlur();
+        updateBgImg();
         // 禁止 MV、收藏、下载、评论、乐谱
         mvButton.setEnabled(false);
         collectButton.setEnabled(false);
@@ -20169,13 +20159,13 @@ public class MainFrame extends JFrame {
         boolean isDefault = albumImage == ImageConstants.DEFAULT_IMG;
         saveAlbumImageMenuItem.setEnabled(!isDefault);
         // 专辑图片显示原本大小图片的一个缩小副本，并设置圆角
-        BufferedImage img = ImageUtil.width(ImageUtil.cropCenter(albumImage), albumImageWidth);
+        BufferedImage img = ImageUtil.width(ImageUtil.cropCenterSquare(albumImage), albumImageWidth);
         albumImageLabel.setIcon(new ImageIcon(ImageUtil.borderShadow(ImageUtil.radius(img, LARGE_ARC))));
         // 切换面板专辑图片
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(img, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
-        // 背景模糊
-        if (blurType != BlurConstants.OFF) doBlur();
+        // 更新背景图片
+        if (blurType != BlurConstants.OFF) updateBgImg();
     }
 
     // 清空歌词
@@ -22077,7 +22067,7 @@ public class MainFrame extends JFrame {
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
         // 切换主题，包含背景图，模糊状态并载入了音乐就不换
-        if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) doBlur();
+        if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) updateBgImg();
         // 标题图标
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
         setIconImage(titleImg);
@@ -22515,72 +22505,78 @@ public class MainFrame extends JFrame {
         return "";
     }
 
+    // 处理背景图片
+    public BufferedImage processBgImg(int cw, int ch, boolean isMainFrame, boolean radiusEnabled) {
+        // 若为主窗口调用，则同步更新迷你窗口背景
+        if (isMainFrame && miniDialog != null)
+            miniDialog.globalExecutor.execute(() -> miniDialog.updateBgImg());
+
+        // 获取原始图片
+        BufferedImage img;
+        boolean loadedMusicResource = player.loadedMusicResource();
+        if (blurType != BlurConstants.OFF && loadedMusicResource) {
+            img = player.getMetaMusicInfo().getAlbumImage();
+            if (img == null) img = ImageConstants.DEFAULT_IMG;
+            if (blurType == BlurConstants.MC)
+                img = ImageUtil.dyeRect(1, 1, ImageUtil.getDominantColorLuminanceSuitable(img));
+        } else img = UIStyleStorage.currUIStyle.getImg();
+
+        // 截取正方形(有的图片是长方形)
+        if (loadedMusicResource && (blurType == BlurConstants.CV || blurType == BlurConstants.LG))
+            img = ImageUtil.cropCenterSquare(img);
+        // 移除透明通道
+        img = ImageUtil.removeAlphaChannel(img);
+        if (loadedMusicResource) {
+            // 线性渐变
+            if (blurType == BlurConstants.LG) img = ImageUtil.gradient(img, cw, ch);
+                // 迷幻纹理
+            else if (blurType == BlurConstants.FBM) img = ImageUtil.fbm(img, cw, ch);
+        }
+        // 流体图
+        if (fluidOn) img = ImageUtil.fluid(img, cw, ch);
+        // 缩放至画布大小
+        img = ImageUtil.width(img, cw);
+        if (ch > img.getHeight())
+            img = ImageUtil.height(img, ch);
+        // 裁剪中间的一部分
+        if (!loadedMusicResource || blurType == BlurConstants.CV || blurType == BlurConstants.OFF) {
+            int iw = img.getWidth(), ih = img.getHeight();
+            img = ImageUtil.cut(img, iw > cw ? (iw - cw) / 2 : 0, iw > ch ? 0 : (ih - ch) / 2, cw, ch);
+        } else {
+            img = ImageUtil.forceSize(img, cw, ch);
+        }
+        // 活力色彩
+        if (vibrantOn) img = ImageUtil.vibrant(img);
+        // 高斯模糊
+        if (gsOn) img = ImageUtil.gaussianBlur(img);
+        // 暗角滤镜
+        if (darkerOn) img = ImageUtil.darker(img);
+        // 设置圆角
+        if (radiusEnabled) img = ImageUtil.radius(img, ScaleUtil.scale(10));
+        return img;
+    }
+
     // 更新上层组件
     private void updateUpperComp() {
         // 更新弹出菜单
         if (currPopup != null) currPopup.repaint();
         // 更新对话框
         try {
-            for (AbstractShadowDialog d : currDialogs) d.updateBlur();
+            for (AbstractShadowDialog d : currDialogs) d.updateBgImg();
         } catch (ConcurrentModificationException e) {
 
         }
     }
 
-    // 模糊碟片，图像宽度设为 窗口宽度 * 1.2，等比例，毛玻璃化，暗化
-    public void doBlur() {
-        blurExecutor.execute(() -> {
-            BufferedImage img;
-            boolean loadedMusicResource = player.loadedMusicResource();
-            if (blurType != BlurConstants.OFF && loadedMusicResource) {
-                img = player.getMetaMusicInfo().getAlbumImage();
-                if (img == null) img = ImageConstants.DEFAULT_IMG;
-                if (blurType == BlurConstants.MC) img = ImageUtil.dyeRect(1, 1, ImageUtil.getBestAvgColor(img));
-            } else img = UIStyleStorage.currUIStyle.getImg();
-
+    // 更新背景图片
+    public void updateBgImg() {
+        bgImgExecutor.execute(() -> {
             int gw = globalPanel.getWidth(), gh = globalPanel.getHeight();
             if (gw == 0 || gh == 0) {
                 gw = windowWidth;
                 gh = windowHeight;
             }
-            // 改变迷你窗口背景
-            if (miniDialog != null) {
-                BufferedImage finalImg = img;
-                miniDialog.globalExecutor.execute(() -> miniDialog.doBlur(finalImg));
-            }
-
-            // 截取正方形(有的图片是长方形)
-            if (loadedMusicResource && (blurType == BlurConstants.CV || blurType == BlurConstants.LG))
-                img = ImageUtil.cropCenter(img);
-            // 消除透明度
-            img = ImageUtil.eraseTransparency(img);
-            if (loadedMusicResource) {
-                // 线性渐变
-                if (blurType == BlurConstants.LG) img = ImageUtil.gradient(img, gw, gh);
-                    // 迷幻纹理
-                else if (blurType == BlurConstants.FBM) img = ImageUtil.fbm(img, gw, gh);
-            }
-            // 流体图
-            if (fluidOn) img = ImageUtil.fluid(img, gw, gh);
-            // 活力色彩
-            if (vibrantOn) img = ImageUtil.vibrant(img);
-            // 高斯模糊
-            if (gsOn) img = ImageUtil.gaussianBlur(img);
-            // 暗角滤镜
-            if (darkerOn) img = ImageUtil.darker(img);
-            // 缩放至窗口大小
-            img = ImageUtil.width(img, gw);
-            if (gh > img.getHeight())
-                img = ImageUtil.height(img, gh);
-            // 裁剪中间的一部分
-            if (!loadedMusicResource || blurType == BlurConstants.CV || blurType == BlurConstants.OFF) {
-                int iw = img.getWidth(), ih = img.getHeight();
-                img = ImageUtil.region(img, iw > gw ? (iw - gw) / 2 : 0, iw > gw ? 0 : (ih - gh) / 2, gw, gh);
-            } else {
-                img = ImageUtil.forceSize(img, gw, gh);
-            }
-            // 设置圆角
-//            img = ImageUtil.radius(img, WIN_ARC);
+            BufferedImage img = processBgImg(gw, gh, true, false);
             globalPanel.setBgImg(img);
             updateUpperComp();
             globalPanel.setOnImgScaledReady(() -> {

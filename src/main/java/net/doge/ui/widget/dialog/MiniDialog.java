@@ -230,6 +230,6 @@ public class MiniDialog extends AbstractMiniDialog {
 
         globalPanel.add(controlPanel, BorderLayout.CENTER);
 
-        updateBlur();
+        updateBgImg();
     }
 }

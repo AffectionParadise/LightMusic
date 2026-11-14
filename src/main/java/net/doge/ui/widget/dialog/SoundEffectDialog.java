@@ -101,7 +101,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
 
         pack();
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

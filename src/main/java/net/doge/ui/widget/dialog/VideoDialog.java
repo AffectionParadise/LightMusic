@@ -204,7 +204,7 @@ public class VideoDialog extends AbstractTitledDialog {
         initControlPanel();
         playVideo();
 
-        updateBlur();
+        updateBgImg();
     }
 
     public void showDialog() {

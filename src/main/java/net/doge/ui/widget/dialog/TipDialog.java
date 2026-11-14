@@ -72,7 +72,7 @@ public class TipDialog extends AbstractShadowDialog {
 
     public void updateView(boolean resetLocation) {
         updateSize();
-        updateBlur();
+        updateBgImg();
         if (resetLocation) setLocationRelativeTo(null);
     }
 

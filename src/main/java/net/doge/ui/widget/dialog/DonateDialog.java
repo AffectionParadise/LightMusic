@@ -63,7 +63,7 @@ public class DonateDialog extends AbstractTitledDialog {
         initTitleBar();
         initView();
         pack();
-        updateBlur();
+        updateBgImg();
         setLocationRelativeTo(null);
 
         f.currDialogs.add(this);

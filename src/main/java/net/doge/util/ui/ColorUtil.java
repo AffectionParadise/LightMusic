@@ -428,21 +428,17 @@ public class ColorUtil {
     }
 
     /**
-     * 调整色块使之成为最佳色块
+     * 调整颜色明暗舒适度
      *
-     * @param rgb
+     * @param color
      * @return
      */
-    public static Color makeBestColor(int rgb) {
-        HSL hsl = rgbToHsl(rgb);
+    public static Color luminanceSuitable(Color color) {
+        HSL hsl = colorToHsl(color);
         float maxS = 50, minL = 50, maxL = 70;
         if (hsl.s > maxS) hsl.s = maxS;
         if (hsl.l < minL) hsl.l = minL;
         else if (hsl.l > maxL) hsl.l = maxL;
         return hslToColor(hsl);
-    }
-
-    public static int merge(int srgb) {
-        return 0;
     }
 }

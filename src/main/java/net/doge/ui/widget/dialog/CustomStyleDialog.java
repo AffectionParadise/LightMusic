@@ -119,7 +119,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         initView();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

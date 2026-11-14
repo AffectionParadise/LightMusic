@@ -71,7 +71,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         pack();
         setLocationRelativeTo(null);
 
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

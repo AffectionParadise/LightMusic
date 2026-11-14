@@ -86,7 +86,7 @@ public class ManageCustomStyleDialog extends AbstractTitledDialog {
         initStyles();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

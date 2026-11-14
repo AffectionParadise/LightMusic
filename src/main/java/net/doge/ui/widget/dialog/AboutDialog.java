@@ -55,7 +55,7 @@ public class AboutDialog extends AbstractTitledDialog {
         initTitleBar();
 
         pack();
-        updateBlur();
+        updateBgImg();
         setLocationRelativeTo(null);
 
         f.currDialogs.add(this);

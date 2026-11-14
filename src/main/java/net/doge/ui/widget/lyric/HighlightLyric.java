@@ -405,10 +405,10 @@ public class HighlightLyric {
     private void cropImg() {
         if (width <= widthThreshold) return;
         int pw = (int) Math.round(width * ratio);
-        if (pw <= widthThreshold / 2) img = ImageUtil.region(img, 0, 0, widthThreshold, height);
+        if (pw <= widthThreshold / 2) img = ImageUtil.cut(img, 0, 0, widthThreshold, height);
         else if (width - pw > widthThreshold / 2)
-            img = ImageUtil.region(img, pw - widthThreshold / 2, 0, widthThreshold, height);
-        else img = ImageUtil.region(img, width - widthThreshold, 0, widthThreshold, height);
+            img = ImageUtil.cut(img, pw - widthThreshold / 2, 0, widthThreshold, height);
+        else img = ImageUtil.cut(img, width - widthThreshold, 0, widthThreshold, height);
     }
 
     private void makeIcon() {

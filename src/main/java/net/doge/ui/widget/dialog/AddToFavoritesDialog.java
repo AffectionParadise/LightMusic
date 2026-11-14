@@ -88,7 +88,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         initLocalPlaylists();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);

@@ -110,7 +110,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
             pack();
         }
 
-        updateBlur();
+        updateBgImg();
         setLocationRelativeTo(null);
 
         f.currDialogs.add(this);

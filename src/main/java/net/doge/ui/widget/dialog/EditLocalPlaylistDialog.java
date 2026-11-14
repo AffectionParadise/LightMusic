@@ -57,7 +57,7 @@ public class EditLocalPlaylistDialog extends AbstractTitledDialog {
         initView();
 
         setLocationRelativeTo(null);
-        updateBlur();
+        updateBgImg();
 
         f.currDialogs.add(this);
         setVisible(true);
