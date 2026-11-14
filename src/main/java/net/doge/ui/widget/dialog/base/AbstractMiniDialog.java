@@ -68,9 +68,9 @@ public abstract class AbstractMiniDialog extends BaseDialog {
         img = ImageUtil.eraseTransparency(img);
         if (loadedMusicResource) {
             // 线性渐变
-            if (f.blurType == BlurConstants.LG) img = ImageUtil.gradientImage(img, dw, dh);
+            if (f.blurType == BlurConstants.LG) img = ImageUtil.gradient(img, dw, dh);
                 // 迷幻纹理
-            else if (f.blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, dw, dh);
+            else if (f.blurType == BlurConstants.FBM) img = ImageUtil.fbm(img, dw, dh);
         }
         // 流体图
         if (f.fluidOn) img = ImageUtil.fluid(img, dw, dh);

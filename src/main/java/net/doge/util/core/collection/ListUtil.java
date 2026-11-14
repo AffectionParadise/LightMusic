@@ -80,12 +80,12 @@ public class ListUtil {
      * @param target
      * @return
      */
-    public static int biSearchLeft(List<Integer> numList, int target) {
+    public static <T> int binarySearchLowBound(List<? extends Comparable<T>> numList, T target) {
         int left = 0, right = numList.size() - 1;
         while (left <= right) {
             int mid = (left + right) / 2;
             if (numList.get(mid) == target) return mid;
-            else if (numList.get(mid) > target) right = mid - 1;
+            else if (numList.get(mid).compareTo(target) > 0) right = mid - 1;
             else left = mid + 1;
         }
         return left - 1;

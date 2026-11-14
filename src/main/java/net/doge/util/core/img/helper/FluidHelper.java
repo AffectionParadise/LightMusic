@@ -1,7 +1,7 @@
 package net.doge.util.core.img.helper;
 
-import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.math.MathUtil;
+import net.doge.util.ui.ColorUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -49,7 +49,7 @@ public class FluidHelper {
      */
     public static FluidHelper from(BufferedImage img) {
         Objects.requireNonNull(img, "img");
-        return new FluidHelper(ImageUtil.extractPalette(img));
+        return new FluidHelper(PaletteHelper.extractPalette(img));
     }
 
     /**
@@ -118,8 +118,8 @@ public class FluidHelper {
                 }
                 double edge = (nx - 0.5) * (nx - 0.5) + (ny - 0.5) * (ny - 0.5);
                 double shade = 0.94 - edge * 0.22 - ny * 0.08;
-                pixels[y * width + x] = (toSrgb(red / sum * shade) << 16)
-                        | (toSrgb(green / sum * shade) << 8) | toSrgb(blue / sum * shade);
+                pixels[y * width + x] = ColorUtil.merge(toSrgb(red / sum * shade),
+                        toSrgb(green / sum * shade), toSrgb(blue / sum * shade));
             }
         }
         // 两遍可分离的盒式滤波可柔化狭窄的颜色接缝，时间复杂度为 O(宽度 × 高度)
@@ -142,17 +142,17 @@ public class FluidHelper {
             int r = 0, g = 0, b = 0;
             for (int offset = -radius; offset <= radius; offset++) {
                 int rgb = source[y * width + MathUtil.clamp(offset, 0, width - 1)];
-                r += (rgb >> 16) & 255;
-                g += (rgb >> 8) & 255;
-                b += rgb & 255;
+                r += ColorUtil.red(rgb);
+                g += ColorUtil.green(rgb);
+                b += ColorUtil.blue(rgb);
             }
             for (int x = 0; x < width; x++) {
                 target[x * height + y] = ((r / divisor) << 16) | ((g / divisor) << 8) | (b / divisor);
                 int left = source[y * width + MathUtil.clamp(x - radius, 0, width - 1)];
                 int right = source[y * width + MathUtil.clamp(x + radius + 1, 0, width - 1)];
-                r += ((right >> 16) & 255) - ((left >> 16) & 255);
-                g += ((right >> 8) & 255) - ((left >> 8) & 255);
-                b += (right & 255) - (left & 255);
+                r += ColorUtil.red(right) - ColorUtil.red(left);
+                g += ColorUtil.green(right) - ColorUtil.green(left);
+                b += ColorUtil.blue(right) - ColorUtil.blue(left);
             }
         }
     }

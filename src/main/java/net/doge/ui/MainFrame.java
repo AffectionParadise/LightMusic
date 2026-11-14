@@ -19478,7 +19478,7 @@ public class MainFrame extends JFrame {
                     if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LYRIC_PIECE + currRatio;
                     renderer.setRatio(ratio);
                     desktopLyricDialog.updateLyric(statements.get(nextLyric - 1 >= 0 ? nextLyric - 1 : nextLyric), ratio);
-                    // 更新歌词上动画
+                    // 更新歌词上浮动画
                     updateWordDropAnimation(desktopLyricDialog.getHighlightLyric(), LYRIC_PIECE);
                     updateWordDropAnimation(renderer.getHl(), LYRIC_PIECE);
                 } else {
@@ -22556,9 +22556,9 @@ public class MainFrame extends JFrame {
             img = ImageUtil.eraseTransparency(img);
             if (loadedMusicResource) {
                 // 线性渐变
-                if (blurType == BlurConstants.LG) img = ImageUtil.gradientImage(img, gw, gh);
+                if (blurType == BlurConstants.LG) img = ImageUtil.gradient(img, gw, gh);
                     // 迷幻纹理
-                else if (blurType == BlurConstants.FBM) img = ImageUtil.fbmImage(img, gw, gh);
+                else if (blurType == BlurConstants.FBM) img = ImageUtil.fbm(img, gw, gh);
             }
             // 流体图
             if (fluidOn) img = ImageUtil.fluid(img, gw, gh);

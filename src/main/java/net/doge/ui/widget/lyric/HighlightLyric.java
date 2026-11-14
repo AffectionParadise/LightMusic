@@ -60,9 +60,9 @@ public class HighlightLyric {
     private FontMetrics[] metricsArray;
 
     // 最小上浮动画时间
-    private final int minDropDuration = 100;
+    private final long minDropDuration = 100;
     // 最大简单上浮动画时间
-    private final int maxSimpleDropDuration = 1000;
+    private final long maxSimpleDropDuration = 1000;
     // 起始/经过/结束位移
     private final int startDrop = ScaleUtil.scale(3);
     private final double interpolarX = 0.5;
@@ -74,7 +74,7 @@ public class HighlightLyric {
     public List<Integer> wordDropGapList = new LinkedList<>();
 
     // 光辉效果出现要求的字(段)最小持续时间
-    private final int glowOccurrenceDemand = 1000;
+    private final long glowOccurrenceDemand = 1000;
     // 光辉效果透明度变化函数参数(在 x 点达到最大，然后在 y 点开始减小)
     private final double glowX = 0.3;
     private final double glowY = 0.8;
@@ -86,9 +86,9 @@ public class HighlightLyric {
     // 字(也有可能是一段)宽度前缀和
     private List<Integer> wordWidthPrefixSumExcludedList = new LinkedList<>();
     // 每个字(也有可能是一段)相对当行的起始时间
-    private List<Integer> wordStartList = new LinkedList<>();
+    private List<Long> wordStartList = new LinkedList<>();
     // 每个字(也有可能是一段)的持续时间
-    private List<Integer> wordDurationList = new LinkedList<>();
+    private List<Long> wordDurationList = new LinkedList<>();
 
     /**
      * @param label          显示字体的标签
@@ -128,9 +128,9 @@ public class HighlightLyric {
         // 初始化每段时间数据，非逐字歌词需要等待 EndTime 传入后再更新
         if (isByWord) {
             List<String> startList = RegexUtil.findAllGroup1(LyricPattern.START, lyric);
-            for (String startStr : startList) wordStartList.add(Integer.parseInt(startStr));
+            for (String startStr : startList) wordStartList.add(Long.parseLong(startStr));
             List<String> durationList = RegexUtil.findAllGroup1(LyricPattern.DURATION, lyric);
-            for (String durationStr : durationList) wordDurationList.add(Integer.parseInt(durationStr));
+            for (String durationStr : durationList) wordDurationList.add(Long.parseLong(durationStr));
         }
         initWordWidthList(lyric);
 
@@ -245,12 +245,12 @@ public class HighlightLyric {
      * @return
      */
     public double computeRatio(double currTime, double lineStartTime) {
-        int currTimeMs = (int) (currTime * 1000), lineStartTimeMs = (int) (lineStartTime * 1000);
-        int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
+        long currTimeMs = (long) (currTime * 1000), lineStartTimeMs = (long) (lineStartTime * 1000);
+        long lineCurrTimeMs = currTimeMs - lineStartTimeMs;
 
-        int wordStartIndex = ListUtil.biSearchLeft(wordStartList, lineCurrTimeMs);
+        int wordStartIndex = ListUtil.binarySearchLowBound(wordStartList, lineCurrTimeMs);
         if (wordStartIndex < 0) return 0;
-        int wordStart = wordStartList.get(wordStartIndex);
+        long wordStart = wordStartList.get(wordStartIndex);
         // 防止单字比率超出
         double wordRatio = Math.min(1, (double) (lineCurrTimeMs - wordStart) / wordDurationList.get(wordStartIndex));
         // 部分情况有 NAN 值
@@ -266,14 +266,14 @@ public class HighlightLyric {
     public void updateNormalWordEffects(double currTime, double lineStartTime, double lineEndTime) {
         // 如果每段起始/持续时间未初始化(针对非逐字歌词)
         if (wordStartList.isEmpty()) {
-            int lineStartTimeMs = (int) (lineStartTime * 1000), lineEndTimeMs = (int) (lineEndTime * 1000);
-            int lineDurationMs = lineEndTimeMs - lineStartTimeMs;
+            long lineStartTimeMs = (long) (lineStartTime * 1000), lineEndTimeMs = (long) (lineEndTime * 1000);
+            long lineDurationMs = lineEndTimeMs - lineStartTimeMs;
 
             int totalWidth = width - 2 * shadowHOffset;
             for (int i = 0, len = wordWidthList.size(); i < len; i++) {
                 int wordWidth = wordWidthList.get(i);
-                int wordStart = lineDurationMs * wordWidthPrefixSumExcludedList.get(i) / totalWidth;
-                int wordDuration = lineDurationMs * wordWidth / totalWidth;
+                long wordStart = lineDurationMs * wordWidthPrefixSumExcludedList.get(i) / totalWidth;
+                long wordDuration = lineDurationMs * wordWidth / totalWidth;
                 wordStartList.add(wordStart);
                 wordDurationList.add(wordDuration);
             }
@@ -286,10 +286,10 @@ public class HighlightLyric {
         int currTimeMs = (int) (currTime * 1000), lineStartTimeMs = (int) (lineStartTime * 1000);
         int lineCurrTimeMs = currTimeMs - lineStartTimeMs;
         for (int i = 0, len = wordStartList.size(); i < len; i++) {
-            int wordStart = wordStartList.get(i);
-            int wordDuration = wordDurationList.get(i);
+            long wordStart = wordStartList.get(i);
+            long wordDuration = wordDurationList.get(i);
             // Drop 动画进度，控制在 0-1 之间
-            int wordElapsed = lineCurrTimeMs - wordStart;
+            long wordElapsed = lineCurrTimeMs - wordStart;
             double progress = MathUtil.clamp((double) wordElapsed / Math.max(minDropDuration, wordDuration), 0, 1);
             // 超出最大简单动画时间，使用曲线动画
             int wordDropOrigin = computeWordDrop(progress, wordDuration >= maxSimpleDropDuration);

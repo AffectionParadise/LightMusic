@@ -441,4 +441,8 @@ public class ColorUtil {
         else if (hsl.l > maxL) hsl.l = maxL;
         return hslToColor(hsl);
     }
+
+    public static int merge(int srgb) {
+        return 0;
+    }
 }

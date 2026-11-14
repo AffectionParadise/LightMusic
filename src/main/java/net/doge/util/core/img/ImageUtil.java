@@ -1,15 +1,18 @@
 package net.doge.util.core.img;
 
 import cn.hutool.core.img.ImgUtil;
-import com.jhlabs.image.*;
+import com.jhlabs.image.ExposureFilter;
+import com.jhlabs.image.GradientFilter;
+import com.jhlabs.image.SaturationFilter;
+import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.core.ui.Colors;
 import net.doge.constant.core.ui.image.BlurConstants;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.img.helper.FbmHelper;
 import net.doge.util.core.img.helper.FluidHelper;
 import net.doge.util.core.img.helper.GaussianBlurHelper;
 import net.doge.util.core.img.helper.PaletteHelper;
@@ -36,8 +39,6 @@ import java.util.List;
  * @date 2020/12/9
  */
 public class ImageUtil {
-    // 分析布朗运动过滤器
-    private static final FBMFilter fbmFilter = new FBMFilter();
     // 曝光过滤器
     private static final ExposureFilter exposureFilter = new ExposureFilter();
     // 饱和度过滤器
@@ -52,10 +53,6 @@ public class ImageUtil {
     private static final int SHADOW_THICKNESS = 30;
 
     static {
-        fbmFilter.setLacunarity(0.35f);
-        fbmFilter.setH(5f);
-        fbmFilter.setBasisType(FBMFilter.RIDGED);
-
         shadowFilter.setRadius(20f);
         shadowFilter.setDistance(0f);
         shadowFilter.setOpacity(0.65f);
@@ -278,18 +275,14 @@ public class ImageUtil {
     }
 
     /**
-     * 从指定 BufferedImage 创建透明图片
+     * 创建指定宽高的不透明图片
      *
+     * @param w
+     * @param h
      * @return
      */
-    public static BufferedImage createTransparentImage(BufferedImage img) {
-        if (img == null) return null;
-        int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(w, h);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
-        g2d.drawImage(img, 0, 0, null);
-        g2d.dispose();
-        return outputImg;
+    public static BufferedImage createOpaqueImage(int w, int h) {
+        return new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
     }
 
     /**
@@ -302,7 +295,7 @@ public class ImageUtil {
         if (img == null) return null;
         if (!img.getColorModel().hasAlpha()) return img;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        BufferedImage outputImg = createOpaqueImage(w, h);
         Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
         g2d.drawImage(img, 0, 0, null);
         g2d.dispose();
@@ -333,11 +326,6 @@ public class ImageUtil {
         Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
         g2d.drawImage(img, 0, 0, null);
         g2d.setComposite(AlphaComposite.SrcAtop);
-//        final float diff = 15;
-//        final float[] fractions = {0.333f, 0.667f, 1};
-//        final Color[] colors = {ColorUtil.hsvDiffPick(color, -diff), color, ColorUtil.hsvDiffPick(color, diff)};
-//        LinearGradientPaint lgp = new LinearGradientPaint(0, 0, w, h, fractions, colors);
-//        g2d.setPaint(lgp);
         g2d.setColor(color);
         g2d.fillRect(0, 0, w, h);
         g2d.dispose();
@@ -633,7 +621,7 @@ public class ImageUtil {
         double scale = Math.min(1.0, 256.0 / Math.max(canvasWidth, canvasHeight));
         int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
         int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
-        double ts = RandomUtil.randomDouble(10);
+        double ts = RandomUtil.randomDouble(30);
         return fluidHelper.render(rw, rh, ts);
     }
 
@@ -774,48 +762,18 @@ public class ImageUtil {
     }
 
     /**
-     * 提取图像主色调 Palette
-     *
-     * @param img
-     * @return
-     */
-    public static List<Color> extractPalette(BufferedImage img) {
-        return PaletteHelper.extractPalette(img);
-    }
-
-    /**
-     * 从图像主色调提取一对视觉美观的颜色
-     *
-     * @param img
-     * @return
-     */
-    public static List<Color> extractPairVisualAppeal(BufferedImage img) {
-        return PaletteHelper.extractPairVisualAppeal(img);
-    }
-
-    /**
-     * 提取图像主色调，并生成指定宽高的分形布朗运动图像
+     * 指定面板尺寸生成分形布朗运动图像
      *
      * @return
      */
-    public static BufferedImage fbmImage(BufferedImage img, int w, int h) {
-        List<Color> palette = extractPalette(img);
-        int ca = palette.get(0).getRGB();
-        int cb = (palette.size() > 1 ? palette.get(1) : Colors.THEME).getRGB();
-        fbmFilter.setAngle((float) Math.toRadians(RandomUtil.randomInt(360)));
-        fbmFilter.setColormap(new LinearColormap(cb, ca));
-        return fbmFilter.filter(createTransparentImage(w, h), null);
-    }
-
-    /**
-     * 图像提取主色调，并生成指定宽高的线性渐变图像
-     *
-     * @return
-     */
-    public static BufferedImage gradientImage(BufferedImage img, int w, int h) {
-        List<Color> pair = extractPairVisualAppeal(img);
-        Color ca = pair.get(0), cb = pair.get(1);
-        return linearGradient(w, h, ca, cb);
+    public static BufferedImage fbm(BufferedImage img, int canvasWidth, int canvasHeight) {
+        if (img == null) return null;
+        FbmHelper fbmHelper = FbmHelper.from(img);
+        double scale = Math.min(1.0, 320.0 / Math.max(canvasWidth, canvasHeight));
+        int rw = Math.max(1, (int) Math.round(canvasWidth * scale));
+        int rh = Math.max(1, (int) Math.round(canvasHeight * scale));
+        double ts = RandomUtil.randomDouble(30);
+        return fbmHelper.render(rw, rh, ts);
     }
 
     /**
@@ -823,7 +781,7 @@ public class ImageUtil {
      *
      * @return
      */
-    public static BufferedImage linearGradient(int w, int h, Color c1, Color c2) {
+    public static BufferedImage gradient(int w, int h, Color c1, Color c2) {
         BufferedImage img = createTransparentImage(w, h);
         GradientFilter gf = new GradientFilter(new Point(0, 0), new Point(w, h), c1.getRGB(), c2.getRGB(), false, GradientFilter.LINEAR, GradientFilter.INT_LINEAR);
 //        Graphics2D g2d = GraphicsUtil.setup(img.createGraphics());
@@ -833,5 +791,16 @@ public class ImageUtil {
 //        g2d.fillRect(0, 0, w, h);
 //        g2d.dispose();
         return gf.filter(img, null);
+    }
+
+    /**
+     * 图像提取主色调，并生成指定宽高的线性渐变图像
+     *
+     * @return
+     */
+    public static BufferedImage gradient(BufferedImage img, int w, int h) {
+        List<Color> pair = PaletteHelper.extractPairVisualAppeal(img);
+        Color ca = pair.get(0), cb = pair.get(1);
+        return gradient(w, h, ca, cb);
     }
 }
