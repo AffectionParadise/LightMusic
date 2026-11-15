@@ -2547,7 +2547,7 @@ public class MainFrame extends JFrame {
                     // 歌词面板
                     int lw = (int) Math.round(w * 0.6);
                     Dimension d = new Dimension(lw, h);
-                    Dimension d2 = new Dimension(lw, ScaleUtil.scale(SpectrumConstants.barMaxHeight));
+                    Dimension d2 = new Dimension(lw, ScaleUtil.scale(SpectrumConstants.maxBarHeight));
                     lyricScrollPane.setPreferredSize(d);
                     spectrumPanel.setPreferredSize(d2);
                     // 时间条
@@ -2564,8 +2564,8 @@ public class MainFrame extends JFrame {
                     albumLabel.setPreferredSize(ld);
                     songNameLabel.revalidate();
                     // 歌曲信息面板
-                    int hi = (int) Math.round(w * 0.05), vi = (int) Math.round(h * 0.05);
-                    leftInfoBox.setBorder(new HDEmptyBorder(vi, hi, vi, hi));
+                    int hi = (int) Math.round(w * 0.0625), vi = (int) Math.round(h * 0.0625);
+                    leftInfoBox.setBorder(new EmptyBorder(vi, hi, vi, hi));
                     if (player.loadedMusicResource()) {
                         showAlbumImage();
                     }
@@ -3085,8 +3085,8 @@ public class MainFrame extends JFrame {
         // 载入歌词对齐方式
         LyricAlignment.lyricAlignmentIndex = config.getIntValue(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 载入频谱最大高度
-        SpectrumConstants.barMaxHeight = config.getIntValue(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
-        spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
+        SpectrumConstants.maxBarHeight = config.getIntValue(ConfigConstants.MAX_BAR_HEIGHT, SpectrumConstants.maxBarHeight);
+        spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.maxBarHeight));
         // 载入高斯模糊因子
         BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 载入暗角滤镜因子
@@ -3160,7 +3160,7 @@ public class MainFrame extends JFrame {
         spectrumGradientMenuItem.setSelected(specGradient);
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.6f;
-        spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) (specOpacity * 100)));
+        spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, Math.round(specOpacity * 100)));
         // 载入是否锁定桌面歌词
         desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
         // 载入桌面歌词坐标
@@ -3935,7 +3935,7 @@ public class MainFrame extends JFrame {
         // 存入歌词对齐方式
         config.put(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 存入频谱最大高度
-        config.put(ConfigConstants.SPEC_MAX_HEIGHT, SpectrumConstants.barMaxHeight);
+        config.put(ConfigConstants.MAX_BAR_HEIGHT, SpectrumConstants.maxBarHeight);
         // 存入高斯模糊因子
         config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
         // 存入暗角滤镜因子
@@ -19362,7 +19362,7 @@ public class MainFrame extends JFrame {
                 String text = mi.getText();
                 float so = specOpacity + Float.parseFloat(text.replaceFirst("%", "")) / 100;
                 specOpacity = Math.min(1, Math.max(0.1f, so));
-                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, (int) Math.round(specOpacity * 100)));
+                spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, Math.round(specOpacity * 100)));
             });
             spectrumPopupMenu.add(mi);
         }
@@ -19444,18 +19444,18 @@ public class MainFrame extends JFrame {
 
     // 初始化动画 Timer
     private void initTimer() {
-        final int specPiece = (int) ((SpectrumConstants.PLAYER_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
+        final int specPiece = (int) ((SpectrumConstants.UPDATE_INTERVAL - 0.01) * 1000 / SpectrumConstants.TIMER_INTERVAL);
         spectrumTimer = new Timer(SpectrumConstants.TIMER_INTERVAL, e -> {
             spectrumExecutor.execute(() -> {
-                double[] specs = player.specs;
-                double[] specsOrigin = player.specsOrigin;
-                double[] specsGap = player.specsGap;
+                double[] barHeights = player.barHeights;
+                double[] barHeightsOrigin = player.barHeightsOrigin;
+                double[] barHeightsGap = player.barHeightsGap;
                 for (int i = 0, len = SpectrumConstants.barNum; i < len; i++) {
-                    double step = Math.max(1, specsGap[i] / specPiece);
-                    if (specs[i] < specsOrigin[i])
-                        specs[i] += Math.min(step, specsOrigin[i] - specs[i]);
-                    else if (specs[i] > specsOrigin[i])
-                        specs[i] -= Math.min(step, specs[i] - specsOrigin[i]);
+                    double step = Math.max(1, barHeightsGap[i] / specPiece);
+                    if (barHeights[i] < barHeightsOrigin[i])
+                        barHeights[i] += Math.min(step, barHeightsOrigin[i] - barHeights[i]);
+                    else if (barHeights[i] > barHeightsOrigin[i])
+                        barHeights[i] -= Math.min(step, barHeights[i] - barHeightsOrigin[i]);
                 }
                 lyricAndSpecBox.repaint();
             });
@@ -20324,8 +20324,8 @@ public class MainFrame extends JFrame {
 
         MediaPlayer mp = player.getMp();
         // 设置频谱更新间隔
-        mp.setAudioSpectrumInterval(SpectrumConstants.PLAYER_INTERVAL);
-        // 设置频谱更新数量
+        mp.setAudioSpectrumInterval(SpectrumConstants.UPDATE_INTERVAL);
+        // 设置频谱带数量
         mp.setAudioSpectrumNumBands(SpectrumConstants.NUM_BANDS);
         // 设置频谱阈值，默认是 -60
         mp.setAudioSpectrumThreshold(SpectrumConstants.THRESHOLD);
@@ -20379,7 +20379,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 频谱监听器
-        mp.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> SpectrumUtil.handleMagnitudes(magnitudes, player));
+        mp.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> SpectrumUtil.processMagnitudes(magnitudes, duration, player));
         // 播放器状态监听
         mp.statusProperty().addListener((observable, oldValue, newValue) -> {
             // 排除正在销毁的 mp 对象的事件调用

@@ -18,7 +18,7 @@ public class ScaleUtil {
      */
     public static int scale(int value) {
         if (value > Integer.MAX_VALUE / SCALE) return value;
-        return (int) (value * SCALE);
+        return Math.round(value * SCALE);
     }
 
     public static double scale(double value) {

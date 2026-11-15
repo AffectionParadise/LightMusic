@@ -62,7 +62,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
 
     private final int HORIZONTAL_SPACE = ScaleUtil.scale(90);
     private final int VERTICAL_SPACE = ScaleUtil.scale(25);
-    private final Border BORDER = new EmptyBorder(VERTICAL_SPACE, 0, VERTICAL_SPACE, 0);
+    private final Border BORDER = new EmptyBorder(VERTICAL_SPACE, 0, VERTICAL_SPACE, HORIZONTAL_SPACE);
 
     public LyricListRenderer() {
         createFontAnimation();

@@ -4,7 +4,6 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.service.music.info.impl.musicurl.track.qq.QqTrackReqV2;
 import net.doge.sdk.service.music.info.impl.musicurl.track.qq.VkeysQqTrackReq;
-import net.doge.sdk.service.music.info.impl.musicurl.track.qq.XcvtsQqTrackReq;
 import net.doge.util.core.StringUtil;
 
 public class QqMusicUrlReq {
@@ -48,7 +47,7 @@ public class QqMusicUrlReq {
                 break;
         }
         String trackUrl = VkeysQqTrackReq.getInstance().getTrackUrl(id, quality);
-        if (StringUtil.isEmpty(trackUrl)) trackUrl = XcvtsQqTrackReq.getInstance().getTrackUrl(id, quality);
+//        if (StringUtil.isEmpty(trackUrl)) trackUrl = XcvtsQqTrackReq.getInstance().getTrackUrl(id, quality);
         if (StringUtil.isEmpty(trackUrl)) trackUrl = QqTrackReqV2.getInstance().getTrackUrl(id, quality);
         return trackUrl;
     }

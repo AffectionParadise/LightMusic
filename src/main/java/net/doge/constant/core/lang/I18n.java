@@ -591,7 +591,7 @@ public class I18n {
         LANG_MAP.put("left", new String[]{"居左", "Left"});
         LANG_MAP.put("center", new String[]{"居中", "Center"});
         LANG_MAP.put("right", new String[]{"居右", "Right"});
-        LANG_MAP.put("specMaxHeight", new String[]{"频谱最大高度(≤%s像素)：", "Max spectrum view height(≤%s pixels): "});
+        LANG_MAP.put("specMaxHeight", new String[]{"频谱最大高度(≤%s DPI 像素)：", "Max spectrum view height(≤%s pixels): "});
         LANG_MAP.put("gsFactor", new String[]{"高斯模糊半径（半径越大越模糊）：", "Gaussian blur radius(Bigger radius, blurrier): "});
         LANG_MAP.put("darkerFactor", new String[]{"暗角滤镜因子（因子越小越暗）：", "Darker mode factor(Smaller factor, darker): "});
         LANG_MAP.put("autoDownloadLyric", new String[]{"下载歌曲时自动下载歌词", "Download lyrics while downloading tracks"});

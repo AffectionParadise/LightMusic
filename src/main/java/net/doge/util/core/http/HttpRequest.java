@@ -4,7 +4,6 @@ import net.doge.util.core.exception.ExceptionUtil;
 import net.doge.util.core.http.constant.ContentType;
 import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.http.constant.Method;
-import net.doge.util.core.http.cookiejar.CustomCookieJar;
 import okhttp3.*;
 import okhttp3.internal.http.HttpMethod;
 
@@ -23,9 +22,12 @@ public class HttpRequest {
     private FormBody.Builder formBuilder;
     private Method method;
 
-    // 私有构造器
-    private HttpRequest(Method method, String url) {
-        this.client = HttpClient.CLIENT;
+    public HttpRequest(Method method, String url) {
+        this(HttpClient.CLIENT, method, url);
+    }
+
+    public HttpRequest(OkHttpClient client, Method method, String url) {
+        this.client = client;
         this.method = method;
         this.requestBuilder = new Request.Builder().url(url);
         String methodStr = method.toString();
@@ -38,40 +40,40 @@ public class HttpRequest {
     }
 
     // 通过请求方法构造
+    public static HttpRequest createRequest(Method method, String url) {
+        return new HttpRequest(method, url);
+    }
+
     public static HttpRequest get(String url) {
-        return new HttpRequest(Method.GET, url);
+        return createRequest(Method.GET, url);
     }
 
     public static HttpRequest post(String url) {
-        return new HttpRequest(Method.POST, url);
+        return createRequest(Method.POST, url);
     }
 
     public static HttpRequest put(String url) {
-        return new HttpRequest(Method.PUT, url);
+        return createRequest(Method.PUT, url);
     }
 
     public static HttpRequest delete(String url) {
-        return new HttpRequest(Method.DELETE, url);
+        return createRequest(Method.DELETE, url);
     }
 
     public static HttpRequest patch(String url) {
-        return new HttpRequest(Method.PATCH, url);
+        return createRequest(Method.PATCH, url);
     }
 
     public static HttpRequest head(String url) {
-        return new HttpRequest(Method.HEAD, url);
+        return createRequest(Method.HEAD, url);
     }
 
     public static HttpRequest trace(String url) {
-        return new HttpRequest(Method.TRACE, url);
+        return createRequest(Method.TRACE, url);
     }
 
     public static HttpRequest options(String url) {
-        return new HttpRequest(Method.OPTIONS, url);
-    }
-
-    public static HttpRequest createRequest(Method method, String url) {
-        return new HttpRequest(method, url);
+        return createRequest(Method.OPTIONS, url);
     }
 
     // 请求头
@@ -157,25 +159,6 @@ public class HttpRequest {
                 .readTimeout(readTimeout, TimeUnit.SECONDS)
                 .writeTimeout(writeTimeout, TimeUnit.SECONDS)
                 .build();
-        return this;
-    }
-
-    // 会话
-    public HttpRequest session() {
-        this.client = client.newBuilder()
-                .cookieJar(new CustomCookieJar())
-                .build();
-        return this;
-    }
-
-    // 获取 Client
-    public OkHttpClient client() {
-        return client;
-    }
-
-    // 设置 Client
-    public HttpRequest client(OkHttpClient client) {
-        this.client = client;
         return this;
     }
 

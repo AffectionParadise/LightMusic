@@ -52,10 +52,10 @@ public class MusicPlayer {
     private int mpErrorCount;
     private final int MAX_ERROR_COUNT = 5;
 
-    // 频谱数据
-    public double[] specs = new double[SpectrumConstants.NUM_BANDS];
-    public double[] specsOrigin = new double[SpectrumConstants.NUM_BANDS];
-    public double[] specsGap = new double[SpectrumConstants.NUM_BANDS];
+    // 频谱柱状图高度数据
+    public double[] barHeights = new double[SpectrumConstants.NUM_BANDS];
+    public double[] barHeightsOrigin = new double[SpectrumConstants.NUM_BANDS];
+    public double[] barHeightsGap = new double[SpectrumConstants.NUM_BANDS];
 
     public MusicPlayer(MainFrame f) {
         this.f = f;
@@ -98,12 +98,17 @@ public class MusicPlayer {
         audioFile = null;
         musicInfo = null;
 
-        for (int i = 0, len = specsOrigin.length; i < len; i++) {
-            specsOrigin[i] = 0;
-            specsGap[i] = specs[i];
-        }
+        clearBarHeightsData();
 
         mpErrorCount = 0;
+    }
+
+    // 清除频谱数据
+    private void clearBarHeightsData() {
+        for (int i = 0, len = barHeightsOrigin.length; i < len; i++) {
+            barHeightsOrigin[i] = 0;
+            barHeightsGap[i] = barHeights[i];
+        }
     }
 
     // 卸载当前文件

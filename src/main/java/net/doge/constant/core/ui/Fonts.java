@@ -25,8 +25,8 @@ public class Fonts {
     // 标准大小
     public static final int FONT_SIZE = ScaleUtil.scale(17);
     // 标题
-    public static final int TITLE_FONT_SIZE = FONT_SIZE + ScaleUtil.scale(10);
-    // 第二级别标题文字
+    public static final int TITLE_FONT_SIZE = FONT_SIZE + ScaleUtil.scale(8);
+    // 二级标题
     public static final int TITLE2_FONT_SIZE = FONT_SIZE + ScaleUtil.scale(4);
     // 小文字
     public static final int TINY_SIZE = FONT_SIZE - ScaleUtil.scale(2);

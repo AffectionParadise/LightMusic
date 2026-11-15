@@ -119,7 +119,7 @@ public class NcReqBuilder {
         String characters = "abcdefghijklmnopqrstuvwxyz";
         StringBuilder sb = new StringBuilder();
         for (int i = 0, len = characters.length(); i < 6; i++)
-            sb.append(characters.charAt((int) Math.floor(Math.random() * len)));
+            sb.append(characters.charAt(RandomUtil.randomInt(len)));
         return String.format("%s.%s.01.0", sb, System.currentTimeMillis());
     }
 

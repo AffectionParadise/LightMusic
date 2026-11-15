@@ -6,6 +6,7 @@ import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.http.HttpSession;
 import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.log.LogUtil;
@@ -82,18 +83,19 @@ public class QqovoKgTrackReq {
             // 获取 apikey
             Map<String, String> baseHeaders = new HashMap<>();
             baseHeaders.put(Header.REFERER, "https://qqovo.top/room/4SVWQK");
+            baseHeaders.put(Header.ORIGIN, "https://qqovo.top");
             String deviceId = RandomUtil.randomUuid();
-            HttpRequest authRequest = HttpRequest.post(AUTH_API)
+            // 认证接口请求后需要保持会话
+            HttpSession session = new HttpSession();
+            HttpRequest authRequest = session.post(AUTH_API)
                     .headers(baseHeaders)
-                    .jsonBody(String.format("{\"deviceId\":\"%s\"}", deviceId))
-                    .session();
+                    .jsonBody(String.format("{\"deviceId\":\"%s\"}", deviceId));
             String authBody = authRequest.executeAsStr();
             JSONObject authJson = JSONObject.parseObject(authBody);
             String apiSignKey = authJson.getString("apiSignKey");
             // 获取 url
             String url = String.format(SONG_URL_KG_API, hash, qualityMap.get(quality));
-            String songBody = HttpRequest.get(url)
-                    .client(authRequest.client())
+            String songBody = session.get(url)
                     .headers(buildHeaders(url, apiSignKey, baseHeaders))
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);

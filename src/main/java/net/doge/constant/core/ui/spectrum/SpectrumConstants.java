@@ -36,20 +36,20 @@ public class SpectrumConstants {
     // 对称波浪式
     public static final int SYM_WAVE = 7;
 
-    // 播放器更新频谱数量
-    public static final int NUM_BANDS = 256;
-    // 播放器更新频谱时间间隔(s)
-    public static final double PLAYER_INTERVAL = 0.1;
+    // 频谱带数量
+    public static final int NUM_BANDS = 512;
+    // 更新频谱时间间隔(s)
+    public static final double UPDATE_INTERVAL = 0.1;
+    // 频谱阈值
+    public static final int THRESHOLD = -80;
     // UI 更新频谱 Timer 时间间隔(ms)
     public static final int TIMER_INTERVAL = 10;
     // 频谱条数量(由界面宽度决定)
-    public static int barNum = 60;
+    public static int barNum;
     // 频谱每条宽度
     public static final int BAR_WIDTH = ScaleUtil.scale(7);
-    // 频谱最大高度(逻辑长度)
-    public static int barMaxHeight = 150;
+    // 频谱最大高度(DPI 像素)
+    public static int maxBarHeight = 100;
     // 频谱条与条之间的间距
     public static final int BAR_GAP = ScaleUtil.scale(3);
-    // 频谱阈值
-    public static final int THRESHOLD = -80;
 }

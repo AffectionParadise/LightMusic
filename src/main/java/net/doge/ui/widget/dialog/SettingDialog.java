@@ -888,7 +888,7 @@ public class SettingDialog extends AbstractTitledDialog {
         videoOnlyCheckBox.setSelected(f.videoOnly);
         showTabTextCheckBox.setSelected(f.showTabText);
         lyricAlignmentComboBox.setSelectedIndex(LyricAlignment.lyricAlignmentIndex);
-        specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.barMaxHeight));
+        specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.maxBarHeight));
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
         autoDownloadLyricCheckBox.setSelected(f.autoDownloadLyric);
@@ -980,9 +980,9 @@ public class SettingDialog extends AbstractTitledDialog {
             new TipDialog(f, I18n.getText("invalidSpecMaxHeight"), true).showDialog();
             return false;
         }
-        SpectrumConstants.barMaxHeight = Integer.parseInt(text);
-        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, ScaleUtil.scale(SpectrumConstants.barMaxHeight)));
-        f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.barMaxHeight));
+        SpectrumConstants.maxBarHeight = Integer.parseInt(text);
+        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, ScaleUtil.scale(SpectrumConstants.maxBarHeight)));
+        f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.maxBarHeight));
         f.spectrumPanel.revalidate();
 
         text = maxCacheSizeTextField.getText();

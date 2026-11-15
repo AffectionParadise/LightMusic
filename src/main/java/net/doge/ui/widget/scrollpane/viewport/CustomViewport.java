@@ -42,7 +42,7 @@ public class CustomViewport extends JViewport {
             imgG2d.setComposite(AlphaComposite.DstIn);
             Color white = Colors.WHITE, transparent = ColorUtil.deriveAlpha(white, 0);
             float ratio = (float) FADE_HEIGHT / h;
-            LinearGradientPaint fade = new LinearGradientPaint(0, 0, 0, h, new float[]{0, ratio, 1 - ratio, 1},
+            LinearGradientPaint fade = new LinearGradientPaint(0, 0, 0, h, new float[]{0f, ratio, 1 - ratio, 1f},
                     new Color[]{transparent, white, white, transparent});
             imgG2d.setPaint(fade);
             imgG2d.fillRect(0, 0, w, h);
