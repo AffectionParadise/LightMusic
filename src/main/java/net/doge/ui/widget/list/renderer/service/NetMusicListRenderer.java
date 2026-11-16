@@ -80,6 +80,8 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
         innerPanel.add(artistLabel);
         innerPanel.add(albumNameLabel);
         innerPanel.add(durationLabel);
+
+        outerPanel.setLayout(new BorderLayout());
     }
 
     @Override
@@ -124,7 +126,7 @@ public class NetMusicListRenderer extends CustomListCellRenderer {
         Dimension ps2 = artistLabel.getPreferredSize();
         Dimension ps3 = albumNameLabel.getPreferredSize();
         int ph = Math.max(ps.height, Math.max(ps2.height, ps3.height));
-        Dimension d = new Dimension(lw, Math.max(ph, ScaleUtil.scale(36)));
+        Dimension d = new Dimension(lw, Math.max(ph + ScaleUtil.scale(10), ScaleUtil.scale(46)));
         innerPanel.setPreferredSize(d);
         outerPanel.add(innerPanel, BorderLayout.CENTER);
 

@@ -3,6 +3,7 @@ package net.doge.ui.widget.menu;
 import lombok.Getter;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.util.ui.GraphicsUtil;
+import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
@@ -14,6 +15,7 @@ import java.awt.*;
  * @date 2020/12/13
  */
 public class CustomSeparator extends JSeparator implements ExtendedOpacitySupported {
+    private final int HORIZONTAL_SPACE = ScaleUtil.scale(8);
     @Getter
     private float extendedOpacity = 1f;
 
@@ -33,6 +35,6 @@ public class CustomSeparator extends JSeparator implements ExtendedOpacitySuppor
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, extendedOpacity * 0.1f);
         g2d.setColor(getForeground());
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.fillRect(HORIZONTAL_SPACE, 0, getWidth() - 2 * HORIZONTAL_SPACE, getHeight());
     }
 }

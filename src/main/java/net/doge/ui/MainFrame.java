@@ -1225,7 +1225,7 @@ public class MainFrame extends JFrame {
     public CustomComboBox<LocalPlaylist> localPlaylistComboBox = new CustomComboBox<>();
     // 收藏夹按钮
     private CustomButton localPlaylistToolButton = new CustomButton(localPlaylistIcon);
-    // 收藏夹按钮
+    // 歌曲列表工具栏分割条
     private SplitLabel musicToolBarSplitLabel = new SplitLabel();
     // 收藏夹按钮弹出菜单
     private CustomPopupMenu localPlaylistPopupMenu = new CustomPopupMenu(THIS);
@@ -1710,14 +1710,14 @@ public class MainFrame extends JFrame {
     private CustomMenuItem netMvCollectMenuItem = new CustomMenuItem(COLLECT_MENU_ITEM_TEXT);
     // MV 右键菜单：下载
     private CustomMenuItem netMvDownloadMenuItem = new CustomMenuItem(DOWNLOAD_MENU_ITEM_TEXT);
+    // MV 右键菜单：查看评论
+    private CustomMenuItem netMvCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
     // MV 右键菜单：查看相似 MV
     private CustomMenuItem netMvSimilarMvMenuItem = new CustomMenuItem(SIMILAR_MV_MENU_ITEM_TEXT);
     // MV 右键菜单：查看视频分集
     private CustomMenuItem netMvVideoEpisodeMenuItem = new CustomMenuItem(VIDEO_EPISODE_MENU_ITEM_TEXT);
     // MV 右键菜单：查看发布者
     private CustomMenuItem netMvCreatorMenuItem = new CustomMenuItem(MV_CREATOR_MENU_ITEM_TEXT);
-    // MV 右键菜单：查看评论
-    private CustomMenuItem netMvCommentMenuItem = new CustomMenuItem(COMMENT_MENU_ITEM_TEXT);
     // MV 右键菜单：复制名称
     private CustomMenuItem netMvCopyNameMenuItem = new CustomMenuItem(COPY_NAME_MENU_ITEM_TEXT);
     // MV 工具栏
@@ -2786,6 +2786,7 @@ public class MainFrame extends JFrame {
         nextMottoMenuItem.addActionListener(e -> updateMotto());
 
         mottoPopupMenu.add(copyMottoMenuItem);
+        mottoPopupMenu.addSeparator();
         mottoPopupMenu.add(nextMottoMenuItem);
 
         // 隐藏歌曲详情
@@ -6250,6 +6251,7 @@ public class MainFrame extends JFrame {
         copyArtistMenuItem.addActionListener(e -> copyToClipboard(musicInfo.getArtist()));
         copyAlbumMenuItem.addActionListener(e -> copyToClipboard(musicInfo.getAlbumName()));
         leftInfoPopupMenu.add(saveAlbumImageMenuItem);
+        leftInfoPopupMenu.addSeparator();
         leftInfoPopupMenu.add(copySongNameMenuItem);
         leftInfoPopupMenu.add(copyArtistMenuItem);
         leftInfoPopupMenu.add(copyAlbumMenuItem);
@@ -6580,6 +6582,7 @@ public class MainFrame extends JFrame {
         editLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
         removeLocalPlaylistMenuItem.setEnabled(!currLocalPlaylist.isDefault());
         localPlaylistPopupMenu.add(createLocalPlaylistMenuItem);
+        localPlaylistPopupMenu.addSeparator();
         localPlaylistPopupMenu.add(editLocalPlaylistMenuItem);
         localPlaylistPopupMenu.add(removeLocalPlaylistMenuItem);
         // 按钮绑定右键菜单
@@ -6933,6 +6936,7 @@ public class MainFrame extends JFrame {
             removeToolButton.requestFocus();
         });
         stylePopupMenu.add(manageStyleMenuItem);
+        stylePopupMenu.addSeparator();
         stylePopupMenu.add(styleCustomMenuItem);
         // 个人音乐筛选框
         filterTextField.setHintText(I18n.getText("filterByKeyword"));
@@ -7337,17 +7341,21 @@ public class MainFrame extends JFrame {
         musicPopupMenu.add(playMenuItem);
         musicPopupMenu.add(nextPlayMenuItem);
         musicPopupMenu.add(playMvMenuItem);
+        musicPopupMenu.addSeparator();
         musicPopupMenu.add(collectMenuItem);
         musicPopupMenu.add(downloadMenuItem);
         musicPopupMenu.add(commentMenuItem);
         musicPopupMenu.add(sheetMenuItem);
+        musicPopupMenu.addSeparator();
         musicPopupMenu.add(searchSongMenuItem);
         musicPopupMenu.add(similarSongMenuItem);
+        musicPopupMenu.addSeparator();
         musicPopupMenu.add(relatedPlaylistMenuItem);
         musicPopupMenu.add(authorMenuItem);
         musicPopupMenu.add(albumMenuItem);
         musicPopupMenu.add(recRadioMenuItem);
         musicPopupMenu.add(relatedMvMenuItem);
+        musicPopupMenu.addSeparator();
         musicPopupMenu.add(copyNameMenuItem);
         musicPopupMenu.add(locateFileMenuItem);
         musicPopupMenu.add(editInfoMenuItem);
@@ -7543,6 +7551,7 @@ public class MainFrame extends JFrame {
                     netMusicCountLabel.setText(String.format(PAGINATION_MSG, netMusicCurrPage, netMusicMaxPage));
                     netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
                     netMusicCountPanel.setVisible(true);
+                    netMusicSourceComboBox.setVisible(true);
                     netMusicSearchTypeComboBox.setVisible(true);
                     netMusicSearchSubTypeComboBox.setVisible(netMusicSearchTypeComboBox.getSelectedIndex() == 2);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -7849,6 +7858,7 @@ public class MainFrame extends JFrame {
                     netMusicCountPanel.add(netMusicCountLabel, netMusicCountPanel.getComponentIndex(netMusicCountLabel));
                     netLeftBox.add(netMusicCountPanel);
                     netMusicCountPanel.setVisible(true);
+                    netMusicSourceComboBox.setVisible(false);
                     netMusicSearchTypeComboBox.setVisible(false);
                     netMusicSearchSubTypeComboBox.setVisible(false);
                     // 添加数据建议在更新数量显示之后，不然有时候会出现显示不出来的情况！
@@ -8316,17 +8326,21 @@ public class MainFrame extends JFrame {
         netMusicPopupMenu.add(netMusicPlayMenuItem);
         netMusicPopupMenu.add(netMusicNextPlayMenuItem);
         netMusicPopupMenu.add(netMusicPlayMvMenuItem);
+        netMusicPopupMenu.addSeparator();
         netMusicPopupMenu.add(netMusicCollectMenuItem);
         netMusicPopupMenu.add(netMusicDownloadMenuItem);
         netMusicPopupMenu.add(netMusicCommentMenuItem);
         netMusicPopupMenu.add(netMusicSheetMenuItem);
+        netMusicPopupMenu.addSeparator();
         netMusicPopupMenu.add(netMusicSearchSongMenuItem);
         netMusicPopupMenu.add(netMusicSimilarSongMenuItem);
+        netMusicPopupMenu.addSeparator();
         netMusicPopupMenu.add(netMusicRelatedPlaylistMenuItem);
         netMusicPopupMenu.add(netMusicAuthorMenuItem);
         netMusicPopupMenu.add(netMusicAlbumMenuItem);
         netMusicPopupMenu.add(netMusicRecRadioMenuItem);
         netMusicPopupMenu.add(netMusicRelatedMvMenuItem);
+        netMusicPopupMenu.addSeparator();
         netMusicPopupMenu.add(netMusicCopyNameMenuItem);
 
         // 搜索建议面板
@@ -9006,6 +9020,7 @@ public class MainFrame extends JFrame {
         // 右键菜单
         descriptionPanelPopupMenu.add(saveDescCoverImgMenuItem);
         descriptionPanelPopupMenu.add(saveDescBgImgMenuItem);
+        descriptionPanelPopupMenu.addSeparator();
         descriptionPanelPopupMenu.add(copyDescNameMenuItem);
         descriptionPanelPopupMenu.add(copyDescTagMenuItem);
         descriptionPanelPopupMenu.add(copyDescMenuItem);
@@ -10138,11 +10153,14 @@ public class MainFrame extends JFrame {
         // 歌单列表右键菜单项
         netPlaylistPopupMenu.add(netPlaylistOpenMenuItem);
         netPlaylistPopupMenu.add(netPlaylistPlayAllMenuItem);
+        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistCollectMenuItem);
         netPlaylistPopupMenu.add(netPlaylistCommentMenuItem);
+        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistSimilarPlaylistMenuItem);
         netPlaylistPopupMenu.add(netPlaylistCreatorMenuItem);
         netPlaylistPopupMenu.add(netPlaylistSubscriberMenuItem);
+        netPlaylistPopupMenu.addSeparator();
         netPlaylistPopupMenu.add(netPlaylistCopyNameMenuItem);
 
         // 搜索历史面板
@@ -11086,11 +11104,14 @@ public class MainFrame extends JFrame {
         // 专辑列表右键菜单项
         netAlbumPopupMenu.add(netAlbumOpenMenuItem);
         netAlbumPopupMenu.add(netAlbumPlayAllMenuItem);
+        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCollectMenuItem);
         netAlbumPopupMenu.add(netAlbumCommentMenuItem);
+        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumArtistMenuItem);
         netAlbumPopupMenu.add(netAlbumSimilarMenuItem);
         netAlbumPopupMenu.add(netAlbumPhotosMenuItem);
+        netAlbumPopupMenu.addSeparator();
         netAlbumPopupMenu.add(netAlbumCopyNameMenuItem);
 
         // 搜索历史面板
@@ -12239,14 +12260,18 @@ public class MainFrame extends JFrame {
         // 歌手右键菜单项
         netArtistPopupMenu.add(netArtistOpenMenuItem);
         netArtistPopupMenu.add(netArtistPlayAllMenuItem);
+        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistCollectMenuItem);
+        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistBrowseAlbumMenuItem);
         netArtistPopupMenu.add(netArtistBrowseMvMenuItem);
         netArtistPopupMenu.add(netArtistSimilarArtistMenuItem);
+        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistFansMenuItem);
         netArtistPopupMenu.add(netArtistBuddyMenuItem);
         netArtistPopupMenu.add(netArtistRadiosMenuItem);
         netArtistPopupMenu.add(netArtistPhotosMenuItem);
+        netArtistPopupMenu.addSeparator();
         netArtistPopupMenu.add(netArtistCopyNameMenuItem);
 
         // 搜索历史面板
@@ -13311,14 +13336,18 @@ public class MainFrame extends JFrame {
         // 电台列表右键菜单项
         netRadioPopupMenu.add(netRadioOpenMenuItem);
         netRadioPopupMenu.add(netRadioPlayAllMenuItem);
+        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioCollectMenuItem);
         netRadioPopupMenu.add(netRadioCommentMenuItem);
+        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioDjMenuItem);
         netRadioPopupMenu.add(netRadioSubscriberMenuItem);
         netRadioPopupMenu.add(netRadioSimilarMenuItem);
+        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioArtistsMenuItem);
         netRadioPopupMenu.add(netRadioPhotosMenuItem);
         netRadioPopupMenu.add(netRadioPostersMenuItem);
+        netRadioPopupMenu.addSeparator();
         netRadioPopupMenu.add(netRadioCopyNameMenuItem);
 
         // 搜索历史面板
@@ -13778,6 +13807,15 @@ public class MainFrame extends JFrame {
             else if (selectedIndex == TabIndex.PERSONAL) multiDownloadMv(collectionList.getSelectedValuesList(), false);
             else multiDownloadMv(itemRecommendList.getSelectedValuesList(), false);
         });
+        // 查看评论
+        netMvCommentMenuItem.addActionListener(e -> {
+            NetMvInfo mvInfo;
+            int selectedIndex = tabbedPane.getSelectedIndex();
+            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
+            else if (selectedIndex == TabIndex.PERSONAL) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
+            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
+            getComments(mvInfo, true);
+        });
         // 查看相似 MV
         netMvSimilarMvMenuItem.addActionListener(e -> {
             NetMvInfo mvInfo;
@@ -14010,15 +14048,6 @@ public class MainFrame extends JFrame {
                 }
             });
         });
-        // 查看评论
-        netMvCommentMenuItem.addActionListener(e -> {
-            NetMvInfo mvInfo;
-            int selectedIndex = tabbedPane.getSelectedIndex();
-            if (selectedIndex == TabIndex.NET_MV) mvInfo = netMvList.getSelectedValue();
-            else if (selectedIndex == TabIndex.PERSONAL) mvInfo = (NetMvInfo) collectionList.getSelectedValue();
-            else mvInfo = (NetMvInfo) itemRecommendList.getSelectedValue();
-            getComments(mvInfo, true);
-        });
         // 复制名称
         netMvCopyNameMenuItem.addActionListener(e -> {
             NetResource resource;
@@ -14030,12 +14059,15 @@ public class MainFrame extends JFrame {
         });
         // MV 列表右键菜单项
         netMvPopupMenu.add(netMvPlayMenuItem);
+        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCollectMenuItem);
         netMvPopupMenu.add(netMvDownloadMenuItem);
+        netMvPopupMenu.add(netMvCommentMenuItem);
+        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvSimilarMvMenuItem);
         netMvPopupMenu.add(netMvVideoEpisodeMenuItem);
         netMvPopupMenu.add(netMvCreatorMenuItem);
-        netMvPopupMenu.add(netMvCommentMenuItem);
+        netMvPopupMenu.addSeparator();
         netMvPopupMenu.add(netMvCopyNameMenuItem);
 
         // 搜索历史面板
@@ -14619,8 +14651,10 @@ public class MainFrame extends JFrame {
         // 榜单列表右键菜单项
         netRankPopupMenu.add(netRankOpenMenuItem);
         netRankPopupMenu.add(netRankPlayAllMenuItem);
+        netRankPopupMenu.addSeparator();
         netRankPopupMenu.add(netRankCollectMenuItem);
         netRankPopupMenu.add(netRankCommentMenuItem);
+        netRankPopupMenu.addSeparator();
         netRankPopupMenu.add(netRankCopyNameMenuItem);
 
         // 榜单最佳大小
@@ -15728,13 +15762,17 @@ public class MainFrame extends JFrame {
         // 用户列表右键菜单项
         netUserPopupMenu.add(netUserOpenMenuItem);
         netUserPopupMenu.add(netUserPlayAllMenuItem);
+        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserCollectMenuItem);
+        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserPlaylistMenuItem);
         netUserPopupMenu.add(netUserAlbumMenuItem);
         netUserPopupMenu.add(netUserRadioMenuItem);
         netUserPopupMenu.add(netUserVideoMenuItem);
+        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserFollowMenuItem);
         netUserPopupMenu.add(netUserFanMenuItem);
+        netUserPopupMenu.addSeparator();
         netUserPopupMenu.add(netUserCopyNameMenuItem);
 
         // 搜索历史面板
@@ -16275,7 +16313,9 @@ public class MainFrame extends JFrame {
         });
         // 评论列表右键菜单项
         netCommentPopupMenu.add(netCommentCopyMenuItem);
+        netCommentPopupMenu.addSeparator();
         netCommentPopupMenu.add(netCommentSaveProfileMenuItem);
+        netCommentPopupMenu.addSeparator();
         netCommentPopupMenu.add(netCommentUserMenuItem);
         netCommentPopupMenu.add(netCommentPlaylistMenuItem);
         netCommentPopupMenu.add(netCommentAlbumMenuItem);
@@ -16494,6 +16534,7 @@ public class MainFrame extends JFrame {
         });
         // 乐谱列表右键菜单项
         netSheetPopupMenu.add(netSheetBrowseMenuItem);
+        netSheetPopupMenu.addSeparator();
         netSheetPopupMenu.add(netSheetCopyNameMenuItem);
 
         // 乐谱最佳大小
@@ -18634,8 +18675,10 @@ public class MainFrame extends JFrame {
 
         downloadPopupMenu.add(downloadPlayMenuItem);
         downloadPopupMenu.add(downloadNextPlayMenuItem);
+        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(downloadLocateFileMenuItem);
         downloadPopupMenu.add(downloadEditInfoMenuItem);
+        downloadPopupMenu.addSeparator();
         downloadPopupMenu.add(cancelTaskMenuItem);
         downloadPopupMenu.add(restartTaskMenuItem);
         downloadPopupMenu.add(removeTaskMenuItem);
@@ -19028,17 +19071,21 @@ public class MainFrame extends JFrame {
         playQueuePopupMenu.add(playQueuePlayMenuItem);
         playQueuePopupMenu.add(playQueueNextPlayMenuItem);
         playQueuePopupMenu.add(playQueuePlayMvMenuItem);
+        playQueuePopupMenu.addSeparator();
         playQueuePopupMenu.add(playQueueCollectMenuItem);
         playQueuePopupMenu.add(playQueueDownloadMenuItem);
         playQueuePopupMenu.add(playQueueCommentMenuItem);
         playQueuePopupMenu.add(playQueueSheetMenuItem);
+        playQueuePopupMenu.addSeparator();
         playQueuePopupMenu.add(playQueueSearchSongMenuItem);
         playQueuePopupMenu.add(playQueueSimilarSongMenuItem);
+        playQueuePopupMenu.addSeparator();
         playQueuePopupMenu.add(playQueueRelatedPlaylistMenuItem);
         playQueuePopupMenu.add(playQueueAuthorMenuItem);
         playQueuePopupMenu.add(playQueueAlbumMenuItem);
         playQueuePopupMenu.add(playQueueRecRadioMenuItem);
         playQueuePopupMenu.add(playQueueRelatedMvMenuItem);
+        playQueuePopupMenu.addSeparator();
         playQueuePopupMenu.add(playQueueCopyNameMenuItem);
         playQueuePopupMenu.add(playQueueLocateFileMenuItem);
         playQueuePopupMenu.add(playQueueEditInfoMenuItem);
@@ -19118,7 +19165,9 @@ public class MainFrame extends JFrame {
         currLyricOffsetMenuItem.setEnabled(false);
 
         lyricPopupMenu.add(locateLyricMenuItem);
+        lyricPopupMenu.addSeparator();
         lyricPopupMenu.add(copyLyricMenuItem);
+        lyricPopupMenu.addSeparator();
         lyricPopupMenu.add(browseLyricMenuItem);
         lyricPopupMenu.add(downloadLyricMenuItem);
         lyricPopupMenu.addSeparator();
@@ -21209,10 +21258,10 @@ public class MainFrame extends JFrame {
         netMvPlayMenuItem.setIcon(ImageUtil.dye(playMenuItemIcon, iconColor));
         netMvCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, iconColor));
         netMvDownloadMenuItem.setIcon(ImageUtil.dye(downloadMenuItemIcon, iconColor));
+        netMvCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
         netMvSimilarMvMenuItem.setIcon(ImageUtil.dye(similarMvMenuItemIcon, iconColor));
         netMvVideoEpisodeMenuItem.setIcon(ImageUtil.dye(videoEpisodeMenuItemIcon, iconColor));
         netMvCreatorMenuItem.setIcon(ImageUtil.dye(userMenuItemIcon, iconColor));
-        netMvCommentMenuItem.setIcon(ImageUtil.dye(commentMenuItemIcon, iconColor));
         netMvCopyNameMenuItem.setIcon(ImageUtil.dye(copyNameMenuItemIcon, iconColor));
 
         netRankOpenMenuItem.setIcon(ImageUtil.dye(openMenuItemIcon, iconColor));
