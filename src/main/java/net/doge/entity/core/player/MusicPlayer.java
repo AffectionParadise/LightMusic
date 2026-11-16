@@ -17,6 +17,7 @@ import net.doge.constant.core.player.PlayerStatus;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.constant.service.source.NetResourceSource;
+import net.doge.entity.core.player.processor.VisualSpectrumProcessor;
 import net.doge.entity.service.AudioFile;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.MusicResource;
@@ -24,6 +25,7 @@ import net.doge.ui.MainFrame;
 import net.doge.util.core.StringUtil;
 import net.doge.util.media.DurationUtil;
 import net.doge.util.media.MediaUtil;
+import net.doge.util.ui.ScaleUtil;
 
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Field;
@@ -56,6 +58,8 @@ public class MusicPlayer {
     public double[] barHeights = new double[SpectrumConstants.NUM_BANDS];
     public double[] barHeightsOrigin = new double[SpectrumConstants.NUM_BANDS];
     public double[] barHeightsGap = new double[SpectrumConstants.NUM_BANDS];
+    // 频谱可视化处理类
+    private VisualSpectrumProcessor processor;
 
     public MusicPlayer(MainFrame f) {
         this.f = f;
@@ -97,14 +101,13 @@ public class MusicPlayer {
         metaMusicInfo.setAlbumImage(null);
         audioFile = null;
         musicInfo = null;
-
         clearBarHeightsData();
-
         mpErrorCount = 0;
     }
 
     // 清除频谱数据
     private void clearBarHeightsData() {
+        if (processor != null) processor.reset();
         for (int i = 0, len = barHeightsOrigin.length; i < len; i++) {
             barHeightsOrigin[i] = 0;
             barHeightsGap[i] = barHeights[i];
@@ -347,6 +350,25 @@ public class MusicPlayer {
     public void setRate(double rate) {
         if (mp == null) return;
         mp.setRate(rate);
+    }
+
+    //处理频谱数据
+    public void processMagnitudes(float[] magnitudes, double duration) {
+        int barNum = SpectrumConstants.barNum;
+        int maxBarHeight = ScaleUtil.scale(SpectrumConstants.maxBarHeight);
+
+        if (barNum <= 0 || maxBarHeight <= 0) return;
+
+        if (processor == null || barNum != processor.getBarCount() || maxBarHeight != processor.getMaxHeight())
+            processor = new VisualSpectrumProcessor(barNum, maxBarHeight, 44100);
+        double[] heights = processor.process(magnitudes, duration);
+
+        // 同步处理后的高度数组
+        for (int i = 0; i < barNum; i++) {
+            double h = heights[i];
+            barHeightsOrigin[i] = h;
+            barHeightsGap[i] = Math.abs(h - barHeights[i]);
+        }
     }
 
     // 调整均衡器增益

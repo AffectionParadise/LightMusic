@@ -88,7 +88,7 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i], arc = ScaleUtil.scale(4);
+                    int barHeight = (int) Math.round(barHeights[i]), arc = ScaleUtil.scale(4);
                     g2d.fillRoundRect(viewX + i * (barWidth + barGap), ph - barHeight,
                             barWidth, barHeight, arc, arc);
                 }
@@ -98,7 +98,7 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i], arc = ScaleUtil.scale(4);
+                    int barHeight = (int) Math.round(barHeights[i]), arc = ScaleUtil.scale(4);
                     g2d.fillRoundRect(viewX + i * (barWidth + barGap), (ph - barHeight) / 2,
                             barWidth, barHeight, arc, arc);
                 }
@@ -110,12 +110,12 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     int x1 = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int y1 = ph - barHeight;
                     int x2 = x1 + barWidth + barGap;
-                    int y2 = ph - (int) barHeights[i + 1];
+                    int y2 = ph - (int) Math.round(barHeights[i + 1]);
                     if (y1 == ph && y2 == ph) continue;
                     g2d.drawLine(x1, y1, x2, y2);
                 }
@@ -127,12 +127,12 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     int p1x = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int p1y = ph - barHeight;
                     int p2x = p1x + barWidth + barGap;
-                    int p2y = ph - (int) barHeights[i + 1];
+                    int p2y = ph - (int) Math.round(barHeights[i + 1]);
                     int p3x = (p1x + p2x) / 2;
                     if (p1y == ph && p2y == ph) continue;
                     GeneralPath path = new GeneralPath();
@@ -146,12 +146,12 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     int p1x = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int p1y = ph - barHeight;
                     int p2x = p1x + barWidth + barGap;
-                    int p2y = ph - (int) barHeights[i + 1];
+                    int p2y = ph - (int) Math.round(barHeights[i + 1]);
                     Polygon polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph, ph, p2y}, 4);
                     g2d.fill(polygon);
                 }
@@ -161,12 +161,12 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     int p1x = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int p1y = ph - barHeight;
                     int p2x = p1x + barWidth + barGap;
-                    int p2y = ph - (int) barHeights[i + 1];
+                    int p2y = ph - (int) Math.round(barHeights[i + 1]);
                     int p3x = (p1x + p2x) / 2;
                     GeneralPath path = new GeneralPath();
                     path.moveTo(p1x, p1y);
@@ -182,18 +182,18 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     // 上半部分
                     int p1x = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int p1y = (ph - barHeight) / 2;
                     int p2x = p1x + barWidth + barGap;
-                    int p2y = (ph - (int) barHeights[i + 1]) / 2;
+                    int p2y = (ph - (int) Math.round(barHeights[i + 1])) / 2;
                     Polygon polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph / 2, ph / 2, p2y}, 4);
                     g2d.fill(polygon);
                     // 下半部分
                     p1y = (ph + barHeight) / 2;
-                    p2y = (ph + (int) barHeights[i + 1]) / 2;
+                    p2y = (ph + (int) Math.round(barHeights[i + 1])) / 2;
                     polygon = new Polygon(new int[]{p1x, p1x, p2x, p2x}, new int[]{p1y, ph / 2, ph / 2, p2y}, 4);
                     g2d.fill(polygon);
                 }
@@ -203,13 +203,13 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                 else g2d.setColor(spectrumColor);
                 for (int i = 0; i < barNum; i++) {
                     // 得到频谱高度并绘制
-                    int barHeight = (int) barHeights[i];
+                    int barHeight = (int) Math.round(barHeights[i]);
                     if (i + 1 >= barNum) return;
                     // 上半部分
                     int p1x = viewX + barWidth / 2 + i * (barWidth + barGap);
                     int p1y = (ph - barHeight) / 2;
                     int p2x = p1x + barWidth + barGap;
-                    int p2y = (ph - (int) barHeights[i + 1]) / 2;
+                    int p2y = (ph - (int) Math.round(barHeights[i + 1])) / 2;
                     int p3x = (p1x + p2x) / 2;
                     GeneralPath path = new GeneralPath();
                     path.moveTo(p1x, p1y);
@@ -220,7 +220,7 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
                     g2d.fill(path);
                     // 下半部分
                     p1y = (ph + barHeight) / 2;
-                    p2y = (ph + (int) barHeights[i + 1]) / 2;
+                    p2y = (ph + (int) Math.round(barHeights[i + 1])) / 2;
                     p3x = (p1x + p2x) / 2;
                     path.reset();
                     path.moveTo(p1x, p1y);

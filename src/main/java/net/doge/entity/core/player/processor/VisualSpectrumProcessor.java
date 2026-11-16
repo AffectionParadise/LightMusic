@@ -1,4 +1,4 @@
-package net.doge.util.ui.processor;
+package net.doge.entity.core.player.processor;
 
 import lombok.Getter;
 import net.doge.util.core.math.MathUtil;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 public final class VisualSpectrumProcessor {
     private static final double MIN_DB = -80.0;
     private static final double MEL_MIN_HZ = 55.0;
-    private static final double MEL_MAX_HZ = 15000.0;
+    private static final double MEL_MAX_HZ = 10000.0;
     private static final double ATTACK_SECONDS = 0.045;
     private static final double RELEASE_SECONDS = 0.200;
     private static final double LONG_TERM_SECONDS = 6.0;
@@ -77,8 +77,7 @@ public final class VisualSpectrumProcessor {
             return new double[barCount];
         }
         final double dt = Double.isFinite(durationSeconds) && durationSeconds > 0
-                ? Math.max(0.005, Math.min(0.100, durationSeconds))
-                : 0.04;
+                ? Math.max(0.005, Math.min(0.100, durationSeconds)) : 0.04;
 
         int len = magnitudes.length;
         ensureFilters(len);

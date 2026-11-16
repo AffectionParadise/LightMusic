@@ -82,6 +82,7 @@ import net.doge.ui.widget.combobox.ui.StringComboBoxUI;
 import net.doge.ui.widget.dialog.*;
 import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
+import net.doge.ui.widget.label.SplitLabel;
 import net.doge.ui.widget.list.CustomList;
 import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
 import net.doge.ui.widget.list.renderer.core.LyricListRenderer;
@@ -132,7 +133,6 @@ import net.doge.util.media.DurationUtil;
 import net.doge.util.media.MediaUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
-import net.doge.util.ui.SpectrumUtil;
 import net.doge.util.ui.SwingUtil;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
@@ -354,8 +354,6 @@ public class MainFrame extends JFrame {
     private ImageIcon loadingIcon = LMIconManager.getIcon("loading");
     // 隐藏歌曲详情图标
     private ImageIcon hideDetailIcon = LMIconManager.getIcon("title.hideDetail");
-    // 分割线图标
-    private ImageIcon splitIcon = LMIconManager.getIcon("title.split");
     // 迷你模式图标
     private ImageIcon miniIcon = LMIconManager.getIcon("title.miniWindow");
     // 最小化图标
@@ -452,8 +450,8 @@ public class MainFrame extends JFrame {
     private ImageIcon fbmBlurIcon = LMIconManager.getIcon("menu.fbm");
     // 模糊关闭图标
     private ImageIcon blurOffIcon = LMIconManager.getIcon("menu.blurOff");
-    // 音效图标
-    private ImageIcon soundEffectIcon = LMIconManager.getIcon("control.soundEffect");
+    // 均衡器图标
+    private ImageIcon equalizerIcon = LMIconManager.getIcon("control.equalizer");
     // 转到播放队列图标
     private ImageIcon goToPlayQueueIcon = LMIconManager.getIcon("control.goToPlayQueue");
     // 开启桌面歌词图标
@@ -490,10 +488,6 @@ public class MainFrame extends JFrame {
     private ImageIcon reverseIcon = LMIconManager.getIcon("toolbar.reverse");
     // 排序图标
     private ImageIcon sortIcon = LMIconManager.getIcon("toolbar.sort");
-    // 上移图标
-    private ImageIcon moveUpIcon = LMIconManager.getIcon("toolbar.moveUp");
-    // 下移图标
-    private ImageIcon moveDownIcon = LMIconManager.getIcon("toolbar.moveDown");
     // 清除输入图标
     private ImageIcon clearInputIcon = LMIconManager.getIcon("toolbar.clearInput");
     // 换肤图标
@@ -679,7 +673,7 @@ public class MainFrame extends JFrame {
     private final String RATE_TIP = I18n.getText("rateTip");
     private final String SWITCH_SPECTRUM_TIP = I18n.getText("switchSpectrumTip");
     private final String SWITCH_BLUR_TIP = I18n.getText("switchBlurTip");
-    private final String SOUND_EFFECT_TIP = I18n.getText("soundEffectTip");
+    private final String EQUALIZER_TIP = I18n.getText("equalizerTip");
     private final String SHEET_TIP = I18n.getText("sheetTip");
     private final String ORIGINAL_LYRIC_TIP = I18n.getText("originalLyricTip");
     private final String TRANSLATION_TIP = I18n.getText("translationTip");
@@ -697,8 +691,6 @@ public class MainFrame extends JFrame {
     private final String DUPLICATE_TIP = I18n.getText("duplicateTip");
     private final String REVERSE_TIP = I18n.getText("reverseTip");
     private final String SORT_TIP = I18n.getText("sortTip");
-    private final String MOVE_UP_TIP = I18n.getText("moveUpTip");
-    private final String MOVE_DOWN_TIP = I18n.getText("moveDownTip");
     private final String CLEAR_INPUT_TIP = I18n.getText("clearInputTip");
     private final String STYLE_TIP = I18n.getText("styleTip");
     private final String HIDE_DETAIL_TIP = I18n.getText("hideDetailTip");
@@ -740,6 +732,10 @@ public class MainFrame extends JFrame {
     public boolean videoOnly;
     // 显示侧边栏文字
     public boolean showTabText;
+    // 显示乐谱按钮
+    public boolean showSheetButton;
+    // 显示快进/快退按钮
+    public boolean showFobButton;
     // 当前播放速率
     public double currRate;
     public double currVideoRate;
@@ -880,7 +876,7 @@ public class MainFrame extends JFrame {
     private CustomPanel windowCtrlPanel = new CustomPanel();
     // 窗口控制按钮
     private CustomButton hideDetailButton = new CustomButton(hideDetailIcon);
-    private CustomLabel splitLabel = new CustomLabel(splitIcon);
+    private SplitLabel splitLabel = new SplitLabel();
     private CustomButton miniButton = new CustomButton(miniIcon);
     private CustomButton minimizeButton = new CustomButton(minimizeIcon);
     private CustomButton maximizeButton = new CustomButton(maximizeIcon);
@@ -983,7 +979,7 @@ public class MainFrame extends JFrame {
     private CustomButton rateButton = new CustomButton(rateIcon);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
     private CustomButton blurButton = new CustomButton(cvBlurIcon);
-    private CustomButton soundEffectButton = new CustomButton(soundEffectIcon);
+    private CustomButton equalizerButton = new CustomButton(equalizerIcon);
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
     public CustomButton desktopLyricButton = new CustomButton(desktopLyricOnIcon);
@@ -1229,6 +1225,8 @@ public class MainFrame extends JFrame {
     public CustomComboBox<LocalPlaylist> localPlaylistComboBox = new CustomComboBox<>();
     // 收藏夹按钮
     private CustomButton localPlaylistToolButton = new CustomButton(localPlaylistIcon);
+    // 收藏夹按钮
+    private SplitLabel musicToolBarSplitLabel = new SplitLabel();
     // 收藏夹按钮弹出菜单
     private CustomPopupMenu localPlaylistPopupMenu = new CustomPopupMenu(THIS);
     private CustomMenuItem createLocalPlaylistMenuItem = new CustomMenuItem(I18n.getText("createLocalPlaylist"));
@@ -1270,10 +1268,6 @@ public class MainFrame extends JFrame {
     private CustomRadioButtonMenuItem sortByLastModifiedTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByLastModifiedTime"));
     private CustomRadioButtonMenuItem sortByLastAccessTimeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortByLastAccessTime"));
     private CustomRadioButtonMenuItem sortBySizeMenuItem = new CustomRadioButtonMenuItem(I18n.getText("sortBySize"));
-    // 上移按钮
-    private CustomButton moveUpToolButton = new CustomButton(moveUpIcon);
-    // 下移按钮
-    private CustomButton moveDownToolButton = new CustomButton(moveDownIcon);
     // 个人音乐筛选框
     private CustomTextField filterTextField = new CustomTextField(10);
     // 清除输入按钮
@@ -2086,10 +2080,6 @@ public class MainFrame extends JFrame {
     private CustomButton playQueueDuplicateToolButton = new CustomButton(duplicateIcon);
     // 倒序按钮
     private CustomButton playQueueReverseToolButton = new CustomButton(reverseIcon);
-    // 上移按钮
-    private CustomButton playQueueMoveUpToolButton = new CustomButton(moveUpIcon);
-    // 下移按钮
-    private CustomButton playQueueMoveDownToolButton = new CustomButton(moveDownIcon);
     // 歌曲数量标签
     private CustomLabel playQueueCountLabel = new CustomLabel(String.format(TOTAL_MSG, 0));
 
@@ -2328,8 +2318,8 @@ public class MainFrame extends JFrame {
     // 推荐打开事件
     Runnable openRecommendItemAction;
 
-    // 当前音效索引
-    public int currSoundEffect;
+    // 当前均衡器索引
+    public int currEqualizer;
     // 当前均衡
     public double[] ed;
 
@@ -2876,9 +2866,6 @@ public class MainFrame extends JFrame {
         });
         // 隐藏详情暂时不可见
         hideDetailButton.setVisible(false);
-        // 最佳大小
-        Dimension d = new Dimension(splitIcon.getIconWidth() + ScaleUtil.scale(10), splitIcon.getIconHeight() + ScaleUtil.scale(10));
-        splitLabel.setPreferredSize(d);
         // 悬浮提示
         hideDetailButton.setToolTipText(HIDE_DETAIL_TIP);
         styleToolButton.setToolTipText(STYLE_TIP);
@@ -3082,6 +3069,12 @@ public class MainFrame extends JFrame {
         // 是否显示侧边栏文字
         showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
         updateTabSize();
+        // 是否显示乐谱按钮
+        showSheetButton = config.getBooleanValue(ConfigConstants.SHOW_SHEET_BUTTON, false);
+        updateSheetButtonShowing();
+        // 是否显示快进/快退按钮
+        showFobButton = config.getBooleanValue(ConfigConstants.SHOW_FOB_BUTTON, false);
+        updateFobButtonShowing();
         // 载入歌词对齐方式
         LyricAlignment.lyricAlignmentIndex = config.getIntValue(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 载入频谱最大高度
@@ -3222,8 +3215,8 @@ public class MainFrame extends JFrame {
         // 载入是否静音
         isMute = config.getBooleanValue(ConfigConstants.MUTE, false);
         if (isMute) muteButton.setIcon(ImageUtil.dye(muteIcon, UIStyleStorage.currUIStyle.getIconColor()));
-        // 载入音效
-        currSoundEffect = config.getIntValue(ConfigConstants.SOUND_EFFECT, 0);
+        // 载入均衡器
+        currEqualizer = config.getIntValue(ConfigConstants.EQUALIZER, 0);
         // 载入均衡数据
         JSONArray edArray = config.getJSONArray(ConfigConstants.EQUALIZER_DATA);
         ed = new double[EqualizerData.BAND_NUM];
@@ -3932,6 +3925,10 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
         // 存入是否显示侧边栏文字
         config.put(ConfigConstants.SHOW_TAB_TEXT, showTabText);
+        // 存入是否显示乐谱按钮
+        config.put(ConfigConstants.SHOW_SHEET_BUTTON, showSheetButton);
+        // 存入是否显示快进/快退按钮
+        config.put(ConfigConstants.SHOW_FOB_BUTTON, showFobButton);
         // 存入歌词对齐方式
         config.put(ConfigConstants.LYRIC_ALIGNMENT, LyricAlignment.lyricAlignmentIndex);
         // 存入频谱最大高度
@@ -4019,8 +4016,8 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.MUTE, isMute);
         // 存入音量
         config.put(ConfigConstants.VOLUME, volumeSlider.getValue());
-        // 存入音效
-        config.put(ConfigConstants.SOUND_EFFECT, currSoundEffect);
+        // 存入均衡器
+        config.put(ConfigConstants.EQUALIZER, currEqualizer);
         // 存入均衡数据
         config.put(ConfigConstants.EQUALIZER_DATA, ed);
         // 存入迷你窗口位置
@@ -6595,6 +6592,18 @@ public class MainFrame extends JFrame {
                 localPlaylistPopupMenu.show(localPlaylistToolButton, e.getX(), e.getY());
             }
         });
+        // 分割条随收藏夹按钮一同显示
+        localPlaylistToolButton.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                musicToolBarSplitLabel.setVisible(true);
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+                musicToolBarSplitLabel.setVisible(false);
+            }
+        });
 
         addPopupMenu.add(addFileMenuItem);
         addPopupMenu.add(addDirMenuItem);
@@ -6917,40 +6926,6 @@ public class MainFrame extends JFrame {
                 sortPopupMenu.show(sortToolButton, e.getX(), e.getY());
             }
         });
-        // 点击上下移按钮事件
-        moveUpToolButton.addActionListener(e -> {
-            int index = collectionTabbedPane.getSelectedIndex();
-            CustomList list;
-            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION || index == CollectionTabIndex.MUSIC) {
-                list = musicList;
-            } else list = collectionList;
-            int selectedIndex = list.getSelectedIndex();
-            if (selectedIndex != -1 && selectedIndex != 0) {
-                DefaultListModel model = (DefaultListModel) list.getModel();
-                Resource r1 = (Resource) model.get(selectedIndex - 1);
-                Resource r2 = (Resource) model.get(selectedIndex);
-                model.set(selectedIndex - 1, r2);
-                model.set(selectedIndex, r1);
-                list.setSelectedIndex(selectedIndex - 1);
-            }
-        });
-        moveDownToolButton.addActionListener(e -> {
-            int index = collectionTabbedPane.getSelectedIndex();
-            CustomList list;
-            if (currPersonalMusicTab != PersonalMusicTabIndex.COLLECTION
-                    || index == CollectionTabIndex.MUSIC) {
-                list = musicList;
-            } else list = collectionList;
-            int selectedIndex = list.getSelectedIndex();
-            DefaultListModel model = (DefaultListModel) list.getModel();
-            if (selectedIndex != -1 && selectedIndex != model.size() - 1) {
-                Resource r1 = (Resource) model.get(selectedIndex);
-                Resource r2 = (Resource) model.get(selectedIndex + 1);
-                model.set(selectedIndex, r2);
-                model.set(selectedIndex + 1, r1);
-                list.setSelectedIndex(selectedIndex + 1);
-            }
-        });
         // 清除输入事件
         clearInputToolButton.addActionListener(e -> {
             filterTextField.requestFocus();
@@ -6990,14 +6965,13 @@ public class MainFrame extends JFrame {
         duplicateToolButton.setToolTipText(DUPLICATE_TIP);
         reverseToolButton.setToolTipText(REVERSE_TIP);
         sortToolButton.setToolTipText(SORT_TIP);
-        moveUpToolButton.setToolTipText(MOVE_UP_TIP);
-        moveDownToolButton.setToolTipText(MOVE_DOWN_TIP);
         clearInputToolButton.setToolTipText(CLEAR_INPUT_TIP);
         // 清除输入按钮初始不可见
         clearInputToolButton.setVisible(false);
 
         musicToolBar.add(localPlaylistComboBox);
         musicToolBar.add(localPlaylistToolButton);
+        musicToolBar.add(musicToolBarSplitLabel);
         musicToolBar.add(addToolButton);
         musicToolBar.add(reimportToolButton);
         musicToolBar.add(manageCatalogToolButton);
@@ -7006,8 +6980,6 @@ public class MainFrame extends JFrame {
         musicToolBar.add(duplicateToolButton);
         musicToolBar.add(reverseToolButton);
         musicToolBar.add(sortToolButton);
-        musicToolBar.add(moveUpToolButton);
-        musicToolBar.add(moveDownToolButton);
         musicToolBar.add(filterTextField);
         musicToolBar.add(clearInputToolButton);
         musicToolBar.add(countLabel);
@@ -18779,39 +18751,12 @@ public class MainFrame extends JFrame {
                 new TipDialog(THIS, REVERSE_SUCCESS_MSG).showDialog();
             }
         });
-        // 上移下移
-        playQueueMoveUpToolButton.addActionListener(e -> {
-            int selectedIndex = playQueue.getSelectedIndex();
-            if (selectedIndex != -1 && selectedIndex != 0) {
-                MusicResource r1 = playQueueModel.get(selectedIndex - 1);
-                MusicResource r2 = playQueueModel.get(selectedIndex);
-                playQueueModel.set(selectedIndex - 1, r2);
-                playQueueModel.set(selectedIndex, r1);
-                playQueue.setSelectedIndex(selectedIndex - 1);
-                if (player.loadedMusicResource(r1)) currSong = selectedIndex;
-                else if (player.loadedMusicResource(r2)) currSong = selectedIndex - 1;
-            }
-        });
-        playQueueMoveDownToolButton.addActionListener(e -> {
-            int selectedIndex = playQueue.getSelectedIndex();
-            if (selectedIndex != -1 && selectedIndex != playQueueModel.size() - 1) {
-                MusicResource r1 = playQueueModel.get(selectedIndex);
-                MusicResource r2 = playQueueModel.get(selectedIndex + 1);
-                playQueueModel.set(selectedIndex, r2);
-                playQueueModel.set(selectedIndex + 1, r1);
-                playQueue.setSelectedIndex(selectedIndex + 1);
-                if (player.loadedMusicResource(r1)) currSong = selectedIndex + 1;
-                else if (player.loadedMusicResource(r2)) currSong = selectedIndex;
-            }
-        });
 
         // 帮助提示
         playQueueRemoveToolButton.setToolTipText(REMOVE_FROM_PLAY_QUEUE_TIP);
         playQueueClearToolButton.setToolTipText(CLEAR_PLAY_QUEUE_TIP);
         playQueueDuplicateToolButton.setToolTipText(DUPLICATE_TIP);
         playQueueReverseToolButton.setToolTipText(REVERSE_TIP);
-        playQueueMoveUpToolButton.setToolTipText(MOVE_UP_TIP);
-        playQueueMoveDownToolButton.setToolTipText(MOVE_DOWN_TIP);
 
         // 透明度
         playQueueCountLabel.setOpacity(0.5f);
@@ -18820,8 +18765,6 @@ public class MainFrame extends JFrame {
         playQueueToolBar.add(playQueueClearToolButton);
         playQueueToolBar.add(playQueueDuplicateToolButton);
         playQueueToolBar.add(playQueueReverseToolButton);
-        playQueueToolBar.add(playQueueMoveUpToolButton);
-        playQueueToolBar.add(playQueueMoveDownToolButton);
         playQueueToolBar.add(playQueueCountLabel);
         // 加胶水让工具栏左对齐
         playQueueToolBar.add(CustomBox.createHorizontalGlue());
@@ -19665,6 +19608,17 @@ public class MainFrame extends JFrame {
         componentChangeFadingAnimation.transition();
     }
 
+    // 更新乐谱按钮显示状态
+    public void updateSheetButtonShowing() {
+        sheetButton.setVisible(showSheetButton);
+    }
+
+    // 更新快进/快退按钮显示状态
+    public void updateFobButtonShowing() {
+        backwardButton.setVisible(showFobButton);
+        forwardButton.setVisible(showFobButton);
+    }
+
     // 初始化控制面板
     private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
@@ -19896,9 +19850,9 @@ public class MainFrame extends JFrame {
                 blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(348) : h));
             }
         });
-        // 音效按钮
-        soundEffectButton.setToolTipText(SOUND_EFFECT_TIP);
-        soundEffectButton.addActionListener(e -> new SoundEffectDialog(THIS).showDialog());
+        // 均衡器按钮
+        equalizerButton.setToolTipText(EQUALIZER_TIP);
+        equalizerButton.addActionListener(e -> new EqualizerDialog(THIS).showDialog());
         // 跳到播放队列按钮
         goToPlayQueueButton.setToolTipText(GO_TO_PLAY_QUEUE_TIP);
         goToPlayQueueButton.addMouseListener(new MouseAdapter() {
@@ -19961,9 +19915,10 @@ public class MainFrame extends JFrame {
 
         // 按钮水平隔开一段间距
         FlowLayout fl = new HDFlowLayout();
-        fl.setHgap(ScaleUtil.scale(0));
+        fl.setHgap(ScaleUtil.scale(3));
         controlPanel.setLayout(fl);
         controlPanel.setBorder(new HDEmptyBorder(2, 0, 0, 30));
+        controlPanel.add(equalizerButton);
         controlPanel.add(backwardButton);
         controlPanel.add(lastButton);
         controlPanel.add(playOrPauseButton);
@@ -19979,7 +19934,6 @@ public class MainFrame extends JFrame {
         controlPanel.add(rateButton);
         controlPanel.add(switchSpectrumButton);
         controlPanel.add(blurButton);
-        controlPanel.add(soundEffectButton);
         controlPanel.add(goToPlayQueueButton);
 
         fl = new HDFlowLayout();
@@ -20379,7 +20333,7 @@ public class MainFrame extends JFrame {
             }
         });
         // 频谱监听器
-        mp.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> SpectrumUtil.processMagnitudes(magnitudes, duration, player));
+        mp.setAudioSpectrumListener((timestamp, duration, magnitudes, phases) -> player.processMagnitudes(magnitudes, duration));
         // 播放器状态监听
         mp.statusProperty().addListener((observable, oldValue, newValue) -> {
             // 排除正在销毁的 mp 对象的事件调用
@@ -21070,9 +21024,6 @@ public class MainFrame extends JFrame {
         Color lyricColor = style.getLyricColor();
         Color highlightColor = style.getHighlightColor();
 
-        // 托盘
-//        trayIconImg.setImage(ImageUtil.dye(trayIcon, iconColor).getImage());
-
         // 标题栏
         titleLabel.setForeground(textColor);
         titleLabel.updateIconStyle();
@@ -21650,6 +21601,7 @@ public class MainFrame extends JFrame {
         historyButton.updateIconStyle();
         collectionButton.updateIconStyle();
         localPlaylistToolButton.updateIconStyle();
+        musicToolBarSplitLabel.updateIconStyle();
         addToolButton.updateIconStyle();
         reimportToolButton.updateIconStyle();
         manageCatalogToolButton.updateIconStyle();
@@ -21658,8 +21610,6 @@ public class MainFrame extends JFrame {
         duplicateToolButton.updateIconStyle();
         reverseToolButton.updateIconStyle();
         sortToolButton.updateIconStyle();
-        moveUpToolButton.updateIconStyle();
-        moveDownToolButton.updateIconStyle();
         clearInputToolButton.updateIconStyle();
         // 在线音乐搜索栏按钮颜色
         netMusicBackwardButton.updateIconStyle();
@@ -21803,8 +21753,6 @@ public class MainFrame extends JFrame {
         playQueueClearToolButton.updateIconStyle();
         playQueueDuplicateToolButton.updateIconStyle();
         playQueueReverseToolButton.updateIconStyle();
-        playQueueMoveUpToolButton.updateIconStyle();
-        playQueueMoveDownToolButton.updateIconStyle();
 
         // 工具栏下面的标签颜色
         countLabel.setForeground(textColor);
@@ -22056,7 +22004,7 @@ public class MainFrame extends JFrame {
         rateButton.updateIconStyle();
         switchSpectrumButton.updateIconStyle();
         blurButton.updateIconStyle();
-        soundEffectButton.updateIconStyle();
+        equalizerButton.updateIconStyle();
         goToPlayQueueButton.updateIconStyle();
         desktopLyricButton.updateIconStyle();
         switchLyricTypeButton.updateIconStyle();

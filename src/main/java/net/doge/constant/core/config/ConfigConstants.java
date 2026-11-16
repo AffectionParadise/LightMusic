@@ -55,6 +55,10 @@ public class ConfigConstants {
     public static final String VIDEO_ONLY = "videoOnly";
     // 是否显示侧边栏文字
     public static final String SHOW_TAB_TEXT = "showTabText";
+    // 是否显示快进/快退按钮
+    public static final String SHOW_FOB_BUTTON = "showFobButton";
+    // 是否显示乐谱按钮
+    public static final String SHOW_SHEET_BUTTON = "showSheetButton";
     // 歌词对齐方式
     public static final String LYRIC_ALIGNMENT = "lyricAlignment";
     // 频谱最大高度
@@ -142,8 +146,8 @@ public class ConfigConstants {
     public static final String MUTE = "isMute";
     // 音量
     public static final String VOLUME = "volume";
-    // 音效
-    public static final String SOUND_EFFECT = "soundEffect";
+    // 均衡器
+    public static final String EQUALIZER = "equalizer";
     // 均衡数据
     public static final String EQUALIZER_DATA = "equalizerData";
     // 迷你窗口 x

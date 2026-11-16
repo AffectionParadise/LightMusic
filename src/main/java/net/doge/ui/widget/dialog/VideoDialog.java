@@ -407,19 +407,20 @@ public class VideoDialog extends AbstractTitledDialog {
         playOrPauseButton.setToolTipText(PLAY_TIP);
         playOrPauseButton.setIcon(ImageUtil.dye(pauseIcon, iconColor));
         playOrPauseButton.addActionListener(e -> playOrPause());
-
-        // 快进
-        forwardButton.setToolTipText(FORWARD_TIP);
-        forwardButton.updateIconStyle();
-        forwardButton.addActionListener(e -> {
-            mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
-        });
         // 快退
         backwardButton.setToolTipText(BACKWARD_TIP);
         backwardButton.updateIconStyle();
         backwardButton.addActionListener(e -> {
             mp.seek(mp.getCurrentTime().subtract(Duration.seconds(f.videoForwardOrBackwardTime)));
         });
+        backwardButton.setVisible(f.showFobButton);
+        // 快进
+        forwardButton.setToolTipText(FORWARD_TIP);
+        forwardButton.updateIconStyle();
+        forwardButton.addActionListener(e -> {
+            mp.seek(mp.getCurrentTime().add(Duration.seconds(f.videoForwardOrBackwardTime)));
+        });
+        forwardButton.setVisible(f.showFobButton);
         // 静音
         muteButton.setToolTipText(SOUND_TIP);
         muteButton.setIcon(ImageUtil.dye(soundIcon, iconColor));

@@ -201,7 +201,7 @@ public class I18n {
         LANG_MAP.put("fullScreenTip", new String[]{"全屏", "Full screen"});
         LANG_MAP.put("switchSpectrumTip", new String[]{"频谱", "Spectrum"});
         LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
-        LANG_MAP.put("soundEffectTip", new String[]{"音效", "Sound effect"});
+        LANG_MAP.put("equalizerTip", new String[]{"均衡器", "Equalizer"});
         LANG_MAP.put("sheetTip", new String[]{"乐谱", "Sheet"});
         LANG_MAP.put("originalLyricTip", new String[]{"原歌词", "Original lyric"});
         LANG_MAP.put("translationTip", new String[]{"翻译", "Translation"});
@@ -219,8 +219,6 @@ public class I18n {
         LANG_MAP.put("duplicateTip", new String[]{"去重", "Deduplicate"});
         LANG_MAP.put("reverseTip", new String[]{"倒序", "Reverse"});
         LANG_MAP.put("sortTip", new String[]{"排序", "Sort"});
-        LANG_MAP.put("moveUpTip", new String[]{"上移", "Move up"});
-        LANG_MAP.put("moveDownTip", new String[]{"下移", "Move down"});
         LANG_MAP.put("clearInputTip", new String[]{"清除输入", "Clear entry"});
         LANG_MAP.put("styleTip", new String[]{"换肤", "Theme"});
         LANG_MAP.put("hideDetailTip", new String[]{"隐藏歌曲详情页", "Hide details"});
@@ -587,6 +585,8 @@ public class I18n {
         LANG_MAP.put("closeOption", new String[]{"关闭主界面时：", "Closing option: "});
         LANG_MAP.put("windowSize", new String[]{"窗口大小：", "Window size: "});
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});
+        LANG_MAP.put("showSheetButton", new String[]{"显示乐谱按钮", "Show sheet button"});
+        LANG_MAP.put("showFobButton", new String[]{"显示快进/快退按钮", "Show fast-forward / rewind buttons"});
         LANG_MAP.put("lyricAlignment", new String[]{"歌词对齐方式：", "Lyric alignment: "});
         LANG_MAP.put("left", new String[]{"居左", "Left"});
         LANG_MAP.put("center", new String[]{"居中", "Center"});
@@ -642,8 +642,8 @@ public class I18n {
         LANG_MAP.put("invalidSearchHistoryCount", new String[]{"最大搜索历史数量无效", "Invalid search history count"});
         LANG_MAP.put("invalidConcurrentTaskCount", new String[]{"同时下载的最大任务数无效", "Invalid max concurrent task count"});
 
-        LANG_MAP.put("soundEffectTitle", new String[]{"音效", "Sound effect"});
-        LANG_MAP.put("soundEffect", new String[]{"音效：", "Sound effect: "});
+        LANG_MAP.put("equalizerTitle", new String[]{"均衡器", "Equalizer"});
+        LANG_MAP.put("equalizerPreset", new String[]{"预设：", "Preset: "});
 
         LANG_MAP.put("downloadMsg", new String[]{"正在下载更新包......", "Downloading update package..."});
         LANG_MAP.put("downloadFailedMsg", new String[]{"更新包下载失败，请稍后再试", "Update package download failed, please try again later"});

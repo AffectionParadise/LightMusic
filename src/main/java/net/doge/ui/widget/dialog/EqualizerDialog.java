@@ -25,16 +25,16 @@ import java.awt.event.ItemEvent;
  * @description 音效对话框
  * @date 2020/12/15
  */
-public class SoundEffectDialog extends AbstractTitledDialog {
+public class EqualizerDialog extends AbstractTitledDialog {
     private final int WIDTH = ScaleUtil.scale(400);
     private final int HEIGHT = ScaleUtil.scale(200);
 
     private CustomPanel centerPanel = new CustomPanel();
 
-    private CustomPanel soundEffectPanel = new CustomPanel();
+    private CustomPanel equalizerPresetPanel = new CustomPanel();
     private CustomPanel sliderPanel = new CustomPanel();
 
-    private CustomLabel soundEffectLabel = new CustomLabel(I18n.getText("soundEffect"));
+    private CustomLabel equalizerPresetLabel = new CustomLabel(I18n.getText("equalizerPreset"));
     private CustomComboBox<String> comboBox = new CustomComboBox<>();
     private final CustomPanel[] panels = {
             new CustomPanel(),
@@ -86,8 +86,8 @@ public class SoundEffectDialog extends AbstractTitledDialog {
     };
     private boolean fitting;
 
-    public SoundEffectDialog(MainFrame f) {
-        super(f, I18n.getText("soundEffectTitle"));
+    public EqualizerDialog(MainFrame f) {
+        super(f, I18n.getText("equalizerTitle"));
 
         for (String se : EqualizerData.NAMES) comboBox.addItem(se);
         comboBox.addItem(I18n.getText("custom"));
@@ -115,13 +115,13 @@ public class SoundEffectDialog extends AbstractTitledDialog {
         Color sliderColor = style.getSliderColor();
 
         // 音效选择面板
-        soundEffectLabel.setForeground(textColor);
+        equalizerPresetLabel.setForeground(textColor);
         comboBox.addItemListener(e -> {
             // 避免事件被处理 2 次！
             if (e.getStateChange() != ItemEvent.SELECTED) return;
             int index = comboBox.getSelectedIndex();
             // 记录当前音效
-            f.currSoundEffect = index;
+            f.currEqualizer = index;
             double[][] eds = EqualizerData.DATA;
             if (index >= eds.length) return;
 
@@ -134,9 +134,9 @@ public class SoundEffectDialog extends AbstractTitledDialog {
         // 下拉框 UI
         comboBox.setUI(new StringComboBoxUI(comboBox, f, 220));
 
-        soundEffectPanel.add(soundEffectLabel);
-        soundEffectPanel.add(comboBox);
-        centerPanel.add(soundEffectPanel, BorderLayout.NORTH);
+        equalizerPresetPanel.add(equalizerPresetLabel);
+        equalizerPresetPanel.add(comboBox);
+        centerPanel.add(equalizerPresetPanel, BorderLayout.NORTH);
 
         // 滑动条面板
         sliderPanel.setLayout(new GridLayout(1, 10));
@@ -182,7 +182,7 @@ public class SoundEffectDialog extends AbstractTitledDialog {
         }
 
         // 加载当前音效
-        comboBox.setSelectedIndex(f.currSoundEffect);
+        comboBox.setSelectedIndex(f.currEqualizer);
         // 加载当前均衡
         fitData(f.ed);
 

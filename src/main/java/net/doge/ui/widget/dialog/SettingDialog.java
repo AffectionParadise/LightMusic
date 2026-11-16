@@ -111,6 +111,10 @@ public class SettingDialog extends AbstractTitledDialog {
 
     private CustomPanel showTabTextPanel = new CustomPanel();
     private CustomCheckBox showTabTextCheckBox = new CustomCheckBox(I18n.getText("showTabText"));
+    private CustomPanel showSheetButtonPanel = new CustomPanel();
+    private CustomCheckBox showSheetButtonCheckBox = new CustomCheckBox(I18n.getText("showSheetButton"));
+    private CustomPanel showFobButtonPanel = new CustomPanel();
+    private CustomCheckBox showFobButtonCheckBox = new CustomCheckBox(I18n.getText("showFobButton"));
     private CustomPanel lyricAlignmentPanel = new CustomPanel();
     private CustomLabel lyricAlignmentLabel = new CustomLabel(I18n.getText("lyricAlignment"));
     private CustomComboBox<String> lyricAlignmentComboBox = new CustomComboBox<>();
@@ -299,6 +303,8 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setLayout(fl);
         windowSizePanel.setLayout(fl);
         showTabTextPanel.setLayout(fl);
+        showSheetButtonPanel.setLayout(fl);
+        showFobButtonPanel.setLayout(fl);
         lyricAlignmentPanel.setLayout(fl);
         specMaxHeightPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
@@ -336,6 +342,8 @@ public class SettingDialog extends AbstractTitledDialog {
         closeOptionPanel.setMaximumSize(d);
         windowSizePanel.setMaximumSize(d);
         showTabTextPanel.setMaximumSize(d);
+        showSheetButtonPanel.setMaximumSize(d);
+        showFobButtonPanel.setMaximumSize(d);
         lyricAlignmentPanel.setMaximumSize(d);
         specMaxHeightPanel.setMaximumSize(d);
         gsFactorPanel.setMaximumSize(d);
@@ -375,6 +383,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setForeground(textColor);
         videoOnlyCheckBox.setForeground(textColor);
         showTabTextCheckBox.setForeground(textColor);
+        showSheetButtonCheckBox.setForeground(textColor);
+        showFobButtonCheckBox.setForeground(textColor);
         lyricAlignmentLabel.setForeground(textColor);
         specMaxHeightLabel.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
@@ -667,6 +677,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.updateIconStyle();
         videoOnlyCheckBox.updateIconStyle();
         showTabTextCheckBox.updateIconStyle();
+        showSheetButtonCheckBox.updateIconStyle();
+        showFobButtonCheckBox.updateIconStyle();
         autoDownloadLyricCheckBox.updateIconStyle();
         verbatimTimelineCheckBox.updateIconStyle();
         enableKeyCheckBox.updateIconStyle();
@@ -676,6 +688,10 @@ public class SettingDialog extends AbstractTitledDialog {
         videoOnlyPanel.add(videoOnlyCheckBox);
 
         showTabTextPanel.add(showTabTextCheckBox);
+
+        showSheetButtonPanel.add(showSheetButtonCheckBox);
+
+        showFobButtonPanel.add(showFobButtonCheckBox);
 
         for (String name : LyricAlignment.NAMES) lyricAlignmentComboBox.addItem(name);
         lyricAlignmentPanel.add(lyricAlignmentLabel);
@@ -804,6 +820,10 @@ public class SettingDialog extends AbstractTitledDialog {
 
         appearanceContentBox.add(showTabTextPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
+        appearanceContentBox.add(showSheetButtonPanel);
+        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
+        appearanceContentBox.add(showFobButtonPanel);
+        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(lyricAlignmentPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(specMaxHeightPanel);
@@ -887,6 +907,8 @@ public class SettingDialog extends AbstractTitledDialog {
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         videoOnlyCheckBox.setSelected(f.videoOnly);
         showTabTextCheckBox.setSelected(f.showTabText);
+        showSheetButtonCheckBox.setSelected(f.showSheetButton);
+        showFobButtonCheckBox.setSelected(f.showFobButton);
         lyricAlignmentComboBox.setSelectedIndex(LyricAlignment.lyricAlignmentIndex);
         specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.maxBarHeight));
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
@@ -949,6 +971,12 @@ public class SettingDialog extends AbstractTitledDialog {
 
         f.showTabText = showTabTextCheckBox.isSelected();
         f.updateTabSize();
+
+        f.showSheetButton = showSheetButtonCheckBox.isSelected();
+        f.updateSheetButtonShowing();
+
+        f.showFobButton = showFobButtonCheckBox.isSelected();
+        f.updateFobButtonShowing();
 
         LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
 
