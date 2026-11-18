@@ -25,8 +25,8 @@ public class CustomMenuItem extends JMenuItem implements ExtendedOpacitySupporte
     private Timer drawBgTimer;
     private float bgAlpha;
     private final float destBgAlpha = 0.1f;
-    private final int HORIZONTAL_SPACE = ScaleUtil.scale(6);
-    private final int VERTICAL_SPACE = ScaleUtil.scale(2);
+    private final int HORIZONTAL_INSET = ScaleUtil.scale(6);
+    private final int VERTICAL_INSET = ScaleUtil.scale(2);
     @Getter
     private float extendedOpacity = 1f;
     private static final Border BORDER = new HDEmptyBorder(6, 0, 6, -10);
@@ -106,7 +106,7 @@ public class CustomMenuItem extends JMenuItem implements ExtendedOpacitySupporte
             g2d.setColor(getForeground());
             GraphicsUtil.srcOver(g2d, extendedOpacity * bgAlpha);
             int arc = ScaleUtil.scale(10);
-            g2d.fillRoundRect(HORIZONTAL_SPACE, VERTICAL_SPACE, getWidth() - 2 * HORIZONTAL_SPACE, getHeight() - 2 * VERTICAL_SPACE, arc, arc);
+            g2d.fillRoundRect(HORIZONTAL_INSET, VERTICAL_INSET, getWidth() - 2 * HORIZONTAL_INSET, getHeight() - 2 * VERTICAL_INSET, arc, arc);
         }
         GraphicsUtil.srcOver(g, extendedOpacity);
         super.paintComponent(g);

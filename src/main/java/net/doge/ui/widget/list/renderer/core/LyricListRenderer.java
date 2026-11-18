@@ -60,9 +60,9 @@ public class LyricListRenderer extends CustomListCellRenderer {
     private Timer fontTimer;
 //    private Map<Integer, Float> alphas = new HashMap<>();
 
-    private final int HORIZONTAL_SPACE = ScaleUtil.scale(90);
-    private final int VERTICAL_SPACE = ScaleUtil.scale(25);
-    private final Border BORDER = new EmptyBorder(VERTICAL_SPACE, 0, VERTICAL_SPACE, HORIZONTAL_SPACE);
+    private final int HORIZONTAL_INSET = ScaleUtil.scale(90);
+    private final int VERTICAL_INSET = ScaleUtil.scale(25);
+    private final Border BORDER = new EmptyBorder(VERTICAL_INSET, 0, VERTICAL_INSET, HORIZONTAL_INSET);
 
     public LyricListRenderer() {
         createFontAnimation();
@@ -102,7 +102,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
         Component component = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         JLabel label = (JLabel) component;
 
-        int maxWidth = list.getVisibleRect().width - HORIZONTAL_SPACE;
+        int maxWidth = list.getVisibleRect().width - HORIZONTAL_INSET;
         if (maxWidth <= 0) return label;
         list.setFixedCellWidth(maxWidth);
 

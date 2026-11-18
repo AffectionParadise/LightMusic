@@ -19,7 +19,7 @@ import java.awt.geom.GeneralPath;
 
 public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported {
     private final Stroke STROKE = new BasicStroke(ScaleUtil.scale(3));
-    private final int SPACE = ScaleUtil.scale(90);
+    private final int INSET = ScaleUtil.scale(90);
 
     @Getter
     private float extendedOpacity = 1f;
@@ -37,7 +37,7 @@ public class SpectrumPanel extends BasePanel implements ExtendedOpacitySupported
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                int num = (getWidth() - SPACE + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
+                int num = (getWidth() - INSET + SpectrumConstants.BAR_GAP) / (SpectrumConstants.BAR_WIDTH + SpectrumConstants.BAR_GAP);
                 SpectrumConstants.barNum = Math.min(num, SpectrumConstants.NUM_BANDS);
             }
         });

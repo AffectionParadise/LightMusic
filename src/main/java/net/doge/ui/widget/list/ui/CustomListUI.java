@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class CustomListUI extends BasicListUI {
     public void setCellHeight(int index, int h) {
+        if (cellHeights == null) return;
         if (index >= cellHeights.length) return;
         cellHeights[index] = h;
     }

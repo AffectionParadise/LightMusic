@@ -16,7 +16,7 @@ public class CustomList<E> extends JList<E> {
 
     private void init() {
         setOpaque(false);
-        // 横向滚动时自适应宽度
+        // 元素横向排布时自适应宽度
         setVisibleRowCount(0);
         // 拖放支持
         setDragEnabled(true);

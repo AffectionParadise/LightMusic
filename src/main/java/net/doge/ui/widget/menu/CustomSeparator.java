@@ -15,7 +15,7 @@ import java.awt.*;
  * @date 2020/12/13
  */
 public class CustomSeparator extends JSeparator implements ExtendedOpacitySupported {
-    private final int HORIZONTAL_SPACE = ScaleUtil.scale(8);
+    private final int HORIZONTAL_INSET = ScaleUtil.scale(8);
     @Getter
     private float extendedOpacity = 1f;
 
@@ -35,6 +35,6 @@ public class CustomSeparator extends JSeparator implements ExtendedOpacitySuppor
         Graphics2D g2d = GraphicsUtil.setup(g);
         GraphicsUtil.srcOver(g2d, extendedOpacity * 0.1f);
         g2d.setColor(getForeground());
-        g2d.fillRect(HORIZONTAL_SPACE, 0, getWidth() - 2 * HORIZONTAL_SPACE, getHeight());
+        g2d.fillRect(HORIZONTAL_INSET, 0, getWidth() - 2 * HORIZONTAL_INSET, getHeight());
     }
 }
