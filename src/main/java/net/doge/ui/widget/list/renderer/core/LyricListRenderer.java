@@ -61,7 +61,7 @@ public class LyricListRenderer extends CustomListCellRenderer {
 //    private Map<Integer, Float> alphas = new HashMap<>();
 
     private final int HORIZONTAL_INSET = ScaleUtil.scale(90);
-    private final int VERTICAL_INSET = ScaleUtil.scale(25);
+    private final int VERTICAL_INSET = ScaleUtil.scale(28);
     private final Border BORDER = new EmptyBorder(VERTICAL_INSET, 0, VERTICAL_INSET, HORIZONTAL_INSET);
 
     public LyricListRenderer() {

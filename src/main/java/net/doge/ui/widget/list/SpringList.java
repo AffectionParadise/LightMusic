@@ -1,6 +1,7 @@
 package net.doge.ui.widget.list;
 
 import net.doge.ui.widget.list.renderer.core.LyricListRenderer;
+import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
@@ -67,7 +68,7 @@ public class SpringList<E> extends CustomList<E> {
     private int activeIndex = -1;
 
     // 每行之间的间距
-    private int rowGap = 0;
+    private int rowGap = ScaleUtil.scale(0);
     // 当前歌词目标在视口高度中的相对比例
     private double anchor = 0.5;
     // 弹簧刚度，决定恢复力

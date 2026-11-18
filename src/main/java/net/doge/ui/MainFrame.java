@@ -19470,7 +19470,9 @@ public class MainFrame extends JFrame {
                 if (nextLyric >= 0) {
                     double currRatio = desktopLyricDialog.getRatio(), ratio = 0;
                     double or = originalRatio;
-                    if (currRatio < or || currRatio - or < 0.8) ratio = (or - currRatio) / LYRIC_PIECE + currRatio;
+                    // 注意边界控制，ratio 可能小于 0
+                    if (currRatio < or || currRatio - or < 0.8)
+                        ratio = Math.max(0, currRatio + (or - currRatio) / LYRIC_PIECE);
                     renderer.setRatio(ratio);
                     desktopLyricDialog.updateLyric(statements.get(nextLyric - 1 >= 0 ? nextLyric - 1 : nextLyric), ratio);
                     // 更新歌词上浮动画
@@ -20320,7 +20322,7 @@ public class MainFrame extends JFrame {
         renderer.setRow(row);
         lyricList.setModel(lyricListModel);
 //        lyricScrollAnimation = true;
-//        lyricList.updateActiveIndex();
+        lyricList.updateActiveIndex();
         if (reload) seekLyric(player.getCurrTimeSeconds());
     }
 
@@ -22795,7 +22797,9 @@ public class MainFrame extends JFrame {
                         Dimension d = new Dimension(netMusicHotSearchInnerPanel2.getWidth(), p.y + ScaleUtil.scale(50));
                         netMusicHotSearchInnerPanel2.setMinimumSize(d);
                         netMusicHotSearchInnerPanel2.setPreferredSize(d);
+                        // 修复面板有时布局不正确问题
                         netMusicHotSearchInnerPanel2.invalidate();
+                        netMusicHotSearchInnerPanel2.validate();
                         netMusicHotSearchInnerPanel2.repaint();
                     }
                 });
