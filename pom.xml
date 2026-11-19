@@ -26,7 +26,7 @@
         <lombok.version>1.18.48</lombok.version>
         <pinyin4j.version>2.5.1</pinyin4j.version>
         <opencc4j.version>1.14.0</opencc4j.version>
-        <moji4j.version>1.2.0</moji4j.version>
+        <!--        <moji4j.version>1.2.0</moji4j.version>-->
         <hutool.version>5.8.48</hutool.version>
         <okhttp.version>5.5.1</okhttp.version>
     </properties>
@@ -209,11 +209,11 @@
         </dependency>
 
         <!-- 日语转罗马音 -->
-        <dependency>
-            <groupId>com.andree-surya</groupId>
-            <artifactId>moji4j</artifactId>
-            <version>${moji4j.version}</version>
-        </dependency>
+        <!--        <dependency>-->
+        <!--            <groupId>com.andree-surya</groupId>-->
+        <!--            <artifactId>moji4j</artifactId>-->
+        <!--            <version>${moji4j.version}</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
 </project>

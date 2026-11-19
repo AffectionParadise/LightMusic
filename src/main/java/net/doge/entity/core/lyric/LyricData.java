@@ -1,13 +1,15 @@
 package net.doge.entity.core.lyric;
 
 import lombok.Data;
+import net.doge.constant.core.lyric.LyricPattern;
+import net.doge.constant.core.lyric.LyricState;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.array.ArrayUtil;
+import net.doge.util.core.collection.ListUtil;
 import net.doge.util.core.text.LyricUtil;
 import net.doge.util.media.DurationUtil;
 
-import java.io.File;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,27 +21,23 @@ import java.util.List;
  */
 @Data
 public class LyricData {
+    // 状态
+    private int state = LyricState.OK;
     // 歌词
-    private List<Statement> statements = new LinkedList<>();
+    private List<Statement> statements;
     // lrc 文件内容
     private String lyricStr;
     // 偏移
     private double offset;
-
-    public LyricData(File lyricFile) {
-        this(lyricFile, false);
-    }
-
-    public LyricData(File lyricFile, boolean badFormat) {
-        this(FileUtil.readStr(lyricFile, FileUtil.getCharsetName(lyricFile)), badFormat);
-    }
+    // 子歌词不支持滚动
+    private boolean subLyricDirty;
 
     public LyricData(String lyricStr) {
-        this(lyricStr, false);
+        initData(lyricStr, null);
     }
 
-    public LyricData(String lyricStr, boolean badFormat) {
-        initData(lyricStr, badFormat);
+    public LyricData(String lyricStr, String subLyricStr) {
+        initData(lyricStr, subLyricStr);
     }
 
     public boolean isEmpty() {
@@ -47,60 +45,95 @@ public class LyricData {
     }
 
     // 初始化歌词数据
-    private void initData(String lyricStr, boolean badFormat) {
+    private void initData(String lyricStr, String subLyricStr) {
         this.lyricStr = lyricStr;
-        String[] lyricArray = lyricStr.split("\r?\n");
-        // 不支持滚动的歌词，直接读取整行作为歌词
-        if (badFormat) {
-            for (String line : lyricArray) {
-                line = LyricUtil.cleanLyricStr(line);
-                if (StringUtil.isEmpty(line)) continue;
-                statements.add(new Statement(line));
+        statements = parse(lyricStr, false);
+        List<Statement> subLyricStmts = parse(subLyricStr, true);
+        // 合并解析的所有歌词信息
+        // 子歌词不支持滚动时，只能进行一一对应
+        if (subLyricDirty) {
+            for (int i = 0, s = subLyricStmts.size(); i < s; i++) {
+                Statement lyricStmt = statements.get(i);
+                Statement subLyricStmt = subLyricStmts.get(i);
+                lyricStmt.setSubLyric(subLyricStmt.getLyric());
             }
         }
-        // 解析完整的歌词
+        // 子歌词支持滚动时，查找匹配的歌词
         else {
+            subLyricStmts.forEach(subLyricStmt -> {
+                int i = ListUtil.binarySearchLowBound(statements, subLyricStmt);
+                if (i >= 0) {
+                    Statement lyricStmt = statements.get(i);
+                    lyricStmt.setSubLyric(subLyricStmt.getLyric());
+                }
+            });
+        }
+        // 将读取的歌词按时间排序
+        sortLyric();
+        // 添加歌词排头的呼吸点
+        if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
+    }
+
+    private List<Statement> parse(String lyricStr, boolean isSubLyric) {
+        List<Statement> stmts = new LinkedList<>();
+        if (StringUtil.isEmpty(lyricStr)) {
+            if (!isSubLyric) state = LyricState.NOT_EXISTS;
+            return stmts;
+        }
+        // 子歌词过滤掉逐字时间轴
+        if (isSubLyric) lyricStr = lyricStr.replaceAll(LyricPattern.PAIR_FIND, "");
+        // 解析完整的歌词
+        String[] lyricArray = ArrayUtil.removeLastEmpty(lyricStr.split("\\R", -1));
+        for (String line : lyricArray) {
+            line = LyricUtil.cleanLyricStr(line);
+            if (StringUtil.isEmpty(line)) continue;
+
+            // 解析 offset
+            String offsetStr = RegexUtil.getGroup1("\\[offset:(-?\\d+)\\]", line);
+            if (StringUtil.notEmpty(offsetStr)) offset = Double.parseDouble(offsetStr) / 1000;
+
+            List<String> timeStrList = RegexUtil.findAllGroup1("\\[(\\d+:\\d+(?:[.:]\\d+)?)\\]", line);
+            int lineLyricStart = line.lastIndexOf(']') + 1;
+            String lineLyric = lineLyricStart < line.length() ? StringUtil.shortenBlank(line.substring(lineLyricStart).trim()) : "";
+            // 循环是为了处理歌词复用情况
+            timeStrList.forEach(timeStr -> {
+                double time = DurationUtil.lyricTimeToSeconds(timeStr) - offset;
+                stmts.add(new Statement(time, lineLyric));
+            });
+        }
+        // 清洗歌词，删除空行并设置结束时间
+        clean(stmts);
+        // 解析之后若 Statement 列表为空，则为不支持滚动，直接读取整行作为歌词
+        if (stmts.isEmpty()) {
             for (String line : lyricArray) {
-                line = LyricUtil.cleanLyricStr(line);
-                if (StringUtil.isEmpty(line)) continue;
-
-                // 解析 offset
-                String offsetStr = RegexUtil.getGroup1("\\[offset:(-?\\d+)\\]", line);
-                if (StringUtil.notEmpty(offsetStr)) offset = Double.parseDouble(offsetStr) / 1000;
-
-                List<String> timeStrList = RegexUtil.findAllGroup1("\\[(\\d+:\\d+(?:[.:]\\d+)?)\\]", line);
-                int lineLyricStart = line.lastIndexOf(']') + 1;
-                String lineLyric = lineLyricStart < line.length() ? StringUtil.shortenBlank(line.substring(lineLyricStart).trim()) : "";
-                // 循环是为了处理歌词复用情况
-                timeStrList.forEach(timeStr -> {
-                    double time = DurationUtil.lyricTimeToSeconds(timeStr) - offset;
-                    statements.add(new Statement(time, lineLyric));
-                });
+                // 没有时间轴信息时，翻译的空行需要保留
+                if (!isSubLyric) {
+                    line = LyricUtil.cleanLyricStr(line);
+                    if (StringUtil.isEmpty(line)) continue;
+                }
+                stmts.add(new Statement(line));
             }
-            // 将读取的歌词按时间排序
-            sortLyric();
-            // 清洗歌词，删除空行并设置结束时间
-            clean();
-            // 添加歌词排头的呼吸点
-            if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
+            if (!isSubLyric) state = LyricState.BAD_FORMAT;
+            else subLyricDirty = true;
+        }
+        return stmts;
+    }
+
+    // 清洗歌词，移除空行并设置结束时间
+    private void clean(List<Statement> stmts) {
+        for (int i = 0; i < stmts.size(); i++) {
+            Statement stmt = stmts.get(i);
+            if (stmt.notEmpty()) continue;
+            if (i > 0) {
+                Statement ls = stmts.get(i - 1);
+                if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
+            }
+            stmts.remove(i--);
         }
     }
 
     // 按时间排序歌词
     private void sortLyric() {
         statements.sort(Comparator.comparingDouble(Statement::getTime));
-    }
-
-    // 清洗歌词，移除空行并设置结束时间
-    private void clean() {
-        for (int i = 0; i < statements.size(); i++) {
-            Statement stmt = statements.get(i);
-            if (stmt.notEmpty()) continue;
-            if (i > 0) {
-                Statement ls = statements.get(i - 1);
-                if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
-            }
-            statements.remove(i--);
-        }
     }
 }

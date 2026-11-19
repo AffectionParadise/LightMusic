@@ -3,6 +3,7 @@ package net.doge.entity.core.lyric;
 import lombok.Data;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.util.core.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author Doge
@@ -10,7 +11,7 @@ import net.doge.util.core.StringUtil;
  * @date 2020/12/7
  */
 @Data
-public class Statement {
+public class Statement implements Comparable<Statement> {
     // 开始时间
     private double time;
     // 结束时间
@@ -19,6 +20,8 @@ public class Statement {
     private String lyric;
     // 纯歌词
     private String plainLyric;
+    // 子歌词(翻译/罗马音)
+    private String subLyric;
 
     public Statement(String lyric) {
         setLyric(lyric);
@@ -29,9 +32,15 @@ public class Statement {
         setLyric(lyric);
     }
 
+    public Statement(double time, String lyric, String subLyric) {
+        this.time = time;
+        setLyric(lyric);
+        this.subLyric = subLyric;
+    }
+
     public void setLyric(String lyric) {
         this.lyric = lyric;
-        plainLyric = lyric.replaceAll(LyricPattern.PAIR, "");
+        plainLyric = lyric.replaceAll(LyricPattern.PAIR_FIND, "");
     }
 
     public boolean hasEndTime() {
@@ -46,8 +55,17 @@ public class Statement {
         return StringUtil.isEmpty(plainLyric);
     }
 
+    public boolean hasSubLyric() {
+        return StringUtil.notEmpty(subLyric);
+    }
+
     @Override
     public String toString() {
-        return plainLyric;
+        return "Lyric: " + plainLyric + (hasSubLyric() ? "\nSubLyric: " + subLyric : "");
+    }
+
+    @Override
+    public int compareTo(@NotNull Statement o) {
+        return Double.compare(time, o.time);
     }
 }

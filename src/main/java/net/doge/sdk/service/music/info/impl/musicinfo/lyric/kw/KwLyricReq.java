@@ -48,13 +48,18 @@ public class KwLyricReq {
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
         byte[] nBytes = Arrays.copyOfRange(bodyBytes, index, bodyBytes.length);
         byte[] lyricRawData = CryptoUtil.decompress(nBytes);
+        String lyricStr;
         // 无 lrcx 参数时，此处直接获得 lrc 歌词
 //        String lyricStr = new String(lyricRawData, Charset.forName("gb18030"));
         String lyricRawDataStr = new String(lyricRawData, StandardCharsets.UTF_8);
-        byte[] lyricData = CryptoUtil.base64Decode(lyricRawDataStr);
-        CryptoUtil.xorCipher(lyricData, keyBytes);
+        // 非逐字歌词
+        if (lyricRawDataStr.startsWith("[")) lyricStr = lyricRawDataStr;
+        else {
+            byte[] lyricData = CryptoUtil.base64Decode(lyricRawDataStr);
+            CryptoUtil.xorCipher(lyricData, keyBytes);
 //        String lyricStr = new String(output, Charset.forName("gb18030"));
-        String lyricStr = new String(lyricData, StandardCharsets.UTF_8);
+            lyricStr = new String(lyricData, StandardCharsets.UTF_8);
+        }
 
         // 解析酷我的偏移值
         int offset = 1, offset2 = 1;

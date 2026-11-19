@@ -29,6 +29,6 @@ public class LyricUtil {
     public static String getAppropriateLyricStr(String lyricStr, boolean verbatimTimeline) {
         if (lyricStr == null) return null;
         if (verbatimTimeline) return lyricStr;
-        return lyricStr.replaceAll(LyricPattern.PAIR, "");
+        return lyricStr.replaceAll(LyricPattern.PAIR_FIND, "");
     }
 }

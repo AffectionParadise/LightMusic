@@ -17,6 +17,7 @@ import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.core.config.ConfigConstants;
 import net.doge.constant.core.data.HistorySearchType;
 import net.doge.constant.core.lang.I18n;
+import net.doge.constant.core.lyric.LyricState;
 import net.doge.constant.core.lyric.LyricType;
 import net.doge.constant.core.lyric.NextLyric;
 import net.doge.constant.core.media.AudioQuality;
@@ -463,8 +464,6 @@ public class MainFrame extends JFrame {
     private ImageIcon tradChineseIcon = LMIconManager.getIcon("control.traditionalChinese");
     // 罗马音图标
     private ImageIcon romajiIcon = LMIconManager.getIcon("control.romaji");
-    // 原歌词图标
-    private ImageIcon originalIcon = LMIconManager.getIcon("control.original");
     // 歌词翻译图标
     private ImageIcon translationIcon = LMIconManager.getIcon("control.translation");
     // 收藏夹图标
@@ -676,7 +675,6 @@ public class MainFrame extends JFrame {
     private final String SWITCH_BLUR_TIP = I18n.getText("switchBlurTip");
     private final String EQUALIZER_TIP = I18n.getText("equalizerTip");
     private final String SHEET_TIP = I18n.getText("sheetTip");
-    private final String ORIGINAL_LYRIC_TIP = I18n.getText("originalLyricTip");
     private final String TRANSLATION_TIP = I18n.getText("translationTip");
     private final String ROMA_TIP = I18n.getText("romaTip");
     private final String TRAD_CHINESE_TIP = I18n.getText("tradChineseTip");
@@ -984,10 +982,9 @@ public class MainFrame extends JFrame {
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
     public CustomButton desktopLyricButton = new CustomButton(desktopLyricOnIcon);
-    private CustomButton switchLyricTypeButton = new CustomButton(originalIcon);
+    private CustomButton switchLyricTypeButton = new CustomButton(translationIcon);
     // 歌词类型右键菜单
     private CustomPopupMenu lyricTypePopupMenu = new CustomPopupMenu(THIS);
-    private CustomMenuItem originalLyricMenuItem = new CustomMenuItem(I18n.getText("originalLyric"));
     private CustomMenuItem translationMenuItem = new CustomMenuItem(I18n.getText("translation"));
     private CustomMenuItem romaMenuItem = new CustomMenuItem(I18n.getText("roma"));
     private CustomMenuItem tradChineseMenuItem = new CustomMenuItem(I18n.getText("tradChinese"));
@@ -3233,12 +3230,8 @@ public class MainFrame extends JFrame {
         miniX = config.getIntValue(ConfigConstants.MINIX, -0x3f3f3f3f);
         miniY = config.getIntValue(ConfigConstants.MINIY, -0x3f3f3f3f);
         // 载入歌词类型
-        currLyricType = LyricType.fromIndex(config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.ORIGINAL.getIndex()));
+        currLyricType = LyricType.fromIndex(config.getIntValue(ConfigConstants.LYRIC_TYPE, LyricType.TRANSLATION.getIndex()));
         switch (currLyricType) {
-            case ORIGINAL:
-                switchLyricTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
-                switchLyricTypeButton.setToolTipText(ORIGINAL_LYRIC_TIP);
-                break;
             case TRANSLATION:
                 switchLyricTypeButton.setIcon(ImageUtil.dye(translationIcon, UIStyleStorage.currUIStyle.getIconColor()));
                 switchLyricTypeButton.setToolTipText(TRANSLATION_TIP);
@@ -19947,12 +19940,6 @@ public class MainFrame extends JFrame {
             }
         });
         // 歌词类型弹出菜单
-        originalLyricMenuItem.addActionListener(e -> {
-            if (currLyricType == LyricType.ORIGINAL) return;
-            loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.ORIGINAL, true);
-            switchLyricTypeButton.setIcon(ImageUtil.dye(originalIcon, UIStyleStorage.currUIStyle.getIconColor()));
-            switchLyricTypeButton.setToolTipText(ORIGINAL_LYRIC_TIP);
-        });
         translationMenuItem.addActionListener(e -> {
             if (currLyricType == LyricType.TRANSLATION) return;
             loadLyric(player.getAudioFile(), player.getMusicInfo(), currLyricType = LyricType.TRANSLATION, true);
@@ -19972,7 +19959,6 @@ public class MainFrame extends JFrame {
             switchLyricTypeButton.setToolTipText(TRAD_CHINESE_TIP);
         });
 
-        lyricTypePopupMenu.add(originalLyricMenuItem);
         lyricTypePopupMenu.add(translationMenuItem);
         lyricTypePopupMenu.add(romaMenuItem);
         lyricTypePopupMenu.add(tradChineseMenuItem);
@@ -20216,8 +20202,7 @@ public class MainFrame extends JFrame {
         clearLyric();
 
         LyricData lyricData = null;
-        final int BAD_FORMAT = 0, NO_LYRIC = 1;
-        int state = -1;
+        int state;
         boolean isFile = musicInfo == null;
 
         // 本地音乐歌词
@@ -20226,93 +20211,42 @@ public class MainFrame extends JFrame {
             File lyricFile = file.toLmlFile();
             if (!lyricFile.exists()) lyricFile = file.toLyricFile();
             boolean exists = lyricFile.exists();
-            String embeddedLyric = null;
             // 从歌词文件读取歌词，若不存在，读取内嵌歌词
-            lyricData = exists ? new LyricData(lyricFile) : new LyricData(embeddedLyric = MediaUtil.getEmbeddedLyric(file));
-            // 首次读取为空，说明歌词格式不正确或者歌词为空
-            if (lyricData.isEmpty()) {
-                statements = exists ? new LyricData(lyricFile, true).getStatements()
-                        : new LyricData(embeddedLyric, true).getStatements();
-                // 再次读取为空，说明歌词为空
-                state = statements.isEmpty() ? NO_LYRIC : BAD_FORMAT;
-            } else statements = lyricData.getStatements();
+            String lyric = exists ? FileUtil.readStr(lyricFile, FileUtil.getCharsetName(lyricFile)) : MediaUtil.getEmbeddedLyric(file);
+            String subLyric = null;
+            // 繁体歌词
+            if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
+            lyricData = new LyricData(lyric, subLyric);
+            state = lyricData.getState();
+            statements = lyricData.getStatements();
             // 繁体转换
             if (lyricType == LyricType.TRADITIONAL_CN)
                 for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
-                // 罗马音转换
-            else if (lyricType == LyricType.ROMA)
-                for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
         }
         // 在线音乐歌词
-        else {
-            switch (lyricType) {
-                // 歌词
-                case ORIGINAL:
-                case TRADITIONAL_CN:
-                    if (musicInfo.hasLyric()) {
-                        String lyric = musicInfo.getLyric();
-                        lyricData = new LyricData(lyric);
-                        if (lyricData.isEmpty()) {
-                            statements = new LyricData(lyric, true).getStatements();
-                            state = BAD_FORMAT;
-                        } else statements = lyricData.getStatements();
-                        // 繁体转换
-                        if (lyricType == LyricType.TRADITIONAL_CN)
-                            for (Statement stmt : statements)
-                                stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
-                    } else state = NO_LYRIC;
-                    break;
-                // 翻译
-                case TRANSLATION:
-                    if (musicInfo.hasTrans()) {
-                        String trans = musicInfo.getTrans();
-                        lyricData = new LyricData(trans);
-                        if (lyricData.isEmpty()) {
-                            statements = new LyricData(trans, true).getStatements();
-                            state = BAD_FORMAT;
-                        } else statements = lyricData.getStatements();
-                    }
-                    // 无翻译时，加载原歌词
-                    else {
-                        loadLyric(file, musicInfo, LyricType.ORIGINAL, reload);
-                        return;
-                    }
-                    break;
-                // 罗马音
-                case ROMA:
-                    if (musicInfo.hasRoma()) {
-                        String roma = musicInfo.getRoma();
-                        lyricData = new LyricData(roma);
-                        if (lyricData.isEmpty()) {
-                            statements = new LyricData(roma, true).getStatements();
-                            state = BAD_FORMAT;
-                        } else statements = lyricData.getStatements();
-                    }
-                    // 无罗马音时，使用原歌词进行转换
-                    else if (musicInfo.hasLyric()) {
-                        String lyric = musicInfo.getLyric();
-                        lyricData = new LyricData(lyric);
-                        if (lyricData.isEmpty()) {
-                            statements = new LyricData(lyric, true).getStatements();
-                            state = BAD_FORMAT;
-                        } else statements = lyricData.getStatements();
-                        for (Statement stmt : statements) stmt.setLyric(LangUtil.toRomaji(stmt.getLyric()));
-                    } else state = NO_LYRIC;
-                    break;
-            }
-        }
+        else if (musicInfo.hasLyric()) {
+            String lyric = musicInfo.getLyric();
+            String subLyric = null;
+            if (lyricType == LyricType.TRANSLATION) subLyric = musicInfo.getTrans();
+            else if (lyricType == LyricType.ROMA) subLyric = musicInfo.getRoma();
+            else if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
+            lyricData = new LyricData(lyric, subLyric);
+            state = lyricData.getState();
+            statements = lyricData.getStatements();
+        } else state = LyricState.NOT_EXISTS;
+
         String lyricStr = lyricData == null ? "" : lyricData.getLyricStr();
         String cleaned = LyricUtil.cleanLyricStr(LyricUtil.getAppropriateLyricStr(lyricStr, verbatimTimeline));
-        if (StringUtil.isEmpty(cleaned)) state = NO_LYRIC;
+        if (StringUtil.isEmpty(cleaned)) state = LyricState.NOT_EXISTS;
 
-        if (state == BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
-        else if (state == NO_LYRIC) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
+        if (state == LyricState.BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
+        else if (state == LyricState.NOT_EXISTS) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
         if (ListUtil.notEmpty(statements)) {
             for (Statement statement : statements) lyricListModel.addElement(statement);
         }
         // 标记为无歌词 / 不支持滚动
-        nextLyric = state == BAD_FORMAT ? NextLyric.BAD_FORMAT : state == NO_LYRIC ? NextLyric.NOT_EXISTS : 0;
-        row = state == BAD_FORMAT || state == NO_LYRIC ? 0 : -1;
+        nextLyric = state == LyricState.BAD_FORMAT ? NextLyric.BAD_FORMAT : state == LyricState.NOT_EXISTS ? NextLyric.NOT_EXISTS : 0;
+        row = state == LyricState.BAD_FORMAT || state == LyricState.NOT_EXISTS ? 0 : -1;
 
         originalRatio = 0;
 //        lyricScrollPane.setVBarValue(currScrollVal = 0);
@@ -21172,7 +21106,6 @@ public class MainFrame extends JFrame {
         lgBlurMenuItem.setIcon(ImageUtil.dye(lgBlurIcon, iconColor));
         fbmBlurMenuItem.setIcon(ImageUtil.dye(fbmBlurIcon, iconColor));
 
-        originalLyricMenuItem.setIcon(ImageUtil.dye(originalIcon, iconColor));
         translationMenuItem.setIcon(ImageUtil.dye(translationIcon, iconColor));
         romaMenuItem.setIcon(ImageUtil.dye(romajiIcon, iconColor));
         tradChineseMenuItem.setIcon(ImageUtil.dye(tradChineseIcon, iconColor));
@@ -22747,6 +22680,7 @@ public class MainFrame extends JFrame {
                         netMusicSearchSuggestionInnerPanel2.setMinimumSize(d);
                         netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
                         netMusicSearchSuggestionInnerPanel2.invalidate();
+                        netMusicSearchSuggestionInnerPanel2.validate();
                         netMusicSearchSuggestionInnerPanel2.repaint();
                     }
                 });

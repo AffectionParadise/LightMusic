@@ -203,7 +203,6 @@ public class I18n {
         LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
         LANG_MAP.put("equalizerTip", new String[]{"均衡器", "Equalizer"});
         LANG_MAP.put("sheetTip", new String[]{"乐谱", "Sheet"});
-        LANG_MAP.put("originalLyricTip", new String[]{"原歌词", "Original lyric"});
         LANG_MAP.put("translationTip", new String[]{"翻译", "Translation"});
         LANG_MAP.put("romaTip", new String[]{"罗马音", "Roma"});
         LANG_MAP.put("tradChineseTip", new String[]{"繁体", "Traditional Chinese"});
@@ -275,7 +274,6 @@ public class I18n {
         LANG_MAP.put("listCycle", new String[]{"列表循环", "Loop all"});
         LANG_MAP.put("shuffle", new String[]{"随机播放", "Shuffle"});
 
-        LANG_MAP.put("originalLyric", new String[]{"原歌词", "Original lyric"});
         LANG_MAP.put("translation", new String[]{"翻译", "Translation"});
         LANG_MAP.put("roma", new String[]{"罗马音", "Roma"});
         LANG_MAP.put("tradChinese", new String[]{"繁体", "Traditional Chinese"});

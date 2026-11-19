@@ -11,14 +11,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum LyricType {
-    // 原歌词
-    ORIGINAL(0),
     // 翻译
-    TRANSLATION(1),
+    TRANSLATION(0),
     // 罗马音
-    ROMA(2),
+    ROMA(1),
     // 繁体
-    TRADITIONAL_CN(3);
+    TRADITIONAL_CN(2);
 
     private int index;
 

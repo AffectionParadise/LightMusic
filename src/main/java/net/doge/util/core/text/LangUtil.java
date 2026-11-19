@@ -1,7 +1,6 @@
 package net.doge.util.core.text;
 
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
-import com.moji4j.MojiConverter;
 import net.doge.util.core.StringUtil;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -17,7 +16,6 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  */
 public class LangUtil {
     private static HanyuPinyinOutputFormat format = new HanyuPinyinOutputFormat();
-    private static MojiConverter mojiConverter = new MojiConverter();
 
     static {
         // 拼音小写
@@ -56,28 +54,6 @@ public class LangUtil {
      */
     public static String toTraditionalChinese(String s) {
         return ZhConverterUtil.toTraditional(s);
-    }
-
-    /**
-     * 日语转为罗马音
-     *
-     * @param s
-     * @return
-     */
-    public static String toRomaji(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0, len = s.length(); i < len; i++) {
-            char ch = s.charAt(i);
-            String s1 = mojiConverter.convertKanaToRomaji(String.valueOf(ch));
-            // 遇到片假、平假加空格隔开
-            if (s1.indexOf(ch) < 0) {
-                if (i != 0) sb.append(' ');
-                sb.append(s1);
-                if (i != len - 1) sb.append(' ');
-            } else sb.append(s1);
-        }
-        // 将连续空格缩成一个
-        return StringUtil.shortenBlank(sb.toString());
     }
 
     /**

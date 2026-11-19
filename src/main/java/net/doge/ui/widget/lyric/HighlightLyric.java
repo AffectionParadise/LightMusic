@@ -113,7 +113,7 @@ public class HighlightLyric {
         this.plainLyric = stmt.getPlainLyric();
 
         // 是否为逐字歌词
-        if (RegexUtil.contains(LyricPattern.PAIR, lyric)) isByWord = true;
+        if (RegexUtil.contains(LyricPattern.PAIR_FIND, lyric)) isByWord = true;
 
         // 获取字符串的宽（显示在屏幕上所占的像素 px）
         labelFont = label.getFont();
@@ -206,7 +206,7 @@ public class HighlightLyric {
 
     private void initWordWidthList(String lyric) {
         // 非逐字歌词直接分割成单个字符
-        String[] sp = ArrayUtil.removeFirstEmpty(isByWord ? lyric.split(LyricPattern.PAIR, -1) : lyric.split(""));
+        String[] sp = ArrayUtil.removeFirstEmpty(isByWord ? lyric.split(LyricPattern.PAIR_FIND, -1) : lyric.split(""));
         // 计算每段的宽度
         int sum = 0;
         List<Font> fonts = isDesktopLyric ? Fonts.TYPES_HUGE : Fonts.TYPES_BIG;
