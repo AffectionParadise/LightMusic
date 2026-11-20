@@ -60,7 +60,8 @@ public class Statement implements Comparable<Statement> {
 
     @Override
     public String toString() {
-        return "Lyric: " + plainLyric + (hasSubLyric() ? "\nSubLyric: " + subLyric : "");
+        return "Time: " + time + "\nLyric:" + plainLyric
+                + (hasSubLyric() ? "\nSubLyric:" + subLyric : "");
     }
 
     @Override

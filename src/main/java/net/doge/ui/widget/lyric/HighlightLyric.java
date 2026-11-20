@@ -149,8 +149,7 @@ public class HighlightLyric {
         }
         // 桌面歌词阴影显示不完全解决
         width += 2 * shadowHOffset;
-        height = label.getFontMetrics(labelFont).getHeight();
-        height += fontSize;
+        height = getImageHeight(label.getFontMetrics(labelFont));
         // 渐隐宽度根据字体大小决定
         fadeWidth = height / 2;
 
@@ -202,6 +201,11 @@ public class HighlightLyric {
 
         // 按照比例清除相关的像素点
         if (ratio <= 1 && ratio >= 0) setRatio(ratio);
+    }
+
+    // 计算歌词总高度
+    public static int getImageHeight(FontMetrics metrics) {
+        return metrics.getHeight() + metrics.getFont().getSize();
     }
 
     private void initWordWidthList(String lyric) {
@@ -395,14 +399,14 @@ public class HighlightLyric {
 //        g2d.drawImage(imgR, t, 0, width - shadowHOffset, height, t, 0, width - shadowHOffset, height, null);
         g2d.dispose();
 
-        cropImg();
+        cropImg(ratio);
         makeIcon();
 
         this.ratio = ratio;
     }
 
     // 裁剪图片使之宽度不超过阈值
-    private void cropImg() {
+    private void cropImg(double ratio) {
         if (width <= widthThreshold) return;
         int pw = (int) Math.round(width * ratio);
         if (pw <= widthThreshold / 2) img = ImageUtil.cut(img, 0, 0, widthThreshold, height);

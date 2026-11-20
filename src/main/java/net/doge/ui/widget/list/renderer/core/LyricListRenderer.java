@@ -7,7 +7,7 @@ import net.doge.entity.core.lyric.Statement;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
 import net.doge.ui.widget.list.renderer.base.StableCellHeightProvider;
-import net.doge.ui.widget.list.ui.CustomListUI;
+import net.doge.ui.widget.list.ui.LyricListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.util.core.text.HtmlUtil;
@@ -57,9 +57,9 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
     public final float normalMinOpacity = 0.05f;
     private Timer fontTimer;
 
-    private final int LYRIC_GAP = ScaleUtil.scale(5);
+    private final int LYRIC_GAP = ScaleUtil.scale(0);
     private final int HORIZONTAL_INSET = ScaleUtil.scale(90);
-    private final int VERTICAL_INSET = ScaleUtil.scale(28);
+    private final int VERTICAL_INSET = ScaleUtil.scale(25);
     private final Border BORDER = new EmptyBorder(VERTICAL_INSET, 0, VERTICAL_INSET, HORIZONTAL_INSET);
 
     public LyricListRenderer() {
@@ -155,7 +155,7 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
         }
 
         // 设置 list 对应行的高度
-        ((CustomListUI) list.getUI()).setCellHeight(index, outerPanel.getPreferredSize().height);
+        ((LyricListUI) list.getUI()).setCellHeight(index, outerPanel.getPreferredSize().height);
 
         return outerPanel;
     }
@@ -164,11 +164,13 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
     @Override
     public int getStableCellHeight(JList<?> list, Object value, int index, int width) {
         Statement statement = (Statement) value;
-        // SpringList 传入的 width 已经扣除了 List 的 Insets
+        // LyricList 传入的 width 已经扣除了 List 的 Insets
         Insets insets = outerPanel.getInsets();
         int contentWidth = Math.max(1, width - insets.left - insets.right);
-        // 注意：必须使用最大字体，不能使用动画中的 highlightFont
-        int lyricHeight = measureLyricHeight(statement.getPlainLyric(), highlightLyricTargetFont, contentWidth);
+        // 主歌词区域需要容纳换行文本和高亮图像，并按动画结束时的最大字号预留高度
+        int textHeight = measureLyricHeight(statement.getPlainLyric(), highlightLyricTargetFont, contentWidth);
+        int imageHeight = HighlightLyric.getImageHeight(lyricLabel.getFontMetrics(highlightLyricTargetFont));
+        int lyricHeight = Math.max(textHeight, imageHeight);
         // 子歌词高度
         int subLyricHeight = 0;
         int gap = 0;

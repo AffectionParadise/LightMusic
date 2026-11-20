@@ -65,14 +65,12 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
         wheelScrollingTimer.stop();
     }
 
-    public boolean setVBarValue(int value) {
-        if (value < getVBarMin() || value > getVBarMax()) return false;
+    public void setVBarValue(int value) {
         verticalScrollBar.setValue(value);
         // 修复某些情况滚动条不显示并且无法滚动
         if (value == 0 && !verticalScrollBar.isShowing()) {
             revalidate();
         }
-        return true;
     }
 
     public int getVBarValue() {

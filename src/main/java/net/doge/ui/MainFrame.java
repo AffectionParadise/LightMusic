@@ -85,11 +85,11 @@ import net.doge.ui.widget.dialog.base.AbstractShadowDialog;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.label.SplitLabel;
 import net.doge.ui.widget.list.CustomList;
-import net.doge.ui.widget.list.SpringList;
+import net.doge.ui.widget.list.LyricList;
 import net.doge.ui.widget.list.renderer.core.DownloadListRenderer;
 import net.doge.ui.widget.list.renderer.core.LyricListRenderer;
 import net.doge.ui.widget.list.renderer.service.*;
-import net.doge.ui.widget.list.ui.CustomListUI;
+import net.doge.ui.widget.list.ui.LyricListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.menu.CustomCheckBoxMenuItem;
 import net.doge.ui.widget.menu.CustomMenuItem;
@@ -920,7 +920,7 @@ public class MainFrame extends JFrame {
     private CustomPopupMenu stylePopupMenu = new CustomPopupMenu(THIS);
 
     // 歌词列表
-    public SpringList<Statement> lyricList = new SpringList<>();
+    public LyricList<Statement> lyricList = new LyricList<>();
     private CustomScrollPane lyricScrollPane = new CustomScrollPane(lyricList);
     private DefaultListModel<Statement> lyricListModel = new DefaultListModel<>();
     // 频谱面板
@@ -19116,7 +19116,7 @@ public class MainFrame extends JFrame {
     }
 
     private boolean lyricListDragged;
-    private int lastLyricDragY;
+    private int lastLyricDragYOnScreen;
 
     // 初始化歌词列表
     private void initLyricList() {
@@ -19267,7 +19267,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1) return;
-                lastLyricDragY = e.getY();
+                lastLyricDragYOnScreen = e.getYOnScreen();
             }
         });
         // 绑定数据 Model
@@ -19293,9 +19293,10 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
-                int y = e.getY();
-                int delta = (lastLyricDragY - y) * 2;
-                lastLyricDragY = y;
+                // 注意此处必须用相对于屏幕的坐标
+                int yOnScreen = e.getYOnScreen();
+                int delta = (lastLyricDragYOnScreen - yOnScreen) * 2;
+                lastLyricDragYOnScreen = yOnScreen;
                 if (delta == 0) return;
                 if (!lyricListDragged) {
                     lyricListDragged = true;
@@ -19307,7 +19308,7 @@ public class MainFrame extends JFrame {
                     // 立即结束弹簧动画
                     lyricList.snapToTargets();
                 }
-                vb.setValue(vb.getValue() + delta);
+                lyricScrollPane.setVBarValue(lyricScrollPane.getVBarValue() + delta);
                 vb.setActive(true);
             }
         });
@@ -21929,7 +21930,7 @@ public class MainFrame extends JFrame {
         lyricListRenderer.setBgColor(lyricColor);
         lyricListRenderer.setHighlightColor(highlightColor);
         lyricList.setCellRenderer(lyricListRenderer);
-        lyricList.setUI(new CustomListUI());
+        lyricList.setUI(new LyricListUI());
 
         // 进度条和控制面板透明
         timeBar.setUI(new TimeSliderUI(timeBar, timeBarColor, timeBarColor, THIS, player, true));      // 自定义进度条 UI

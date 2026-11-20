@@ -29,9 +29,9 @@ import java.util.Arrays;
  * 本组件主要用于几百行以内的歌词列表，不适合数百万行的大型数据列表。
  * 兼容 Java 8+，无第三方依赖。
  */
-public class SpringList<E> extends CustomList<E> {
+public class LyricList<E> extends CustomList<E> {
     private static final long serialVersionUID = 2L;
-    // 动画物理计算允许的最大单步时间(毫秒)
+    // 动画物理计算允许的最大单步时间(秒)
     private static final double MAX_STEP = 1.0 / 120.0;
     // 位置接近目标的容差(像素)
     private static final double EPS_Y = 0.15;
@@ -72,18 +72,15 @@ public class SpringList<E> extends CustomList<E> {
     private int rowGap = ScaleUtil.scale(0);
     // 当前歌词目标在视口高度中的相对比例
     private double anchor = 0.5;
-    // 弹簧刚度，决定恢复力
-    private double stiffness = 58;
-    // 阻尼，控制振荡和回弹
-    private double damping = 12.4;
-    // 自动滚动刚度，决定恢复力
-    private double autoScrollStiffness = 42;
-    // 自动滚动阻尼，控制振荡和回弹
-    private double autoScrollDamping = 12.4;
-    // 相邻行的启动时间差
-    private double rowDelaySeconds = 0.042;
-    // 任意一行允许的最大启动延迟
-    private double maxCascadeDelay = 0.5;
+    // 歌词行的弹簧保留轻微回弹
+    private double stiffness = 135;
+    private double damping = 17.5;
+    // 自动跟随视口接近临界阻尼，平稳停在高亮行的对齐位置
+    private double autoScrollStiffness = 150;
+    private double autoScrollDamping = 24.5;
+    // 相邻行启动间隔 30 毫秒，跨多行时最多延迟 180 毫秒
+    private double rowDelaySeconds = 0.030;
+    private double maxCascadeDelay = 0.180;
     // activeIndex 发生变化时，是否允许播放动画
     private boolean animateActiveIndex = true;
     // activeIndex 变化后，视口是否自动跟随
@@ -91,7 +88,7 @@ public class SpringList<E> extends CustomList<E> {
     // 外部滚动时，是否添加行的弹性拖尾
     private boolean animateExternalScroll = true;
     // 外部滚动的拖尾位移强度，取值 0–1
-    private double manualLagFactor = 0.55;
+    private double manualLagFactor = 0.35;
 
     // 视口状态，程序化滚动与外部滚动是不同的
     private JViewport watchedViewport;
@@ -158,11 +155,11 @@ public class SpringList<E> extends CustomList<E> {
         }
     };
 
-    public SpringList() {
+    public LyricList() {
         init();
     }
 
-    public SpringList(ListModel<E> model) {
+    public LyricList(ListModel<E> model) {
         init();
         setModel(model);
     }

@@ -8,10 +8,10 @@ import java.awt.event.MouseEvent;
 
 /**
  * @author Doge
- * @description 列表自定义 UI
+ * @description 弹簧列表自定义 UI
  * @date 2020/12/13
  */
-public class CustomListUI extends BasicListUI {
+public class LyricListUI extends BasicListUI {
     public void setCellHeight(int index, int h) {
         if (cellHeights == null) return;
         if (index >= cellHeights.length) return;
