@@ -61,6 +61,10 @@ public class CustomScrollPane extends JScrollPane implements ExtendedOpacitySupp
         verticalScrollBar.setUI(new CustomScrollBarUI());
     }
 
+    public void stopWheelScrolling() {
+        wheelScrollingTimer.stop();
+    }
+
     public boolean setVBarValue(int value) {
         if (value < getVBarMin() || value > getVBarMax()) return false;
         verticalScrollBar.setValue(value);

@@ -2411,8 +2411,6 @@ public class MainFrame extends JFrame {
     private Timer lyricTimer;
     // 歌词到新行的延迟滚动
     private Timer lyricDelayScrollTimer;
-    // 是否正在进行歌词滚动动画
-//    public boolean lyricScrollAnimation;
     // 滚动条动画
     public Timer startWaitingLyricScrollingTimer;
     private boolean lyricScrollWaiting;
@@ -2427,8 +2425,6 @@ public class MainFrame extends JFrame {
     private boolean hotSearchProcessing;
 
     private int row;
-    // 当前歌词滚动条的值
-//    private int currScrollVal;
 
     // 执行多个动画的线程池，是使用多个 Timer 造成卡顿的替代方案！
     private ExecutorService spectrumExecutor = Executors.newSingleThreadExecutor();
@@ -2509,7 +2505,6 @@ public class MainFrame extends JFrame {
                 // 清除由于失去焦点未出队的按键，避免快捷键失效
                 currKeys.clear();
                 if (windowState == WindowState.MAXIMIZED) desktopLyricDialog.setVisible(false);
-//                if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
                 if (nextLyric != NextLyric.BAD_FORMAT) lyricList.updateActiveIndex();
             }
 
@@ -19121,6 +19116,7 @@ public class MainFrame extends JFrame {
     }
 
     private boolean lyricListDragged;
+    private int lastLyricDragY;
 
     // 初始化歌词列表
     private void initLyricList() {
@@ -19188,6 +19184,8 @@ public class MainFrame extends JFrame {
         lyricList.setFocusable(false);
         // 不支持拖放
         lyricList.setDragEnabled(false);
+        // 拖动到边缘不会自动滚动
+        lyricList.setAutoscrolls(false);
         lyricList.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         // 悬停框
 //        lyricList.addMouseMotionListener(new MouseAdapter() {
@@ -19223,7 +19221,6 @@ public class MainFrame extends JFrame {
         // 延迟后滚动歌词
         startWaitingLyricScrollingTimer = new Timer(2500, e -> {
             startWaitingLyricScrollingTimer.stop();
-//            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             if (nextLyric != NextLyric.BAD_FORMAT) lyricList.updateActiveIndex();
             vb.setActive(false);
             lyricScrollWaiting = false;
@@ -19231,14 +19228,10 @@ public class MainFrame extends JFrame {
         // 开始歌词滚动之前的等待阶段
         Runnable startWaitingLyricScrolling = () -> {
             if (startWaitingLyricScrollingTimer.isRunning()) startWaitingLyricScrollingTimer.stop();
-//            currScrollVal = vb.getValue();
             vb.setActive(true);
             lyricScrollWaiting = true;
             startWaitingLyricScrollingTimer.start();
         };
-        // 歌词面板拖动时上下滚动
-        Point dragFrom = new Point();
-
         // 右键弹出菜单
         lyricList.addMouseListener(new MouseAdapter() {
             @Override
@@ -19259,23 +19252,22 @@ public class MainFrame extends JFrame {
                     lyricPopupMenu.show(lyricList, e.getX(), e.getY());
                 }
                 // 双击定位歌词时间
-                else if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+                else if (!lyricListDragged && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
                     String plainLyric = lyricList.getSelectedValue().getPlainLyric();
                     if (plainLyric.trim().isEmpty()) return;
                     if (nextLyric >= 0) locateLyricMenuItem.doClick();
                 }
                 // 拖拽释放启动歌词滚动延时动画
-                if (lyricListDragged) {
-                    startWaitingLyricScrolling.run();
+                if (e.getButton() == MouseEvent.BUTTON1 && lyricListDragged) {
                     lyricListDragged = false;
+                    startWaitingLyricScrolling.run();
                 }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 if (e.getButton() != MouseEvent.BUTTON1) return;
-                dragFrom.x = e.getX();
-                dragFrom.y = e.getY();
+                lastLyricDragY = e.getY();
             }
         });
         // 绑定数据 Model
@@ -19292,9 +19284,7 @@ public class MainFrame extends JFrame {
                 int ph = lyricScrollPane.getHeight() / 2 + ScaleUtil.scale(20);
                 // 歌词列表上下内边距随滚动面板变化
                 lyricList.setBorder(new EmptyBorder(ph, 0, ph, 0));
-                if (nextLyric == NextLyric.BAD_FORMAT) return;
-//                currScrollVal = vb.getValue();
-//                lyricScrollAnimation = true;
+                if (lyricScrollWaiting || nextLyric == NextLyric.BAD_FORMAT) return;
                 lyricList.updateActiveIndex();
             }
         });
@@ -19303,28 +19293,37 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (!SwingUtilities.isLeftMouseButton(e)) return;
-                lyricListDragged = true;
-                // 停止当前动画
-                startWaitingLyricScrollingTimer.stop();
-//                lyricScrollAnimation = false;
-                lyricScrollWaiting = true;
-                Point p = e.getPoint();
-                int yOffset = (dragFrom.y - p.y) * 2;
-                boolean ok = lyricScrollPane.setVBarValue(lyricScrollPane.getVBarValue() + yOffset);
-                dragFrom.x = p.x;
-                // 拖动时超出滚动条范围后不再叠加参数
-                dragFrom.y = ok ? p.y + yOffset : p.y;
+                int y = e.getY();
+                int delta = (lastLyricDragY - y) * 2;
+                lastLyricDragY = y;
+                if (delta == 0) return;
+                if (!lyricListDragged) {
+                    lyricListDragged = true;
+                    lyricScrollWaiting = true;
+                    // 打断歌词滚动等待中的状态
+                    startWaitingLyricScrollingTimer.stop();
+                    lyricDelayScrollTimer.stop();
+                    lyricScrollPane.stopWheelScrolling();
+                    // 立即结束弹簧动画
+                    lyricList.snapToTargets();
+                }
+                vb.setValue(vb.getValue() + delta);
                 vb.setActive(true);
             }
         });
         // 歌词面板滚轮滚动触发延时动画
-        lyricScrollPane.addMouseWheelListener(e -> startWaitingLyricScrolling.run());
+        lyricScrollPane.addMouseWheelListener(e -> {
+            if (lyricListDragged) {
+                lyricScrollPane.stopWheelScrolling();
+                return;
+            }
+            startWaitingLyricScrolling.run();
+        });
         // 滚动条拖拽时停止延时动画
         vb.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 startWaitingLyricScrollingTimer.stop();
-//                lyricScrollAnimation = false;
                 lyricScrollWaiting = true;
             }
         });
@@ -19483,24 +19482,10 @@ public class MainFrame extends JFrame {
                     globalPanel.setAngle((angle + 1) % 360);
                 }
             });
-//            if (lyricScrollAnimation) {
-            // 避免线程池执行顺序不一致导致的动画过渡不流畅，不提交
-//                lyricScrollExecutor.execute(() -> {
-//                Rectangle bounds = lyricList.getCellBounds(row, row);
-//                if (bounds == null) return;
-//                Insets insets = lyricScrollPane.getInsets();
-//                int val = lyricScrollPane.getVBarValue(), dVal = bounds.y - (lyricScrollPane.getHeight() - insets.top - insets.bottom) / 2
-//                        + bounds.height / 2, step = Math.max(1, Math.abs(dVal - currScrollVal) / ScaleUtil.scale(20));
-//                int nv = val < dVal ? Math.min(dVal, val + step) : Math.max(dVal, val - step);
-//                lyricScrollPane.setVBarValue(nv);
-//                if (nv == dVal || lyricScrollPane.getVBarValue() == val) lyricScrollAnimation = false;
-//                });
-//            }
         });
         lyricDelayScrollTimer = new Timer(150, e -> {
             lyricDelayScrollTimer.stop();
-//            lyricScrollAnimation = true;
-            lyricList.updateActiveIndex();
+            if (!lyricScrollWaiting) lyricList.updateActiveIndex();
         });
         globalPanelTimer = new Timer(10, e -> {
             globalPanelExecutor.execute(() -> {
@@ -19621,22 +19606,6 @@ public class MainFrame extends JFrame {
     }
 
     private void toLyricView(Runnable extraOperation) {
-//        // 滑入动画之后处理
-//        globalPanel.setOnAfterSlide(() -> {
-//            globalPanel.remove(tabbedPane);
-//            globalPanel.remove(netCommentBox);
-//            globalPanel.remove(netSheetBox);
-//            // 防止事件不起作用
-//            globalPanel.requestFocus();
-//            globalPanel.add(infoAndLyricBox, BorderLayout.CENTER);
-//            globalPanel.repaint();
-////          updateLyricListViewFading();
-//            lyricScrollAnimation = true;
-//        });
-//        // 播放组件放置的滑入动画
-//        globalPanel.slideFrom(tabbedPane, infoAndLyricBox, SlideFrom.BOTTOM);
-//        globalPanel.slideFrom(netCommentBox, infoAndLyricBox, SlideFrom.BOTTOM);
-//        globalPanel.slideFrom(netSheetBox, infoAndLyricBox, SlideFrom.BOTTOM);
         if (componentChangeFadingAnimation != null && componentChangeFadingAnimation.isRunning()) return;
         currPaneType = CenterPaneType.LYRIC;
         lastPaneType = null;
@@ -19646,7 +19615,6 @@ public class MainFrame extends JFrame {
             globalPanel.remove(s);
             globalPanel.add(t, BorderLayout.CENTER);
             globalPanel.revalidate();
-//            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             if (nextLyric != NextLyric.BAD_FORMAT) lyricList.updateActiveIndex();
             // 清空评论数据
             if (!netCommentListModel.isEmpty()) netCommentListModel.clear();
@@ -19658,7 +19626,6 @@ public class MainFrame extends JFrame {
         };
         // 有时切换到歌词面板，歌词自动滚动失败，在动画结束后再试
         ComponentChangeHandler onFadingInStopped = (s, t) -> {
-//            if (nextLyric != NextLyric.BAD_FORMAT) lyricScrollAnimation = true;
             if (nextLyric != NextLyric.BAD_FORMAT) lyricList.updateActiveIndex();
         };
         componentChangeFadingAnimation = new ComponentChangeFadingAnimation(src, infoAndLyricBox, onFadingOutStopped, onFadingInStopped);
@@ -19936,7 +19903,7 @@ public class MainFrame extends JFrame {
             @Override
             public void mouseReleased(MouseEvent e) {
                 int h = lyricTypePopupMenu.getHeight();
-                lyricTypePopupMenu.show(switchLyricTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(161) : h));
+                lyricTypePopupMenu.show(switchLyricTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(134) : h));
             }
         });
         // 歌词类型弹出菜单
@@ -20188,7 +20155,6 @@ public class MainFrame extends JFrame {
         row = 0;
         nextLyric = NextLyric.LOADING;
         originalRatio = 0;
-//        lyricScrollPane.setVBarValue(currScrollVal = 0);
         lyricScrollPane.setVBarValue(0);
         // 更新歌词面板渲染
         LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
@@ -20202,7 +20168,7 @@ public class MainFrame extends JFrame {
         clearLyric();
 
         LyricData lyricData = null;
-        int state;
+        int lyricState;
         boolean isFile = musicInfo == null;
 
         // 本地音乐歌词
@@ -20217,7 +20183,7 @@ public class MainFrame extends JFrame {
             // 繁体歌词
             if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
             lyricData = new LyricData(lyric, subLyric);
-            state = lyricData.getState();
+            lyricState = lyricData.getLyricState();
             statements = lyricData.getStatements();
             // 繁体转换
             if (lyricType == LyricType.TRADITIONAL_CN)
@@ -20231,31 +20197,29 @@ public class MainFrame extends JFrame {
             else if (lyricType == LyricType.ROMA) subLyric = musicInfo.getRoma();
             else if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
             lyricData = new LyricData(lyric, subLyric);
-            state = lyricData.getState();
+            lyricState = lyricData.getLyricState();
             statements = lyricData.getStatements();
-        } else state = LyricState.NOT_EXISTS;
+        } else lyricState = LyricState.NOT_EXISTS;
 
         String lyricStr = lyricData == null ? "" : lyricData.getLyricStr();
         String cleaned = LyricUtil.cleanLyricStr(LyricUtil.getAppropriateLyricStr(lyricStr, verbatimTimeline));
-        if (StringUtil.isEmpty(cleaned)) state = LyricState.NOT_EXISTS;
+        if (StringUtil.isEmpty(cleaned)) lyricState = LyricState.NOT_EXISTS;
 
-        if (state == LyricState.BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
-        else if (state == LyricState.NOT_EXISTS) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
+        if (lyricState == LyricState.BAD_FORMAT) lyricListModel.addElement(new Statement(0, BAD_FORMAT_LYRIC_MSG));
+        else if (lyricState == LyricState.NOT_EXISTS) lyricListModel.addElement(new Statement(0, NO_LYRIC_MSG));
         if (ListUtil.notEmpty(statements)) {
             for (Statement statement : statements) lyricListModel.addElement(statement);
         }
         // 标记为无歌词 / 不支持滚动
-        nextLyric = state == LyricState.BAD_FORMAT ? NextLyric.BAD_FORMAT : state == LyricState.NOT_EXISTS ? NextLyric.NOT_EXISTS : 0;
-        row = state == LyricState.BAD_FORMAT || state == LyricState.NOT_EXISTS ? 0 : -1;
+        nextLyric = lyricState == LyricState.BAD_FORMAT ? NextLyric.BAD_FORMAT : lyricState == LyricState.NOT_EXISTS ? NextLyric.NOT_EXISTS : 0;
+        row = lyricState == LyricState.BAD_FORMAT || lyricState == LyricState.NOT_EXISTS ? 0 : -1;
 
         originalRatio = 0;
-//        lyricScrollPane.setVBarValue(currScrollVal = 0);
         lyricScrollPane.setVBarValue(0);
         // 更新歌词面板渲染
         LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
         renderer.setRow(row);
         lyricList.setModel(lyricListModel);
-//        lyricScrollAnimation = true;
         lyricList.updateActiveIndex();
         if (reload) seekLyric(player.getCurrTimeSeconds());
     }
@@ -20360,10 +20324,6 @@ public class MainFrame extends JFrame {
                     if (!lyricScrollWaiting) {
                         if (!lyricDelayScrollTimer.isRunning()) lyricDelayScrollTimer.start();
                     }
-//                    if (!lyricScrollAnimation && !lyricScrollWaiting) {
-//                        currScrollVal = lyricScrollPane.getVBarValue();
-//                        if (!lyricDelayScrollTimer.isRunning()) lyricDelayScrollTimer.start();
-//                    }
                     LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
                     renderer.setRow(row);
                     nextLyric++;
@@ -22433,10 +22393,6 @@ public class MainFrame extends JFrame {
             row = nextLyric - 1;
             LyricListRenderer renderer = (LyricListRenderer) lyricList.getCellRenderer();
             renderer.setRow(row);
-//            if (!lyricScrollAnimation) {
-//                currScrollVal = lyricScrollPane.getVBarValue();
-//                lyricScrollAnimation = true;
-//            }
             lyricList.updateActiveIndex();
             updateOriginalRatio(t);
             break;

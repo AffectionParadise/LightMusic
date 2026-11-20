@@ -24,12 +24,11 @@ public class Statement implements Comparable<Statement> {
     private String subLyric;
 
     public Statement(String lyric) {
-        setLyric(lyric);
+        this(0, lyric);
     }
 
     public Statement(double time, String lyric) {
-        this.time = time;
-        setLyric(lyric);
+        this(time, lyric, null);
     }
 
     public Statement(double time, String lyric, String subLyric) {

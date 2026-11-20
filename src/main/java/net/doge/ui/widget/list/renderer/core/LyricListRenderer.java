@@ -6,6 +6,7 @@ import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.entity.core.lyric.Statement;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
+import net.doge.ui.widget.list.renderer.base.StableCellHeightProvider;
 import net.doge.ui.widget.list.ui.CustomListUI;
 import net.doge.ui.widget.lyric.HighlightLyric;
 import net.doge.ui.widget.panel.CustomPanel;
@@ -23,10 +24,11 @@ import java.awt.*;
  * @date 2020/12/7
  */
 @Data
-public class LyricListRenderer extends CustomListCellRenderer {
-    private final Font defaultFont = Fonts.NORMAL_SUPER;
-    private Font shrinkFont = defaultFont;
-    private Font highlightFont = Fonts.NORMAL_BIG;
+public class LyricListRenderer extends CustomListCellRenderer implements StableCellHeightProvider {
+    private final Font normalLyricTargetFont = Fonts.NORMAL_SUPER;
+    private final Font highlightLyricTargetFont = Fonts.NORMAL_BIG;
+    private Font shrinkFont = normalLyricTargetFont;
+    private Font highlightFont = highlightLyricTargetFont;
     // 字体大小动画数组
     private Font[] fontAnimation;
     private int hIndex;
@@ -130,9 +132,9 @@ public class LyricListRenderer extends CustomListCellRenderer {
         }
         // 其他行的样式
         else {
-            lyricLabel.setFont(index == lRow ? shrinkFont : defaultFont);
+            lyricLabel.setFont(index == lRow ? shrinkFont : normalLyricTargetFont);
             // 对长歌词手动添加 <br> 换行，由于排版问题取消自动换行
-            lyricLabel.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(plainLyric, maxWidth, defaultFont.getSize())));
+            lyricLabel.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(plainLyric, maxWidth, normalLyricTargetFont.getSize())));
             lyricLabel.setIcon(null);
         }
 
@@ -141,13 +143,13 @@ public class LyricListRenderer extends CustomListCellRenderer {
         subLyricLabel.setVisible(hasSubLyric);
         if (hasSubLyric) {
             String subLyric = statement.getSubLyric();
-            subLyricLabel.setFont(defaultFont);
+            subLyricLabel.setFont(normalLyricTargetFont);
             subLyricLabel.setHorizontalAlignment(alignment);
             subLyricLabel.setForeground(bgColor);
             if (index == row) subLyricLabel.setOpacity(highlightMaxOpacity);
             else if (index < row) subLyricLabel.setOpacity(normalMinOpacity);
             else subLyricLabel.setOpacity(normalMaxOpacity);
-            subLyricLabel.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(subLyric, maxWidth, defaultFont.getSize())));
+            subLyricLabel.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(subLyric, maxWidth, normalLyricTargetFont.getSize())));
         } else {
             subLyricLabel.setText("");
         }
@@ -156,6 +158,33 @@ public class LyricListRenderer extends CustomListCellRenderer {
         ((CustomListUI) list.getUI()).setCellHeight(index, outerPanel.getPreferredSize().height);
 
         return outerPanel;
+    }
+
+    // 返回稳定的 Cell 高度，用于适应字体大小动画
+    @Override
+    public int getStableCellHeight(JList<?> list, Object value, int index, int width) {
+        Statement statement = (Statement) value;
+        // SpringList 传入的 width 已经扣除了 List 的 Insets
+        Insets insets = outerPanel.getInsets();
+        int contentWidth = Math.max(1, width - insets.left - insets.right);
+        // 注意：必须使用最大字体，不能使用动画中的 highlightFont
+        int lyricHeight = measureLyricHeight(statement.getPlainLyric(), highlightLyricTargetFont, contentWidth);
+        // 子歌词高度
+        int subLyricHeight = 0;
+        int gap = 0;
+        if (statement.hasSubLyric()) {
+            subLyricHeight = measureLyricHeight(statement.getSubLyric(), normalLyricTargetFont, contentWidth);
+            gap = LYRIC_GAP;
+        }
+        int height = insets.top + lyricHeight + gap + subLyricHeight + insets.bottom;
+        return height;
+    }
+
+    private int measureLyricHeight(String text, Font font, int width) {
+        JLabel probe = new JLabel();
+        probe.setFont(font);
+        probe.setText(HtmlUtil.textToHtmlNoWrap(HtmlUtil.wrapLineByWidth(text, width, font.getSize())));
+        return probe.getPreferredSize().height;
     }
 
     @Override

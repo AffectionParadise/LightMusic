@@ -45,8 +45,8 @@ public class QsMusicSearchReq {
         String musicInfoBody = SdkCommon.qsRequest(SEARCH_MUSIC_QS_API, params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-        JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");
-        if (JsonUtil.notEmpty(resultGroups)) {
+        if (JsonUtil.notEmpty(musicInfoJson)) {
+            JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");
             JSONObject result = resultGroups.getJSONObject(0);
             JSONArray songArray = result.getJSONArray("data");
             t = page * limit + (result.getBooleanValue("has_more") ? 1 : 0);

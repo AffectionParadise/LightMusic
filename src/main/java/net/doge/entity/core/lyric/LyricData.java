@@ -21,16 +21,16 @@ import java.util.List;
  */
 @Data
 public class LyricData {
-    // 状态
-    private int state = LyricState.OK;
-    // 歌词
+    // 歌词状态
+    private int lyricState = LyricState.OK;
+    // 子歌词状态
+    private int subLyricState = LyricState.OK;
+    // 整合后的歌词
     private List<Statement> statements;
     // lrc 文件内容
     private String lyricStr;
     // 偏移
     private double offset;
-    // 子歌词不支持滚动
-    private boolean subLyricDirty;
 
     public LyricData(String lyricStr) {
         initData(lyricStr, null);
@@ -51,8 +51,8 @@ public class LyricData {
         List<Statement> subLyricStmts = parse(subLyricStr, true);
         // 合并解析的所有歌词信息
         // 子歌词不支持滚动时，只能进行一一对应
-        if (subLyricDirty) {
-            for (int i = 0, s = subLyricStmts.size(); i < s; i++) {
+        if (subLyricState == LyricState.BAD_FORMAT) {
+            for (int i = 0, s = statements.size(); i < s; i++) {
                 Statement lyricStmt = statements.get(i);
                 Statement subLyricStmt = subLyricStmts.get(i);
                 lyricStmt.setSubLyric(subLyricStmt.getLyric());
@@ -77,7 +77,8 @@ public class LyricData {
     private List<Statement> parse(String lyricStr, boolean isSubLyric) {
         List<Statement> stmts = new LinkedList<>();
         if (StringUtil.isEmpty(lyricStr)) {
-            if (!isSubLyric) state = LyricState.NOT_EXISTS;
+            if (isSubLyric) subLyricState = LyricState.NOT_EXISTS;
+            else lyricState = LyricState.NOT_EXISTS;
             return stmts;
         }
         // 子歌词过滤掉逐字时间轴
@@ -113,8 +114,8 @@ public class LyricData {
                 }
                 stmts.add(new Statement(line));
             }
-            if (!isSubLyric) state = LyricState.BAD_FORMAT;
-            else subLyricDirty = true;
+            if (isSubLyric) subLyricState = LyricState.BAD_FORMAT;
+            else lyricState = LyricState.BAD_FORMAT;
         }
         return stmts;
     }

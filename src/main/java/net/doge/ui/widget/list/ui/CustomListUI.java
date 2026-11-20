@@ -1,8 +1,10 @@
 package net.doge.ui.widget.list.ui;
 
 import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import javax.swing.plaf.basic.BasicListUI;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Doge
@@ -14,6 +16,18 @@ public class CustomListUI extends BasicListUI {
         if (cellHeights == null) return;
         if (index >= cellHeights.length) return;
         cellHeights[index] = h;
+    }
+
+    @Override
+    protected MouseInputListener createMouseInputListener() {
+        return new MouseInputHandler() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                // 左键拖动由外部处理，避免默认选区拖动再次滚动视口
+                if (SwingUtilities.isLeftMouseButton(e)) return;
+                super.mouseDragged(e);
+            }
+        };
     }
 
     @Override

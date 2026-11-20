@@ -1,5 +1,6 @@
 package net.doge.ui.widget.list;
 
+import net.doge.ui.widget.list.renderer.base.StableCellHeightProvider;
 import net.doge.ui.widget.list.renderer.core.LyricListRenderer;
 import net.doge.util.ui.ScaleUtil;
 
@@ -349,14 +350,17 @@ public class SpringList<E> extends CustomList<E> {
             double[] p = new double[n + 1];
             ListCellRenderer<? super E> r = getCellRenderer();
             for (int i = 0; i < n; i++) {
+                E value = getModel().getElementAt(i);
                 int ch = getFixedCellHeight();
                 if (ch <= 0) {
-                    Component c = r.getListCellRendererComponent(this,
-                            getModel().getElementAt(i), i,
-                            getSelectionModel().isSelectedIndex(i),
-                            hasFocus() && getLeadSelectionIndex() == i);
-                    c.setSize(w, Short.MAX_VALUE);
-                    ch = Math.max(1, c.getPreferredSize().height);
+                    if (r instanceof StableCellHeightProvider) {
+                        ch = ((StableCellHeightProvider) r).getStableCellHeight(this, value, i, w);
+                    } else {
+                        // 普通 Renderer 使用原来的高度测量方式
+                        Component c = r.getListCellRendererComponent(this, value, i, false, false);
+                        c.setSize(w, Short.MAX_VALUE);
+                        ch = c.getPreferredSize().height;
+                    }
                 }
                 measured[i] = Math.max(1, ch);
                 p[i + 1] = p[i] + measured[i] + rowGap;
