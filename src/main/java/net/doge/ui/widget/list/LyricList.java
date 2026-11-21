@@ -71,7 +71,7 @@ public class LyricList<E> extends CustomList<E> {
     // 每行之间的间距
     private int rowGap = ScaleUtil.scale(0);
     // 当前歌词目标在视口高度中的相对比例
-    private double anchor = 0.5;
+    private double anchor = 0.44;
     // 歌词行的弹簧保留轻微回弹
     private double stiffness = 135;
     private double damping = 17.5;

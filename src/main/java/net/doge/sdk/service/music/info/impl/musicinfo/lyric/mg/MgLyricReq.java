@@ -38,7 +38,7 @@ public class MgLyricReq {
         if (StringUtil.notEmpty(mrcUrl)) {
             String mrcStr = HttpRequest.get(mrcUrl).executeAsStr();
             mrcStr = MrcDecoder.getInstance().decode(mrcStr);
-            String[] lsp = mrcStr.split("\n");
+            String[] lsp = mrcStr.split("\\R");
             StringBuilder sb = new StringBuilder();
             for (String l : lsp) {
                 if (RegexUtil.contains("\\[\\d+,\\d+\\]", l)) {

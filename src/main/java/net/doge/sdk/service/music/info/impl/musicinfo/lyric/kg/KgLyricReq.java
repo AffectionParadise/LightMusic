@@ -118,7 +118,7 @@ public class KgLyricReq {
         }
 
         // 处理逐字歌词
-        String[] lsp = result.split("\n");
+        String[] lsp = result.split("\\R");
         String lineTimeExp = "\\[(\\d+),\\d+\\]";
         StringBuilder sb = new StringBuilder();
         for (String l : lsp) {

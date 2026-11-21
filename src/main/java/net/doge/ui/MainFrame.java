@@ -20274,6 +20274,7 @@ public class MainFrame extends JFrame {
             // 错误计数，超出后加载失败
             player.countsMpError();
             if (player.mpErrorExceeded()) {
+                LogUtil.error("播放器重试后仍失败", mp.getError());
                 updateTitle(LOAD_TRACK_FAILED);
                 return;
             }
@@ -20601,10 +20602,14 @@ public class MainFrame extends JFrame {
                     try {
                         MusicServerUtil.fillLyric(finalMusicInfo);
                     } catch (Exception e) {
-
+                        LogUtil.error("获取在线歌词失败", e);
                     } finally {
                         if (!finalMusicInfo.equals(player.getMusicInfo())) return;
-                        loadLyric(null, finalMusicInfo, currLyricType, false);
+                        try {
+                            loadLyric(null, finalMusicInfo, currLyricType, false);
+                        } catch (RuntimeException e) {
+                            LogUtil.error("加载在线歌词失败", e);
+                        }
                     }
                 });
 
@@ -22803,7 +22808,7 @@ public class MainFrame extends JFrame {
                 loading.start();
                 runnable.run();
             } catch (Exception ex) {
-                LogUtil.error(ex);
+                LogUtil.error("执行加载任务失败", ex);
             } finally {
                 loading.stop();
             }

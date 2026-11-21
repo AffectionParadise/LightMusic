@@ -132,7 +132,7 @@ public class QqLyricReq {
         String lyric = RegexUtil.getGroup1("LyricContent=\"(.*)\"", xmlStr);
 //        Document doc = Jsoup.parse(xmlStr);
 //        String lyric = doc.select("Lyric_1").attr("LyricContent");
-        String[] lsp = lyric.split("\n");
+        String[] lsp = lyric.split("\\R");
         StringBuilder sb = new StringBuilder();
         for (String l : lsp) {
             if (RegexUtil.contains("\\[\\d+,\\d+\\]", l)) {

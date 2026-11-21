@@ -5,7 +5,6 @@ import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.constant.core.lyric.LyricState;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
-import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.text.LyricUtil;
 import net.doge.util.media.DurationUtil;
 
@@ -60,80 +59,6 @@ public class LyricData {
         if (!statements.isEmpty() && statements.get(0).getTime() >= 3) statements.add(0, new Statement(0, "···"));
     }
 
-    private void matchTimedLyrics(List<Statement> subLyricStmts) {
-        List<Statement> lyrics = new ArrayList<>(statements);
-        List<Statement> subLyrics = new ArrayList<>(subLyricStmts);
-        int lyricIndex = 0, subLyricsIndex = 0;
-        // 两组歌词已按时间排序，跨时间组的歌词无需进入同一个动态规划表
-        int lyricsSize = lyrics.size(), subLyricsSize = subLyrics.size();
-        while (lyricIndex < lyricsSize && subLyricsIndex < subLyricsSize) {
-            long lyricTime = centisecondKey(lyrics.get(lyricIndex));
-            long translationTime = centisecondKey(subLyrics.get(subLyricsIndex));
-            if (lyricTime < translationTime) lyricIndex++;
-            else if (lyricTime > translationTime) subLyricsIndex++;
-            else {
-                int lyricEnd = timeGroupEnd(lyrics, lyricIndex, lyricTime);
-                int translationEnd = timeGroupEnd(subLyrics, subLyricsIndex, translationTime);
-                matchTimeGroup(lyrics.subList(lyricIndex, lyricEnd), subLyrics.subList(subLyricsIndex, translationEnd));
-                lyricIndex = lyricEnd;
-                subLyricsIndex = translationEnd;
-            }
-        }
-    }
-
-    private static long centisecondKey(Statement stmt) {
-        double centiseconds = stmt.getTime() * 100;
-        // 截取到百分之一秒，同时抵消浮点换算在边界上的微小误差
-        return (long) (centiseconds + Math.copySign(1e-9, centiseconds));
-    }
-
-    private static int timeGroupEnd(List<Statement> stmts, int start, long time) {
-        int end = start + 1;
-        while (end < stmts.size() && centisecondKey(stmts.get(end)) == time) end++;
-        return end;
-    }
-
-    private static void matchTimeGroup(List<Statement> lyrics, List<Statement> subLyrics) {
-        int lyricsSize = lyrics.size(), subLyricsSize = subLyrics.size();
-        if (lyricsSize == subLyricsSize) {
-            for (int i = 0; i < lyricsSize; i++) lyrics.get(i).setSubLyric(subLyrics.get(i).getLyric());
-            return;
-        }
-
-        boolean fewerLyrics = lyricsSize < subLyricsSize;
-        List<Statement> shorter = fewerLyrics ? lyrics : subLyrics;
-        List<Statement> longer = fewerLyrics ? subLyrics : lyrics;
-        int longerSize = longer.size(), shoterSize = shorter.size();
-        int extraRows = longerSize - shoterSize;
-        boolean[][] matched = new boolean[shoterSize][extraRows + 1];
-        double[] previous = new double[extraRows + 1], current = new double[extraRows + 1];
-
-        // 状态 (i, skipped) 的代价是匹配前 i 行短序列、跳过长序列中 skipped 行的最小总时间差
-        for (int i = 1; i <= shoterSize; i++) {
-            double time = shorter.get(i - 1).getTime();
-            for (int skipped = 0; skipped <= extraRows; skipped++) {
-                double matchCost = previous[skipped] + Math.abs(time - longer.get(i + skipped - 1).getTime());
-                double skipCost = skipped == 0 ? Double.POSITIVE_INFINITY : current[skipped - 1];
-                matched[i - 1][skipped] = matchCost <= skipCost;
-                current[skipped] = Math.min(matchCost, skipCost);
-            }
-            double[] temp = previous;
-            previous = current;
-            current = temp;
-        }
-
-        // 从最优状态回溯，按顺序一对一配对
-        for (int i = shoterSize, skipped = extraRows; i > 0; ) {
-            if (matched[i - 1][skipped]) {
-                Statement shortStmt = shorter.get(i - 1);
-                Statement longStmt = longer.get(i + skipped - 1);
-                if (fewerLyrics) shortStmt.setSubLyric(longStmt.getLyric());
-                else longStmt.setSubLyric(shortStmt.getLyric());
-                i--;
-            } else skipped--;
-        }
-    }
-
     private List<Statement> parse(String lyricStr, boolean isSubLyric) {
         List<Statement> stmts = new LinkedList<>();
         if (StringUtil.isEmpty(lyricStr)) {
@@ -144,7 +69,7 @@ public class LyricData {
         // 子歌词过滤掉逐字时间轴
         if (isSubLyric) lyricStr = lyricStr.replaceAll(LyricPattern.PAIR_FIND, "");
         // 解析完整的歌词
-        String[] lyricArray = ArrayUtil.removeLastEmpty(lyricStr.split("\\R", -1));
+        String[] lyricArray = lyricStr.split("\\R");
         for (String line : lyricArray) {
             line = LyricUtil.cleanLyricStr(line);
             if (StringUtil.isEmpty(line)) continue;
@@ -192,6 +117,81 @@ public class LyricData {
                 if (!ls.hasEndTime()) ls.setEndTime(stmt.getTime());
             }
             stmts.remove(i--);
+        }
+    }
+
+    // 匹配与合并歌词与子歌词
+    private void matchTimedLyrics(List<Statement> subLyricStmts) {
+        List<Statement> lyrics = new ArrayList<>(statements);
+        List<Statement> subLyrics = new ArrayList<>(subLyricStmts);
+        int lyricIndex = 0, subLyricsIndex = 0;
+        // 两组歌词已按时间排序，跨时间组的歌词无需进入同一个动态规划表
+        int lyricsSize = lyrics.size(), subLyricsSize = subLyrics.size();
+        while (lyricIndex < lyricsSize && subLyricsIndex < subLyricsSize) {
+            long lyricTime = centisecondKey(lyrics.get(lyricIndex));
+            long subLyricTime = centisecondKey(subLyrics.get(subLyricsIndex));
+            if (lyricTime < subLyricTime) lyricIndex++;
+            else if (lyricTime > subLyricTime) subLyricsIndex++;
+            else {
+                int lyricEnd = timeGroupEnd(lyrics, lyricIndex, lyricTime);
+                int translationEnd = timeGroupEnd(subLyrics, subLyricsIndex, subLyricTime);
+                matchTimeGroup(lyrics.subList(lyricIndex, lyricEnd), subLyrics.subList(subLyricsIndex, translationEnd));
+                lyricIndex = lyricEnd;
+                subLyricsIndex = translationEnd;
+            }
+        }
+    }
+
+    private static long centisecondKey(Statement stmt) {
+        double centiseconds = stmt.getTime() * 100;
+        // 截取到百分之一秒，同时抵消浮点换算在边界上的微小误差
+        return (long) (centiseconds + Math.copySign(1e-9, centiseconds));
+    }
+
+    private static int timeGroupEnd(List<Statement> stmts, int start, long time) {
+        int end = start + 1, size = stmts.size();
+        while (end < size && centisecondKey(stmts.get(end)) == time) end++;
+        return end;
+    }
+
+    private static void matchTimeGroup(List<Statement> lyrics, List<Statement> subLyrics) {
+        int lyricsSize = lyrics.size(), subLyricsSize = subLyrics.size();
+        if (lyricsSize == subLyricsSize) {
+            for (int i = 0; i < lyricsSize; i++) lyrics.get(i).setSubLyric(subLyrics.get(i).getLyric());
+            return;
+        }
+
+        boolean fewerLyrics = lyricsSize < subLyricsSize;
+        List<Statement> shorter = fewerLyrics ? lyrics : subLyrics;
+        List<Statement> longer = fewerLyrics ? subLyrics : lyrics;
+        int longerSize = longer.size(), shoterSize = shorter.size();
+        int extraRows = longerSize - shoterSize;
+        boolean[][] matched = new boolean[shoterSize][extraRows + 1];
+        double[] previous = new double[extraRows + 1], current = new double[extraRows + 1];
+
+        // 状态 (i, skipped) 的代价是匹配前 i 行短序列、跳过长序列中 skipped 行的最小总时间差
+        for (int i = 1; i <= shoterSize; i++) {
+            double time = shorter.get(i - 1).getTime();
+            for (int skipped = 0; skipped <= extraRows; skipped++) {
+                double matchCost = previous[skipped] + Math.abs(time - longer.get(i + skipped - 1).getTime());
+                double skipCost = skipped == 0 ? Double.POSITIVE_INFINITY : current[skipped - 1];
+                matched[i - 1][skipped] = matchCost <= skipCost;
+                current[skipped] = Math.min(matchCost, skipCost);
+            }
+            double[] temp = previous;
+            previous = current;
+            current = temp;
+        }
+
+        // 从最优状态回溯，按顺序一对一配对
+        for (int i = shoterSize, skipped = extraRows; i > 0; ) {
+            if (matched[i - 1][skipped]) {
+                Statement shortStmt = shorter.get(i - 1);
+                Statement longStmt = longer.get(i + skipped - 1);
+                if (fewerLyrics) shortStmt.setSubLyric(longStmt.getLyric());
+                else longStmt.setSubLyric(shortStmt.getLyric());
+                i--;
+            } else skipped--;
         }
     }
 }

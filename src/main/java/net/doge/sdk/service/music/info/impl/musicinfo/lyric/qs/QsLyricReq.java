@@ -33,7 +33,7 @@ public class QsLyricReq {
         String lyric = lyricJson.getString("content");
         if (StringUtil.isEmpty(lyric)) musicInfo.setLyric("");
         else {
-            String[] lsp = lyric.split("\n");
+            String[] lsp = lyric.split("\\R");
             String lineTimeExp = "\\[(\\d+),\\d+\\]";
             StringBuilder sb = new StringBuilder();
             for (String l : lsp) {

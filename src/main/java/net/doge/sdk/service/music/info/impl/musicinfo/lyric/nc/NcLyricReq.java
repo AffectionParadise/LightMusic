@@ -48,7 +48,7 @@ public class NcLyricReq {
             String lyric = yrcJson.getString("lyric");
             if (StringUtil.isEmpty(lyric)) musicInfo.setLyric("");
             else {
-                String[] lsp = lyric.split("\n");
+                String[] lsp = lyric.split("\\R");
                 StringBuilder sb = new StringBuilder();
                 for (String l : lsp) {
                     // 网易云歌词中包含部分 json 数据需要解析
@@ -89,7 +89,7 @@ public class NcLyricReq {
             String lyric = lrcJson.getString("lyric");
             if (StringUtil.isEmpty(lyric)) musicInfo.setLyric("");
             else {
-                String[] lsp = lyric.split("\n");
+                String[] lsp = lyric.split("\\R");
                 StringBuilder sb = new StringBuilder();
                 for (String l : lsp) {
                     if (JsonUtil.isValidObject(l)) {

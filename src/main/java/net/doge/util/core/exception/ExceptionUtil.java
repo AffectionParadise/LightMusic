@@ -10,6 +10,7 @@ import net.doge.ui.widget.dialog.TipDialog;
 import net.doge.util.core.log.LogUtil;
 
 import java.net.SocketTimeoutException;
+import java.util.concurrent.CancellationException;
 
 /**
  * @author Doge
@@ -30,8 +31,8 @@ public class ExceptionUtil {
      * @return
      */
     public static void throwRuntimeException(Exception e) {
-        if (e instanceof SocketTimeoutException) throw new TimeoutRuntimeException(TIME_OUT_MSG);
-        throw new ConnectRuntimeException(NET_ERROR_MSG);
+        if (e instanceof SocketTimeoutException) throw new TimeoutRuntimeException(TIME_OUT_MSG, e);
+        throw new ConnectRuntimeException(NET_ERROR_MSG, e);
     }
 
     /**
@@ -41,8 +42,12 @@ public class ExceptionUtil {
      * @return
      */
     public static void handleAsyncException(Exception e) {
-        // InterruptedException ExecutionException
-        LogUtil.error(e.getCause());
+        if (e instanceof InterruptedException) {
+            Thread.currentThread().interrupt();
+            return;
+        }
+        if (e instanceof CancellationException) return;
+        LogUtil.error("异步任务执行失败", e);
     }
 
     /**
@@ -52,7 +57,7 @@ public class ExceptionUtil {
      * @return
      */
     public static void handleResourceException(Exception e, MainFrame f) {
-        LogUtil.error(e);
+        LogUtil.error("资源获取失败", e);
         String msg;
         if (e instanceof ConnectRuntimeException) msg = NET_ERROR_MSG;
         else if (e instanceof TimeoutRuntimeException) msg = TIME_OUT_MSG;
@@ -67,7 +72,7 @@ public class ExceptionUtil {
      * @return
      */
     public static void handlePlaybackException(Exception e, MainFrame f) {
-        LogUtil.error(e);
+        LogUtil.error("播放失败", e);
         String msg;
         if (e instanceof MediaException) msg = UNSUPPORTED_AUDIO_FILE_MSG;
         else if (e instanceof IllegalArgumentException || e instanceof IllegalMediaException)

@@ -71,7 +71,7 @@ public class KwLyricReq {
         }
         // 解析逐字歌词
         String lineTimeExp = "\\[\\d+:\\d+(?:[.:]\\d+)?\\]";
-        String[] lsp = lyricStr.split("\n");
+        String[] lsp = lyricStr.split("\\R");
         StringBuilder sb = new StringBuilder();
         for (String l : lsp) {
             List<String> s1List = RegexUtil.findAllGroup1("<(\\d+),-?\\d+>", l);
@@ -136,7 +136,7 @@ public class KwLyricReq {
             lastTime = time;
         }
         // 去除翻译中无用的逐字时间轴
-        musicInfo.setTrans(sb.toString().replaceAll("<\\d+,-?\\d+>", ""));
+        musicInfo.setTrans(sb.toString().replaceAll(LyricPattern.PAIR_FIND, ""));
 
 //            String lyricBody = SdkCommon.kwRequest(String.format(LYRIC_KW_API, id))
 //                    .executeAsync()

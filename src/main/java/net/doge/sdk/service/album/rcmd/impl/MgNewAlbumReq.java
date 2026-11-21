@@ -51,7 +51,7 @@ public class MgNewAlbumReq {
 //
 //            String albumId = albumJson.getString("albumId");
 //            String albumName = albumJson.getString("albumName");
-//            String[] des = albumJson.getString("albumsDes").split("\n");
+//            String[] des = albumJson.getString("albumsDes").split("\\R");
 //            String artist = des[1].split("：")[1];
 //            String artistId = albumJson.getString("singerId");
 //            String publishTime = des[5].split("：")[1];

@@ -12,4 +12,8 @@ public class ConnectRuntimeException extends RuntimeException {
     public ConnectRuntimeException(String msg) {
         super(msg);
     }
+
+    public ConnectRuntimeException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
 }
