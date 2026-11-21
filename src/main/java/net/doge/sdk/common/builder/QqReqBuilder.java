@@ -1,8 +1,8 @@
 package net.doge.sdk.common.builder;
 
-import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.constant.qq.QqSearchDevice;
 import net.doge.sdk.common.constant.qq.QqSearchType;
+import net.doge.sdk.common.crypto.QqCrypto;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.http.HttpRequest;
 
@@ -16,6 +16,9 @@ public class QqReqBuilder {
         if (instance == null) instance = new QqReqBuilder();
         return instance;
     }
+
+    // 需要签名的 QQ API
+    public static final String SIGNED_MAIN_QQ_API = "https://u.y.qq.com/cgi-bin/musics.fcg?sign=%s";
 
     public HttpRequest buildSearchRequest(QqSearchDevice device, QqSearchType type, String keyword, int page, int limit) {
         String json = "{\"comm\":{\"_channelid\":\"0\",\"_os_version\":\"6.2.9200-2\",\"ct\":\"19\",\"cv\":\"2151\",\"guid\":\"1F70E520B2EAA7D25E11760783C53CA9\"," +
@@ -59,8 +62,12 @@ public class QqReqBuilder {
                 break;
         }
         String searchId = getSearchId();
-        return HttpRequest.post(SdkCommon.QQ_MAIN_API)
-                .jsonBody(String.format(json, method, searchId, t, keyword, page, limit));
+        String data = String.format(json, method, searchId, t, keyword, page, limit);
+        String sign = QqCrypto.getInstance().zzcSign(data);
+        String url = String.format(SIGNED_MAIN_QQ_API, sign);
+        return HttpRequest.post(url)
+                .userAgent("QQMusic 14090508(android 12)")
+                .jsonBody(data);
     }
 
     /**

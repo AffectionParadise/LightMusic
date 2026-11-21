@@ -40,7 +40,7 @@ public class QqArtistListReq {
         if (StringUtil.notEmpty(param)) {
             final int lim = 80, p = (page - 1) / 4 + 1;
             String[] sp = param.split(" ");
-            String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+            String artistInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                             "\"param\":{\"sex\":%s,\"genre\":%s,\"index\":%s,\"area\":%s,\"sin\":%s,\"cur_page\":%s}}}", sp[0], sp[1], sp[2], sp[3], (p - 1) * lim, p))
                     .executeAsStr();

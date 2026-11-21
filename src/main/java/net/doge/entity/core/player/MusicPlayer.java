@@ -23,6 +23,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.entity.service.base.MusicResource;
 import net.doge.ui.MainFrame;
 import net.doge.util.core.StringUtil;
+import net.doge.util.core.math.MathUtil;
 import net.doge.util.media.DurationUtil;
 import net.doge.util.media.MediaUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -381,9 +382,7 @@ public class MusicPlayer {
         bands.get(1).setCenterFrequency(62.5);
         for (int i = 0, size = bands.size(); i < size; i++) {
             EqualizerBand band = bands.get(i);
-            double val = ds[i];
-            val = Math.min(val, EqualizerData.MAX_GAIN);
-            val = Math.max(val, EqualizerData.MIN_GAIN);
+            double val = MathUtil.clamp(ds[i], EqualizerData.MIN_GAIN, EqualizerData.MAX_GAIN);
             band.setGain(val);
         }
     }

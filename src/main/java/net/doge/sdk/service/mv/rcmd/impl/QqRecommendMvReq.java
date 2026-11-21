@@ -42,7 +42,7 @@ public class QqRecommendMvReq {
 
         String param = s[TagType.RECOMMEND_MV_QQ];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+            String mvInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"mv_list\":{\"module\":\"MvService.MvInfoProServer\"," +
                             "\"method\":\"GetAllocMvInfo\",\"param\":{\"area_id\":%s,\"version_id\":%s,\"start\":%s,\"size\":%s," +
                             "\"order\":1}}}", param, s[TagType.RECOMMEND_MV_QQ_2], (page - 1) * limit, limit))

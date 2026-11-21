@@ -38,7 +38,7 @@ public class QqNewAlbumReq {
 
         String param = s[TagType.NEW_ALBUM_QQ];
         if (StringUtil.notEmpty(param)) {
-            String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+            String albumInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"new_album\":{\"module\":\"newalbum.NewAlbumServer\",\"method\":\"get_new_album_info\"," +
                             "\"param\":{\"area\":%s,\"sin\":0,\"num\":100}}}", param))
                     .executeAsStr();

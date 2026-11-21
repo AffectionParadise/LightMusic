@@ -14,7 +14,7 @@ import java.util.Arrays;
  * 使用频率补偿、缓慢的逐频段电平调整、谨慎的全局 AGC、
  * 瞬态脉冲、软拐点限幅器以及启动/释放平滑。
  */
-public final class VisualSpectrumProcessor {
+public class VisualSpectrumProcessor {
     private static final double MIN_DB = -80.0;
     private static final double MEL_MIN_HZ = 55.0;
     private static final double MEL_MAX_HZ = 10000.0;

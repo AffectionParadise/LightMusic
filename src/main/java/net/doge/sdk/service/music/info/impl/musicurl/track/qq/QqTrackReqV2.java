@@ -63,7 +63,7 @@ public class QqTrackReqV2 {
         // 获取 mediaMid
         String infoReqBody = String.format("{\"comm\":{\"ct\":\"19\",\"cv\":\"1859\",\"uin\":\"0\"},\"req\":{\"module\":\"music.pf_song_detail_svr\"," +
                 "\"method\":\"get_song_detail_yqq\",\"param\":{\"song_type\":0,\"song_mid\":\"%s\"}}}", mid);
-        String infoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String infoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(infoReqBody)
                 .executeAsStr();
         JSONObject infoBodyJson = JSONObject.parseObject(infoBody);
@@ -77,7 +77,7 @@ public class QqTrackReqV2 {
                         "\"guid\":\"%s\",\"songmid\":[\"%s\"],\"songtype\":[0],\"uin\":\"%s\",\"loginflag\":1,\"platform\":\"20\"}}," +
                         "\"comm\":{\"qq\":\"%s\",\"authst\":\"%s\",\"ct\":\"26\",\"cv\":\"2010101\",\"v\":\"2010101\"}}",
                 qualityEntry.getPrefix() + mediaMid + qualityEntry.getSuffix(), guid, mid, uin, loginuin, qqmusic_key);
-        String urlBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String urlBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(reqBody)
                 .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(urlBody);

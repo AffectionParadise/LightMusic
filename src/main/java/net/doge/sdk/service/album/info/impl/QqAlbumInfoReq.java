@@ -97,7 +97,7 @@ public class QqAlbumInfoReq {
         int total;
 
         String id = albumInfo.getId();
-        String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String albumInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":10000},\"albumSonglist\":{\"method\":\"GetAlbumSongList\",\"param\":" +
                         "{\"albumMid\":\"%s\",\"albumID\":0,\"begin\":0,\"num\":999,\"order\":2},\"module\":\"music.musichallAlbum.AlbumSongList\"}}", id))
                 .executeAsStr();

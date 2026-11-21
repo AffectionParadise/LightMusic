@@ -27,7 +27,7 @@ public class QqHotSearchReq {
     public List<String> getHotSearch() {
         List<String> r = new LinkedList<>();
 
-        String hotSearchBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String hotSearchBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody("{\"comm\":{\"ct\":\"19\",\"cv\":\"1803\",\"guid\":\"0\",\"patch\":\"118\",\"psrf_access_token_expiresAt\":0," +
                         "\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\",\"tmeLoginType\":0," +
                         "\"uin\":\"0\",\"wid\":\"0\"},\"hotkey\":{\"method\":\"GetHotkeyForQQMusicPC\"," +

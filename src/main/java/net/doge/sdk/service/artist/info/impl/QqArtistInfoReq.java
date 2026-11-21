@@ -65,7 +65,7 @@ public class QqArtistInfoReq {
 //
 //                res.add(artistInfo);
 
-        String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String artistInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
                         "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
                         "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
@@ -131,7 +131,7 @@ public class QqArtistInfoReq {
 //            GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
 //            artistInfo.setDescription(description);
 
-        String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String artistInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"singer\":{\"method\":\"GetSingerDetail\",\"param\":{\"singer_mids\":[\"%s\"],\"ex_singer\":1," +
                         "\"wiki_singer\":1,\"group_singer\":0,\"pic\":1,\"photos\":0},\"module\":\"music.musichallSinger.SingerInfoInter\"}," +
                         "\"album\":{\"method\":\"GetAlbumList\",\"param\":{\"singerMid\":\"%s\",\"order\":0,\"begin\":0,\"num\":1," +
@@ -169,7 +169,7 @@ public class QqArtistInfoReq {
         int total;
 
         String id = artistInfo.getId();
-        String artistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String artistInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singer\":{\"method\":\"get_singer_detail_info\",\"param\":" +
                         "{\"sort\":5,\"singermid\":\"%s\",\"sin\":%s,\"num\":%s},\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
                 .executeAsStr();

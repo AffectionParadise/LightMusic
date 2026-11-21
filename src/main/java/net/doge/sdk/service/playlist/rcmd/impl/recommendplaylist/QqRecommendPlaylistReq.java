@@ -43,7 +43,7 @@ public class QqRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String playlistInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody("{\"comm\":{\"ct\":24},\"recomPlaylist\":{\"method\":\"get_hot_recommend\",\"param\":{\"async\":1,\"cmd\":2},\"module\":\"playlist.HotRecommendServer\"}}")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

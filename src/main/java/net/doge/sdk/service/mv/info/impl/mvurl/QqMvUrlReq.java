@@ -25,7 +25,7 @@ public class QqMvUrlReq {
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"getMvUrl\":{\"module\":\"gosrf.Stream.MvUrlProxy\",\"method\":\"GetMvUrls\"," +
                         "\"param\":{\"vids\":[\"%s\"],\"request_typet\":10001}}}", id))
                 .executeAsStr();

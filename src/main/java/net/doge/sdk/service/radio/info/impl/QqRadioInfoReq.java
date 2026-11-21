@@ -44,7 +44,7 @@ public class QqRadioInfoReq {
         int total = 0;
 
         String id = radioInfo.getId();
-        String radioInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String radioInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"songlist\":{\"module\":\"mb_track_radio_svr\",\"method\":\"get_radio_track\"," +
                         "\"param\":{\"id\":%s,\"firstplay\":1,\"num\":15}},\"radiolist\":{\"module\":\"pf.radiosvr\"," +
                         "\"method\":\"GetRadiolist\",\"param\":{\"ct\":\"24\"}},\"comm\":{\"ct\":24,\"cv\":0}}", id))

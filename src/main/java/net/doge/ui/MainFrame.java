@@ -19387,40 +19387,15 @@ public class MainFrame extends JFrame {
         });
         // 初始不可见
         spectrumPanel.setVisible(false);
+
         lyricScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         lyricScrollPane.setVBarActive(false);
+        lyricScrollPane.setBorder(new HDEmptyBorder(0, 0, 0, 10));
+
         lyricAndSpecBox.add(lyricScrollPane);
         lyricAndSpecBox.add(spectrumPanel);
         infoAndLyricBox.add(lyricAndSpecBox);
     }
-
-//    // 更新歌词面板上下边缘渐隐效果
-//    private void updateLyricListViewFading() {
-//        int first = lyricList.getFirstVisibleIndex();
-//        int last = lyricList.getLastVisibleIndex();
-//        JViewport vp = lyricScrollPane.getViewport();
-//        Rectangle fb = lyricList.getCellBounds(first, first);
-//        if (fb != null) {
-//            Rectangle vfb = SwingUtilities.convertRectangle(lyricList, fb, vp);
-//            // 向上取整 (a + b - 1) / b
-//            if (vfb.y > vfb.height) first -= (vfb.y + vfb.height - 1) / vfb.height;
-//        }
-//        Rectangle lb = lyricList.getCellBounds(last, last);
-//        if (lb != null) {
-//            Rectangle vlb = SwingUtilities.convertRectangle(lyricList, lb, vp);
-//            // 向上取整 (a + b - 1) / b
-//            if (vlb.y + vlb.height < vp.getHeight()) last += (vp.getHeight() - vlb.y - 1) / vlb.height;
-//        }
-//        LyricListRenderer r = (LyricListRenderer) lyricList.getCellRenderer();
-//        Map<Integer, Float> alphas = r.getAlphas();
-//        alphas.clear();
-//        int t = r.edgeCellNum;
-//        float step = (r.normalMaxAlpha - r.normalMinAlpha) / t;
-//        for (int i = 0; i < t; i++) {
-//            alphas.put(first + i, r.normalMinAlpha + i * step);
-//            alphas.put(last - i, r.normalMinAlpha + i * step);
-//        }
-//    }
 
     // 更新歌词下坠动画
     private void updateWordDropAnimation(HighlightLyric hl, int piece) {

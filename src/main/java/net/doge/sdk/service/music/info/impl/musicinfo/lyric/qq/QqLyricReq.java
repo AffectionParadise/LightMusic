@@ -82,7 +82,7 @@ public class QqLyricReq {
 //        String qrcStr = QrcParser.getInstance().parse(data.getString("lyric"));
 
         // 先根据 mid 获取 id
-        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", mid))
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

@@ -54,7 +54,7 @@ public class QqCommentReq {
             typeStr = "1";
 
             // QQ 需要先通过 mid 获取 id
-            String songInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+            String songInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                     .executeAsStr();
             JSONObject trackInfo = JSONObject.parseObject(songInfoBody).getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info");

@@ -59,7 +59,7 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
 
     private final int LYRIC_GAP = ScaleUtil.scale(10);
     private final int HORIZONTAL_INSET = ScaleUtil.scale(90);
-    private final int VERTICAL_INSET = ScaleUtil.scale(20);
+    private final int VERTICAL_INSET = ScaleUtil.scale(10);
     private final Border BORDER = new EmptyBorder(VERTICAL_INSET, 0, VERTICAL_INSET, HORIZONTAL_INSET);
 
     public LyricListRenderer() {

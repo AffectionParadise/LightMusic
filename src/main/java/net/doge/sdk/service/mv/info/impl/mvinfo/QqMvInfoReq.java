@@ -26,7 +26,7 @@ public class QqMvInfoReq {
      */
     public void fillMvDetail(NetMvInfo mvInfo) {
         String mvId = mvInfo.getId();
-        String mvBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
                         "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
                         "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +

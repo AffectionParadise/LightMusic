@@ -25,7 +25,7 @@ public class QqArtistTagReq {
      */
     public void initArtistTag() {
         int c = Tags.artistIndices.length;
-        String artistTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String artistTagBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody("{\"comm\":{\"ct\":24,\"cv\":0},\"singerList\":{\"module\":\"Music.SingerListServer\",\"method\":\"get_singer_list\"," +
                         "\"param\":{\"area\":-100,\"sex\":-100,\"genre\":-100,\"index\":-100,\"sin\":0,\"cur_page\":1}}}")
                 .executeAsStr();

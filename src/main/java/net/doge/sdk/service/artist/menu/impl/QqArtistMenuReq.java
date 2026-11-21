@@ -41,7 +41,7 @@ public class QqArtistMenuReq {
         int total;
 
         String id = artistInfo.getId();
-        String albumInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String albumInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":0},\"singerAlbum\":{\"method\":\"get_singer_album\",\"param\":" +
                         "{\"singermid\":\"%s\",\"order\":\"time\",\"begin\":%s,\"num\":%s,\"exstatus\":1}," +
                         "\"module\":\"music.web_singer_info_svr\"}}", id, (page - 1) * limit, limit))
@@ -122,7 +122,7 @@ public class QqArtistMenuReq {
 //                res.add(mvInfo);
 //            }
 
-        String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"mv\":{\"method\":\"GetSingerMvList\",\"param\":{\"singermid\":\"%s\",\"order\":1,\"start\":%s,\"count\":%s}," +
                         "\"module\":\"MvService.MvInfoProServer\"}}", id, (page - 1) * limit, limit))
                 .executeAsStr();

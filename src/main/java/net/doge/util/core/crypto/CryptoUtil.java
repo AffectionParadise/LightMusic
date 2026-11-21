@@ -29,11 +29,11 @@ public class CryptoUtil {
     /**
      * 计算文件 32 位 MD5 值(16 进制字符串)
      *
-     * @param s
+     * @param data
      * @return
      */
-    public static String md5Hex(String s) {
-        return DigestUtil.md5Hex(s);
+    public static String md5Hex(String data) {
+        return DigestUtil.md5Hex(data);
     }
 
     /**
@@ -44,6 +44,17 @@ public class CryptoUtil {
      */
     public static String md5Hex(File file) {
         return DigestUtil.md5Hex(file);
+    }
+
+
+    /**
+     * 计算 SHA-1，返回 16 进制字符串
+     *
+     * @param data
+     * @return
+     */
+    public static String sha1Hex(String data) {
+        return DigestUtil.sha1Hex(data);
     }
 
     /**
@@ -93,6 +104,16 @@ public class CryptoUtil {
      */
     public static String base64Encode(byte[] data) {
         return Base64.encode(data);
+    }
+
+    /**
+     * 不带填充 Base 64 编码 bytes
+     *
+     * @param data
+     * @return
+     */
+    public static String base64EncodeWithoutPadding(byte[] data) {
+        return Base64.encodeWithoutPadding(data);
     }
 
     /**

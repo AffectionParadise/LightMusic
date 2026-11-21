@@ -31,7 +31,7 @@ public class QqHotMusicRecommendReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                         "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 4, (page - 1) * limit, limit))
                 .executeAsStr();
@@ -82,7 +82,7 @@ public class QqHotMusicRecommendReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                         "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", 26, (page - 1) * limit, limit))
                 .executeAsStr();

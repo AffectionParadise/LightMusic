@@ -31,7 +31,7 @@ public class QqRankInfoReq {
      */
     public void fillRankInfo(NetRankInfo rankInfo) {
         String id = rankInfo.getId();
-        String rankInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String rankInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                         "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1))
                 .executeAsStr();
@@ -50,7 +50,7 @@ public class QqRankInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String rankInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"detail\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetDetail\"," +
                         "\"param\":{\"topId\":%s,\"offset\":%s,\"num\":%s}},\"comm\":{\"ct\":24,\"cv\":0}}", id, 0, 1000))
                 .executeAsStr();

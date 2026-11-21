@@ -25,7 +25,7 @@ public class QqMvTagReq {
      */
     public void initMvTag() {
         int c = Tags.mvIndices.length;
-        String mvTagBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvTagBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody("{\"comm\":{\"ct\":24},\"mv_tag\":{\"module\":\"MvService.MvInfoProServer\",\"method\":\"GetAllocTag\",\"param\":{}}}")
                 .executeAsStr();
         JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);

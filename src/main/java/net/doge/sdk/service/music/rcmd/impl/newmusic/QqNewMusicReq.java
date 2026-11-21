@@ -37,7 +37,7 @@ public class QqNewMusicReq {
 
         String param = s[TagType.RECOMMEND_NEW_SONG_QQ];
         if (StringUtil.notEmpty(param)) {
-            String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+            String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +
                             "\"method\":\"get_new_song_info\",\"param\":{\"type\":%s}}}", param))
                     .executeAsStr();

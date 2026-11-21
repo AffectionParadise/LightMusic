@@ -38,13 +38,13 @@ public class QqMvMenuReq {
 
         String id = musicInfo.getId();
         // 先根据 mid 获取 id
-        String musicInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"songinfo\":{\"method\":\"get_song_detail_yqq\",\"module\":\"music.pf_song_detail_svr\",\"param\":{\"song_mid\":\"%s\"}}}", id))
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
 
-        String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"g_tk\":5381,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\"," +
                         "\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1},\"video\":{\"module\":\"MvService.MvInfoProServer\"," +
                         "\"method\":\"GetSongRelatedMv\",\"param\":{\"songid\":%s,\"songtype\":1,\"lastmvid\":0,\"num\":10}}}", id))
@@ -91,7 +91,7 @@ public class QqMvMenuReq {
         int t;
 
         String id = netMvInfo.getId();
-        String mvInfoBody = HttpRequest.post(SdkCommon.QQ_MAIN_API)
+        String mvInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                 .jsonBody(String.format("{\"comm\":{\"ct\":24,\"cv\":4747474},\"mvinfo\":{\"module\":\"video.VideoDataServer\"," +
                         "\"method\":\"get_video_info_batch\",\"param\":{\"vidlist\":[\"%s\"],\"required\":[\"vid\",\"type\",\"sid\"," +
                         "\"cover_pic\",\"duration\",\"singers\",\"video_switch\",\"msg\",\"name\",\"desc\",\"playcnt\",\"pubdate\"," +
