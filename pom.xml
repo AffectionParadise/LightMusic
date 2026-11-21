@@ -14,9 +14,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--        <jfx.version>11.0.2</jfx.version>-->
-        <!--        <flatlaf.version>3.7</flatlaf.version>-->
         <jaudiotagger.version>3.0.1</jaudiotagger.version>
-        <!--        <palette.version>untagged-2e8df5cb83748d6f2aec</palette.version>-->
         <thumbnailator.version>0.4.21</thumbnailator.version>
         <filters.version>2.0.235-1</filters.version>
         <webp-imageio.version>0.1.6</webp-imageio.version>
@@ -24,21 +22,14 @@
         <fastjson2.version>2.0.66</fastjson2.version>
         <jsoup.version>1.23.2</jsoup.version>
         <lombok.version>1.18.48</lombok.version>
-        <pinyin4j.version>2.5.1</pinyin4j.version>
         <opencc4j.version>1.14.0</opencc4j.version>
-        <!--        <moji4j.version>1.2.0</moji4j.version>-->
+        <kuromoji-ipadic.version>0.9.0</kuromoji-ipadic.version>
+        <icu4j.version>77.1</icu4j.version>
         <hutool.version>5.8.48</hutool.version>
         <okhttp.version>5.5.1</okhttp.version>
     </properties>
 
     <dependencies>
-        <!-- FlatLaf -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.formdev</groupId>-->
-        <!--            <artifactId>flatlaf</artifactId>-->
-        <!--            <version>${flatlaf.version}</version>-->
-        <!--        </dependency>-->
-
         <!-- jdk 9 及以上需要引入 javafx 依赖 -->
         <!--        <dependency>-->
         <!--            <groupId>org.openjfx</groupId>-->
@@ -76,19 +67,6 @@
             <artifactId>jaudiotagger</artifactId>
             <version>${jaudiotagger.version}</version>
         </dependency>
-
-        <!-- 图片主色调提取 -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.github.trickl</groupId>-->
-        <!--            <artifactId>palette</artifactId>-->
-        <!--            <version>${palette.version}</version>-->
-        <!--        </dependency>-->
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.loyalsound</groupId>-->
-        <!--            <artifactId>iris</artifactId>-->
-        <!--            <version>1.1</version>-->
-        <!--        </dependency>-->
 
         <!-- thumbnailator 图像处理 -->
         <dependency>
@@ -194,13 +172,6 @@
             <version>${lombok.version}</version>
         </dependency>
 
-        <!-- 中文转拼音 -->
-        <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
-            <version>${pinyin4j.version}</version>
-        </dependency>
-
         <!-- 繁简切换 -->
         <dependency>
             <groupId>com.github.houbb</groupId>
@@ -209,11 +180,18 @@
         </dependency>
 
         <!-- 日语转罗马音 -->
-        <!--        <dependency>-->
-        <!--            <groupId>com.andree-surya</groupId>-->
-        <!--            <artifactId>moji4j</artifactId>-->
-        <!--            <version>${moji4j.version}</version>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.atilika.kuromoji</groupId>
+            <artifactId>kuromoji-ipadic</artifactId>
+            <version>${kuromoji-ipadic.version}</version>
+        </dependency>
+
+        <!-- 国际化 -->
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>${icu4j.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

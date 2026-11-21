@@ -136,7 +136,6 @@ import net.doge.util.media.MediaUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
-import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -20181,21 +20180,24 @@ public class MainFrame extends JFrame {
             // 从歌词文件读取歌词，若不存在，读取内嵌歌词
             String lyric = exists ? FileUtil.readStr(lyricFile, FileUtil.getCharsetName(lyricFile)) : MediaUtil.getEmbeddedLyric(file);
             String subLyric = null;
-            // 繁体歌词
-            if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
+            // 罗马音
+            if (lyricType == LyricType.ROMA) subLyric = LangUtil.toRomaji(lyric);
+                // 繁体
+            else if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
+
             lyricData = new LyricData(lyric, subLyric);
             lyricState = lyricData.getLyricState();
             statements = lyricData.getStatements();
-            // 繁体转换
-            if (lyricType == LyricType.TRADITIONAL_CN)
-                for (Statement stmt : statements) stmt.setLyric(LangUtil.toTraditionalChinese(stmt.getLyric()));
         }
         // 在线音乐歌词
         else if (musicInfo.hasLyric()) {
             String lyric = musicInfo.getLyric();
             String subLyric = null;
             if (lyricType == LyricType.TRANSLATION) subLyric = musicInfo.getTrans();
-            else if (lyricType == LyricType.ROMA) subLyric = musicInfo.getRoma();
+                // 罗马音
+            else if (lyricType == LyricType.ROMA)
+                subLyric = musicInfo.hasRoma() ? musicInfo.getRoma() : LangUtil.toRomaji(lyric);
+                // 繁体
             else if (lyricType == LyricType.TRADITIONAL_CN) subLyric = LangUtil.toTraditionalChinese(lyric);
             lyricData = new LyricData(lyric, subLyric);
             lyricState = lyricData.getLyricState();
@@ -20784,101 +20786,69 @@ public class MainFrame extends JFrame {
 
     // 列表排序
     private void sortFiles(SortMethod method, SortOrder order) {
-        DefaultListModel model = (DefaultListModel) musicList.getModel();
-        List<Object> list = Collections.list(model.elements());
+        DefaultListModel<MusicResource> model = (DefaultListModel<MusicResource>) musicList.getModel();
+        List<MusicResource> list = Collections.list(model.elements());
         if (method == SortMethod.BY_SONG_AND_FILE_NAME) {
-            Collections.sort(list, (o1, o2) -> {
-                try {
-                    String s1 = null, s2 = null;
-                    if (o1 instanceof AudioFile) {
-                        AudioFile f1 = (AudioFile) o1;
-                        s1 = f1.toString();
-                    } else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
-                    if (o2 instanceof AudioFile) {
-                        AudioFile f2 = (AudioFile) o2;
-                        s2 = f2.toString();
-                    } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortOrder.ASCENDING ? LangUtil.compareByPinyin(s1, s2) : LangUtil.compareByPinyin(s2, s1);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    LogUtil.error(e);
-                }
-                return 0;
+            list.sort((o1, o2) -> {
+                String s1 = null, s2 = null;
+                if (o1 instanceof AudioFile) {
+                    AudioFile f1 = (AudioFile) o1;
+                    s1 = f1.toString();
+                } else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
+                if (o2 instanceof AudioFile) {
+                    AudioFile f2 = (AudioFile) o2;
+                    s2 = f2.toString();
+                } else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
+                return order == SortOrder.ASCENDING ? LangUtil.compareName(s1, s2) : LangUtil.compareName(s2, s1);
             });
         } else if (method == SortMethod.BY_SONG_NAME) {
-            Collections.sort(list, (o1, o2) -> {
-                try {
-                    String s1 = null, s2 = null;
-                    if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getSongName();
-                    else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
-                    if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getSongName();
-                    else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
-                    return order == SortOrder.ASCENDING ? LangUtil.compareByPinyin(s1, s2) : LangUtil.compareByPinyin(s2, s1);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    LogUtil.error(e);
-                }
-                return 0;
+            list.sort((o1, o2) -> {
+                String s1 = null, s2 = null;
+                if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getSongName();
+                else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getName();
+                if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getSongName();
+                else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getName();
+                return order == SortOrder.ASCENDING ? LangUtil.compareName(s1, s2) : LangUtil.compareName(s2, s1);
             });
         } else if (method == SortMethod.BY_ARTIST_NAME) {
-            Collections.sort(list, (o1, o2) -> {
-                try {
-                    String s1 = null, s2 = null;
-                    if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getArtist();
-                    else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getArtist();
-                    if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getArtist();
-                    else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
-                    return order == SortOrder.ASCENDING ? LangUtil.compareByPinyin(s1, s2) : LangUtil.compareByPinyin(s2, s1);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    LogUtil.error(e);
-                }
-                return 0;
+            list.sort((o1, o2) -> {
+                String s1 = null, s2 = null;
+                if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getArtist();
+                else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getArtist();
+                if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getArtist();
+                else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getArtist();
+                return order == SortOrder.ASCENDING ? LangUtil.compareName(s1, s2) : LangUtil.compareName(s2, s1);
             });
         } else if (method == SortMethod.BY_ALBUM_NAME) {
-            Collections.sort(list, (o1, o2) -> {
-                try {
-                    String s1 = null, s2 = null;
-                    if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getAlbum();
-                    else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getAlbumName();
-                    if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getAlbum();
-                    else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
-                    return order == SortOrder.ASCENDING ? LangUtil.compareByPinyin(s1, s2) : LangUtil.compareByPinyin(s2, s1);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    LogUtil.error(e);
-                }
-                return 0;
+            list.sort((o1, o2) -> {
+                String s1 = null, s2 = null;
+                if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getAlbum();
+                else if (o1 instanceof NetMusicInfo) s1 = ((NetMusicInfo) o1).getAlbumName();
+                if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getAlbum();
+                else if (o2 instanceof NetMusicInfo) s2 = ((NetMusicInfo) o2).getAlbumName();
+                return order == SortOrder.ASCENDING ? LangUtil.compareName(s1, s2) : LangUtil.compareName(s2, s1);
             });
         } else if (method == SortMethod.BY_FILE_NAME) {
-            Collections.sort(list, (o1, o2) -> {
+            list.sort((o1, o2) -> {
                 String s1 = "", s2 = "";
                 if (o1 instanceof AudioFile) s1 = ((AudioFile) o1).getName();
                 else if (o1 instanceof NetMusicInfo) s1 = o1.toString();
                 if (o2 instanceof AudioFile) s2 = ((AudioFile) o2).getName();
                 else if (o2 instanceof NetMusicInfo) s2 = o2.toString();
-                try {
-                    return order == SortOrder.ASCENDING ? LangUtil.compareByPinyin(s1, s2) : LangUtil.compareByPinyin(s2, s1);
-                } catch (BadHanyuPinyinOutputFormatCombination e) {
-                    LogUtil.error(e);
-                    return 0;
-                }
+                return order == SortOrder.ASCENDING ? LangUtil.compareName(s1, s2) : LangUtil.compareName(s2, s1);
             });
         }
         // 按时长排序只支持本地音乐
         else if (method == SortMethod.BY_DURATION && model == musicListModel) {
-            Collections.sort(list, (o1, o2) -> {
-                double d1;
-                double d2;
-                try {
-                    d1 = ((AudioFile) o1).getDuration();
-                    d2 = ((AudioFile) o2).getDuration();
-                } catch (Exception e) {
-                    LogUtil.error(e);
-                    return 0;
-                }
+            list.sort((o1, o2) -> {
+                double d1 = ((AudioFile) o1).getDuration();
+                double d2 = ((AudioFile) o2).getDuration();
                 return order == SortOrder.ASCENDING ? Double.compare(d1, d2) : Double.compare(d2, d1);
             });
         }
         // 按修改时间排序只支持本地音乐
         else if (method == SortMethod.BY_LAST_MODIFIED_TIME && model == musicListModel) {
-            Collections.sort(list, (o1, o2) -> {
+            list.sort((o1, o2) -> {
                 long t1 = ((File) o1).lastModified();
                 long t2 = ((File) o2).lastModified();
                 return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
@@ -20886,7 +20856,7 @@ public class MainFrame extends JFrame {
         }
         // 按创建时间排序只支持本地音乐
         else if (method == SortMethod.BY_CREATION_TIME && model == musicListModel) {
-            Collections.sort(list, (o1, o2) -> {
+            list.sort((o1, o2) -> {
                 long t1 = FileUtil.getCreationTime((File) o1);
                 long t2 = FileUtil.getCreationTime((File) o2);
                 return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
@@ -20894,7 +20864,7 @@ public class MainFrame extends JFrame {
         }
         // 按访问时间排序只支持本地音乐
         else if (method == SortMethod.BY_LAST_ACCESS_TIME && model == musicListModel) {
-            Collections.sort(list, (o1, o2) -> {
+            list.sort((o1, o2) -> {
                 long t1 = FileUtil.getAccessTime((File) o1);
                 long t2 = FileUtil.getAccessTime((File) o2);
                 return order == SortOrder.ASCENDING ? Long.compare(t1, t2) : Long.compare(t2, t1);
@@ -20902,7 +20872,7 @@ public class MainFrame extends JFrame {
         }
         // 文件大小排序只支持本地音乐
         else if (method == SortMethod.BY_SIZE && model == musicListModel) {
-            Collections.sort(list, (o1, o2) -> {
+            list.sort((o1, o2) -> {
                 long l1 = ((File) o1).length();
                 long l2 = ((File) o2).length();
                 return order == SortOrder.ASCENDING ? Long.compare(l1, l2) : Long.compare(l2, l1);
@@ -22827,6 +22797,7 @@ public class MainFrame extends JFrame {
     }
 
     public static void launch() {
+        Thread.setDefaultUncaughtExceptionHandler((thread, error) -> LogUtil.error("线程出现未捕获异常", error));
         GlobalExecutors.requestExecutor.execute(() -> {
             if (validateData()) return;
             System.exit(-1);
