@@ -54,10 +54,10 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
     private final float highlightMaxOpacity = 1f;
     // 普通歌词最大最小不透明度
     public final float normalMaxOpacity = 0.4f;
-    public final float normalMinOpacity = 0.05f;
+    public final float normalMinOpacity = 0.1f;
     private Timer fontTimer;
 
-    private final int LYRIC_GAP = ScaleUtil.scale(0);
+    private final int LYRIC_GAP = ScaleUtil.scale(10);
     private final int HORIZONTAL_INSET = ScaleUtil.scale(90);
     private final int VERTICAL_INSET = ScaleUtil.scale(20);
     private final Border BORDER = new EmptyBorder(VERTICAL_INSET, 0, VERTICAL_INSET, HORIZONTAL_INSET);
@@ -91,11 +91,20 @@ public class LyricListRenderer extends CustomListCellRenderer implements StableC
     }
 
     private void init() {
-        outerPanel.setLayout(new BorderLayout(0, LYRIC_GAP));
+        outerPanel.setLayout(new GridBagLayout());
         outerPanel.setBorder(BORDER);
 
-        outerPanel.add(lyricLabel, BorderLayout.CENTER);
-        outerPanel.add(subLyricLabel, BorderLayout.SOUTH);
+        // 主歌词与可见的子歌词作为一组居中，共享单元格预留的垂直空间
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        outerPanel.add(lyricLabel, constraints);
+
+        constraints.gridy = 1;
+        constraints.insets = new Insets(LYRIC_GAP, 0, 0, 0);
+        outerPanel.add(subLyricLabel, constraints);
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {

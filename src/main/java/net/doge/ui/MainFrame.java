@@ -6623,15 +6623,12 @@ public class MainFrame extends JFrame {
                 return;
             }
             ListModel model = musicList.getModel();
-            // 修复重新导入时程序假死问题
-            if (model.getSize() > 0) musicList.setSelectedIndex(0);
             musicList.setModel(emptyListModel);
             musicListModel.clear();
             int audioFileCount = 0;
             for (File dir : catalogs) {
                 // 文件夹不存在，跳过
                 if (!dir.exists()) continue;
-
                 File[] files = dir.listFiles();
                 for (File file : files) {
                     // 支持这种文件格式才添加
@@ -6826,62 +6823,62 @@ public class MainFrame extends JFrame {
         // 升序
         ascendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, ascendingMenuItem);
-            sortFiles(currSortMethod, currSortOrder = SortOrder.ASCENDING);
+            sortMusicList(currSortMethod, currSortOrder = SortOrder.ASCENDING);
         });
         // 降序
         descendingMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortOrderButtonGroup, descendingMenuItem);
-            sortFiles(currSortMethod, currSortOrder = SortOrder.DESCENDING);
+            sortMusicList(currSortMethod, currSortOrder = SortOrder.DESCENDING);
         });
         // 按曲名/文件名混合排序
         sortBySongNameAndFileNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameAndFileNameMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_SONG_AND_FILE_NAME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_SONG_AND_FILE_NAME, currSortOrder);
         });
         // 按曲名排序
         sortBySongNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySongNameMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_SONG_NAME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_SONG_NAME, currSortOrder);
         });
         // 按艺术家排序
         sortByArtistNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByArtistNameMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_ARTIST_NAME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_ARTIST_NAME, currSortOrder);
         });
         // 按专辑排序
         sortByAlbumNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByAlbumNameMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_ALBUM_NAME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_ALBUM_NAME, currSortOrder);
         });
         // 按文件名排序
         sortByFileNameMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByFileNameMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_FILE_NAME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_FILE_NAME, currSortOrder);
         });
         // 按时长排序
         sortByTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByTimeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_DURATION, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_DURATION, currSortOrder);
         });
         // 按创建时间排序
         sortByCreationTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByCreationTimeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_CREATION_TIME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_CREATION_TIME, currSortOrder);
         });
         // 按修改时间排序
         sortByLastModifiedTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByLastModifiedTimeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_LAST_MODIFIED_TIME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_LAST_MODIFIED_TIME, currSortOrder);
         });
         // 按访问时间排序
         sortByLastAccessTimeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortByLastAccessTimeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_LAST_ACCESS_TIME, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_LAST_ACCESS_TIME, currSortOrder);
         });
         // 按大小排序
         sortBySizeMenuItem.addActionListener(e -> {
             updateMenuItemStatus(sortMethodButtonGroup, sortBySizeMenuItem);
-            sortFiles(currSortMethod = SortMethod.BY_SIZE, currSortOrder);
+            sortMusicList(currSortMethod = SortMethod.BY_SIZE, currSortOrder);
         });
 
         sortOrderButtonGroup.add(ascendingMenuItem);
@@ -6994,51 +6991,56 @@ public class MainFrame extends JFrame {
                     || currPersonalMusicTab == PersonalMusicTabIndex.HISTORY && (model == historyModel || model == filterModel)) {
                 countLabel.setText(String.format(TOTAL_MSG, size));
                 musicList.setModel(model);
-                leftBox.remove(emptyHintPanel);
-                leftBox.add(musicScrollPane);
-                leftBox.repaint();
+                if (size == 1) {
+                    leftBox.remove(emptyHintPanel);
+                    leftBox.add(musicScrollPane);
+                    leftBox.repaint();
+                }
             } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex == CollectionTabIndex.MUSIC
                     && (model == collectionModel || model == filterModel)) {
                 countLabel.setText(String.format(TOTAL_MSG, size));
                 musicList.setModel(model);
-                musicCollectionLeftBox.remove(emptyHintPanel);
-                musicCollectionLeftBox.add(musicScrollPane);
-                musicCollectionLeftBox.repaint();
+                if (size == 1) {
+                    musicCollectionLeftBox.remove(emptyHintPanel);
+                    musicCollectionLeftBox.add(musicScrollPane);
+                    musicCollectionLeftBox.repaint();
+                }
             } else if (currPersonalMusicTab == PersonalMusicTabIndex.COLLECTION && selectedIndex != CollectionTabIndex.MUSIC) {
                 if (selectedIndex == CollectionTabIndex.PLAYLIST && (model == playlistCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.ALBUM && (model == albumCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.ARTIST && (model == artistCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.RADIO && (model == radioCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.MV && (model == mvCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.RANK && (model == rankCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 } else if (selectedIndex == CollectionTabIndex.USER && (model == userCollectionModel || model == filterModel)) {
-                    collectionList.setModel(model);
                     countLabel.setText(String.format(TOTAL_MSG, size));
+                    collectionList.setModel(model);
                 }
-
-                CustomBox box = null;
-                if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
-                else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
-                box.remove(emptyHintPanel);
-                box.add(collectionScrollPane);
-                box.repaint();
+                if (size == 1) {
+                    CustomBox box = null;
+                    if (selectedIndex == CollectionTabIndex.PLAYLIST) box = playlistCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.ALBUM) box = albumCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.ARTIST) box = artistCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.RADIO) box = radioCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.MV) box = mvCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.RANK) box = rankCollectionLeftBox;
+                    else if (selectedIndex == CollectionTabIndex.USER) box = userCollectionLeftBox;
+                    box.remove(emptyHintPanel);
+                    box.add(collectionScrollPane);
+                    box.repaint();
+                }
             }
         }
 
@@ -7114,6 +7116,7 @@ public class MainFrame extends JFrame {
         rankCollectionModel.addListDataListener(countListener);
         userCollectionModel.addListDataListener(countListener);
         filterModel.addListDataListener(countListener);
+
         musicList.setModel(musicListModel);
         musicList.addKeyListener(new KeyAdapter() {
             @Override
@@ -18501,6 +18504,7 @@ public class MainFrame extends JFrame {
                 if (size == 1) {
                     downloadLeftBox.remove(emptyHintPanel);
                     downloadLeftBox.add(downloadListScrollPane);
+                    downloadLeftBox.repaint();
                 }
             }
 
@@ -18816,6 +18820,7 @@ public class MainFrame extends JFrame {
                 if (size == 1) {
                     playQueueLeftBox.remove(emptyHintPanel);
                     playQueueLeftBox.add(playQueueScrollPane);
+                    playQueueLeftBox.repaint();
                 }
             }
 
@@ -18826,6 +18831,7 @@ public class MainFrame extends JFrame {
                 if (size == 0) {
                     playQueueLeftBox.remove(playQueueScrollPane);
                     playQueueLeftBox.add(emptyHintPanel);
+                    playQueueLeftBox.repaint();
                 }
             }
 
@@ -20784,8 +20790,8 @@ public class MainFrame extends JFrame {
         if (showDialog) new TipDialog(THIS, CHANGE_SHUFFLE_MSG).showDialog();
     }
 
-    // 列表排序
-    private void sortFiles(SortMethod method, SortOrder order) {
+    // 音乐列表排序
+    private void sortMusicList(SortMethod method, SortOrder order) {
         DefaultListModel<MusicResource> model = (DefaultListModel<MusicResource>) musicList.getModel();
         List<MusicResource> list = Collections.list(model.elements());
         if (method == SortMethod.BY_SONG_AND_FILE_NAME) {
@@ -20880,7 +20886,7 @@ public class MainFrame extends JFrame {
         }
         musicList.setModel(emptyListModel);
         model.clear();
-        list.forEach(o -> model.addElement(o));
+        list.forEach(model::addElement);
         list.clear();
         musicList.setModel(model);
         countLabel.setText(String.format(TOTAL_MSG, model.size()));
@@ -22531,12 +22537,8 @@ public class MainFrame extends JFrame {
             else if (selectedIndex == CollectionTabIndex.RANK) listModel = rankCollectionModel;
             else if (selectedIndex == CollectionTabIndex.USER) listModel = userCollectionModel;
         }
-        // 解决选中第一项重新筛选的性能问题
-        if (useMusicList) {
-            // 修复筛选时程序假死问题
-            if (!listModel.isEmpty()) musicList.setSelectedIndex(0);
-            musicList.setModel(emptyListModel);
-        } else collectionList.setModel(emptyListModel);
+        if (useMusicList) musicList.setModel(emptyListModel);
+        else collectionList.setModel(emptyListModel);
         for (int i = 0, size = listModel.size(); i < size; i++) {
             Resource resource = (Resource) listModel.get(i);
             if (resource.toString().toLowerCase().contains(keyword)) filterModel.addElement(resource);

@@ -25,6 +25,7 @@ public class HighlightLyric {
     // 尺寸
     private int width;
     private int height;
+    private int iconHeight;
     // 歌词
     private double time;
     private String lyric;
@@ -149,7 +150,9 @@ public class HighlightLyric {
         }
         // 桌面歌词阴影显示不完全解决
         width += 2 * shadowHOffset;
-        height = getImageHeight(label.getFontMetrics(labelFont));
+        FontMetrics labelMetrics = label.getFontMetrics(labelFont);
+        height = getImageHeight(labelMetrics);
+        iconHeight = height;
         // 渐隐宽度根据字体大小决定
         fadeWidth = height / 2;
 
@@ -196,6 +199,13 @@ public class HighlightLyric {
         // 初始化光辉效果的文字
         if (glowRequired) imgGlow = ImageUtil.glowShadow(imgL, c1);
 
+        if (!isDesktopLyric) {
+            // 列表图标移除底部多余的透明空间，同时保留字形、光辉和下坠动画所需的高度
+            int paintedHeight = Math.max(getPaintedHeight(imgL), getPaintedHeight(imgR));
+            paintedHeight = Math.max(paintedHeight, getPaintedHeight(imgGlow));
+            iconHeight = Math.min(height, Math.max(dy + labelMetrics.getDescent(), paintedHeight + startDrop));
+        }
+
         g1.dispose();
         g2.dispose();
 
@@ -206,6 +216,16 @@ public class HighlightLyric {
     // 计算歌词总高度
     public static int getImageHeight(FontMetrics metrics) {
         return metrics.getHeight() + metrics.getFont().getSize();
+    }
+
+    private static int getPaintedHeight(BufferedImage image) {
+        if (image == null) return 0;
+        for (int y = image.getHeight() - 1; y >= 0; y--) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                if ((image.getRGB(x, y) >>> 24) != 0) return y + 1;
+            }
+        }
+        return 0;
     }
 
     private void initWordWidthList(String lyric) {
@@ -416,7 +436,8 @@ public class HighlightLyric {
     }
 
     private void makeIcon() {
-        if (imgIcon == null) imgIcon = new ImageIcon(img);
-        imgIcon.setImage(img);
+        BufferedImage icon = iconHeight < height ? img.getSubimage(0, 0, img.getWidth(), iconHeight) : img;
+        if (imgIcon == null) imgIcon = new ImageIcon(icon);
+        else imgIcon.setImage(icon);
     }
 }
