@@ -43,6 +43,7 @@ public class BiReqBuilder {
     public HttpRequest buildRequest(String baseUrl, Map<String, Object> params) {
         // 公共 query
         if (params == null) params = new TreeMap<>();
+        if (!(params instanceof TreeMap)) params = new TreeMap<>(params);
         params.put("wts", System.currentTimeMillis() / 1000);
 
         // 获取 img_key 和 sub_key

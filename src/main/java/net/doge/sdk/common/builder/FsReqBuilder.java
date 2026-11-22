@@ -35,6 +35,7 @@ public class FsReqBuilder {
 
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();
+        if (!(params instanceof TreeMap)) params = new TreeMap<>(params);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         params.put("dfid", dfid);
         params.put("mid", mid);
@@ -43,7 +44,7 @@ public class FsReqBuilder {
         params.put("clientver", clientver);
         params.put("clienttime", ct);
         // 签名
-        params.put("signature", sign(params, data));
+        params.put("signature", createSignature(params, data));
         url += "?" + UrlUtil.buildQuery(params);
         return HttpRequest.createRequest(method, url)
                 .header("dfid", dfid)
@@ -60,8 +61,7 @@ public class FsReqBuilder {
     }
 
     // 签名
-    private String sign(Map<String, Object> params, String data) {
-//        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
+    private String createSignature(Map<String, Object> params, String data) {
         String content = buildSignParams(params);
         return CryptoUtil.md5Hex(signKey + content + (StringUtil.notEmpty(data) ? data : "") + signKey);
     }

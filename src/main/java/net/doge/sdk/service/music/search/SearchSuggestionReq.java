@@ -30,6 +30,7 @@ public class SearchSuggestionReq {
         executor.submit(() -> NcSearchSuggestionReq.getInstance().getSimpleSearchSuggestion(keyword));
         executor.submit(() -> NcSearchSuggestionReq.getInstance().getSearchSuggestion(keyword));
         executor.submit(() -> KgSearchSuggestionReq.getInstance().getSearchSuggestion(keyword));
+        executor.submit(() -> KgSearchSuggestionReq.getInstance().getSearchSuggestionV2(keyword));
         executor.submit(() -> QqSearchSuggestionReq.getInstance().getSearchSuggestion(keyword));
         executor.submit(() -> KwSearchSuggestionReq.getInstance().getSearchSuggestion(keyword));
         executor.submit(() -> MgSearchSuggestionReq.getInstance().getSearchSuggestion(keyword));

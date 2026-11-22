@@ -21,6 +21,7 @@ public class QiReqBuilder {
     public HttpRequest buildRequest(String baseUrl, Map<String, Object> params) {
         // 公共 query
         if (params == null) params = new TreeMap<>();
+        if (!(params instanceof TreeMap)) params = new TreeMap<>(params);
         params.put("appid", "16073360");
         params.put("timestamp", System.currentTimeMillis());
 

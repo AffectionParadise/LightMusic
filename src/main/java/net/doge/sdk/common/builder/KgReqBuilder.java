@@ -42,6 +42,7 @@ public class KgReqBuilder {
 
         // 初始化默认参数
         if (params == null) params = new TreeMap<>();
+        if (!(params instanceof TreeMap)) params = new TreeMap<>(params);
         String ct = String.valueOf(System.currentTimeMillis() / 1000);
         params.put("dfid", dfid);
         params.put("mid", mid);
@@ -82,7 +83,6 @@ public class KgReqBuilder {
 
     // 生成签名，安卓/WEB 使用的 key 不同
     private String createSignature(Map<String, Object> params, String data, String key) {
-//        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
         String content = buildSignParams(params);
         return CryptoUtil.md5Hex(key + content + (StringUtil.notEmpty(data) ? data : "") + key);
     }
