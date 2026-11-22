@@ -36,6 +36,7 @@ public class NewMusicReq {
             if (dt) executor.submit(() -> kgNewMusicReq.getEverydaySong(page, limit));
             executor.submit(() -> kgNewMusicReq.getRecommendNewSong(tag, page, limit));
             executor.submit(() -> kgNewMusicReq.getStyleSong(tag, page, limit));
+            executor.submit(() -> kgNewMusicReq.getThemePlaylistSong(tag, page, limit));
         }
         if (src == NetResourceSource.QQ || src == NetResourceSource.ALL) {
             executor.submit(() -> QqNewMusicReq.getInstance().getRecommendNewSong(tag, page, limit));

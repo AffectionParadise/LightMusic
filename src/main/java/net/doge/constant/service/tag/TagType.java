@@ -69,14 +69,16 @@ public class TagType {
     public static final int RECOMMEND_NEW_SONG_KG = 2;
     // 风格歌曲 (酷狗)
     public static final int STYLE_SONG_KG = 3;
+    // 主题歌单歌曲 (酷狗)
+    public static final int THEME_PLAYLIST_SONG_KG = 4;
     // 推荐新歌 (QQ)
-    public static final int RECOMMEND_NEW_SONG_QQ = 4;
+    public static final int RECOMMEND_NEW_SONG_QQ = 5;
     // 推荐新歌 (音乐磁场)
-    public static final int RECOMMEND_NEW_SONG_HF = 5;
+    public static final int RECOMMEND_NEW_SONG_HF = 6;
     // 推荐新歌 (咕咕咕音乐)
-    public static final int RECOMMEND_NEW_SONG_GG = 6;
+    public static final int RECOMMEND_NEW_SONG_GG = 7;
     // 推荐新歌 (5sing)
-    public static final int RECOMMEND_NEW_SONG_FS = 7;
+    public static final int RECOMMEND_NEW_SONG_FS = 8;
 
     // 新碟上架
     // 新碟上架 (网易云)

@@ -8,6 +8,7 @@ import net.doge.constant.service.tag.TagType;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.builder.KgReqBuilder;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
@@ -38,6 +39,8 @@ public class KgNewMusicReq {
     private final String EVERYDAY_SONG_KG_API = "/everyday_song_recommend";
     // 风格歌曲 API (酷狗)
     private final String STYLE_SONG_KG_API = "/everydayrec.service/everyday_style_recommend";
+    // 主题歌单歌曲 API (酷狗)
+    private final String THEME_PLAYLIST_SONG_KG_API = "/v2/gettheme_songidlist";
 
     /**
      * 每日推荐歌曲
@@ -160,6 +163,64 @@ public class KgNewMusicReq {
             Map<String, Object> params = new TreeMap<>();
             params.put("tagids", param);
             String musicInfoBody = SdkCommon.kgRequest(params, "{}", options)
+                    .executeAsStr();
+            JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+            JSONObject data = musicInfoJson.getJSONObject("data");
+            JSONArray songArray = data.getJSONArray("song_list");
+            t = songArray.size();
+            for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+                JSONObject songJson = songArray.getJSONObject(i);
+
+                String hash = songJson.getString("hash");
+                String songId = songJson.getString("album_audio_id");
+                String name = songJson.getString("songname");
+                String artist = SdkUtil.parseArtist(songJson);
+                String artistId = SdkUtil.parseArtistId(songJson);
+                String albumName = songJson.getString("album_name");
+                String albumId = songJson.getString("album_id");
+                Double duration = songJson.getDouble("time_length");
+                String mvId = songJson.getString("mv_hash");
+                int qualityType = AudioQuality.UNKNOWN;
+                if (songJson.getLong("filesize_other") != 0) qualityType = AudioQuality.HR;
+                else if (songJson.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+                else if (songJson.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+                else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
+
+                NetMusicInfo musicInfo = new NetMusicInfo();
+                musicInfo.setSource(NetResourceSource.KG);
+                musicInfo.setHash(hash);
+                musicInfo.setId(songId);
+                musicInfo.setName(name);
+                musicInfo.setArtist(artist);
+                musicInfo.setArtistId(artistId);
+                musicInfo.setAlbumName(albumName);
+                musicInfo.setAlbumId(albumId);
+                musicInfo.setDuration(duration);
+                musicInfo.setMvId(mvId);
+                musicInfo.setQualityType(qualityType);
+
+                r.add(musicInfo);
+            }
+        }
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 主题歌单歌曲
+     */
+    public CommonResult<NetMusicInfo> getThemePlaylistSong(String tag, int page, int limit) {
+        List<NetMusicInfo> r = new LinkedList<>();
+        int t = 0;
+        String[] s = Tags.newSongTags.get(tag);
+
+        String param = s[TagType.THEME_PLAYLIST_SONG_KG];
+        if (StringUtil.notEmpty(param)) {
+            Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(THEME_PLAYLIST_SONG_KG_API);
+            String ct = String.valueOf(System.currentTimeMillis() / 1000);
+            String dat = String.format("{\"platform\":\"android\",\"clientver\":%s,\"clienttime\":%s,\"area_code\":1,\"module_id\":1,\"userid\":%s,\"theme_id\":%s}",
+                    KgReqBuilder.clientver, ct, KgReqBuilder.userid, param);
+            String musicInfoBody = SdkCommon.kgRequest(null, dat, options)
+                    .header("x-router", "everydayrec.service.kugou.com")
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");

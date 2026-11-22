@@ -27,7 +27,7 @@ public class Tags {
 
     public static final Map<String, String[]> newSongTags = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final int[] newSongIndices = {NetResourceSource.NC, NetResourceSource.NC, NetResourceSource.KG, NetResourceSource.KG,
-            NetResourceSource.QQ, NetResourceSource.HF, NetResourceSource.GG, NetResourceSource.FS};
+            NetResourceSource.KG, NetResourceSource.QQ, NetResourceSource.HF, NetResourceSource.GG, NetResourceSource.FS};
 
     public static final Map<String, String[]> newAlbumTags = Collections.synchronizedMap(new LinkedHashMap<>());
     public static final int[] newAlbumIndices = {NetResourceSource.NC, NetResourceSource.NC, NetResourceSource.NC, NetResourceSource.KG,
