@@ -85,7 +85,7 @@ public class MePlaylistInfoReq {
         JSONObject album = info.getJSONObject("album");
 
         String coverImgUrl = album.getString("front_cover");
-        String description = HtmlUtil.removeHtmlLabel(album.getString("intro"));
+        String description = HtmlUtil.escapeHtml(album.getString("intro"));
 
         if (!playlistInfo.hasCoverImgUrl()) playlistInfo.setCoverImgUrl(coverImgUrl);
         GlobalExecutors.imageExecutor.execute(() -> playlistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));

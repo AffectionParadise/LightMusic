@@ -1,6 +1,8 @@
 package net.doge.util.core.text;
 
 import net.doge.constant.core.ui.Fonts;
+import net.doge.util.core.StringUtil;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
@@ -10,8 +12,6 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Doge
@@ -100,7 +100,7 @@ public class HtmlUtil {
             }
             for (int j = 0, l = Fonts.TYPES.size(); j < l; j++) {
                 if (!Fonts.TYPES.get(j).canDisplay(codePoint)) continue;
-                // 中文
+                // 默认字体
                 if (j == 0) sb.append(chars[0]);
                 else
                     sb.append(String.format("<span style=\"font-family:%s\">%s</span>", Fonts.TYPES.get(j).getFontName(), str));
@@ -118,17 +118,27 @@ public class HtmlUtil {
      * @param s
      * @return
      */
-    public static String removeHtmlLabel(String s) {
-        if (s == null) return null;
-        s = s.replaceAll("<br ?/?>", "\n");
-        Pattern pattern = Pattern.compile("<[^>]+>");
-        Matcher matcher = pattern.matcher(s);
-        return matcher.replaceAll("")
-                .replaceAll("&?nbsp;", " ")
-                .replaceAll("&?amp;", "&")
-                .replaceAll("&?lt;", "<")
-                .replaceAll("&?gt;", ">")
-                .replaceAll("&?apos;", "'");
+    public static String escapeHtml(String s) {
+        if (StringUtil.isEmpty(s)) return s;
+        StringBuilder result = new StringBuilder();
+        appendText(Jsoup.parseBodyFragment(s).body(), result);
+        return result.toString();
+    }
+
+    private static void appendText(Node node, StringBuilder result) {
+        if (node instanceof TextNode) {
+            // Jsoup 已解码 &amp;、&lt;、&#39; 等实体，另将 &nbsp; 转为普通空格
+            result.append(((TextNode) node).getWholeText().replace('\u00A0', ' '));
+            return;
+        }
+        // 支持 <br>、<br/>、<br />、<BR> 以及带属性的 <br>
+        if (node instanceof Element && "br".equalsIgnoreCase(((Element) node).tagName())) {
+            result.append('\n');
+            return;
+        }
+        for (Node child : node.childNodes()) {
+            appendText(child, result);
+        }
     }
 
     public static String wrapLineByWidth(String text, int thresholdWidth) {

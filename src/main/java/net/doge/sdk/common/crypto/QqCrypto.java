@@ -36,10 +36,9 @@ public class QqCrypto {
 
     private String pickHashByIdx(String hash, int[] indexes) {
         StringBuilder sb = new StringBuilder();
+        int len = hash.length();
         for (int idx : indexes) {
-            if (idx >= 0 && idx < hash.length()) {
-                sb.append(hash.charAt(idx));
-            }
+            if (idx >= 0 && idx < len) sb.append(hash.charAt(idx));
             // 越界时模拟 JS undefined 被 join('') 忽略
         }
         return sb.toString();

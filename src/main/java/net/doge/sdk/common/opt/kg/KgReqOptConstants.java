@@ -6,4 +6,5 @@ package net.doge.sdk.common.opt.kg;
 public class KgReqOptConstants {
     // 加密方式
     public static final String ANDROID = "android";
+    public static final String WEB = "web";
 }

@@ -61,7 +61,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
 
         titleLabel.setFont(Fonts.NORMAL_TITLE2);
         titleLabel.setText(title);
-        setTitle(HtmlUtil.removeHtmlLabel(title));
+        setTitle(HtmlUtil.escapeHtml(title));
 
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();

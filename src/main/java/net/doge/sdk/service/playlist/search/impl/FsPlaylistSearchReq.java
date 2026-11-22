@@ -49,7 +49,7 @@ public class FsPlaylistSearchReq {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
                 String playlistId = playlistJson.getString("songListId");
-                String playlistName = HtmlUtil.removeHtmlLabel(playlistJson.getString("title"));
+                String playlistName = HtmlUtil.escapeHtml(playlistJson.getString("title"));
                 String creator = playlistJson.getString("userName");
                 String creatorId = playlistJson.getString("userId");
                 Long playCount = playlistJson.getLong("playCount");

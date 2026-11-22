@@ -48,8 +48,8 @@ public class MeArtistInfoReq {
             JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
 
             String coverImgUrl = data.getString("avatar");
-            String intro = HtmlUtil.removeHtmlLabel(data.getString("intro"));
-            String announcement = HtmlUtil.removeHtmlLabel(data.getString("announcement"));
+            String intro = HtmlUtil.escapeHtml(data.getString("intro"));
+            String announcement = HtmlUtil.escapeHtml(data.getString("announcement"));
 
             if (!artistInfo.hasDescription()) artistInfo.setDescription(intro + "\n\n" + announcement);
 

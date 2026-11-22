@@ -33,52 +33,21 @@ public class QqPlaylistSearchReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-//        String playlistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.PLAYLIST, keyword, page, limit)
-//                .executeAsStr();
-//        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
-//        JSONObject data = playlistInfoJson.getJSONObject("req").getJSONObject("data");
-//        t = data.getJSONObject("meta").getIntValue("sum");
-//        JSONArray playlistArray = data.getJSONObject("body").getJSONArray("item_songlist");
-//        for (int i = 0, len = playlistArray.size(); i < len; i++) {
-//            JSONObject playlistJson = playlistArray.getJSONObject(i);
-//
-//            String playlistId = playlistJson.getString("dissid");
-//            String playlistName = playlistJson.getString("dissname");
-//            String creator = playlistJson.getJSONObject("creator").getString("name");
-//            Long playCount = playlistJson.getLong("listennum");
-//            Integer trackCount = playlistJson.getIntValue("song_count");
-//            String coverImgThumbUrl = playlistJson.getString("imgurl");
-//
-//            NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
-//            playlistInfo.setSource(NetResourceSource.QQ);
-//            playlistInfo.setId(playlistId);
-//            playlistInfo.setName(playlistName);
-//            playlistInfo.setCreator(creator);
-//            playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-//            playlistInfo.setPlayCount(playCount);
-//            playlistInfo.setTrackCount(trackCount);
-//            GlobalExecutors.imageExecutor.execute(() -> {
-//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-//                playlistInfo.setCoverImgThumb(coverImgThumb);
-//            });
-//            r.add(playlistInfo);
-//        }
-
-        String playlistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.PLAYLIST, keyword, page, limit)
+        String playlistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.PLAYLIST, keyword, page, limit)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("req").getJSONObject("data");
         t = data.getJSONObject("meta").getIntValue("sum");
-        JSONArray playlistArray = data.getJSONObject("body").getJSONArray("item_songlist");
+        JSONArray playlistArray = data.getJSONObject("body").getJSONObject("songlist").getJSONArray("list");
         for (int i = 0, len = playlistArray.size(); i < len; i++) {
             JSONObject playlistJson = playlistArray.getJSONObject(i);
 
             String playlistId = playlistJson.getString("dissid");
             String playlistName = playlistJson.getString("dissname");
-            String creator = playlistJson.getString("nickname");
+            String creator = playlistJson.getJSONObject("creator").getString("name");
             Long playCount = playlistJson.getLong("listennum");
-            Integer trackCount = playlistJson.getIntValue("songnum");
-            String coverImgThumbUrl = playlistJson.getString("logo");
+            Integer trackCount = playlistJson.getIntValue("song_count");
+            String coverImgThumbUrl = playlistJson.getString("imgurl");
 
             NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
             playlistInfo.setSource(NetResourceSource.QQ);
@@ -94,6 +63,37 @@ public class QqPlaylistSearchReq {
             });
             r.add(playlistInfo);
         }
+
+//        String playlistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.PLAYLIST, keyword, page, limit)
+//                .executeAsStr();
+//        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+//        JSONObject data = playlistInfoJson.getJSONObject("req").getJSONObject("data");
+//        t = data.getJSONObject("meta").getIntValue("sum");
+//        JSONArray playlistArray = data.getJSONObject("body").getJSONArray("item_songlist");
+//        for (int i = 0, len = playlistArray.size(); i < len; i++) {
+//            JSONObject playlistJson = playlistArray.getJSONObject(i);
+//
+//            String playlistId = playlistJson.getString("dissid");
+//            String playlistName = HtmlUtil.escapeHtml(playlistJson.getString("dissname"));
+//            String creator = playlistJson.getString("nickname");
+//            Long playCount = playlistJson.getLong("listennum");
+//            Integer trackCount = playlistJson.getIntValue("songnum");
+//            String coverImgThumbUrl = playlistJson.getString("logo");
+//
+//            NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+//            playlistInfo.setSource(NetResourceSource.QQ);
+//            playlistInfo.setId(playlistId);
+//            playlistInfo.setName(playlistName);
+//            playlistInfo.setCreator(creator);
+//            playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//            playlistInfo.setPlayCount(playCount);
+//            playlistInfo.setTrackCount(trackCount);
+//            GlobalExecutors.imageExecutor.execute(() -> {
+//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                playlistInfo.setCoverImgThumb(coverImgThumb);
+//            });
+//            r.add(playlistInfo);
+//        }
 
         return new CommonResult<>(r, t);
     }

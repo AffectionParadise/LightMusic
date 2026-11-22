@@ -6,6 +6,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KgReqOptsBuilder {
+    // Web GET 请求
+    public static Map<KgReqOptEnum, Object> webGet(String url) {
+        Map<KgReqOptEnum, Object> opts = new HashMap<>();
+        opts.put(KgReqOptEnum.METHOD, Method.GET);
+        opts.put(KgReqOptEnum.CRYPTO, KgReqOptConstants.WEB);
+        opts.put(KgReqOptEnum.URL, url);
+        return opts;
+    }
+
     // 安卓 GET 请求
     public static Map<KgReqOptEnum, Object> androidGet(String url) {
         Map<KgReqOptEnum, Object> opts = new HashMap<>();
@@ -16,9 +25,9 @@ public class KgReqOptsBuilder {
     }
 
     // 安卓 GET 请求，带加密 key
-    public static Map<KgReqOptEnum, Object> androidGetWithKey(String url) {
+    public static Map<KgReqOptEnum, Object> androidGetWithEncryptKey(String url) {
         Map<KgReqOptEnum, Object> opts = androidGet(url);
-        opts.put(KgReqOptEnum.ENCRYPT_KEY, true);
+        opts.put(KgReqOptEnum.WITH_ENCRYPT_KEY, true);
         return opts;
     }
 

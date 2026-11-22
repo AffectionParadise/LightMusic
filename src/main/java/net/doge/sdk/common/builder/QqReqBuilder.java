@@ -20,6 +20,13 @@ public class QqReqBuilder {
     // 需要签名的 QQ API
     public static final String SIGNED_MAIN_QQ_API = "https://u.y.qq.com/cgi-bin/musics.fcg?sign=%s";
 
+    public HttpRequest buildRequest(String data) {
+        String sign = QqCrypto.getInstance().zzcSign(data);
+        String url = String.format(SIGNED_MAIN_QQ_API, sign);
+        return HttpRequest.post(url)
+                .jsonBody(data);
+    }
+
     public HttpRequest buildSearchRequest(QqSearchDevice device, QqSearchType type, String keyword, int page, int limit) {
         String json = "{\"comm\":{\"_channelid\":\"0\",\"_os_version\":\"6.2.9200-2\",\"ct\":\"19\",\"cv\":\"2151\",\"guid\":\"1F70E520B2EAA7D25E11760783C53CA9\"," +
                 "\"patch\":\"118\",\"psrf_access_token_expiresAt\":0,\"psrf_qqaccess_token\":\"\",\"psrf_qqopenid\":\"\",\"psrf_qqunionid\":\"\",\"tmeAppID\":\"qqmusic\"," +
@@ -55,6 +62,7 @@ public class QqReqBuilder {
         switch (device) {
             case MOBILE:
             default:
+                // 不推荐使用手机端，依然存在返回空数据问题
                 method = "DoSearchForQQMusicMobile";
                 break;
             case PC:
@@ -63,11 +71,8 @@ public class QqReqBuilder {
         }
         String searchId = getSearchId();
         String data = String.format(json, method, searchId, t, keyword, page, limit);
-        String sign = QqCrypto.getInstance().zzcSign(data);
-        String url = String.format(SIGNED_MAIN_QQ_API, sign);
-        return HttpRequest.post(url)
-                .userAgent("QQMusic 14090508(android 12)")
-                .jsonBody(data);
+        return buildRequest(data)
+                .userAgent("QQMusic 14090508(android 12)");
     }
 
     /**

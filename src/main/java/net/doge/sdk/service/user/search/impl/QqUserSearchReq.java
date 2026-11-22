@@ -47,7 +47,7 @@ public class QqUserSearchReq {
             String gender = "保密";
             String avatarThumbUrl = userJson.getString("pic");
             Integer fan = userJson.getIntValue("fans_num");
-//                Integer playlistCount = userJson.getIntValue("diss_num");
+            Integer playlistCount = userJson.getIntValue("diss_num");
 
             NetUserInfo userInfo = new NetUserInfo();
             userInfo.setSource(NetResourceSource.QQ);
@@ -57,7 +57,7 @@ public class QqUserSearchReq {
             userInfo.setAvatarThumbUrl(avatarThumbUrl);
             userInfo.setAvatarUrl(avatarThumbUrl);
             userInfo.setFan(fan);
-//                userInfo.setPlaylistCount(playlistCount);
+            userInfo.setPlaylistCount(playlistCount);
             GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
                 userInfo.setAvatarThumb(avatarThumb);
@@ -80,7 +80,7 @@ public class QqUserSearchReq {
 //            String gender = "保密";
 //            String avatarThumbUrl = userJson.getString("pic");
 //            Integer fan = (int) LangUtil.parseNumber(RegexUtil.getGroup1("(.*?)人关注", userJson.getString("subtitle")));
-////                Integer playlistCount = userJson.getIntValue("diss_num");
+//                Integer playlistCount = userJson.getIntValue("diss_num");
 //
 //            NetUserInfo userInfo = new NetUserInfo();
 //            userInfo.setSource(NetResourceSource.QQ);
@@ -90,7 +90,7 @@ public class QqUserSearchReq {
 //            userInfo.setAvatarThumbUrl(avatarThumbUrl);
 //            userInfo.setAvatarUrl(avatarThumbUrl);
 //            userInfo.setFan(fan);
-////                userInfo.setPlaylistCount(playlistCount);
+//                userInfo.setPlaylistCount(playlistCount);
 //            GlobalExecutors.imageExecutor.execute(() -> {
 //                BufferedImage avatarThumb = SdkUtil.extractCover(avatarThumbUrl);
 //                userInfo.setAvatarThumb(avatarThumb);

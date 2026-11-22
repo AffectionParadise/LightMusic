@@ -40,7 +40,7 @@ public class ColorUtil {
     }
 
     /**
-     * 返回 RGB 颜色值中的 Alpha
+     * 返回 ARGB 颜色值中的 Alpha
      *
      * @param argb
      * @return
@@ -118,7 +118,7 @@ public class ColorUtil {
      * @return
      */
     public static Color deriveAlpha(Color color, float alpha) {
-        return deriveAlpha(color, (int) (255 * alpha));
+        return deriveAlpha(color, Math.round(255 * alpha));
     }
 
     /**
@@ -142,6 +142,12 @@ public class ColorUtil {
         return luminance(color.getRGB());
     }
 
+    /**
+     * 计算颜色亮度
+     *
+     * @param rgb
+     * @return
+     */
     public static double luminance(int rgb) {
         return (0.2126 * red(rgb) + 0.7152 * green(rgb) + 0.0722 * blue(rgb)) / 255.0;
     }
@@ -173,7 +179,7 @@ public class ColorUtil {
      * @return
      */
     public static int merge(float r, float g, float b) {
-        return merge((int) (r * 255), (int) (g * 255), (int) (b * 255));
+        return merge(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
     }
 
     /**
@@ -261,9 +267,9 @@ public class ColorUtil {
      * @return
      */
     public static Color brighter(Color color, float factor) {
-        int red = (int) ((color.getRed() * (1 - factor) / 255 + factor) * 255);
-        int green = (int) ((color.getGreen() * (1 - factor) / 255 + factor) * 255);
-        int blue = (int) ((color.getBlue() * (1 - factor) / 255 + factor) * 255);
+        int red = Math.round((color.getRed() * (1 - factor) / 255 + factor) * 255);
+        int green = Math.round((color.getGreen() * (1 - factor) / 255 + factor) * 255);
+        int blue = Math.round((color.getBlue() * (1 - factor) / 255 + factor) * 255);
         return new Color(red, green, blue, color.getAlpha());
     }
 
@@ -284,9 +290,9 @@ public class ColorUtil {
      * @return
      */
     public static Color darker(Color color, float factor) {
-        int red = (int) ((color.getRed() * (1 - factor)));
-        int green = (int) ((color.getGreen() * (1 - factor)));
-        int blue = (int) ((color.getBlue() * (1 - factor)));
+        int red = Math.round(color.getRed() * (1 - factor));
+        int green = Math.round(color.getGreen() * (1 - factor));
+        int blue = Math.round(color.getBlue() * (1 - factor));
         return new Color(red, green, blue, color.getAlpha());
     }
 
@@ -338,7 +344,7 @@ public class ColorUtil {
         l = (min + max) / 2;
         delta = max - min;
         if (delta == 0) return new HSL(h * 360, s * 100, l * 100);
-        s = delta / ((l <= 0.5f) ? (min + max) : (2 - max - min));
+        s = delta / (l <= 0.5f ? min + max : 2 - max - min);
         if (r == max) h = g == min ? 5 + (max - b) / delta : 1 - (max - g) / delta;
         else if (g == max) h = b == min ? 1 + (max - r) / delta : 3 - (max - b) / delta;
         else h = r == min ? 3 + (max - g) / delta : 5 - (max - r) / delta;

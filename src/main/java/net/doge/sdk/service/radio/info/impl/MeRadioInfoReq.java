@@ -97,7 +97,7 @@ public class MeRadioInfoReq {
         if (!radioInfo.hasCoverImgUrl()) radioInfo.setCoverImgUrl(coverImgUrl);
         GlobalExecutors.imageExecutor.execute(() -> radioInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
         if (!radioInfo.hasTag()) radioInfo.setTag(SdkUtil.parseTag(drama));
-        if (!radioInfo.hasDescription()) radioInfo.setDescription(HtmlUtil.removeHtmlLabel(description));
+        if (!radioInfo.hasDescription()) radioInfo.setDescription(HtmlUtil.escapeHtml(description));
         if (!radioInfo.hasDj()) radioInfo.setDj(drama.getString("author"));
         if (!radioInfo.hasDjId()) radioInfo.setDjId(drama.getString("user_id"));
         if (!radioInfo.hasCategory()) radioInfo.setCategory(drama.getString("catalog_name"));

@@ -93,7 +93,7 @@ public class SdkUtil {
     public static JSONObject findFeatureObj(JSONArray array, String key, Object value) {
         for (int i = 0, s = array.size(); i < s; i++) {
             JSONObject obj = array.getJSONObject(i);
-            if (obj.containsKey(key) && value.equals(obj.getString(key))) return obj;
+            if (obj.containsKey(key) && value.equals(obj.get(key))) return obj;
         }
         return null;
     }

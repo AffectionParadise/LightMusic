@@ -32,52 +32,12 @@ public class QqMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-//        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.SONG, keyword, page, limit)
-//                .executeAsStr();
-//        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
-//        JSONObject data = musicInfoJson.getJSONObject("req").getJSONObject("data");
-//        t = data.getJSONObject("meta").getIntValue("sum");
-//        JSONArray songArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
-//        for (int i = 0, len = songArray.size(); i < len; i++) {
-//            JSONObject songJson = songArray.getJSONObject(i);
-//            JSONObject albumJson = songJson.getJSONObject("album");
-//            JSONObject fileJson = songJson.getJSONObject("file");
-//
-//            String songId = songJson.getString("mid");
-//            String songName = songJson.getString("title");
-//            String artist = SdkUtil.parseArtist(songJson);
-//            String artistId = SdkUtil.parseArtistId(songJson);
-//            String albumName = albumJson.getString("title");
-//            String albumId = albumJson.getString("mid");
-//            Double duration = songJson.getDouble("interval");
-//            String mvId = songJson.getJSONObject("mv").getString("vid");
-//            int qualityType = AudioQuality.UNKNOWN;
-//            if (fileJson.getLong("size_hires") != 0) qualityType = AudioQuality.HR;
-//            else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
-//            else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
-//            else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-//
-//            NetMusicInfo musicInfo = new NetMusicInfo();
-//            musicInfo.setSource(NetResourceSource.QQ);
-//            musicInfo.setId(songId);
-//            musicInfo.setName(songName);
-//            musicInfo.setArtist(artist);
-//            musicInfo.setArtistId(artistId);
-//            musicInfo.setAlbumName(albumName);
-//            musicInfo.setAlbumId(albumId);
-//            musicInfo.setDuration(duration);
-//            musicInfo.setMvId(mvId);
-//            musicInfo.setQualityType(qualityType);
-//
-//            r.add(musicInfo);
-//        }
-
-        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.SONG, keyword, page, limit)
+        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.SONG, keyword, page, limit)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("req").getJSONObject("data");
         t = data.getJSONObject("meta").getIntValue("sum");
-        JSONArray songArray = data.getJSONObject("body").getJSONArray("item_song");
+        JSONArray songArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
         for (int i = 0, len = songArray.size(); i < len; i++) {
             JSONObject songJson = songArray.getJSONObject(i);
             JSONObject albumJson = songJson.getJSONObject("album");
@@ -112,22 +72,12 @@ public class QqMusicSearchReq {
             r.add(musicInfo);
         }
 
-        return new CommonResult<>(r, t);
-    }
-
-    /**
-     * 根据歌词关键词获取歌曲
-     */
-    public CommonResult<NetMusicInfo> searchMusicByLyric(String keyword, int page, int limit) {
-        List<NetMusicInfo> r = new LinkedList<>();
-        int t;
-
-//        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.LYRIC, keyword, page, limit)
+//        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.SONG, keyword, page, limit)
 //                .executeAsStr();
 //        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
 //        JSONObject data = musicInfoJson.getJSONObject("req").getJSONObject("data");
 //        t = data.getJSONObject("meta").getIntValue("sum");
-//        JSONArray songArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
+//        JSONArray songArray = data.getJSONObject("body").getJSONArray("item_song");
 //        for (int i = 0, len = songArray.size(); i < len; i++) {
 //            JSONObject songJson = songArray.getJSONObject(i);
 //            JSONObject albumJson = songJson.getJSONObject("album");
@@ -146,7 +96,6 @@ public class QqMusicSearchReq {
 //            else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
 //            else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
 //            else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-//            String lyricMatch = songJson.getString("content").replace("\n", " / ");
 //
 //            NetMusicInfo musicInfo = new NetMusicInfo();
 //            musicInfo.setSource(NetResourceSource.QQ);
@@ -159,17 +108,26 @@ public class QqMusicSearchReq {
 //            musicInfo.setDuration(duration);
 //            musicInfo.setMvId(mvId);
 //            musicInfo.setQualityType(qualityType);
-//            musicInfo.setLyricMatch(lyricMatch);
 //
 //            r.add(musicInfo);
 //        }
 
-        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.LYRIC, keyword, page, limit)
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 根据歌词关键词获取歌曲
+     */
+    public CommonResult<NetMusicInfo> searchMusicByLyric(String keyword, int page, int limit) {
+        List<NetMusicInfo> r = new LinkedList<>();
+        int t;
+
+        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.LYRIC, keyword, page, limit)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("req").getJSONObject("data");
         t = data.getJSONObject("meta").getIntValue("sum");
-        JSONArray songArray = data.getJSONObject("body").getJSONArray("item_song");
+        JSONArray songArray = data.getJSONObject("body").getJSONObject("song").getJSONArray("list");
         for (int i = 0, len = songArray.size(); i < len; i++) {
             JSONObject songJson = songArray.getJSONObject(i);
             JSONObject albumJson = songJson.getJSONObject("album");
@@ -188,7 +146,7 @@ public class QqMusicSearchReq {
             else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
             else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
             else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
-            String lyricMatch = songJson.getString("content").replace("\\n", " / ");
+            String lyricMatch = songJson.getString("content").replace("\n", " / ");
 
             NetMusicInfo musicInfo = new NetMusicInfo();
             musicInfo.setSource(NetResourceSource.QQ);
@@ -205,6 +163,48 @@ public class QqMusicSearchReq {
 
             r.add(musicInfo);
         }
+
+//        String musicInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.LYRIC, keyword, page, limit)
+//                .executeAsStr();
+//        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+//        JSONObject data = musicInfoJson.getJSONObject("req").getJSONObject("data");
+//        t = data.getJSONObject("meta").getIntValue("sum");
+//        JSONArray songArray = data.getJSONObject("body").getJSONArray("item_song");
+//        for (int i = 0, len = songArray.size(); i < len; i++) {
+//            JSONObject songJson = songArray.getJSONObject(i);
+//            JSONObject albumJson = songJson.getJSONObject("album");
+//            JSONObject fileJson = songJson.getJSONObject("file");
+//
+//            String songId = songJson.getString("mid");
+//            String songName = songJson.getString("title");
+//            String artist = SdkUtil.parseArtist(songJson);
+//            String artistId = SdkUtil.parseArtistId(songJson);
+//            String albumName = albumJson.getString("title");
+//            String albumId = albumJson.getString("mid");
+//            Double duration = songJson.getDouble("interval");
+//            String mvId = songJson.getJSONObject("mv").getString("vid");
+//            int qualityType = AudioQuality.UNKNOWN;
+//            if (fileJson.getLong("size_hires") != 0) qualityType = AudioQuality.HR;
+//            else if (fileJson.getLong("size_flac") != 0) qualityType = AudioQuality.SQ;
+//            else if (fileJson.getLong("size_320mp3") != 0) qualityType = AudioQuality.HQ;
+//            else if (fileJson.getLong("size_128mp3") != 0) qualityType = AudioQuality.LQ;
+//            String lyricMatch = songJson.getString("content").replace("\\n", " / ");
+//
+//            NetMusicInfo musicInfo = new NetMusicInfo();
+//            musicInfo.setSource(NetResourceSource.QQ);
+//            musicInfo.setId(songId);
+//            musicInfo.setName(songName);
+//            musicInfo.setArtist(artist);
+//            musicInfo.setArtistId(artistId);
+//            musicInfo.setAlbumName(albumName);
+//            musicInfo.setAlbumId(albumId);
+//            musicInfo.setDuration(duration);
+//            musicInfo.setMvId(mvId);
+//            musicInfo.setQualityType(qualityType);
+//            musicInfo.setLyricMatch(lyricMatch);
+//
+//            r.add(musicInfo);
+//        }
 
         return new CommonResult<>(r, t);
     }

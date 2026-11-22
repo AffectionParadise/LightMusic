@@ -501,12 +501,14 @@ public class ImageUtil {
      * @return
      */
     public static BufferedImage cut(BufferedImage img, int x, int y, int w, int h) {
-        try {
-            return Thumbnails.of(img).scale(1).sourceRegion(x, y, w, h).asBufferedImage();
-        } catch (Exception e) {
-            LogUtil.error(e);
-            return null;
-        }
+        if (img == null) return null;
+        return img.getSubimage(x, y, w, h);
+//        try {
+//            return Thumbnails.of(img).scale(1).sourceRegion(x, y, w, h).asBufferedImage();
+//        } catch (Exception e) {
+//            LogUtil.error(e);
+//            return null;
+//        }
     }
 
     /**

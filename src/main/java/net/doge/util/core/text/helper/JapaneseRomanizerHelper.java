@@ -47,18 +47,17 @@ public final class JapaneseRomanizerHelper {
      * @return 转换日语句子后的文本
      */
     public static String toRomaji(String text) {
-        if (text == null || !KANA.matcher(text).find()) {
-            return text;
-        }
+        if (text == null || !KANA.matcher(text).find()) return text;
 
         StringBuilder result = new StringBuilder(text.length());
         Matcher timedLines = LRC_LINE.matcher(text);
         int cursor = 0;
         while (timedLines.find()) {
-            appendSentences(result, text.substring(cursor, timedLines.start()), SENTENCE_SEPARATOR, true);
-            result.append(text, timedLines.start(), timedLines.start(1));
+            int start = timedLines.start(), end = timedLines.end();
+            appendSentences(result, text.substring(cursor, start), SENTENCE_SEPARATOR, true);
+            result.append(text, start, timedLines.start(1));
             appendLrcLyrics(result, timedLines.group(1));
-            cursor = timedLines.end();
+            cursor = end;
         }
         appendSentences(result, text.substring(cursor), SENTENCE_SEPARATOR, true);
         return result.toString();
@@ -68,9 +67,10 @@ public final class JapaneseRomanizerHelper {
         Matcher separators = LRC_LYRIC_SEPARATOR.matcher(lyrics);
         int start = 0;
         while (separators.find()) {
-            appendLrcPart(result, lyrics.substring(start, separators.start()));
-            result.append(lyrics, separators.start(), separators.end());
-            start = separators.end();
+            int s = separators.start(), e = separators.end();
+            appendLrcPart(result, lyrics.substring(start, s));
+            result.append(lyrics, s, e);
+            start = e;
         }
         appendLrcPart(result, lyrics.substring(start));
     }
@@ -91,23 +91,18 @@ public final class JapaneseRomanizerHelper {
     }
 
     private static int findUnmarkedTranslation(String part) {
-        if (!KANA.matcher(part).find()) {
-            return -1;
-        }
+        if (!KANA.matcher(part).find()) return -1;
 
         Matcher gaps = HORIZONTAL_SPACE.matcher(part);
         List<Integer> candidates = new ArrayList<>();
         while (gaps.find()) {
-            if (gaps.start() > 0 && gaps.end() < part.length()) {
-                candidates.add(gaps.start());
-            }
+            int start = gaps.start(), end = gaps.end(), len = part.length();
+            if (start > 0 && end < len) candidates.add(start);
         }
-        // 优先保留包含空格的最长日语歌词片段，剩余内容按原样保留。
+        // 优先保留包含空格的最长日语歌词片段，剩余内容按原样保留
         for (int i = candidates.size() - 1; i >= 0; i--) {
             int boundary = candidates.get(i);
-            if (isJapaneseText(part.substring(0, boundary), true)) {
-                return boundary;
-            }
+            if (isJapaneseText(part.substring(0, boundary), true)) return boundary;
         }
         return -1;
     }
@@ -116,32 +111,26 @@ public final class JapaneseRomanizerHelper {
         Matcher boundaries = separator.matcher(text);
         int start = 0;
         while (boundaries.find()) {
-            appendSentence(result, text.substring(start, boundaries.start()), tryClauses);
-            result.append(text, boundaries.start(), boundaries.end());
-            start = boundaries.end();
+            int s = boundaries.start(), e = boundaries.end();
+            appendSentence(result, text.substring(start, s), tryClauses);
+            result.append(text, s, e);
+            start = e;
         }
         appendSentence(result, text.substring(start), tryClauses);
     }
 
     private static void appendSentence(StringBuilder result, String sentence, boolean tryClauses) {
-        if (isJapaneseText(sentence, false)) {
-            appendRomanizedSentence(result, sentence);
-        } else if (tryClauses && CLAUSE_SEPARATOR.matcher(sentence).find()) {
+        if (isJapaneseText(sentence, false)) appendRomanizedSentence(result, sentence);
+        else if (tryClauses && CLAUSE_SEPARATOR.matcher(sentence).find())
             appendSentences(result, sentence, CLAUSE_SEPARATOR, false);
-        } else {
-            result.append(sentence);
-        }
+        else result.append(sentence);
     }
 
     private static boolean isJapaneseText(String sentence, boolean allowLyricFragment) {
-        if (!KANA.matcher(sentence).find()) {
-            return false;
-        }
+        if (!KANA.matcher(sentence).find()) return false;
 
         String normalized = Normalizer.normalize(sentence, Normalizer.Form.NFKC);
-        if (OTHER_SCRIPT.matcher(normalized).find() || LATIN_PHRASE_AT_EDGE.matcher(normalized).find()) {
-            return false;
-        }
+        if (OTHER_SCRIPT.matcher(normalized).find() || LATIN_PHRASE_AT_EDGE.matcher(normalized).find()) return false;
 
         Token last = null;
         Token previous = null;
@@ -149,24 +138,16 @@ public final class JapaneseRomanizerHelper {
         for (Token token : Resources.TOKENIZER.tokenize(normalized)) {
             String surface = token.getSurface();
             String partOfSpeech = token.getPartOfSpeechLevel1();
-            if ("記号".equals(partOfSpeech) || !JAPANESE_TEXT.matcher(surface).find()) {
-                continue;
-            }
-            // 没有日语读音的汉字词可能属于中文，不能仅凭末尾的假名判断。
-            if (!token.isKnown() && HAN.matcher(surface).find()) {
-                return false;
-            }
+            if ("記号".equals(partOfSpeech) || !JAPANESE_TEXT.matcher(surface).find()) continue;
+            // 没有日语读音的汉字词可能属于中文，不能仅凭末尾的假名判断
+            if (!token.isKnown() && HAN.matcher(surface).find()) return false;
             hasTopic |= last != null && "助詞".equals(partOfSpeech) && "は".equals(surface);
             previous = last;
             last = token;
         }
 
-        if (last == null) {
-            return false;
-        }
-        if (allowLyricFragment && (HIRAGANA.matcher(normalized).find() || !HAN.matcher(normalized).find())) {
-            return true;
-        }
+        if (last == null) return false;
+        if (allowLyricFragment && (HIRAGANA.matcher(normalized).find() || !HAN.matcher(normalized).find())) return true;
 
         String subtype = last.getPartOfSpeechLevel2();
         switch (last.getPartOfSpeechLevel1()) {
@@ -175,14 +156,12 @@ public final class JapaneseRomanizerHelper {
             case "名詞":
                 return hasTopic || "形容動詞語幹".equals(subtype);
             case "助詞":
-                if (previous == null) {
-                    return false;
-                }
+                if (previous == null) return false;
                 String surface = last.getSurface();
                 return "終助詞".equals(subtype)
-                        || (subtype.contains("終助詞") && isPredicate(previous))
-                        || ("接続助詞".equals(subtype) && ("て".equals(surface) || "で".equals(surface))
-                        && "動詞".equals(previous.getPartOfSpeechLevel1()));
+                        || subtype.contains("終助詞") && isPredicate(previous)
+                        || "接続助詞".equals(subtype) && ("て".equals(surface) || "で".equals(surface))
+                        && "動詞".equals(previous.getPartOfSpeechLevel1());
             default:
                 return isPredicate(last);
         }

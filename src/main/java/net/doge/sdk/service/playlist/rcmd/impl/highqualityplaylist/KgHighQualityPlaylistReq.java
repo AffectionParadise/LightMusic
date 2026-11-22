@@ -76,11 +76,10 @@ public class KgHighQualityPlaylistReq {
                 for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
                     JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                    String playlistId = playlistJson.getString("specialid");
+                    String playlistId = playlistJson.getString("global_collection_id");
                     String playlistName = playlistJson.getString("specialname");
                     String creator = playlistJson.getString("nickname");
                     Long playCount = playlistJson.getLong("play_count");
-                    Integer trackCount = playlistJson.getIntValue("songcount");
                     String coverImgThumbUrl = playlistJson.getString("imgurl").replace("/{size}", "");
 
                     NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
@@ -90,7 +89,6 @@ public class KgHighQualityPlaylistReq {
                     playlistInfo.setCreator(creator);
                     playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
                     playlistInfo.setPlayCount(playCount);
-                    playlistInfo.setTrackCount(trackCount);
                     GlobalExecutors.imageExecutor.execute(() -> {
                         BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                         playlistInfo.setCoverImgThumb(coverImgThumb);
@@ -121,7 +119,7 @@ public class KgHighQualityPlaylistReq {
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                String playlistId = playlistJson.getString("specialid");
+                String playlistId = playlistJson.getString("global_collection_id");
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
                 Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
@@ -163,7 +161,7 @@ public class KgHighQualityPlaylistReq {
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                String playlistId = playlistJson.getString("specialid");
+                String playlistId = playlistJson.getString("global_collection_id");
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
                 Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
@@ -205,7 +203,7 @@ public class KgHighQualityPlaylistReq {
             for (int i = 0, len = playlistArray.size(); i < len; i++) {
                 JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-                String playlistId = playlistJson.getString("specialid");
+                String playlistId = playlistJson.getString("global_collection_id");
                 String playlistName = playlistJson.getString("specialname");
                 String creator = playlistJson.getString("nickname");
                 Long playCount = LangUtil.parseNumber(playlistJson.getString("total_play_count"));
@@ -245,7 +243,7 @@ public class KgHighQualityPlaylistReq {
         for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {
             JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-            String playlistId = playlistJson.getString("specialid");
+            String playlistId = playlistJson.getString("global_specialid");
             String playlistName = playlistJson.getString("specialname");
             String creator = playlistJson.getString("nickname");
             Long playCount = playlistJson.getLong("playcount");

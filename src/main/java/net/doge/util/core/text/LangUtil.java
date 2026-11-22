@@ -21,7 +21,7 @@ public class LangUtil {
     public static int compareName(String s1, String s2) {
         if (s1 == null) return -1;
         if (s2 == null) return 1;
-        return NameComparator.comparing(s1, s2);
+        return NameComparator.getInstance().compare(s1, s2);
     }
 
     /**

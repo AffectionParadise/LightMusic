@@ -436,7 +436,7 @@ public class HighlightLyric {
     }
 
     private void makeIcon() {
-        BufferedImage icon = iconHeight < height ? img.getSubimage(0, 0, img.getWidth(), iconHeight) : img;
+        BufferedImage icon = iconHeight < height ? ImageUtil.cut(img, 0, 0, img.getWidth(), iconHeight) : img;
         if (imgIcon == null) imgIcon = new ImageIcon(icon);
         else imgIcon.setImage(icon);
     }

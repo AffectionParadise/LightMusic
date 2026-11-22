@@ -51,7 +51,7 @@ public class MeMusicSearchReq {
                 JSONObject songJson = songArray.getJSONObject(i);
 
                 String songId = songJson.getString("id");
-                String name = HtmlUtil.removeHtmlLabel(songJson.getString("soundstr"));
+                String name = HtmlUtil.escapeHtml(songJson.getString("soundstr"));
                 String artist = songJson.getString("username");
                 String artistId = songJson.getString("user_id");
                 Double duration = songJson.getDouble("duration") / 1000;

@@ -30,7 +30,10 @@ public class KgReqBuilder {
     public static final String dfid = "-";
     public static final String mid = "16249512204336365674023395779019";
     public static final String uuid = "15e772e1213bdd0718d0c1d10d64e06f";
+    // 安卓 key
     public static final String androidSignKey = "OIlwieks28dk2k092lksi2UIkp";
+    // Web key
+    public static final String webSignKey = "NVPh5oo715z5DIWAeQlhMDsWXXQV4hwt";
 
     public HttpRequest buildRequest(Map<String, Object> params, String data, Map<KgReqOptEnum, Object> options) {
         String url = (String) options.getOrDefault(KgReqOptEnum.URL, "");
@@ -50,13 +53,16 @@ public class KgReqBuilder {
         params.put("clienttime", ct);
 
         // 带加密 key
-        if ((Boolean) options.getOrDefault(KgReqOptEnum.ENCRYPT_KEY, false))
+        if ((Boolean) options.getOrDefault(KgReqOptEnum.WITH_ENCRYPT_KEY, false))
             params.put("key", CryptoUtil.md5Hex(params.get("hash") + pidversec + appid + mid + userid));
 
         String crypto = (String) options.get(KgReqOptEnum.CRYPTO);
         switch (crypto) {
             case KgReqOptConstants.ANDROID:
-                params.put("signature", signAndroid(params, data));
+                params.put("signature", createSignature(params, data, androidSignKey));
+                break;
+            case KgReqOptConstants.WEB:
+                params.put("signature", createSignature(params, data, webSignKey));
                 break;
         }
         url += "?" + UrlUtil.buildQuery(params);
@@ -74,11 +80,11 @@ public class KgReqBuilder {
         return sb.toString();
     }
 
-    // 安卓签名
-    private String signAndroid(Map<String, Object> params, String data) {
+    // 生成签名，安卓/WEB 使用的 key 不同
+    private String createSignature(Map<String, Object> params, String data, String key) {
 //        Map<String, Object> paramsTreeMap = new TreeMap<>(params);
         String content = buildSignParams(params);
-        return CryptoUtil.md5Hex(androidSignKey + content + (StringUtil.notEmpty(data) ? data : "") + androidSignKey);
+        return CryptoUtil.md5Hex(key + content + (StringUtil.notEmpty(data) ? data : "") + key);
     }
 
     // 请求参数签名

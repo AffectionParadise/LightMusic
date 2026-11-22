@@ -35,45 +35,13 @@ public class QqArtistSearchReq {
         int t;
 
         int lim = Math.min(40, limit);
-//        String artistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.ARTIST, keyword, page, lim)
-//                .executeAsStr();
-//        JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
-//        JSONObject data = artistInfoJson.getJSONObject("req").getJSONObject("data");
-//        int sum = data.getJSONObject("meta").getIntValue("sum");
-//        t = PageUtil.totalPage(sum, lim) * limit;
-//        JSONArray artistArray = data.getJSONObject("body").getJSONObject("singer").getJSONArray("list");
-//        for (int i = 0, len = artistArray.size(); i < len; i++) {
-//            JSONObject artistJson = artistArray.getJSONObject(i);
-//
-//            String artistId = artistJson.getString("singerMID");
-//            String artistName = artistJson.getString("singerName");
-//            Integer songNum = artistJson.getIntValue("songNum");
-//            Integer albumNum = artistJson.getIntValue("albumNum");
-//            Integer mvNum = artistJson.getIntValue("mvNum");
-//            String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, artistId);
-//
-//            NetArtistInfo artistInfo = new NetArtistInfo();
-//            artistInfo.setSource(NetResourceSource.QQ);
-//            artistInfo.setId(artistId);
-//            artistInfo.setName(artistName);
-//            artistInfo.setSongNum(songNum);
-//            artistInfo.setAlbumNum(albumNum);
-//            artistInfo.setMvNum(mvNum);
-//            artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-//            GlobalExecutors.imageExecutor.execute(() -> {
-//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-//                artistInfo.setCoverImgThumb(coverImgThumb);
-//            });
-//            r.add(artistInfo);
-//        }
-
-        String artistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.ARTIST, keyword, page, lim)
+        String artistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.ARTIST, keyword, page, lim)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("req").getJSONObject("data");
         int sum = data.getJSONObject("meta").getIntValue("sum");
         t = PageUtil.totalPage(sum, lim) * limit;
-        JSONArray artistArray = data.getJSONObject("body").getJSONArray("singer");
+        JSONArray artistArray = data.getJSONObject("body").getJSONObject("singer").getJSONArray("list");
         for (int i = 0, len = artistArray.size(); i < len; i++) {
             JSONObject artistJson = artistArray.getJSONObject(i);
 
@@ -98,6 +66,38 @@ public class QqArtistSearchReq {
             });
             r.add(artistInfo);
         }
+
+//        String artistInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.ARTIST, keyword, page, lim)
+//                .executeAsStr();
+//        JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
+//        JSONObject data = artistInfoJson.getJSONObject("req").getJSONObject("data");
+//        int sum = data.getJSONObject("meta").getIntValue("sum");
+//        t = PageUtil.totalPage(sum, lim) * limit;
+//        JSONArray artistArray = data.getJSONObject("body").getJSONArray("singer");
+//        for (int i = 0, len = artistArray.size(); i < len; i++) {
+//            JSONObject artistJson = artistArray.getJSONObject(i);
+//
+//            String artistId = artistJson.getString("singerMID");
+//            String artistName = artistJson.getString("singerName");
+//            Integer songNum = artistJson.getIntValue("songNum");
+//            Integer albumNum = artistJson.getIntValue("albumNum");
+//            Integer mvNum = artistJson.getIntValue("mvNum");
+//            String coverImgThumbUrl = String.format(SdkCommon.ARTIST_IMG_QQ_API, artistId);
+//
+//            NetArtistInfo artistInfo = new NetArtistInfo();
+//            artistInfo.setSource(NetResourceSource.QQ);
+//            artistInfo.setId(artistId);
+//            artistInfo.setName(artistName);
+//            artistInfo.setSongNum(songNum);
+//            artistInfo.setAlbumNum(albumNum);
+//            artistInfo.setMvNum(mvNum);
+//            artistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//            GlobalExecutors.imageExecutor.execute(() -> {
+//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                artistInfo.setCoverImgThumb(coverImgThumb);
+//            });
+//            r.add(artistInfo);
+//        }
 
         return new CommonResult<>(r, t);
     }

@@ -33,55 +33,22 @@ public class QqAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-//        String albumInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.PLAYLIST, keyword, page, limit)
-//                .executeAsStr();
-//        JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
-//        JSONObject data = albumInfoJson.getJSONObject("req").getJSONObject("data");
-//        t = data.getJSONObject("meta").getIntValue("sum");
-//        JSONArray albumArray = data.getJSONObject("body").getJSONArray("item_album");
-//        for (int i = 0, len = albumArray.size(); i < len; i++) {
-//            JSONObject albumJson = albumArray.getJSONObject(i);
-//
-//            String albumId = albumJson.getString("albumMID");
-//            String albumName = albumJson.getString("albumName");
-//            String artist = SdkUtil.parseArtist(albumJson);
-//            String artistId = SdkUtil.parseArtistId(albumJson);
-//            String publishTime = albumJson.getString("publicTime");
-//            Integer songNum = albumJson.getIntValue("song_count");
-//            String coverImgThumbUrl = albumJson.getString("albumPic").replaceFirst("http:", "https:").replaceFirst("180x180", "500x500");
-//
-//            NetAlbumInfo albumInfo = new NetAlbumInfo();
-//            albumInfo.setSource(NetResourceSource.QQ);
-//            albumInfo.setId(albumId);
-//            albumInfo.setName(albumName);
-//            albumInfo.setArtist(artist);
-//            albumInfo.setArtistId(artistId);
-//            albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
-//            albumInfo.setPublishTime(publishTime);
-//            albumInfo.setSongNum(songNum);
-//            GlobalExecutors.imageExecutor.execute(() -> {
-//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
-//                albumInfo.setCoverImgThumb(coverImgThumb);
-//            });
-//            r.add(albumInfo);
-//        }
-
-        String albumInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.ALBUM, keyword, page, limit)
+        String albumInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.PC, QqSearchType.ALBUM, keyword, page, limit)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("req").getJSONObject("data");
         t = data.getJSONObject("meta").getIntValue("sum");
-        JSONArray albumArray = data.getJSONObject("body").getJSONArray("item_album");
+        JSONArray albumArray = data.getJSONObject("body").getJSONObject("album").getJSONArray("list");
         for (int i = 0, len = albumArray.size(); i < len; i++) {
             JSONObject albumJson = albumArray.getJSONObject(i);
 
-            String albumId = albumJson.getString("albummid");
-            String albumName = albumJson.getString("name");
+            String albumId = albumJson.getString("albumMID");
+            String albumName = albumJson.getString("albumName");
             String artist = SdkUtil.parseArtist(albumJson);
             String artistId = SdkUtil.parseArtistId(albumJson);
-            String publishTime = albumJson.getString("publish_date");
-            Integer songNum = albumJson.getIntValue("song_num");
-            String coverImgThumbUrl = albumJson.getString("pic").replaceFirst("http:", "https:").replaceFirst("180x180", "500x500");
+            String publishTime = albumJson.getString("publicTime");
+            Integer songNum = albumJson.getIntValue("song_count");
+            String coverImgThumbUrl = albumJson.getString("albumPic").replaceFirst("http:", "https:").replaceFirst("180x180", "500x500");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
             albumInfo.setSource(NetResourceSource.QQ);
@@ -98,6 +65,39 @@ public class QqAlbumSearchReq {
             });
             r.add(albumInfo);
         }
+
+//        String albumInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.ALBUM, keyword, page, limit)
+//                .executeAsStr();
+//        JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
+//        JSONObject data = albumInfoJson.getJSONObject("req").getJSONObject("data");
+//        t = data.getJSONObject("meta").getIntValue("sum");
+//        JSONArray albumArray = data.getJSONObject("body").getJSONArray("item_album");
+//        for (int i = 0, len = albumArray.size(); i < len; i++) {
+//            JSONObject albumJson = albumArray.getJSONObject(i);
+//
+//            String albumId = albumJson.getString("albummid");
+//            String albumName = albumJson.getString("name");
+//            String artist = SdkUtil.parseArtist(albumJson);
+//            String artistId = SdkUtil.parseArtistId(albumJson);
+//            String publishTime = albumJson.getString("publish_date");
+//            Integer songNum = albumJson.getIntValue("song_num");
+//            String coverImgThumbUrl = albumJson.getString("pic").replaceFirst("http:", "https:").replaceFirst("180x180", "500x500");
+//
+//            NetAlbumInfo albumInfo = new NetAlbumInfo();
+//            albumInfo.setSource(NetResourceSource.QQ);
+//            albumInfo.setId(albumId);
+//            albumInfo.setName(albumName);
+//            albumInfo.setArtist(artist);
+//            albumInfo.setArtistId(artistId);
+//            albumInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+//            albumInfo.setPublishTime(publishTime);
+//            albumInfo.setSongNum(songNum);
+//            GlobalExecutors.imageExecutor.execute(() -> {
+//                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+//                albumInfo.setCoverImgThumb(coverImgThumb);
+//            });
+//            r.add(albumInfo);
+//        }
 
         return new CommonResult<>(r, t);
     }

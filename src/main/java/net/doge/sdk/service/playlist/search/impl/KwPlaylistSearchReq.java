@@ -80,7 +80,7 @@ public class KwPlaylistSearchReq {
             JSONObject playlistJson = playlistArray.getJSONObject(i);
 
             String playlistId = playlistJson.getString("playlistid");
-            String playlistName = HtmlUtil.removeHtmlLabel(playlistJson.getString("name"));
+            String playlistName = HtmlUtil.escapeHtml(playlistJson.getString("name"));
             String creator = playlistJson.getString("nickname");
             Long playCount = playlistJson.getLong("playcnt");
             Integer trackCount = playlistJson.getIntValue("songnum");

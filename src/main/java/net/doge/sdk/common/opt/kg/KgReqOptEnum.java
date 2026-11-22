@@ -11,5 +11,5 @@ public enum KgReqOptEnum {
     // 加密类型
     CRYPTO,
     // 是否带加密 key
-    ENCRYPT_KEY
+    WITH_ENCRYPT_KEY
 }

@@ -96,7 +96,7 @@ public class KwLyricReq {
         lyricStr = sb.toString();
 
         // 分离歌词和翻译
-        String[] sp = lyricStr.split("\n");
+        String[] sp = lyricStr.split("\\R");
         sb = new StringBuilder();
         boolean hasTrans = false;
         int s = sp.length;

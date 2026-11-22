@@ -49,7 +49,7 @@ public class KgPlaylistSearchReq {
 //            for (int i = 0, len = playlistArray.size(); i < len; i++) {
 //                JSONObject playlistJson = playlistArray.getJSONObject(i);
 //
-//                String playlistId = playlistJson.getString("specialid");
+//                String playlistId = playlistJson.getString("global_collection_id");
 //                String playlistName = playlistJson.getString("specialname");
 //                String creator = playlistJson.getString("nickname");
 //                Long playCount = playlistJson.getLong("playcount");
@@ -88,7 +88,7 @@ public class KgPlaylistSearchReq {
         for (int i = 0, len = playlistArray.size(); i < len; i++) {
             JSONObject playlistJson = playlistArray.getJSONObject(i);
 
-            String playlistId = playlistJson.getString("specialid");
+            String playlistId = playlistJson.getString("gid");
             String playlistName = playlistJson.getString("specialname");
             String creator = playlistJson.getString("nickname");
             Long playCount = playlistJson.getLong("total_play_count");

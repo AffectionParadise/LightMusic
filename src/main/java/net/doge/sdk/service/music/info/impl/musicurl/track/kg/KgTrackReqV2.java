@@ -81,7 +81,7 @@ public class KgTrackReqV2 {
         params.put("cdnBackup", 1);
         params.put("kcard", 0);
         params.put("module", "collection");
-        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGetWithKey(SONG_URL_KG_API);
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidGetWithEncryptKey(SONG_URL_KG_API);
         String respBody = SdkCommon.kgRequest(params, null, options)
                 .header("x-router", "trackercdn.kugou.com")
                 .executeAsStr();
