@@ -10,7 +10,9 @@ import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.media.DurationUtil;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MgLyricReq {
     private static MgLyricReq instance;
@@ -24,13 +26,17 @@ public class MgLyricReq {
     }
 
     // 歌词 API (咪咕)
-    private final String LYRIC_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String LYRIC_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do";
 //    private final String LYRIC_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/getLyric?copyrightId=%s";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
-        String songBody = HttpRequest.get(String.format(LYRIC_MG_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("copyrightId", id);
+        params.put("resourceType", 2);
+        String songBody = HttpRequest.get(LYRIC_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
         String mrcUrl = data.getString("mrcUrl");

@@ -9,9 +9,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FsMusicInfoReq {
     private static FsMusicInfoReq instance;
@@ -25,16 +26,19 @@ public class FsMusicInfoReq {
     }
 
     // 歌曲信息 API (5sing)
-    private final String SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find?songinfo=%s";
+    private final String SONG_DETAIL_FS_API = "http://service.5sing.kugou.com/song/find";
     // 歌词 API (5sing)
-    private final String LYRIC_FS_API = "http://5sing.kugou.com/fm/m/json/lrc?songType=%s&songId=%s";
+    private final String LYRIC_FS_API = "http://5sing.kugou.com/fm/m/json/lrc";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_FS_API, UrlUtil.encodeAll(id.replace("_", "$"))))
+        Map<String, Object> params = new HashMap<>();
+        params.put("songinfo", id.replace("_", "$"));
+        String songBody = HttpRequest.get(SONG_DETAIL_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONArray.parseArray(songBody).getJSONObject(0);
 
@@ -57,7 +61,11 @@ public class FsMusicInfoReq {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
         String[] sp = id.split("_");
-        String lyricBody = HttpRequest.get(String.format(LYRIC_FS_API, sp[0], sp[1]))
+        Map<String, Object> params = new HashMap<>();
+        params.put("songType", sp[0]);
+        params.put("songId", sp[1]);
+        String lyricBody = HttpRequest.get(LYRIC_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject lyricJson = JSONObject.parseObject(lyricBody);
         musicInfo.setLyric(lyricJson.getString("txt"));

@@ -17,8 +17,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeUserInfoReq {
     private static MeUserInfoReq instance;
@@ -34,7 +36,7 @@ public class MeUserInfoReq {
     // 用户信息 API (猫耳)
     private final String USER_DETAIL_ME_API = "https://www.missevan.com/%s/";
     // 用户节目 API (猫耳)
-    private final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound?order=%s&user_id=%s&p=%s&page_size=%s";
+    private final String USER_PROGRAMS_ME_API = "https://www.missevan.com/person/getusersound";
 
     /**
      * 根据用户 id 补全用户信息(包括封面图、描述)
@@ -45,7 +47,7 @@ public class MeUserInfoReq {
             // 用户节目数
             if (!userInfo.hasProgramCount()) {
                 GlobalExecutors.requestExecutor.execute(() -> {
-                    String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
+                    String programCountBody = buildUserProgramsRequest(0, id, 1, 1)
                             .executeAsStr();
                     Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                     userInfo.setProgramCount(programCount);
@@ -92,7 +94,7 @@ public class MeUserInfoReq {
         int total;
 
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, recordType, id, page, limit))
+        String userInfoBody = buildUserProgramsRequest(recordType, id, page, limit)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("info");
@@ -133,7 +135,7 @@ public class MeUserInfoReq {
         Runnable getProgramCount = () -> {
             // 用户节目数
             GlobalExecutors.requestExecutor.execute(() -> {
-                String programCountBody = HttpRequest.get(String.format(USER_PROGRAMS_ME_API, 0, id, 1, 1))
+                String programCountBody = buildUserProgramsRequest(0, id, 1, 1)
                         .executeAsStr();
                 Integer programCount = JSONObject.parseObject(programCountBody).getJSONObject("info").getJSONObject("pagination").getIntValue("count");
                 userInfo.setProgramCount(programCount);
@@ -171,5 +173,15 @@ public class MeUserInfoReq {
         executor.await();
 
         return new CommonResult<>(res, t);
+    }
+
+    private HttpRequest buildUserProgramsRequest(int recordType, String id, int page, int limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("order", recordType);
+        params.put("user_id", id);
+        params.put("p", page);
+        params.put("page_size", limit);
+        return HttpRequest.get(USER_PROGRAMS_ME_API)
+                .queryParams(params);
     }
 }

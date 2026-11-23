@@ -44,6 +44,11 @@ public class SdkCommon {
         return QqReqBuilder.getInstance().buildSearchRequest(device, type, keyword, page, limit);
     }
 
+    // 构造 QQ 音乐歌单请求
+    public static HttpRequest qqPlaylistRequest(String data) {
+        return QqReqBuilder.getInstance().buildPlaylistRequest(data);
+    }
+
     // 构造酷我音乐请求
     public static HttpRequest kwRequest(String url) {
         return KwReqBuilder.getInstance().buildRequest(url);

@@ -14,8 +14,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpResponse;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwHighQualityPlaylistReq {
     private static KwHighQualityPlaylistReq instance;
@@ -29,13 +31,13 @@ public class KwHighQualityPlaylistReq {
     }
 
     // 热门歌单 API (酷我)
-    private final String HOT_PLAYLIST_KW_API = "https://kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot&httpsStatus=1";
+    private final String HOT_PLAYLIST_KW_API = "https://kuwo.cn/api/pc/classify/playlist/getRcmPlayList";
     // 默认歌单(热门) API (酷我)
-    private final String DEFAULT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=hot";
+    private final String DEFAULT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList";
     // 分类歌单 API (酷我)
-    private final String CAT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList?loginUid=0&loginSid=0&appUid=76039576&id=%s&pn=%s&rn=%s";
+    private final String CAT_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagPlayList";
     // 分类歌单 API 2 (酷我)
-    private final String CAT_PLAYLIST_KW_API_2 = "http://mobileinterfaces.kuwo.cn/er.s?type=get_pc_qz_data&f=web&id=%s&prod=pc";
+    private final String CAT_PLAYLIST_KW_API_2 = "http://mobileinterfaces.kuwo.cn/er.s";
 
     /**
      * 热门歌单
@@ -44,7 +46,13 @@ public class KwHighQualityPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = HttpRequest.get(String.format(HOT_PLAYLIST_KW_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("order", "hot");
+        params.put("httpsStatus", 1);
+        HttpResponse resp = HttpRequest.get(HOT_PLAYLIST_KW_API)
+                .queryParams(params)
                 .execute();
         if (resp.isSuccessful()) {
             String playlistInfoBody = resp.body();
@@ -88,7 +96,13 @@ public class KwHighQualityPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = HttpRequest.get(String.format(DEFAULT_PLAYLIST_KW_API, page, limit)).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("order", "hot");
+        HttpResponse resp = HttpRequest.get(DEFAULT_PLAYLIST_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String playlistInfoBody = resp.body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -137,7 +151,14 @@ public class KwHighQualityPlaylistReq {
             String[] sp = param.split(" ");
             // 根据 digest 信息请求不同的分类歌单接口
             if ("43".equals(sp[1])) {
-                HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API_2, sp[0])).execute();
+                Map<String, Object> catPlaylist2Params = new HashMap<>();
+                catPlaylist2Params.put("type", "get_pc_qz_data");
+                catPlaylist2Params.put("f", "web");
+                catPlaylist2Params.put("id", sp[0]);
+                catPlaylist2Params.put("prod", "pc");
+                HttpResponse resp = HttpRequest.get(CAT_PLAYLIST_KW_API_2)
+                        .queryParams(catPlaylist2Params)
+                        .execute();
                 if (resp.isSuccessful()) {
                     String playlistInfoBody = resp.body();
                     JSONArray playlistArray = JSONArray.parseArray(playlistInfoBody);
@@ -167,7 +188,16 @@ public class KwHighQualityPlaylistReq {
                     }
                 }
             } else {
-                HttpResponse resp = HttpRequest.get(String.format(CAT_PLAYLIST_KW_API, sp[0], page, limit)).execute();
+                Map<String, Object> params = new HashMap<>();
+                params.put("loginUid", 0);
+                params.put("loginSid", 0);
+                params.put("appUid", 76039576);
+                params.put("id", sp[0]);
+                params.put("pn", page);
+                params.put("rn", limit);
+                HttpResponse resp = HttpRequest.get(CAT_PLAYLIST_KW_API)
+                        .queryParams(params)
+                        .execute();
                 if (resp.isSuccessful()) {
                     String playlistInfoBody = resp.body();
                     JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

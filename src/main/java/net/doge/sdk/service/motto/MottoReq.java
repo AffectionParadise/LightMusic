@@ -4,6 +4,10 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 public class MottoReq {
     private static MottoReq instance;
 
@@ -16,7 +20,7 @@ public class MottoReq {
     }
 
     // 格言 API
-    private final String MOTTO_API = "https://v1.hitokoto.cn/?encode=json&lang=cn&c=d&c=i";
+    private final String MOTTO_API = "https://v1.hitokoto.cn/";
 
     /**
      * 获取格言
@@ -24,7 +28,12 @@ public class MottoReq {
      * @return
      */
     public String getMotto() {
+        Map<String, Object> params = new HashMap<>();
+        params.put("encode", "json");
+        params.put("lang", "cn");
+        params.put("c", Arrays.asList("d", "i"));
         String mottoBody = HttpRequest.get(MOTTO_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mottoJson = JSONObject.parseObject(mottoBody);
         String content = mottoJson.getString("hitokoto");

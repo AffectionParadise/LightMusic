@@ -27,7 +27,7 @@ public class VkeysQqTrackReq {
 
     // 歌曲 URL 获取 API (QQ)
     // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/qq.py
-    private final String SONG_URL_QQ_API = "https://api.vkeys.cn/music/tencent/song/link?mid=%s&quality=%s";
+    private final String SONG_URL_QQ_API = "https://api.vkeys.cn/music/tencent/song/link";
 
     private Map<String, String> qualityMap = new HashMap<>();
     // url 黑名单
@@ -81,7 +81,11 @@ public class VkeysQqTrackReq {
      */
     public String getTrackUrl(String mid, String quality) {
         try {
-            String songBody = HttpRequest.get(String.format(SONG_URL_QQ_API, mid, qualityMap.get(quality)))
+            Map<String, Object> params = new HashMap<>();
+            params.put("mid", mid);
+            params.put("quality", qualityMap.get(quality));
+            String songBody = HttpRequest.get(SONG_URL_QQ_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject songJson = JSONObject.parseObject(songBody);
             if (songJson.getIntValue("code") != 0) return "";

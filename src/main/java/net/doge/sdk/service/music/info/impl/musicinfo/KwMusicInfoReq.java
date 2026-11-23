@@ -12,6 +12,8 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KwMusicInfoReq {
     private static KwMusicInfoReq instance;
@@ -25,14 +27,19 @@ public class KwMusicInfoReq {
     }
 
     // 歌曲信息 API (酷我)
-    private final String SONG_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
+    private final String SONG_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        HttpResponse resp = SdkCommon.kwRequest(String.format(SONG_DETAIL_KW_API, id)).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("mid", id);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(SONG_DETAIL_KW_API)
+                .queryParams(params)
+                .execute();
         if (!resp.isSuccessful()) return;
         String songBody = resp.body();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");

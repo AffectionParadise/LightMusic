@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.text.LangUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgRecommendPlaylistReq {
     private static MgRecommendPlaylistReq instance;
@@ -27,11 +29,11 @@ public class MgRecommendPlaylistReq {
     }
 
     // 歌单广场 API (咪咕)
-    private final String SQUARE_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/playlist-square-recommend/v1.0?templateVersion=2";
+    private final String SQUARE_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/playlist-square-recommend/v1.0";
     // 首页推荐歌单 API (咪咕)
-    private final String INDEX_REC_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/resource-dataloader/recommend-playlist/v1.0?scene=recommend_playlist";
+    private final String INDEX_REC_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/resource-dataloader/recommend-playlist/v1.0";
     // 推荐歌单 API(最新) (咪咕)
-    private final String REC_NEW_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=2";
+    private final String REC_NEW_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do";
     // 推荐歌单(最热) API (咪咕)
 //    private final String RECOMMEND_PLAYLIST_MG_API = "https://m.music.migu.cn/migu/remoting/playlist_bycolumnid_tag?playListType=2&type=1&columnId=15127315&startIndex=%s";
     // 最新歌单 API (咪咕)
@@ -44,7 +46,10 @@ public class MgRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("templateVersion", 2);
         String playlistInfoBody = HttpRequest.get(SQUARE_PLAYLIST_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -100,7 +105,10 @@ public class MgRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("scene", "recommend_playlist");
         String playlistInfoBody = HttpRequest.get(INDEX_REC_PLAYLIST_MG_API)
+                .queryParams(params)
                 .header("DeviceId", "D05C5D20-E570-48DF-A717-78D00B4FC5C5")
                 .header("Recommendstatus", "1")
                 .executeAsStr();
@@ -145,7 +153,13 @@ public class MgRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(REC_NEW_PLAYLIST_MG_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", page);
+        params.put("count", limit);
+        params.put("templateVersion", 5);
+        params.put("type", 2);
+        String playlistInfoBody = HttpRequest.get(REC_NEW_PLAYLIST_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);

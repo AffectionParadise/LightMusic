@@ -11,8 +11,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgNewRadioReq {
     private static MgNewRadioReq instance;
@@ -26,7 +28,7 @@ public class MgNewRadioReq {
     }
 
     // 时序电台 API (咪咕)
-    private final String TIMING_RADIO_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-radio/v1.0?templateVersion=1";
+    private final String TIMING_RADIO_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-radio/v1.0";
 
     /**
      * 时序电台
@@ -35,7 +37,10 @@ public class MgNewRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("templateVersion", 1);
         String radioInfoBody = HttpRequest.get(TIMING_RADIO_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("data");

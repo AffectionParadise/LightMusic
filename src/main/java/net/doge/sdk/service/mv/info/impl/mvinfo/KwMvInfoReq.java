@@ -7,6 +7,8 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.util.SdkUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KwMvInfoReq {
     private static KwMvInfoReq instance;
@@ -20,14 +22,18 @@ public class KwMvInfoReq {
     }
 
     // MV 信息 API (酷我)
-    private final String MV_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo?mid=%s&httpsStatus=1";
+    private final String MV_DETAIL_KW_API = "https://kuwo.cn/api/www/music/musicInfo";
 
     /**
      * 根据 MV id 补全 MV 基本信息
      */
     public void fillMvDetail(NetMvInfo mvInfo) {
         String mvId = mvInfo.getId();
-        String mvBody = SdkCommon.kwRequest(String.format(MV_DETAIL_KW_API, mvId))
+        Map<String, Object> params = new HashMap<>();
+        params.put("mid", mvId);
+        params.put("httpsStatus", 1);
+        String mvBody = SdkCommon.kwRequest(MV_DETAIL_KW_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvJson = JSONObject.parseObject(mvBody);
         JSONObject data = mvJson.getJSONObject("data");

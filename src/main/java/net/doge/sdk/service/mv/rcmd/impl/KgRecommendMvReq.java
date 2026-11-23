@@ -16,6 +16,7 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class KgRecommendMvReq {
     }
 
     // 推荐 MV API (酷狗)
-    private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list?sort=4&id=%s&page=%s&pagesize=%s";
+    private final String RECOMMEND_MV_KG_API = "http://mobilecdnbj.kugou.com/api/v5/video/list";
     // 编辑精选 MV API (酷狗)
     private final String IP_MV_KG_API = "/openapi/v1/ip/videos";
 
@@ -46,7 +47,13 @@ public class KgRecommendMvReq {
 
         String param = s[TagModule.RECOMMEND_MV_KG];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, param, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("sort", 4);
+            params.put("id", param);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            String mvInfoBody = HttpRequest.get(RECOMMEND_MV_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONObject data = mvInfoJson.getJSONObject("data");

@@ -16,8 +16,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class QqUserMenuReq {
@@ -32,12 +34,11 @@ public class QqUserMenuReq {
     }
 
     // 用户创建歌单 API (QQ)
-    private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss?" +
-            "hostUin=0&hostuin=%s&sin=0&size=200&g_tk=5381&loginUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
+    private final String USER_CREATED_PLAYLIST_QQ_API = "https://c.y.qq.com/rsc/fcgi-bin/fcg_user_created_diss";
     // 用户收藏歌单 API (QQ)
-    private final String USER_COLLECTED_PLAYLIST_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=3&sin=%s&ein=%s";
+    private final String USER_COLLECTED_PLAYLIST_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg";
     // 用户收藏专辑 API (QQ)
-    private final String USER_COLLECTED_ALBUM_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg?ct=20&cid=205360956&userid=%s&reqtype=2&sin=%s&ein=%s";
+    private final String USER_COLLECTED_ALBUM_QQ_API = "https://c.y.qq.com/fav/fcgi-bin/fcg_get_profile_order_asset.fcg";
 
     /**
      * 获取用户歌单（通过用户）
@@ -51,7 +52,21 @@ public class QqUserMenuReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             int t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_QQ_API, id))
+            Map<String, Object> params = new HashMap<>();
+            params.put("hostUin", 0);
+            params.put("hostuin", id);
+            params.put("sin", 0);
+            params.put("size", 200);
+            params.put("g_tk", 5381);
+            params.put("loginUin", 0);
+            params.put("format", "json");
+            params.put("inCharset", "utf8");
+            params.put("outCharset", "utf-8");
+            params.put("notice", 0);
+            params.put("platform", "yqq.json");
+            params.put("needNewCode", 0);
+            String playlistInfoBody = HttpRequest.get(USER_CREATED_PLAYLIST_QQ_API)
+                    .queryParams(params)
                     .referer("https://y.qq.com/portal/profile.html")
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -94,7 +109,15 @@ public class QqUserMenuReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             int t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_QQ_API, id, (page - 1) * limit, page * limit))
+            Map<String, Object> userCollectedPlaylistParams = new HashMap<>();
+            userCollectedPlaylistParams.put("ct", 20);
+            userCollectedPlaylistParams.put("cid", 205360956);
+            userCollectedPlaylistParams.put("userid", id);
+            userCollectedPlaylistParams.put("reqtype", 3);
+            userCollectedPlaylistParams.put("sin", (page - 1) * limit);
+            userCollectedPlaylistParams.put("ein", page * limit);
+            String playlistInfoBody = HttpRequest.get(USER_COLLECTED_PLAYLIST_QQ_API)
+                    .queryParams(userCollectedPlaylistParams)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -148,7 +171,15 @@ public class QqUserMenuReq {
         int total;
 
         String id = userInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(USER_COLLECTED_ALBUM_QQ_API, id, (page - 1) * limit, page * limit - 1))
+        Map<String, Object> params = new HashMap<>();
+        params.put("ct", 20);
+        params.put("cid", 205360956);
+        params.put("userid", id);
+        params.put("reqtype", 2);
+        params.put("sin", (page - 1) * limit);
+        params.put("ein", page * limit - 1);
+        String albumInfoBody = HttpRequest.get(USER_COLLECTED_ALBUM_QQ_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

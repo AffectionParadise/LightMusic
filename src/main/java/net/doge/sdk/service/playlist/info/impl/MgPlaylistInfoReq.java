@@ -15,8 +15,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgPlaylistInfoReq {
     private static MgPlaylistInfoReq instance;
@@ -30,9 +32,9 @@ public class MgPlaylistInfoReq {
     }
 
     // 歌单信息 API (咪咕)
-    private final String PLAYLIST_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?needSimple=00&resourceType=2021&resourceId=%s";
+    private final String PLAYLIST_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do";
     // 歌单歌曲 API (咪咕)
-    private final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do?musicListId=%s&pageNo=%s&pageSize=%s";
+    private final String PLAYLIST_SONGS_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/user/queryMusicListSongs.do";
 
     /**
      * 根据歌单 id 获取歌单
@@ -41,7 +43,7 @@ public class MgPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_MG_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray resource = playlistInfoJson.getJSONArray("resource");
@@ -81,7 +83,7 @@ public class MgPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_MG_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONArray("resource").getJSONObject(0);
@@ -104,7 +106,12 @@ public class MgPlaylistInfoReq {
         int total;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_MG_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("musicListId", id);
+        params.put("pageNo", page);
+        params.put("pageSize", limit);
+        String playlistInfoBody = HttpRequest.get(PLAYLIST_SONGS_MG_API)
+                .queryParams(params)
                 .referer("https://m.music.migu.cn/")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -149,5 +156,14 @@ public class MgPlaylistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildPlaylistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("needSimple", "00");
+        params.put("resourceType", 2021);
+        params.put("resourceId", id);
+        return HttpRequest.get(PLAYLIST_DETAIL_MG_API)
+                .queryParams(params);
     }
 }

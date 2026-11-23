@@ -14,8 +14,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpResponse;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwArtistListReq {
     private static KwArtistListReq instance;
@@ -29,9 +31,9 @@ public class KwArtistListReq {
     }
 
     // 歌手推荐 API (酷我)
-    private final String ARTIST_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo?category=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo";
     // 全部歌手 API (酷我)
-    private final String ALL_ARTISTS_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo?category=%s&prefix=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ALL_ARTISTS_LIST_KW_API = "https://kuwo.cn/api/www/artist/artistInfo";
 
     /**
      * 推荐歌手
@@ -43,7 +45,14 @@ public class KwArtistListReq {
 
         String param = s[TagModule.ARTIST_LIST_KW];
         if (StringUtil.notEmpty(param)) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, param, page, limit)).execute();
+            Map<String, Object> params = new HashMap<>();
+            params.put("category", param);
+            params.put("pn", page);
+            params.put("rn", limit);
+            params.put("httpsStatus", 1);
+            HttpResponse resp = SdkCommon.kwRequest(ARTIST_LIST_KW_API)
+                    .queryParams(params)
+                    .execute();
             if (resp.isSuccessful()) {
                 String artistInfoBody = resp.body();
                 JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -91,7 +100,14 @@ public class KwArtistListReq {
         String param = s[TagModule.ALL_ARTIST_KW];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("category", sp[0]);
+            params.put("prefix", sp[1]);
+            params.put("pn", page);
+            params.put("rn", limit);
+            params.put("httpsStatus", 1);
+            HttpResponse resp = SdkCommon.kwRequest(ALL_ARTISTS_LIST_KW_API)
+                    .queryParams(params)
                     .referer(StringUtil.notEmpty(sp[1]) ? "https://kuwo.cn/singers" : "")
                     .execute();
             if (resp.isSuccessful()) {

@@ -1,10 +1,14 @@
 package net.doge.sdk.common.builder;
 
+import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.constant.qq.QqSearchDevice;
 import net.doge.sdk.common.constant.qq.QqSearchType;
 import net.doge.sdk.common.crypto.QqCrypto;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.http.HttpRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class QqReqBuilder {
     private static QqReqBuilder instance;
@@ -18,13 +22,30 @@ public class QqReqBuilder {
     }
 
     // 需要签名的 QQ API
-    public static final String SIGNED_MAIN_QQ_API = "https://u.y.qq.com/cgi-bin/musics.fcg?sign=%s";
+    public static final String SIGNED_MAIN_QQ_API = "https://u.y.qq.com/cgi-bin/musics.fcg";
 
     public HttpRequest buildRequest(String data) {
         String sign = QqCrypto.getInstance().zzcSign(data);
-        String url = String.format(SIGNED_MAIN_QQ_API, sign);
-        return HttpRequest.post(url)
+        Map<String, Object> params = new HashMap<>();
+        params.put("sign", sign);
+        return HttpRequest.post(SIGNED_MAIN_QQ_API)
+                .queryParams(params)
                 .jsonBody(data);
+    }
+
+    public HttpRequest buildPlaylistRequest(String data) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("loginUin", 0);
+        params.put("hostUin", 0);
+        params.put("format", "json");
+        params.put("inCharset", "utf-8");
+        params.put("outCharset", "utf-8");
+        params.put("notice", 0);
+        params.put("platform", "wk_v15.json");
+        params.put("needNewCode", 0);
+        params.put("data", data);
+        return HttpRequest.get(SdkCommon.MAIN_QQ_API)
+                .queryParams(params);
     }
 
     public HttpRequest buildSearchRequest(QqSearchDevice device, QqSearchType type, String keyword, int page, int limit) {

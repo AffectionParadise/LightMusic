@@ -16,8 +16,10 @@ import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwCommentReq {
     private static KwCommentReq instance;
@@ -30,10 +32,8 @@ public class KwCommentReq {
         return instance;
     }
 
-    // 热门评论 API (酷我)
-    private final String HOT_COMMENTS_KW_API = "https://comment.kuwo.cn/com.s?digest=%s&sid=%s&type=get_rec_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
-    // 最新评论 API (酷我)
-    private final String NEW_COMMENTS_KW_API = "https://comment.kuwo.cn/com.s?digest=%s&sid=%s&type=get_comment&f=web&page=%s&rows=%s&uid=0&prod=newWeb&httpsStatus=1";
+    // 评论 API (酷我)
+    private final String COMMENTS_KW_API = "https://comment.kuwo.cn/com.s";
 
     /**
      * 获取评论
@@ -66,9 +66,18 @@ public class KwCommentReq {
                     ref = "https://kuwo.cn/rankList/" + UrlUtil.encodeAll(id);
                     break;
             }
-            String url = hotOnly ? HOT_COMMENTS_KW_API : NEW_COMMENTS_KW_API;
-            // 最新评论
-            String commentInfoBody = HttpRequest.get(String.format(url, typeStr, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("digest", typeStr);
+            params.put("sid", id);
+            params.put("type", hotOnly ? "get_rec_comment" : "get_comment");
+            params.put("f", "web");
+            params.put("page", page);
+            params.put("rows", limit);
+            params.put("uid", 0);
+            params.put("prod", "newWeb");
+            params.put("httpsStatus", 1);
+            String commentInfoBody = HttpRequest.get(COMMENTS_KW_API)
+                    .queryParams(params)
                     .referer(ref)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);

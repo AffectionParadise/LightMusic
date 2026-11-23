@@ -8,8 +8,10 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwRankInfoReq {
     private static KwRankInfoReq instance;
@@ -24,7 +26,7 @@ public class KwRankInfoReq {
 
     // 榜单信息 API (酷我)
 //    private final String RANK_DETAIL_KW_API = "https://kuwo.cn/api/www/bang/bang/musicList?bangId=%s&pn=%s&rn=%s&httpsStatus=1";
-    private final String RANK_DETAIL_KW_API = "http://kbangserver.kuwo.cn/ksong.s?from=pc&fmt=json&id=%s&pn=%s&rn=%s&type=bang&data=content&show_copyright_off=0&pcmp4=1&isbang=1";
+    private final String RANK_DETAIL_KW_API = "http://kbangserver.kuwo.cn/ksong.s";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
@@ -68,7 +70,19 @@ public class KwRankInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_KW_API, id, page - 1, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("from", "pc");
+        params.put("fmt", "json");
+        params.put("id", id);
+        params.put("pn", page - 1);
+        params.put("rn", limit);
+        params.put("type", "bang");
+        params.put("data", "content");
+        params.put("show_copyright_off", 0);
+        params.put("pcmp4", 1);
+        params.put("isbang", 1);
+        String rankInfoBody = HttpRequest.get(RANK_DETAIL_KW_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(rankInfoBody);
         total = data.getIntValue("num");

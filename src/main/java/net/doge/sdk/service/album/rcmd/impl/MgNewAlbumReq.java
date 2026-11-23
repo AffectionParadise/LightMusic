@@ -11,8 +11,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgNewAlbumReq {
     private static MgNewAlbumReq instance;
@@ -28,9 +30,9 @@ public class MgNewAlbumReq {
     // 新碟推荐 API (咪咕)
 //    private final String NEW_ALBUM_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23854016&pageNo=%s&pageSize=%s&type=2003";
     // 新碟上架 API (咪咕)
-    private final String NEW_ALBUM_MG_API = "https://app.c.nf.migu.cn/column/column-info/h5/v2.0?columnId=75577835";
+    private final String NEW_ALBUM_MG_API = "https://app.c.nf.migu.cn/column/column-info/h5/v2.0";
     // 新专辑榜 API (咪咕)
-    private final String NEW_ALBUM_RANK_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=23218151";
+    private final String NEW_ALBUM_RANK_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do";
 
     /**
      * 新碟推荐(接口分页)
@@ -74,7 +76,10 @@ public class MgNewAlbumReq {
 //
 //            r.add(albumInfo);
 //        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("columnId", 75577835);
         String albumInfoBody = HttpRequest.get(NEW_ALBUM_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data").getJSONObject("columnInfo");
@@ -121,7 +126,10 @@ public class MgNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("columnId", 23218151);
         String albumInfoBody = HttpRequest.get(NEW_ALBUM_RANK_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("columnInfo");

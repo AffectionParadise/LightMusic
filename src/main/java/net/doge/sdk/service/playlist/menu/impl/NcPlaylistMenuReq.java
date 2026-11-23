@@ -18,6 +18,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class NcPlaylistMenuReq {
     }
 
     // 歌单相似歌单 API (网易云)
-    private final String SIMILAR_PLAYLIST_NC_API = "https://music.163.com/playlist?id=%s";
+    private final String SIMILAR_PLAYLIST_NC_API = "https://music.163.com/playlist";
     // 歌单收藏者 API (网易云)
     private final String PLAYLIST_SUBSCRIBERS_NC_API = "https://music.163.com/weapi/playlist/subscribers";
 
@@ -49,7 +50,10 @@ public class NcPlaylistMenuReq {
 
         String id = netPlaylistInfo.getId();
         Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapiPC();
-        String playlistInfoBody = SdkCommon.ncRequest(Method.GET, String.format(SIMILAR_PLAYLIST_NC_API, id), "{}", options)
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        String playlistInfoBody = SdkCommon.ncRequest(Method.GET, SIMILAR_PLAYLIST_NC_API, "{}", options)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(playlistInfoBody);
         Elements playlistArray = doc.select(".m-rctlist.f-cb li");

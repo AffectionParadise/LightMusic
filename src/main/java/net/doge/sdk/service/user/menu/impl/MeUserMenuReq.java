@@ -14,8 +14,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class MeUserMenuReq {
@@ -30,17 +32,17 @@ public class MeUserMenuReq {
     }
 
     // 用户创建音单 API (猫耳)
-    private final String USER_CREATED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum?user_id=%s&type=0&p=%s&page_size=%s";
+    private final String USER_CREATED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum";
     // 用户收藏音单 API (猫耳)
-    private final String USER_COLLECTED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum?user_id=%s&type=1&p=%s&page_size=%s";
+    private final String USER_COLLECTED_PLAYLIST_ME_API = "https://www.missevan.com/person/getuseralbum";
     // 用户电台 API (猫耳)
-    private final String USER_RADIO_ME_API = "https://www.missevan.com/dramaapi/getuserdramas?user_id=%s&s=&order=0&page=%s&page_size=%s";
+    private final String USER_RADIO_ME_API = "https://www.missevan.com/dramaapi/getuserdramas";
     // 用户收藏电台 API (猫耳)
-    private final String USER_SUB_RADIO_ME_API = "https://www.missevan.com/dramaapi/getusersubscriptions?user_id=%s&page=%s&page_size=%s";
+    private final String USER_SUB_RADIO_ME_API = "https://www.missevan.com/dramaapi/getusersubscriptions";
     // 用户关注 API (猫耳)
-    private final String USER_FOLLOWS_ME_API = "https://www.missevan.com/person/getuserattention?type=0&user_id=%s&p=%s&page_size=%s";
+    private final String USER_FOLLOWS_ME_API = "https://www.missevan.com/person/getuserattention";
     // 用户粉丝 API (猫耳)
-    private final String USER_FANS_ME_API = "https://www.missevan.com/person/getuserattention?type=1&user_id=%s&p=%s&page_size=%s";
+    private final String USER_FANS_ME_API = "https://www.missevan.com/person/getuserattention";
 
     /**
      * 获取用户歌单（通过用户）
@@ -54,7 +56,13 @@ public class MeUserMenuReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             int t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(USER_CREATED_PLAYLIST_ME_API, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", id);
+            params.put("type", 0);
+            params.put("p", page);
+            params.put("page_size", limit);
+            String playlistInfoBody = HttpRequest.get(USER_CREATED_PLAYLIST_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("info");
@@ -93,7 +101,13 @@ public class MeUserMenuReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             int t = 0;
 
-            String playlistInfoBody = HttpRequest.get(String.format(USER_COLLECTED_PLAYLIST_ME_API, id, page, limit))
+            Map<String, Object> userCollectedPlaylistParams = new HashMap<>();
+            userCollectedPlaylistParams.put("user_id", id);
+            userCollectedPlaylistParams.put("type", 1);
+            userCollectedPlaylistParams.put("p", page);
+            userCollectedPlaylistParams.put("page_size", limit);
+            String playlistInfoBody = HttpRequest.get(USER_COLLECTED_PLAYLIST_ME_API)
+                    .queryParams(userCollectedPlaylistParams)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("info");
@@ -145,7 +159,14 @@ public class MeUserMenuReq {
             List<NetRadioInfo> r = new LinkedList<>();
             int t;
 
-            String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_ME_API, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("user_id", id);
+            params.put("s", "");
+            params.put("order", 0);
+            params.put("page", page);
+            params.put("page_size", limit);
+            String radioInfoBody = HttpRequest.get(USER_RADIO_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
@@ -183,7 +204,12 @@ public class MeUserMenuReq {
             List<NetRadioInfo> r = new LinkedList<>();
             int t = 0;
 
-            String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_ME_API, id, page, limit))
+            Map<String, Object> userSubRadioParams = new HashMap<>();
+            userSubRadioParams.put("user_id", id);
+            userSubRadioParams.put("page", page);
+            userSubRadioParams.put("page_size", limit);
+            String radioInfoBody = HttpRequest.get(USER_SUB_RADIO_ME_API)
+                    .queryParams(userSubRadioParams)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
@@ -231,7 +257,13 @@ public class MeUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_ME_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 0);
+        params.put("user_id", id);
+        params.put("p", page);
+        params.put("page_size", limit);
+        String userInfoBody = HttpRequest.get(USER_FOLLOWS_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("info");
@@ -279,7 +311,13 @@ public class MeUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FANS_ME_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 1);
+        params.put("user_id", id);
+        params.put("p", page);
+        params.put("page_size", limit);
+        String userInfoBody = HttpRequest.get(USER_FANS_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("info");

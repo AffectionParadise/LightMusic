@@ -23,7 +23,7 @@ public class ChkszKgTrackReq {
 
     // 歌曲 URL 获取 API (酷狗)
     // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/kugou.py
-    private final String SONG_URL_KG_API = "https://api.chksz.com/api/kugou_music?id=%s&size=%s";
+    private final String SONG_URL_KG_API = "https://api.chksz.com/api/kugou_music";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -45,7 +45,11 @@ public class ChkszKgTrackReq {
      */
     public String getTrackUrl(String hash, String quality) {
         try {
-            String songBody = HttpRequest.get(String.format(SONG_URL_KG_API, hash, qualityMap.get(quality)))
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", hash);
+            params.put("size", qualityMap.get(quality));
+            String songBody = HttpRequest.get(SONG_URL_KG_API)
+                    .queryParams(params)
                     .referer("https://cp.chksz.top/")
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);

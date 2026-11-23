@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeRadioInfoReq {
     private static MeRadioInfoReq instance;
@@ -27,7 +29,7 @@ public class MeRadioInfoReq {
     }
 
     // 电台信息 API (猫耳)
-    private final String RADIO_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
+    private final String RADIO_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdrama";
     // 电台节目 API (猫耳)
 //    private final String RADIO_PROGRAM_ME_API = "https://www.missevan.com/dramaapi/getdramaepisodedetails?drama_id=%s&p=%s&page_size=%s";
 
@@ -38,7 +40,7 @@ public class MeRadioInfoReq {
         List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
+        String radioInfoBody = buildRadioDetailRequest(id)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject info = radioInfoJson.getJSONObject("info");
@@ -84,7 +86,7 @@ public class MeRadioInfoReq {
      */
     public void fillRadioInfo(NetRadioInfo radioInfo) {
         String id = radioInfo.getId();
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
+        String radioInfoBody = buildRadioDetailRequest(id)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject info = radioInfoJson.getJSONObject("info");
@@ -120,7 +122,7 @@ public class MeRadioInfoReq {
         int total;
 
         String id = radioInfo.getId();
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_ME_API, id))
+        String radioInfoBody = buildRadioDetailRequest(id)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject info = radioInfoJson.getJSONObject("info");
@@ -156,5 +158,12 @@ public class MeRadioInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildRadioDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("drama_id", id);
+        return HttpRequest.get(RADIO_DETAIL_ME_API)
+                .queryParams(params);
     }
 }

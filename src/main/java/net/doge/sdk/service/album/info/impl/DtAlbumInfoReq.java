@@ -7,6 +7,9 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DtAlbumInfoReq {
     private static DtAlbumInfoReq instance;
 
@@ -19,14 +22,17 @@ public class DtAlbumInfoReq {
     }
 
     // 专辑信息 API (堆糖)
-    private final String ALBUM_DETAIL_DT_API = "https://www.duitang.com/napi/album/detail/?album_id=%s";
+    private final String ALBUM_DETAIL_DT_API = "https://www.duitang.com/napi/album/detail/";
 
     /**
      * 根据专辑 id 补全专辑信息(包括封面图、描述)
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_DT_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("album_id", id);
+        String albumInfoBody = HttpRequest.get(ALBUM_DETAIL_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");

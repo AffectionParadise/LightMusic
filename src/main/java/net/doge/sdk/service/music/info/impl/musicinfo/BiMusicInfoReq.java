@@ -11,6 +11,8 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BiMusicInfoReq {
     private static BiMusicInfoReq instance;
@@ -24,16 +26,19 @@ public class BiMusicInfoReq {
     }
 
     // 歌曲信息 API (哔哩哔哩)
-    private final String SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info?sid=%s";
+    private final String SONG_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/info";
     // 歌词 API (哔哩哔哩)
-    private final String LYRIC_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/lyric?sid=%s";
+    private final String LYRIC_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/lyric";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_BI_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("sid", id);
+        String songBody = HttpRequest.get(SONG_DETAIL_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONObject("data");
@@ -57,7 +62,10 @@ public class BiMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String lyricBody = HttpRequest.get(String.format(LYRIC_BI_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("sid", id);
+        String lyricBody = HttpRequest.get(LYRIC_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject lyricJson = JSONObject.parseObject(lyricBody);

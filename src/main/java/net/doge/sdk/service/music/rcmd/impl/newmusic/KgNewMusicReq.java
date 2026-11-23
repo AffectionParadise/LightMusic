@@ -16,10 +16,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class KgNewMusicReq {
     private static KgNewMusicReq instance;
@@ -33,7 +30,7 @@ public class KgNewMusicReq {
     }
 
     // 新歌速递 API (酷狗)
-    private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong?version=9108&type=%s&page=%s&pagesize=%s";
+    private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong";
     //    private final String RECOMMEND_NEW_SONG_KG_API = "/musicadservice/container/v1/newsong_publish";
     // 每日推荐歌曲 API (酷狗)
     private final String EVERYDAY_SONG_KG_API = "/everyday_song_recommend";
@@ -106,7 +103,13 @@ public class KgNewMusicReq {
 
         String param = s[TagModule.RECOMMEND_NEW_SONG_KG];
         if (StringUtil.notEmpty(param)) {
-            String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, param, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("version", 9108);
+            params.put("type", param);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            String musicInfoBody = HttpRequest.get(RECOMMEND_NEW_SONG_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("data");

@@ -16,8 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbNewAlbumReq {
     private static DbNewAlbumReq instance;
@@ -31,9 +33,9 @@ public class DbNewAlbumReq {
     }
 
     // Top 250 专辑 API (豆瓣)
-    private final String TOP_ALBUM_DB_API = "https://music.douban.com/top250?start=%s";
+    private final String TOP_ALBUM_DB_API = "https://music.douban.com/top250";
     // 分类专辑 API (豆瓣)
-    private final String CAT_ALBUM_DB_API = "https://music.douban.com/tag/%s?start=%s&type=T";
+    private final String CAT_ALBUM_DB_API = "https://music.douban.com/tag/%s";
 
     /**
      * Top 250
@@ -43,7 +45,10 @@ public class DbNewAlbumReq {
         int t = 0;
         final int rn = 25;
 
-        String albumInfoBody = HttpRequest.get(String.format(TOP_ALBUM_DB_API, (page - 1) * rn))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * rn);
+        String albumInfoBody = HttpRequest.get(TOP_ALBUM_DB_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(albumInfoBody);
         Elements as = doc.select("tr.item");
@@ -88,7 +93,11 @@ public class DbNewAlbumReq {
 
         String param = s[TagModule.CAT_ALBUM_DB];
         if (StringUtil.notEmpty(param)) {
-            String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, param, (page - 1) * limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("start", (page - 1) * limit);
+            params.put("type", "T");
+            String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, param))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(albumInfoBody);
             Elements as = doc.select("tr.item");

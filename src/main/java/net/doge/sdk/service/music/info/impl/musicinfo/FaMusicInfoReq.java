@@ -10,12 +10,13 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
-import net.doge.util.core.net.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FaMusicInfoReq {
     private static FaMusicInfoReq instance;
@@ -29,9 +30,9 @@ public class FaMusicInfoReq {
     }
 
     // 歌曲信息 API (发姐)
-    private final String SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    private final String SONG_DETAIL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php";
     // 歌词 API (发姐)
-    private final String LYRIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&scope=remote_lyric&id=%s";
+    private final String LYRIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
@@ -43,10 +44,14 @@ public class FaMusicInfoReq {
                 .executeAsStr();
         Document doc = Jsoup.parse(body);
         Elements ap = doc.select("#aplayer1");
-        String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
         String _nonce = ap.attr("data-_nonce");
 
-        String songInfoBody = HttpRequest.get(String.format(SONG_DETAIL_FA_API, musicSet, _nonce))
+        Map<String, Object> params = new HashMap<>();
+        params.put("action", "hermit");
+        params.put("musicset", ap.attr("data-songs"));
+        params.put("_nonce", _nonce);
+        String songInfoBody = HttpRequest.get(SONG_DETAIL_FA_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
         JSONObject data = songInfoJson.getJSONObject("msg");
@@ -73,7 +78,12 @@ public class FaMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String lyricBody = HttpRequest.get(String.format(LYRIC_FA_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("action", "hermit");
+        params.put("scope", "remote_lyric");
+        params.put("id", id);
+        String lyricBody = HttpRequest.get(LYRIC_FA_API)
+                .queryParams(params)
                 .executeAsStr();
         musicInfo.setLyric(lyricBody);
         musicInfo.setTrans("");

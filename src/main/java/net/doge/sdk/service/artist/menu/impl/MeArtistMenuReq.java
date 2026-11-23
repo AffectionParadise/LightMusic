@@ -12,8 +12,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeArtistMenuReq {
     private static MeArtistMenuReq instance;
@@ -27,13 +29,13 @@ public class MeArtistMenuReq {
     }
 
     // 社团职员 API (猫耳)
-    private final String ORGANIZATION_STAFFS_ME_API = "https://www.missevan.com/organization/staff?organization_id=%s&page=%s";
+    private final String ORGANIZATION_STAFFS_ME_API = "https://www.missevan.com/organization/staff";
     // 社团声优 API (猫耳)
-    private final String ORGANIZATION_CVS_ME_API = "https://www.missevan.com/organization/cast?organization_id=%s&page=%s";
+    private final String ORGANIZATION_CVS_ME_API = "https://www.missevan.com/organization/cast";
     // 社团电台 API (猫耳)
-    private final String ORGANIZATION_RADIOS_ME_API = "https://www.missevan.com/organization/drama?organization_id=%s&page=%s";
+    private final String ORGANIZATION_RADIOS_ME_API = "https://www.missevan.com/organization/drama";
     // CV 信息 API (猫耳)
-    private final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo?cv_id=%s&page=%s&page_size=%s";
+    private final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo";
 
     /**
      * 获取歌手粉丝
@@ -45,7 +47,11 @@ public class MeArtistMenuReq {
         int t;
 
         String id = artistInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(ORGANIZATION_STAFFS_ME_API, id, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization_id", id);
+        params.put("page", page);
+        String userInfoBody = HttpRequest.get(ORGANIZATION_STAFFS_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("info");
@@ -87,7 +93,11 @@ public class MeArtistMenuReq {
         int t;
 
         String id = netArtistInfo.getId();
-        String artistInfoBody = HttpRequest.get(String.format(ORGANIZATION_CVS_ME_API, id, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("organization_id", id);
+        params.put("page", page);
+        String artistInfoBody = HttpRequest.get(ORGANIZATION_CVS_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject info = artistInfoJson.getJSONObject("info");
@@ -128,7 +138,11 @@ public class MeArtistMenuReq {
 
         String id = artistInfo.getId();
         if (artistInfo.isOrganization()) {
-            String radioInfoBody = HttpRequest.get(String.format(ORGANIZATION_RADIOS_ME_API, id, page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("organization_id", id);
+            params.put("page", page);
+            String radioInfoBody = HttpRequest.get(ORGANIZATION_RADIOS_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");
@@ -156,7 +170,12 @@ public class MeArtistMenuReq {
                 res.add(radioInfo);
             }
         } else {
-            String radioInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, page, limit))
+            Map<String, Object> cvDetailParams = new HashMap<>();
+            cvDetailParams.put("cv_id", id);
+            cvDetailParams.put("page", page);
+            cvDetailParams.put("page_size", limit);
+            String radioInfoBody = HttpRequest.get(CV_DETAIL_ME_API)
+                    .queryParams(cvDetailParams)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("dramas");

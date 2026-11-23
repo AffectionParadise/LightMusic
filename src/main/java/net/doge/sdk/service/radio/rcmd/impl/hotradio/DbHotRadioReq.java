@@ -20,8 +20,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbHotRadioReq {
     private static DbHotRadioReq instance;
@@ -35,13 +37,13 @@ public class DbHotRadioReq {
     }
 
     // Top 250 电台 API (豆瓣)
-    private final String TOP_RADIO_DB_API = "https://movie.douban.com/top250?start=%s&filter=";
+    private final String TOP_RADIO_DB_API = "https://movie.douban.com/top250";
     // 分类电台 API (豆瓣)
-    private final String CAT_RADIO_DB_API = "https://movie.douban.com/j/chart/top_list?type=%s&interval_id=100:90&action=&start=%s&limit=%s";
+    private final String CAT_RADIO_DB_API = "https://movie.douban.com/j/chart/top_list";
     // 分类电台总数 API (豆瓣)
-    private final String CAT_RADIO_TOTAL_DB_API = "https://movie.douban.com/j/chart/top_list_count?type=%s&interval_id=100:90";
+    private final String CAT_RADIO_TOTAL_DB_API = "https://movie.douban.com/j/chart/top_list_count";
     // 分类游戏电台 API (豆瓣)
-    private final String CAT_GAME_RADIO_DB_API = "https://www.douban.com/j/ilmen/game/search?genres=%s&platforms=%s&more=%s&sort=rating";
+    private final String CAT_GAME_RADIO_DB_API = "https://www.douban.com/j/ilmen/game/search";
 
     /**
      * Top 250
@@ -51,7 +53,11 @@ public class DbHotRadioReq {
         int t;
 
         final int rn = 25;
-        String radioInfoBody = HttpRequest.get(String.format(TOP_RADIO_DB_API, (page - 1) * rn))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * rn);
+        params.put("filter", "");
+        String radioInfoBody = HttpRequest.get(TOP_RADIO_DB_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(radioInfoBody);
         Elements rs = doc.select(".item");
@@ -97,10 +103,22 @@ public class DbHotRadioReq {
 
         String param = s[TagModule.CAT_RADIO_DB];
         if (StringUtil.notEmpty(param)) {
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, param, (page - 1) * limit, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", param);
+            params.put("interval_id", "100:90");
+            params.put("action", "");
+            params.put("start", (page - 1) * limit);
+            params.put("limit", limit);
+            String radioInfoBody = HttpRequest.get(CAT_RADIO_DB_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONArray radioArray = JSONArray.parseArray(radioInfoBody);
-            t = JSONObject.parseObject(HttpRequest.get(String.format(CAT_RADIO_TOTAL_DB_API, param)).executeAsStr()).getIntValue("total");
+            Map<String, Object> catRadioTotalParams = new HashMap<>();
+            catRadioTotalParams.put("type", param);
+            catRadioTotalParams.put("interval_id", "100:90");
+            t = JSONObject.parseObject(HttpRequest.get(CAT_RADIO_TOTAL_DB_API)
+                    .queryParams(catRadioTotalParams)
+                    .executeAsStr()).getIntValue("total");
             for (int i = 0, len = radioArray.size(); i < len; i++) {
                 JSONObject radioJson = radioArray.getJSONObject(i);
 
@@ -139,7 +157,13 @@ public class DbHotRadioReq {
         String param = s[TagModule.CAT_GAME_RADIO_DB];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("genres", sp[0]);
+            params.put("platforms", sp[1]);
+            params.put("more", page);
+            params.put("sort", "rating");
+            String radioInfoBody = HttpRequest.get(CAT_GAME_RADIO_DB_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = data.getJSONArray("games");

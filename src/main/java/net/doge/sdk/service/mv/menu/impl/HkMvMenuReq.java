@@ -8,12 +8,13 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HkMvMenuReq {
     private static HkMvMenuReq instance;
@@ -27,7 +28,7 @@ public class HkMvMenuReq {
     }
 
     // 相似视频 API (好看)
-    private final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec?title=%s&vid=%s&act=pcRec&pd=pc";
+    private final String SIMILAR_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/videorec";
 
     /**
      * 获取相似 MV (通过 MV)
@@ -39,8 +40,13 @@ public class HkMvMenuReq {
         int t;
 
         String id = netMvInfo.getId();
-        String name = UrlUtil.encodeAll(netMvInfo.getName());
-        String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_HK_API, name, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("title", netMvInfo.getName());
+        params.put("vid", id);
+        params.put("act", "pcRec");
+        params.put("pd", "pc");
+        String mvInfoBody = HttpRequest.get(SIMILAR_VIDEO_HK_API)
+                .queryParams(params)
                 .referer(String.format("https://haokan.baidu.com/v?vid=%s", id))
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data").getJSONObject("response");

@@ -15,8 +15,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmCommentReq {
     private static XmCommentReq instance;
@@ -29,14 +31,10 @@ public class XmCommentReq {
         return instance;
     }
 
-    // 电台热门评论 API (喜马拉雅)
-    private final String RADIO_HOT_COMMENTS_XM_API
-            = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=content-score-desc&pageId=%s&pageSize=%s";
-    // 电台最新评论 API (喜马拉雅)
-    private final String RADIO_NEW_COMMENTS_XM_API
-            = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1?albumId=%s&order=time-desc&pageId=%s&pageSize=%s";
+    // 电台评论 API (喜马拉雅)
+    private final String RADIO_COMMENTS_XM_API = "https://mobile.ximalaya.com/album-comment-mobile/web/album/comment/list/query/1";
     // 节目评论 API (喜马拉雅)
-    private final String COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments?trackId=%s&page=%s&pageSize=%s";
+    private final String COMMENTS_XM_API = "https://www.ximalaya.com/revision/comment/queryComments";
 
     /**
      * 获取评论
@@ -51,8 +49,13 @@ public class XmCommentReq {
 
         JSONArray commentArray;
         if (isRadio) {
-            String url = hotOnly ? RADIO_HOT_COMMENTS_XM_API : RADIO_NEW_COMMENTS_XM_API;
-            String commentInfoBody = HttpRequest.get(String.format(url, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("albumId", id);
+            params.put("order", hotOnly ? "content-score-desc" : "time-desc");
+            params.put("pageId", page);
+            params.put("pageSize", limit);
+            String commentInfoBody = HttpRequest.get(RADIO_COMMENTS_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");
@@ -60,7 +63,12 @@ public class XmCommentReq {
             total = comments.getIntValue("totalCount");
             commentArray = comments.getJSONArray("list");
         } else {
-            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_XM_API, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("trackId", id);
+            params.put("page", page);
+            params.put("pageSize", limit);
+            String commentInfoBody = HttpRequest.get(COMMENTS_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("data");

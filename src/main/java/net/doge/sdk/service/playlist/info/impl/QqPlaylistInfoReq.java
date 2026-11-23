@@ -13,8 +13,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqPlaylistInfoReq {
     private static QqPlaylistInfoReq instance;
@@ -28,7 +30,7 @@ public class QqPlaylistInfoReq {
     }
 
     // 歌单信息 API (QQ)
-    private final String PLAYLIST_DETAIL_QQ_API = "https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&disstid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=0";
+    private final String PLAYLIST_DETAIL_QQ_API = "https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg";
 
     /**
      * 根据歌单 id 获取歌单
@@ -37,7 +39,7 @@ public class QqPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -75,7 +77,7 @@ public class QqPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -101,7 +103,7 @@ public class QqPlaylistInfoReq {
         int total = 0;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QQ_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .referer("https://y.qq.com/n/yqq/playlist")
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -144,5 +146,25 @@ public class QqPlaylistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildPlaylistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 1);
+        params.put("json", 1);
+        params.put("utf8", 1);
+        params.put("onlysong", 0);
+        params.put("disstid", id);
+        params.put("g_tk", 5381);
+        params.put("loginUin", 0);
+        params.put("hostUin", 0);
+        params.put("format", "json");
+        params.put("inCharset", "utf8");
+        params.put("outCharset", "utf-8");
+        params.put("notice", 0);
+        params.put("platform", "yqq.json");
+        params.put("needNewCode", 0);
+        return HttpRequest.get(PLAYLIST_DETAIL_QQ_API)
+                .queryParams(params);
     }
 }

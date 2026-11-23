@@ -11,8 +11,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmRadioInfoReq {
     private static XmRadioInfoReq instance;
@@ -26,11 +28,11 @@ public class XmRadioInfoReq {
     }
 
     // 电台信息 API (喜马拉雅)
-    private final String RADIO_DETAIL_XM_API = "https://www.ximalaya.com/revision/album/v1/simple?albumId=%s";
+    private final String RADIO_DETAIL_XM_API = "https://www.ximalaya.com/revision/album/v1/simple";
     // 简短电台信息 API (喜马拉雅)
-    private final String BRIEF_RADIO_DETAIL_XM_API = "https://www.ximalaya.com/tdk-web/seo/search/albumInfo?albumId=%s";
+    private final String BRIEF_RADIO_DETAIL_XM_API = "https://www.ximalaya.com/tdk-web/seo/search/albumInfo";
     // 电台节目 API (喜马拉雅)
-    private final String RADIO_PROGRAM_XM_API = "http://www.ximalaya.com/revision/album/v1/getTracksList?albumId=%s&sort=%s&&pageNum=%s&pageSize=%s";
+    private final String RADIO_PROGRAM_XM_API = "http://www.ximalaya.com/revision/album/v1/getTracksList";
 
     /**
      * 根据电台 id 获取电台
@@ -39,7 +41,7 @@ public class XmRadioInfoReq {
         List<NetRadioInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
+        String radioInfoBody = buildRadioDetailRequest(id)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("data");
@@ -79,7 +81,10 @@ public class XmRadioInfoReq {
         String id = radioInfo.getId();
         if (!radioInfo.hasTrackCount()) {
             GlobalExecutors.requestExecutor.execute(() -> {
-                String radioInfoBody = HttpRequest.get(String.format(BRIEF_RADIO_DETAIL_XM_API, id))
+                Map<String, Object> params = new HashMap<>();
+                params.put("albumId", id);
+                String radioInfoBody = HttpRequest.get(BRIEF_RADIO_DETAIL_XM_API)
+                        .queryParams(params)
                         .executeAsStr();
                 JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
                 JSONObject radioJson = radioInfoJson.getJSONObject("data");
@@ -87,7 +92,7 @@ public class XmRadioInfoReq {
                 radioInfo.setTrackCount(radioJson.getIntValue("trackCount"));
             });
         }
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_DETAIL_XM_API, id))
+        String radioInfoBody = buildRadioDetailRequest(id)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject radioJson = radioInfoJson.getJSONObject("data").getJSONObject("albumPageMainInfo");
@@ -110,7 +115,13 @@ public class XmRadioInfoReq {
         int total;
 
         String id = radioInfo.getId();
-        String radioInfoBody = HttpRequest.get(String.format(RADIO_PROGRAM_XM_API, id, sortType, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("albumId", id);
+        params.put("sort", sortType);
+        params.put("pageNum", page);
+        params.put("pageSize", limit);
+        String radioInfoBody = HttpRequest.get(RADIO_PROGRAM_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("data");
@@ -140,5 +151,12 @@ public class XmRadioInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildRadioDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("albumId", id);
+        return HttpRequest.get(RADIO_DETAIL_XM_API)
+                .queryParams(params);
     }
 }

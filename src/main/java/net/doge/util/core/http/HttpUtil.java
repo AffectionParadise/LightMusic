@@ -23,8 +23,14 @@ public class HttpUtil {
      * @return
      */
     public static String getRedirectUrl(String url) {
+        return getRedirectUrl(url, null);
+    }
+
+    public static String getRedirectUrl(String url, Map<String, Object> params) {
         try {
-            HttpResponse resp = HttpRequest.get(url).execute();
+            HttpResponse resp = HttpRequest.get(url)
+                    .queryParams(params)
+                    .execute();
             String finalUrl = resp.getFinalUrl();
             resp.close();
             return finalUrl;

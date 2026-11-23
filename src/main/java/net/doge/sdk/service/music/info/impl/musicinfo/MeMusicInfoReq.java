@@ -17,7 +17,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MeMusicInfoReq {
     private static MeMusicInfoReq instance;
@@ -31,11 +33,11 @@ public class MeMusicInfoReq {
     }
 
     // 歌曲信息 API (猫耳)
-    private final String SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound?soundid=%s";
+    private final String SONG_DETAIL_ME_API = "https://www.missevan.com/sound/getsound";
     // 歌曲专辑信息 API (猫耳)
-    private final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound?sound_id=%s";
+    private final String SONG_ALBUM_DETAIL_ME_API = "https://www.missevan.com/dramaapi/getdramabysound";
     // 弹幕 API (猫耳)
-    private final String DM_ME_API = "https://www.missevan.com/sound/getdm?soundid=%s";
+    private final String DM_ME_API = "https://www.missevan.com/sound/getdm";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
@@ -44,7 +46,10 @@ public class MeMusicInfoReq {
         String id = musicInfo.getId();
         // 歌曲信息
         Runnable fillMusicInfo = () -> {
-            String songBody = HttpRequest.get(String.format(SONG_DETAIL_ME_API, id))
+            Map<String, Object> params = new HashMap<>();
+            params.put("soundid", id);
+            String songBody = HttpRequest.get(SONG_DETAIL_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(songBody).getJSONObject("info").getJSONObject("sound");
             // 时长是毫秒，转为秒
@@ -62,7 +67,10 @@ public class MeMusicInfoReq {
         };
         // 专辑信息
         Runnable fillAlbumInfo = () -> {
-            String albumBody = HttpRequest.get(String.format(SONG_ALBUM_DETAIL_ME_API, id))
+            Map<String, Object> songAlbumDetailParams = new HashMap<>();
+            songAlbumDetailParams.put("sound_id", id);
+            String albumBody = HttpRequest.get(SONG_ALBUM_DETAIL_ME_API)
+                    .queryParams(songAlbumDetailParams)
                     .executeAsStr();
             String infoStr = JSONObject.parseObject(albumBody).getString("info");
             // 可能是字符串也可能是 json 对象，先判断
@@ -85,7 +93,10 @@ public class MeMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         String id = musicInfo.getId();
-        String dmBody = HttpRequest.get(String.format(DM_ME_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("soundid", id);
+        String dmBody = HttpRequest.get(DM_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(dmBody);
         Elements elements = doc.select("d");

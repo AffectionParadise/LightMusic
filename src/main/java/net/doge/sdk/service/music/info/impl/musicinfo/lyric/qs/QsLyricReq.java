@@ -9,6 +9,9 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class QsLyricReq {
     private static QsLyricReq instance;
 
@@ -21,12 +24,16 @@ public class QsLyricReq {
     }
 
     // 歌词 API (汽水)
-    private final String LYRIC_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track?track_id=%s&device_platform=web";
+    private final String LYRIC_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
 
-        String lyricBody = HttpRequest.get(String.format(LYRIC_QS_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("track_id", id);
+        params.put("device_platform", "web");
+        String lyricBody = HttpRequest.get(LYRIC_QS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject lyricJson = JSONObject.parseObject(lyricBody).getJSONObject("lyric");
         // 逐字歌词

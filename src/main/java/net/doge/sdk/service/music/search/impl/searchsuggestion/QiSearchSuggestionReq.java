@@ -35,7 +35,8 @@ public class QiSearchSuggestionReq {
         Map<String, Object> params = new TreeMap<>();
         params.put("type", "");
         params.put("word", keyword);
-        HttpResponse resp = SdkCommon.qiRequest(SEARCH_SUGGESTION_QI_API, params).execute();
+        HttpResponse resp = SdkCommon.qiRequest(SEARCH_SUGGESTION_QI_API, params)
+                .execute();
         if (resp.isSuccessful()) {
             JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
             JSONArray data = searchSuggestionJson.getJSONArray("data");

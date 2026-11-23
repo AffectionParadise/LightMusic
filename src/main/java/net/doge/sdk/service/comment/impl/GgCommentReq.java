@@ -16,8 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class GgCommentReq {
     private static GgCommentReq instance;
@@ -31,7 +33,7 @@ public class GgCommentReq {
     }
 
     // 评论 API (咕咕咕音乐)
-    private final String COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm?sort=desc";
+    private final String COMMENTS_GG_API = "http://www.gggmusic.com/thread-%s-%s.htm";
 
     /**
      * 获取评论
@@ -42,7 +44,10 @@ public class GgCommentReq {
 
         String id = resource.getId();
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("sort", "desc");
         String commentInfoBody = HttpRequest.get(String.format(COMMENTS_GG_API, id, page))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(commentInfoBody);
         Elements comments = doc.select("li.media.post");

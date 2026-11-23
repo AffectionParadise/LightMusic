@@ -14,6 +14,7 @@ import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class NcSheetReq {
     // 获取乐谱 API (网易云)
     private final String GET_SHEETS_NC_API = "https://interface3.music.163.com/eapi/music/sheet/list/v1";
     // 获取乐谱图片 API (网易云)
-    private final String GET_SHEETS_IMG_NC_API = "https://interface3.music.163.com/eapi//music/sheet/preview/info?id=%s";
+    private final String GET_SHEETS_IMG_NC_API = "https://interface3.music.163.com/eapi//music/sheet/preview/info";
 
     /**
      * 获取歌曲乐谱
@@ -94,7 +95,10 @@ public class NcSheetReq {
 
         String id = sheetInfo.getId();
         Map<NcReqOptEnum, String> options = NcReqOptsBuilder.eapi("/api//music/sheet/preview/info");
-        String imgInfoBody = SdkCommon.ncRequest(Method.POST, String.format(GET_SHEETS_IMG_NC_API, id), String.format("{\"id\":\"%s\"}", id), options)
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        String imgInfoBody = SdkCommon.ncRequest(Method.POST, GET_SHEETS_IMG_NC_API, String.format("{\"id\":\"%s\"}", id), options)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject imgInfoJson = JSONObject.parseObject(imgInfoBody);
         JSONArray imgArray = imgInfoJson.getJSONArray("data");

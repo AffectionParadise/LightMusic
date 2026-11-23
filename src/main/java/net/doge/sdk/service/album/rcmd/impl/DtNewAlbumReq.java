@@ -15,8 +15,10 @@ import net.doge.util.core.http.HttpResponse;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DtNewAlbumReq {
     private static DtNewAlbumReq instance;
@@ -30,12 +32,10 @@ public class DtNewAlbumReq {
     }
 
     // 热门推荐专辑 API (堆糖)
-    private final String REC_ALBUM_DT_API = "https://www.duitang.com/napi/index/hot/?include_fields=top_comments,is_root,source_link,item," +
-            "buyable,root_id,status,like_count,sender,album&start=%s&limit=%s&_=%s";
+    private final String REC_ALBUM_DT_API = "https://www.duitang.com/napi/index/hot/";
     // 分类专辑 API (堆糖)
     private final String CAT_ALBUM_DT_API
-            = "https://www.duitang.com/napi/blog/list/by_filter_id/?include_fields=top_comments,is_root,source_link,item,buyable,root_id," +
-            "status,like_count,sender,album,reply_count&filter_id=%s&start=%s&limit=%s&_=%s";
+            = "https://www.duitang.com/napi/blog/list/by_filter_id/";
 
     /**
      * 推荐专辑
@@ -44,7 +44,14 @@ public class DtNewAlbumReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        HttpResponse resp = HttpRequest.get(String.format(REC_ALBUM_DT_API, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("include_fields", "top_comments,is_root,source_link,item,buyable,root_id,status,like_count,sender,album");
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        params.put("_", System.currentTimeMillis());
+        HttpResponse resp = HttpRequest.get(REC_ALBUM_DT_API)
+                .queryParams(params)
+                .execute();
         String albumInfoBody = resp.body();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
@@ -91,7 +98,15 @@ public class DtNewAlbumReq {
 
         String param = s[TagModule.CAT_ALBUM_DT];
         if (StringUtil.notEmpty(param)) {
-            HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, param, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+            Map<String, Object> params = new HashMap<>();
+            params.put("include_fields", "top_comments,is_root,source_link,item,buyable,root_id,status,like_count,sender,album,reply_count");
+            params.put("filter_id", param);
+            params.put("start", (page - 1) * limit);
+            params.put("limit", limit);
+            params.put("_", System.currentTimeMillis());
+            HttpResponse resp = HttpRequest.get(CAT_ALBUM_DT_API)
+                    .queryParams(params)
+                    .execute();
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
             JSONObject data = albumInfoJson.getJSONObject("data");

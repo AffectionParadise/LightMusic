@@ -15,8 +15,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeArtistInfoReq {
     private static MeArtistInfoReq instance;
@@ -30,9 +32,9 @@ public class MeArtistInfoReq {
     }
 
     // 社团信息 API (猫耳)
-    private final String ORGANIZATION_DETAIL_ME_API = "https://www.missevan.com/organization/profile?organization_id=%s";
+    private final String ORGANIZATION_DETAIL_ME_API = "https://www.missevan.com/organization/profile";
     // CV 信息 API (猫耳)
-    private final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo?cv_id=%s&page=%s&page_size=%s";
+    private final String CV_DETAIL_ME_API = "https://www.missevan.com/dramaapi/cvinfo";
     // 声优节目 API (猫耳)
     private final String CV_PROGRAMS_ME_API = "https://www.missevan.com/seiy/%s";
 
@@ -42,7 +44,10 @@ public class MeArtistInfoReq {
     public void fillArtistInfo(NetArtistInfo artistInfo) {
         String id = artistInfo.getId();
         if (artistInfo.isOrganization()) {
-            String artistInfoBody = HttpRequest.get(String.format(ORGANIZATION_DETAIL_ME_API, id))
+            Map<String, Object> params = new HashMap<>();
+            params.put("organization_id", id);
+            String artistInfoBody = HttpRequest.get(ORGANIZATION_DETAIL_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
@@ -56,7 +61,12 @@ public class MeArtistInfoReq {
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
         } else {
-            String artistInfoBody = HttpRequest.get(String.format(CV_DETAIL_ME_API, id, 1, 1))
+            Map<String, Object> cvDetailParams = new HashMap<>();
+            cvDetailParams.put("cv_id", id);
+            cvDetailParams.put("page", 1);
+            cvDetailParams.put("page_size", 1);
+            String artistInfoBody = HttpRequest.get(CV_DETAIL_ME_API)
+                    .queryParams(cvDetailParams)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("info");

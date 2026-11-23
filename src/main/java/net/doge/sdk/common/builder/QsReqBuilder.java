@@ -1,7 +1,6 @@
 package net.doge.sdk.common.builder;
 
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class QsReqBuilder {
         params.put("device_id", "2204957404565290");
         params.put("_rticket", System.currentTimeMillis());
 
-        String url = baseUrl + "?" + UrlUtil.buildQuery(params);
-        return HttpRequest.get(url);
+        return HttpRequest.get(baseUrl)
+                .queryParams(params);
     }
 }

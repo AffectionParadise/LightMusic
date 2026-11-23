@@ -22,7 +22,7 @@ public class BakaKgTrackReq {
 
     // 歌曲 URL 获取 API (酷狗)
     // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/kugou.py
-    private final String SONG_URL_KG_API = "https://api.baka.plus/meting/?server=kugou&type=url&id=%s&br=%s";
+    private final String SONG_URL_KG_API = "https://api.baka.plus/meting/";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -44,8 +44,12 @@ public class BakaKgTrackReq {
      */
     public String getTrackUrl(String hash, String quality) {
         try {
-            String url = String.format(SONG_URL_KG_API, hash, qualityMap.get(quality));
-            String trackUrl = HttpUtil.getRedirectUrl(url);
+            Map<String, Object> params = new HashMap<>();
+            params.put("server", "kugou");
+            params.put("type", "url");
+            params.put("id", hash);
+            params.put("br", qualityMap.get(quality));
+            String trackUrl = HttpUtil.getRedirectUrl(SONG_URL_KG_API, params);
             // 此 url 未知原因无法播放
             if (StringUtil.isEmpty(trackUrl)) return "";
             return trackUrl;

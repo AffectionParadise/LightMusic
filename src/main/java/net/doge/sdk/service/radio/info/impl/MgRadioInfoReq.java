@@ -12,8 +12,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgRadioInfoReq {
     private static MgRadioInfoReq instance;
@@ -27,7 +29,7 @@ public class MgRadioInfoReq {
     }
 
     // 电台歌曲 API (猫耳)
-    private final String RADIO_SONGS_MG_API = "https://app.c.nf.migu.cn/pc/column/music-radio/scene/song/v3.0?remain=0&actionId=1&radioId=%s&pageNo=%s";
+    private final String RADIO_SONGS_MG_API = "https://app.c.nf.migu.cn/pc/column/music-radio/scene/song/v3.0";
 
     /**
      * 根据电台 id 补全电台信息(包括封面图、描述)
@@ -46,7 +48,13 @@ public class MgRadioInfoReq {
         int total;
 
         String id = radioInfo.getId();
-        String artistInfoBody = HttpRequest.get(String.format(RADIO_SONGS_MG_API, id, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("remain", 0);
+        params.put("actionId", 1);
+        params.put("radioId", id);
+        params.put("pageNo", page);
+        String artistInfoBody = HttpRequest.get(RADIO_SONGS_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");

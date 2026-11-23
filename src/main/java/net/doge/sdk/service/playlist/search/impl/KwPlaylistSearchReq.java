@@ -8,12 +8,13 @@ import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwPlaylistSearchReq {
     private static KwPlaylistSearchReq instance;
@@ -28,7 +29,7 @@ public class KwPlaylistSearchReq {
 
     // 关键词搜索歌单 API (酷我)
 //    private final String SEARCH_PLAYLIST_KW_API = "https://kuwo.cn/api/www/search/searchPlayListBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
-    private final String SEARCH_PLAYLIST_KW_API = "http://search.kuwo.cn/r.s?all=%s&pn=%s&rn=%s&rformat=json&encoding=utf8&ver=mbox&vipver=MUSIC_8.7.7.0_BCS37&plat=pc&devid=28156413&ft=playlist&pay=0&needliveshow=0";
+    private final String SEARCH_PLAYLIST_KW_API = "http://search.kuwo.cn/r.s";
 
     /**
      * 根据关键词获取歌单
@@ -38,7 +39,6 @@ public class KwPlaylistSearchReq {
         int t;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
         //            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page, limit)).executeAsync();
 //            if (resp.isSuccessful()) {
 //                String playlistInfoBody = resp.body();
@@ -71,7 +71,21 @@ public class KwPlaylistSearchReq {
 //                    r.add(playlistInfo);
 //                }
 //            }
-        String playlistInfoBody = HttpRequest.get(String.format(SEARCH_PLAYLIST_KW_API, encodedKeyword, page - 1, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("all", keyword);
+        params.put("pn", page - 1);
+        params.put("rn", limit);
+        params.put("rformat", "json");
+        params.put("encoding", "utf8");
+        params.put("ver", "mbox");
+        params.put("vipver", "MUSIC_8.7.7.0_BCS37");
+        params.put("plat", "pc");
+        params.put("devid", 28156413);
+        params.put("ft", "playlist");
+        params.put("pay", 0);
+        params.put("needliveshow", 0);
+        String playlistInfoBody = HttpRequest.get(SEARCH_PLAYLIST_KW_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(playlistInfoBody);
         t = data.getIntValue("TOTAL");

@@ -15,8 +15,10 @@ import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwArtistMenuReq {
     private static KwArtistMenuReq instance;
@@ -30,9 +32,9 @@ public class KwArtistMenuReq {
     }
 
     // 歌手专辑 API (酷我)
-    private final String ARTIST_ALBUMS_KW_API = "https://kuwo.cn/api/www/artist/artistAlbum?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_ALBUMS_KW_API = "https://kuwo.cn/api/www/artist/artistAlbum";
     // 歌手 MV API (酷我)
-    private final String ARTIST_MVS_KW_API = "https://kuwo.cn/api/www/artist/artistMv?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_MVS_KW_API = "https://kuwo.cn/api/www/artist/artistMv";
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
@@ -42,7 +44,13 @@ public class KwArtistMenuReq {
         int total = 0;
 
         String id = artistInfo.getId();
-        HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_ALBUMS_KW_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("artistid", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(ARTIST_ALBUMS_KW_API)
+                .queryParams(params)
                 .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/album")
                 .execute();
         if (resp.isSuccessful()) {
@@ -88,7 +96,13 @@ public class KwArtistMenuReq {
         int total = 0;
 
         String id = artistInfo.getId();
-        HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_MVS_KW_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("artistid", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(ARTIST_MVS_KW_API)
+                .queryParams(params)
                 .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id) + "/mv")
                 .execute();
         if (resp.isSuccessful()) {

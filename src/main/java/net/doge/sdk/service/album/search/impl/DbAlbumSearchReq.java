@@ -11,14 +11,15 @@ import net.doge.util.core.PageUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbAlbumSearchReq {
     private static DbAlbumSearchReq instance;
@@ -32,7 +33,7 @@ public class DbAlbumSearchReq {
     }
 
     // 关键词搜索专辑 API (豆瓣)
-    private final String SEARCH_ALBUM_DB_API = "https://www.douban.com/j/search?q=%s&start=%s&cat=1003";
+    private final String SEARCH_ALBUM_DB_API = "https://www.douban.com/j/search";
 
     /**
      * 根据关键词获取专辑
@@ -41,10 +42,13 @@ public class DbAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
         final int lim = Math.min(20, limit);
-        String albumInfoBody = HttpRequest.get(String.format(SEARCH_ALBUM_DB_API, encodedKeyword, (page - 1) * lim))
+        Map<String, Object> params = new HashMap<>();
+        params.put("q", keyword);
+        params.put("start", (page - 1) * lim);
+        params.put("cat", 1003);
+        String albumInfoBody = HttpRequest.get(SEARCH_ALBUM_DB_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONArray albumArray = albumInfoJson.getJSONArray("items");

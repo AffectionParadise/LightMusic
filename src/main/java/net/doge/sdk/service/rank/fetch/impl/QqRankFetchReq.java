@@ -10,8 +10,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqRankFetchReq {
     private static QqRankFetchReq instance;
@@ -25,12 +27,10 @@ public class QqRankFetchReq {
     }
 
     // 获取榜单 API (QQ)
-    private final String GET_RANK_QQ_API = "https://u.y.qq.com/cgi-bin/musicu.fcg?_=1577086820633&data={%22comm%22:{%22g_tk%22:5381,%22uin%22:123456," +
-            "%22format%22:%22json%22,%22inCharset%22:%22utf-8%22,%22outCharset%22:%22utf-8%22,%22notice%22:0,%22platform%22:%22h5%22,%22needNewCode%22:1," +
-            "%22ct%22:23,%22cv%22:0},%22topList%22:{%22module%22:%22musicToplist.ToplistInfoServer%22,%22method%22:%22GetAll%22,%22param%22:{}}}";
+    private final String GET_RANK_QQ_API = "https://u.y.qq.com/cgi-bin/musicu.fcg";
     // 获取榜单 API (QQ)
     private final String GET_RANK_QQ_API_V2
-            = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&uin=0&needNewCode=1&platform=h5";
+            = "https://c.y.qq.com/v8/fcg-bin/fcg_myqq_toplist.fcg";
 
     /**
      * 获取所有榜单
@@ -39,7 +39,11 @@ public class QqRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("_", "1577086820633");
+        params.put("data", "{\"comm\":{\"g_tk\":5381,\"uin\":123456,\"format\":\"json\",\"inCharset\":\"utf-8\",\"outCharset\":\"utf-8\",\"notice\":0,\"platform\":\"h5\",\"needNewCode\":1,\"ct\":23,\"cv\":0},\"topList\":{\"module\":\"musicToplist.ToplistInfoServer\",\"method\":\"GetAll\",\"param\":{}}}");
         String rankInfoBody = HttpRequest.get(GET_RANK_QQ_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONArray group = rankInfoJson.getJSONObject("topList").getJSONObject("data").getJSONArray("group");
@@ -81,7 +85,17 @@ public class QqRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("g_tk", "1928093487");
+        params.put("inCharset", "utf-8");
+        params.put("outCharset", "utf-8");
+        params.put("notice", 0);
+        params.put("format", "json");
+        params.put("uin", 0);
+        params.put("needNewCode", 1);
+        params.put("platform", "h5");
         String rankInfoBody = HttpRequest.get(GET_RANK_QQ_API_V2)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONArray data = rankInfoJson.getJSONObject("data").getJSONArray("topList");

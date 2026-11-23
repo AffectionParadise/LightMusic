@@ -16,8 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbArtistMenuReq {
     private static DbArtistMenuReq instance;
@@ -31,13 +33,13 @@ public class DbArtistMenuReq {
     }
 
     // 歌手粉丝 API (豆瓣)
-    private final String ARTIST_FANS_DB_API = "https://movie.douban.com/celebrity/%s/fans?start=%s";
+    private final String ARTIST_FANS_DB_API = "https://movie.douban.com/celebrity/%s/fans";
     // 歌手合作人 API (豆瓣)
-    private final String ARTIST_BUDDY_DB_API = "https://movie.douban.com/celebrity/%s/partners?start=%s";
+    private final String ARTIST_BUDDY_DB_API = "https://movie.douban.com/celebrity/%s/partners";
     // 歌手电台 API (豆瓣)
-    private final String ARTIST_RADIO_DB_API = "https://movie.douban.com/celebrity/%s/movies?start=%s&format=pic&sortby=time";
+    private final String ARTIST_RADIO_DB_API = "https://movie.douban.com/celebrity/%s/movies";
     // 获取歌手照片 API (豆瓣)
-    private final String GET_ARTISTS_IMG_DB_API = "https://movie.douban.com/celebrity/%s/photos/?type=C&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_ARTISTS_IMG_DB_API = "https://movie.douban.com/celebrity/%s/photos/";
 
     /**
      * 获取歌手照片链接
@@ -48,7 +50,14 @@ public class DbArtistMenuReq {
 
         String id = artistInfo.getId();
         final int limit = 30;
-        String imgInfoBody = HttpRequest.get(String.format(GET_ARTISTS_IMG_DB_API, id, (page - 1) * limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", "C");
+        params.put("start", (page - 1) * limit);
+        params.put("sortby", "like");
+        params.put("size", "a");
+        params.put("subtype", "a");
+        String imgInfoBody = HttpRequest.get(String.format(GET_ARTISTS_IMG_DB_API, id))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(imgInfoBody);
         Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
@@ -74,7 +83,10 @@ public class DbArtistMenuReq {
 
         String id = artistInfo.getId();
         final int rn = 35;
-        String userInfoBody = HttpRequest.get(String.format(ARTIST_FANS_DB_API, id, (page - 1) * rn))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * rn);
+        String userInfoBody = HttpRequest.get(String.format(ARTIST_FANS_DB_API, id))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(userInfoBody);
         String ts = RegexUtil.getGroup1("（(\\d+)）", doc.select("#content > h1").text());
@@ -120,7 +132,10 @@ public class DbArtistMenuReq {
 
         String id = netArtistInfo.getId();
         final int dbLimit = 10;
-        String artistInfoBody = HttpRequest.get(String.format(ARTIST_BUDDY_DB_API, id, (page - 1) * dbLimit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * dbLimit);
+        String artistInfoBody = HttpRequest.get(String.format(ARTIST_BUDDY_DB_API, id))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(artistInfoBody);
         Elements cs = doc.select(".partners.item");
@@ -162,7 +177,12 @@ public class DbArtistMenuReq {
 
         String id = artistInfo.getId();
         final int dbLimit = 10;
-        String artistInfoBody = HttpRequest.get(String.format(ARTIST_RADIO_DB_API, id, (page - 1) * dbLimit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * dbLimit);
+        params.put("format", "pic");
+        params.put("sortby", "time");
+        String artistInfoBody = HttpRequest.get(String.format(ARTIST_RADIO_DB_API, id))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(artistInfoBody);
         Elements rs = doc.select(".grid_view > ul > li > dl");

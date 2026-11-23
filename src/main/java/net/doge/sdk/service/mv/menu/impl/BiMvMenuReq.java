@@ -13,8 +13,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiMvMenuReq {
     private static BiMvMenuReq instance;
@@ -28,9 +30,9 @@ public class BiMvMenuReq {
     }
 
     // 相似视频 API (哔哩哔哩)
-    private final String SIMILAR_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/archive/related?bvid=%s";
+    private final String SIMILAR_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/archive/related";
     // 视频分集 API (哔哩哔哩)
-    private final String VIDEO_EPISODES_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
+    private final String VIDEO_EPISODES_BI_API = "https://api.bilibili.com/x/player/pagelist";
 
     /**
      * 获取相似 MV (通过 MV)
@@ -42,7 +44,10 @@ public class BiMvMenuReq {
         int t;
 
         String bvId = netMvInfo.getBvId();
-        String mvInfoBody = HttpRequest.get(String.format(SIMILAR_VIDEO_BI_API, bvId))
+        Map<String, Object> params = new HashMap<>();
+        params.put("bvid", bvId);
+        String mvInfoBody = HttpRequest.get(SIMILAR_VIDEO_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");
@@ -94,7 +99,10 @@ public class BiMvMenuReq {
 
         String id = netMvInfo.getId();
         String bvId = netMvInfo.getBvId();
-        String mvInfoBody = HttpRequest.get(String.format(VIDEO_EPISODES_BI_API, bvId))
+        Map<String, Object> params = new HashMap<>();
+        params.put("bvid", bvId);
+        String mvInfoBody = HttpRequest.get(VIDEO_EPISODES_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONArray mvArray = JSONObject.parseObject(mvInfoBody).getJSONArray("data");

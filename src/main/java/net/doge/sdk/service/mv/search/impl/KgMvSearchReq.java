@@ -9,12 +9,13 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KgMvSearchReq {
     private static KgMvSearchReq instance;
@@ -28,7 +29,7 @@ public class KgMvSearchReq {
     }
 
     // 关键词搜索 MV API (酷狗)
-    private final String SEARCH_MV_KG_API = "http://msearch.kugou.com/api/v3/search/mv?version=9108&keyword=%s&page=%s&pagesize=%s&sver=2";
+    private final String SEARCH_MV_KG_API = "http://msearch.kugou.com/api/v3/search/mv";
     //    private final String SEARCH_MV_KG_API = "/v1/search/mv";
 
     /**
@@ -38,9 +39,14 @@ public class KgMvSearchReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String mvInfoBody = HttpRequest.get(String.format(SEARCH_MV_KG_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("version", 9108);
+        params.put("keyword", keyword);
+        params.put("page", page);
+        params.put("pagesize", limit);
+        params.put("sver", 2);
+        String mvInfoBody = HttpRequest.get(SEARCH_MV_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");

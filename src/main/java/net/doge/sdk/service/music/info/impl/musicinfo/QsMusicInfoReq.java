@@ -11,6 +11,8 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class QsMusicInfoReq {
     private static QsMusicInfoReq instance;
@@ -24,14 +26,18 @@ public class QsMusicInfoReq {
     }
 
     // 歌曲信息 API (汽水)
-    private final String SONG_DETAIL_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track?track_id=%s&device_platform=web";
+    private final String SONG_DETAIL_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track";
 
     /**
      * 补充 NetMusicInfo 歌曲信息(包括 时长、专辑名称、封面图片、歌词)
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_QS_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("track_id", id);
+        params.put("device_platform", "web");
+        String songBody = HttpRequest.get(SONG_DETAIL_QS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject songJson = JSONObject.parseObject(songBody).getJSONObject("seo_track").getJSONObject("track");
         JSONObject albumJson = songJson.getJSONObject("album");

@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiPlaylistInfoReq {
     private static BiPlaylistInfoReq instance;
@@ -27,9 +29,9 @@ public class BiPlaylistInfoReq {
     }
 
     // 歌单信息 API (哔哩哔哩)
-    private final String PLAYLIST_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/info?sid=%s";
+    private final String PLAYLIST_DETAIL_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/info";
     // 歌单歌曲 API (哔哩哔哩)
-    private final String PLAYLIST_SONGS_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/of-menu?sid=%s&pn=%s&ps=%s";
+    private final String PLAYLIST_SONGS_BI_API = "https://www.bilibili.com/audio/music-service-c/web/song/of-menu";
 
     /**
      * 根据歌单 id 获取歌单
@@ -38,7 +40,7 @@ public class BiPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("data");
@@ -78,7 +80,7 @@ public class BiPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_BI_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -100,7 +102,12 @@ public class BiPlaylistInfoReq {
         int total;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_SONGS_BI_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("sid", id);
+        params.put("pn", page);
+        params.put("ps", limit);
+        String playlistInfoBody = HttpRequest.get(PLAYLIST_SONGS_BI_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -127,5 +134,12 @@ public class BiPlaylistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildPlaylistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("sid", id);
+        return HttpRequest.get(PLAYLIST_DETAIL_BI_API)
+                .queryParams(params);
     }
 }

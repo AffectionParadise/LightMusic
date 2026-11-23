@@ -18,8 +18,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbCommentReq {
     private static DbCommentReq instance;
@@ -33,13 +35,13 @@ public class DbCommentReq {
     }
 
     // 电台评论 API (豆瓣)
-    private final String RADIO_COMMENTS_DB_API = "https://movie.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    private final String RADIO_COMMENTS_DB_API = "https://movie.douban.com/subject/%s/comments/";
     // 图书电台评论 API (豆瓣)
-    private final String BOOK_RADIO_COMMENTS_DB_API = "https://book.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    private final String BOOK_RADIO_COMMENTS_DB_API = "https://book.douban.com/subject/%s/comments/";
     // 游戏电台评论 API (豆瓣)
-    private final String GAME_RADIO_COMMENTS_DB_API = "https://www.douban.com/game/%s/comments?sort=%s&start=%s";
+    private final String GAME_RADIO_COMMENTS_DB_API = "https://www.douban.com/game/%s/comments";
     // 专辑评论 API (豆瓣)
-    private final String ALBUM_COMMENTS_DB_API = "https://music.douban.com/subject/%s/comments/?sort=%s&start=%s&limit=%s&status=P";
+    private final String ALBUM_COMMENTS_DB_API = "https://music.douban.com/subject/%s/comments/";
 
     /**
      * 获取评论
@@ -59,8 +61,11 @@ public class DbCommentReq {
         }
 
         if (isGame) {
-            String url = GAME_RADIO_COMMENTS_DB_API;
-            String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "score" : "time", (page - 1) * limit, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("sort", hotOnly ? "score" : "time");
+            params.put("start", (page - 1) * limit);
+            String commentInfoBody = HttpRequest.get(String.format(GAME_RADIO_COMMENTS_DB_API, id))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select("li.comment-item");
@@ -104,7 +109,13 @@ public class DbCommentReq {
                 if (isBook) url = BOOK_RADIO_COMMENTS_DB_API;
                 else url = RADIO_COMMENTS_DB_API;
             } else url = ALBUM_COMMENTS_DB_API;
-            String commentInfoBody = HttpRequest.get(String.format(url, id, hotOnly ? "new_score" : "time", (page - 1) * limit, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("sort", hotOnly ? "new_score" : "time");
+            params.put("start", (page - 1) * limit);
+            params.put("limit", limit);
+            params.put("status", "P");
+            String commentInfoBody = HttpRequest.get(String.format(url, id))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(commentInfoBody);
             Elements comments = doc.select(isRadio && !isBook ? ".comment-item" : "li.comment-item");

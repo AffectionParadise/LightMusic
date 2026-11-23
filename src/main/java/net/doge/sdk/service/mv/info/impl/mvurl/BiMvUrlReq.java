@@ -7,6 +7,7 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -22,7 +23,7 @@ public class BiMvUrlReq {
     }
 
     // 视频 bvid 获取 cid (哔哩哔哩)
-    private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist?bvid=%s";
+    private final String VIDEO_CID_BI_API = "https://api.bilibili.com/x/player/pagelist";
     // MV 视频链接获取 API (哔哩哔哩)
     private final String VIDEO_URL_BI_API = "https://api.bilibili.com/x/player/playurl";
 
@@ -32,7 +33,10 @@ public class BiMvUrlReq {
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String bvId = mvInfo.getBvId();
         // 先通过 bvid 获取 cid
-        String cidBody = HttpRequest.get(String.format(VIDEO_CID_BI_API, bvId))
+        Map<String, Object> cidParams = new HashMap<>();
+        cidParams.put("bvid", bvId);
+        String cidBody = HttpRequest.get(VIDEO_CID_BI_API)
+                .queryParams(cidParams)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         String cid = JSONObject.parseObject(cidBody).getJSONArray("data").getJSONObject(0).getString("cid");

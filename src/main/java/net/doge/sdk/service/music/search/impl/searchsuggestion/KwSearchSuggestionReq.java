@@ -5,10 +5,11 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.net.UrlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwSearchSuggestionReq {
     private static KwSearchSuggestionReq instance;
@@ -22,7 +23,7 @@ public class KwSearchSuggestionReq {
     }
 
     // 搜索建议 API (酷我)
-    private final String SEARCH_SUGGESTION_KW_API = "https://kuwo.cn/openapi/v1/www/search/searchKey?key=%s&httpsStatus=1";
+    private final String SEARCH_SUGGESTION_KW_API = "https://kuwo.cn/openapi/v1/www/search/searchKey";
 
     /**
      * 获取搜索建议
@@ -32,9 +33,12 @@ public class KwSearchSuggestionReq {
     public List<String> getSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_SUGGESTION_KW_API, encodedKeyword)).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("key", keyword);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(SEARCH_SUGGESTION_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             JSONObject searchSuggestionJson = JSONObject.parseObject(resp.body());
             JSONArray data = searchSuggestionJson.getJSONArray("data");

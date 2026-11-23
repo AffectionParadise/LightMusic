@@ -12,8 +12,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class XmUserMenuReq {
@@ -28,13 +30,13 @@ public class XmUserMenuReq {
     }
 
     // 用户电台 API (喜马拉雅)
-    private final String USER_RADIO_XM_API = "https://www.ximalaya.com/revision/user/pub?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_RADIO_XM_API = "https://www.ximalaya.com/revision/user/pub";
     // 用户收藏电台 API (喜马拉雅)
-    private final String USER_SUB_RADIO_XM_API = "https://www.ximalaya.com/revision/user/sub?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_SUB_RADIO_XM_API = "https://www.ximalaya.com/revision/user/sub";
     // 用户关注 API (喜马拉雅)
-    private final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_FOLLOWS_XM_API = "https://www.ximalaya.com/revision/user/following";
     // 用户粉丝 API (喜马拉雅)
-    private final String USER_FANS_XM_API = "https://www.ximalaya.com/revision/user/fans?uid=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_FANS_XM_API = "https://www.ximalaya.com/revision/user/fans";
 
     /**
      * 获取用户电台（通过用户）
@@ -47,7 +49,13 @@ public class XmUserMenuReq {
             List<NetRadioInfo> r = new LinkedList<>();
             int t;
 
-            String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_XM_API, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("uid", id);
+            params.put("page", page);
+            params.put("pageSize", limit);
+            params.put("keyWord", "");
+            String radioInfoBody = HttpRequest.get(USER_RADIO_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
@@ -89,7 +97,13 @@ public class XmUserMenuReq {
             List<NetRadioInfo> r = new LinkedList<>();
             int t;
 
-            String radioInfoBody = HttpRequest.get(String.format(USER_SUB_RADIO_XM_API, id, page, limit))
+            Map<String, Object> userSubRadioParams = new HashMap<>();
+            userSubRadioParams.put("uid", id);
+            userSubRadioParams.put("page", page);
+            userSubRadioParams.put("pageSize", limit);
+            userSubRadioParams.put("keyWord", "");
+            String radioInfoBody = HttpRequest.get(USER_SUB_RADIO_XM_API)
+                    .queryParams(userSubRadioParams)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
@@ -145,7 +159,13 @@ public class XmUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_XM_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", id);
+        params.put("page", page);
+        params.put("pageSize", limit);
+        params.put("keyWord", "");
+        String userInfoBody = HttpRequest.get(USER_FOLLOWS_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -196,7 +216,13 @@ public class XmUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FANS_XM_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", id);
+        params.put("page", page);
+        params.put("pageSize", limit);
+        params.put("keyWord", "");
+        String userInfoBody = HttpRequest.get(USER_FANS_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");

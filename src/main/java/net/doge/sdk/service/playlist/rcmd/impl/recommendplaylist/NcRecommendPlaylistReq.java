@@ -22,6 +22,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class NcRecommendPlaylistReq {
     // 推荐歌单 API (网易云)
     private final String RECOMMEND_PLAYLIST_NC_API = "https://music.163.com/weapi/personalized/playlist";
     // 发现歌单 API (网易云)
-    private final String DISCOVER_PLAYLIST_NC_API = "https://music.163.com/discover/playlist/?order=hot&offset=%s&limit=%s";
+    private final String DISCOVER_PLAYLIST_NC_API = "https://music.163.com/discover/playlist/";
     // 曲风歌单 API (网易云)
     private final String STYLE_PLAYLIST_NC_API = "https://music.163.com/api/style-tag/home/playlist";
 
@@ -52,7 +53,12 @@ public class NcRecommendPlaylistReq {
         int t;
 
         final int lim = Math.min(35, limit);
-        String playlistInfoBody = HttpRequest.get(String.format(DISCOVER_PLAYLIST_NC_API, (page - 1) * lim, lim))
+        Map<String, Object> params = new HashMap<>();
+        params.put("order", "hot");
+        params.put("offset", (page - 1) * lim);
+        params.put("limit", lim);
+        String playlistInfoBody = HttpRequest.get(DISCOVER_PLAYLIST_NC_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(playlistInfoBody);
         Elements playlists = doc.select("ul.m-cvrlst.f-cb li");

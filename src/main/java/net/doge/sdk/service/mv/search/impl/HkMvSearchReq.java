@@ -10,13 +10,14 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.LangUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HkMvSearchReq {
     private static HkMvSearchReq instance;
@@ -30,7 +31,7 @@ public class HkMvSearchReq {
     }
 
     // 关键词搜索 MV API (好看)
-    private final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video?query=%s&pn=%s&rn=%s&type=video";
+    private final String SEARCH_MV_HK_API = "https://haokan.baidu.com/haokan/ui-search/pc/search/video";
 
     /**
      * 根据关键词获取 MV
@@ -39,9 +40,13 @@ public class HkMvSearchReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = HttpRequest.get(String.format(SEARCH_MV_HK_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("query", keyword);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("type", "video");
+        HttpResponse resp = HttpRequest.get(SEARCH_MV_HK_API)
+                .queryParams(params)
                 .cookie(SdkCommon.HK_COOKIE)
                 .execute();
         String mvInfoBody = resp.body();

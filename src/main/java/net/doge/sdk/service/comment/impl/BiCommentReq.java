@@ -17,8 +17,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiCommentReq {
     private static BiCommentReq instance;
@@ -32,7 +34,7 @@ public class BiCommentReq {
     }
 
     // 评论 API (哔哩哔哩)
-    private final String COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply?type=%s&oid=%s&sort=%s&pn=%s&ps=%s";
+    private final String COMMENTS_BI_API = "https://api.bilibili.com/x/v2/reply";
 
     /**
      * 获取评论
@@ -46,8 +48,14 @@ public class BiCommentReq {
         boolean hotOnly = I18n.getText("hotComment").equals(type);
 
         int lim = Math.min(20, limit);
-        String url = String.format(COMMENTS_BI_API, isVideo ? 1 : 14, id, hotOnly ? 1 : 0, page, lim);
-        String commentInfoBody = HttpRequest.get(url)
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", isVideo ? 1 : 14);
+        params.put("oid", id);
+        params.put("sort", hotOnly ? 1 : 0);
+        params.put("pn", page);
+        params.put("ps", lim);
+        String commentInfoBody = HttpRequest.get(COMMENTS_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);

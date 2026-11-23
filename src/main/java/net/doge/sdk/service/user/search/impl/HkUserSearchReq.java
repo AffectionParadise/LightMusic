@@ -9,11 +9,12 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HkUserSearchReq {
     private static HkUserSearchReq instance;
@@ -28,7 +29,7 @@ public class HkUserSearchReq {
 
     // 关键词搜索用户 API (好看)
     private final String SEARCH_USER_HK_API
-            = "https://haokan.baidu.com/haokan/ui-search/pc/search/author?pn=%s&query=%s&rn=%s&timestamp=1683718494563&type=author&version=1";
+            = "https://haokan.baidu.com/haokan/ui-search/pc/search/author";
 
     /**
      * 根据关键词获取用户
@@ -37,9 +38,15 @@ public class HkUserSearchReq {
         List<NetUserInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_HK_API, page, encodedKeyword, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("query", keyword);
+        params.put("rn", limit);
+        params.put("timestamp", "1683718494563");
+        params.put("type", "author");
+        params.put("version", 1);
+        String userInfoBody = HttpRequest.get(SEARCH_USER_HK_API)
+                .queryParams(params)
                 .cookie(SdkCommon.HK_COOKIE)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

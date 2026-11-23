@@ -23,7 +23,7 @@ public class QsTrackReq {
     }
 
     // 歌曲 URL 获取 API (汽水)
-    private final String SONG_URL_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track?track_id=%s&device_platform=web";
+    private final String SONG_URL_QS_API = "https://beta-luna.douyin.com/luna/h5/seo_track";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -43,7 +43,11 @@ public class QsTrackReq {
      * @return
      */
     public String getTrackUrl(String id, String quality) {
-        String songBody = HttpRequest.get(String.format(SONG_URL_QS_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("track_id", id);
+        params.put("device_platform", "web");
+        String songBody = HttpRequest.get(SONG_URL_QS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject songJson = JSONObject.parseObject(songBody);
         JSONObject track = songJson.getJSONObject("seo_track").getJSONObject("track");

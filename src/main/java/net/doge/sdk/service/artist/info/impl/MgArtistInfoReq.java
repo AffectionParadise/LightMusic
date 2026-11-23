@@ -13,8 +13,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgArtistInfoReq {
     private static MgArtistInfoReq instance;
@@ -29,10 +31,10 @@ public class MgArtistInfoReq {
 
     // 歌手信息 API (咪咕)
 //    private final String ARTIST_DETAIL_MG_API = "http://music.migu.cn/v3/music/artist/%s";
-    private final String ARTIST_DETAIL_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer/info/v1.1?singerId=%s";
+    private final String ARTIST_DETAIL_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer/info/v1.1";
     // 歌手歌曲 API (咪咕)
 //    private final String ARTIST_SONGS_MG_API = "http://music.migu.cn/v3/music/artist/%s/song?page=%s";
-    private final String ARTIST_SONGS_MG_API = "http://app.c.nf.migu.cn/MIGUM3.0/bmw/singer/song/v1.0?singerId=%s&pageNo=%s&type=1";
+    private final String ARTIST_SONGS_MG_API = "http://app.c.nf.migu.cn/MIGUM3.0/bmw/singer/song/v1.0";
 
     /**
      * 根据歌手 id 获取歌手
@@ -68,7 +70,7 @@ public class MgArtistInfoReq {
 //            artistInfo.setCoverImgThumb(coverImgThumb);
 //        });
 
-        String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_MG_API, id))
+        String artistInfoBody = buildArtistDetailRequest(id)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
@@ -134,7 +136,7 @@ public class MgArtistInfoReq {
 //        GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
 //        artistInfo.setDescription(description);
 
-        String artistInfoBody = HttpRequest.get(String.format(ARTIST_DETAIL_MG_API, id))
+        String artistInfoBody = buildArtistDetailRequest(id)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
@@ -205,7 +207,12 @@ public class MgArtistInfoReq {
 //            res.add(musicInfo);
 //        }
 
-        String artistInfoBody = HttpRequest.get(String.format(ARTIST_SONGS_MG_API, id, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("singerId", id);
+        params.put("pageNo", page);
+        params.put("type", 1);
+        String artistInfoBody = HttpRequest.get(ARTIST_SONGS_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");
@@ -252,5 +259,12 @@ public class MgArtistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildArtistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("singerId", id);
+        return HttpRequest.get(ARTIST_DETAIL_MG_API)
+                .queryParams(params);
     }
 }

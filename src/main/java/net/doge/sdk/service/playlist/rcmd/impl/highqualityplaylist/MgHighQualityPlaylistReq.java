@@ -15,8 +15,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.text.LangUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgHighQualityPlaylistReq {
     private static MgHighQualityPlaylistReq instance;
@@ -30,9 +32,9 @@ public class MgHighQualityPlaylistReq {
     }
 
     // 推荐歌单 API(最热) (咪咕)
-    private final String REC_HOT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do?start=%s&count=%s&templateVersion=5&type=1";
+    private final String REC_HOT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v2.0/content/getMusicData.do";
     // 分类歌单 API (咪咕)
-    private final String CAT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag?tagId=%s&pageNumber=%s&templateVersion=1";
+    private final String CAT_PLAYLIST_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/v1.0/template/musiclistplaza-listbytag";
 
     /**
      * 推荐歌单(最热)
@@ -41,7 +43,13 @@ public class MgHighQualityPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(REC_HOT_PLAYLIST_MG_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", page);
+        params.put("count", limit);
+        params.put("templateVersion", 5);
+        params.put("type", 1);
+        String playlistInfoBody = HttpRequest.get(REC_HOT_PLAYLIST_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data").getJSONArray("contentItemList").getJSONObject(0);
@@ -128,7 +136,12 @@ public class MgHighQualityPlaylistReq {
 
         String param = s[TagModule.CAT_PLAYLIST_MG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, param, page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("tagId", param);
+            params.put("pageNumber", page);
+            params.put("templateVersion", 1);
+            String playlistInfoBody = HttpRequest.get(CAT_PLAYLIST_MG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data").getJSONObject("contentItemList");

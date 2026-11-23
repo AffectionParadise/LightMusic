@@ -14,8 +14,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HfNewMusicReq {
     private static HfNewMusicReq instance;
@@ -29,7 +31,7 @@ public class HfNewMusicReq {
     }
 
     // 推荐新歌 API (音乐磁场)
-    private final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifiti.net/%s-%s.htm?orderby=tid";
+    private final String RECOMMEND_NEW_MUSIC_HF_API = "https://www.hifiti.net/%s-%s.htm";
 
     /**
      * 推荐新歌
@@ -41,7 +43,10 @@ public class HfNewMusicReq {
 
         String param = s[TagModule.RECOMMEND_NEW_SONG_HF];
         if (StringUtil.notEmpty(param)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("orderby", "tid");
             String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_HF_API, param, page))
+                    .queryParams(params)
                     .cookie(SdkCommon.HF_COOKIE)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);

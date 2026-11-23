@@ -11,8 +11,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FsRecommendMvReq {
     private static FsRecommendMvReq instance;
@@ -26,11 +28,11 @@ public class FsRecommendMvReq {
     }
 
     // 推荐 MV API (5sing)
-    private final String RECOMMEND_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=3&sortType=2&pageIndex=%s&pageSize=%s";
+    private final String RECOMMEND_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew";
     // 最热 MV API (5sing)
-    private final String HOT_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=2&sortType=2&pageIndex=%s&pageSize=%s";
+    private final String HOT_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew";
     // 最新 MV API (5sing)
-    private final String NEW_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew?type=2&sortType=1&pageIndex=%s&pageSize=%s";
+    private final String NEW_MV_FS_API = "http://service.5sing.kugou.com/mv/listNew";
 
     /**
      * 推荐 MV
@@ -39,7 +41,13 @@ public class FsRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_FS_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 3);
+        params.put("sortType", 2);
+        params.put("pageIndex", page);
+        params.put("pageSize", limit);
+        String mvInfoBody = HttpRequest.get(RECOMMEND_MV_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");
@@ -85,7 +93,13 @@ public class FsRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(HOT_MV_FS_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 2);
+        params.put("sortType", 2);
+        params.put("pageIndex", page);
+        params.put("pageSize", limit);
+        String mvInfoBody = HttpRequest.get(HOT_MV_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");
@@ -131,7 +145,13 @@ public class FsRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(NEW_MV_FS_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", 2);
+        params.put("sortType", 1);
+        params.put("pageIndex", page);
+        params.put("pageSize", limit);
+        String mvInfoBody = HttpRequest.get(NEW_MV_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");

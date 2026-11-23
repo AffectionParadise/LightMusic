@@ -16,6 +16,7 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,9 +33,9 @@ public class KgArtistListReq {
     }
 
     // 热门歌手推荐 API (酷狗)
-    private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=1&page=%s&pagesize=%s";
+    private final String HOT_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list";
     // 飙升歌手推荐 API (酷狗)
-    private final String UP_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list?sextype=%s&type=%s&sort=2&page=%s&pagesize=%s";
+    private final String UP_ARTIST_LIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/singer/list";
     // 编辑精选歌手 API (酷狗)
     private final String IP_ARTIST_KG_API = "/openapi/v1/ip/author_list";
 
@@ -49,7 +50,14 @@ public class KgArtistListReq {
         String param = s[TagModule.HOT_ARTIST_LIST_KG];
         if (StringUtil.notEmpty(param)) {
             String[] split = param.split(" ");
-            String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("sextype", split[0]);
+            params.put("type", split[1]);
+            params.put("sort", 1);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            String artistInfoBody = HttpRequest.get(HOT_ARTIST_LIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");
@@ -95,7 +103,14 @@ public class KgArtistListReq {
         String param = s[TagModule.HOT_ARTIST_LIST_KG];
         if (StringUtil.notEmpty(param)) {
             String[] split = param.split(" ");
-            String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("sextype", split[0]);
+            params.put("type", split[1]);
+            params.put("sort", 2);
+            params.put("page", page);
+            params.put("pagesize", limit);
+            String artistInfoBody = HttpRequest.get(UP_ARTIST_LIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");

@@ -10,6 +10,7 @@ import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class KgMvTagReq {
@@ -24,7 +25,7 @@ public class KgMvTagReq {
     }
 
     // MV 标签 API (酷狗)
-    private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel?version=9108&type=2";
+    private final String MV_TAG_KG_API = "http://mobileservice.kugou.com/api/v5/video/recommend_channel";
     // 编辑精选标签 API (酷狗)
     private final String IP_TAG_KG_API = "/v1/zone/index";
 
@@ -35,7 +36,11 @@ public class KgMvTagReq {
      */
     public void initMvTag() {
         int c = Tags.mvIndices.length;
+        Map<String, Object> params = new HashMap<>();
+        params.put("version", 9108);
+        params.put("type", 2);
         String mvTagBody = HttpRequest.get(MV_TAG_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvTagJson = JSONObject.parseObject(mvTagBody);
         JSONArray tags = mvTagJson.getJSONObject("data").getJSONArray("list");

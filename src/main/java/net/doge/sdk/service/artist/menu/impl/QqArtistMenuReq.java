@@ -14,8 +14,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqArtistMenuReq {
     private static QqArtistMenuReq instance;
@@ -31,7 +33,7 @@ public class QqArtistMenuReq {
     // 歌手 MV API (QQ)
 //    private final String ARTIST_MVS_QQ_API = "http://c.y.qq.com/mv/fcgi-bin/fcg_singer_mv.fcg?singermid=%s&order=time&begin=%s&num=%s&cid=205360581";
     // 相似歌手 API (QQ)
-    private final String SIMILAR_ARTIST_QQ_API = "http://c.y.qq.com/v8/fcg-bin/fcg_v8_simsinger.fcg?singer_mid=%s&num=10&utf8=1";
+    private final String SIMILAR_ARTIST_QQ_API = "http://c.y.qq.com/v8/fcg-bin/fcg_v8_simsinger.fcg";
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
@@ -171,7 +173,12 @@ public class QqArtistMenuReq {
         int t = 0;
 
         String id = netArtistInfo.getId();
-        String artistInfoBody = HttpRequest.get(String.format(SIMILAR_ARTIST_QQ_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("singer_mid", id);
+        params.put("num", 10);
+        params.put("utf8", 1);
+        String artistInfoBody = HttpRequest.get(SIMILAR_ARTIST_QQ_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONArray artistArray = artistInfoJson.getJSONObject("singers").getJSONArray("items");

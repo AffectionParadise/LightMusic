@@ -9,12 +9,13 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DtAlbumSearchReq {
     private static DtAlbumSearchReq instance;
@@ -29,12 +30,10 @@ public class DtAlbumSearchReq {
 
     // 关键词搜索专辑 API (堆糖)
     private final String SEARCH_ALBUM_DT_API
-            = "https://www.duitang.com/napi/album/list/by_search/?include_fields=is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover" +
-            "&kw=%s&start=%s&limit=%s&type=album&_type=&_=%s";
+            = "https://www.duitang.com/napi/album/list/by_search/";
     // 关键词搜索专辑 API 2 (堆糖)
     private final String SEARCH_ALBUM_DT_API_2
-            = "https://www.duitang.com/napi/blogv2/list/by_search/?include_fields=is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover" +
-            "&kw=%s&start=%s&limit=%s&type=feed&_type=&_=%s";
+            = "https://www.duitang.com/napi/blogv2/list/by_search/";
 
     /**
      * 根据关键词获取专辑
@@ -43,9 +42,17 @@ public class DtAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("include_fields", "is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover");
+        params.put("kw", keyword);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        params.put("type", "album");
+        params.put("_type", "");
+        params.put("_", System.currentTimeMillis());
+        HttpResponse resp = HttpRequest.get(SEARCH_ALBUM_DT_API)
+                .queryParams(params)
+                .execute();
         String albumInfoBody = resp.body();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
@@ -88,9 +95,17 @@ public class DtAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = HttpRequest.get(String.format(SEARCH_ALBUM_DT_API_2, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("include_fields", "is_root,source_link,item,buyable,root_id,status,like_count,sender,album,cover");
+        params.put("kw", keyword);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        params.put("type", "feed");
+        params.put("_type", "");
+        params.put("_", System.currentTimeMillis());
+        HttpResponse resp = HttpRequest.get(SEARCH_ALBUM_DT_API_2)
+                .queryParams(params)
+                .execute();
         String albumInfoBody = resp.body();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

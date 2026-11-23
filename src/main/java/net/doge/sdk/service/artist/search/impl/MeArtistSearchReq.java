@@ -8,11 +8,12 @@ import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeArtistSearchReq {
     private static MeArtistSearchReq instance;
@@ -26,7 +27,7 @@ public class MeArtistSearchReq {
     }
 
     // 关键词搜索声优 API (猫耳)
-    private final String SEARCH_CV_ME_API = "https://www.missevan.com/sound/getsearch?s=%s&type=4&p=%s&page_size=%s";
+    private final String SEARCH_CV_ME_API = "https://www.missevan.com/sound/getsearch";
 
     /**
      * 根据关键词获取歌手
@@ -35,9 +36,13 @@ public class MeArtistSearchReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String artistInfoBody = HttpRequest.get(String.format(SEARCH_CV_ME_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("s", keyword);
+        params.put("type", 4);
+        params.put("p", page);
+        params.put("page_size", limit);
+        String artistInfoBody = HttpRequest.get(SEARCH_CV_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject info = artistInfoJson.getJSONObject("info");

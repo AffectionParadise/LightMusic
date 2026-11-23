@@ -13,8 +13,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MePlaylistInfoReq {
     private static MePlaylistInfoReq instance;
@@ -28,7 +30,7 @@ public class MePlaylistInfoReq {
     }
 
     // 歌单信息 API (猫耳)
-    private final String PLAYLIST_DETAIL_ME_API = "https://www.missevan.com/sound/soundAllList?albumid=%s";
+    private final String PLAYLIST_DETAIL_ME_API = "https://www.missevan.com/sound/soundAllList";
 
     /**
      * 根据歌单 id 获取歌单
@@ -37,7 +39,7 @@ public class MePlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("info");
@@ -77,7 +79,7 @@ public class MePlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject info = playlistInfoJson.getJSONObject("info");
@@ -102,7 +104,7 @@ public class MePlaylistInfoReq {
         int total;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_ME_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("info");
@@ -125,5 +127,12 @@ public class MePlaylistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildPlaylistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("albumid", id);
+        return HttpRequest.get(PLAYLIST_DETAIL_ME_API)
+                .queryParams(params);
     }
 }

@@ -34,11 +34,9 @@ public class QqCommentReq {
     }
 
     // 评论 API (QQ)
-    private final String COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg?biztype=%s&topid=%s&loginUin=0&cmd=%s&pagenum=%s&pagesize=%s";
+    private final String COMMENTS_QQ_API = "http://c.y.qq.com/base/fcgi-bin/fcg_global_comment_h5.fcg";
     // 专辑信息 API (QQ)
-    private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json" +
-            "&inCharset=utf-8&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page" +
-            "&albummid=%s&albumid=0";
+    private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg";
 
     /**
      * 获取评论
@@ -64,7 +62,24 @@ public class QqCommentReq {
             typeStr = "2";
 
             // QQ 需要先通过 mid 获取 id
-            String songInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
+            Map<String, Object> albumDetailParams = new HashMap<>();
+            albumDetailParams.put("_", "1689937314930");
+            albumDetailParams.put("cv", 4747474);
+            albumDetailParams.put("ct", 24);
+            albumDetailParams.put("format", "json");
+            albumDetailParams.put("inCharset", "utf-8");
+            albumDetailParams.put("outCharset", "utf-8");
+            albumDetailParams.put("notice", 0);
+            albumDetailParams.put("platform", "yqq.json");
+            albumDetailParams.put("needNewCode", 1);
+            albumDetailParams.put("uin", 0);
+            albumDetailParams.put("g_tk_new_20200303", 5381);
+            albumDetailParams.put("g_tk", 5381);
+            albumDetailParams.put("cmd", "get_album_buy_page");
+            albumDetailParams.put("albummid", id);
+            albumDetailParams.put("albumid", 0);
+            String songInfoBody = HttpRequest.get(ALBUM_DETAIL_QQ_API)
+                    .queryParams(albumDetailParams)
                     .executeAsStr();
             id = JSONObject.parseObject(songInfoBody).getJSONObject("data").getString("album_id");
         } else if (resource instanceof NetMvInfo) typeStr = "5";
@@ -79,7 +94,15 @@ public class QqCommentReq {
             cmd.put("4", new int[]{8, 9});
             cmd.put("5", new int[]{8, 6});
             String bizType = typeStr;
-            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_QQ_API, bizType, id, cmd.get(bizType)[hotOnly ? 1 : 0], page - 1, lim))
+            Map<String, Object> params = new HashMap<>();
+            params.put("biztype", bizType);
+            params.put("topid", id);
+            params.put("loginUin", 0);
+            params.put("cmd", cmd.get(bizType)[hotOnly ? 1 : 0]);
+            params.put("pagenum", page - 1);
+            params.put("pagesize", lim);
+            String commentInfoBody = HttpRequest.get(COMMENTS_QQ_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject commentJson = commentInfoJson.getJSONObject("comment");

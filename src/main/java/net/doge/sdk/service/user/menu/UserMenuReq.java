@@ -4,7 +4,6 @@ import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.*;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.service.user.menu.impl.*;
-import net.doge.util.core.net.UrlUtil;
 
 public class UserMenuReq {
     private static UserMenuReq instance;
@@ -24,7 +23,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetPlaylistInfo> getUserPlaylists(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
-        String id = UrlUtil.encodeAll(commentInfo.getUserId());
+        String id = commentInfo.getUserId();
         String name = commentInfo.getUsername();
 
         NetUserInfo userInfo = new NetUserInfo();
@@ -42,7 +41,7 @@ public class UserMenuReq {
      */
     public CommonResult<NetAlbumInfo> getUserAlbums(NetCommentInfo commentInfo, int page, int limit) {
         int source = commentInfo.getSource();
-        String id = UrlUtil.encodeAll(commentInfo.getUserId());
+        String id = commentInfo.getUserId();
 
         NetUserInfo userInfo = new NetUserInfo();
         userInfo.setSource(source);

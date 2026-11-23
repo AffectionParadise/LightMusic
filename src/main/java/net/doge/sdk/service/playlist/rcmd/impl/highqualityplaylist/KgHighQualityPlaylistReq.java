@@ -19,9 +19,7 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.text.LangUtil;
 
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class KgHighQualityPlaylistReq {
     private static KgHighQualityPlaylistReq instance;
@@ -37,14 +35,13 @@ public class KgHighQualityPlaylistReq {
     // Top 分类歌单 API (酷狗)
     private final String TOP_PLAYLIST_KG_API = "/specialrec.service/special_recommend";
     // 推荐分类歌单(最热) API (酷狗)
-    private final String CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=6&c=%s&p=%s";
+    private final String CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // 推荐分类歌单(热藏) API (酷狗)
-    private final String HOT_COLLECTED_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=3&c=%s&p=%s";
+    private final String HOT_COLLECTED_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // 推荐分类歌单(飙升) API (酷狗)
-    private final String UP_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=8&c=%s&p=%s";
+    private final String UP_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // 热门歌单 API (酷狗)
-    private final String HOT_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/special/recommend?recommend_expire=0&sign=52186982747e1404d426fa3f2a1e8ee4" +
-            "&plat=0&uid=0&version=9108&page=1&area_code=1&appid=1005&mid=286974383886022203545511837994020015101&_t=1545746286";
+    private final String HOT_PLAYLIST_KG_API = "http://mobilecdnbj.kugou.com/api/v5/special/recommend";
     // 编辑精选歌单 API (酷狗)
 //    private final String IP_PLAYLIST_KG_API = "/ocean/v6/pubsongs/list_info_for_ip";
 
@@ -111,7 +108,14 @@ public class KgHighQualityPlaylistReq {
 
         String param = s[TagModule.TOP_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_KG_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("is_ajax", 1);
+            params.put("cdn", "cdn");
+            params.put("t", 6);
+            params.put("c", param.trim());
+            params.put("p", page);
+            String playlistInfoBody = HttpRequest.get(CAT_PLAYLIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -153,7 +157,14 @@ public class KgHighQualityPlaylistReq {
 
         String param = s[TagModule.TOP_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(HOT_COLLECTED_CAT_PLAYLIST_KG_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("is_ajax", 1);
+            params.put("cdn", "cdn");
+            params.put("t", 3);
+            params.put("c", param.trim());
+            params.put("p", page);
+            String playlistInfoBody = HttpRequest.get(HOT_COLLECTED_CAT_PLAYLIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -195,7 +206,14 @@ public class KgHighQualityPlaylistReq {
 
         String param = s[TagModule.TOP_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(UP_CAT_PLAYLIST_KG_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("is_ajax", 1);
+            params.put("cdn", "cdn");
+            params.put("t", 8);
+            params.put("c", param.trim());
+            params.put("p", page);
+            String playlistInfoBody = HttpRequest.get(UP_CAT_PLAYLIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -234,7 +252,19 @@ public class KgHighQualityPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
+        Map<String, Object> params = new TreeMap<>();
+        params.put("recommend_expire", 0);
+        params.put("sign", "52186982747e1404d426fa3f2a1e8ee4");
+        params.put("plat", 0);
+        params.put("uid", 0);
+        params.put("version", 9108);
+        params.put("page", 1);
+        params.put("area_code", 1);
+        params.put("appid", 1005);
+        params.put("mid", "286974383886022203545511837994020015101");
+        params.put("_t", "1545746286");
         String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");

@@ -13,8 +13,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwPlaylistInfoReq {
     private static KwPlaylistInfoReq instance;
@@ -29,7 +31,7 @@ public class KwPlaylistInfoReq {
 
     // 歌单信息 API (酷我)
 //    private final String PLAYLIST_DETAIL_KW_API = "https://kuwo.cn/api/www/playlist/playListInfo?pid=%s&pn=%s&rn=%s&httpsStatus=1";
-    private final String PLAYLIST_DETAIL_KW_API = "http://nplserver.kuwo.cn/pl.svc?op=getlistinfo&pid=%s&pn=%s&rn=%s&encode=utf8&keyset=pl2012&identity=kuwo&pcmp4=1&vipver=MUSIC_9.0.5.0_W1&newver=1";
+    private final String PLAYLIST_DETAIL_KW_API = "http://nplserver.kuwo.cn/pl.svc";
 
     /**
      * 根据歌单 id 获取歌单
@@ -67,7 +69,7 @@ public class KwPlaylistInfoReq {
 //                res.add(playlistInfo);
 //            }
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, 0, 1))
+        String playlistInfoBody = buildPlaylistDetailRequest(id, 0, 1)
                 .executeAsStr();
         JSONObject playlistJson = JSONObject.parseObject(playlistInfoBody);
         if (JsonUtil.notEmpty(playlistJson)) {
@@ -118,7 +120,7 @@ public class KwPlaylistInfoReq {
 //            playlistInfo.setDescription(description);
 //            if (!playlistInfo.hasTag()) playlistInfo.setTag(data.getString("tag").replace(",", "、"));
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, 0, 1))
+        String playlistInfoBody = buildPlaylistDetailRequest(id, 0, 1)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(playlistInfoBody);
 
@@ -172,7 +174,7 @@ public class KwPlaylistInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_KW_API, id, page - 1, limit))
+        String playlistInfoBody = buildPlaylistDetailRequest(id, page - 1, limit)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(playlistInfoBody);
         JSONArray songArray = data.getJSONArray("musiclist");
@@ -211,5 +213,21 @@ public class KwPlaylistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildPlaylistDetailRequest(String id, int page, int limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("op", "getlistinfo");
+        params.put("pid", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("encode", "utf8");
+        params.put("keyset", "pl2012");
+        params.put("identity", "kuwo");
+        params.put("pcmp4", 1);
+        params.put("vipver", "MUSIC_9.0.5.0_W1");
+        params.put("newver", 1);
+        return HttpRequest.get(PLAYLIST_DETAIL_KW_API)
+                .queryParams(params);
     }
 }

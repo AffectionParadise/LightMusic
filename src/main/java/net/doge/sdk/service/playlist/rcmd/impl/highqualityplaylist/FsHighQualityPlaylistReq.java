@@ -16,8 +16,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FsHighQualityPlaylistReq {
     private static FsHighQualityPlaylistReq instance;
@@ -31,7 +33,7 @@ public class FsHighQualityPlaylistReq {
     }
 
     // 分类歌单(最热) API (5sing)
-    private final String HOT_PLAYLIST_FS_API = "http://5sing.kugou.com/gd/gdList?tagName=%s&page=%s&type=0";
+    private final String HOT_PLAYLIST_FS_API = "http://5sing.kugou.com/gd/gdList";
 
     /**
      * 分类歌单(最热)
@@ -43,7 +45,12 @@ public class FsHighQualityPlaylistReq {
 
         String param = s[TagModule.HOT_PLAYLIST_FS];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_FS_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("tagName", param.trim());
+            params.put("page", page);
+            params.put("type", 0);
+            String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(playlistInfoBody);
             Elements as = doc.select("span.pagecon a");

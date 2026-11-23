@@ -14,8 +14,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgArtistListReq {
     private static MgArtistListReq instance;
@@ -29,11 +31,11 @@ public class MgArtistListReq {
     }
 
     // 来电新声榜 API (咪咕)
-    private final String ARTIST_LIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=22425062";
+    private final String ARTIST_LIST_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do";
     // 来电唱作榜 API (咪咕)
-    private final String ARTIST_LIST_MG_API_2 = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=22425072";
+    private final String ARTIST_LIST_MG_API_2 = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do";
     // 分类歌手 API (咪咕)
-    private final String CAT_ARTIST_LIST_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer-index/list/v1.0?tab=%s";
+    private final String CAT_ARTIST_LIST_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer-index/list/v1.0";
 
     /**
      * 来电新声榜
@@ -42,7 +44,10 @@ public class MgArtistListReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("columnId", 22425062);
         String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("columnInfo");
@@ -79,7 +84,10 @@ public class MgArtistListReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("columnId", 22425072);
         String artistInfoBody = HttpRequest.get(ARTIST_LIST_MG_API_2)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("columnInfo");
@@ -119,7 +127,10 @@ public class MgArtistListReq {
 
         String param = s[TagModule.CAT_ARTIST_MG];
         if (StringUtil.notEmpty(param)) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_ARTIST_LIST_MG_API, param))
+            Map<String, Object> params = new HashMap<>();
+            params.put("tab", param);
+            String artistInfoBody = HttpRequest.get(CAT_ARTIST_LIST_MG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("data");

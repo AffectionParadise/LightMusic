@@ -10,8 +10,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiRecommendPlaylistReq {
     private static BiRecommendPlaylistReq instance;
@@ -25,11 +27,11 @@ public class BiRecommendPlaylistReq {
     }
 
     // 推荐歌单 API (哔哩哔哩)
-    private final String NEW_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/hit?pn=%s&ps=%s";
+    private final String NEW_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/hit";
     // 热门歌单 API (哔哩哔哩)
-    private final String HOT_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/rank?pn=%s&ps=%s";
+    private final String HOT_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/menu/rank";
     // 全部歌单 API (哔哩哔哩)
-    private final String ALL_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/home/list-rank?pn=%s&ps=%s";
+    private final String ALL_PLAYLIST_BI_API = "https://www.bilibili.com/audio/music-service-c/web/home/list-rank";
 
     /**
      * 推荐歌单
@@ -38,7 +40,11 @@ public class BiRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_BI_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("ps", limit);
+        String playlistInfoBody = HttpRequest.get(NEW_PLAYLIST_BI_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -82,7 +88,11 @@ public class BiRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(HOT_PLAYLIST_BI_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("ps", limit);
+        String playlistInfoBody = HttpRequest.get(HOT_PLAYLIST_BI_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");
@@ -126,7 +136,11 @@ public class BiRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(ALL_PLAYLIST_BI_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("ps", limit);
+        String playlistInfoBody = HttpRequest.get(ALL_PLAYLIST_BI_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("data");

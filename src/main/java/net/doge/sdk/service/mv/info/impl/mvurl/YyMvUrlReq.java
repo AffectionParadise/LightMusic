@@ -6,6 +6,9 @@ import net.doge.constant.core.media.VideoQuality;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class YyMvUrlReq {
     private static YyMvUrlReq instance;
 
@@ -18,14 +21,17 @@ public class YyMvUrlReq {
     }
 
     // MV 视频链接获取 API (音悦台)
-    private final String MV_URL_YY_API = "https://video-api.yinyuetai.com/video/get?id=%s";
+    private final String MV_URL_YY_API = "https://video-api.yinyuetai.com/video/get";
 
     /**
      * 根据 MV id 获取 MV 视频链接
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = HttpRequest.get(String.format(MV_URL_YY_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        String mvBody = HttpRequest.get(MV_URL_YY_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
         JSONArray urlArray = data.getJSONObject("fullClip").getJSONArray("urls");

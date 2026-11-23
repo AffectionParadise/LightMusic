@@ -13,8 +13,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FsNewMusicReq {
     private static FsNewMusicReq instance;
@@ -28,17 +30,17 @@ public class FsNewMusicReq {
     }
 
     // 最新上传(原唱) API (5sing)
-    private final String LATEST_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list?t=-1&s=%s&l=%s&p=%s";
+    private final String LATEST_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list";
     // 网站推荐(原唱) API (5sing)
-    private final String WEBSITE_REC_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list?t=1&s=%s&l=%s&p=%s";
+    private final String WEBSITE_REC_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list";
     // 候选推荐(原唱) API (5sing)
-    private final String CANDI_REC_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list?t=2&s=%s&l=%s&p=%s";
+    private final String CANDI_REC_YC_MUSIC_FS_API = "https://5sing.kugou.com/yc/list";
     // 最新上传(翻唱) API (5sing)
-    private final String LATEST_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list?t=-1&s=%s&l=%s&p=%s";
+    private final String LATEST_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list";
     // 网站推荐(翻唱) API (5sing)
-    private final String WEBSITE_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list?t=1&s=%s&l=%s&p=%s";
+    private final String WEBSITE_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list";
     // 候选推荐(翻唱) API (5sing)
-    private final String CANDI_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list?t=2&s=%s&l=%s&p=%s";
+    private final String CANDI_REC_FC_MUSIC_FS_API = "https://5sing.kugou.com/fc/list";
     // 所有伴奏(伴奏) API (5sing)
     private final String ALL_BZ_MUSIC_FS_API = "http://5sing.kugou.com/bz/bzsong/more_%s.shtml";
 
@@ -53,7 +55,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(LATEST_YC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", -1);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(LATEST_YC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
@@ -93,7 +101,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", 1);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(WEBSITE_REC_YC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
@@ -133,7 +147,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", 2);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(CANDI_REC_YC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
@@ -173,7 +193,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(LATEST_FC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", -1);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(LATEST_FC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
@@ -213,7 +239,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", 1);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(WEBSITE_REC_FC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");
@@ -253,7 +285,13 @@ public class FsNewMusicReq {
         String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("t", 2);
+            params.put("s", sp[0]);
+            params.put("l", sp[1]);
+            params.put("p", page);
+            String musicInfoBody = HttpRequest.get(CANDI_REC_FC_MUSIC_FS_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".lists dl dd.l_info");

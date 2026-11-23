@@ -12,7 +12,6 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -32,9 +31,6 @@ public class QqRecommendPlaylistReq {
     // 推荐歌单 API (QQ)
 //    private final String RECOMMEND_PLAYLIST_QQ_API
 //            = SdkCommon.PREFIX_QQ + "/recommend/playlist?id=%s&pageNo=1&pageSize=120";
-    // 推荐歌单(最新) API (QQ)
-    private final String NEW_PLAYLIST_QQ_API
-            = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8&notice=0&platform=wk_v15.json&needNewCode=0&data=";
 
     /**
      * 每日推荐(程序分页)
@@ -130,16 +126,16 @@ public class QqRecommendPlaylistReq {
         String param = s[TagModule.NEW_PLAYLIST_QQ];
         if (StringUtil.notEmpty(param)) {
             boolean isAll = "10000000".equals(param);
-            String url;
+            String requestData;
             if (isAll) {
-                url = NEW_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
+                requestData = String.format(
                         "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                 "\"playlist\":{" +
                                 "\"method\":\"get_playlist_by_tag\"," +
                                 "\"param\":{\"id\":10000000,\"sin\":%s,\"size\":%s,\"order\":2,\"cur_page\":%s}," +
-                                "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page));
+                                "\"module\":\"playlist.PlayListPlazaServer\"}}", (page - 1) * limit, limit, page);
             } else {
-                url = NEW_PLAYLIST_QQ_API + UrlUtil.encodeAll(String.format(
+                requestData = String.format(
                         "{\"comm\":{\"cv\":1602,\"ct\":20}," +
                                 "\"playlist\":{" +
                                 "\"method\":\"get_category_content\"," +
@@ -150,9 +146,9 @@ public class QqRecommendPlaylistReq {
                                 "\"size\":%s," +
                                 "\"page\":%s," +
                                 "\"use_page\":1}," +
-                                "\"module\":\"playlist.PlayListCategoryServer\"}}", param, param, limit, page - 1));
+                                "\"module\":\"playlist.PlayListCategoryServer\"}}", param, param, limit, page - 1);
             }
-            String playlistInfoBody = HttpRequest.get(url)
+            String playlistInfoBody = SdkCommon.qqPlaylistRequest(requestData)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             if (isAll) {

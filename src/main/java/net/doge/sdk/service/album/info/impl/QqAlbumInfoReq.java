@@ -13,8 +13,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqAlbumInfoReq {
     private static QqAlbumInfoReq instance;
@@ -28,8 +30,28 @@ public class QqAlbumInfoReq {
     }
 
     // 专辑信息 API (QQ)
-    private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg?_=1689937314930&cv=4747474&ct=24&format=json&inCharset=utf-8" +
-            "&outCharset=utf-8&notice=0&platform=yqq.json&needNewCode=1&uin=0&g_tk_new_20200303=5381&g_tk=5381&cmd=get_album_buy_page&albummid=%s&albumid=0";
+    private final String ALBUM_DETAIL_QQ_API = "https://c.y.qq.com/v8/fcg-bin/musicmall.fcg";
+
+    private HttpRequest buildAlbumInfoRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("_", 1689937314930L);
+        params.put("cv", 4747474);
+        params.put("ct", 24);
+        params.put("format", "json");
+        params.put("inCharset", "utf-8");
+        params.put("outCharset", "utf-8");
+        params.put("notice", 0);
+        params.put("platform", "yqq.json");
+        params.put("needNewCode", 1);
+        params.put("uin", 0);
+        params.put("g_tk_new_20200303", 5381);
+        params.put("g_tk", 5381);
+        params.put("cmd", "get_album_buy_page");
+        params.put("albummid", id);
+        params.put("albumid", 0);
+        return HttpRequest.get(ALBUM_DETAIL_QQ_API)
+                .queryParams(params);
+    }
 
     /**
      * 根据专辑 id 获取专辑
@@ -38,7 +60,7 @@ public class QqAlbumInfoReq {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");
@@ -75,7 +97,7 @@ public class QqAlbumInfoReq {
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_QQ_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

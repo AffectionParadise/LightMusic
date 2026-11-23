@@ -16,8 +16,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiRecommendMvReq {
     private static BiRecommendMvReq instance;
@@ -33,15 +35,15 @@ public class BiRecommendMvReq {
     // 首页推荐视频 API (哔哩哔哩)
     private final String INDEX_REC_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/wbi/index/top/feed/rcmd";
     // 热门视频 API (哔哩哔哩)
-    private final String HOT_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular?pn=%s&ps=%s";
+    private final String HOT_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular";
     // 入站必刷视频 API (哔哩哔哩)
     private final String POP_PRECIOUS_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular/precious";
     // 分区排行榜视频 API (哔哩哔哩)
-    private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/v2?rid=%s&type=all";
+    private final String CAT_RANK_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/ranking/v2";
     // 分区最新视频 API (哔哩哔哩)
-    private final String CAT_NEW_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/dynamic/region?rid=%s&pn=%s&ps=%s";
+    private final String CAT_NEW_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/dynamic/region";
     // 每周必看视频 API (哔哩哔哩)
-    private final String POP_SERIES_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular/series/one?number=%s";
+    private final String POP_SERIES_VIDEO_BI_API = "https://api.bilibili.com/x/web-interface/popular/series/one";
 
     /**
      * 首页推荐视频
@@ -99,7 +101,11 @@ public class BiRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(HOT_VIDEO_BI_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("ps", limit);
+        String mvInfoBody = HttpRequest.get(HOT_VIDEO_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
@@ -199,7 +205,11 @@ public class BiRecommendMvReq {
 
         String param = s[TagModule.CAT_RANK_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, param))
+            Map<String, Object> params = new HashMap<>();
+            params.put("rid", param);
+            params.put("type", "all");
+            String mvInfoBody = HttpRequest.get(CAT_RANK_VIDEO_BI_API)
+                    .queryParams(params)
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -252,7 +262,12 @@ public class BiRecommendMvReq {
 
         String param = s[TagModule.CAT_RANK_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, param, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("rid", param);
+            params.put("pn", page);
+            params.put("ps", limit);
+            String mvInfoBody = HttpRequest.get(CAT_NEW_VIDEO_BI_API)
+                    .queryParams(params)
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
@@ -307,7 +322,10 @@ public class BiRecommendMvReq {
 
         String param = s[TagModule.POP_SERIES_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(POP_SERIES_VIDEO_BI_API, param))
+            Map<String, Object> params = new HashMap<>();
+            params.put("number", param);
+            String mvInfoBody = HttpRequest.get(POP_SERIES_VIDEO_BI_API)
+                    .queryParams(params)
                     .cookie(SdkCommon.BI_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

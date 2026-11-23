@@ -14,8 +14,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class HkUserMenuReq {
@@ -30,9 +32,9 @@ public class HkUserMenuReq {
     }
 
     // 用户视频 API (好看)
-    private final String USER_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&ctime=%s";
+    private final String USER_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall";
     // 用户小视频 API (好看)
-    private final String USER_SMALL_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall?app_id=%s&rn=20&video_type=haokan|tabhubVideo";
+    private final String USER_SMALL_VIDEO_HK_API = "https://haokan.baidu.com/web/author/listall";
 
     /**
      * 获取用户视频 (通过用户)
@@ -46,7 +48,12 @@ public class HkUserMenuReq {
             List<NetMvInfo> r = new LinkedList<>();
             int t;
 
-            String mvInfoBody = HttpRequest.get(String.format(USER_VIDEO_HK_API, id, cursor))
+            Map<String, Object> params = new HashMap<>();
+            params.put("app_id", id);
+            params.put("rn", 20);
+            params.put("ctime", cursor);
+            String mvInfoBody = HttpRequest.get(USER_VIDEO_HK_API)
+                    .queryParams(params)
                     .cookie(SdkCommon.HK_COOKIE)
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");
@@ -90,7 +97,12 @@ public class HkUserMenuReq {
             List<NetMvInfo> r = new LinkedList<>();
             int t;
 
-            String mvInfoBody = HttpRequest.get(String.format(USER_SMALL_VIDEO_HK_API, id))
+            Map<String, Object> userSmallVideoParams = new HashMap<>();
+            userSmallVideoParams.put("app_id", id);
+            userSmallVideoParams.put("rn", 20);
+            userSmallVideoParams.put("video_type", "haokan|tabhubVideo");
+            String mvInfoBody = HttpRequest.get(USER_SMALL_VIDEO_HK_API)
+                    .queryParams(userSmallVideoParams)
                     .cookie(SdkCommon.HK_COOKIE)
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");

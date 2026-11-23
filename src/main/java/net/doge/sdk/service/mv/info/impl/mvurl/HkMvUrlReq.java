@@ -7,6 +7,9 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class HkMvUrlReq {
     private static HkMvUrlReq instance;
 
@@ -19,14 +22,18 @@ public class HkMvUrlReq {
     }
 
     // MV 视频链接获取 API (好看)
-    private final String MV_URL_HK_API = "https://haokan.baidu.com/v?vid=%s&_format=json";
+    private final String MV_URL_HK_API = "https://haokan.baidu.com/v";
 
     /**
      * 根据 MV id 获取 MV 视频链接
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = HttpRequest.get(String.format(MV_URL_HK_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("vid", id);
+        params.put("_format", "json");
+        String mvBody = HttpRequest.get(MV_URL_HK_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("data");
         JSONArray urlArray = data.getJSONObject("apiData").getJSONObject("curVideoMeta").getJSONArray("clarityUrl");

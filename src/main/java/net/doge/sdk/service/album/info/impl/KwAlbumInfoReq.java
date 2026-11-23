@@ -10,11 +10,14 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwAlbumInfoReq {
     private static KwAlbumInfoReq instance;
@@ -28,7 +31,17 @@ public class KwAlbumInfoReq {
     }
 
     // 专辑信息 API (酷我)
-    private final String ALBUM_DETAIL_KW_API = "https://kuwo.cn/api/www/album/albumInfo?albumId=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ALBUM_DETAIL_KW_API = "https://kuwo.cn/api/www/album/albumInfo";
+
+    private HttpRequest buildAlbumInfoRequest(String id, int page, int limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("albumId", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("httpsStatus", 1);
+        return SdkCommon.kwRequest(ALBUM_DETAIL_KW_API)
+                .queryParams(params);
+    }
 
     /**
      * 根据专辑 id 获取专辑
@@ -37,7 +50,7 @@ public class KwAlbumInfoReq {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, 1, 1))
+        String albumInfoBody = buildAlbumInfoRequest(id, 1, 1)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");
@@ -74,7 +87,7 @@ public class KwAlbumInfoReq {
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, 1, 1))
+        String albumInfoBody = buildAlbumInfoRequest(id, 1, 1)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
@@ -99,7 +112,7 @@ public class KwAlbumInfoReq {
         int total;
 
         String id = albumInfo.getId();
-        String albumInfoBody = SdkCommon.kwRequest(String.format(ALBUM_DETAIL_KW_API, id, page, limit))
+        String albumInfoBody = buildAlbumInfoRequest(id, page, limit)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

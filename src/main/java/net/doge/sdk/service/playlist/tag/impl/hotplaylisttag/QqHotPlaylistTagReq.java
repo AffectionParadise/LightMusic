@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
-import net.doge.util.core.http.HttpRequest;
+import net.doge.sdk.common.SdkCommon;
 
 public class QqHotPlaylistTagReq {
     private static QqHotPlaylistTagReq instance;
@@ -17,12 +17,6 @@ public class QqHotPlaylistTagReq {
         return instance;
     }
 
-    // 歌单标签 API (QQ)
-    private final String PLAYLIST_TAG_QQ_API
-            = "https://u.y.qq.com/cgi-bin/musicu.fcg?loginUin=0&hostUin=0&format=json&inCharset=utf-8&outCharset=utf-8" +
-            "&notice=0&platform=wk_v15.json&needNewCode=0&data=%7B%22tags%22%3A%7B%22method%22%3A%22get_all_categories" +
-            "%22%2C%22param%22%3A%7B%22qq%22%3A%22%22%7D%2C%22module%22%3A%22playlist.PlaylistAllCategoriesServer%22%7D%7D";
-
     /**
      * 歌单标签
      *
@@ -30,7 +24,8 @@ public class QqHotPlaylistTagReq {
      */
     public void initHotPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
-        String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_QQ_API)
+        String data = "{\"tags\":{\"method\":\"get_all_categories\",\"param\":{\"qq\":\"\"},\"module\":\"playlist.PlaylistAllCategoriesServer\"}}";
+        String playlistTagBody = SdkCommon.qqPlaylistRequest(data)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
         JSONArray tags = playlistTagJson.getJSONObject("tags").getJSONObject("data").getJSONArray("v_group");

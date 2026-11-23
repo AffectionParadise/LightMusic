@@ -4,10 +4,11 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqSearchSuggestionReq {
     private static QqSearchSuggestionReq instance;
@@ -21,8 +22,7 @@ public class QqSearchSuggestionReq {
     }
 
     // 搜索建议 API (QQ)
-    private final String SEARCH_SUGGESTION_QQ_API = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg?is_xml=0&format=json&key=%s" +
-            "&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
+    private final String SEARCH_SUGGESTION_QQ_API = "https://c.y.qq.com/splcloud/fcgi-bin/smartbox_new.fcg";
 
     /**
      * 获取搜索建议
@@ -32,9 +32,19 @@ public class QqSearchSuggestionReq {
     public List<String> getSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_QQ_API, encodedKeyword))
+        Map<String, Object> params = new HashMap<>();
+        params.put("is_xml", 0);
+        params.put("format", "json");
+        params.put("key", keyword);
+        params.put("loginUin", 0);
+        params.put("hostUin", 0);
+        params.put("inCharset", "utf8");
+        params.put("outCharset", "utf-8");
+        params.put("notice", 0);
+        params.put("platform", "yqq");
+        params.put("needNewCode", 0);
+        String searchSuggestionBody = HttpRequest.get(SEARCH_SUGGESTION_QQ_API)
+                .queryParams(params)
                 .referer("https://y.qq.com/portal/player.html")
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);

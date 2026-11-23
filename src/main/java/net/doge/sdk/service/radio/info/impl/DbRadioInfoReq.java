@@ -13,8 +13,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbRadioInfoReq {
     private static DbRadioInfoReq instance;
@@ -34,11 +36,11 @@ public class DbRadioInfoReq {
     // 游戏电台信息 API (豆瓣)
     private final String GAME_RADIO_DETAIL_DB_API = "https://www.douban.com/game/%s/";
     // 获取电台照片 API (豆瓣)
-    private final String GET_RADIO_IMG_DB_API = "https://movie.douban.com/subject/%s/photos?type=S&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_RADIO_IMG_DB_API = "https://movie.douban.com/subject/%s/photos";
     // 获取电台海报 API (豆瓣)
-    private final String GET_RADIO_POSTER_DB_API = "https://movie.douban.com/subject/%s/photos?type=R&start=%s&sortby=like&size=a&subtype=a";
+    private final String GET_RADIO_POSTER_DB_API = "https://movie.douban.com/subject/%s/photos";
     // 获取游戏电台照片 API (豆瓣)
-    private final String GET_GAME_RADIO_IMG_DB_API = "https://www.douban.com/game/%s/photos/?type=all&start=%s&sortby=hot";
+    private final String GET_GAME_RADIO_IMG_DB_API = "https://www.douban.com/game/%s/photos/";
 
     /**
      * 根据电台 id 补全电台信息(包括封面图、描述)
@@ -109,7 +111,12 @@ public class DbRadioInfoReq {
         boolean isGame = radioInfo.isGame();
         final int limit = isGame ? 24 : 30;
         if (isGame) {
-            String imgInfoBody = HttpRequest.get(String.format(GET_GAME_RADIO_IMG_DB_API, id, (page - 1) * limit))
+            Map<String, Object> getGameRadioImgParams = new HashMap<>();
+            getGameRadioImgParams.put("type", "all");
+            getGameRadioImgParams.put("start", (page - 1) * limit);
+            getGameRadioImgParams.put("sortby", "hot");
+            String imgInfoBody = HttpRequest.get(String.format(GET_GAME_RADIO_IMG_DB_API, id))
+                    .queryParams(getGameRadioImgParams)
                     .executeAsStr();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select(".pholist ul img");
@@ -121,7 +128,14 @@ public class DbRadioInfoReq {
                 res.add(url);
             }
         } else if (!isBook) {
-            String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id, (page - 1) * limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", "S");
+            params.put("start", (page - 1) * limit);
+            params.put("sortby", "like");
+            params.put("size", "a");
+            params.put("subtype", "a");
+            String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_IMG_DB_API, id))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");
@@ -148,7 +162,14 @@ public class DbRadioInfoReq {
         boolean isBook = radioInfo.isBook();
         final int limit = 30;
         if (!isBook) {
-            String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_POSTER_DB_API, id, (page - 1) * limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", "R");
+            params.put("start", (page - 1) * limit);
+            params.put("sortby", "like");
+            params.put("size", "a");
+            params.put("subtype", "a");
+            String imgInfoBody = HttpRequest.get(String.format(GET_RADIO_POSTER_DB_API, id))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select("ul.poster-col3.clearfix .cover img");

@@ -7,13 +7,14 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FaHotMusicRecommendReq {
     private static FaHotMusicRecommendReq instance;
@@ -27,7 +28,7 @@ public class FaHotMusicRecommendReq {
     }
 
     // 发姐歌曲 API (发姐)
-    private final String HOT_MUSIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    private final String HOT_MUSIC_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php";
 
     /**
      * 发姐热门歌曲
@@ -41,10 +42,14 @@ public class FaHotMusicRecommendReq {
                 .executeAsStr();
         Document doc = Jsoup.parse(body);
         Elements ap = doc.select("#aplayer1");
-        String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
         String _nonce = ap.attr("data-_nonce");
 
-        String songInfoBody = HttpRequest.get(String.format(HOT_MUSIC_FA_API, musicSet, _nonce))
+        Map<String, Object> params = new HashMap<>();
+        params.put("action", "hermit");
+        params.put("musicset", ap.attr("data-songs"));
+        params.put("_nonce", _nonce);
+        String songInfoBody = HttpRequest.get(HOT_MUSIC_FA_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
         JSONObject data = songInfoJson.getJSONObject("msg");

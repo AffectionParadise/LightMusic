@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeArtistListReq {
     private static MeArtistListReq instance;
@@ -28,9 +30,9 @@ public class MeArtistListReq {
     }
 
     // CV 广场 API (猫耳)
-    private final String CAT_CV_ME_API = "https://www.missevan.com/organization/getseiys?initial=%s&p=%s&page_size=%s";
+    private final String CAT_CV_ME_API = "https://www.missevan.com/organization/getseiys";
     // 社团广场 API (猫耳)
-    private final String CAT_ORGANIZATIONS_ME_API = "https://www.missevan.com/organization/getorganizations?initial=%s&p=%s&page_size=%s";
+    private final String CAT_ORGANIZATIONS_ME_API = "https://www.missevan.com/organization/getorganizations";
 
     /**
      * 分类声优
@@ -42,7 +44,12 @@ public class MeArtistListReq {
 
         String param = s[TagModule.CAT_CV_ME];
         if (StringUtil.notEmpty(param)) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, param.trim(), page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("initial", param.trim());
+            params.put("p", page);
+            params.put("page_size", limit);
+            String artistInfoBody = HttpRequest.get(CAT_CV_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject info = artistInfoJson.getJSONObject("info");
@@ -82,7 +89,12 @@ public class MeArtistListReq {
 
         String param = s[TagModule.CAT_CV_ME];
         if (StringUtil.notEmpty(param)) {
-            String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, param.trim(), page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("initial", param.trim());
+            params.put("p", page);
+            params.put("page_size", limit);
+            String artistInfoBody = HttpRequest.get(CAT_ORGANIZATIONS_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject info = artistInfoJson.getJSONObject("info");

@@ -16,7 +16,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.parser.Parser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class QqLyricReq {
     private static QqLyricReq instance;
@@ -30,8 +32,8 @@ public class QqLyricReq {
     }
 
     // 歌词 API (QQ)
-    private final String LYRIC_QQ_API = "https://c.y.qq.com/qqmusic/fcgi-bin/lyric_download.fcg?version=15&miniversion=82&lrctype=4&musicid=%s";
-    private final String LYRIC_QQ_API_2 = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?songmid=%s&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8¬ice=0&platform=yqq&needNewCode=0";
+    private final String LYRIC_QQ_API = "https://c.y.qq.com/qqmusic/fcgi-bin/lyric_download.fcg";
+    private final String LYRIC_QQ_API_2 = "https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg";
 //    private final String SEARCH_QRC_QQ_API = "https://c.y.qq.com/lyric/fcgi-bin/fcg_search_pc_lrc.fcg?SONGNAME=%s&SINGERNAME=%s&TYPE=2&RANGE_MIN=1&RANGE_MAX=20";
 
     public void fillLyric(NetMusicInfo musicInfo) {
@@ -88,7 +90,13 @@ public class QqLyricReq {
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         String id = musicInfoJson.getJSONObject("songinfo").getJSONObject("data").getJSONObject("track_info").getString("id");
         // 获取歌词
-        String lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("version", 15);
+        params.put("miniversion", 82);
+        params.put("lrctype", 4);
+        params.put("musicid", id);
+        String lyricBody = HttpRequest.get(LYRIC_QQ_API)
+                .queryParams(params)
                 .executeAsStr();
         lyricBody = lyricBody.replaceAll("<!--|-->", "");
         // 此处用 XMLParser 解析，否则 CDATA 无法获取！
@@ -101,7 +109,18 @@ public class QqLyricReq {
         String qrcXml = qrcDecoder.decode(lyricHex);
         // 没有 qrc (lyric 密文存在但无法解密出明文) 用 lrc 代替
         if (StringUtil.isEmpty(qrcXml) && StringUtil.notEmpty(lyricHex)) {
-            lyricBody = HttpRequest.get(String.format(LYRIC_QQ_API_2, mid))
+            Map<String, Object> lyric2Params = new HashMap<>();
+            lyric2Params.put("songmid", mid);
+            lyric2Params.put("g_tk", 5381);
+            lyric2Params.put("loginUin", 0);
+            lyric2Params.put("hostUin", 0);
+            lyric2Params.put("format", "json");
+            lyric2Params.put("inCharset", "utf8");
+            lyric2Params.put("outCharset", "utf-8¬ice=0");
+            lyric2Params.put("platform", "yqq");
+            lyric2Params.put("needNewCode", 0);
+            lyricBody = HttpRequest.get(LYRIC_QQ_API_2)
+                    .queryParams(lyric2Params)
                     .referer("https://y.qq.com/portal/player.html")
                     .executeAsStr();
             JSONObject lyricJson = JSONObject.parseObject(lyricBody);

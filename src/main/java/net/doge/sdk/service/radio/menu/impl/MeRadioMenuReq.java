@@ -11,8 +11,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeRadioMenuReq {
     private static MeRadioMenuReq instance;
@@ -26,9 +28,9 @@ public class MeRadioMenuReq {
     }
 
     // 电台 CV API (猫耳)
-    private final String RADIO_CVS_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
+    private final String RADIO_CVS_ME_API = "https://www.missevan.com/dramaapi/getdrama";
     // 相似电台 API (猫耳)
-    private final String SIMILAR_RADIO_ME_API = "https://www.missevan.com/dramaapi/getdrama?drama_id=%s";
+    private final String SIMILAR_RADIO_ME_API = "https://www.missevan.com/dramaapi/getdrama";
 
     /**
      * 获取相似电台
@@ -40,7 +42,10 @@ public class MeRadioMenuReq {
         int t;
 
         String id = radioInfo.getId();
-        String radioInfoBody = HttpRequest.get(String.format(SIMILAR_RADIO_ME_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("drama_id", id);
+        String radioInfoBody = HttpRequest.get(SIMILAR_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info");
@@ -81,7 +86,10 @@ public class MeRadioMenuReq {
         int t;
 
         String id = radioInfo.getId();
-        String artistInfoBody = HttpRequest.get(String.format(RADIO_CVS_ME_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("drama_id", id);
+        String artistInfoBody = HttpRequest.get(RADIO_CVS_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("info");

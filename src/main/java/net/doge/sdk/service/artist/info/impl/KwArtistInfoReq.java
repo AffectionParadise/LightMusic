@@ -10,12 +10,15 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwArtistInfoReq {
     private static KwArtistInfoReq instance;
@@ -29,9 +32,9 @@ public class KwArtistInfoReq {
     }
 
     // 歌手信息 API (酷我)
-    private final String ARTIST_DETAIL_KW_API = "https://kuwo.cn/api/www/artist/artist?artistid=%s&httpsStatus=1";
+    private final String ARTIST_DETAIL_KW_API = "https://kuwo.cn/api/www/artist/artist";
     // 歌手歌曲 API (酷我)
-    private final String ARTIST_SONGS_KW_API = "https://kuwo.cn/api/www/artist/artistMusic?artistid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String ARTIST_SONGS_KW_API = "https://kuwo.cn/api/www/artist/artistMusic";
 
     /**
      * 根据歌手 id 预加载歌手信息
@@ -52,7 +55,7 @@ public class KwArtistInfoReq {
         List<NetArtistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_DETAIL_KW_API, id))
+        String artistInfoBody = buildArtistDetailRequest(id)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject artistJson = artistInfoJson.getJSONObject("data");
@@ -87,7 +90,7 @@ public class KwArtistInfoReq {
      */
     public void fillArtistInfo(NetArtistInfo artistInfo) {
         String id = artistInfo.getId();
-        String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_DETAIL_KW_API, id))
+        String artistInfoBody = buildArtistDetailRequest(id)
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");
@@ -111,7 +114,13 @@ public class KwArtistInfoReq {
         int total;
 
         String id = artistInfo.getId();
-        String artistInfoBody = SdkCommon.kwRequest(String.format(ARTIST_SONGS_KW_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("artistid", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("httpsStatus", 1);
+        String artistInfoBody = SdkCommon.kwRequest(ARTIST_SONGS_KW_API)
+                .queryParams(params)
                 .referer("https://kuwo.cn/singer_detail/" + UrlUtil.encodeAll(id))
                 .executeAsStr();
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
@@ -150,5 +159,13 @@ public class KwArtistInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildArtistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("artistid", id);
+        params.put("httpsStatus", 1);
+        return SdkCommon.kwRequest(ARTIST_DETAIL_KW_API)
+                .queryParams(params);
     }
 }

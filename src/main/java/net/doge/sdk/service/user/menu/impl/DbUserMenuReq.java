@@ -18,8 +18,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 public class DbUserMenuReq {
@@ -34,11 +36,11 @@ public class DbUserMenuReq {
     }
 
     // 用户专辑 API (豆瓣)
-    private final String USER_ALBUM_DB_API = "https://music.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
+    private final String USER_ALBUM_DB_API = "https://music.douban.com/people/%s/collect";
     // 用户电台 API (豆瓣)
-    private final String USER_RADIO_DB_API = "https://movie.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
+    private final String USER_RADIO_DB_API = "https://movie.douban.com/people/%s/collect";
     // 用户图书电台 API (豆瓣)
-    private final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect?start=%s&sort=time&rating=all&filter=all&mode=grid";
+    private final String USER_BOOK_RADIO_DB_API = "https://book.douban.com/people/%s/collect";
 
     /**
      * 获取用户专辑（通过用户）
@@ -51,7 +53,14 @@ public class DbUserMenuReq {
 
         String id = userInfo.getId();
         final int rn = 15;
-        String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, id, (page - 1) * rn))
+        Map<String, Object> params = new HashMap<>();
+        params.put("start", (page - 1) * rn);
+        params.put("sort", "time");
+        params.put("rating", "all");
+        params.put("filter", "all");
+        params.put("mode", "grid");
+        String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DB_API, id))
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(albumInfoBody);
         Elements rs = doc.select(".item");
@@ -100,7 +109,14 @@ public class DbUserMenuReq {
             int t;
 
             final int rn = 15;
-            String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_DB_API, id, (page - 1) * rn))
+            Map<String, Object> params = new HashMap<>();
+            params.put("start", (page - 1) * rn);
+            params.put("sort", "time");
+            params.put("rating", "all");
+            params.put("filter", "all");
+            params.put("mode", "grid");
+            String radioInfoBody = HttpRequest.get(String.format(USER_RADIO_DB_API, id))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(radioInfoBody);
             Elements rs = doc.select(".item");
@@ -140,7 +156,14 @@ public class DbUserMenuReq {
             int t;
 
             final int rn = 15;
-            String radioInfoBody = HttpRequest.get(String.format(USER_BOOK_RADIO_DB_API, id, (page - 1) * rn))
+            Map<String, Object> userBookRadioParams = new HashMap<>();
+            userBookRadioParams.put("start", (page - 1) * rn);
+            userBookRadioParams.put("sort", "time");
+            userBookRadioParams.put("rating", "all");
+            userBookRadioParams.put("filter", "all");
+            userBookRadioParams.put("mode", "grid");
+            String radioInfoBody = HttpRequest.get(String.format(USER_BOOK_RADIO_DB_API, id))
+                    .queryParams(userBookRadioParams)
                     .executeAsStr();
             Document doc = Jsoup.parse(radioInfoBody);
             Elements rs = doc.select("li.subject-item");

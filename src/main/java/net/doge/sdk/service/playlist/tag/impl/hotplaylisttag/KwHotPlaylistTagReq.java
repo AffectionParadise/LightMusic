@@ -6,6 +6,9 @@ import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KwHotPlaylistTagReq {
     private static KwHotPlaylistTagReq instance;
 
@@ -19,8 +22,7 @@ public class KwHotPlaylistTagReq {
 
     // 歌单标签 API (酷我)
     private final String PLAYLIST_TAG_KW_API
-            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagList?cmd=rcm_keyword_playlist&user=0" +
-            "&prod=kwplayer_pc_9.0.5.0&vipver=9.0.5.0&source=kwplayer_pc_9.0.5.0&loginUid=0&loginSid=0&appUid=76039576";
+            = "http://wapi.kuwo.cn/api/pc/classify/playlist/getTagList";
 
     /**
      * 歌单标签
@@ -29,7 +31,17 @@ public class KwHotPlaylistTagReq {
      */
     public void initHotPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
+        Map<String, Object> params = new HashMap<>();
+        params.put("cmd", "rcm_keyword_playlist");
+        params.put("user", 0);
+        params.put("prod", "kwplayer_pc_9.0.5.0");
+        params.put("vipver", "9.0.5.0");
+        params.put("source", "kwplayer_pc_9.0.5.0");
+        params.put("loginUid", 0);
+        params.put("loginSid", 0);
+        params.put("appUid", 76039576);
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KW_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
         JSONArray tags = playlistTagJson.getJSONArray("data");

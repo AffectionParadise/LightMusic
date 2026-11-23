@@ -15,8 +15,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QqRecommendMvReq {
     private static QqRecommendMvReq instance;
@@ -30,7 +32,7 @@ public class QqRecommendMvReq {
     }
 
     // 最新 MV API (QQ)
-    private final String NEW_MV_QQ_API = "https://c.y.qq.com/mv/fcgi-bin/getmv_by_tag?cmd=shoubo&format=json&lan=%s";
+    private final String NEW_MV_QQ_API = "https://c.y.qq.com/mv/fcgi-bin/getmv_by_tag";
 
     /**
      * 推荐 MV
@@ -94,7 +96,12 @@ public class QqRecommendMvReq {
 
         String param = s[TagModule.NEW_MV_QQ];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(NEW_MV_QQ_API, param))
+            Map<String, Object> params = new HashMap<>();
+            params.put("cmd", "shoubo");
+            params.put("format", "json");
+            params.put("lan", param);
+            String mvInfoBody = HttpRequest.get(NEW_MV_QQ_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
             JSONArray mvArray = mvInfoJson.getJSONObject("data").getJSONArray("mvlist");

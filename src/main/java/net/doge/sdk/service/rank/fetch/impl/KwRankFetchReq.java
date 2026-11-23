@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpResponse;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwRankFetchReq {
     private static KwRankFetchReq instance;
@@ -27,8 +29,8 @@ public class KwRankFetchReq {
     }
 
     // 获取榜单 API (酷我)
-    private final String GET_RANK_KW_API = "https://kuwo.cn/api/www/bang/bang/bangMenu?&httpsStatus=1";
-    private final String GET_RANK_KW_API_V2 = "http://qukudata.kuwo.cn/q.k?op=query&cont=tree&node=2&pn=0&rn=1000&fmt=json&level=2";
+    private final String GET_RANK_KW_API = "https://kuwo.cn/api/www/bang/bang/bangMenu";
+    private final String GET_RANK_KW_API_V2 = "http://qukudata.kuwo.cn/q.k";
     // 获取推荐榜单 API (酷我)
 //    private final String GET_REC_RANK_KW_API = "https://kuwo.cn/api/www/bang/index/bangList?&httpsStatus=1";
 
@@ -39,7 +41,11 @@ public class KwRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = SdkCommon.kwRequest(GET_RANK_KW_API).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(GET_RANK_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String rankInfoBody = resp.body();
             JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
@@ -81,7 +87,17 @@ public class KwRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = HttpRequest.get(GET_RANK_KW_API_V2).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("op", "query");
+        params.put("cont", "tree");
+        params.put("node", 2);
+        params.put("pn", 0);
+        params.put("rn", 1000);
+        params.put("fmt", "json");
+        params.put("level", 2);
+        HttpResponse resp = HttpRequest.get(GET_RANK_KW_API_V2)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String rankInfoBody = resp.body();
             JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);

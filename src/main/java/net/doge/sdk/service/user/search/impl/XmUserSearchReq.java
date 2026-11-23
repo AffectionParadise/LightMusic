@@ -9,11 +9,12 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmUserSearchReq {
     private static XmUserSearchReq instance;
@@ -28,7 +29,7 @@ public class XmUserSearchReq {
 
     // 关键词搜索用户 API (喜马拉雅)
     private final String SEARCH_USER_XM_API
-            = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&core=user&device=iPhone";
+            = "https://www.ximalaya.com/revision/search/main";
 
     /**
      * 根据关键词获取用户
@@ -37,9 +38,16 @@ public class XmUserSearchReq {
         List<NetUserInfo> r = new LinkedList<>();
         int t = 0;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_XM_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("kw", keyword);
+        params.put("page", page);
+        params.put("spellchecker", true);
+        params.put("condition", "relation");
+        params.put("rows", limit);
+        params.put("core", "user");
+        params.put("device", "iPhone");
+        String userInfoBody = HttpRequest.get(SEARCH_USER_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject result = userInfoJson.getJSONObject("data").getJSONObject("user");

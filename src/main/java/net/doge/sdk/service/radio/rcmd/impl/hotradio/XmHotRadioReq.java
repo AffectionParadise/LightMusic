@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmHotRadioReq {
     private static XmHotRadioReq instance;
@@ -29,11 +31,11 @@ public class XmHotRadioReq {
 
     // 分类电台 API (喜马拉雅)
     private final String CAT_RADIO_XM_API
-            = "https://www.ximalaya.com/revision/category/queryCategoryPageAlbums?category=%s&subcategory=%s&meta=&sort=0&page=%s&perPage=%s&useCache=false";
+            = "https://www.ximalaya.com/revision/category/queryCategoryPageAlbums";
     // 频道电台 API (喜马拉雅)
-    private final String CHANNEL_RADIO_XM_API = "https://www.ximalaya.com/revision/metadata/v2/channel/albums?groupId=%s&pageNum=%s&pageSize=%s&sort=1&metadata=";
+    private final String CHANNEL_RADIO_XM_API = "https://www.ximalaya.com/revision/metadata/v2/channel/albums";
     // 分类电台榜 API (喜马拉雅)
-    private final String CAT_RADIO_RANK_XM_API = "https://www.ximalaya.com/revision/rank/v3/element?typeId=%s&clusterId=%s";
+    private final String CAT_RADIO_RANK_XM_API = "https://www.ximalaya.com/revision/rank/v3/element";
 
     /**
      * 分类电台
@@ -46,7 +48,16 @@ public class XmHotRadioReq {
         String param = s[TagModule.CAT_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("category", sp[0]);
+            params.put("subcategory", sp[1]);
+            params.put("meta", "");
+            params.put("sort", 0);
+            params.put("page", page);
+            params.put("perPage", limit);
+            params.put("useCache", false);
+            String radioInfoBody = HttpRequest.get(CAT_RADIO_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
@@ -98,7 +109,14 @@ public class XmHotRadioReq {
 
         String param = s[TagModule.CHANNEL_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
-            String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, param, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("groupId", param);
+            params.put("pageNum", page);
+            params.put("pageSize", limit);
+            params.put("sort", 1);
+            params.put("metadata", "");
+            String radioInfoBody = HttpRequest.get(CHANNEL_RADIO_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");
@@ -146,7 +164,11 @@ public class XmHotRadioReq {
         String param = s[TagModule.CAT_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ");
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANK_XM_API, sp[0], sp[1]))
+            Map<String, Object> params = new HashMap<>();
+            params.put("typeId", sp[0]);
+            params.put("clusterId", sp[1]);
+            String radioInfoBody = HttpRequest.get(CAT_RADIO_RANK_XM_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("rankList").getJSONObject(0).getJSONArray("albums");

@@ -10,8 +10,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KgRankFetchReq {
     private static KgRankFetchReq instance;
@@ -25,7 +27,7 @@ public class KgRankFetchReq {
     }
 
     // 获取榜单 API (酷狗)
-    private final String GET_RANK_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/list?apiver=6&area_code=1";
+    private final String GET_RANK_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/list";
 
     /**
      * 获取所有榜单
@@ -34,7 +36,11 @@ public class KgRankFetchReq {
         List<NetRankInfo> r = new LinkedList<>();
         int t = 0;
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("apiver", 6);
+        params.put("area_code", 1);
         String rankInfoBody = HttpRequest.get(GET_RANK_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONArray rankArray = rankInfoJson.getJSONObject("data").getJSONArray("info");

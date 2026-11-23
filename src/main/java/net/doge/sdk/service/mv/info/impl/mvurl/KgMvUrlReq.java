@@ -6,6 +6,9 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KgMvUrlReq {
     private static KgMvUrlReq instance;
 
@@ -18,7 +21,7 @@ public class KgMvUrlReq {
     }
 
     // MV 视频链接获取 API (酷狗)
-    private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php?cmd=100&hash=%s&ismp3=1&ext=mp4";
+    private final String MV_URL_KG_API = "http://m.kugou.com/app/i/mv.php";
     //    private final String MV_URL_KG_API = "/v2/interface/index";
 
     /**
@@ -26,7 +29,13 @@ public class KgMvUrlReq {
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = HttpRequest.get(String.format(MV_URL_KG_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("cmd", 100);
+        params.put("hash", id);
+        params.put("ismp3", 1);
+        params.put("ext", "mp4");
+        String mvBody = HttpRequest.get(MV_URL_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(mvBody).getJSONObject("mvdata");
         // 高画质优先

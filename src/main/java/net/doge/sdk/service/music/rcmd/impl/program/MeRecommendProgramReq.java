@@ -16,8 +16,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeRecommendProgramReq {
     private static MeRecommendProgramReq instance;
@@ -33,11 +35,11 @@ public class MeRecommendProgramReq {
     // 推荐节目 API (猫耳)
     private final String REC_PROGRAM_ME_API = "https://www.missevan.com/site/homepage";
     // 探索节目 API (猫耳)
-    private final String EXP_PROGRAM_ME_API = "https://www.missevan.com/explore/%s?p=%s&pagesize=%s";
+    private final String EXP_PROGRAM_ME_API = "https://www.missevan.com/explore/%s";
     // 首页分类节目 API (猫耳)
-    private final String INDEX_CAT_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=1&id=%s&p=%s&pagesize=%s";
+    private final String INDEX_CAT_PROGRAM_ME_API = "https://www.missevan.com/sound/m";
     // 首页分类节目 API (最新)(猫耳)
-    private final String INDEX_CAT_NEW_PROGRAM_ME_API = "https://www.missevan.com/sound/m?order=0&id=%s&p=%s&pagesize=%s";
+    private final String INDEX_CAT_NEW_PROGRAM_ME_API = "https://www.missevan.com/sound/m";
 
     /**
      * 推荐节目
@@ -97,7 +99,11 @@ public class MeRecommendProgramReq {
 
         String param = s[TagModule.EXP_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
-            String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
+            Map<String, Object> params = new HashMap<>();
+            params.put("p", page);
+            params.put("pagesize", Math.min(limit, 20));
+            String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, param))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -137,7 +143,7 @@ public class MeRecommendProgramReq {
 
         String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
+            String programInfoBody = buildIndexCatProgramRequest(param, page, Math.min(limit, 20))
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -172,7 +178,13 @@ public class MeRecommendProgramReq {
 
         String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
+            Map<String, Object> params = new HashMap<>();
+            params.put("order", 0);
+            params.put("id", param);
+            params.put("p", page);
+            params.put("pagesize", Math.min(limit, 20));
+            String programInfoBody = HttpRequest.get(INDEX_CAT_NEW_PROGRAM_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             String ts = RegexUtil.getGroup1("p=(\\d+)", doc.select("li.last a").attr("href"));
@@ -207,7 +219,7 @@ public class MeRecommendProgramReq {
 
         String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
-            String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, limit))
+            String programInfoBody = buildIndexCatProgramRequest(param, page, limit)
                     .executeAsStr();
             Document doc = Jsoup.parse(programInfoBody);
             Elements boxes = doc.select(".vw-weibo-title.floatleft a");
@@ -228,5 +240,15 @@ public class MeRecommendProgramReq {
             }
         }
         return new CommonResult<>(r, t);
+    }
+
+    private HttpRequest buildIndexCatProgramRequest(String param, int page, int limit) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("order", 1);
+        params.put("id", param);
+        params.put("p", page);
+        params.put("pagesize", limit);
+        return HttpRequest.get(INDEX_CAT_PROGRAM_ME_API)
+                .queryParams(params);
     }
 }

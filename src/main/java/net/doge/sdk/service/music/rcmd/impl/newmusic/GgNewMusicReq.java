@@ -13,8 +13,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class GgNewMusicReq {
     private static GgNewMusicReq instance;
@@ -28,7 +30,7 @@ public class GgNewMusicReq {
     }
 
     // 推荐新歌 API (咕咕咕音乐)
-    private final String RECOMMEND_NEW_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm?orderby=tid";
+    private final String RECOMMEND_NEW_MUSIC_GG_API = "http://www.gggmusic.com/%s-%s.htm";
 
     /**
      * 推荐新歌
@@ -40,7 +42,10 @@ public class GgNewMusicReq {
 
         String param = s[TagModule.RECOMMEND_NEW_SONG_GG];
         if (StringUtil.notEmpty(param)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("orderby", "tid");
             String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_MUSIC_GG_API, param, page))
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(musicInfoBody);
             Elements songs = doc.select(".media.thread.tap");

@@ -10,6 +10,7 @@ import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class KgHotPlaylistTagReq {
@@ -24,7 +25,7 @@ public class KgHotPlaylistTagReq {
     }
 
     // 歌单标签 API (酷狗)
-    private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_smarty=1";
+    private final String PLAYLIST_TAG_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // 编辑精选标签 API (酷狗)
     private final String IP_TAG_KG_API = "/v1/zone/index";
 
@@ -35,7 +36,10 @@ public class KgHotPlaylistTagReq {
      */
     public void initHotPlaylistTag() {
         int c = Tags.hotPlaylistIndices.length;
+        Map<String, Object> params = new HashMap<>();
+        params.put("is_smarty", 1);
         String playlistTagBody = HttpRequest.get(PLAYLIST_TAG_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistTagJson = JSONObject.parseObject(playlistTagBody);
         JSONObject tagIds = playlistTagJson.getJSONObject("data").getJSONObject("tagids");

@@ -8,10 +8,11 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwMusicSearchReq {
     private static KwMusicSearchReq instance;
@@ -26,8 +27,7 @@ public class KwMusicSearchReq {
 
     // 关键词搜索歌曲 API (酷我)
 //    private final String SEARCH_MUSIC_KW_API = "https://kuwo.cn/api/www/search/searchMusicBykeyWord?key=%s&pn=%s&rn=%s&reqId=a52ed540-2fb5-11ee-bba2-0d6f963952a7&plat=web_www&from=&httpsStatus=1";
-    private final String SEARCH_MUSIC_KW_API = "https://search.kuwo.cn/r.s?client=kt&all=%s&pn=%s&rn=%s&uid=794762570" +
-            "&ver=kwplayer_ar_9.2.2.1&vipver=1&show_copyright_off=1&newver=1&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&vermerge=1&mobi=1&issubtitle=1";
+    private final String SEARCH_MUSIC_KW_API = "https://search.kuwo.cn/r.s";
 
     /**
      * 根据关键词获取歌曲
@@ -37,7 +37,6 @@ public class KwMusicSearchReq {
         int t = 0;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
 //            HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page, limit)).executeAsync();
 //            // 有时候请求会崩，先判断是否请求成功
 //            if (resp.isSuccessful()) {
@@ -76,7 +75,26 @@ public class KwMusicSearchReq {
 //                    }
 //                }
 //            }
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KW_API, encodedKeyword, page - 1, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("client", "kt");
+        params.put("all", keyword);
+        params.put("pn", page - 1);
+        params.put("rn", limit);
+        params.put("uid", 794762570);
+        params.put("ver", "kwplayer_ar_9.2.2.1");
+        params.put("vipver", 1);
+        params.put("show_copyright_off", 1);
+        params.put("newver", 1);
+        params.put("ft", "music");
+        params.put("cluster", 0);
+        params.put("strategy", 2012);
+        params.put("encoding", "utf8");
+        params.put("rformat", "json");
+        params.put("vermerge", 1);
+        params.put("mobi", 1);
+        params.put("issubtitle", 1);
+        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_KW_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         if (JsonUtil.notEmpty(musicInfoJson)) {

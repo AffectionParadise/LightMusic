@@ -14,6 +14,8 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MgMusicInfoReq {
     private static MgMusicInfoReq instance;
@@ -28,14 +30,14 @@ public class MgMusicInfoReq {
 
     // 歌曲信息 API (咪咕) (下面那个接口能获取无版权音乐的信息)
 //    private final String SONG_DETAIL_MG_API = "https://music.migu.cn/v3/api/music/audioPlayer/songs?copyrightId=%s";
-    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do";
 
     /**
      * 补充 NetMusicInfo 歌曲时长
      */
     public void fillDuration(NetMusicInfo musicInfo) {
         String songId = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, songId))
+        String songBody = buildSongDetailRequest(songId)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
         if (!musicInfo.hasDuration()) musicInfo.setDuration(DurationUtil.toSeconds(data.getString("length")));
@@ -46,7 +48,7 @@ public class MgMusicInfoReq {
      */
     public void fillMusicInfo(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, id))
+        String songBody = buildSongDetailRequest(id)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
 
@@ -72,5 +74,13 @@ public class MgMusicInfoReq {
     public void fillLyric(NetMusicInfo musicInfo) {
         if (musicInfo.isLyricIntegrated()) return;
         MgLyricReq.getInstance().fillLyric(musicInfo);
+    }
+
+    private HttpRequest buildSongDetailRequest(String songId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("copyrightId", songId);
+        params.put("resourceType", 2);
+        return HttpRequest.get(SONG_DETAIL_MG_API)
+                .queryParams(params);
     }
 }

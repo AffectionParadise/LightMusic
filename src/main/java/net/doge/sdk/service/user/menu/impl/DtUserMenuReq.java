@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DtUserMenuReq {
     private static DtUserMenuReq instance;
@@ -27,11 +29,11 @@ public class DtUserMenuReq {
     }
 
     // 用户专辑 API (堆糖)
-    private final String USER_ALBUM_DT_API = "https://www.duitang.com/napi/album/list/by_user/?user_id=%s&start=%s&limit=%s";
+    private final String USER_ALBUM_DT_API = "https://www.duitang.com/napi/album/list/by_user/";
     // 用户关注 API (堆糖)
-    private final String USER_FOLLOWS_DT_API = "https://www.duitang.com/napi/friendship/follows/?user_id=%s&start=%s&limit=%s";
+    private final String USER_FOLLOWS_DT_API = "https://www.duitang.com/napi/friendship/follows/";
     // 用户粉丝 API (堆糖)
-    private final String USER_FANS_DT_API = "https://www.duitang.com/napi/friendship/fans/?user_id=%s&start=%s&limit=%s";
+    private final String USER_FANS_DT_API = "https://www.duitang.com/napi/friendship/fans/";
 
     /**
      * 获取用户专辑（通过用户）
@@ -43,7 +45,12 @@ public class DtUserMenuReq {
         int total;
 
         String id = userInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(USER_ALBUM_DT_API, id, (page - 1) * limit, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", id);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        String albumInfoBody = HttpRequest.get(USER_ALBUM_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");
@@ -91,7 +98,12 @@ public class DtUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_DT_API, id, (page - 1) * limit, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", id);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        String userInfoBody = HttpRequest.get(USER_FOLLOWS_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -137,7 +149,12 @@ public class DtUserMenuReq {
         int t;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FANS_DT_API, id, (page - 1) * limit, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("user_id", id);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        String userInfoBody = HttpRequest.get(USER_FANS_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");

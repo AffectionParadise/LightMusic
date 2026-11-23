@@ -10,6 +10,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DtUserInfoReq {
     private static DtUserInfoReq instance;
 
@@ -22,14 +25,17 @@ public class DtUserInfoReq {
     }
 
     // 用户信息 API (堆糖)
-    private final String USER_DETAIL_DT_API = "https://www.duitang.com/people/?id=%s";
+    private final String USER_DETAIL_DT_API = "https://www.duitang.com/people/";
 
     /**
      * 根据用户 id 补全用户信息(包括封面图、描述)
      */
     public void fillUserInfo(NetUserInfo userInfo) {
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_DT_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+        String userInfoBody = HttpRequest.get(USER_DETAIL_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(userInfoBody);
         Elements a = doc.select(".people-funs a");

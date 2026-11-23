@@ -7,15 +7,16 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DbArtistSearchReq {
     private static DbArtistSearchReq instance;
@@ -29,7 +30,7 @@ public class DbArtistSearchReq {
     }
 
     // 关键词搜索歌手 API (豆瓣)
-    private final String SEARCH_ARTIST_DB_API = "https://movie.douban.com/celebrities/search?search_text=%s&start=%s";
+    private final String SEARCH_ARTIST_DB_API = "https://movie.douban.com/celebrities/search";
 
     /**
      * 根据关键词获取歌手
@@ -38,9 +39,11 @@ public class DbArtistSearchReq {
         List<NetArtistInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String artistInfoBody = HttpRequest.get(String.format(SEARCH_ARTIST_DB_API, encodedKeyword, (page - 1) * 15))
+        Map<String, Object> params = new HashMap<>();
+        params.put("search_text", keyword);
+        params.put("start", (page - 1) * 15);
+        String artistInfoBody = HttpRequest.get(SEARCH_ARTIST_DB_API)
+                .queryParams(params)
                 .executeAsStr();
         Document doc = Jsoup.parse(artistInfoBody);
         t = Integer.parseInt(doc.select(".rr").first().text().split("共")[1]);

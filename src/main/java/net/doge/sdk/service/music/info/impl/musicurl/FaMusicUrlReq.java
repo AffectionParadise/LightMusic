@@ -10,6 +10,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FaMusicUrlReq {
     private static FaMusicUrlReq instance;
 
@@ -22,7 +25,7 @@ public class FaMusicUrlReq {
     }
 
     // 歌曲 URL 获取 API (发姐)
-    private final String SONG_URL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php?action=hermit&musicset=%s&_nonce=%s";
+    private final String SONG_URL_FA_API = "https://www.chatcyf.com/wp-admin/admin-ajax.php";
 
     /**
      * 根据歌曲 id 获取歌曲地址
@@ -34,10 +37,15 @@ public class FaMusicUrlReq {
                 .executeAsStr();
         Document doc = Jsoup.parse(body);
         Elements ap = doc.select("#aplayer1");
-        String musicSet = UrlUtil.encodeAll(ap.attr("data-songs"));
+        String musicSet = ap.attr("data-songs");
         String _nonce = ap.attr("data-_nonce");
 
-        String songInfoBody = HttpRequest.get(String.format(SONG_URL_FA_API, musicSet, _nonce))
+        Map<String, Object> params = new HashMap<>();
+        params.put("action", "hermit");
+        params.put("musicset", musicSet);
+        params.put("_nonce", _nonce);
+        String songInfoBody = HttpRequest.get(SONG_URL_FA_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject songInfoJson = JSONObject.parseObject(songInfoBody);
         JSONObject data = songInfoJson.getJSONObject("msg");

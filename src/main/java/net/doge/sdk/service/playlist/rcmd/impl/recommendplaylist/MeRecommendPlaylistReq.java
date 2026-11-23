@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeRecommendPlaylistReq {
     private static MeRecommendPlaylistReq instance;
@@ -30,7 +32,7 @@ public class MeRecommendPlaylistReq {
     // 推荐歌单 API (猫耳)
     private final String REC_PLAYLIST_ME_API = "https://www.missevan.com/site/homepage";
     // 分类歌单(最新) API (猫耳)
-    private final String NEW_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum?order=1&tid=%s&p=%s&pagesize=%s";
+    private final String NEW_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum";
 
     /**
      * 推荐歌单
@@ -85,7 +87,13 @@ public class MeRecommendPlaylistReq {
 
         String param = s[TagModule.NEW_PLAYLIST_ME];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_ME_API, param.trim(), page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("order", 1);
+            params.put("tid", param.trim());
+            params.put("p", page);
+            params.put("pagesize", limit);
+            String playlistInfoBody = HttpRequest.get(NEW_PLAYLIST_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");

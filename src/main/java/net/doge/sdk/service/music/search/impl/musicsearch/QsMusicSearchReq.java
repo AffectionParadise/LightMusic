@@ -11,7 +11,6 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,7 +31,7 @@ public class QsMusicSearchReq {
     // 搜索歌曲 API (汽水)
     private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/search/track";
     // 搜索歌曲下游 API (汽水)
-    private final String SEARCH_MUSIC_DOWNSTREAM_QS_API = "https://api-vehicle.volcengine.com/v2/search/type?keyword=%s&search_type=music&real_offset=%s&limit=%s&search_source=qishui";
+    private final String SEARCH_MUSIC_DOWNSTREAM_QS_API = "https://api-vehicle.volcengine.com/v2/search/type";
 
     /**
      * 根据关键词获取歌曲
@@ -105,15 +104,22 @@ public class QsMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_DOWNSTREAM_QS_API, encodedKeyword, (page - 1) * limit, limit))
+        // real_offset 参数无效，程序分页
+        final int lim = 200;
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("search_type", "music");
+        params.put("real_offset", 0);
+        params.put("limit", lim);
+        params.put("search_source", "qishui");
+        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_DOWNSTREAM_QS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("data");
         JSONArray songArray = data.getJSONArray("list");
-        t = page * limit + (data.getBooleanValue("has_more") ? 1 : 0);
-        for (int i = 0, len = songArray.size(); i < len; i++) {
+        t = songArray.size();
+        for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
             JSONObject songJson = songArray.getJSONObject(i);
 
             String songId = songJson.getString("item_id");

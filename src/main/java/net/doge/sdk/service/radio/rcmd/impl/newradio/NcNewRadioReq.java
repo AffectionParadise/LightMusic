@@ -12,6 +12,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.constant.Method;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class NcNewRadioReq {
     // 付费精品电台 API (网易云)
     private final String PAY_RADIO_NC_API = "https://music.163.com/api/djradio/toplist/pay";
     // 付费精选电台 API (网易云)
-    private final String PAY_GIFT_RADIO_NC_API = "https://music.163.com/weapi/djradio/home/paygift/list?_nmclfl=1";
+    private final String PAY_GIFT_RADIO_NC_API = "https://music.163.com/weapi/djradio/home/paygift/list";
 
     /**
      * 新晋电台榜
@@ -233,8 +234,11 @@ public class NcNewRadioReq {
         int t;
 
         Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
+        Map<String, Object> params = new HashMap<>();
+        params.put("_nmclfl", 1);
         String radioInfoBody = SdkCommon.ncRequest(Method.POST, PAY_GIFT_RADIO_NC_API,
                         String.format("{\"offset\":%s,\"limit\":%s}", (page - 1) * limit, limit), options)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONArray radioArray = radioInfoJson.getJSONObject("data").getJSONArray("list");

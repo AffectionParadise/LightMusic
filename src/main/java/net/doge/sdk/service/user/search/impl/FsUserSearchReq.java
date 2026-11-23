@@ -9,12 +9,13 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FsUserSearchReq {
     private static FsUserSearchReq instance;
@@ -28,7 +29,7 @@ public class FsUserSearchReq {
     }
 
     // 关键词搜索用户 API (5sing)
-    private final String SEARCH_USER_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=1&type=2";
+    private final String SEARCH_USER_FS_API = "http://search.5sing.kugou.com/home/json";
 
     /**
      * 根据关键词获取用户
@@ -37,9 +38,14 @@ public class FsUserSearchReq {
         List<NetUserInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_FS_API, encodedKeyword, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("sort", 1);
+        params.put("page", page);
+        params.put("filter", 1);
+        params.put("type", 2);
+        String userInfoBody = HttpRequest.get(SEARCH_USER_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(userInfoBody);
         t = data.getJSONObject("pageInfo").getIntValue("totalPages") * limit;

@@ -7,6 +7,9 @@ import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MgHotRadioTagReq {
     private static MgHotRadioTagReq instance;
 
@@ -19,7 +22,7 @@ public class MgHotRadioTagReq {
     }
 
     // 分类电台标签 API (咪咕)
-    private final String HOT_RADIO_TAG_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-radio/v1.0?templateVersion=1";
+    private final String HOT_RADIO_TAG_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-radio/v1.0";
 
     /**
      * 分类电台标签
@@ -28,7 +31,11 @@ public class MgHotRadioTagReq {
      */
     public void initHotRadioTag() {
         int c = Tags.radioIndices.length;
-        String radioTagBody = HttpRequest.get(HOT_RADIO_TAG_MG_API).executeAsStr();
+        Map<String, Object> params = new HashMap<>();
+        params.put("templateVersion", 1);
+        String radioTagBody = HttpRequest.get(HOT_RADIO_TAG_MG_API)
+                .queryParams(params)
+                .executeAsStr();
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
         JSONObject data = radioTagJson.getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");

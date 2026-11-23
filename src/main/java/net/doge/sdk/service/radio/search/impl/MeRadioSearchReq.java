@@ -8,11 +8,12 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeRadioSearchReq {
     private static MeRadioSearchReq instance;
@@ -26,7 +27,7 @@ public class MeRadioSearchReq {
     }
 
     // 关键词搜索电台 API(猫耳)
-    private final String SEARCH_RADIO_ME_API = "https://www.missevan.com/dramaapi/search?s=%s&page=%s&page_size=%s";
+    private final String SEARCH_RADIO_ME_API = "https://www.missevan.com/dramaapi/search";
 
     /**
      * 根据关键词获取电台
@@ -35,9 +36,12 @@ public class MeRadioSearchReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_ME_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("s", keyword);
+        params.put("page", page);
+        params.put("page_size", limit);
+        String radioInfoBody = HttpRequest.get(SEARCH_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info");

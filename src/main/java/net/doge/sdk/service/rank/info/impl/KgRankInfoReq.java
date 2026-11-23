@@ -10,8 +10,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KgRankInfoReq {
     private static KgRankInfoReq instance;
@@ -25,7 +27,7 @@ public class KgRankInfoReq {
     }
 
     // 榜单信息 API (酷狗)
-    private final String RANK_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song?volid=35050&rankid=%s&page=%s&pagesize=%s";
+    private final String RANK_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/song";
 
     /**
      * 根据榜单 id 获取里面歌曲的 id 并获取每首歌曲粗略信息，分页，返回 NetMusicInfo
@@ -34,7 +36,13 @@ public class KgRankInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_KG_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("volid", 35050);
+        params.put("rankid", id);
+        params.put("page", page);
+        params.put("pagesize", limit);
+        String rankInfoBody = HttpRequest.get(RANK_DETAIL_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("data");

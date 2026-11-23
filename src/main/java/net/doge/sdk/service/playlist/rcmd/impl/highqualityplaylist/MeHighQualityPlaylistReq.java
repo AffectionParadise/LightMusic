@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeHighQualityPlaylistReq {
     private static MeHighQualityPlaylistReq instance;
@@ -28,7 +30,7 @@ public class MeHighQualityPlaylistReq {
     }
 
     // 分类歌单 API (猫耳)
-    private final String CAT_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum?order=0&tid=%s&p=%s&pagesize=%s";
+    private final String CAT_PLAYLIST_ME_API = "https://www.missevan.com/explore/tagalbum";
     // 探索歌单 API (猫耳)
     private final String EXP_PLAYLIST_ME_API = "https://www.missevan.com/explore/getAlbumFromTag/%s";
 
@@ -42,7 +44,13 @@ public class MeHighQualityPlaylistReq {
 
         String param = s[TagModule.CAT_PLAYLIST_ME];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_ME_API, param.trim(), page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("order", 0);
+            params.put("tid", param.trim());
+            params.put("p", page);
+            params.put("pagesize", limit);
+            String playlistInfoBody = HttpRequest.get(CAT_PLAYLIST_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = playlistInfoJson.getJSONObject("pagination").getIntValue("count");

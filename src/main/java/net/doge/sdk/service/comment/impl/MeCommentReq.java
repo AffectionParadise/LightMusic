@@ -16,8 +16,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeCommentReq {
     private static MeCommentReq instance;
@@ -31,7 +33,7 @@ public class MeCommentReq {
     }
 
     // 节目评论 API (猫耳)
-    private final String COMMENTS_ME_API = "https://www.missevan.com/site/getcomment?type=%s&order=%s&eId=%s&p=%s&pagesize=%s";
+    private final String COMMENTS_ME_API = "https://www.missevan.com/site/getcomment";
 
     /**
      * 获取评论
@@ -47,7 +49,14 @@ public class MeCommentReq {
         else if (resource instanceof NetPlaylistInfo) typeStr = "2";
 
         if (StringUtil.notEmpty(typeStr)) {
-            String commentInfoBody = HttpRequest.get(String.format(COMMENTS_ME_API, typeStr, hotOnly ? 3 : 1, id, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", typeStr);
+            params.put("order", hotOnly ? 3 : 1);
+            params.put("eId", id);
+            params.put("p", page);
+            params.put("pagesize", limit);
+            String commentInfoBody = HttpRequest.get(COMMENTS_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
             JSONObject data = commentInfoJson.getJSONObject("info").getJSONObject("comment");

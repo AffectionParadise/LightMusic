@@ -8,11 +8,12 @@ import net.doge.entity.service.NetUserInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeUserSearchReq {
     private static MeUserSearchReq instance;
@@ -26,7 +27,7 @@ public class MeUserSearchReq {
     }
 
     // 关键词搜索用户 API (猫耳)
-    private final String SEARCH_USER_ME_API = "https://www.missevan.com/sound/getsearch?s=%s&type=1&p=%s&page_size=%s";
+    private final String SEARCH_USER_ME_API = "https://www.missevan.com/sound/getsearch";
 
     /**
      * 根据关键词获取用户
@@ -35,9 +36,13 @@ public class MeUserSearchReq {
         List<NetUserInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_ME_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("s", keyword);
+        params.put("type", 1);
+        params.put("p", page);
+        params.put("page_size", limit);
+        String userInfoBody = HttpRequest.get(SEARCH_USER_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject info = userInfoJson.getJSONObject("info");

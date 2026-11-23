@@ -8,11 +8,12 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmRadioSearchReq {
     private static XmRadioSearchReq instance;
@@ -27,7 +28,7 @@ public class XmRadioSearchReq {
 
     // 关键词搜索电台 API(喜马拉雅)
     private final String SEARCH_RADIO_XM_API
-            = "https://www.ximalaya.com/revision/search/main?core=album&kw=%s&page=%s&spellchecker=true&rows=%s&condition=relation&device=iPhone&fq=&paidFilter=false";
+            = "https://www.ximalaya.com/revision/search/main";
 
     /**
      * 根据关键词获取电台
@@ -36,9 +37,18 @@ public class XmRadioSearchReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String radioInfoBody = HttpRequest.get(String.format(SEARCH_RADIO_XM_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("core", "album");
+        params.put("kw", keyword);
+        params.put("page", page);
+        params.put("spellchecker", true);
+        params.put("rows", limit);
+        params.put("condition", "relation");
+        params.put("device", "iPhone");
+        params.put("fq", "");
+        params.put("paidFilter", false);
+        String radioInfoBody = HttpRequest.get(SEARCH_RADIO_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("data").getJSONObject("album");

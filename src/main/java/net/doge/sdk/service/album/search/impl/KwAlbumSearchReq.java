@@ -9,12 +9,13 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpResponse;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwAlbumSearchReq {
     private static KwAlbumSearchReq instance;
@@ -28,7 +29,7 @@ public class KwAlbumSearchReq {
     }
 
     // 关键词搜索专辑 API (酷我)
-    private final String SEARCH_ALBUM_KW_API = "https://kuwo.cn/api/www/search/searchAlbumBykeyWord?key=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String SEARCH_ALBUM_KW_API = "https://kuwo.cn/api/www/search/searchAlbumBykeyWord";
 
     /**
      * 根据关键词获取专辑
@@ -37,9 +38,14 @@ public class KwAlbumSearchReq {
         List<NetAlbumInfo> r = new LinkedList<>();
         int t = 0;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        HttpResponse resp = SdkCommon.kwRequest(String.format(SEARCH_ALBUM_KW_API, encodedKeyword, page, limit)).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("key", keyword);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(SEARCH_ALBUM_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String albumInfoBody = resp.body();
             JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);

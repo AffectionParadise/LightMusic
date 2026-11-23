@@ -9,11 +9,12 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KgLyricReq {
     private static KgLyricReq instance;
@@ -27,8 +28,8 @@ public class KgLyricReq {
     }
 
     // 歌词 API (酷狗)
-    private final String SEARCH_LYRIC_KG_API = "http://lyrics.kugou.com/search?ver=1&man=yes&client=pc&keyword=%s&hash=%s&timelength=%s";
-    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download?ver=1&client=pc&id=%s&accesskey=%s&fmt=krc&charset=utf8";
+    private final String SEARCH_LYRIC_KG_API = "http://lyrics.kugou.com/search";
+    private final String LYRIC_KG_API = "http://lyrics.kugou.com/download";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String hash = musicInfo.getHash();
@@ -38,7 +39,15 @@ public class KgLyricReq {
         String lyricId, accessKey;
 
         // 搜索歌词
-        String lBody = HttpRequest.get(String.format(SEARCH_LYRIC_KG_API, UrlUtil.encodeAll(name), hash, duration))
+        Map<String, Object> params = new HashMap<>();
+        params.put("ver", 1);
+        params.put("man", "yes");
+        params.put("client", "pc");
+        params.put("keyword", name);
+        params.put("hash", hash);
+        params.put("timelength", duration);
+        String lBody = HttpRequest.get(SEARCH_LYRIC_KG_API)
+                .queryParams(params)
                 .userAgent("KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")
@@ -58,7 +67,15 @@ public class KgLyricReq {
         if (StringUtil.isEmpty(lyricId) || StringUtil.isEmpty(accessKey)) return;
 
         // 获取歌词
-        String lyricBody = HttpRequest.get(String.format(LYRIC_KG_API, lyricId, accessKey))
+        Map<String, Object> lyricParams = new HashMap<>();
+        lyricParams.put("ver", 1);
+        lyricParams.put("client", "pc");
+        lyricParams.put("id", lyricId);
+        lyricParams.put("accesskey", accessKey);
+        lyricParams.put("fmt", "krc");
+        lyricParams.put("charset", "utf8");
+        String lyricBody = HttpRequest.get(LYRIC_KG_API)
+                .queryParams(lyricParams)
                 .userAgent("KuGou2012-9020-ExpandSearchManager")
                 .header("KG-RC", "1")
                 .header("KG-THash", "expand_search_manager.cpp:852736169:451")

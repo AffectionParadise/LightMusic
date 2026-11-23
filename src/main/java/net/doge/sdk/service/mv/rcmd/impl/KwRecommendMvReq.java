@@ -14,8 +14,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpResponse;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwRecommendMvReq {
     private static KwRecommendMvReq instance;
@@ -29,7 +31,7 @@ public class KwRecommendMvReq {
     }
 
     // 推荐 MV API (酷我)
-    private final String RECOMMEND_MV_KW_API = "https://kuwo.cn/api/www/music/mvList?pid=%s&pn=%s&rn=%s&httpsStatus=1";
+    private final String RECOMMEND_MV_KW_API = "https://kuwo.cn/api/www/music/mvList";
 
     /**
      * 推荐 MV
@@ -41,7 +43,14 @@ public class KwRecommendMvReq {
 
         String param = s[TagModule.RECOMMEND_MV_KW];
         if (StringUtil.notEmpty(param)) {
-            HttpResponse resp = SdkCommon.kwRequest(String.format(RECOMMEND_MV_KW_API, param, page, limit)).execute();
+            Map<String, Object> params = new HashMap<>();
+            params.put("pid", param);
+            params.put("pn", page);
+            params.put("rn", limit);
+            params.put("httpsStatus", 1);
+            HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_MV_KW_API)
+                    .queryParams(params)
+                    .execute();
             if (resp.isSuccessful()) {
                 String mvInfoBody = resp.body();
                 JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

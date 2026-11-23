@@ -6,10 +6,11 @@ import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmMusicSearchReq {
     private static XmMusicSearchReq instance;
@@ -23,8 +24,7 @@ public class XmMusicSearchReq {
     }
 
     // 关键词搜索节目 API (喜马拉雅)
-    private final String SEARCH_PROGRAM_XM_API
-            = "https://www.ximalaya.com/revision/search/main?kw=%s&page=%s&spellchecker=true&condition=relation&rows=%s&device=iPhone&core=track&fq=&paidFilter=false";
+    private final String SEARCH_PROGRAM_XM_API = "https://www.ximalaya.com/revision/search/main";
 
     /**
      * 根据关键词获取节目
@@ -33,9 +33,18 @@ public class XmMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_XM_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("kw", keyword);
+        params.put("page", page);
+        params.put("spellchecker", true);
+        params.put("condition", "relation");
+        params.put("rows", limit);
+        params.put("device", "iPhone");
+        params.put("core", "track");
+        params.put("fq", "");
+        params.put("paidFilter", false);
+        String musicInfoBody = HttpRequest.get(SEARCH_PROGRAM_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("data").getJSONObject("track");

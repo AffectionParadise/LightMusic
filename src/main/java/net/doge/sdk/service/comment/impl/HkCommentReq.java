@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.time.TimeUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HkCommentReq {
     private static HkCommentReq instance;
@@ -27,7 +29,7 @@ public class HkCommentReq {
     }
 
     // 评论 API (好看)
-    private final String COMMENTS_HK_API = "https://haokan.baidu.com/videoui/api/commentget?url_key=%s&pn=%s&rn=%s&child_rn=1";
+    private final String COMMENTS_HK_API = "https://haokan.baidu.com/videoui/api/commentget";
 
     /**
      * 获取评论
@@ -38,7 +40,13 @@ public class HkCommentReq {
 
         String id = resource.getId();
 
-        String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HK_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("url_key", id);
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("child_rn", 1);
+        String commentInfoBody = HttpRequest.get(COMMENTS_HK_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject commentInfoJson = JSONObject.parseObject(commentInfoBody);
         JSONObject data = commentInfoJson.getJSONObject("data");

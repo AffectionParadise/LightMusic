@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeHotRadioReq {
     private static MeHotRadioReq instance;
@@ -28,13 +30,13 @@ public class MeHotRadioReq {
     }
 
     // 周榜电台 API (猫耳)
-    private final String WEEK_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=1&page=%s&page_size=%s";
+    private final String WEEK_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank";
     // 月榜电台 API (猫耳)
-    private final String MONTH_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=2&page=%s&page_size=%s";
+    private final String MONTH_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank";
     // 总榜电台 API (猫耳)
-    private final String ALL_TIME_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank?period=3&page=%s&page_size=%s";
+    private final String ALL_TIME_RADIO_ME_API = "https://www.missevan.com/reward/drama-reward-rank";
     // 广播剧分类电台 API (猫耳)
-    private final String CAT_RADIO_ME_API = "https://www.missevan.com/dramaapi/filter?filters=%s_0_%s_%s_0&page=%s&order=1&page_size=%s";
+    private final String CAT_RADIO_ME_API = "https://www.missevan.com/dramaapi/filter";
 
     /**
      * 周榜
@@ -43,7 +45,12 @@ public class MeHotRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        String radioInfoBody = HttpRequest.get(String.format(WEEK_RADIO_ME_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("period", 1);
+        params.put("page", page);
+        params.put("page_size", limit);
+        String radioInfoBody = HttpRequest.get(WEEK_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -82,7 +89,12 @@ public class MeHotRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        String radioInfoBody = HttpRequest.get(String.format(MONTH_RADIO_ME_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("period", 2);
+        params.put("page", page);
+        params.put("page_size", limit);
+        String radioInfoBody = HttpRequest.get(MONTH_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -121,7 +133,12 @@ public class MeHotRadioReq {
         List<NetRadioInfo> r = new LinkedList<>();
         int t;
 
-        String radioInfoBody = HttpRequest.get(String.format(ALL_TIME_RADIO_ME_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("period", 3);
+        params.put("page", page);
+        params.put("page_size", limit);
+        String radioInfoBody = HttpRequest.get(ALL_TIME_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info").getJSONObject("ranks");
@@ -164,7 +181,13 @@ public class MeHotRadioReq {
         String param = s[TagModule.CAT_RADIO_ME];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ");
-            String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_ME_API, sp[2], sp[0], sp[1], page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("filters", String.format("%s_0_%s_%s_0", sp[2], sp[0], sp[1]));
+            params.put("page", page);
+            params.put("order", 1);
+            params.put("page_size", limit);
+            String radioInfoBody = HttpRequest.get(CAT_RADIO_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("info");

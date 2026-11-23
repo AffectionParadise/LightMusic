@@ -15,10 +15,7 @@ import net.doge.util.core.time.TimeUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class BiUserMenuReq {
     private static BiUserMenuReq instance;
@@ -34,9 +31,9 @@ public class BiUserMenuReq {
     // 用户视频 API (哔哩哔哩)
     private final String USER_VIDEO_BI_API = "https://api.bilibili.com/x/space/wbi/arc/search";
     // 用户关注 API (哔哩哔哩)
-    private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings?vmid=%s&pn=%s&ps=%s";
+    private final String USER_FOLLOWS_BI_API = "https://api.bilibili.com/x/relation/followings";
     // 用户粉丝 API (哔哩哔哩)
-    private final String USER_FANS_BI_API = "https://api.bilibili.com/x/relation/followers?vmid=%s&pn=%s&ps=%s";
+    private final String USER_FANS_BI_API = "https://api.bilibili.com/x/relation/followers";
 
     /**
      * 获取用户视频 (通过用户)
@@ -106,7 +103,12 @@ public class BiUserMenuReq {
         int t = 0;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FOLLOWS_BI_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("vmid", id);
+        params.put("pn", page);
+        params.put("ps", limit);
+        String userInfoBody = HttpRequest.get(USER_FOLLOWS_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -149,7 +151,12 @@ public class BiUserMenuReq {
         int t = 0;
 
         String id = netUserInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_FANS_BI_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("vmid", id);
+        params.put("pn", page);
+        params.put("ps", limit);
+        String userInfoBody = HttpRequest.get(USER_FANS_BI_API)
+                .queryParams(params)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);

@@ -12,8 +12,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class XmUserInfoReq {
     private static XmUserInfoReq instance;
@@ -27,16 +29,16 @@ public class XmUserInfoReq {
     }
 
     // 用户信息 API (喜马拉雅)
-    private final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic?uid=%s";
+    private final String USER_DETAIL_XM_API = "https://www.ximalaya.com/revision/user/basic";
     // 用户节目 API (喜马拉雅)
-    private final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track?uid=%s&orderType=%s&page=%s&pageSize=%s&keyWord=";
+    private final String USER_PROGRAMS_XM_API = "https://www.ximalaya.com/revision/user/track";
 
     /**
      * 根据用户 id 补全用户信息(包括封面图、描述)
      */
     public void fillUserInfo(NetUserInfo userInfo) {
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, id))
+        String userInfoBody = buildUserDetailRequest(id)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -75,7 +77,14 @@ public class XmUserInfoReq {
         int total;
 
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_PROGRAMS_XM_API, id, recordType + 1, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", id);
+        params.put("orderType", recordType + 1);
+        params.put("page", page);
+        params.put("pageSize", limit);
+        params.put("keyWord", "");
+        String userInfoBody = HttpRequest.get(USER_PROGRAMS_XM_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -116,7 +125,7 @@ public class XmUserInfoReq {
         List<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_XM_API, id))
+        String userInfoBody = buildUserDetailRequest(id)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -150,5 +159,12 @@ public class XmUserInfoReq {
         res.add(userInfo);
 
         return new CommonResult<>(res, t);
+    }
+
+    private HttpRequest buildUserDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("uid", id);
+        return HttpRequest.get(USER_DETAIL_XM_API)
+                .queryParams(params);
     }
 }

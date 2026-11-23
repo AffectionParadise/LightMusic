@@ -18,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpRequest {
     private OkHttpClient client;
 
+    private HttpUrl.Builder urlBuilder;
     private Request.Builder requestBuilder;
     private FormBody.Builder formBuilder;
     private Method method;
@@ -29,7 +30,8 @@ public class HttpRequest {
     public HttpRequest(OkHttpClient client, Method method, String url) {
         this.client = client;
         this.method = method;
-        this.requestBuilder = new Request.Builder().url(url);
+        this.urlBuilder = HttpUrl.get(url).newBuilder();
+        this.requestBuilder = new Request.Builder();
         String methodStr = method.toString();
         requestBuilder.method(methodStr, HttpMethod.requiresRequestBody(methodStr) ? createEmptyBody() : null);
     }
@@ -74,6 +76,38 @@ public class HttpRequest {
 
     public static HttpRequest options(String url) {
         return createRequest(Method.OPTIONS, url);
+    }
+
+    // 请求 query 参数
+    public HttpRequest queryParam(String name, String value) {
+        urlBuilder.addQueryParameter(name, value);
+        return this;
+    }
+
+    public HttpRequest queryParam(String name, Object value) {
+        return queryParam(name, String.valueOf(value));
+    }
+
+    public HttpRequest queryParams(Map<String, Object> params) {
+        if (params != null) {
+            params.forEach((name, value) -> {
+                if (value instanceof Iterable<?>) {
+                    // 多个同名参数叠加传递
+                    for (Object item : (Iterable<?>) value) queryParam(name, item);
+                } else queryParam(name, value);
+            });
+        }
+        return this;
+    }
+
+    // 获取当前 HttpUrl
+    public HttpUrl url() {
+        return urlBuilder.build();
+    }
+
+    // 显式构建 url
+    private void buildUrl() {
+        requestBuilder.url(url());
     }
 
     // 请求头
@@ -164,7 +198,8 @@ public class HttpRequest {
 
     // 执行
     public HttpResponse execute() {
-        // 自动构建未处理的 form
+        // 自动构建未处理的 Builder
+        buildUrl();
         buildForm();
 
         Request request = requestBuilder.build();

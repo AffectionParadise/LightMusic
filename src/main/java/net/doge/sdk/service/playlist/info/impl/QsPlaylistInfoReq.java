@@ -13,8 +13,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class QsPlaylistInfoReq {
     private static QsPlaylistInfoReq instance;
@@ -28,7 +30,14 @@ public class QsPlaylistInfoReq {
     }
 
     // 歌单信息 API (汽水)
-    private final String PLAYLIST_DETAIL_QS_API = "https://api.qishui.com/luna/pc/playlist/detail?playlist_id=%s";
+    private final String PLAYLIST_DETAIL_QS_API = "https://api.qishui.com/luna/pc/playlist/detail";
+
+    private HttpRequest buildPlaylistDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("playlist_id", id);
+        return HttpRequest.get(PLAYLIST_DETAIL_QS_API)
+                .queryParams(params);
+    }
 
     /**
      * 根据歌单 id 获取歌单
@@ -37,7 +46,7 @@ public class QsPlaylistInfoReq {
         List<NetPlaylistInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QS_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
@@ -78,7 +87,7 @@ public class QsPlaylistInfoReq {
      */
     public void fillPlaylistInfo(NetPlaylistInfo playlistInfo) {
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QS_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject playlistJson = playlistInfoJson.getJSONObject("playlist");
@@ -99,7 +108,7 @@ public class QsPlaylistInfoReq {
         int total;
 
         String id = playlistInfo.getId();
-        String playlistInfoBody = HttpRequest.get(String.format(PLAYLIST_DETAIL_QS_API, id))
+        String playlistInfoBody = buildPlaylistDetailRequest(id)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray songArray = playlistInfoJson.getJSONArray("media_resources");

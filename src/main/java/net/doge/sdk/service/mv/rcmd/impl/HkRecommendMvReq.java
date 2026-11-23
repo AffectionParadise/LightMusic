@@ -17,8 +17,10 @@ import net.doge.util.core.time.TimeUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HkRecommendMvReq {
     private static HkRecommendMvReq instance;
@@ -32,12 +34,12 @@ public class HkRecommendMvReq {
     }
 
     // 猜你喜欢视频 API (好看)
-    private final String GUESS_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/Getvideolandfeed?time=%s";
+    private final String GUESS_VIDEO_HK_API = "https://haokan.baidu.com/videoui/api/Getvideolandfeed";
     // 榜单视频 API (好看)
     private final String TOP_VIDEO_HK_API
-            = "https://haokan.baidu.com/videoui/page/pc/toplist?type=hotvideo&sfrom=haokan_web_banner&page=%s&pageSize=%s&_format=json";
+            = "https://haokan.baidu.com/videoui/page/pc/toplist";
     // 推荐视频 API (好看)
-    private final String RECOMMEND_VIDEO_HK_API = "https://haokan.baidu.com/web/video/feed?tab=%s&act=pcFeed&pd=pc&num=%s&shuaxin_id=1661766211525";
+    private final String RECOMMEND_VIDEO_HK_API = "https://haokan.baidu.com/web/video/feed";
 
     /**
      * 猜你喜欢视频
@@ -46,7 +48,10 @@ public class HkRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(GUESS_VIDEO_HK_API, System.currentTimeMillis()))
+        Map<String, Object> params = new HashMap<>();
+        params.put("time", System.currentTimeMillis());
+        String mvInfoBody = HttpRequest.get(GUESS_VIDEO_HK_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("data");
@@ -91,7 +96,14 @@ public class HkRecommendMvReq {
         List<NetMvInfo> r = new LinkedList<>();
         int t;
 
-        String mvInfoBody = HttpRequest.get(String.format(TOP_VIDEO_HK_API, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", "hotvideo");
+        params.put("sfrom", "haokan_web_banner");
+        params.put("page", page);
+        params.put("pageSize", limit);
+        params.put("_format", "json");
+        String mvInfoBody = HttpRequest.get(TOP_VIDEO_HK_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);
         JSONObject data = mvInfoJson.getJSONObject("apiData").getJSONObject("response");
@@ -139,7 +151,14 @@ public class HkRecommendMvReq {
 
         String param = s[TagModule.RECOMMEND_VIDEO_HK];
         if (StringUtil.notEmpty(param)) {
-            String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_VIDEO_HK_API, param, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("tab", param);
+            params.put("act", "pcFeed");
+            params.put("pd", "pc");
+            params.put("num", limit);
+            params.put("shuaxin_id", "1661766211525");
+            String mvInfoBody = HttpRequest.get(RECOMMEND_VIDEO_HK_API)
+                    .queryParams(params)
                     .cookie(SdkCommon.HK_COOKIE)
                     .executeAsStr();
             JSONObject mvInfoJson = JSONObject.parseObject(mvInfoBody);

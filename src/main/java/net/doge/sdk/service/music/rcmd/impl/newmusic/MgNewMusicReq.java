@@ -9,8 +9,10 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgNewMusicReq {
     private static MgNewMusicReq instance;
@@ -26,7 +28,7 @@ public class MgNewMusicReq {
     // 推荐新歌 API (咪咕)
 //    private final String RECOMMEND_NEW_SONG_MG_API = "http://m.music.migu.cn/migu/remoting/cms_list_tag?nid=23853978&pageNo=%s&pageSize=%s";
     // 新歌速递 API (咪咕)
-    private final String RECOMMEND_NEW_SONG_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-index-show/v2.0?templateVersion=1";
+    private final String RECOMMEND_NEW_SONG_MG_API = "https://app.c.nf.migu.cn/pc/bmw/page-data/music-index-show/v2.0";
 
     /**
      * 推荐新歌
@@ -66,7 +68,10 @@ public class MgNewMusicReq {
 //
 //            r.add(musicInfo);
 //        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("templateVersion", 1);
         String musicInfoBody = HttpRequest.get(RECOMMEND_NEW_SONG_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("data");

@@ -16,6 +16,7 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +33,19 @@ public class KgAlbumInfoReq {
     }
 
     // 专辑信息 API (酷狗)
-    private final String ALBUM_DETAIL_KG_API = "http://mobilecdn.kugou.com/api/v3/album/info?version=9108&albumid=%s";
+    private final String ALBUM_DETAIL_KG_API = "http://mobilecdn.kugou.com/api/v3/album/info";
     //    private final String ALBUM_DETAIL_KG_API = "/kmr/v2/albums";
     // 专辑歌曲 API (酷狗)
 //    private final String ALBUM_SONGS_KG_API = "http://mobilecdn.kugou.com/api/v3/album/song?version=9108&albumid=%s&page=%s&pagesize=%s";
     private final String ALBUM_SONGS_KG_API = "/v1/album_audio/lite";
+
+    private HttpRequest buildAlbumInfoRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("version", 9108);
+        params.put("albumid", id);
+        return HttpRequest.get(ALBUM_DETAIL_KG_API)
+                .queryParams(params);
+    }
 
     /**
      * 根据专辑 id 获取专辑
@@ -45,7 +54,7 @@ public class KgAlbumInfoReq {
         List<NetAlbumInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KG_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject albumJson = albumInfoJson.getJSONObject("data");
@@ -82,7 +91,7 @@ public class KgAlbumInfoReq {
      */
     public void fillAlbumInfo(NetAlbumInfo albumInfo) {
         String id = albumInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_KG_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

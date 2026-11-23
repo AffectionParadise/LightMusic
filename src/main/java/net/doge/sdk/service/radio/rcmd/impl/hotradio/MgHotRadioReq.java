@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgHotRadioReq {
     private static MgHotRadioReq instance;
@@ -28,7 +30,7 @@ public class MgHotRadioReq {
     }
 
     // 分类电台 API (咪咕)
-    private final String CAT_RADIO_MG_API = "https://app.c.nf.migu.cn/pc/bmw/music-radio/category/list/v1.0?recommendStatus=1";
+    private final String CAT_RADIO_MG_API = "https://app.c.nf.migu.cn/pc/bmw/music-radio/category/list/v1.0";
 
     /**
      * 分类电台
@@ -40,7 +42,10 @@ public class MgHotRadioReq {
 
         String param = s[TagModule.CAT_RADIO_MG];
         if (StringUtil.notEmpty(param)) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("recommendStatus", 1);
             String radioInfoBody = HttpRequest.get(CAT_RADIO_MG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");

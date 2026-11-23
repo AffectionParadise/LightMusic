@@ -17,8 +17,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class HfCommentReq {
     private static HfCommentReq instance;
@@ -32,7 +34,7 @@ public class HfCommentReq {
     }
 
     // 评论 API (音乐磁场)
-    private final String COMMENTS_HF_API = "https://www.hifiti.net/thread-%s-%s.htm?sort=desc";
+    private final String COMMENTS_HF_API = "https://www.hifiti.net/thread-%s-%s.htm";
 
     /**
      * 获取评论
@@ -43,7 +45,10 @@ public class HfCommentReq {
 
         String id = resource.getId();
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("sort", "desc");
         String commentInfoBody = HttpRequest.get(String.format(COMMENTS_HF_API, id, page))
+                .queryParams(params)
                 .cookie(SdkCommon.HF_COOKIE)
                 .executeAsStr();
         Document doc = Jsoup.parse(commentInfoBody);

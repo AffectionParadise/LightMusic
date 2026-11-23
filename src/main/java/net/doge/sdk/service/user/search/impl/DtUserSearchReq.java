@@ -9,11 +9,12 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DtUserSearchReq {
     private static DtUserSearchReq instance;
@@ -27,7 +28,7 @@ public class DtUserSearchReq {
     }
 
     // 关键词搜索用户 API (堆糖)
-    private final String SEARCH_USER_DT_API = "https://www.duitang.com/napi/people/list/by_search/?kw=%s&start=%s&limit=%s&type=people&_type=&_=%s";
+    private final String SEARCH_USER_DT_API = "https://www.duitang.com/napi/people/list/by_search/";
 
     /**
      * 根据关键词获取用户
@@ -36,9 +37,15 @@ public class DtUserSearchReq {
         List<NetUserInfo> r = new LinkedList<>();
         int t = 0;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String userInfoBody = HttpRequest.get(String.format(SEARCH_USER_DT_API, encodedKeyword, (page - 1) * limit, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new HashMap<>();
+        params.put("kw", keyword);
+        params.put("start", (page - 1) * limit);
+        params.put("limit", limit);
+        params.put("type", "people");
+        params.put("_type", "");
+        params.put("_", System.currentTimeMillis());
+        String userInfoBody = HttpRequest.get(SEARCH_USER_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");

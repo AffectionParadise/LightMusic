@@ -11,11 +11,12 @@ import net.doge.util.core.http.constant.Header;
 import net.doge.util.core.http.constant.Method;
 import net.doge.util.core.log.LogUtil;
 import net.doge.util.core.net.UrlUtil;
+import okhttp3.HttpUrl;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class QqovoKgTrackReq {
     private static QqovoKgTrackReq instance;
@@ -32,7 +33,7 @@ public class QqovoKgTrackReq {
     // 歌曲 URL 获取 API (酷狗)
     // https://github.com/CharlesPikachu/musicdl/blob/master/musicdl/modules/sources/kugou.py
     private final String AUTH_API = "https://qqovo.top/api/session/bootstrap";
-    private final String SONG_URL_KG_API = "https://qqovo.top/api/meting?server=kugou&type=url&id=%s&quality=%s";
+    private final String SONG_URL_KG_API = "https://qqovo.top/api/meting";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -46,29 +47,23 @@ public class QqovoKgTrackReq {
     }
 
     // 构造 Header
-    private Map<String, String> buildHeaders(String url, String apiSignKey, Map<String, String> baseHeaders) {
-        try {
-            URI uri = new URI(url);
-            String path = uri.getPath();
-            String query = uri.getQuery();
+    private Map<String, String> buildHeaders(HttpUrl url, String apiSignKey, Map<String, String> baseHeaders) {
+        URI uri = url.uri();
+        String path = uri.getPath();
+        String query = uri.getQuery();
 
-            String sortedQuery = UrlUtil.sortQuery(query);
-            String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
-            String nonce = RandomUtil.randomUuid();
+        String sortedQuery = UrlUtil.sortQuery(query);
+        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
+        String nonce = RandomUtil.randomUuid();
 
-            String payload = String.join("\n", Method.GET.toString(), path, sortedQuery, "", timestamp, nonce);
-            String signature = CryptoUtil.hmacSha256Base64Url(payload, apiSignKey);
+        String payload = String.join("\n", Method.GET.toString(), path, sortedQuery, "", timestamp, nonce);
+        String signature = CryptoUtil.hmacSha256Base64Url(payload, apiSignKey);
 
-            Map<String, String> headers = new HashMap<>(baseHeaders);
-            headers.put("X-OM-Ts", timestamp);
-            headers.put("X-OM-Nonce", nonce);
-            headers.put("X-OM-Sign", signature);
-
-            return headers;
-        } catch (URISyntaxException e) {
-            LogUtil.error(e);
-            return null;
-        }
+        Map<String, String> headers = new HashMap<>(baseHeaders);
+        headers.put("X-OM-Ts", timestamp);
+        headers.put("X-OM-Nonce", nonce);
+        headers.put("X-OM-Sign", signature);
+        return headers;
     }
 
     /**
@@ -94,9 +89,14 @@ public class QqovoKgTrackReq {
             JSONObject authJson = JSONObject.parseObject(authBody);
             String apiSignKey = authJson.getString("apiSignKey");
             // 获取 url
-            String url = String.format(SONG_URL_KG_API, hash, qualityMap.get(quality));
-            String songBody = session.get(url)
-                    .headers(buildHeaders(url, apiSignKey, baseHeaders))
+            Map<String, Object> params = new TreeMap<>();
+            params.put("server", "kugou");
+            params.put("type", "url");
+            params.put("id", hash);
+            params.put("quality", qualityMap.get(quality));
+            HttpRequest songRequest = session.get(SONG_URL_KG_API)
+                    .queryParams(params);
+            String songBody = songRequest.headers(buildHeaders(songRequest.url(), apiSignKey, baseHeaders))
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);
             String trackUrl = urlJson.getString("url");

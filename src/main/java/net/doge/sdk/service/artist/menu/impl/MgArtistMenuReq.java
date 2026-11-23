@@ -11,8 +11,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgArtistMenuReq {
     private static MgArtistMenuReq instance;
@@ -27,7 +29,7 @@ public class MgArtistMenuReq {
 
     // 歌手专辑 API (咪咕)
 //    private final String ARTIST_ALBUMS_MG_API = "http://music.migu.cn/v3/music/artist/%s/album?page=%s";
-    private final String ARTIST_ALBUMS_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer/album/v1.0?singerId=%s&pageNo=%s";
+    private final String ARTIST_ALBUMS_MG_API = "http://app.c.nf.migu.cn/pc/bmw/singer/album/v1.0";
 
     /**
      * 根据歌手 id 获取里面专辑的粗略信息，分页，返回 NetAlbumInfo
@@ -71,7 +73,11 @@ public class MgArtistMenuReq {
 //            res.add(albumInfo);
 //        }
 
-        String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_MG_API, id, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("singerId", id);
+        params.put("pageNo", page);
+        String albumInfoBody = HttpRequest.get(ARTIST_ALBUMS_MG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(albumInfoBody).getJSONObject("data");
         // 根据是否返回下一页 url 判断

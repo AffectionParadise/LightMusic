@@ -7,6 +7,9 @@ import net.doge.entity.service.NetMvInfo;
 import net.doge.util.core.array.ArrayUtil;
 import net.doge.util.core.http.HttpRequest;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class FsMvUrlReq {
     private static FsMvUrlReq instance;
 
@@ -19,14 +22,17 @@ public class FsMvUrlReq {
     }
 
     // MV 视频链接获取 API (5sing)
-    private final String MV_URL_FS_API = "http://service.5sing.kugou.com/mv/play?mvId=%s";
+    private final String MV_URL_FS_API = "http://service.5sing.kugou.com/mv/play";
 
     /**
      * 根据 MV id 获取 MV 视频链接
      */
     public String fetchMvUrl(NetMvInfo mvInfo, boolean forDownload) {
         String id = mvInfo.getId();
-        String mvBody = HttpRequest.get(String.format(MV_URL_FS_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("mvId", id);
+        String mvBody = HttpRequest.get(MV_URL_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONArray urlArray = JSONObject.parseObject(mvBody).getJSONArray("data");
         String quality;

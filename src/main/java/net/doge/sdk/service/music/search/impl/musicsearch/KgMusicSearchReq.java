@@ -11,12 +11,8 @@ import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class KgMusicSearchReq {
     private static KgMusicSearchReq instance;
@@ -31,7 +27,7 @@ public class KgMusicSearchReq {
 
     // 关键词搜索歌曲 API (酷狗)
 //    private final String SEARCH_MUSIC_KG_API = "http://mobilecdn.kugou.com/api/v3/search/song?format=json&keyword=%s&page=%s&pagesize=%s&showtype=1";
-    private final String SEARCH_MUSIC_KG_API = "https://songsearch.kugou.com/song_search_v2?keyword=%s&page=%s&pagesize=%s&userid=0&clientver=&platform=WebFilter&filter=2&iscorrection=1&privilege_filter=0";
+    private final String SEARCH_MUSIC_KG_API = "https://songsearch.kugou.com/song_search_v2";
     //    private final String SEARCH_MUSIC_KG_API = "/v2/search/song";
     // 关键词搜索歌曲 API (搜歌词) (酷狗)
 //    private final String SEARCH_MUSIC_BY_LYRIC_KG_API = "http://mobileservice.kugou.com/api/v3/lyric/search?keyword=%s&page=%s&pagesize=%s";
@@ -45,7 +41,6 @@ public class KgMusicSearchReq {
         int t;
 
         // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
 //            String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
 //                    .executeAsync()
 //                    .body();
@@ -84,7 +79,18 @@ public class KgMusicSearchReq {
 //                r.add(musicInfo);
 //            }
 
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_KG_API, encodedKeyword, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("page", page);
+        params.put("pagesize", limit);
+        params.put("userid", 0);
+        params.put("clientver", "");
+        params.put("platform", "WebFilter");
+        params.put("filter", 2);
+        params.put("iscorrection", 1);
+        params.put("privilege_filter", 0);
+        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("data");

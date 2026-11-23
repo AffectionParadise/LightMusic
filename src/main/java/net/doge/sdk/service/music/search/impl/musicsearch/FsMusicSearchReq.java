@@ -8,11 +8,12 @@ import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FsMusicSearchReq {
     private static FsMusicSearchReq instance;
@@ -26,7 +27,7 @@ public class FsMusicSearchReq {
     }
 
     // 关键词搜索歌曲 API (5sing)
-    private final String SEARCH_MUSIC_FS_API = "http://search.5sing.kugou.com/home/json?keyword=%s&sort=1&page=%s&filter=0&type=0";
+    private final String SEARCH_MUSIC_FS_API = "http://search.5sing.kugou.com/home/json";
 
     /**
      * 根据关键词获取歌曲
@@ -35,9 +36,14 @@ public class FsMusicSearchReq {
         List<NetMusicInfo> r = new LinkedList<>();
         int t = 0;
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_FS_API, encodedKeyword, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("keyword", keyword);
+        params.put("sort", 1);
+        params.put("page", page);
+        params.put("filter", 0);
+        params.put("type", 0);
+        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_FS_API)
+                .queryParams(params)
                 .executeAsStr();
         // 关键词过长会返回空 Body
         if (StringUtil.notEmpty(musicInfoBody)) {

@@ -12,8 +12,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.HttpResponse;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class KwRecommendPlaylistReq {
     private static KwRecommendPlaylistReq instance;
@@ -27,9 +29,9 @@ public class KwRecommendPlaylistReq {
     }
 
     // 推荐歌单 API (酷我)
-    private final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist?loginUid=0&httpsStatus=1";
+    private final String RECOMMEND_PLAYLIST_KW_API = "https://kuwo.cn/api/www/rcm/index/playlist";
     // 推荐歌单(最新) API (酷我)
-    private final String NEW_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList?pn=%s&rn=%s&order=new";
+    private final String NEW_PLAYLIST_KW_API = "http://wapi.kuwo.cn/api/pc/classify/playlist/getRcmPlayList";
 
     /**
      * 推荐歌单(程序分页)
@@ -38,7 +40,12 @@ public class KwRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("loginUid", 0);
+        params.put("httpsStatus", 1);
+        HttpResponse resp = SdkCommon.kwRequest(RECOMMEND_PLAYLIST_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String playlistInfoBody = resp.body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
@@ -80,7 +87,13 @@ public class KwRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t = 0;
 
-        HttpResponse resp = HttpRequest.get(String.format(NEW_PLAYLIST_KW_API, page, limit)).execute();
+        Map<String, Object> params = new HashMap<>();
+        params.put("pn", page);
+        params.put("rn", limit);
+        params.put("order", "new");
+        HttpResponse resp = HttpRequest.get(NEW_PLAYLIST_KW_API)
+                .queryParams(params)
+                .execute();
         if (resp.isSuccessful()) {
             String playlistInfoBody = resp.body();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);

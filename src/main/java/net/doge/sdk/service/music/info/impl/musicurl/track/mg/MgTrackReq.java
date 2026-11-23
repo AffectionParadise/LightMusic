@@ -22,9 +22,9 @@ public class MgTrackReq {
     }
 
     // 歌曲 URL 获取 API (咪咕)
-    private final String SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/strategy/pc/listen/v1.0?scene=&netType=01&resourceType=2&copyrightId=%s&contentId=%s&toneFlag=%s";
+    private final String SONG_URL_MG_API = "https://app.c.nf.migu.cn/MIGUM3.0/strategy/pc/listen/v1.0";
     // 歌曲信息 API (咪咕)
-    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do?copyrightId=%s&resourceType=2";
+    private final String SONG_DETAIL_MG_API = "https://c.musicapp.migu.cn/MIGUM2.0/v1.0/content/resourceinfo.do";
 
     private Map<String, String> qualityMap = new HashMap<>();
 
@@ -44,12 +44,24 @@ public class MgTrackReq {
      */
     public String getTrackUrl(String id, String quality) {
         // 先根据 id 获取 contentId
-        String songBody = HttpRequest.get(String.format(SONG_DETAIL_MG_API, id))
+        Map<String, Object> songDetailParams = new HashMap<>();
+        songDetailParams.put("copyrightId", id);
+        songDetailParams.put("resourceType", 2);
+        String songBody = HttpRequest.get(SONG_DETAIL_MG_API)
+                .queryParams(songDetailParams)
                 .executeAsStr();
         JSONObject songJson = JSONObject.parseObject(songBody).getJSONArray("resource").getJSONObject(0);
         String contentId = songJson.getString("contentId");
 
-        String urlBody = HttpRequest.get(String.format(SONG_URL_MG_API, id, contentId, qualityMap.get(quality)))
+        Map<String, Object> params = new HashMap<>();
+        params.put("scene", "");
+        params.put("netType", "01");
+        params.put("resourceType", 2);
+        params.put("copyrightId", id);
+        params.put("contentId", contentId);
+        params.put("toneFlag", qualityMap.get(quality));
+        String urlBody = HttpRequest.get(SONG_URL_MG_API)
+                .queryParams(params)
                 .header("aversionid", "")
                 .header("token", "")
                 .header("channel", "0146832")

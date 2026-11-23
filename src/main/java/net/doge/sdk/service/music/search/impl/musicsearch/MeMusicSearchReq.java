@@ -9,11 +9,12 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 import net.doge.util.core.text.HtmlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeMusicSearchReq {
     private static MeMusicSearchReq instance;
@@ -27,7 +28,7 @@ public class MeMusicSearchReq {
     }
 
     // 关键词搜索节目 API (猫耳)
-    private final String SEARCH_PROGRAM_ME_API = "https://www.missevan.com/sound/getsearch?cid=%s&s=%s&p=%s&type=3&page_size=%s";
+    private final String SEARCH_PROGRAM_ME_API = "https://www.missevan.com/sound/getsearch";
 
     /**
      * 根据关键词获取节目
@@ -37,11 +38,16 @@ public class MeMusicSearchReq {
         int t = 0;
         String[] s = Tags.programSearchTags.get(subType);
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
         String param = s[TagModule.PROGRAM_SEARCH_ME];
         if (StringUtil.notEmpty(param)) {
-            String musicInfoBody = HttpRequest.get(String.format(SEARCH_PROGRAM_ME_API, param.trim(), encodedKeyword, page, limit))
+            Map<String, Object> params = new HashMap<>();
+            params.put("cid", param.trim());
+            params.put("s", keyword);
+            params.put("p", page);
+            params.put("type", 3);
+            params.put("page_size", limit);
+            String musicInfoBody = HttpRequest.get(SEARCH_PROGRAM_ME_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
             JSONObject data = musicInfoJson.getJSONObject("info");

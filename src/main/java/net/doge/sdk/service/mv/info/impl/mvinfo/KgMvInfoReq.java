@@ -7,6 +7,8 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KgMvInfoReq {
     private static KgMvInfoReq instance;
@@ -20,14 +22,19 @@ public class KgMvInfoReq {
     }
 
     // MV 信息 API (酷狗)
-    private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash=%s";
+    private final String MV_DETAIL_KG_API = "http://mobilecdnbj.kugou.com/api/v3/mv/detail";
 
     /**
      * 根据 MV id 补全 MV 基本信息
      */
     public void fillMvDetail(NetMvInfo mvInfo) {
         String mvId = mvInfo.getId();
-        String mvBody = HttpRequest.get(String.format(MV_DETAIL_KG_API, mvId))
+        Map<String, Object> params = new HashMap<>();
+        params.put("area_code", 1);
+        params.put("plat", 0);
+        params.put("mvhash", mvId);
+        String mvBody = HttpRequest.get(MV_DETAIL_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject mvJson = JSONObject.parseObject(mvBody);
         JSONObject data = mvJson.getJSONObject("data").getJSONObject("info");

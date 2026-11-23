@@ -14,8 +14,10 @@ import net.doge.util.core.json.JsonUtil;
 import net.doge.util.media.DurationUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgAlbumInfoReq {
     private static MgAlbumInfoReq instance;
@@ -30,9 +32,16 @@ public class MgAlbumInfoReq {
 
     // 专辑信息 API (咪咕)
 //    private final String ALBUM_DETAIL_MG_API = "http://music.migu.cn/v3/music/album/%s?page=%s";
-    private final String ALBUM_DETAIL_MG_API = "https://app.c.nf.migu.cn/v1.0/content/resourceinfo.do?needSimple=01&resourceType=5&resourceId=%s";
-    // 专辑歌曲 API (咪咕)
-    private final String ALBUM_SONGS_MG_API = "https://app.c.nf.migu.cn/v1.0/content/resourceinfo.do?needSimple=01&resourceType=5&resourceId=%s";
+    private final String ALBUM_DETAIL_MG_API = "https://app.c.nf.migu.cn/v1.0/content/resourceinfo.do";
+
+    private HttpRequest buildAlbumInfoRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("needSimple", "01");
+        params.put("resourceType", 5);
+        params.put("resourceId", id);
+        return HttpRequest.get(ALBUM_DETAIL_MG_API)
+                .queryParams(params);
+    }
 
     /**
      * 根据专辑 id 获取专辑
@@ -74,7 +83,7 @@ public class MgAlbumInfoReq {
 //                    res.add(albumInfo);
 //                }
 
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(albumInfoBody).getJSONArray("resource").getJSONObject(0);
 
@@ -121,7 +130,7 @@ public class MgAlbumInfoReq {
 //            GlobalExecutors.imageExecutor.execute(() -> albumInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
 //            albumInfo.setDescription(description);
 
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_DETAIL_MG_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(albumInfoBody).getJSONArray("resource").getJSONObject(0);
 
@@ -188,7 +197,7 @@ public class MgAlbumInfoReq {
 //                res.add(musicInfo);
 //            }
 
-        String albumInfoBody = HttpRequest.get(String.format(ALBUM_SONGS_MG_API, id))
+        String albumInfoBody = buildAlbumInfoRequest(id)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONArray("resource").getJSONObject(0);

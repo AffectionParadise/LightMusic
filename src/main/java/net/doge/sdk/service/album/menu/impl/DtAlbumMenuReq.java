@@ -5,10 +5,11 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class DtAlbumMenuReq {
     private static DtAlbumMenuReq instance;
@@ -22,7 +23,7 @@ public class DtAlbumMenuReq {
     }
 
     // 获取专辑照片 API (堆糖)
-    private final String GET_ALBUMS_IMG_DT_API = "https://www.duitang.com/napi/vienna/blog/by_album/?album_id=%s&after_id=%s&limit=%s&_=%s";
+    private final String GET_ALBUMS_IMG_DT_API = "https://www.duitang.com/napi/vienna/blog/by_album/";
 
     /**
      * 获取专辑照片链接
@@ -30,10 +31,15 @@ public class DtAlbumMenuReq {
     public CommonResult<String> getAlbumImgUrls(NetAlbumInfo albumInfo, int page, int limit, String cursor) {
         String id = albumInfo.getId();
         List<String> imgUrls = new LinkedList<>();
-        cursor = UrlUtil.encodeAll(cursor);
         int total;
 
-        String imgInfoBody = HttpRequest.get(String.format(GET_ALBUMS_IMG_DT_API, id, cursor, limit, System.currentTimeMillis()))
+        Map<String, Object> params = new HashMap<>();
+        params.put("album_id", id);
+        params.put("after_id", cursor);
+        params.put("limit", limit);
+        params.put("_", System.currentTimeMillis());
+        String imgInfoBody = HttpRequest.get(GET_ALBUMS_IMG_DT_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject data = JSONObject.parseObject(imgInfoBody).getJSONObject("data");
         JSONArray imgs = data.getJSONArray("object_list");

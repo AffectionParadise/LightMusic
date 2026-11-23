@@ -5,7 +5,6 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.http.constant.Method;
-import net.doge.util.core.net.UrlUtil;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -45,8 +44,8 @@ public class FsReqBuilder {
         params.put("clienttime", ct);
         // 签名
         params.put("signature", createSignature(params, data));
-        url += "?" + UrlUtil.buildQuery(params);
         return HttpRequest.createRequest(method, url)
+                .queryParams(params)
                 .header("dfid", dfid)
                 .header("mid", mid)
                 .header("clienttime", ct)

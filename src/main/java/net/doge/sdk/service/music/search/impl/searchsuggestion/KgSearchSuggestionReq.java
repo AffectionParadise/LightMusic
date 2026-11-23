@@ -7,12 +7,8 @@ import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
-import net.doge.util.core.net.UrlUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class KgSearchSuggestionReq {
     private static KgSearchSuggestionReq instance;
@@ -26,7 +22,7 @@ public class KgSearchSuggestionReq {
     }
 
     // 搜索建议 API (酷狗)
-    private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php?cmd=302&keyword=%s";
+    private final String SEARCH_SUGGESTION_KG_API = "http://msearchcdn.kugou.com/new/app/i/search.php";
     // 搜索建议 V2 API (酷狗)
     private final String SEARCH_SUGGESTION_KG_API_V2 = "/v2/getSearchTip";
 
@@ -38,9 +34,11 @@ public class KgSearchSuggestionReq {
     public List<String> getSearchSuggestion(String keyword) {
         List<String> r = new LinkedList<>();
 
-        // 先对关键词编码，避免特殊符号的干扰
-        String encodedKeyword = UrlUtil.encodeAll(keyword);
-        String searchSuggestionBody = HttpRequest.get(String.format(SEARCH_SUGGESTION_KG_API, encodedKeyword))
+        Map<String, Object> params = new HashMap<>();
+        params.put("cmd", 302);
+        params.put("keyword", keyword);
+        String searchSuggestionBody = HttpRequest.get(SEARCH_SUGGESTION_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
         JSONArray data = searchSuggestionJson.getJSONArray("data");

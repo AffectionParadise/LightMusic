@@ -16,10 +16,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class KgArtistMenuReq {
     private static KgArtistMenuReq instance;
@@ -33,7 +30,7 @@ public class KgArtistMenuReq {
     }
 
     // 歌手专辑 API (酷狗)
-    private final String ARTIST_ALBUMS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/album?singerid=%s&page=%s&pagesize=%s";
+    private final String ARTIST_ALBUMS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/album";
     //    private final String ARTIST_ALBUMS_KG_API = "/kmr/v1/author/albums";
     // 歌手 MV API (酷狗)
 //    private final String ARTIST_MVS_KG_API = "http://mobilecdnbj.kugou.com/api/v3/singer/mv?&singerid=%s&page=%s&pagesize=%s";
@@ -49,7 +46,12 @@ public class KgArtistMenuReq {
         int total;
 
         String id = artistInfo.getId();
-        String albumInfoBody = HttpRequest.get(String.format(ARTIST_ALBUMS_KG_API, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("singerid", id);
+        params.put("page", page);
+        params.put("pagesize", limit);
+        String albumInfoBody = HttpRequest.get(ARTIST_ALBUMS_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONObject data = albumInfoJson.getJSONObject("data");

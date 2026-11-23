@@ -18,6 +18,7 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.text.LangUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,11 @@ public class KgRecommendPlaylistReq {
     }
 
     // 推荐歌单 API (每页固定 30 条)(酷狗)
-    private final String RECOMMEND_PLAYLIST_KG_API = "http://m.kugou.com/plist/index?json=true&page=%s";
+    private final String RECOMMEND_PLAYLIST_KG_API = "http://m.kugou.com/plist/index";
     // 推荐分类歌单(推荐) API (酷狗)
-    private final String RECOMMEND_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=5&c=%s&p=%s";
+    private final String RECOMMEND_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // 推荐分类歌单(最新) API (酷狗)
-    private final String NEW_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial?is_ajax=1&cdn=cdn&t=7&c=%s&p=%s";
+    private final String NEW_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // Top 分类歌单 API (酷狗)
     private final String TOP_PLAYLIST_KG_API = "/specialrec.service/special_recommend";
 
@@ -49,7 +50,11 @@ public class KgRecommendPlaylistReq {
         List<NetPlaylistInfo> r = new LinkedList<>();
         int t;
 
-        String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_PLAYLIST_KG_API, page))
+        Map<String, Object> params = new HashMap<>();
+        params.put("json", true);
+        params.put("page", page);
+        String playlistInfoBody = HttpRequest.get(RECOMMEND_PLAYLIST_KG_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONObject data = playlistInfoJson.getJSONObject("plist").getJSONObject("list");
@@ -93,7 +98,14 @@ public class KgRecommendPlaylistReq {
 
         String param = s[TagModule.RECOMMEND_CAT_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("is_ajax", 1);
+            params.put("cdn", "cdn");
+            params.put("t", 5);
+            params.put("c", param.trim());
+            params.put("p", page);
+            String playlistInfoBody = HttpRequest.get(RECOMMEND_CAT_PLAYLIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;
@@ -135,7 +147,14 @@ public class KgRecommendPlaylistReq {
 
         String param = s[TagModule.RECOMMEND_CAT_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
-            String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, param.trim(), page))
+            Map<String, Object> params = new HashMap<>();
+            params.put("is_ajax", 1);
+            params.put("cdn", "cdn");
+            params.put("t", 7);
+            params.put("c", param.trim());
+            params.put("p", page);
+            String playlistInfoBody = HttpRequest.get(NEW_CAT_PLAYLIST_KG_API)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             t = limit * 100;

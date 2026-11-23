@@ -13,8 +13,10 @@ import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.media.DurationUtil;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MgRankInfoReq {
     private static MgRankInfoReq instance;
@@ -28,14 +30,14 @@ public class MgRankInfoReq {
     }
 
     // 榜单信息 API (咪咕)
-    private final String RANK_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do?columnId=%s";
+    private final String RANK_DETAIL_MG_API = "https://app.c.nf.migu.cn/MIGUM2.0/v1.0/content/querycontentbyId.do";
 
     /**
      * 根据榜单 id 补全榜单信息(包括封面图)
      */
     public void fillRankInfo(NetRankInfo rankInfo) {
         String id = rankInfo.getId();
-        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_MG_API, id))
+        String rankInfoBody = buildRankDetailRequest(id)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("columnInfo");
@@ -62,7 +64,7 @@ public class MgRankInfoReq {
         List<NetMusicInfo> res = new LinkedList<>();
         int total;
 
-        String rankInfoBody = HttpRequest.get(String.format(RANK_DETAIL_MG_API, id))
+        String rankInfoBody = buildRankDetailRequest(id)
                 .executeAsStr();
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("columnInfo");
@@ -106,5 +108,12 @@ public class MgRankInfoReq {
         }
 
         return new CommonResult<>(res, total);
+    }
+
+    private HttpRequest buildRankDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("columnId", id);
+        return HttpRequest.get(RANK_DETAIL_MG_API)
+                .queryParams(params);
     }
 }

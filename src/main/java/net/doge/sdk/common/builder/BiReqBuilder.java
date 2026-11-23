@@ -5,7 +5,6 @@ import net.doge.sdk.common.SdkCommon;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.crypto.CryptoUtil;
 import net.doge.util.core.http.HttpRequest;
-import net.doge.util.core.net.UrlUtil;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,11 +57,12 @@ public class BiReqBuilder {
         String imgKey = RegexUtil.getGroup1(fileNameExp, imgUrl);
         String subKey = RegexUtil.getGroup1(fileNameExp, subUrl);
 
-        String query = UrlUtil.buildQuery(params);
+        HttpRequest request = HttpRequest.get(baseUrl)
+                .queryParams(params);
+        String query = request.url().encodedQuery();
         String mixinKey = getMixinKey(imgKey, subKey);
         String wbiSign = CryptoUtil.md5Hex(query + mixinKey);
-        String url = baseUrl + "?" + query + "&w_rid=" + wbiSign;
-        return HttpRequest.get(url)
+        return request.queryParam("w_rid", wbiSign)
                 .cookie(SdkCommon.BI_COOKIE);
     }
 }

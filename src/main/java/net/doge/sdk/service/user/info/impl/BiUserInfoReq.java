@@ -13,8 +13,10 @@ import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class BiUserInfoReq {
     private static BiUserInfoReq instance;
@@ -28,16 +30,16 @@ public class BiUserInfoReq {
     }
 
     // 用户信息 API (哔哩哔哩)
-    private final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card?mid=%s&photo=true";
+    private final String USER_DETAIL_BI_API = "https://api.bilibili.com/x/web-interface/card";
     // 用户音频 API (哔哩哔哩)
-    private final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper?order=%s&uid=%s&pn=%s&ps=%s";
+    private final String USER_AUDIO_BI_API = "https://api.bilibili.com/audio/music-service/web/song/upper";
 
     /**
      * 根据用户 id 补全用户信息(包括封面图、描述)
      */
     public void fillUserInfo(NetUserInfo userInfo) {
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, id))
+        String userInfoBody = buildUserDetailRequest(id)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -69,7 +71,13 @@ public class BiUserInfoReq {
         int total;
 
         String id = userInfo.getId();
-        String userInfoBody = HttpRequest.get(String.format(USER_AUDIO_BI_API, recordType + 1, id, page, limit))
+        Map<String, Object> params = new HashMap<>();
+        params.put("order", recordType + 1);
+        params.put("uid", id);
+        params.put("pn", page);
+        params.put("ps", limit);
+        String userInfoBody = HttpRequest.get(USER_AUDIO_BI_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
         JSONObject data = userInfoJson.getJSONObject("data");
@@ -108,7 +116,7 @@ public class BiUserInfoReq {
         List<NetUserInfo> res = new LinkedList<>();
         Integer t = 1;
 
-        String userInfoBody = HttpRequest.get(String.format(USER_DETAIL_BI_API, id))
+        String userInfoBody = buildUserDetailRequest(id)
                 .cookie(SdkCommon.BI_COOKIE)
                 .executeAsStr();
         JSONObject userInfoJson = JSONObject.parseObject(userInfoBody);
@@ -141,5 +149,13 @@ public class BiUserInfoReq {
         res.add(userInfo);
 
         return new CommonResult<>(res, t);
+    }
+
+    private HttpRequest buildUserDetailRequest(String id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("mid", id);
+        params.put("photo", true);
+        return HttpRequest.get(USER_DETAIL_BI_API)
+                .queryParams(params);
     }
 }

@@ -11,8 +11,10 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class MeMusicMenuReq {
     private static MeMusicMenuReq instance;
@@ -26,9 +28,9 @@ public class MeMusicMenuReq {
     }
 
     // 相似歌曲 API (猫耳)
-    private final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
+    private final String SIMILAR_SONG_ME_API = "https://www.missevan.com/sound/getsoundlike";
     // 歌曲推荐电台 API (猫耳)
-    private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike?sound_id=%s&type=15";
+    private final String SONG_REC_RADIO_ME_API = "https://www.missevan.com/sound/getsoundlike";
 
     /**
      * 获取相似歌曲
@@ -40,7 +42,11 @@ public class MeMusicMenuReq {
         int t;
 
         String id = netMusicInfo.getId();
-        String musicInfoBody = HttpRequest.get(String.format(SIMILAR_SONG_ME_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("sound_id", id);
+        params.put("type", 15);
+        String musicInfoBody = HttpRequest.get(SIMILAR_SONG_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONArray songArray = musicInfoJson.getJSONObject("info").getJSONArray("sounds");
@@ -72,7 +78,11 @@ public class MeMusicMenuReq {
         int t;
 
         String id = musicInfo.getId();
-        String radioInfoBody = HttpRequest.get(String.format(SONG_REC_RADIO_ME_API, id))
+        Map<String, Object> params = new HashMap<>();
+        params.put("sound_id", id);
+        params.put("type", 15);
+        String radioInfoBody = HttpRequest.get(SONG_REC_RADIO_ME_API)
+                .queryParams(params)
                 .executeAsStr();
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("info");

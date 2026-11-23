@@ -10,7 +10,9 @@ import net.doge.util.core.http.HttpRequest;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class KwLyricReq {
     private static KwLyricReq instance;
@@ -26,7 +28,7 @@ public class KwLyricReq {
     // 歌词 API (酷我)
 //    private final String LYRIC_KW_API = "http://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=%s&httpsStatus=1";
 //    private final String LYRIC_KW_API = "http://newlyric.kuwo.cn/newlyric.lrc?";
-    private final String LYRIC_KW_API = "http://mlyric.kuwo.cn/mobi.s?f=web&type=lyric&lrcx=1&rid=%s&encode=utf8";
+    private final String LYRIC_KW_API = "http://mlyric.kuwo.cn/mobi.s";
 
     public void fillLyric(NetMusicInfo musicInfo) {
         String id = musicInfo.getId();
@@ -42,7 +44,14 @@ public class KwLyricReq {
 //        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
 //                .executeAsBytes();
         // 新接口参数不需要加密，且使用 utf8 解码歌词
-        byte[] bodyBytes = HttpRequest.get(String.format(LYRIC_KW_API, id))
+        Map<String, Object> lyricParams = new HashMap<>();
+        lyricParams.put("f", "web");
+        lyricParams.put("type", "lyric");
+        lyricParams.put("lrcx", 1);
+        lyricParams.put("rid", id);
+        lyricParams.put("encode", "utf8");
+        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API)
+                .queryParams(lyricParams)
                 .executeAsBytes();
         if (!"tp=content".equalsIgnoreCase(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;
