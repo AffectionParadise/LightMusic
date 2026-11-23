@@ -97,13 +97,13 @@ public class XmUserMenuReq {
             List<NetRadioInfo> r = new LinkedList<>();
             int t;
 
-            Map<String, Object> userSubRadioParams = new HashMap<>();
-            userSubRadioParams.put("uid", id);
-            userSubRadioParams.put("page", page);
-            userSubRadioParams.put("pageSize", limit);
-            userSubRadioParams.put("keyWord", "");
+            Map<String, Object> params = new HashMap<>();
+            params.put("uid", id);
+            params.put("page", page);
+            params.put("pageSize", limit);
+            params.put("keyWord", "");
             String radioInfoBody = HttpRequest.get(USER_SUB_RADIO_XM_API)
-                    .queryParams(userSubRadioParams)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
             JSONObject data = radioInfoJson.getJSONObject("data");

@@ -63,8 +63,8 @@ public class KwArtistMenuReq {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
                 String albumId = albumJson.getString("albumid");
-                String albumName = HtmlUtil.escapeHtml(albumJson.getString("album"));
-                String artist = HtmlUtil.escapeHtml(albumJson.getString("artist")).replace("&", "、");
+                String albumName = HtmlUtil.stripHtml(albumJson.getString("album"));
+                String artist = HtmlUtil.stripHtml(albumJson.getString("artist")).replace("&", "、");
                 String artistId = albumJson.getString("artistid");
                 String publishTime = albumJson.getString("releaseDate");
                 String coverImgThumbUrl = albumJson.getString("pic");

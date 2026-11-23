@@ -55,7 +55,7 @@ public class FsUserSearchReq {
                 JSONObject userJson = userArray.getJSONObject(i);
 
                 String userId = userJson.getString("id");
-                String name = HtmlUtil.escapeHtml(userJson.getString("nickName"));
+                String name = HtmlUtil.stripHtml(userJson.getString("nickName"));
                 int sex = userJson.getIntValue("sex");
                 String gender = sex == 0 ? "♂ 男" : sex == 1 ? "♀ 女" : "保密";
                 String avatarThumbUrl = userJson.getString("pictureUrl");

@@ -97,12 +97,12 @@ public class HkUserMenuReq {
             List<NetMvInfo> r = new LinkedList<>();
             int t;
 
-            Map<String, Object> userSmallVideoParams = new HashMap<>();
-            userSmallVideoParams.put("app_id", id);
-            userSmallVideoParams.put("rn", 20);
-            userSmallVideoParams.put("video_type", "haokan|tabhubVideo");
+            Map<String, Object> params = new HashMap<>();
+            params.put("app_id", id);
+            params.put("rn", 20);
+            params.put("video_type", "haokan|tabhubVideo");
             String mvInfoBody = HttpRequest.get(USER_SMALL_VIDEO_HK_API)
-                    .queryParams(userSmallVideoParams)
+                    .queryParams(params)
                     .cookie(SdkCommon.HK_COOKIE)
                     .executeAsStr();
             JSONObject data = JSONObject.parseObject(mvInfoBody).getJSONObject("data");

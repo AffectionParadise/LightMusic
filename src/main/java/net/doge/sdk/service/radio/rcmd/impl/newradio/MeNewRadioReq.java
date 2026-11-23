@@ -51,7 +51,7 @@ public class MeNewRadioReq {
             String radioName = radioJson.getString("name");
             String dj = radioJson.getString("author");
             String coverImgThumbUrl = "https:" + radioJson.getString("cover");
-            String description = HtmlUtil.escapeHtml(radioJson.getString("abstract"));
+            String description = HtmlUtil.stripHtml(radioJson.getString("abstract"));
 
             NetRadioInfo radioInfo = new NetRadioInfo();
             radioInfo.setSource(NetResourceSource.ME);

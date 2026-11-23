@@ -57,8 +57,8 @@ public class KgMvSearchReq {
 
             String mvId = mvJson.getString("hash");
             // 酷狗返回的名称含有 HTML 标签，需要去除
-            String mvName = HtmlUtil.escapeHtml(mvJson.getString("filename"));
-            String artistName = HtmlUtil.escapeHtml(mvJson.getString("singername"));
+            String mvName = HtmlUtil.stripHtml(mvJson.getString("filename"));
+            String artistName = HtmlUtil.stripHtml(mvJson.getString("singername"));
             String creatorId = mvJson.getString("userid");
             Long playCount = mvJson.getLong("historyheat");
             Double duration = mvJson.getDouble("duration");

@@ -44,14 +44,14 @@ public class KwLyricReq {
 //        byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API + params)
 //                .executeAsBytes();
         // 新接口参数不需要加密，且使用 utf8 解码歌词
-        Map<String, Object> lyricParams = new HashMap<>();
-        lyricParams.put("f", "web");
-        lyricParams.put("type", "lyric");
-        lyricParams.put("lrcx", 1);
-        lyricParams.put("rid", id);
-        lyricParams.put("encode", "utf8");
+        Map<String, Object> params = new HashMap<>();
+        params.put("f", "web");
+        params.put("type", "lyric");
+        params.put("lrcx", 1);
+        params.put("rid", id);
+        params.put("encode", "utf8");
         byte[] bodyBytes = HttpRequest.get(LYRIC_KW_API)
-                .queryParams(lyricParams)
+                .queryParams(params)
                 .executeAsBytes();
         if (!"tp=content".equalsIgnoreCase(new String(bodyBytes, 0, 10))) return;
         int index = ArrayUtil.indexOf(bodyBytes, "\r\n\r\n".getBytes(StandardCharsets.UTF_8)) + 4;

@@ -85,18 +85,14 @@ public class HttpRequest {
     }
 
     public HttpRequest queryParam(String name, Object value) {
-        return queryParam(name, String.valueOf(value));
+        if (!(value instanceof Iterable<?>)) return queryParam(name, String.valueOf(value));
+        // 多个同名参数叠加传递
+        for (Object item : (Iterable<?>) value) queryParam(name, String.valueOf(item));
+        return this;
     }
 
     public HttpRequest queryParams(Map<String, Object> params) {
-        if (params != null) {
-            params.forEach((name, value) -> {
-                if (value instanceof Iterable<?>) {
-                    // 多个同名参数叠加传递
-                    for (Object item : (Iterable<?>) value) queryParam(name, item);
-                } else queryParam(name, value);
-            });
-        }
+        if (params != null) params.forEach(this::queryParam);
         return this;
     }
 

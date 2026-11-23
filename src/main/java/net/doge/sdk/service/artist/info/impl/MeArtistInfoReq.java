@@ -53,20 +53,20 @@ public class MeArtistInfoReq {
             JSONObject data = artistInfoJson.getJSONObject("info").getJSONObject("organization");
 
             String coverImgUrl = data.getString("avatar");
-            String intro = HtmlUtil.escapeHtml(data.getString("intro"));
-            String announcement = HtmlUtil.escapeHtml(data.getString("announcement"));
+            String intro = HtmlUtil.stripHtml(data.getString("intro"));
+            String announcement = HtmlUtil.stripHtml(data.getString("announcement"));
 
             if (!artistInfo.hasDescription()) artistInfo.setDescription(intro + "\n\n" + announcement);
 
             if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
             GlobalExecutors.imageExecutor.execute(() -> artistInfo.setCoverImg(SdkUtil.getImageFromUrl(coverImgUrl)));
         } else {
-            Map<String, Object> cvDetailParams = new HashMap<>();
-            cvDetailParams.put("cv_id", id);
-            cvDetailParams.put("page", 1);
-            cvDetailParams.put("page_size", 1);
+            Map<String, Object> params = new HashMap<>();
+            params.put("cv_id", id);
+            params.put("page", 1);
+            params.put("page_size", 1);
             String artistInfoBody = HttpRequest.get(CV_DETAIL_ME_API)
-                    .queryParams(cvDetailParams)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
             JSONObject data = artistInfoJson.getJSONObject("info");

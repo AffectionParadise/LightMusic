@@ -111,12 +111,12 @@ public class DbRadioInfoReq {
         boolean isGame = radioInfo.isGame();
         final int limit = isGame ? 24 : 30;
         if (isGame) {
-            Map<String, Object> getGameRadioImgParams = new HashMap<>();
-            getGameRadioImgParams.put("type", "all");
-            getGameRadioImgParams.put("start", (page - 1) * limit);
-            getGameRadioImgParams.put("sortby", "hot");
+            Map<String, Object> params = new HashMap<>();
+            params.put("type", "all");
+            params.put("start", (page - 1) * limit);
+            params.put("sortby", "hot");
             String imgInfoBody = HttpRequest.get(String.format(GET_GAME_RADIO_IMG_DB_API, id))
-                    .queryParams(getGameRadioImgParams)
+                    .queryParams(params)
                     .executeAsStr();
             Document doc = Jsoup.parse(imgInfoBody);
             Elements imgs = doc.select(".pholist ul img");

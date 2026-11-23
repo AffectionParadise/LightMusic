@@ -95,7 +95,7 @@ public class KwArtistInfoReq {
         JSONObject artistInfoJson = JSONObject.parseObject(artistInfoBody);
         JSONObject data = artistInfoJson.getJSONObject("data");
 
-        String description = HtmlUtil.escapeHtml(data.getString("info"));
+        String description = HtmlUtil.stripHtml(data.getString("info"));
         String coverImgUrl = data.getString("pic300");
 
         if (!artistInfo.hasCoverImgUrl()) artistInfo.setCoverImgUrl(coverImgUrl);
@@ -132,7 +132,7 @@ public class KwArtistInfoReq {
 
             String songId = songJson.getString("rid");
             // 酷我歌名中可能含有 HTML 标签，先去除
-            String name = HtmlUtil.escapeHtml(songJson.getString("name"));
+            String name = HtmlUtil.stripHtml(songJson.getString("name"));
             String artist = songJson.getString("artist").replace("&", "、");
             String artistId = songJson.getString("artistid");
             String albumName = songJson.getString("album");

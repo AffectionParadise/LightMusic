@@ -9063,7 +9063,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_RANK) l = rankCoverAndNameLabel;
             else if (si == TabIndex.NET_USER) l = userCoverAndNameLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemCoverAndNameLabel;
-            copyToClipboard(HtmlUtil.escapeHtml(l.getText()));
+            copyToClipboard(HtmlUtil.stripHtml(l.getText()));
         });
         copyDescTagMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -9075,7 +9075,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userTagLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemTagLabel;
             if (l == null || l.isTextEmpty()) return;
-            copyToClipboard(HtmlUtil.escapeHtml(l.getText()));
+            copyToClipboard(HtmlUtil.stripHtml(l.getText()));
         });
         copyDescMenuItem.addActionListener(e -> {
             CustomLabel l = null;
@@ -9089,7 +9089,7 @@ public class MainFrame extends JFrame {
             else if (si == TabIndex.NET_USER) l = userDescriptionLabel;
             else if (si == TabIndex.RECOMMEND) l = recommendItemDescriptionLabel;
             if (l.isTextEmpty()) return;
-            copyToClipboard(HtmlUtil.escapeHtml(l.getText()));
+            copyToClipboard(HtmlUtil.stripHtml(l.getText()));
         });
 
         // 滚动条监听器

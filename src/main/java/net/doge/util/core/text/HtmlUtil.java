@@ -118,7 +118,7 @@ public class HtmlUtil {
      * @param s
      * @return
      */
-    public static String escapeHtml(String s) {
+    public static String stripHtml(String s) {
         if (StringUtil.isEmpty(s)) return s;
         StringBuilder result = new StringBuilder();
         appendText(Jsoup.parseBodyFragment(s).body(), result);

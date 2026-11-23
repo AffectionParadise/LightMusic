@@ -67,7 +67,7 @@ public class DialogButton extends BaseButton implements ExtendedOpacitySupported
     }
 
     public String getPlainText() {
-        return HtmlUtil.escapeHtml(getText());
+        return HtmlUtil.stripHtml(getText());
     }
 
     @Override

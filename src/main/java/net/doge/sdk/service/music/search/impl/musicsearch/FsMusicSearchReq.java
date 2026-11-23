@@ -56,8 +56,8 @@ public class FsMusicSearchReq {
 
                     String songId = songJson.getString("songId");
                     String songType = songJson.getString("typeEname");
-                    String songName = HtmlUtil.escapeHtml(songJson.getString("songName"));
-                    String artist = HtmlUtil.escapeHtml(songJson.getString("singer"));
+                    String songName = HtmlUtil.stripHtml(songJson.getString("songName"));
+                    String artist = HtmlUtil.stripHtml(songJson.getString("singer"));
                     String artistId = songJson.getString("singerId");
 
                     NetMusicInfo musicInfo = new NetMusicInfo();

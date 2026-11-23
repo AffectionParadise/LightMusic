@@ -131,7 +131,7 @@ public class NcMusicSearchReq {
                         for (int j = 0, size = lyrics.size(); j < size; j++) {
                             sj.add(lyrics.getString(j));
                         }
-                        lyricMatch = HtmlUtil.escapeHtml(sj.toString());
+                        lyricMatch = HtmlUtil.stripHtml(sj.toString());
                     }
 
                     NetMusicInfo musicInfo = new NetMusicInfo();

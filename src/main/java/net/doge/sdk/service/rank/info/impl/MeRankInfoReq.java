@@ -40,7 +40,7 @@ public class MeRankInfoReq {
         JSONObject rankInfoJson = JSONObject.parseObject(rankInfoBody);
         JSONObject data = rankInfoJson.getJSONObject("info").getJSONObject("album");
 
-        String description = HtmlUtil.escapeHtml(data.getString("intro"));
+        String description = HtmlUtil.stripHtml(data.getString("intro"));
 
         GlobalExecutors.imageExecutor.execute(() -> rankInfo.setCoverImg(SdkUtil.getImageFromUrl(rankInfo.getCoverImgUrl())));
         rankInfo.setDescription(description);

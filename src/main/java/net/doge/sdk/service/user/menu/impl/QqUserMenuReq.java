@@ -109,15 +109,15 @@ public class QqUserMenuReq {
             List<NetPlaylistInfo> r = new LinkedList<>();
             int t = 0;
 
-            Map<String, Object> userCollectedPlaylistParams = new HashMap<>();
-            userCollectedPlaylistParams.put("ct", 20);
-            userCollectedPlaylistParams.put("cid", 205360956);
-            userCollectedPlaylistParams.put("userid", id);
-            userCollectedPlaylistParams.put("reqtype", 3);
-            userCollectedPlaylistParams.put("sin", (page - 1) * limit);
-            userCollectedPlaylistParams.put("ein", page * limit);
+            Map<String, Object> params = new HashMap<>();
+            params.put("ct", 20);
+            params.put("cid", 205360956);
+            params.put("userid", id);
+            params.put("reqtype", 3);
+            params.put("sin", (page - 1) * limit);
+            params.put("ein", page * limit);
             String playlistInfoBody = HttpRequest.get(USER_COLLECTED_PLAYLIST_QQ_API)
-                    .queryParams(userCollectedPlaylistParams)
+                    .queryParams(params)
                     .executeAsStr();
             JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
             JSONObject data = playlistInfoJson.getJSONObject("data");

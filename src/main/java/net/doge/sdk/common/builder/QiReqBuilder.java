@@ -26,10 +26,9 @@ public class QiReqBuilder {
         params.put("timestamp", System.currentTimeMillis());
 
         String query = UrlUtil.buildQuery(params);
-
         String secret = "0b50b02fd0d73a9c4c8c3a781c30845f";
         // 签名需要参数有序，使用 TreeMap 保持有序化
-        String sign = CryptoUtil.md5Hex(UrlUtil.decode(query) + secret);
+        String sign = CryptoUtil.md5Hex(query + secret);
         params.put("sign", sign);
         return HttpRequest.get(baseUrl)
                 .queryParams(params);

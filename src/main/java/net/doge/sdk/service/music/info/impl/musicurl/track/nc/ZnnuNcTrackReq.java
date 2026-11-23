@@ -48,6 +48,7 @@ public class ZnnuNcTrackReq {
 
     // 生成签名
     private String generateSignature(Map<String, Object> params, String timestamp, String domain) {
+        if (!(params instanceof TreeMap)) params = new TreeMap<>(params);
         StringBuilder paramsStrBuilder = new StringBuilder();
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             paramsStrBuilder.append(entry.getKey()).append("=").append(entry.getValue());

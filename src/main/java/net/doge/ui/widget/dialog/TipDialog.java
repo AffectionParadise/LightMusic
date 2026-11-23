@@ -55,7 +55,7 @@ public class TipDialog extends AbstractShadowDialog {
     }
 
     public boolean notEmpty() {
-        return StringUtil.notEmpty(HtmlUtil.escapeHtml(message));
+        return StringUtil.notEmpty(HtmlUtil.stripHtml(message));
     }
 
     public void setMessage(String message) {
@@ -66,7 +66,7 @@ public class TipDialog extends AbstractShadowDialog {
 
     public void updateSize() {
         FontMetrics metrics = messageLabel.getFontMetrics(font);
-        int sw = metrics.stringWidth(HtmlUtil.escapeHtml(message)), sh = metrics.getHeight();
+        int sw = metrics.stringWidth(HtmlUtil.stripHtml(message)), sh = metrics.getHeight();
         setSize(new Dimension(sw + ScaleUtil.scale(60) + 2 * pixels, sh + ScaleUtil.scale(40) + 2 * pixels));
     }
 

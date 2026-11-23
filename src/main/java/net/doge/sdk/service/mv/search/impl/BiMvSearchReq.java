@@ -100,7 +100,7 @@ public class BiMvSearchReq {
 
             String id = mvJson.getString("aid");
             String bvId = mvJson.getString("bvid");
-            String mvName = HtmlUtil.escapeHtml(mvJson.getString("title"));
+            String mvName = HtmlUtil.stripHtml(mvJson.getString("title"));
             String artistName = mvJson.getString("author");
             String creatorId = mvJson.getString("mid");
             Long playCount = mvJson.getLong("play");

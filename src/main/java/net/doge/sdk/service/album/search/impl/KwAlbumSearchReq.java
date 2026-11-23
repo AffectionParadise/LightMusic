@@ -56,7 +56,7 @@ public class KwAlbumSearchReq {
                 JSONObject albumJson = albumArray.getJSONObject(i);
 
                 String albumId = albumJson.getString("albumid");
-                String albumName = HtmlUtil.escapeHtml(albumJson.getString("album"));
+                String albumName = HtmlUtil.stripHtml(albumJson.getString("album"));
                 String artist = albumJson.getString("artist").replace("&", "、");
                 String artistId = albumJson.getString("artistid");
                 String publishTime = albumJson.getString("releaseDate");

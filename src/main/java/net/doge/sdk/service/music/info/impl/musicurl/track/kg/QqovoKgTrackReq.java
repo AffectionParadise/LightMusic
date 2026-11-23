@@ -96,7 +96,8 @@ public class QqovoKgTrackReq {
             params.put("quality", qualityMap.get(quality));
             HttpRequest songRequest = session.get(SONG_URL_KG_API)
                     .queryParams(params);
-            String songBody = songRequest.headers(buildHeaders(songRequest.url(), apiSignKey, baseHeaders))
+            Map<String, String> headers = buildHeaders(songRequest.url(), apiSignKey, baseHeaders);
+            String songBody = songRequest.headers(headers)
                     .executeAsStr();
             JSONObject urlJson = JSONObject.parseObject(songBody);
             String trackUrl = urlJson.getString("url");
