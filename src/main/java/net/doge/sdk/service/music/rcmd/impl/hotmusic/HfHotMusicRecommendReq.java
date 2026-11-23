@@ -1,7 +1,7 @@
 package net.doge.sdk.service.music.rcmd.impl.hotmusic;
 
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -39,7 +39,7 @@ public class HfHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        String param = s[TagType.HOT_MUSIC_HF];
+        String param = s[TagModule.HOT_MUSIC_HF];
         if (StringUtil.notEmpty(param)) {
             String musicInfoBody = HttpRequest.get(String.format(HOT_MUSIC_HF_API, param, page))
                     .cookie(SdkCommon.HF_COOKIE)

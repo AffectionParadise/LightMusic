@@ -8,6 +8,7 @@ import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -39,7 +40,7 @@ public class MgNewRadioReq {
         JSONObject radioInfoJson = JSONObject.parseObject(radioInfoBody);
         JSONObject data = radioInfoJson.getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");
-        JSONArray radioArray = SdkUtil.findFeatureObj(contents, "title", "时序电台").getJSONArray("contents");
+        JSONArray radioArray = JsonUtil.findObject(contents, "title", "时序电台").getJSONArray("contents");
         t = radioArray.size();
         for (int i = (page - 1) * limit, len = Math.min(radioArray.size(), page * limit); i < len; i++) {
             JSONObject radioJson = radioArray.getJSONObject(i);

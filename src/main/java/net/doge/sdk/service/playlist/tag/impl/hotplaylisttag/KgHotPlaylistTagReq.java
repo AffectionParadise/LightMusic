@@ -2,7 +2,7 @@ package net.doge.sdk.service.playlist.tag.impl.hotplaylisttag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KgReqOptEnum;
@@ -49,7 +49,7 @@ public class KgHotPlaylistTagReq {
                 String id = tagJson.getString("id");
 
                 if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
-                Tags.hotPlaylistTags.get(name)[TagType.TOP_PLAYLIST_KG] = id;
+                Tags.hotPlaylistTags.get(name)[TagModule.TOP_PLAYLIST_KG] = id;
             }
         }
     }
@@ -73,7 +73,7 @@ public class KgHotPlaylistTagReq {
             String name = tag.getString("name");
 
             if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
-            Tags.hotPlaylistTags.get(name)[TagType.IP_PLAYLIST_KG] = id;
+            Tags.hotPlaylistTags.get(name)[TagModule.IP_PLAYLIST_KG] = id;
         }
     }
 }

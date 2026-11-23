@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -89,7 +89,7 @@ public class DtNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.CAT_ALBUM_DT];
+        String param = s[TagModule.CAT_ALBUM_DT];
         if (StringUtil.notEmpty(param)) {
             HttpResponse resp = HttpRequest.get(String.format(CAT_ALBUM_DT_API, param, (page - 1) * limit, limit, System.currentTimeMillis())).execute();
             String albumInfoBody = resp.body();

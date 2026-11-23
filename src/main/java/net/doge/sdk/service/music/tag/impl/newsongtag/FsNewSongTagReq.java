@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.tag.impl.newsongtag;
 
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -44,7 +44,7 @@ public class FsNewSongTagReq {
             String id = RegexUtil.getGroup1("&l=(.*)", a.attr("href"));
 
             if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
-            Tags.newSongTags.get(name)[TagType.RECOMMEND_NEW_SONG_FS] = " " + id;
+            Tags.newSongTags.get(name)[TagModule.RECOMMEND_NEW_SONG_FS] = " " + id;
         }
         // 曲风
         tags = dds.last().select("a");
@@ -56,7 +56,7 @@ public class FsNewSongTagReq {
             String id = RegexUtil.getGroup1("s=(.*?)&l=", a.attr("href"));
 
             if (!Tags.newSongTags.containsKey(name)) Tags.newSongTags.put(name, new String[c]);
-            Tags.newSongTags.get(name)[TagType.RECOMMEND_NEW_SONG_FS] = id + " ";
+            Tags.newSongTags.get(name)[TagModule.RECOMMEND_NEW_SONG_FS] = id + " ";
         }
     }
 }

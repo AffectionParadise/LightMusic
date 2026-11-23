@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -126,7 +126,7 @@ public class MgHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.CAT_PLAYLIST_MG];
+        String param = s[TagModule.CAT_PLAYLIST_MG];
         if (StringUtil.notEmpty(param)) {
             String playlistInfoBody = HttpRequest.get(String.format(CAT_PLAYLIST_MG_API, param, page))
                     .executeAsStr();

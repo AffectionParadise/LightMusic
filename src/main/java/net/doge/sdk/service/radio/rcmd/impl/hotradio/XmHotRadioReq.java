@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -43,7 +43,7 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_RADIO_XM];
+        String param = s[TagModule.CAT_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_XM_API, sp[0], sp[1], page, limit))
@@ -96,7 +96,7 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CHANNEL_RADIO_XM];
+        String param = s[TagModule.CHANNEL_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
             String radioInfoBody = HttpRequest.get(String.format(CHANNEL_RADIO_XM_API, param, page, limit))
                     .executeAsStr();
@@ -143,7 +143,7 @@ public class XmHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_RADIO_XM];
+        String param = s[TagModule.CAT_RADIO_XM];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ");
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_RANK_XM_API, sp[0], sp[1]))

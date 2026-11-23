@@ -3,7 +3,7 @@ package net.doge.sdk.service.radio.rcmd.impl.hotradio;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -261,7 +261,7 @@ public class NcHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_HOT_RADIO_NC];
+        String param = s[TagModule.CAT_HOT_RADIO_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_HOT_RADIO_NC_API,
@@ -312,7 +312,7 @@ public class NcHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_REC_RADIO_NC];
+        String param = s[TagModule.CAT_REC_RADIO_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String radioInfoBody = SdkCommon.ncRequest(Method.POST, CAT_REC_RADIO_NC_API, String.format("{\"cateId\":\"%s\"}", param), options)

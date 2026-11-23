@@ -49,7 +49,7 @@ public class QiNewAlbumReq {
                 .executeAsStr();
         JSONObject albumInfoJson = JSONObject.parseObject(albumInfoBody);
         JSONArray dataArray = albumInfoJson.getJSONArray("data");
-        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "album");
+        JSONObject data = JsonUtil.findObject(dataArray, "type", "album");
         JSONArray albumArray = data.getJSONArray("result");
 //        // 首页秀动发行
 //        JSONObject xdData = dataArray.getJSONObject(2);

@@ -8,6 +8,7 @@ import net.doge.util.core.io.FileUtil;
 import net.doge.util.core.log.LogUtil;
 
 import java.io.File;
+import java.util.StringJoiner;
 
 /**
  * @author Doge
@@ -136,5 +137,60 @@ public class JsonUtil {
             LogUtil.error(e);
             return false;
         }
+    }
+
+    /**
+     * 在 JSONArray 中查找并返回含特征键值对的 JSONObject
+     *
+     * @param array
+     * @param key
+     * @param value
+     * @return
+     */
+    public static JSONObject findObject(JSONArray array, String key, Object value) {
+        for (int i = 0, s = array.size(); i < s; i++) {
+            JSONObject obj = array.getJSONObject(i);
+            if (obj.containsKey(key) && obj.get(key).equals(value)) return obj;
+        }
+        return null;
+    }
+
+    /**
+     * 在 JSONArray 中查找是否含特征键值对的 JSONObject
+     *
+     * @param array
+     * @param key
+     * @param value
+     * @return
+     */
+    public static boolean hasObject(JSONArray array, String key, Object value) {
+        for (int i = 0, s = array.size(); i < s; i++) {
+            JSONObject obj = array.getJSONObject(i);
+            if (obj.containsKey(key) && obj.get(key).equals(value)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * 用分隔符连接 JSONArray 中的所有字符串
+     *
+     * @param array
+     * @return
+     */
+    public static String joinString(JSONArray array) {
+        return joinString(array, "、");
+    }
+
+    /**
+     * 用分隔符连接 JSONArray 中的所有字符串
+     *
+     * @param array
+     * @param delimiter
+     * @return
+     */
+    public static String joinString(JSONArray array, String delimiter) {
+        StringJoiner sj = new StringJoiner(delimiter);
+        for (int i = 0, len = array.size(); i < len; i++) sj.add(array.getString(i));
+        return sj.toString();
     }
 }

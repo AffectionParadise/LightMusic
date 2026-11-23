@@ -3,7 +3,7 @@ package net.doge.sdk.service.mv.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -49,7 +49,7 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.MV_RANK_NC];
+        String param = s[TagModule.MV_RANK_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, TOP_MV_NC_API, String.format("{\"area\":\"%s\",\"offset\":%s,\"limit\":%s,\"total\":true}",
@@ -99,7 +99,7 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.MV_RANK_NC];
+        String param = s[TagModule.MV_RANK_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, NEW_MV_NC_API, String.format("{\"area\":\"%s\",\"limit\":100,\"total\":true}", param), options)
@@ -142,8 +142,8 @@ public class NcRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.MV_RANK_NC];
-        String param2 = s[TagType.ALL_MV_NC];
+        String param = s[TagModule.MV_RANK_NC];
+        String param2 = s[TagModule.ALL_MV_NC];
         if (StringUtil.notEmpty(param) || StringUtil.notEmpty(param2)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String mvInfoBody = SdkCommon.ncRequest(Method.POST, ALL_MV_NC_API,

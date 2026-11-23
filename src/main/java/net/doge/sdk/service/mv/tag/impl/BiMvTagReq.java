@@ -2,7 +2,7 @@ package net.doge.sdk.service.mv.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 
@@ -39,7 +39,7 @@ public class BiMvTagReq {
             String id = tagJson.getString("number");
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[TagType.POP_SERIES_VIDEO_BI] = id;
+            Tags.mvTags.get(name)[TagModule.POP_SERIES_VIDEO_BI] = id;
         }
     }
 }

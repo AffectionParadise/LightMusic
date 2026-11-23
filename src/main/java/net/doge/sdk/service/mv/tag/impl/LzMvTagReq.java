@@ -1,6 +1,6 @@
 package net.doge.sdk.service.mv.tag.impl;
 
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
@@ -42,7 +42,7 @@ public class LzMvTagReq {
             if ("全部".equals(name)) continue;
 
             if (!Tags.mvTags.containsKey(name)) Tags.mvTags.put(name, new String[c]);
-            Tags.mvTags.get(name)[TagType.VIDEO_LZ] = id;
+            Tags.mvTags.get(name)[TagModule.VIDEO_LZ] = id;
         }
     }
 }

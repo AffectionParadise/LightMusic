@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -44,7 +44,7 @@ public class KgRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_MV_KG];
+        String param = s[TagModule.RECOMMEND_MV_KG];
         if (StringUtil.notEmpty(param)) {
             String mvInfoBody = HttpRequest.get(String.format(RECOMMEND_MV_KG_API, param, page, limit))
                     .executeAsStr();
@@ -93,7 +93,7 @@ public class KgRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.IP_MV_KG];
+        String param = s[TagModule.IP_MV_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_MV_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -132,7 +132,7 @@ public class KwHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.CAT_PLAYLIST_KW];
+        String param = s[TagModule.CAT_PLAYLIST_KW];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ");
             // 根据 digest 信息请求不同的分类歌单接口

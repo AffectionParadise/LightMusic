@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.lyric.LyricPattern;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.crypto.CryptoUtil;
@@ -100,7 +99,7 @@ public class KgLyricReq {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0, s = transArray.size(); i < s; i++) {
                     JSONArray array = transArray.getJSONArray(i);
-                    sb.append(SdkUtil.joinString(array, ""));
+                    sb.append(JsonUtil.joinString(array, ""));
                     sb.append("\n");
                 }
                 musicInfo.setTrans(sb.toString());
@@ -110,7 +109,7 @@ public class KgLyricReq {
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0, s = romaArray.size(); i < s; i++) {
                     JSONArray array = romaArray.getJSONArray(i);
-                    sb.append(SdkUtil.joinString(array, "").trim());
+                    sb.append(JsonUtil.joinString(array, "").trim());
                     sb.append("\n");
                 }
                 musicInfo.setRoma(StringUtil.shortenBlank(sb.toString()));

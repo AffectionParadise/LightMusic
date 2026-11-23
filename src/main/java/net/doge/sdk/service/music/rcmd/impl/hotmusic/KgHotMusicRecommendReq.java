@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -53,7 +53,7 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        String param = s[TagType.CARD_SONG_KG];
+        String param = s[TagModule.CARD_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(CARD_SONG_KG_API);
             Map<String, Object> params = new TreeMap<>();
@@ -118,7 +118,7 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        String param = s[TagType.THEME_SONG_KG];
+        String param = s[TagModule.THEME_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(THEME_SONG_KG_API);
             long ct = System.currentTimeMillis() / 1000;
@@ -175,7 +175,7 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        String param = s[TagType.FM_SONG_KG];
+        String param = s[TagModule.FM_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ");
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(FM_SONG_KG_API);
@@ -236,7 +236,7 @@ public class KgHotMusicRecommendReq {
         int t = 0;
         String[] s = Tags.hotSongTags.get(tag);
 
-        String param = s[TagType.IP_SONG_KG];
+        String param = s[TagModule.IP_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_SONG_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);

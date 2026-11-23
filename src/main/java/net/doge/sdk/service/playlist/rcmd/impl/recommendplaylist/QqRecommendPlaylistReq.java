@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -127,7 +127,7 @@ public class QqRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        String param = s[TagType.NEW_PLAYLIST_QQ];
+        String param = s[TagModule.NEW_PLAYLIST_QQ];
         if (StringUtil.notEmpty(param)) {
             boolean isAll = "10000000".equals(param);
             String url;

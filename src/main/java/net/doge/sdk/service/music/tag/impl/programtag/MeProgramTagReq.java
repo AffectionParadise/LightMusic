@@ -1,6 +1,6 @@
 package net.doge.sdk.service.music.tag.impl.programtag;
 
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 import org.jsoup.Jsoup;
@@ -43,7 +43,7 @@ public class MeProgramTagReq {
             String name = t.getElementsByTag("a").text().trim();
 
             if (!Tags.programTags.containsKey(name)) Tags.programTags.put(name, new String[c]);
-            Tags.programTags.get(name)[TagType.EXP_PROGRAM_ME] = id;
+            Tags.programTags.get(name)[TagModule.EXP_PROGRAM_ME] = id;
         }
     }
 
@@ -71,7 +71,7 @@ public class MeProgramTagReq {
             String id = href.replaceFirst("/sound/m/", "");
 
             if (!Tags.programTags.containsKey(name)) Tags.programTags.put(name, new String[c]);
-            Tags.programTags.get(name)[TagType.INDEX_CAT_PROGRAM_ME] = id;
+            Tags.programTags.get(name)[TagModule.INDEX_CAT_PROGRAM_ME] = id;
 
             // 子标签
             Elements subTags = tag.select(".vw-topcatalog-subitem-container.fc-topcatalog-subitem-container a");
@@ -82,7 +82,7 @@ public class MeProgramTagReq {
                 String subId = subTag.attr("href").replaceFirst("/sound/m/", "");
 
                 if (!Tags.programTags.containsKey(subName)) Tags.programTags.put(subName, new String[c]);
-                Tags.programTags.get(subName)[TagType.INDEX_CAT_PROGRAM_ME] = subId;
+                Tags.programTags.get(subName)[TagModule.INDEX_CAT_PROGRAM_ME] = subId;
             }
         }
     }

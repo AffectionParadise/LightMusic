@@ -3,7 +3,7 @@ package net.doge.sdk.service.album.rcmd.impl;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -55,7 +55,7 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.NEW_ALBUM_NC];
+        String param = s[TagModule.NEW_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, NEW_ALBUM_NC_API,
@@ -153,7 +153,7 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.NEW_ALBUM_NC];
+        String param = s[TagModule.NEW_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, ALL_NEW_ALBUM_NC_API,
@@ -282,7 +282,7 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.LANG_DI_ALBUM_NC];
+        String param = s[TagModule.LANG_DI_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, LANG_DI_ALBUM_NC_API,
@@ -324,7 +324,7 @@ public class NcNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.STYLE_ALBUM_NC];
+        String param = s[TagModule.STYLE_ALBUM_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String albumInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_ALBUM_NC_API,

@@ -10,6 +10,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -73,9 +74,9 @@ public class MgArtistInfoReq {
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
         JSONObject artistJson = contents.getJSONObject(0).getJSONArray("contents").getJSONObject(0);
         JSONArray subContents = contents.getJSONObject(1).getJSONArray("contents");
-        JSONObject songJson = SdkUtil.findFeatureObj(subContents, "action", "song");
-        JSONObject mvJson = SdkUtil.findFeatureObj(subContents, "action", "mv");
-        JSONObject albumJson = SdkUtil.findFeatureObj(subContents, "action", "album");
+        JSONObject songJson = JsonUtil.findObject(subContents, "action", "song");
+        JSONObject mvJson = JsonUtil.findObject(subContents, "action", "mv");
+        JSONObject albumJson = JsonUtil.findObject(subContents, "action", "album");
 
         String name = artistJson.getString("txt");
         Integer songNum = songJson.getIntValue("txt2");
@@ -139,9 +140,9 @@ public class MgArtistInfoReq {
         JSONArray contents = artistInfoJson.getJSONObject("data").getJSONArray("contents");
         JSONObject artistJson = contents.getJSONObject(0).getJSONArray("contents").getJSONObject(0);
         JSONArray subContents = contents.getJSONObject(1).getJSONArray("contents");
-        JSONObject songJson = SdkUtil.findFeatureObj(subContents, "action", "song");
-        JSONObject mvJson = SdkUtil.findFeatureObj(subContents, "action", "mv");
-        JSONObject albumJson = SdkUtil.findFeatureObj(subContents, "action", "album");
+        JSONObject songJson = JsonUtil.findObject(subContents, "action", "song");
+        JSONObject mvJson = JsonUtil.findObject(subContents, "action", "mv");
+        JSONObject albumJson = JsonUtil.findObject(subContents, "action", "album");
 
         if (!artistInfo.hasSongNum()) artistInfo.setSongNum(songJson.getIntValue("txt2"));
         if (!artistInfo.hasAlbumNum()) artistInfo.setAlbumNum(albumJson.getIntValue("txt2"));

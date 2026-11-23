@@ -2,7 +2,7 @@ package net.doge.sdk.service.mv.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -41,7 +41,7 @@ public class LzRecommendMvReq {
         int t;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.VIDEO_LZ];
+        String param = s[TagModule.VIDEO_LZ];
         boolean isAll = StringUtil.isEmpty(param);
         String mvInfoBody = HttpRequest.get(VIDEO_LZ_API)
                 .executeAsStr();

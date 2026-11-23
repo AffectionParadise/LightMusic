@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -36,7 +36,7 @@ public class QqArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.ARTIST_RANK_QQ];
+        String param = s[TagModule.ARTIST_RANK_QQ];
         if (StringUtil.notEmpty(param)) {
             final int lim = 80, p = (page - 1) / 4 + 1;
             String[] sp = param.split(" ");

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -91,7 +91,7 @@ public class KgRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_CAT_PLAYLIST_KG];
+        String param = s[TagModule.RECOMMEND_CAT_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
             String playlistInfoBody = HttpRequest.get(String.format(RECOMMEND_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();
@@ -133,7 +133,7 @@ public class KgRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_CAT_PLAYLIST_KG];
+        String param = s[TagModule.RECOMMEND_CAT_PLAYLIST_KG];
         if (StringUtil.notEmpty(param)) {
             String playlistInfoBody = HttpRequest.get(String.format(NEW_CAT_PLAYLIST_KG_API, param.trim(), page))
                     .executeAsStr();

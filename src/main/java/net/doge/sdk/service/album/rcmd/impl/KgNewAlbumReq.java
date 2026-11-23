@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -44,7 +44,7 @@ public class KgNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.NEW_ALBUM_KG];
+        String param = s[TagModule.NEW_ALBUM_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(NEW_ALBUM_KG_API);
             String dat = String.format("{\"apiver\":%s,\"token\":\"\",\"page\":%s,\"pagesize\":%s,\"withpriv\":1}", KgReqBuilder.apiver, page, limit);
@@ -93,7 +93,7 @@ public class KgNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.IP_ALBUM_KG];
+        String param = s[TagModule.IP_ALBUM_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_ALBUM_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);

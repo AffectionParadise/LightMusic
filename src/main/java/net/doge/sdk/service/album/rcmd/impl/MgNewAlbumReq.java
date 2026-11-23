@@ -93,7 +93,7 @@ public class MgNewAlbumReq {
             String publishTime = albumJson.getString("publishDate");
             Integer songNum = albumJson.getIntValue("totalCount");
             JSONArray imgItems = albumJson.getJSONArray("imgItems");
-            String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : SdkUtil.findFeatureObj(imgItems, "imgSizeType", "03").getString("img");
+            String coverImgThumbUrl = JsonUtil.isEmpty(imgItems) ? null : JsonUtil.findObject(imgItems, "imgSizeType", "03").getString("img");
 
             NetAlbumInfo albumInfo = new NetAlbumInfo();
             albumInfo.setSource(NetResourceSource.MG);
@@ -138,7 +138,7 @@ public class MgNewAlbumReq {
                 String publishTime = albumJson.getString("publishTime");
                 Integer songNum = albumJson.getIntValue("totalCount");
                 JSONArray imgItems = albumJson.getJSONArray("imgItems");
-                String coverImgThumbUrl = SdkUtil.findFeatureObj(imgItems, "imgSizeType", "03").getString("img");
+                String coverImgThumbUrl = JsonUtil.findObject(imgItems, "imgSizeType", "03").getString("img");
 
                 NetAlbumInfo albumInfo = new NetAlbumInfo();
                 albumInfo.setSource(NetResourceSource.MG);

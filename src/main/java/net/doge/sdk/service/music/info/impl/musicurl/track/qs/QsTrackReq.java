@@ -3,7 +3,6 @@ package net.doge.sdk.service.music.info.impl.musicurl.track.qs;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
@@ -58,7 +57,7 @@ public class QsTrackReq {
                 .executeAsStr();
         JSONObject urlJson = JSONObject.parseObject(urlBody);
         JSONArray urlArray = urlJson.getJSONObject("Result").getJSONObject("Data").getJSONArray("PlayInfoList");
-        JSONObject uj = SdkUtil.findFeatureObj(urlArray, "Quality", qualityMap.get(quality));
+        JSONObject uj = JsonUtil.findObject(urlArray, "Quality", qualityMap.get(quality));
         if (JsonUtil.isEmpty(uj)) return "";
         String trackUrl = uj.getString("MainPlayUrl");
         if (StringUtil.isEmpty(trackUrl)) return "";

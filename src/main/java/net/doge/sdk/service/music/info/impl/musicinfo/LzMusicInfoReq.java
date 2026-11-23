@@ -9,6 +9,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.io.FileUtil;
+import net.doge.util.core.json.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -42,7 +43,7 @@ public class LzMusicInfoReq {
         Elements article = doc.select(String.format(".oa-album-card[data-album-id=\"%s\"]", albumId));
         String albumSongJsonStr = article.attr("data-tracks");
         JSONArray songArray = JSONArray.parseArray(albumSongJsonStr);
-        JSONObject songJson = SdkUtil.findFeatureObj(songArray, "track_id", id);
+        JSONObject songJson = JsonUtil.findObject(songArray, "track_id", id);
         if (!musicInfo.hasAlbumImage()) {
             GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage albumImage = SdkUtil.getImageFromUrl(songJson.getString("cover_url"));
@@ -66,7 +67,7 @@ public class LzMusicInfoReq {
         Elements article = doc.select(String.format(".oa-album-card[data-album-id=\"%s\"]", albumId));
         String albumSongJsonStr = article.attr("data-tracks");
         JSONArray songArray = JSONArray.parseArray(albumSongJsonStr);
-        JSONObject songJson = SdkUtil.findFeatureObj(songArray, "track_id", id);
+        JSONObject songJson = JsonUtil.findObject(songArray, "track_id", id);
         // 获取歌词 url
         String lyricUrl = songJson.getString("lyrics_url");
         String lyric = HttpRequest.get(lyricUrl)

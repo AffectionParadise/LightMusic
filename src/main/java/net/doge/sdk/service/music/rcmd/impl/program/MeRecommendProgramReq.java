@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.program;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -95,7 +95,7 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        String param = s[TagType.EXP_PROGRAM_ME];
+        String param = s[TagModule.EXP_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
             String programInfoBody = HttpRequest.get(String.format(EXP_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
@@ -135,7 +135,7 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
@@ -170,7 +170,7 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_NEW_PROGRAM_ME_API, param, page, Math.min(limit, 20)))
                     .executeAsStr();
@@ -205,7 +205,7 @@ public class MeRecommendProgramReq {
         int t = 0;
         String[] s = Tags.programTags.get(tag);
 
-        String param = s[TagType.INDEX_CAT_PROGRAM_ME];
+        String param = s[TagModule.INDEX_CAT_PROGRAM_ME];
         if (StringUtil.notEmpty(param)) {
             String programInfoBody = HttpRequest.get(String.format(INDEX_CAT_PROGRAM_ME_API, param, page, limit))
                     .executeAsStr();

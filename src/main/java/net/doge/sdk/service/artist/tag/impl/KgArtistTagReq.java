@@ -2,7 +2,7 @@ package net.doge.sdk.service.artist.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KgReqOptEnum;
@@ -44,7 +44,7 @@ public class KgArtistTagReq {
             String name = tag.getString("name");
 
             if (!Tags.artistTags.containsKey(name)) Tags.artistTags.put(name, new String[c]);
-            Tags.artistTags.get(name)[TagType.IP_ARTIST_KG] = id;
+            Tags.artistTags.get(name)[TagModule.IP_ARTIST_KG] = id;
         }
     }
 }

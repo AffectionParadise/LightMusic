@@ -8,7 +8,10 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.StringUtil;
+import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
+import net.doge.util.core.net.UrlUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -28,6 +31,8 @@ public class QsMusicSearchReq {
 
     // 搜索歌曲 API (汽水)
     private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/search/track";
+    // 搜索歌曲下游 API (汽水)
+    private final String SEARCH_MUSIC_DOWNSTREAM_QS_API = "https://api-vehicle.volcengine.com/v2/search/type?keyword=%s&search_type=music&real_offset=%s&limit=%s&search_source=qishui";
 
     /**
      * 根据关键词获取歌曲
@@ -44,6 +49,8 @@ public class QsMusicSearchReq {
         params.put("count", lim);
         String musicInfoBody = SdkCommon.qsRequest(SEARCH_MUSIC_QS_API, params)
                 .executeAsStr();
+        // 由于汽水搜索 API 鉴权问题，返回空 Body 用下游代替
+        if (StringUtil.isEmpty(musicInfoBody)) return searchMusicDownstream(keyword, page, limit);
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         if (JsonUtil.notEmpty(musicInfoJson)) {
             JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");
@@ -63,15 +70,15 @@ public class QsMusicSearchReq {
                 Double duration = songJson.getDouble("duration") / 1000;
                 int qualityType = AudioQuality.UNKNOWN;
                 JSONArray bitRates = songJson.getJSONArray("bit_rates");
-                if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "hi_res")))
+                if (JsonUtil.hasObject(bitRates, "quality", "hi_res"))
                     qualityType = AudioQuality.HR;
-                else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "lossless")))
+                else if (JsonUtil.hasObject(bitRates, "quality", "lossless"))
                     qualityType = AudioQuality.SQ;
-                else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "highest")))
+                else if (JsonUtil.hasObject(bitRates, "quality", "highest"))
                     qualityType = AudioQuality.HQ;
-                else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "higher")))
+                else if (JsonUtil.hasObject(bitRates, "quality", "higher"))
                     qualityType = AudioQuality.MQ;
-                else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "medium")))
+                else if (JsonUtil.hasObject(bitRates, "quality", "medium"))
                     qualityType = AudioQuality.LQ;
 
                 NetMusicInfo musicInfo = new NetMusicInfo();
@@ -87,6 +94,43 @@ public class QsMusicSearchReq {
 
                 r.add(musicInfo);
             }
+        }
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 根据关键词获取歌曲(下游)
+     */
+    public CommonResult<NetMusicInfo> searchMusicDownstream(String keyword, int page, int limit) {
+        List<NetMusicInfo> r = new LinkedList<>();
+        int t;
+
+        // 先对关键词编码，避免特殊符号的干扰
+        String encodedKeyword = UrlUtil.encodeAll(keyword);
+        String musicInfoBody = HttpRequest.get(String.format(SEARCH_MUSIC_DOWNSTREAM_QS_API, encodedKeyword, (page - 1) * limit, limit))
+                .executeAsStr();
+        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+        JSONObject data = musicInfoJson.getJSONObject("data");
+        JSONArray songArray = data.getJSONArray("list");
+        t = page * limit + (data.getBooleanValue("has_more") ? 1 : 0);
+        for (int i = 0, len = songArray.size(); i < len; i++) {
+            JSONObject songJson = songArray.getJSONObject(i);
+
+            String songId = songJson.getString("item_id");
+            String songName = songJson.getString("title");
+            String artist = SdkUtil.parseArtist(songJson);
+            String artistId = SdkUtil.parseArtistId(songJson);
+            Double duration = songJson.getDouble("duration");
+
+            NetMusicInfo musicInfo = new NetMusicInfo();
+            musicInfo.setSource(NetResourceSource.QS);
+            musicInfo.setId(songId);
+            musicInfo.setName(songName);
+            musicInfo.setArtist(artist);
+            musicInfo.setArtistId(artistId);
+            musicInfo.setDuration(duration);
+
+            r.add(musicInfo);
         }
         return new CommonResult<>(r, t);
     }

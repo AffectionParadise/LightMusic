@@ -8,6 +8,7 @@ import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.json.JsonUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +43,7 @@ public class QiNewMusicReq {
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONArray dataArray = musicInfoJson.getJSONArray("data");
-        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "song");
+        JSONObject data = JsonUtil.findObject(dataArray, "type", "song");
         t = data.getIntValue("module_nums");
         JSONArray songArray = data.getJSONArray("result");
         for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {

@@ -3,7 +3,6 @@ package net.doge.sdk.util;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.ui.image.ImageConstants;
-import net.doge.util.core.StringUtil;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -22,7 +21,7 @@ public class SdkUtil {
      * @return
      */
     private static JSONArray getArtistArray(JSONObject json) {
-        String[] artistKeys = {"artists", "artist", "ar", "authors", "singers", "Singers", "singer_list", "singerList", "singer", "singerinfo", "creator", "actors"};
+        String[] artistKeys = {"artists", "artist", "ar", "authors", "singers", "Singers", "singer_list", "singerList", "singer", "singerinfo", "creator", "actors", "author_info"};
         JSONArray artistArray = null;
         for (String key : artistKeys) {
             if (!json.containsKey(key)) continue;
@@ -78,24 +77,13 @@ public class SdkUtil {
         JSONObject first = artistArray.getJSONObject(0);
         // 酷狗部分接口套了一层 base
         if (first.containsKey("base")) first = first.getJSONObject("base");
-        String[] idKeys = {"singermid", "singer_mid", "mid", "singerid", "artistCode", "artistId", "author_id", "userId", "id"};
+        String[] idKeys = {"singermid", "singer_mid", "mid", "singerid", "artistCode", "artistId", "author_id", "userId", "user_id", "id"};
         for (String key : idKeys) {
             if (!first.containsKey(key)) continue;
             return first.getString(key);
         }
 
         return "";
-    }
-
-    /**
-     * 在 JSONArray 中查找并返回含特征键值对的 JSONObject
-     */
-    public static JSONObject findFeatureObj(JSONArray array, String key, Object value) {
-        for (int i = 0, s = array.size(); i < s; i++) {
-            JSONObject obj = array.getJSONObject(i);
-            if (obj.containsKey(key) && value.equals(obj.get(key))) return obj;
-        }
-        return null;
     }
 
     /**
@@ -162,27 +150,14 @@ public class SdkUtil {
             String uri = coverJson.getString("uri");
             String url = coverJson.getJSONArray("urls").getString(0);
             String templatePrefix = coverJson.getString("template_prefix");
-            String coverImgUrl = String.format("%s%s~%s-resize:500:500.jpg", url, uri, templatePrefix);
+            String coverImgUrl = String.format("%s%s~%s-resize:960:960.jpg", url, uri, templatePrefix);
             return coverImgUrl;
         }
         return null;
     }
 
     /**
-     * 连接 Json 数组中的所有字符串
-     */
-    public static String joinString(JSONArray array) {
-        return joinString(array, "、");
-    }
-
-    public static String joinString(JSONArray array, String delimiter) {
-        StringJoiner sj = new StringJoiner(delimiter);
-        for (int i = 0, len = array.size(); i < len; i++) sj.add(array.getString(i));
-        return sj.toString();
-    }
-
-    /**
-     * 解析歌单标签
+     * 从 entity JSON 中解析标签
      */
     public static String parseTag(JSONObject json) {
         // 获取标签数组
@@ -195,16 +170,27 @@ public class SdkUtil {
         }
         if (JsonUtil.isEmpty(tagArray)) return "";
 
+        // 获取标签名称 key
+        Object first = tagArray.get(0);
+        String nameKey = null;
+        if (first instanceof JSONObject) {
+            JSONObject firstJson = (JSONObject) first;
+            String[] nameKeys = {"name", "tagName", "tagname"};
+            for (String key : nameKeys) {
+                if (!firstJson.containsKey(key)) continue;
+                nameKey = key;
+                break;
+            }
+        }
+
         StringJoiner sj = new StringJoiner("、");
         for (int i = 0, len = tagArray.size(); i < len; i++) {
             Object obj = tagArray.get(i);
             if (obj instanceof String) sj.add(tagArray.getString(i));
             else if (obj instanceof JSONObject) {
                 JSONObject tagJson = (JSONObject) obj;
-                String name = tagJson.getString("name");
-                if (StringUtil.isEmpty(name)) name = tagJson.getString("tagName");
-                if (StringUtil.isEmpty(name)) name = tagJson.getString("tagname");
-                if (StringUtil.notEmpty(name)) sj.add(name);
+                String name = tagJson.getString(nameKey);
+                sj.add(name);
             }
         }
         return sj.toString();

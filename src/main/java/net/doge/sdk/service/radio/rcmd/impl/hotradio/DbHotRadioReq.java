@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.RadioType;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetRadioInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -13,6 +13,7 @@ import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.RegexUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -94,7 +95,7 @@ public class DbHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_RADIO_DB];
+        String param = s[TagModule.CAT_RADIO_DB];
         if (StringUtil.notEmpty(param)) {
             String radioInfoBody = HttpRequest.get(String.format(CAT_RADIO_DB_API, param, (page - 1) * limit, limit))
                     .executeAsStr();
@@ -105,9 +106,9 @@ public class DbHotRadioReq {
 
                 String radioId = radioJson.getString("id");
                 String radioName = radioJson.getString("title");
-                String dj = SdkUtil.joinString(radioJson.getJSONArray("actors"));
+                String dj = JsonUtil.joinString(radioJson.getJSONArray("actors"));
                 String coverImgThumbUrl = radioJson.getString("cover_url");
-                String category = SdkUtil.joinString(radioJson.getJSONArray("types"));
+                String category = JsonUtil.joinString(radioJson.getJSONArray("types"));
 
                 NetRadioInfo radioInfo = new NetRadioInfo();
                 radioInfo.setSource(NetResourceSource.DB);
@@ -135,7 +136,7 @@ public class DbHotRadioReq {
         int t = 0;
         String[] s = Tags.radioTags.get(tag);
 
-        String param = s[TagType.CAT_GAME_RADIO_DB];
+        String param = s[TagModule.CAT_GAME_RADIO_DB];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String radioInfoBody = HttpRequest.get(String.format(CAT_GAME_RADIO_DB_API, sp[0], sp[1], page))

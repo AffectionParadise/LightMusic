@@ -3,7 +3,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.highqualityplaylist;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -44,7 +44,7 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.HIGH_QUALITY_PLAYLIST_NC];
+        String param = s[TagModule.HIGH_QUALITY_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, HIGH_QUALITY_PLAYLIST_NC_API,
@@ -92,7 +92,7 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.PICKED_PLAYLIST_NC];
+        String param = s[TagModule.PICKED_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,
@@ -140,7 +140,7 @@ public class NcHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.PICKED_PLAYLIST_NC];
+        String param = s[TagModule.PICKED_PLAYLIST_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String playlistInfoBody = SdkCommon.ncRequest(Method.POST, PICKED_PLAYLIST_NC_API,

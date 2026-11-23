@@ -2,7 +2,7 @@ package net.doge.sdk.service.radio.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 
@@ -43,7 +43,7 @@ public class XmHotRadioTagReq {
                 String pinyin = tagJson.getString("pinyin");
 
                 if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-                Tags.radioTags.get(name)[TagType.CHANNEL_RADIO_XM] = pinyin + " ";
+                Tags.radioTags.get(name)[TagModule.CHANNEL_RADIO_XM] = pinyin + " ";
 
                 // 子标签
                 JSONArray ssTags = tagJson.getJSONArray("subcategories");
@@ -54,7 +54,7 @@ public class XmHotRadioTagReq {
                     String ssId = String.format("%s %s", pinyin, ssTagJson.getString("code"));
 
                     if (!Tags.radioTags.containsKey(ssName)) Tags.radioTags.put(ssName, new String[c]);
-                    Tags.radioTags.get(ssName)[TagType.CHANNEL_RADIO_XM] = ssId;
+                    Tags.radioTags.get(ssName)[TagModule.CHANNEL_RADIO_XM] = ssId;
                 }
             }
         }
@@ -84,7 +84,7 @@ public class XmHotRadioTagReq {
                 String id = t + tagJson.getString("rankClusterId");
 
                 if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-                Tags.radioTags.get(name)[TagType.CAT_RADIO_XM] = id;
+                Tags.radioTags.get(name)[TagModule.CAT_RADIO_XM] = id;
             }
         }
     }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -46,7 +46,7 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.HOT_ARTIST_LIST_KG];
+        String param = s[TagModule.HOT_ARTIST_LIST_KG];
         if (StringUtil.notEmpty(param)) {
             String[] split = param.split(" ");
             String artistInfoBody = HttpRequest.get(String.format(HOT_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
@@ -92,7 +92,7 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.HOT_ARTIST_LIST_KG];
+        String param = s[TagModule.HOT_ARTIST_LIST_KG];
         if (StringUtil.notEmpty(param)) {
             String[] split = param.split(" ");
             String artistInfoBody = HttpRequest.get(String.format(UP_ARTIST_LIST_KG_API, split[0], split[1], page, limit))
@@ -138,7 +138,7 @@ public class KgArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.IP_ARTIST_KG];
+        String param = s[TagModule.IP_ARTIST_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(IP_ARTIST_KG_API);
             String dat = String.format("{\"is_publish\":1,\"ip_id\":\"%s\",\"sort\":3,\"page\":%s,\"pagesize\":%s,\"query\":1}", param, page, limit);

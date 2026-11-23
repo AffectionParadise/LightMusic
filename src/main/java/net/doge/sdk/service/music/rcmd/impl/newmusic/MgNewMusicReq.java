@@ -6,8 +6,8 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.source.NetResourceSource;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -71,7 +71,7 @@ public class MgNewMusicReq {
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         JSONObject data = musicInfoJson.getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");
-        JSONObject content = SdkUtil.findFeatureObj(contents, "columnId", "75579758");
+        JSONObject content = JsonUtil.findObject(contents, "columnId", "75579758");
         JSONArray songArray = content.getJSONArray("contents");
         t = songArray.size();
         for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {

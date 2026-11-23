@@ -3,7 +3,7 @@ package net.doge.sdk.service.music.rcmd.impl.newmusic;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -96,7 +96,7 @@ public class NcNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.FAST_NEW_SONG_NC];
+        String param = s[TagModule.FAST_NEW_SONG_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, FAST_NEW_SONG_NC_API, String.format("{\"areaId\":\"%s\",\"total\":true}", param), options)
@@ -151,7 +151,7 @@ public class NcNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.STYLE_NEW_SONG_NC];
+        String param = s[TagModule.STYLE_NEW_SONG_NC];
         if (StringUtil.notEmpty(param)) {
             Map<NcReqOptEnum, String> options = NcReqOptsBuilder.weapi();
             String musicInfoBody = SdkCommon.ncRequest(Method.POST, STYLE_NEW_SONG_NC_API,

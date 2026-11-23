@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -104,7 +104,7 @@ public class KgNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_KG];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             String musicInfoBody = HttpRequest.get(String.format(RECOMMEND_NEW_SONG_KG_API, param, page, limit))
                     .executeAsStr();
@@ -157,7 +157,7 @@ public class KgNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.STYLE_SONG_KG];
+        String param = s[TagModule.STYLE_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(STYLE_SONG_KG_API);
             Map<String, Object> params = new TreeMap<>();
@@ -213,7 +213,7 @@ public class KgNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.THEME_PLAYLIST_SONG_KG];
+        String param = s[TagModule.THEME_PLAYLIST_SONG_KG];
         if (StringUtil.notEmpty(param)) {
             Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(THEME_PLAYLIST_SONG_KG_API);
             String ct = String.valueOf(System.currentTimeMillis() / 1000);

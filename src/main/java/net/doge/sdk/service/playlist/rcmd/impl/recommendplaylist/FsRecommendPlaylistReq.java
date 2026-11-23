@@ -2,7 +2,7 @@ package net.doge.sdk.service.playlist.rcmd.impl.recommendplaylist;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -41,7 +41,7 @@ public class FsRecommendPlaylistReq {
         int t = 0;
         String[] s = Tags.recPlaylistTags.get(tag);
 
-        String param = s[TagType.NEW_PLAYLIST_FS];
+        String param = s[TagModule.NEW_PLAYLIST_FS];
         if (StringUtil.notEmpty(param)) {
             String playlistInfoBody = HttpRequest.get(String.format(NEW_PLAYLIST_FS_API, param.trim(), page))
                     .executeAsStr();

@@ -5,7 +5,6 @@ import com.alibaba.fastjson2.JSONObject;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.kg.KgReqOptEnum;
 import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
 import net.doge.util.core.json.JsonUtil;
 import net.doge.util.core.net.UrlUtil;
@@ -73,7 +72,7 @@ public class KgSearchSuggestionReq {
                 .executeAsStr();
         JSONObject searchSuggestionJson = JSONObject.parseObject(searchSuggestionBody);
         JSONArray data = searchSuggestionJson.getJSONArray("data");
-        JSONObject songKeywordJson = SdkUtil.findFeatureObj(data, "LableName", "");
+        JSONObject songKeywordJson = JsonUtil.findObject(data, "LableName", "");
         if (JsonUtil.notEmpty(songKeywordJson)) {
             JSONArray keywordArray = songKeywordJson.getJSONArray("RecordDatas");
             for (int i = 0, len = keywordArray.size(); i < len; i++) {

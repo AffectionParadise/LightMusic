@@ -2,10 +2,10 @@ package net.doge.sdk.service.radio.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 
 public class MgHotRadioTagReq {
     private static MgHotRadioTagReq instance;
@@ -32,7 +32,7 @@ public class MgHotRadioTagReq {
         JSONObject radioTagJson = JSONObject.parseObject(radioTagBody);
         JSONObject data = radioTagJson.getJSONObject("data");
         JSONArray contents = data.getJSONArray("contents");
-        JSONArray subContents = SdkUtil.findFeatureObj(contents, "title", "分类电台").getJSONArray("contents");
+        JSONArray subContents = JsonUtil.findObject(contents, "title", "分类电台").getJSONArray("contents");
         for (int i = 0, len = subContents.size(); i < len; i++) {
             JSONObject tagJson = subContents.getJSONObject(i);
             if (!tagJson.containsKey("columnId")) continue;
@@ -42,7 +42,7 @@ public class MgHotRadioTagReq {
             String id = tag.getString("txt2");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[TagType.CAT_RADIO_MG] = id;
+            Tags.radioTags.get(name)[TagModule.CAT_RADIO_MG] = id;
         }
     }
 }

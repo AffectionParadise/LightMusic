@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -35,7 +35,7 @@ public class QqNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_QQ];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_QQ];
         if (StringUtil.notEmpty(param)) {
             String musicInfoBody = HttpRequest.post(SdkCommon.MAIN_QQ_API)
                     .jsonBody(String.format("{\"comm\":{\"ct\":24},\"new_song\":{\"module\":\"newsong.NewSongServer\"," +

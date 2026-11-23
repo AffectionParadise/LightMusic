@@ -2,7 +2,7 @@ package net.doge.sdk.service.album.rcmd.impl;
 
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetAlbumInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -86,7 +86,7 @@ public class DbNewAlbumReq {
         int t = 0;
         String[] s = Tags.newAlbumTags.get(tag);
 
-        String param = s[TagType.CAT_ALBUM_DB];
+        String param = s[TagModule.CAT_ALBUM_DB];
         if (StringUtil.notEmpty(param)) {
             String albumInfoBody = HttpRequest.get(String.format(CAT_ALBUM_DB_API, param, (page - 1) * limit))
                     .executeAsStr();

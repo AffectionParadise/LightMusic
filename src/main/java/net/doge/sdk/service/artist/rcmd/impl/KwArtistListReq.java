@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -41,7 +41,7 @@ public class KwArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.ARTIST_LIST_KW];
+        String param = s[TagModule.ARTIST_LIST_KW];
         if (StringUtil.notEmpty(param)) {
             HttpResponse resp = SdkCommon.kwRequest(String.format(ARTIST_LIST_KW_API, param, page, limit)).execute();
             if (resp.isSuccessful()) {
@@ -88,7 +88,7 @@ public class KwArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.ALL_ARTIST_KW];
+        String param = s[TagModule.ALL_ARTIST_KW];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             HttpResponse resp = SdkCommon.kwRequest(String.format(ALL_ARTISTS_LIST_KW_API, sp[0], sp[1], page, limit))

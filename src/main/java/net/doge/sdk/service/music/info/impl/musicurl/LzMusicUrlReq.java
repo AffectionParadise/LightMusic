@@ -4,8 +4,8 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.media.AudioQuality;
 import net.doge.entity.service.NetMusicInfo;
-import net.doge.sdk.util.SdkUtil;
 import net.doge.util.core.http.HttpRequest;
+import net.doge.util.core.json.JsonUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -36,7 +36,7 @@ public class LzMusicUrlReq {
         Elements article = doc.select(String.format(".oa-album-card[data-album-id=\"%s\"]", albumId));
         String albumSongJsonStr = article.attr("data-tracks");
         JSONArray songArray = JSONArray.parseArray(albumSongJsonStr);
-        JSONObject songJson = SdkUtil.findFeatureObj(songArray, "track_id", id);
+        JSONObject songJson = JsonUtil.findObject(songArray, "track_id", id);
         int quality = forDownload ? AudioQuality.downQuality : AudioQuality.playQuality;
         return songJson.getString(quality == AudioQuality.STANDARD ? "audio_url" : "hq_audio_url");
     }

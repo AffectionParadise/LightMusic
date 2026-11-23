@@ -2,7 +2,7 @@ package net.doge.sdk.service.music.tag.impl.musicsearchtag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.util.core.http.HttpRequest;
 
@@ -42,7 +42,7 @@ public class MeMusicSearchTagReq {
                 String id = obj.getString("id");
 
                 if (!Tags.programSearchTags.containsKey(name)) Tags.programSearchTags.put(name, new String[c]);
-                Tags.programSearchTags.get(name)[TagType.PROGRAM_SEARCH_ME] = id;
+                Tags.programSearchTags.get(name)[TagModule.PROGRAM_SEARCH_ME] = id;
             }
         }
     }

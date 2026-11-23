@@ -117,15 +117,15 @@ public class QsPlaylistInfoReq {
             Double duration = songJson.getDouble("duration") / 1000;
             int qualityType = AudioQuality.UNKNOWN;
             JSONArray bitRates = songJson.getJSONArray("bit_rates");
-            if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "hi_res")))
+            if (JsonUtil.hasObject(bitRates, "quality", "hi_res"))
                 qualityType = AudioQuality.HR;
-            else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "lossless")))
+            else if (JsonUtil.hasObject(bitRates, "quality", "lossless"))
                 qualityType = AudioQuality.SQ;
-            else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "highest")))
+            else if (JsonUtil.hasObject(bitRates, "quality", "highest"))
                 qualityType = AudioQuality.HQ;
-            else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "higher")))
+            else if (JsonUtil.hasObject(bitRates, "quality", "higher"))
                 qualityType = AudioQuality.MQ;
-            else if (JsonUtil.notEmpty(SdkUtil.findFeatureObj(bitRates, "quality", "medium")))
+            else if (JsonUtil.hasObject(bitRates, "quality", "medium"))
                 qualityType = AudioQuality.LQ;
 
             NetMusicInfo musicInfo = new NetMusicInfo();

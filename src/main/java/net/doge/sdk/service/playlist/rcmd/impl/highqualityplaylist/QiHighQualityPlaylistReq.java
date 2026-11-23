@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -40,7 +40,7 @@ public class QiHighQualityPlaylistReq {
         int t = 0;
         String[] s = Tags.hotPlaylistTags.get(tag);
 
-        String param = s[TagType.CAT_PLAYLIST_QI];
+        String param = s[TagModule.CAT_PLAYLIST_QI];
         if (StringUtil.notEmpty(param)) {
             Map<String, Object> params = new TreeMap<>();
             params.put("pageNo", page);

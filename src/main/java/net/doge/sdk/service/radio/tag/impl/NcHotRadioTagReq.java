@@ -2,7 +2,7 @@ package net.doge.sdk.service.radio.tag.impl;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NcReqOptEnum;
@@ -46,7 +46,7 @@ public class NcHotRadioTagReq {
             String id = tagJson.getString("categoryId");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[TagType.CAT_HOT_RADIO_NC] = id;
+            Tags.radioTags.get(name)[TagModule.CAT_HOT_RADIO_NC] = id;
         }
     }
 
@@ -69,7 +69,7 @@ public class NcHotRadioTagReq {
             String id = tagJson.getString("id");
 
             if (!Tags.radioTags.containsKey(name)) Tags.radioTags.put(name, new String[c]);
-            Tags.radioTags.get(name)[TagType.CAT_REC_RADIO_NC] = id;
+            Tags.radioTags.get(name)[TagModule.CAT_REC_RADIO_NC] = id;
         }
     }
 }

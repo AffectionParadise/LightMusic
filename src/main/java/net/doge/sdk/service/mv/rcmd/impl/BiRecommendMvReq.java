@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMvInfo;
 import net.doge.sdk.common.SdkCommon;
@@ -197,7 +197,7 @@ public class BiRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.CAT_RANK_VIDEO_BI];
+        String param = s[TagModule.CAT_RANK_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
             String mvInfoBody = HttpRequest.get(String.format(CAT_RANK_VIDEO_BI_API, param))
                     .cookie(SdkCommon.BI_COOKIE)
@@ -250,7 +250,7 @@ public class BiRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.CAT_RANK_VIDEO_BI];
+        String param = s[TagModule.CAT_RANK_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
             String mvInfoBody = HttpRequest.get(String.format(CAT_NEW_VIDEO_BI_API, param, page, limit))
                     .cookie(SdkCommon.BI_COOKIE)
@@ -305,7 +305,7 @@ public class BiRecommendMvReq {
         int t = 0;
         String[] s = Tags.mvTags.get(tag);
 
-        String param = s[TagType.POP_SERIES_VIDEO_BI];
+        String param = s[TagModule.POP_SERIES_VIDEO_BI];
         if (StringUtil.notEmpty(param)) {
             String mvInfoBody = HttpRequest.get(String.format(POP_SERIES_VIDEO_BI_API, param))
                     .cookie(SdkCommon.BI_COOKIE)

@@ -2,7 +2,7 @@ package net.doge.sdk.service.playlist.tag.impl.hotplaylisttag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.opt.nc.NcReqOptEnum;
@@ -45,7 +45,7 @@ public class NcHotPlaylistTagReq {
             String name = tagJson.getString("name");
 
             if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
-            Tags.hotPlaylistTags.get(name)[TagType.HIGH_QUALITY_PLAYLIST_NC] = name;
+            Tags.hotPlaylistTags.get(name)[TagModule.HIGH_QUALITY_PLAYLIST_NC] = name;
         }
     }
 
@@ -67,7 +67,7 @@ public class NcHotPlaylistTagReq {
             String name = tagJson.getString("name");
 
             if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
-            Tags.hotPlaylistTags.get(name)[TagType.PICKED_PLAYLIST_NC] = name;
+            Tags.hotPlaylistTags.get(name)[TagModule.PICKED_PLAYLIST_NC] = name;
         }
     }
 }

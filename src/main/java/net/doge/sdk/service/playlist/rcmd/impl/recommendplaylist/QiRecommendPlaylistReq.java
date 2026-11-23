@@ -8,6 +8,7 @@ import net.doge.entity.service.NetPlaylistInfo;
 import net.doge.sdk.common.SdkCommon;
 import net.doge.sdk.common.entity.CommonResult;
 import net.doge.sdk.util.SdkUtil;
+import net.doge.util.core.json.JsonUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -43,7 +44,7 @@ public class QiRecommendPlaylistReq {
                 .executeAsStr();
         JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
         JSONArray dataArray = playlistInfoJson.getJSONArray("data");
-        JSONObject data = SdkUtil.findFeatureObj(dataArray, "type", "tracklist");
+        JSONObject data = JsonUtil.findObject(dataArray, "type", "tracklist");
         t = data.getIntValue("module_nums");
         JSONArray playlistArray = data.getJSONArray("result");
         for (int i = (page - 1) * limit, len = Math.min(playlistArray.size(), page * limit); i < len; i++) {

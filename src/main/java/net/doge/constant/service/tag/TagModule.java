@@ -1,9 +1,9 @@
 package net.doge.constant.service.tag;
 
 /**
- * 资源标签类型，用于区分某个 API 使用
+ * 资源标签模块
  */
-public class TagType {
+public class TagModule {
     // 音乐搜索
     // 节目搜索 (猫耳)
     public static final int PROGRAM_SEARCH_ME = 0;

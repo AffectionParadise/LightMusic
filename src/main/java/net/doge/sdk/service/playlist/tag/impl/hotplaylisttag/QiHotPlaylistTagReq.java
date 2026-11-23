@@ -2,7 +2,7 @@ package net.doge.sdk.service.playlist.tag.impl.hotplaylisttag;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.sdk.common.SdkCommon;
 
@@ -40,7 +40,7 @@ public class QiHotPlaylistTagReq {
                 String id = tagJson.getString("id");
 
                 if (!Tags.hotPlaylistTags.containsKey(name)) Tags.hotPlaylistTags.put(name, new String[c]);
-                Tags.hotPlaylistTags.get(name)[TagType.CAT_PLAYLIST_QI] = id;
+                Tags.hotPlaylistTags.get(name)[TagModule.CAT_PLAYLIST_QI] = id;
             }
         }
     }

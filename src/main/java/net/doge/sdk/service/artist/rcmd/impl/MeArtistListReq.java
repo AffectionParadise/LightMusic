@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import net.doge.constant.core.async.GlobalExecutors;
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetArtistInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -40,7 +40,7 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.CAT_CV_ME];
+        String param = s[TagModule.CAT_CV_ME];
         if (StringUtil.notEmpty(param)) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_CV_ME_API, param.trim(), page, limit))
                     .executeAsStr();
@@ -80,7 +80,7 @@ public class MeArtistListReq {
         int t = 0;
         String[] s = Tags.artistTags.get(tag);
 
-        String param = s[TagType.CAT_CV_ME];
+        String param = s[TagModule.CAT_CV_ME];
         if (StringUtil.notEmpty(param)) {
             String artistInfoBody = HttpRequest.get(String.format(CAT_ORGANIZATIONS_ME_API, param.trim(), page, limit))
                     .executeAsStr();

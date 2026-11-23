@@ -7,7 +7,7 @@ package net.doge.constant.core.meta;
  */
 public class SoftInfo {
     // 版本
-    public static final String VERSION = "2.0";
+    public static final String VERSION = "2.1";
     // JDK 版本
     public static final String JDK_VERSION = System.getProperty("java.version");
     // 网址

@@ -1,7 +1,7 @@
 package net.doge.sdk.service.music.rcmd.impl.newmusic;
 
 import net.doge.constant.service.source.NetResourceSource;
-import net.doge.constant.service.tag.TagType;
+import net.doge.constant.service.tag.TagModule;
 import net.doge.constant.service.tag.Tags;
 import net.doge.entity.service.NetMusicInfo;
 import net.doge.sdk.common.entity.CommonResult;
@@ -50,7 +50,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(LATEST_YC_MUSIC_FS_API, sp[0], sp[1], page))
@@ -90,7 +90,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
@@ -130,7 +130,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_YC_MUSIC_FS_API, sp[0], sp[1], page))
@@ -170,7 +170,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(LATEST_FC_MUSIC_FS_API, sp[0], sp[1], page))
@@ -210,7 +210,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(WEBSITE_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
@@ -250,7 +250,7 @@ public class FsNewMusicReq {
         int t = 0;
         String[] s = Tags.newSongTags.get(tag);
 
-        String param = s[TagType.RECOMMEND_NEW_SONG_FS];
+        String param = s[TagModule.RECOMMEND_NEW_SONG_FS];
         if (StringUtil.notEmpty(param)) {
             String[] sp = param.split(" ", -1);
             String musicInfoBody = HttpRequest.get(String.format(CANDI_REC_FC_MUSIC_FS_API, sp[0], sp[1], page))
