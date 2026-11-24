@@ -192,7 +192,7 @@ public class DesktopLyricDialog extends BaseDialog {
     // 更新锁定
     public void updateLock() {
         boolean locked = f.desktopLyricLocked;
-        if (locked) hidePaneView();
+        if (locked) setPaneViewVisible(false);
         // 锁定后启用穿透
         SwingUtil.setWindowClickThrough(this, locked);
     }
@@ -229,29 +229,16 @@ public class DesktopLyricDialog extends BaseDialog {
         close.setIcon(closeIcon);
     }
 
-    private void showPaneView() {
-        boolean unlocked = !f.desktopLyricLocked;
-        lock.setVisible(unlocked);
-        restore.setVisible(unlocked);
-        descendTrans.setVisible(unlocked);
-        ascendTrans.setVisible(unlocked);
-        decreaseFont.setVisible(unlocked);
-        increaseFont.setVisible(unlocked);
-        onTop.setVisible(unlocked);
-        close.setVisible(unlocked);
-        mainPanel.setDrawBg(unlocked);
-    }
-
-    private void hidePaneView() {
-        lock.setVisible(false);
-        restore.setVisible(false);
-        descendTrans.setVisible(false);
-        ascendTrans.setVisible(false);
-        decreaseFont.setVisible(false);
-        increaseFont.setVisible(false);
-        onTop.setVisible(false);
-        close.setVisible(false);
-        mainPanel.setDrawBg(false);
+    private void setPaneViewVisible(boolean visible) {
+        lock.setVisible(visible);
+        restore.setVisible(visible);
+        descendTrans.setVisible(visible);
+        ascendTrans.setVisible(visible);
+        decreaseFont.setVisible(visible);
+        increaseFont.setVisible(visible);
+        onTop.setVisible(visible);
+        close.setVisible(visible);
+        mainPanel.setDrawBg(visible);
     }
 
     // 初始化响应事件
@@ -288,19 +275,19 @@ public class DesktopLyricDialog extends BaseDialog {
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                showPaneView();
+                setPaneViewVisible(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 if (mainPanel.contains(e.getPoint())) return;
-                hidePaneView();
+                setPaneViewVisible(false);
             }
         });
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                hidePaneView();
+                setPaneViewVisible(false);
             }
         });
         // 从任务视图关闭桌面歌词窗口时，触发关闭事件
@@ -321,7 +308,7 @@ public class DesktopLyricDialog extends BaseDialog {
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
-            hidePaneView();
+            setPaneViewVisible(false);
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
