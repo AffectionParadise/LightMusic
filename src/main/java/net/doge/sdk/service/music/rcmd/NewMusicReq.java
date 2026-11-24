@@ -33,7 +33,10 @@ public class NewMusicReq {
         }
         if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
             KgNewMusicReq kgNewMusicReq = KgNewMusicReq.getInstance();
-            if (dt) executor.submit(() -> kgNewMusicReq.getEverydaySong(page, limit));
+            if (dt) {
+                executor.submit(() -> kgNewMusicReq.getEverydaySong(page, limit));
+                executor.submit(() -> kgNewMusicReq.getHomeDiscoverSong(page, limit));
+            }
             executor.submit(() -> kgNewMusicReq.getRecommendNewSong(tag, page, limit));
             executor.submit(() -> kgNewMusicReq.getStyleSong(tag, page, limit));
             executor.submit(() -> kgNewMusicReq.getThemePlaylistSong(tag, page, limit));

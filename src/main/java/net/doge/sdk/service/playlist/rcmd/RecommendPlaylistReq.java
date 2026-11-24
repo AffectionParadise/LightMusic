@@ -27,14 +27,18 @@ public class RecommendPlaylistReq {
         boolean dt = defaultTag.equals(tag);
         if (src == NetResourceSource.NC || src == NetResourceSource.ALL) {
             NcRecommendPlaylistReq ncRecommendPlaylistReq = NcRecommendPlaylistReq.getInstance();
-            if (dt) executor.submit(() -> ncRecommendPlaylistReq.getDiscoverPlaylists(page, limit));
-            if (dt) executor.submit(() -> ncRecommendPlaylistReq.getRecommendPlaylists(page, limit));
-            if (!dt) executor.submit(() -> ncRecommendPlaylistReq.getStylePlaylists(tag, page, limit));
+            if (dt) {
+                executor.submit(() -> ncRecommendPlaylistReq.getDiscoverPlaylists(page, limit));
+                executor.submit(() -> ncRecommendPlaylistReq.getRecommendPlaylists(page, limit));
+            } else executor.submit(() -> ncRecommendPlaylistReq.getStylePlaylists(tag, page, limit));
         }
         if (src == NetResourceSource.KG || src == NetResourceSource.ALL) {
             KgRecommendPlaylistReq kgRecommendPlaylistReq = KgRecommendPlaylistReq.getInstance();
-            if (dt) executor.submit(() -> kgRecommendPlaylistReq.getRecommendPlaylists(page));
-            if (dt) executor.submit(() -> kgRecommendPlaylistReq.getTopPlaylists(page, limit));
+            if (dt) {
+                executor.submit(() -> kgRecommendPlaylistReq.getRecommendPlaylists(page));
+                executor.submit(() -> kgRecommendPlaylistReq.getTopPlaylists(page, limit));
+                executor.submit(() -> kgRecommendPlaylistReq.getSoundEffectPlaylists(page, limit));
+            }
             executor.submit(() -> kgRecommendPlaylistReq.getRecommendTagPlaylists(tag, page, limit));
             executor.submit(() -> kgRecommendPlaylistReq.getNewTagPlaylists(tag, page, limit));
         }

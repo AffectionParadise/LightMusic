@@ -2,6 +2,9 @@ package net.doge.sdk.service.music.search.impl.hotsearch;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import net.doge.sdk.common.SdkCommon;
+import net.doge.sdk.common.opt.kg.KgReqOptEnum;
+import net.doge.sdk.common.opt.kg.KgReqOptsBuilder;
 import net.doge.util.core.http.HttpRequest;
 
 import java.util.LinkedList;
@@ -22,6 +25,8 @@ public class KgHotSearchReq {
 
     // 热搜 API (酷狗)
     private final String HOT_SEARCH_KG_API = "http://gateway.kugou.com/api/v3/search/hot_tab";
+    // 默认搜索词 API (酷狗)
+    private final String DEFAULT_SEARCH_KG_API = "/searchnofocus/v1/search_no_focus_word";
 
     /**
      * 获取热搜
@@ -49,6 +54,28 @@ public class KgHotSearchReq {
         for (int i = 0, len = hotkeys.size(); i < len; i++) {
             JSONObject keywordJson = hotkeys.getJSONObject(i);
             r.add(keywordJson.getString("keyword"));
+        }
+        return r;
+    }
+
+    /**
+     * 获取默认搜索词
+     *
+     * @return
+     */
+    public List<String> getDefaultSearch() {
+        List<String> r = new LinkedList<>();
+
+        Map<String, Object> params = new TreeMap<>();
+        params.put("clientver", 12329);
+        String dat = "{\"plat\":0,\"userid\":0,\"tags\":\"{}\",\"vip_type\":65530,\"m_type\":0,\"own_ads\":{},\"ability\":\"3\",\"sources\":[],\"bitmap\":2,\"mode\":\"normal\"}";
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(DEFAULT_SEARCH_KG_API);
+        String hotSearchBody = SdkCommon.kgRequest(params, dat, options)
+                .executeAsStr();
+        JSONArray hotkeys = JSONObject.parseObject(hotSearchBody).getJSONObject("data").getJSONArray("ads");
+        for (int i = 0, len = hotkeys.size(); i < len; i++) {
+            JSONObject keywordJson = hotkeys.getJSONObject(i);
+            r.add(keywordJson.getString("title"));
         }
         return r;
     }

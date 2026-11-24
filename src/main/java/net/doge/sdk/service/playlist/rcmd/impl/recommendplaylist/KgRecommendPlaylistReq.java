@@ -42,6 +42,8 @@ public class KgRecommendPlaylistReq {
     private final String NEW_CAT_PLAYLIST_KG_API = "http://www2.kugou.kugou.com/yueku/v9/special/getSpecial";
     // Top 分类歌单 API (酷狗)
     private final String TOP_PLAYLIST_KG_API = "/specialrec.service/special_recommend";
+    // 音效歌单 API (酷狗)
+    private final String SOUND_EFFECT_PLAYLIST_KG_API = "/pubsongs/v1/get_sound_effect_list";
 
     /**
      * 每页固定 30 条的推荐歌单
@@ -222,6 +224,51 @@ public class KgRecommendPlaylistReq {
             playlistInfo.setCreator(creator);
             playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
             playlistInfo.setPlayCount(playCount);
+            GlobalExecutors.imageExecutor.execute(() -> {
+                BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
+                playlistInfo.setCoverImgThumb(coverImgThumb);
+            });
+
+            r.add(playlistInfo);
+        }
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 音效歌单
+     */
+    public CommonResult<NetPlaylistInfo> getSoundEffectPlaylists(int page, int limit) {
+        List<NetPlaylistInfo> r = new LinkedList<>();
+        int t;
+
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(SOUND_EFFECT_PLAYLIST_KG_API);
+        String dat = String.format("{\"page\":%s,\"pagesize\":%s}", page, limit);
+        String playlistInfoBody = SdkCommon.kgRequest(null, dat, options)
+                .executeAsStr();
+        JSONObject playlistInfoJson = JSONObject.parseObject(playlistInfoBody);
+        JSONObject data = playlistInfoJson.getJSONObject("data");
+        JSONArray playlistArray = data.getJSONArray("info");
+        t = data.getIntValue("total");
+        for (int i = 0, len = playlistArray.size(); i < len; i++) {
+            JSONObject playlistJson = playlistArray.getJSONObject(i);
+
+            String playlistId = playlistJson.getString("global_collection_id");
+            String playlistName = playlistJson.getString("name");
+            String creator = playlistJson.getString("list_create_username");
+            String creatorId = playlistJson.getString("list_create_userid");
+            Long playCount = playlistJson.getLong("heat");
+            Integer trackCount = playlistJson.getIntValue("count");
+            String coverImgThumbUrl = playlistJson.getString("pic").replace("/{size}", "");
+
+            NetPlaylistInfo playlistInfo = new NetPlaylistInfo();
+            playlistInfo.setSource(NetResourceSource.KG);
+            playlistInfo.setId(playlistId);
+            playlistInfo.setName(playlistName);
+            playlistInfo.setCreator(creator);
+            playlistInfo.setCreatorId(creatorId);
+            playlistInfo.setCoverImgThumbUrl(coverImgThumbUrl);
+            playlistInfo.setPlayCount(playCount);
+            playlistInfo.setTrackCount(trackCount);
             GlobalExecutors.imageExecutor.execute(() -> {
                 BufferedImage coverImgThumb = SdkUtil.extractCover(coverImgThumbUrl);
                 playlistInfo.setCoverImgThumb(coverImgThumb);

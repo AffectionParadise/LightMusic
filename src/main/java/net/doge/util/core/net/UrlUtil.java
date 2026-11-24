@@ -83,7 +83,9 @@ public class UrlUtil {
         for (Map.Entry<String, Object> e : params.entrySet()) {
             String k = e.getKey();
             Object v = e.getValue();
-            sj.add(k + "=" + (encode ? encodeAll(v instanceof String ? (String) v : v.toString()) : v));
+            String rk = encode ? encodeAll(k) : k;
+            Object rv = encode ? encodeAll(String.valueOf(v)) : v;
+            sj.add(rk + "=" + rv);
         }
         return sj.toString();
     }

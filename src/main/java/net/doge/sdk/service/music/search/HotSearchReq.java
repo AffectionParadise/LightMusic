@@ -25,6 +25,7 @@ public class HotSearchReq {
         MultiListCallableExecutor<String> executor = new MultiListCallableExecutor<>();
         executor.submit(() -> NcHotSearchReq.getInstance().getHotSearch());
         executor.submit(() -> KgHotSearchReq.getInstance().getHotSearch());
+        executor.submit(() -> KgHotSearchReq.getInstance().getDefaultSearch());
         executor.submit(() -> QqHotSearchReq.getInstance().getHotSearch());
         executor.submit(() -> KwHotSearchReq.getInstance().getHotSearch());
         executor.submit(() -> KwHotSearchReq.getInstance().getHotSearchWeb());

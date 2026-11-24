@@ -323,7 +323,7 @@ public class KgHighQualityPlaylistReq {
 //                for (int i = 0, len = playlistArray.size(); i < len; i++) {
 //                    JSONObject playlistJson = playlistArray.getJSONObject(i);
 //
-//                    String playlistId = playlistJson.getString("list_create_listid");
+//                    String playlistId = playlistJson.getString("global_collection_id");
 //                    String playlistName = playlistJson.getString("name");
 //                    String creator = playlistJson.getString("list_create_username");
 //                    String creatorId = playlistJson.getString("list_create_userid");

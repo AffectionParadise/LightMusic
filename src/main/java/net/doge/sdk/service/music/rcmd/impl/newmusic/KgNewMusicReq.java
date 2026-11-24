@@ -32,6 +32,8 @@ public class KgNewMusicReq {
     // 新歌速递 API (酷狗)
     private final String RECOMMEND_NEW_SONG_KG_API = "http://mobilecdnbj.kugou.com/api/v3/rank/newsong";
     //    private final String RECOMMEND_NEW_SONG_KG_API = "/musicadservice/container/v1/newsong_publish";
+    // 首页刷歌 API (酷狗)
+    private final String HOME_DISCOVER_SONG_KG_API = "/homediscoverrec/v1/client/home_discover_rec";
     // 每日推荐歌曲 API (酷狗)
     private final String EVERYDAY_SONG_KG_API = "/everyday_song_recommend";
     // 风格歌曲 API (酷狗)
@@ -86,6 +88,61 @@ public class KgNewMusicReq {
             musicInfo.setAlbumId(albumId);
             musicInfo.setDuration(duration);
             musicInfo.setMvId(mvId);
+            musicInfo.setQualityType(qualityType);
+
+            r.add(musicInfo);
+        }
+        return new CommonResult<>(r, t);
+    }
+
+    /**
+     * 首页刷歌
+     */
+    public CommonResult<NetMusicInfo> getHomeDiscoverSong(int page, int limit) {
+        List<NetMusicInfo> r = new LinkedList<>();
+        int t;
+
+        Map<KgReqOptEnum, Object> options = KgReqOptsBuilder.androidPost(HOME_DISCOVER_SONG_KG_API);
+        Map<String, Object> params = new TreeMap<>();
+        params.put("module_key", "home_discover_rec");
+        params.put("module_id", 1);
+        params.put("area_code", 1);
+        params.put("platform", "android");
+        params.put("userid", 0);
+        // 客户端版本号：服务端不下发版本低于约 20489 的内容(静默返回空列表)
+        params.put("clientver", 20809);
+        String dat = "{\"support\":\"only_song\",\"userid\":0,\"recall_type\":\"song\",\"today_play_num\":0,\"pagesize\":100," +
+                "\"go_ky_extra\":[{\"key\":\"network\",\"val\":\"2\"},{\"key\":\"play_mode\",\"val\":\"2\"},{\"key\":\"no_mv_ret\",\"val\":\"1\"}]}";
+        String musicInfoBody = SdkCommon.kgRequest(params, dat, options)
+                .executeAsStr();
+        JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
+        JSONObject data = musicInfoJson.getJSONObject("data");
+        JSONArray songArray = data.getJSONArray("song_info_list");
+        t = songArray.size();
+        for (int i = (page - 1) * limit, len = Math.min(songArray.size(), page * limit); i < len; i++) {
+            JSONObject songJson = songArray.getJSONObject(i);
+
+            String hash = songJson.getString("hash_128");
+            String songId = songJson.getString("album_audio_id");
+            String name = songJson.getString("songname");
+            String artist = songJson.getString("author_name");
+            String albumName = songJson.getString("album_name");
+            String albumId = songJson.getString("ori_album_id");
+            Double duration = songJson.getDouble("timelength_128") / 1000;
+            int qualityType = AudioQuality.UNKNOWN;
+            if (songJson.getLong("filesize_flac") != 0) qualityType = AudioQuality.SQ;
+            else if (songJson.getLong("filesize_320") != 0) qualityType = AudioQuality.HQ;
+            else if (songJson.getLong("filesize_128") != 0) qualityType = AudioQuality.LQ;
+
+            NetMusicInfo musicInfo = new NetMusicInfo();
+            musicInfo.setSource(NetResourceSource.KG);
+            musicInfo.setHash(hash);
+            musicInfo.setId(songId);
+            musicInfo.setName(name);
+            musicInfo.setArtist(artist);
+            musicInfo.setAlbumName(albumName);
+            musicInfo.setAlbumId(albumId);
+            musicInfo.setDuration(duration);
             musicInfo.setQualityType(qualityType);
 
             r.add(musicInfo);
