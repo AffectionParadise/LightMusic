@@ -482,7 +482,6 @@ public class I18n {
 
         LANG_MAP.put("desktopLyricTitle", new String[]{"桌面歌词", "Desktop lyric"});
         LANG_MAP.put("lockTip", new String[]{"锁定", "Lock"});
-        LANG_MAP.put("unlockTip", new String[]{"解锁", "Unlock"});
         LANG_MAP.put("restoreTip", new String[]{"还原位置", "Restore location"});
         LANG_MAP.put("descendTransTip", new String[]{"减少不透明度", "Decrease text opacity"});
         LANG_MAP.put("ascendTransTip", new String[]{"增加不透明度", "Increase text opacity"});
@@ -585,6 +584,7 @@ public class I18n {
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});
         LANG_MAP.put("showSheetButton", new String[]{"显示乐谱按钮", "Show sheet button"});
         LANG_MAP.put("showFobButton", new String[]{"显示快进/快退按钮", "Show fast-forward / rewind buttons"});
+        LANG_MAP.put("lockDesktopLyric", new String[]{"锁定桌面歌词", "Lock desktop lyric"});
         LANG_MAP.put("lyricAlignment", new String[]{"歌词对齐方式：", "Lyric alignment: "});
         LANG_MAP.put("left", new String[]{"居左", "Left"});
         LANG_MAP.put("center", new String[]{"居中", "Center"});

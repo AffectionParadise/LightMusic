@@ -73,7 +73,7 @@ public abstract class AbstractTitledDialog extends AbstractShadowDialog {
         closeButton.setIcon(ImageUtil.dye(f.closeWindowIcon, iconColor));
         // 关闭窗口
         closeButton.addActionListener(e -> close());
-        FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
+        HDFlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setMinimumSize(new HDDimension(40, 30));
         windowCtrlPanel.add(closeButton);

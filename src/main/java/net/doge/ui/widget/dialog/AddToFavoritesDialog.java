@@ -175,7 +175,7 @@ public class AddToFavoritesDialog extends AbstractTitledDialog {
         SwingUtil.ensureAppropriateSize(minimumSizeComponents);
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
-        Dimension area = new HDDimension(1, 10);
+        HDDimension area = new HDDimension(1, 10);
         rightBox.add(CustomBox.createVerticalGlue());
         rightBox.add(newButton);
         rightBox.add(CustomBox.createRigidArea(area));

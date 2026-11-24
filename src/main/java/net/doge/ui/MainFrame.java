@@ -142,7 +142,6 @@ import org.jsoup.select.Elements;
 
 import javax.swing.*;
 import javax.swing.Timer;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -2872,7 +2871,7 @@ public class MainFrame extends JFrame {
         maximizeButton.setToolTipText(MAXIMIZE_WINDOW_TIP);
         closeButton.setToolTipText(CLOSE_WINDOW_TIP);
 
-        FlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
+        HDFlowLayout fl = new HDFlowLayout(HDFlowLayout.RIGHT);
         fl.setHgap(ScaleUtil.scale(14));
         windowCtrlPanel.setLayout(fl);
         windowCtrlPanel.setBorder(new HDEmptyBorder(3, 0, 0, 0));
@@ -3159,7 +3158,7 @@ public class MainFrame extends JFrame {
         if (desktopLyricX >= 0) desktopLyricDialog.setLocation(desktopLyricX, desktopLyricY);
         // 载入是否桌面歌词置顶
         desktopLyricOnTop = config.getBooleanValue(ConfigConstants.DESKTOP_LYRIC_ON_TOP, true);
-        desktopLyricDialog.setAlwaysOnTop(desktopLyricOnTop);
+        desktopLyricDialog.updateOnTop();
         // 载入桌面歌词透明度
         desktopLyricOpacity = config.containsKey(ConfigConstants.DESKTOP_LYRIC_OPACITY) ? config.getFloatValue(ConfigConstants.DESKTOP_LYRIC_OPACITY) : 1f;
         desktopLyricDialog.setAlpha(desktopLyricOpacity);
@@ -4646,7 +4645,7 @@ public class MainFrame extends JFrame {
 
     // 初始化侧边栏大小
     public void updateTabSize() {
-        Dimension d = new HDDimension(showTabText ? 125 : 43, 42);
+        HDDimension d = new HDDimension(showTabText ? 125 : 43, 42);
         personalMusicPanel.setPreferredSize(d);
         netMusicPanel.setPreferredSize(d);
         netPlaylistPanel.setPreferredSize(d);
@@ -4704,7 +4703,7 @@ public class MainFrame extends JFrame {
         playQueuePanel.add(playQueueLabel);
 
         // 标签布局
-        FlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
+        HDFlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
         personalMusicPanel.setLayout(fl);
         netMusicPanel.setLayout(fl);
         netPlaylistPanel.setLayout(fl);
@@ -5543,13 +5542,13 @@ public class MainFrame extends JFrame {
         });
         collectionRecordTypeComboBox.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new HDDimension(30, 30);
-        collectionRefreshButton.setPreferredSize(dimension);
-        collectionStartPageButton.setPreferredSize(dimension);
-        collectionLastPageButton.setPreferredSize(dimension);
-        collectionGoButton.setPreferredSize(dimension);
-        collectionNextPageButton.setPreferredSize(dimension);
-        collectionEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        collectionRefreshButton.setPreferredSize(d);
+        collectionStartPageButton.setPreferredSize(d);
+        collectionLastPageButton.setPreferredSize(d);
+        collectionGoButton.setPreferredSize(d);
+        collectionNextPageButton.setPreferredSize(d);
+        collectionEndPageButton.setPreferredSize(d);
         // 提示语
         collectionBackwardButton.setToolTipText(BACKWARD_TIP);
         collectionPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -7642,13 +7641,13 @@ public class MainFrame extends JFrame {
             netMusicGoPage(destPage);
         });
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netMusicRefreshButton.setPreferredSize(dimension);
-        netMusicStartPageButton.setPreferredSize(dimension);
-        netMusicLastPageButton.setPreferredSize(dimension);
-        netMusicGoButton.setPreferredSize(dimension);
-        netMusicNextPageButton.setPreferredSize(dimension);
-        netMusicEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netMusicRefreshButton.setPreferredSize(d);
+        netMusicStartPageButton.setPreferredSize(d);
+        netMusicLastPageButton.setPreferredSize(d);
+        netMusicGoButton.setPreferredSize(d);
+        netMusicNextPageButton.setPreferredSize(d);
+        netMusicEndPageButton.setPreferredSize(d);
         // 帮助提示
         netMusicBackwardButton.setToolTipText(SHOW_KEYWORD_PANEL_TIP);
         netMusicClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -8370,7 +8369,7 @@ public class MainFrame extends JFrame {
 //                if (netMusicSearchSuggestionInnerPanel2.getComponentCount() == 0) netMusicSearchSuggestionInnerPanel1.setVisible(false);
 //            }
 //        });
-        Dimension d = new HDDimension(Integer.MAX_VALUE, 500);
+        HDDimension d = new HDDimension(Integer.MAX_VALUE, 500);
         netMusicSearchSuggestionInnerPanel2.setMaximumSize(d);
         netMusicSearchSuggestionInnerPanel2.setPreferredSize(d);
         netMusicSearchSuggestionPanel.setVisible(false);
@@ -8900,7 +8899,7 @@ public class MainFrame extends JFrame {
         });
 
         // 边框间距
-        Border eb = new HDEmptyBorder(15, 0, 0, 0);
+        HDEmptyBorder eb = new HDEmptyBorder(15, 0, 0, 0);
         playlistTagLabel.setBorder(eb);
         artistTagLabel.setBorder(eb);
         radioTagLabel.setBorder(eb);
@@ -8908,15 +8907,15 @@ public class MainFrame extends JFrame {
         recommendItemTagLabel.setBorder(eb);
         collectionItemTagLabel.setBorder(eb);
 
-        eb = new EmptyBorder(gap, 0, 0, 0);
-        playlistDescriptionLabel.setBorder(eb);
-        albumDescriptionLabel.setBorder(eb);
-        artistDescriptionLabel.setBorder(eb);
-        radioDescriptionLabel.setBorder(eb);
-        rankDescriptionLabel.setBorder(eb);
-        userDescriptionLabel.setBorder(eb);
-        recommendItemDescriptionLabel.setBorder(eb);
-        collectionItemDescriptionLabel.setBorder(eb);
+        EmptyBorder ebo = new EmptyBorder(gap, 0, 0, 0);
+        playlistDescriptionLabel.setBorder(ebo);
+        albumDescriptionLabel.setBorder(ebo);
+        artistDescriptionLabel.setBorder(ebo);
+        radioDescriptionLabel.setBorder(ebo);
+        rankDescriptionLabel.setBorder(ebo);
+        userDescriptionLabel.setBorder(ebo);
+        recommendItemDescriptionLabel.setBorder(ebo);
+        collectionItemDescriptionLabel.setBorder(ebo);
         // 控制宽度
         int width = coverImageWidth + ScaleUtil.scale(20);
         Dimension size = new Dimension(width, Integer.MAX_VALUE);
@@ -9178,7 +9177,7 @@ public class MainFrame extends JFrame {
         recommendItemDescriptionCollectionPanel.add(recommendItemDescriptionCollectionButton);
         collectionItemDescriptionCollectionPanel.add(collectionItemDescriptionCollectionButton);
 
-        Dimension ms = new HDDimension(Integer.MAX_VALUE, 30);
+        HDDimension ms = new HDDimension(Integer.MAX_VALUE, 30);
         playlistDescriptionCollectionPanel.setMaximumSize(ms);
         albumDescriptionCollectionPanel.setMaximumSize(ms);
         artistDescriptionCollectionPanel.setMaximumSize(ms);
@@ -9224,7 +9223,7 @@ public class MainFrame extends JFrame {
         collectionItemListBox.add(collectionItemDescriptionOuterPanel);
 
         // 设置一下列表盒子的最佳大小使其自动填充满
-        Dimension d = new HDDimension(300, 100);
+        HDDimension d = new HDDimension(300, 100);
         playlistListBox.setPreferredSize(d);
         albumListBox.setPreferredSize(d);
         artistListBox.setPreferredSize(d);
@@ -9645,13 +9644,13 @@ public class MainFrame extends JFrame {
         netPlaylistClearInputButton.setVisible(false);
         netPlaylistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netPlaylistRefreshButton.setPreferredSize(dimension);
-        netPlaylistStartPageButton.setPreferredSize(dimension);
-        netPlaylistLastPageButton.setPreferredSize(dimension);
-        netPlaylistGoButton.setPreferredSize(dimension);
-        netPlaylistNextPageButton.setPreferredSize(dimension);
-        netPlaylistEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netPlaylistRefreshButton.setPreferredSize(d);
+        netPlaylistStartPageButton.setPreferredSize(d);
+        netPlaylistLastPageButton.setPreferredSize(d);
+        netPlaylistGoButton.setPreferredSize(d);
+        netPlaylistNextPageButton.setPreferredSize(d);
+        netPlaylistEndPageButton.setPreferredSize(d);
         // 帮助提示
         netPlaylistBackwardButton.setToolTipText(BACKWARD_TIP);
         netPlaylistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -10195,7 +10194,7 @@ public class MainFrame extends JFrame {
         netPlaylistKeywordsPanel.add(netPlaylistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new HDDimension(900, 500);
+        HDDimension d = new HDDimension(900, 500);
         netPlaylistKeywordsPanel.setPreferredSize(d);
         netPlaylistKeywordsPanelScrollPane.setPreferredSize(d);
 
@@ -10581,13 +10580,13 @@ public class MainFrame extends JFrame {
         netAlbumClearInputButton.setVisible(false);
         netAlbumPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netAlbumRefreshButton.setPreferredSize(dimension);
-        netAlbumStartPageButton.setPreferredSize(dimension);
-        netAlbumLastPageButton.setPreferredSize(dimension);
-        netAlbumGoButton.setPreferredSize(dimension);
-        netAlbumNextPageButton.setPreferredSize(dimension);
-        netAlbumEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netAlbumRefreshButton.setPreferredSize(d);
+        netAlbumStartPageButton.setPreferredSize(d);
+        netAlbumLastPageButton.setPreferredSize(d);
+        netAlbumGoButton.setPreferredSize(d);
+        netAlbumNextPageButton.setPreferredSize(d);
+        netAlbumEndPageButton.setPreferredSize(d);
         // 帮助提示
         netAlbumBackwardButton.setToolTipText(BACKWARD_TIP);
         netAlbumClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -11146,7 +11145,7 @@ public class MainFrame extends JFrame {
         netAlbumKeywordsPanel.add(netAlbumHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new HDDimension(900, 500);
+        HDDimension d = new HDDimension(900, 500);
         netAlbumKeywordsPanel.setPreferredSize(d);
         netAlbumKeywordsPanelScrollPane.setPreferredSize(d);
 
@@ -11543,13 +11542,13 @@ public class MainFrame extends JFrame {
         netArtistClearInputButton.setVisible(false);
         netArtistPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netArtistRefreshButton.setPreferredSize(dimension);
-        netArtistStartPageButton.setPreferredSize(dimension);
-        netArtistLastPageButton.setPreferredSize(dimension);
-        netArtistGoButton.setPreferredSize(dimension);
-        netArtistNextPageButton.setPreferredSize(dimension);
-        netArtistEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netArtistRefreshButton.setPreferredSize(d);
+        netArtistStartPageButton.setPreferredSize(d);
+        netArtistLastPageButton.setPreferredSize(d);
+        netArtistGoButton.setPreferredSize(d);
+        netArtistNextPageButton.setPreferredSize(d);
+        netArtistEndPageButton.setPreferredSize(d);
         // 帮助提示
         netArtistBackwardButton.setToolTipText(BACKWARD_TIP);
         netArtistClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -12306,7 +12305,7 @@ public class MainFrame extends JFrame {
         netArtistKeywordsPanel.add(netArtistHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new HDDimension(900, 500);
+        HDDimension d = new HDDimension(900, 500);
         netArtistKeywordsPanel.setPreferredSize(d);
         netArtistKeywordsPanelScrollPane.setPreferredSize(d);
 
@@ -12699,13 +12698,13 @@ public class MainFrame extends JFrame {
         netRadioSortTypeComboBox.setVisible(false);
         netRadioPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netRadioRefreshButton.setPreferredSize(dimension);
-        netRadioStartPageButton.setPreferredSize(dimension);
-        netRadioLastPageButton.setPreferredSize(dimension);
-        netRadioGoButton.setPreferredSize(dimension);
-        netRadioNextPageButton.setPreferredSize(dimension);
-        netRadioEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netRadioRefreshButton.setPreferredSize(d);
+        netRadioStartPageButton.setPreferredSize(d);
+        netRadioLastPageButton.setPreferredSize(d);
+        netRadioGoButton.setPreferredSize(d);
+        netRadioNextPageButton.setPreferredSize(d);
+        netRadioEndPageButton.setPreferredSize(d);
         // 帮助提示
         netRadioBackwardButton.setToolTipText(BACKWARD_TIP);
         netRadioClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -13382,7 +13381,7 @@ public class MainFrame extends JFrame {
         netRadioKeywordsPanel.add(netRadioHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new HDDimension(900, 500);
+        HDDimension d = new HDDimension(900, 500);
         netRadioKeywordsPanel.setPreferredSize(d);
         netRadioKeywordsPanelScrollPane.setPreferredSize(d);
 
@@ -13628,13 +13627,13 @@ public class MainFrame extends JFrame {
             searchMvGoPage(destPage);
         });
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netMvRefreshButton.setPreferredSize(dimension);
-        netMvStartPageButton.setPreferredSize(dimension);
-        netMvLastPageButton.setPreferredSize(dimension);
-        netMvGoButton.setPreferredSize(dimension);
-        netMvNextPageButton.setPreferredSize(dimension);
-        netMvEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netMvRefreshButton.setPreferredSize(d);
+        netMvStartPageButton.setPreferredSize(d);
+        netMvLastPageButton.setPreferredSize(d);
+        netMvGoButton.setPreferredSize(d);
+        netMvNextPageButton.setPreferredSize(d);
+        netMvEndPageButton.setPreferredSize(d);
         // 不可见
         netMvSortTypeComboBox.setVisible(false);
         // 帮助提示
@@ -14340,13 +14339,13 @@ public class MainFrame extends JFrame {
         // 按钮初始不可见
         netRankPlayAllButton.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netRankRefreshButton.setPreferredSize(dimension);
-        netRankStartPageButton.setPreferredSize(dimension);
-        netRankLastPageButton.setPreferredSize(dimension);
-        netRankGoButton.setPreferredSize(dimension);
-        netRankNextPageButton.setPreferredSize(dimension);
-        netRankEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netRankRefreshButton.setPreferredSize(d);
+        netRankStartPageButton.setPreferredSize(d);
+        netRankLastPageButton.setPreferredSize(d);
+        netRankGoButton.setPreferredSize(d);
+        netRankNextPageButton.setPreferredSize(d);
+        netRankEndPageButton.setPreferredSize(d);
         // 帮助提示
         netRankBackwardButton.setToolTipText(BACKWARD_TIP);
         netRankPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -15066,13 +15065,13 @@ public class MainFrame extends JFrame {
         netUserPlayAllButton.setVisible(false);
         netUserRecordTypeComboBox.setVisible(false);
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netUserRefreshButton.setPreferredSize(dimension);
-        netUserStartPageButton.setPreferredSize(dimension);
-        netUserLastPageButton.setPreferredSize(dimension);
-        netUserGoButton.setPreferredSize(dimension);
-        netUserNextPageButton.setPreferredSize(dimension);
-        netUserEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netUserRefreshButton.setPreferredSize(d);
+        netUserStartPageButton.setPreferredSize(d);
+        netUserLastPageButton.setPreferredSize(d);
+        netUserGoButton.setPreferredSize(d);
+        netUserNextPageButton.setPreferredSize(d);
+        netUserEndPageButton.setPreferredSize(d);
         // 帮助提示
         netUserBackwardButton.setToolTipText(BACKWARD_TIP);
         netUserClearInputButton.setToolTipText(CLEAR_INPUT_TIP);
@@ -15807,7 +15806,7 @@ public class MainFrame extends JFrame {
         netUserKeywordsPanel.add(netUserHistorySearchPanel);
 
         // 同时限制面板与滚动条的大小才能保证按钮不超出窗口！！！
-        Dimension d = new HDDimension(900, 500);
+        HDDimension d = new HDDimension(900, 500);
         netUserKeywordsPanel.setPreferredSize(d);
         netUserKeywordsPanelScrollPane.setPreferredSize(d);
 
@@ -16018,13 +16017,13 @@ public class MainFrame extends JFrame {
             getComments(currCommentResource, false);
         });
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netCommentRefreshButton.setPreferredSize(dimension);
-        netCommentStartPageButton.setPreferredSize(dimension);
-        netCommentLastPageButton.setPreferredSize(dimension);
-        netCommentGoButton.setPreferredSize(dimension);
-        netCommentNextPageButton.setPreferredSize(dimension);
-        netCommentEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netCommentRefreshButton.setPreferredSize(d);
+        netCommentStartPageButton.setPreferredSize(d);
+        netCommentLastPageButton.setPreferredSize(d);
+        netCommentGoButton.setPreferredSize(d);
+        netCommentNextPageButton.setPreferredSize(d);
+        netCommentEndPageButton.setPreferredSize(d);
         // 帮助提示
         netCommentBackwardButton.setToolTipText(BACKWARD_TIP);
         netCommentRefreshButton.setToolTipText(REFRESH_TIP);
@@ -16393,13 +16392,13 @@ public class MainFrame extends JFrame {
             getSheets(currSheetMusicInfo, false);
         });
         // 按钮大小限制
-        Dimension dimension = new HDDimension(30, 30);
-        netSheetRefreshButton.setPreferredSize(dimension);
-        netSheetStartPageButton.setPreferredSize(dimension);
-        netSheetLastPageButton.setPreferredSize(dimension);
-        netSheetGoButton.setPreferredSize(dimension);
-        netSheetNextPageButton.setPreferredSize(dimension);
-        netSheetEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netSheetRefreshButton.setPreferredSize(d);
+        netSheetStartPageButton.setPreferredSize(d);
+        netSheetLastPageButton.setPreferredSize(d);
+        netSheetGoButton.setPreferredSize(d);
+        netSheetNextPageButton.setPreferredSize(d);
+        netSheetEndPageButton.setPreferredSize(d);
         // 帮助提示
         netSheetBackwardButton.setToolTipText(BACKWARD_TIP);
         netSheetRefreshButton.setToolTipText(REFRESH_TIP);
@@ -17830,13 +17829,13 @@ public class MainFrame extends JFrame {
         netRecommendSortTypeComboBox.setVisible(false);
         netRecommendPlayAllButton.setVisible(false);
         // 控制按钮大小
-        Dimension dimension = new HDDimension(30, 30);
-        netRecommendRefreshButton.setPreferredSize(dimension);
-        netRecommendStartPageButton.setPreferredSize(dimension);
-        netRecommendLastPageButton.setPreferredSize(dimension);
-        netRecommendGoButton.setPreferredSize(dimension);
-        netRecommendNextPageButton.setPreferredSize(dimension);
-        netRecommendEndPageButton.setPreferredSize(dimension);
+        HDDimension d = new HDDimension(30, 30);
+        netRecommendRefreshButton.setPreferredSize(d);
+        netRecommendStartPageButton.setPreferredSize(d);
+        netRecommendLastPageButton.setPreferredSize(d);
+        netRecommendGoButton.setPreferredSize(d);
+        netRecommendNextPageButton.setPreferredSize(d);
+        netRecommendEndPageButton.setPreferredSize(d);
         // 提示语
         recommendBackwardButton.setToolTipText(BACKWARD_TIP);
         netRecommendPlayAllButton.setToolTipText(PLAY_ALL_TIP);
@@ -19624,6 +19623,11 @@ public class MainFrame extends JFrame {
         forwardButton.setVisible(showFobButton);
     }
 
+    // 更新桌面歌词锁定状态
+    public void updateDesktopLyricLocking() {
+        desktopLyricDialog.updateLock();
+    }
+
     // 初始化控制面板
     private void initControlPanel() {
         // changePaneButton 图标遮罩 UI
@@ -19912,7 +19916,7 @@ public class MainFrame extends JFrame {
         lyricTypePopupMenu.add(tradChineseMenuItem);
 
         // 按钮水平隔开一段间距
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(3));
         controlPanel.setLayout(fl);
         controlPanel.setBorder(new HDEmptyBorder(2, 0, 0, 30));

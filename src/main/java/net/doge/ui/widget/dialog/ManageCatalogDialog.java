@@ -153,7 +153,7 @@ public class ManageCatalogDialog extends AbstractTitledDialog {
         SwingUtil.ensureAppropriateSize(minimumSizeComponents);
         // 添加右部按钮
         rightBox.setBorder(new HDEmptyBorder(0, 10, 10, 10));
-        Dimension area = new HDDimension(1, 10);
+        HDDimension area = new HDDimension(1, 10);
         rightBox.add(CustomBox.createVerticalGlue());
         rightBox.add(allSelectButton);
         rightBox.add(CustomBox.createRigidArea(area));

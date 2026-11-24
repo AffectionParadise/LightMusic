@@ -9,7 +9,6 @@ import net.doge.util.ui.ScaleUtil;
 import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,7 +28,7 @@ public class CustomMenuItem extends JMenuItem implements ExtendedOpacitySupporte
     private final int VERTICAL_INSET = ScaleUtil.scale(2);
     @Getter
     private float extendedOpacity = 1f;
-    private static final Border BORDER = new HDEmptyBorder(6, 0, 6, -10);
+    private static final HDEmptyBorder BORDER = new HDEmptyBorder(6, 0, 6, -10);
 
     public CustomMenuItem() {
         this(null);

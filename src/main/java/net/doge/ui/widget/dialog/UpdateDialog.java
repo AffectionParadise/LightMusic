@@ -88,7 +88,7 @@ public class UpdateDialog extends AbstractShadowDialog {
         msgLabel.setForeground(textColor);
         percentLabel.setForeground(textColor);
         FontMetrics m = percentLabel.getFontMetrics(Fonts.NORMAL);
-        Dimension d = new HDDimension(m.stringWidth("100%") + 2, m.getHeight());
+        HDDimension d = new HDDimension(m.stringWidth("100%") + 2, m.getHeight());
         percentLabel.setPreferredSize(d);
 
         msgPanel.add(msgLabel);

@@ -44,7 +44,6 @@ import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -115,6 +114,8 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomCheckBox showSheetButtonCheckBox = new CustomCheckBox(I18n.getText("showSheetButton"));
     private CustomPanel showFobButtonPanel = new CustomPanel();
     private CustomCheckBox showFobButtonCheckBox = new CustomCheckBox(I18n.getText("showFobButton"));
+    private CustomPanel lockDesktopLyricPanel = new CustomPanel();
+    private CustomCheckBox lockDesktopLyricCheckBox = new CustomCheckBox(I18n.getText("lockDesktopLyric"));
     private CustomPanel lyricAlignmentPanel = new CustomPanel();
     private CustomLabel lyricAlignmentLabel = new CustomLabel(I18n.getText("lyricAlignment"));
     private CustomComboBox<String> lyricAlignmentComboBox = new CustomComboBox<>();
@@ -258,7 +259,7 @@ public class SettingDialog extends AbstractTitledDialog {
         playbackLabel.setHorizontalAlignment(SwingConstants.LEFT);
         hotKeyLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-        Border eb = new HDEmptyBorder(0, 10, 0, 0);
+        HDEmptyBorder eb = new HDEmptyBorder(0, 10, 0, 0);
         generalPanel.setBorder(eb);
         appearancePanel.setBorder(eb);
         downloadAndCachePanel.setBorder(eb);
@@ -287,7 +288,7 @@ public class SettingDialog extends AbstractTitledDialog {
         tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, UIStyleStorage.currUIStyle));
 
         // 标签大小
-        Dimension d = new HDDimension(120, 40);
+        HDDimension d = new HDDimension(120, 40);
         generalPanel.setPreferredSize(d);
         appearancePanel.setPreferredSize(d);
         downloadAndCachePanel.setPreferredSize(d);
@@ -295,7 +296,7 @@ public class SettingDialog extends AbstractTitledDialog {
         hotKeyPanel.setPreferredSize(d);
 
         // 对齐
-        FlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
+        HDFlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
         autoUpdatePanel.setLayout(fl);
         videoOnlyPanel.setLayout(fl);
         langPanel.setLayout(fl);
@@ -305,6 +306,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextPanel.setLayout(fl);
         showSheetButtonPanel.setLayout(fl);
         showFobButtonPanel.setLayout(fl);
+        lockDesktopLyricPanel.setLayout(fl);
         lyricAlignmentPanel.setLayout(fl);
         specMaxHeightPanel.setLayout(fl);
         gsFactorPanel.setLayout(fl);
@@ -344,6 +346,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextPanel.setMaximumSize(d);
         showSheetButtonPanel.setMaximumSize(d);
         showFobButtonPanel.setMaximumSize(d);
+        lockDesktopLyricPanel.setMaximumSize(d);
         lyricAlignmentPanel.setMaximumSize(d);
         specMaxHeightPanel.setMaximumSize(d);
         gsFactorPanel.setMaximumSize(d);
@@ -385,6 +388,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.setForeground(textColor);
         showSheetButtonCheckBox.setForeground(textColor);
         showFobButtonCheckBox.setForeground(textColor);
+        lockDesktopLyricCheckBox.setForeground(textColor);
         lyricAlignmentLabel.setForeground(textColor);
         specMaxHeightLabel.setForeground(textColor);
         gsFactorLabel.setForeground(textColor);
@@ -679,6 +683,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.updateIconStyle();
         showSheetButtonCheckBox.updateIconStyle();
         showFobButtonCheckBox.updateIconStyle();
+        lockDesktopLyricCheckBox.updateIconStyle();
         autoDownloadLyricCheckBox.updateIconStyle();
         verbatimTimelineCheckBox.updateIconStyle();
         enableKeyCheckBox.updateIconStyle();
@@ -692,6 +697,8 @@ public class SettingDialog extends AbstractTitledDialog {
         showSheetButtonPanel.add(showSheetButtonCheckBox);
 
         showFobButtonPanel.add(showFobButtonCheckBox);
+
+        lockDesktopLyricPanel.add(lockDesktopLyricCheckBox);
 
         for (String name : LyricAlignment.NAMES) lyricAlignmentComboBox.addItem(name);
         lyricAlignmentPanel.add(lyricAlignmentLabel);
@@ -824,6 +831,8 @@ public class SettingDialog extends AbstractTitledDialog {
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(showFobButtonPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
+        appearanceContentBox.add(lockDesktopLyricPanel);
+        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(lyricAlignmentPanel);
         appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
         appearanceContentBox.add(specMaxHeightPanel);
@@ -909,6 +918,7 @@ public class SettingDialog extends AbstractTitledDialog {
         showTabTextCheckBox.setSelected(f.showTabText);
         showSheetButtonCheckBox.setSelected(f.showSheetButton);
         showFobButtonCheckBox.setSelected(f.showFobButton);
+        lockDesktopLyricCheckBox.setSelected(f.desktopLyricLocked);
         lyricAlignmentComboBox.setSelectedIndex(LyricAlignment.lyricAlignmentIndex);
         specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.maxBarHeight));
         gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
@@ -977,6 +987,9 @@ public class SettingDialog extends AbstractTitledDialog {
 
         f.showFobButton = showFobButtonCheckBox.isSelected();
         f.updateFobButtonShowing();
+
+        f.desktopLyricLocked = lockDesktopLyricCheckBox.isSelected();
+        f.updateDesktopLyricLocking();
 
         LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
 

@@ -18,7 +18,6 @@ import net.doge.util.core.text.HtmlUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -125,7 +124,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         checkBox.updateIconStyle();
         checkPanel.add(checkBox);
         checkPanel.setVisible(showCheck);
-        Border eb = new HDEmptyBorder(0, 0, 20, 0);
+        HDEmptyBorder eb = new HDEmptyBorder(0, 0, 20, 0);
         checkPanel.setBorder(eb);
 
         int thickness = messageScrollPane.getThickness();
@@ -140,7 +139,7 @@ public class ConfirmDialog extends AbstractShadowDialog {
         messagePanel.setBorder(eb);
         messageScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         if (StringUtil.notEmpty(yes.getPlainText())) buttonPanel.add(yes);

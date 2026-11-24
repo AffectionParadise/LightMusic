@@ -257,7 +257,7 @@ public abstract class ImageViewDialog extends AbstractTitledDialog {
         saveImgButton.addActionListener(e -> saveImg());
 
         centerPanel.add(imgLabel, BorderLayout.CENTER);
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(5));
         bottomPanel.setLayout(fl);
         bottomPanel.add(scaleLabel);

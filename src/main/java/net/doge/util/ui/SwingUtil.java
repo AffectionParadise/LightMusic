@@ -4,6 +4,7 @@ import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.popup.CustomComboPopup;
 import net.doge.ui.widget.list.renderer.base.CustomListCellRenderer;
+import net.doge.util.ui.helper.WindowClickThroughHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -71,7 +72,7 @@ public class SwingUtil {
     }
 
     /**
-     * 调整数组中所有组件为同一尺寸(宽度与高度取最大值)
+     * 调整所有组件为同一尺寸(宽度与高度取最大值)
      *
      * @param components
      */
@@ -88,5 +89,15 @@ public class SwingUtil {
             // 此处很重要，如果空间有余，会放大到 MaximumSize
             component.setMaximumSize(d);
         }
+    }
+
+    /**
+     * 设置窗口是否穿透
+     *
+     * @param window
+     * @param enabled
+     */
+    public static void setWindowClickThrough(Window window, boolean enabled) {
+        WindowClickThroughHelper.setEnabled(window, enabled);
     }
 }

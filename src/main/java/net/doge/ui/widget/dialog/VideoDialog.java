@@ -520,7 +520,7 @@ public class VideoDialog extends AbstractTitledDialog {
 
         updateMenuItemStatus(selectedFobMenuItem);
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(3));
         controlPanel.setLayout(fl);
         controlPanel.add(CustomBox.createHorizontalGlue());

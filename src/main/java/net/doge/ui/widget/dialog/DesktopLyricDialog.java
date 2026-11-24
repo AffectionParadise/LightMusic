@@ -19,6 +19,7 @@ import net.doge.util.core.img.ImageUtil;
 import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
+import net.doge.util.ui.SwingUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +52,6 @@ public class DesktopLyricDialog extends BaseDialog {
     private CustomPanel buttonPanel = new CustomPanel();
 
     private final String LOCK_TIP = I18n.getText("lockTip");
-    private final String UNLOCK_TIP = I18n.getText("unlockTip");
     private final String RESTORE_TIP = I18n.getText("restoreTip");
     private final String DESCEND_TRANS_TIP = I18n.getText("descendTransTip");
     private final String ASCEND_TRANS_TIP = I18n.getText("ascendTransTip");
@@ -61,7 +61,6 @@ public class DesktopLyricDialog extends BaseDialog {
     private final String CANCEL_ON_TOP_TIP = I18n.getText("cancelOnTopTip");
     private final String CLOSE_TIP = I18n.getText("closeTip");
     private ImageIcon lockIcon = LMIconManager.getIcon("dialog.lock");
-    private ImageIcon unlockIcon = LMIconManager.getIcon("dialog.unlock");
     private ImageIcon restoreIcon = LMIconManager.getIcon("dialog.restoreLocation");
     private ImageIcon descendTransIcon = LMIconManager.getIcon("dialog.descendTrans");
     private ImageIcon ascendTransIcon = LMIconManager.getIcon("dialog.ascendTrans");
@@ -70,7 +69,6 @@ public class DesktopLyricDialog extends BaseDialog {
     private ImageIcon onTopIcon = LMIconManager.getIcon("dialog.onTop");
     private ImageIcon cancelOnTopIcon = LMIconManager.getIcon("dialog.cancelOnTop");
     private ImageIcon closeIcon = LMIconManager.getIcon("dialog.close");
-    private ImageIcon emptyIcon = new ImageIcon(ImageUtil.createTransparentImage(lockIcon.getIconWidth(), lockIcon.getIconHeight()));
 
     private CustomButton lock = new CustomButton();
     private CustomButton restore = new CustomButton();
@@ -83,8 +81,6 @@ public class DesktopLyricDialog extends BaseDialog {
 
     private int dx;
     private int dy;
-    // 穿透
-    private boolean touchOver;
 
     /**
      * 设置背景色
@@ -159,7 +155,7 @@ public class DesktopLyricDialog extends BaseDialog {
         updateLyric(new Statement(" "), 0);
         lyricLabel.setBorder(new HDEmptyBorder(20, 0, 0, 0));
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(10));
         buttonPanel.setLayout(fl);
         buttonPanel.setBorder(new HDEmptyBorder(10, 0, 0, 0));
@@ -172,6 +168,7 @@ public class DesktopLyricDialog extends BaseDialog {
         buttonPanel.add(onTop);
         buttonPanel.add(close);
 
+        lock.setVisible(false);
         restore.setVisible(false);
         descendTrans.setVisible(false);
         ascendTrans.setVisible(false);
@@ -195,14 +192,17 @@ public class DesktopLyricDialog extends BaseDialog {
     // 更新锁定
     public void updateLock() {
         boolean locked = f.desktopLyricLocked;
-        lock.setIcon(locked ? unlockIcon : lockIcon);
-        lock.setToolTipText(locked ? UNLOCK_TIP : LOCK_TIP);
+        if (locked) hidePaneView();
+        // 锁定后启用穿透
+        SwingUtil.setWindowClickThrough(this, locked);
     }
 
     // 更新置顶
     public void updateOnTop() {
-        onTop.setIcon(f.desktopLyricOnTop ? cancelOnTopIcon : onTopIcon);
-        onTop.setToolTipText(f.desktopLyricOnTop ? CANCEL_ON_TOP_TIP : ON_TOP_TIP);
+        boolean desktopLyricOnTop = f.desktopLyricOnTop;
+        onTop.setIcon(desktopLyricOnTop ? cancelOnTopIcon : onTopIcon);
+        onTop.setToolTipText(desktopLyricOnTop ? CANCEL_ON_TOP_TIP : ON_TOP_TIP);
+        setAlwaysOnTop(desktopLyricOnTop);
     }
 
     // 更新样式
@@ -210,7 +210,6 @@ public class DesktopLyricDialog extends BaseDialog {
         UIStyle st = UIStyleStorage.currUIStyle;
         Color iconColor = st.getIconColor();
 
-        unlockIcon = ImageUtil.dye(unlockIcon, iconColor);
         lockIcon = ImageUtil.dye(lockIcon, iconColor);
         restoreIcon = ImageUtil.dye(restoreIcon, iconColor);
         descendTransIcon = ImageUtil.dye(descendTransIcon, iconColor);
@@ -221,6 +220,7 @@ public class DesktopLyricDialog extends BaseDialog {
         cancelOnTopIcon = ImageUtil.dye(cancelOnTopIcon, iconColor);
         closeIcon = ImageUtil.dye(closeIcon, iconColor);
 
+        lock.setIcon(lockIcon);
         restore.setIcon(restoreIcon);
         descendTrans.setIcon(descendTransIcon);
         ascendTrans.setIcon(ascendTransIcon);
@@ -229,17 +229,9 @@ public class DesktopLyricDialog extends BaseDialog {
         close.setIcon(closeIcon);
     }
 
-    // 设置穿透
-    public void setTouchOver(boolean touchOver) {
-        this.touchOver = touchOver;
-        mainPanel.repaint();
-    }
-
-    private void showUI() {
-        updateLock();
-        updateOnTop();
+    private void showPaneView() {
         boolean unlocked = !f.desktopLyricLocked;
-        mainPanel.setDrawBg(unlocked);
+        lock.setVisible(unlocked);
         restore.setVisible(unlocked);
         descendTrans.setVisible(unlocked);
         ascendTrans.setVisible(unlocked);
@@ -247,12 +239,11 @@ public class DesktopLyricDialog extends BaseDialog {
         increaseFont.setVisible(unlocked);
         onTop.setVisible(unlocked);
         close.setVisible(unlocked);
-        // 设置为不穿透，防止鼠标退出事件监听过早
-        setTouchOver(false);
+        mainPanel.setDrawBg(unlocked);
     }
 
-    private void hideUI() {
-        lock.setIcon(emptyIcon);
+    private void hidePaneView() {
+        lock.setVisible(false);
         restore.setVisible(false);
         descendTrans.setVisible(false);
         ascendTrans.setVisible(false);
@@ -261,7 +252,6 @@ public class DesktopLyricDialog extends BaseDialog {
         onTop.setVisible(false);
         close.setVisible(false);
         mainPanel.setDrawBg(false);
-        setTouchOver(true);
     }
 
     // 初始化响应事件
@@ -298,19 +288,19 @@ public class DesktopLyricDialog extends BaseDialog {
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                showUI();
+                showPaneView();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 if (mainPanel.contains(e.getPoint())) return;
-                hideUI();
+                hidePaneView();
             }
         });
         addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                hideUI();
+                hidePaneView();
             }
         });
         // 从任务视图关闭桌面歌词窗口时，触发关闭事件
@@ -322,6 +312,7 @@ public class DesktopLyricDialog extends BaseDialog {
             }
         });
 
+        lock.setToolTipText(LOCK_TIP);
         lock.addActionListener(e -> {
             f.desktopLyricLocked = !f.desktopLyricLocked;
             updateLock();
@@ -330,7 +321,7 @@ public class DesktopLyricDialog extends BaseDialog {
         restore.addActionListener(e -> {
             f.desktopLyricX = f.desktopLyricY = -1;
             setLocation(dx, dy);
-            hideUI();
+            hidePaneView();
         });
         descendTrans.setToolTipText(DESCEND_TRANS_TIP);
         descendTrans.addActionListener(e -> lyricLabel.decreaseAlpha());
@@ -401,10 +392,10 @@ public class DesktopLyricDialog extends BaseDialog {
 
         @Override
         public void paintComponent(Graphics g) {
-            if (!touchOver) {
+            if (drawBg) {
                 Graphics2D g2d = GraphicsUtil.setup(g);
                 g2d.setColor(Colors.BLACK);
-                GraphicsUtil.srcOver(g2d, drawBg ? 0.2f : 0.01f);
+                GraphicsUtil.srcOver(g2d, 0.2f);
                 int arc = ScaleUtil.scale(8);
                 g2d.fillRoundRect(0, 0, getWidth(), getHeight(), arc, arc);
                 GraphicsUtil.srcOver(g2d);

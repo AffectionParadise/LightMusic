@@ -106,7 +106,7 @@ public class DonateDialog extends AbstractTitledDialog {
         centerPanel.add(cPanel, BorderLayout.CENTER);
         centerPanel.add(thankPanel, BorderLayout.SOUTH);
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         buttonPanel.add(yes);

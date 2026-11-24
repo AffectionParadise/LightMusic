@@ -217,7 +217,7 @@ public class MiniDialog extends AbstractMiniDialog {
             f.lyricList.updateActiveIndex();
         });
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(5));
         controlPanel.setLayout(fl);
 

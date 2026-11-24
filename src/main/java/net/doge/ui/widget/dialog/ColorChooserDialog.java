@@ -148,7 +148,7 @@ public class ColorChooserDialog extends AbstractTitledDialog implements Document
     private void initView() {
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 
-        Dimension d = new HDDimension(1, 10);
+        HDDimension d = new HDDimension(1, 10);
         CustomBox rBox = CustomBox.createHorizontalBox();
         rBox.add(rlb);
         rBox.add(rSlider);

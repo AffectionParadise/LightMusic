@@ -15,7 +15,6 @@ import net.doge.util.lmdata.manager.LMIconManager;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 /**
@@ -91,7 +90,7 @@ public class AboutDialog extends AbstractTitledDialog {
         websitePanel.add(websiteLabel);
         mailPanel.add(mailLabel);
 
-        Border eb = new HDEmptyBorder(0, 0, 10, 0);
+        HDEmptyBorder eb = new HDEmptyBorder(0, 0, 10, 0);
         appPanel.setBorder(eb);
         versionPanel.setBorder(eb);
         jdkVersionPanel.setBorder(eb);
@@ -107,7 +106,7 @@ public class AboutDialog extends AbstractTitledDialog {
         centerPanel.add(websitePanel);
         centerPanel.add(mailPanel);
 
-        FlowLayout fl = new HDFlowLayout();
+        HDFlowLayout fl = new HDFlowLayout();
         fl.setHgap(ScaleUtil.scale(20));
         buttonPanel.setLayout(fl);
         buttonPanel.add(yes);

@@ -30,7 +30,6 @@ import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -209,7 +208,7 @@ public class EditInfoDialog extends AbstractTitledDialog {
         results[24] = version;
         results[25] = copyright;
 
-        Border b = new HDEmptyBorder(0, 20, 0, 20);
+        HDEmptyBorder b = new HDEmptyBorder(0, 20, 0, 20);
 
         UIStyle style = UIStyleStorage.currUIStyle;
         Color textColor = style.getTextColor();

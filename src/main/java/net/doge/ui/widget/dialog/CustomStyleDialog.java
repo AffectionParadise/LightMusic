@@ -28,7 +28,6 @@ import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.ScaleUtil;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -143,7 +142,7 @@ public class CustomStyleDialog extends AbstractTitledDialog implements DocumentL
         results[10] = shownStyle.getSliderColor();
         results[11] = shownStyle.getSpectrumColor();
 
-        Border eb = new HDEmptyBorder(0, 20, 0, 20);
+        HDEmptyBorder eb = new HDEmptyBorder(0, 20, 0, 20);
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);

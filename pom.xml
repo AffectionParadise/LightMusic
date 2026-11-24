@@ -25,6 +25,7 @@
         <opencc4j.version>1.14.0</opencc4j.version>
         <kuromoji-ipadic.version>0.9.0</kuromoji-ipadic.version>
         <icu4j.version>77.1</icu4j.version>
+        <jna.version>5.19.1</jna.version>
         <hutool.version>5.8.48</hutool.version>
         <okhttp.version>5.5.1</okhttp.version>
     </properties>
@@ -191,6 +192,13 @@
             <groupId>com.ibm.icu</groupId>
             <artifactId>icu4j</artifactId>
             <version>${icu4j.version}</version>
+        </dependency>
+
+        <!-- Native 调用 -->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>${jna.version}</version>
         </dependency>
     </dependencies>
 
