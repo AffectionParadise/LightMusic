@@ -168,14 +168,10 @@ public class DesktopLyricDialog extends BaseDialog {
         buttonPanel.add(onTop);
         buttonPanel.add(close);
 
-        lock.setVisible(false);
-        restore.setVisible(false);
-        descendTrans.setVisible(false);
-        ascendTrans.setVisible(false);
-        decreaseFont.setVisible(false);
-        increaseFont.setVisible(false);
-        onTop.setVisible(false);
-        close.setVisible(false);
+        updateStyle();
+        // 在按钮可见时记录首选尺寸，隐藏后仍为按钮栏保留空间
+        buttonPanel.setPreferredSize(buttonPanel.getPreferredSize());
+        setPaneViewVisible(false);
 
         lyricPanel.setLayout(new BorderLayout());
         lyricPanel.add(lyricLabel);
@@ -194,7 +190,7 @@ public class DesktopLyricDialog extends BaseDialog {
         boolean locked = f.desktopLyricLocked;
         if (locked) setPaneViewVisible(false);
         // 锁定后启用穿透
-        SwingUtil.setWindowClickThrough(this, locked);
+        if (isDisplayable()) SwingUtil.setWindowClickThrough(this, locked);
     }
 
     // 更新置顶
@@ -226,18 +222,13 @@ public class DesktopLyricDialog extends BaseDialog {
         ascendTrans.setIcon(ascendTransIcon);
         decreaseFont.setIcon(decreaseFontIcon);
         increaseFont.setIcon(increaseFontIcon);
+        onTop.setIcon(f.desktopLyricOnTop ? cancelOnTopIcon : onTopIcon);
         close.setIcon(closeIcon);
     }
 
     private void setPaneViewVisible(boolean visible) {
-        lock.setVisible(visible);
-        restore.setVisible(visible);
-        descendTrans.setVisible(visible);
-        ascendTrans.setVisible(visible);
-        decreaseFont.setVisible(visible);
-        increaseFont.setVisible(visible);
-        onTop.setVisible(visible);
-        close.setVisible(visible);
+        for (Component component : buttonPanel.getComponents())
+            component.setVisible(visible);
         mainPanel.setDrawBg(visible);
     }
 
@@ -275,6 +266,8 @@ public class DesktopLyricDialog extends BaseDialog {
         mainPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
+                // 屏蔽按下锁定按钮后多余的鼠标进入响应
+                if (f.desktopLyricLocked) return;
                 setPaneViewVisible(true);
             }
 
@@ -326,8 +319,6 @@ public class DesktopLyricDialog extends BaseDialog {
         close.addActionListener(e -> {
             f.desktopLyricButton.doClick();
         });
-
-        updateStyle();
     }
 
     private void decreaseFont() {

@@ -67,8 +67,6 @@ public class ConfigConstants {
     public static final String GS_FACTOR_INDEX = "gsFactorIndex";
     // 暗角滤镜因子
     public static final String DARKER_FACTOR_INDEX = "darkerFactorIndex";
-    // 线性渐变色彩风格
-    public static final String GRADIENT_COLOR_STYLE_INDEX = "gradientColorStyleIndex";
     // 播放模式
     public static final String PLAY_MODE = "playMode";
     // 歌曲下载路径
@@ -97,8 +95,8 @@ public class ConfigConstants {
     public static final String VIBRANT_ON = "vibrantOn";
     // 是否律动
     public static final String GROOVE_ON = "grooveOn";
-    // 模糊类型
-    public static final String BLUR_TYPE = "blurType";
+    // 背景效果
+    public static final String BACKGROUND_EFFECT = "backgroundEffect";
     // 是否自动下载歌词
     public static final String AUTO_DOWNLOAD_LYRIC = "autoDownloadLyric";
     // 下载音质

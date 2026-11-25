@@ -26,6 +26,6 @@ public class StringComboBoxUI extends CustomComboBoxUI {
     public StringComboBoxUI(CustomComboBox<String> comboBox, MainFrame f, int width, int[] indicesSupported) {
         super(comboBox, f, width);
         // 下拉列表渲染
-        comboBox.setRenderer(new StringComboBoxRenderer(indicesSupported));
+        comboBox.setRenderer(new StringComboBoxRenderer(comboBox, indicesSupported));
     }
 }

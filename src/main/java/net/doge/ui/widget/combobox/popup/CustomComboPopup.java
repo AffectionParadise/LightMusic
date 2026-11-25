@@ -6,6 +6,7 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.list.CustomList;
+import net.doge.ui.widget.menu.ui.CustomPopupMenuUI;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
@@ -37,7 +38,7 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
     }
 
     private void init() {
-        setLightWeightPopupEnabled(false);
+        setOpaque(false);
         // 阴影边框
         setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
 
@@ -78,22 +79,19 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
 
     @Override
     public void setTreeExtendedOpacity(float extendedOpacity) {
-        // ComboPopup 的透明度会影响 ComboBox 的选中项，因此从 ComboBox 开始更新
-        SwingUtil.setTreeExtendedOpacity(comboBox, extendedOpacity);
+        SwingUtil.setTreeExtendedOpacity(this, extendedOpacity);
+    }
+
+    @Override
+    public void updateUI() {
+        // 与 PopupMenu 沿用同一套 UI
+        setUI(new CustomPopupMenuUI());
     }
 
     @Override
     public void setVisible(boolean b) {
+        if (b && !isVisible()) fadeIn();
         super.setVisible(b);
-        if (b) {
-            // 使 JPopupMenu 对应的 Window 透明！
-            Window w = SwingUtilities.getWindowAncestor(this);
-            w.setVisible(false);
-            w.setBackground(Colors.BLACK);
-            w.setBackground(Colors.TRANSPARENT);
-            fadeIn();
-            w.setVisible(true);
-        }
         f.currPopup = b ? this : null;
     }
 

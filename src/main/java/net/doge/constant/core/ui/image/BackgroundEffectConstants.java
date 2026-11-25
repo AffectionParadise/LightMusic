@@ -4,10 +4,10 @@ import net.doge.constant.core.lang.I18n;
 
 /**
  * @author Doge
- * @description 模糊参数
+ * @description 背景效果参数
  * @date 2020/12/7
  */
-public class BlurConstants {
+public class BackgroundEffectConstants {
     // 关闭
     public static final int OFF = 0;
     // 歌曲封面

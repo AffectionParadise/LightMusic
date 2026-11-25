@@ -200,7 +200,7 @@ public class I18n {
         LANG_MAP.put("fobTimeTip", new String[]{"快进/快退时间", "Fast forward/rewind time"});
         LANG_MAP.put("fullScreenTip", new String[]{"全屏", "Full screen"});
         LANG_MAP.put("switchSpectrumTip", new String[]{"频谱", "Spectrum"});
-        LANG_MAP.put("switchBlurTip", new String[]{"模糊", "Blur"});
+        LANG_MAP.put("backgroundEffectTip", new String[]{"背景效果", "Background effect"});
         LANG_MAP.put("equalizerTip", new String[]{"均衡器", "Equalizer"});
         LANG_MAP.put("sheetTip", new String[]{"乐谱", "Sheet"});
         LANG_MAP.put("translationTip", new String[]{"翻译", "Translation"});
@@ -283,11 +283,11 @@ public class I18n {
         LANG_MAP.put("darker", new String[]{"暗角滤镜", "Darker mode"});
         LANG_MAP.put("vibrant", new String[]{"活力色彩", "Vibrant"});
         LANG_MAP.put("groove", new String[]{"旋转律动", "Groove"});
-        LANG_MAP.put("blurOff", new String[]{"跟随主题", "Follow theme"});
-        LANG_MAP.put("cvBlur", new String[]{"歌曲封面", "Track cover"});
-        LANG_MAP.put("mcBlur", new String[]{"纯主色调", "Solid color"});
-        LANG_MAP.put("lgBlur", new String[]{"线性渐变", "Linear gradient"});
-        LANG_MAP.put("fbmBlur", new String[]{"迷幻纹理", "Psychedelic texture"});
+        LANG_MAP.put("bgOff", new String[]{"跟随主题", "Follow theme"});
+        LANG_MAP.put("cvBg", new String[]{"歌曲封面", "Track cover"});
+        LANG_MAP.put("mcBg", new String[]{"纯主色调", "Solid color"});
+        LANG_MAP.put("lgBg", new String[]{"线性渐变", "Linear gradient"});
+        LANG_MAP.put("fbmBg", new String[]{"迷幻纹理", "Psychedelic texture"});
 
         LANG_MAP.put("emptyHint", new String[]{"列表空空如也~", "Empty list"});
 

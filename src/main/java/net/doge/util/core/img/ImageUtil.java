@@ -7,7 +7,7 @@ import com.jhlabs.image.ShadowFilter;
 import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.doge.constant.core.os.Format;
-import net.doge.constant.core.ui.image.BlurConstants;
+import net.doge.constant.core.ui.image.BackgroundEffectConstants;
 import net.doge.util.core.RandomUtil;
 import net.doge.util.core.StringUtil;
 import net.doge.util.core.http.HttpRequest;
@@ -619,7 +619,7 @@ public class ImageUtil {
      */
     public static BufferedImage gaussianBlur(BufferedImage img) {
         if (img == null) return null;
-        int radius = (int) (img.getWidth() * BlurConstants.GAUSSIAN_FACTOR[BlurConstants.gsFactorIndex]);
+        int radius = (int) (img.getWidth() * BackgroundEffectConstants.GAUSSIAN_FACTOR[BackgroundEffectConstants.gsFactorIndex]);
         return GaussianBlurHelper.blur(img, Math.max(1, radius));
     }
 
@@ -655,7 +655,7 @@ public class ImageUtil {
     public static BufferedImage darker(BufferedImage img) {
         if (img == null) return null;
         double l = computeAverageLuminance(img);
-        float exp = 0.3f, param = BlurConstants.DARKER_FACTOR[BlurConstants.darkerFactorIndex];
+        float exp = 0.3f, param = BackgroundEffectConstants.DARKER_FACTOR[BackgroundEffectConstants.darkerFactorIndex];
         if (l > 0.8) exp += param - 0.05f;
         else if (l > 0.5) exp += param;
         else if (l > 0.4) exp += param + 0.1f;

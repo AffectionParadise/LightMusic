@@ -20,7 +20,7 @@ public class LocalPlaylistComboBoxUI extends CustomComboBoxUI {
     public LocalPlaylistComboBoxUI(CustomComboBox<LocalPlaylist> comboBox, MainFrame f, int width) {
         super(comboBox, f, width);
         // 下拉列表渲染
-        comboBox.setRenderer(new LocalPlaylistComboBoxRenderer());
+        comboBox.setRenderer(new LocalPlaylistComboBoxRenderer(comboBox));
         comboBox.setMaximumSize(new HDDimension(width, 30));
     }
 }

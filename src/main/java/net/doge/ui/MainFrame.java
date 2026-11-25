@@ -33,7 +33,7 @@ import net.doge.constant.core.task.TaskType;
 import net.doge.constant.core.ui.Colors;
 import net.doge.constant.core.ui.Fonts;
 import net.doge.constant.core.ui.dialog.ConfirmDialogOptions;
-import net.doge.constant.core.ui.image.BlurConstants;
+import net.doge.constant.core.ui.image.BackgroundEffectConstants;
 import net.doge.constant.core.ui.image.ImageConstants;
 import net.doge.constant.core.ui.list.MvCompSourceType;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
@@ -441,15 +441,15 @@ public class MainFrame extends JFrame {
     // 频谱关闭图标
     private ImageIcon spectrumOffIcon = LMIconManager.getIcon("control.spectrumOff");
     // 歌曲封面图标
-    private ImageIcon cvBlurIcon = LMIconManager.getIcon("menu.cvBlur");
+    private ImageIcon cvBgIcon = LMIconManager.getIcon("menu.cvBg");
     // 纯主色调图标
-    private ImageIcon mcBlurIcon = LMIconManager.getIcon("menu.pureColorBlur");
+    private ImageIcon mcBgIcon = LMIconManager.getIcon("menu.pureColorBg");
     // 线性渐变图标
-    private ImageIcon lgBlurIcon = LMIconManager.getIcon("menu.linearGradient");
+    private ImageIcon lgBgIcon = LMIconManager.getIcon("menu.linearGradient");
     // 迷幻纹理图标
-    private ImageIcon fbmBlurIcon = LMIconManager.getIcon("menu.fbm");
-    // 模糊关闭图标
-    private ImageIcon blurOffIcon = LMIconManager.getIcon("menu.blurOff");
+    private ImageIcon fbmBgIcon = LMIconManager.getIcon("menu.fbm");
+    // 跟随主题图标
+    private ImageIcon bgOffIcon = LMIconManager.getIcon("menu.bgOff");
     // 均衡器图标
     private ImageIcon equalizerIcon = LMIconManager.getIcon("control.equalizer");
     // 转到播放队列图标
@@ -670,7 +670,7 @@ public class MainFrame extends JFrame {
     private final String MUTE_TIP = I18n.getText("muteTip");
     private final String RATE_TIP = I18n.getText("rateTip");
     private final String SWITCH_SPECTRUM_TIP = I18n.getText("switchSpectrumTip");
-    private final String SWITCH_BLUR_TIP = I18n.getText("switchBlurTip");
+    private final String BACKGROUND_EFFECT_TIP = I18n.getText("backgroundEffectTip");
     private final String EQUALIZER_TIP = I18n.getText("equalizerTip");
     private final String SHEET_TIP = I18n.getText("sheetTip");
     private final String TRANSLATION_TIP = I18n.getText("translationTip");
@@ -829,7 +829,7 @@ public class MainFrame extends JFrame {
     // 是否律动
     public boolean grooveOn;
     // 模糊类型
-    public int blurType;
+    public int backgroundEffect;
     // 是否显示频谱
     public boolean showSpectrum;
     // 是否自动下载歌词
@@ -975,7 +975,7 @@ public class MainFrame extends JFrame {
     public CustomSlider volumeSlider = new CustomSlider();
     private CustomButton rateButton = new CustomButton(rateIcon);
     private CustomButton switchSpectrumButton = new CustomButton(spectrumOnIcon);
-    private CustomButton blurButton = new CustomButton(cvBlurIcon);
+    private CustomButton backgroundEffectButton = new CustomButton(cvBgIcon);
     private CustomButton equalizerButton = new CustomButton(equalizerIcon);
     private CustomButton sheetButton = new CustomButton(sheetIcon);
     private CustomButton goToPlayQueueButton = new CustomButton(goToPlayQueueIcon);
@@ -995,18 +995,18 @@ public class MainFrame extends JFrame {
     private CustomMenuItem listCycleMenuItem = new CustomMenuItem(I18n.getText("listCycle"));
     private CustomMenuItem shuffleMenuItem = new CustomMenuItem(I18n.getText("shuffle"));
 
-    // 模糊模式右键菜单
-    private CustomPopupMenu blurPopupMenu = new CustomPopupMenu(THIS);
+    // 背景效果右键菜单
+    private CustomPopupMenu backgroundEffectPopupMenu = new CustomPopupMenu(THIS);
     private CustomCheckBoxMenuItem fluidMenuItem = new CustomCheckBoxMenuItem(I18n.getText("fluid"));
     private CustomCheckBoxMenuItem gsMenuItem = new CustomCheckBoxMenuItem(I18n.getText("gs"));
     private CustomCheckBoxMenuItem darkerMenuItem = new CustomCheckBoxMenuItem(I18n.getText("darker"));
     private CustomCheckBoxMenuItem vibrantMenuItem = new CustomCheckBoxMenuItem(I18n.getText("vibrant"));
     private CustomCheckBoxMenuItem grooveMenuItem = new CustomCheckBoxMenuItem(I18n.getText("groove"));
-    private CustomMenuItem blurOffMenuItem = new CustomMenuItem(I18n.getText("blurOff"));
-    private CustomMenuItem cvBlurMenuItem = new CustomMenuItem(I18n.getText("cvBlur"));
-    private CustomMenuItem mcBlurMenuItem = new CustomMenuItem(I18n.getText("mcBlur"));
-    private CustomMenuItem lgBlurMenuItem = new CustomMenuItem(I18n.getText("lgBlur"));
-    private CustomMenuItem fbmBlurMenuItem = new CustomMenuItem(I18n.getText("fbmBlur"));
+    private CustomMenuItem bgOffMenuItem = new CustomMenuItem(I18n.getText("bgOff"));
+    private CustomMenuItem cvBgMenuItem = new CustomMenuItem(I18n.getText("cvBg"));
+    private CustomMenuItem mcBgMenuItem = new CustomMenuItem(I18n.getText("mcBg"));
+    private CustomMenuItem lgBgMenuItem = new CustomMenuItem(I18n.getText("lgBg"));
+    private CustomMenuItem fbmBgMenuItem = new CustomMenuItem(I18n.getText("fbmBg"));
 
     // 标签页
     private CustomTabbedPane tabbedPane = new CustomTabbedPane(CustomTabbedPane.LEFT);
@@ -2554,7 +2554,8 @@ public class MainFrame extends JFrame {
                     if (player.loadedMusicResource()) {
                         showAlbumImage();
                     }
-                    if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) updateBgImg();
+                    if (backgroundEffect == BackgroundEffectConstants.OFF || !player.loadedMusicResource())
+                        updateBgImg();
                 });
             }
         });
@@ -3077,11 +3078,9 @@ public class MainFrame extends JFrame {
         SpectrumConstants.maxBarHeight = config.getIntValue(ConfigConstants.MAX_BAR_HEIGHT, SpectrumConstants.maxBarHeight);
         spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.maxBarHeight));
         // 载入高斯模糊因子
-        BlurConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
+        BackgroundEffectConstants.gsFactorIndex = config.getIntValue(ConfigConstants.GS_FACTOR_INDEX, BackgroundEffectConstants.gsFactorIndex);
         // 载入暗角滤镜因子
-        BlurConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
-//        // 载入线性渐变色彩风格
-//        BlurConstants.gradientColorStyleIndex = config.getIntValue(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
+        BackgroundEffectConstants.darkerFactorIndex = config.getIntValue(ConfigConstants.DARKER_FACTOR_INDEX, BackgroundEffectConstants.darkerFactorIndex);
         // 载入歌曲下载路径
         String musicDownPath = config.getString(ConfigConstants.MUSIC_DOWN_PATH);
         if (StringUtil.notEmpty(musicDownPath)) SimplePath.DOWNLOAD_MUSIC_PATH = musicDownPath;
@@ -3126,13 +3125,13 @@ public class MainFrame extends JFrame {
         grooveOn = config.getBooleanValue(ConfigConstants.GROOVE_ON, false);
         globalPanel.setGrooveOn(grooveOn);
         grooveMenuItem.setSelected(grooveOn);
-        // 载入模糊类型
-        blurType = config.getIntValue(ConfigConstants.BLUR_TYPE, BlurConstants.CV);
-        blurButton.setIcon(ImageUtil.dye(blurType == BlurConstants.CV ? cvBlurIcon
-                : blurType == BlurConstants.MC ? mcBlurIcon
-                : blurType == BlurConstants.LG ? lgBlurIcon
-                : blurType == BlurConstants.FBM ? fbmBlurIcon
-                : blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
+        // 载入背景效果
+        backgroundEffect = config.getIntValue(ConfigConstants.BACKGROUND_EFFECT, BackgroundEffectConstants.CV);
+        backgroundEffectButton.setIcon(ImageUtil.dye(backgroundEffect == BackgroundEffectConstants.CV ? cvBgIcon
+                : backgroundEffect == BackgroundEffectConstants.MC ? mcBgIcon
+                : backgroundEffect == BackgroundEffectConstants.LG ? lgBgIcon
+                : backgroundEffect == BackgroundEffectConstants.FBM ? fbmBgIcon
+                : bgOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         // 载入是否自动下载歌词
         autoDownloadLyric = config.getBooleanValue(ConfigConstants.AUTO_DOWNLOAD_LYRIC, true);
         // 载入是否使用逐字时间轴
@@ -3150,8 +3149,6 @@ public class MainFrame extends JFrame {
         // 载入频谱透明度
         specOpacity = config.containsKey(ConfigConstants.SPEC_OPACITY) ? config.getFloatValue(ConfigConstants.SPEC_OPACITY) : 0.6f;
         spectrumOpacityMenuItem.setText(String.format(SPEC_OPACITY_MSG, Math.round(specOpacity * 100)));
-        // 载入是否锁定桌面歌词
-        desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
         // 载入桌面歌词坐标
         desktopLyricX = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_X, -1);
         desktopLyricY = config.getIntValue(ConfigConstants.DESKTOP_LYRIC_Y, -1);
@@ -3171,6 +3168,9 @@ public class MainFrame extends JFrame {
         showDesktopLyric = config.getBooleanValue(ConfigConstants.SHOW_DESKTOP_LYRIC, true);
         if (showDesktopLyric) desktopLyricDialog.setVisible(true);
         else desktopLyricButton.setIcon(ImageUtil.dye(desktopLyricOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
+        // 载入是否锁定桌面歌词
+        desktopLyricLocked = config.getBooleanValue(ConfigConstants.LOCK_DESKTOP_LYRIC, false);
+        updateDesktopLyricLocking();
         // 载入播放模式
         switch (PlayMode.fromCode(config.getIntValue(ConfigConstants.PLAY_MODE, PlayMode.LIST_CYCLE.getCode()))) {
             case DISABLED:
@@ -3926,11 +3926,9 @@ public class MainFrame extends JFrame {
         // 存入频谱最大高度
         config.put(ConfigConstants.MAX_BAR_HEIGHT, SpectrumConstants.maxBarHeight);
         // 存入高斯模糊因子
-        config.put(ConfigConstants.GS_FACTOR_INDEX, BlurConstants.gsFactorIndex);
+        config.put(ConfigConstants.GS_FACTOR_INDEX, BackgroundEffectConstants.gsFactorIndex);
         // 存入暗角滤镜因子
-        config.put(ConfigConstants.DARKER_FACTOR_INDEX, BlurConstants.darkerFactorIndex);
-//        // 存入线性渐变色彩风格
-//        config.put(ConfigConstants.GRADIENT_COLOR_STYLE_INDEX, BlurConstants.gradientColorStyleIndex);
+        config.put(ConfigConstants.DARKER_FACTOR_INDEX, BackgroundEffectConstants.darkerFactorIndex);
         // 存入歌曲下载路径
         config.put(ConfigConstants.MUSIC_DOWN_PATH, SimplePath.DOWNLOAD_MUSIC_PATH);
         // 存入 MV 下载路径
@@ -3960,7 +3958,7 @@ public class MainFrame extends JFrame {
         // 存入是否律动
         config.put(ConfigConstants.GROOVE_ON, grooveOn);
         // 存入模糊类型
-        config.put(ConfigConstants.BLUR_TYPE, blurType);
+        config.put(ConfigConstants.BACKGROUND_EFFECT, backgroundEffect);
         // 存入是否自动下载歌词
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, autoDownloadLyric);
         // 存入是否使用逐字时间轴
@@ -4494,8 +4492,7 @@ public class MainFrame extends JFrame {
                 // 右键弹出菜单
                 else if (btn == MouseEvent.BUTTON3) {
                     if (!e.isPopupTrigger()) return;
-                    int h = trayPopupMenu.getHeight();
-                    trayPopupMenu.setLocation(e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(89) : h));
+                    trayPopupMenu.setLocation(e.getX(), e.getY() - trayPopupMenu.getPreferredSize().height);
                     trayPopupMenu.setInvoker(trayPopupMenu);
                     trayPopupMenu.setVisible(true);
                     netMusicSearchButton.requestFocus();
@@ -7168,17 +7165,18 @@ public class MainFrame extends JFrame {
                                 || musicList.isSelectedIndex(index) && musicList.getSelectedIndices().length == 1) {
                             musicList.setSelectedIndex(index);
                             MusicResource resource = musicList.getSelectedValue();
-                            boolean ins = resource instanceof NetMusicInfo;
-                            downloadMenuItem.setEnabled(ins);
-                            commentMenuItem.setEnabled(ins);
-                            sheetMenuItem.setEnabled(ins);
-                            similarSongMenuItem.setEnabled(ins);
-                            relatedPlaylistMenuItem.setEnabled(ins);
-                            authorMenuItem.setEnabled(ins);
-                            albumMenuItem.setEnabled(ins);
-                            recRadioMenuItem.setEnabled(ins);
-                            relatedMvMenuItem.setEnabled(ins);
-                            playMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
+                            boolean isNet = resource instanceof NetMusicInfo;
+                            boolean fileExists = resource instanceof AudioFile && ((AudioFile) resource).exists();
+                            downloadMenuItem.setEnabled(isNet);
+                            commentMenuItem.setEnabled(isNet);
+                            sheetMenuItem.setEnabled(isNet);
+                            similarSongMenuItem.setEnabled(isNet);
+                            relatedPlaylistMenuItem.setEnabled(isNet);
+                            authorMenuItem.setEnabled(isNet);
+                            albumMenuItem.setEnabled(isNet);
+                            recRadioMenuItem.setEnabled(isNet);
+                            relatedMvMenuItem.setEnabled(isNet);
+                            playMvMenuItem.setEnabled(isNet && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
                                 collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
@@ -7186,8 +7184,8 @@ public class MainFrame extends JFrame {
                                 collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
-                            locateFileMenuItem.setEnabled(!ins);
-                            editInfoMenuItem.setEnabled(!ins);
+                            locateFileMenuItem.setEnabled(!isNet && fileExists);
+                            editInfoMenuItem.setEnabled(!isNet && fileExists);
                         } else {
                             List<MusicResource> list = musicList.getSelectedValuesList();
                             for (MusicResource resource : list) {
@@ -7195,16 +7193,17 @@ public class MainFrame extends JFrame {
                                 if (downloadMenuItem.isEnabled()) break;
                             }
                             MusicResource first = list.get(0);
-                            boolean ins = first instanceof NetMusicInfo;
-                            commentMenuItem.setEnabled(ins);
-                            sheetMenuItem.setEnabled(ins);
-                            similarSongMenuItem.setEnabled(ins);
-                            relatedPlaylistMenuItem.setEnabled(ins);
-                            authorMenuItem.setEnabled(ins);
-                            albumMenuItem.setEnabled(ins);
-                            recRadioMenuItem.setEnabled(ins);
-                            relatedMvMenuItem.setEnabled(ins);
-                            playMvMenuItem.setEnabled(ins);
+                            boolean isNet = first instanceof NetMusicInfo;
+                            boolean fileExists = first instanceof AudioFile && ((AudioFile) first).exists();
+                            commentMenuItem.setEnabled(isNet);
+                            sheetMenuItem.setEnabled(isNet);
+                            similarSongMenuItem.setEnabled(isNet);
+                            relatedPlaylistMenuItem.setEnabled(isNet);
+                            authorMenuItem.setEnabled(isNet);
+                            albumMenuItem.setEnabled(isNet);
+                            recRadioMenuItem.setEnabled(isNet);
+                            relatedMvMenuItem.setEnabled(isNet);
+                            playMvMenuItem.setEnabled(isNet);
                             if (hasBeenCollected(first)) {
                                 collectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
@@ -7212,8 +7211,8 @@ public class MainFrame extends JFrame {
                                 collectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 collectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
-                            locateFileMenuItem.setEnabled(!ins);
-                            editInfoMenuItem.setEnabled(!ins);
+                            locateFileMenuItem.setEnabled(!isNet && fileExists);
+                            editInfoMenuItem.setEnabled(!isNet && fileExists);
                         }
 
                         musicPopupMenu.show(musicList, e.getX(), e.getY());
@@ -18893,17 +18892,18 @@ public class MainFrame extends JFrame {
                                 || playQueue.isSelectedIndex(index) && playQueue.getSelectedIndices().length == 1) {
                             playQueue.setSelectedIndex(index);
                             MusicResource resource = playQueue.getSelectedValue();
-                            boolean ins = resource instanceof NetMusicInfo;
-                            playQueueDownloadMenuItem.setEnabled(ins);
-                            playQueueCommentMenuItem.setEnabled(ins);
-                            playQueueSheetMenuItem.setEnabled(ins);
-                            playQueueSimilarSongMenuItem.setEnabled(ins);
-                            playQueueRelatedPlaylistMenuItem.setEnabled(ins);
-                            playQueueAuthorMenuItem.setEnabled(ins);
-                            playQueueAlbumMenuItem.setEnabled(ins);
-                            playQueueRecRadioMenuItem.setEnabled(ins);
-                            playQueueRelatedMvMenuItem.setEnabled(ins);
-                            playQueuePlayMvMenuItem.setEnabled(ins && ((NetMusicInfo) resource).hasMv());
+                            boolean isNet = resource instanceof NetMusicInfo;
+                            boolean fileExists = resource instanceof AudioFile && ((AudioFile) resource).exists();
+                            playQueueDownloadMenuItem.setEnabled(isNet);
+                            playQueueCommentMenuItem.setEnabled(isNet);
+                            playQueueSheetMenuItem.setEnabled(isNet);
+                            playQueueSimilarSongMenuItem.setEnabled(isNet);
+                            playQueueRelatedPlaylistMenuItem.setEnabled(isNet);
+                            playQueueAuthorMenuItem.setEnabled(isNet);
+                            playQueueAlbumMenuItem.setEnabled(isNet);
+                            playQueueRecRadioMenuItem.setEnabled(isNet);
+                            playQueueRelatedMvMenuItem.setEnabled(isNet);
+                            playQueuePlayMvMenuItem.setEnabled(isNet && ((NetMusicInfo) resource).hasMv());
                             if (hasBeenCollected(resource)) {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
@@ -18911,8 +18911,8 @@ public class MainFrame extends JFrame {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
-                            playQueueLocateFileMenuItem.setEnabled(!ins);
-                            playQueueEditInfoMenuItem.setEnabled(!ins);
+                            playQueueLocateFileMenuItem.setEnabled(!isNet && fileExists);
+                            playQueueEditInfoMenuItem.setEnabled(!isNet && fileExists);
                         } else {
                             List<MusicResource> list = playQueue.getSelectedValuesList();
                             for (MusicResource resource : list) {
@@ -18920,16 +18920,17 @@ public class MainFrame extends JFrame {
                                 if (playQueueDownloadMenuItem.isEnabled()) break;
                             }
                             MusicResource first = list.get(0);
-                            boolean ins = first instanceof NetMusicInfo;
-                            playQueueCommentMenuItem.setEnabled(ins);
-                            playQueueSheetMenuItem.setEnabled(ins);
-                            playQueueSimilarSongMenuItem.setEnabled(ins);
-                            playQueueRelatedPlaylistMenuItem.setEnabled(ins);
-                            playQueueAuthorMenuItem.setEnabled(ins);
-                            playQueueAlbumMenuItem.setEnabled(ins);
-                            playQueueRecRadioMenuItem.setEnabled(ins);
-                            playQueueRelatedMvMenuItem.setEnabled(ins);
-                            playQueuePlayMvMenuItem.setEnabled(ins);
+                            boolean isNet = first instanceof NetMusicInfo;
+                            boolean fileExists = first instanceof AudioFile && ((AudioFile) first).exists();
+                            playQueueCommentMenuItem.setEnabled(isNet);
+                            playQueueSheetMenuItem.setEnabled(isNet);
+                            playQueueSimilarSongMenuItem.setEnabled(isNet);
+                            playQueueRelatedPlaylistMenuItem.setEnabled(isNet);
+                            playQueueAuthorMenuItem.setEnabled(isNet);
+                            playQueueAlbumMenuItem.setEnabled(isNet);
+                            playQueueRecRadioMenuItem.setEnabled(isNet);
+                            playQueueRelatedMvMenuItem.setEnabled(isNet);
+                            playQueuePlayMvMenuItem.setEnabled(isNet);
                             if (hasBeenCollected(first)) {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(cancelCollectionMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECTED_MENU_ITEM_TEXT);
@@ -18937,8 +18938,8 @@ public class MainFrame extends JFrame {
                                 playQueueCollectMenuItem.setIcon(ImageUtil.dye(collectMenuItemIcon, UIStyleStorage.currUIStyle.getIconColor()));
                                 playQueueCollectMenuItem.setText(COLLECT_MENU_ITEM_TEXT);
                             }
-                            playQueueLocateFileMenuItem.setEnabled(!ins);
-                            playQueueEditInfoMenuItem.setEnabled(!ins);
+                            playQueueLocateFileMenuItem.setEnabled(!isNet && fileExists);
+                            playQueueEditInfoMenuItem.setEnabled(!isNet && fileExists);
                         }
 
                         playQueuePopupMenu.show(playQueue, e.getX(), e.getY());
@@ -19716,8 +19717,7 @@ public class MainFrame extends JFrame {
         playModeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                int h = playModePopupMenu.getHeight();
-                playModePopupMenu.show(playModeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(195) : h));
+                playModePopupMenu.showAbove(playModeButton, e.getX(), e.getY());
             }
         });
         // 播放模式弹出菜单
@@ -19793,17 +19793,17 @@ public class MainFrame extends JFrame {
             switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊菜单
-        blurPopupMenu.add(fluidMenuItem);
-        blurPopupMenu.add(gsMenuItem);
-        blurPopupMenu.add(darkerMenuItem);
-        blurPopupMenu.add(vibrantMenuItem);
-        blurPopupMenu.add(grooveMenuItem);
-        blurPopupMenu.addSeparator();
-        blurPopupMenu.add(blurOffMenuItem);
-        blurPopupMenu.add(cvBlurMenuItem);
-        blurPopupMenu.add(mcBlurMenuItem);
-        blurPopupMenu.add(lgBlurMenuItem);
-        blurPopupMenu.add(fbmBlurMenuItem);
+        backgroundEffectPopupMenu.add(fluidMenuItem);
+        backgroundEffectPopupMenu.add(gsMenuItem);
+        backgroundEffectPopupMenu.add(darkerMenuItem);
+        backgroundEffectPopupMenu.add(vibrantMenuItem);
+        backgroundEffectPopupMenu.add(grooveMenuItem);
+        backgroundEffectPopupMenu.addSeparator();
+        backgroundEffectPopupMenu.add(bgOffMenuItem);
+        backgroundEffectPopupMenu.add(cvBgMenuItem);
+        backgroundEffectPopupMenu.add(mcBgMenuItem);
+        backgroundEffectPopupMenu.add(lgBgMenuItem);
+        backgroundEffectPopupMenu.add(fbmBgMenuItem);
         fluidMenuItem.addActionListener(e -> {
             fluidMenuItem.setSelected(fluidOn = !fluidOn);
             updateBgImg();
@@ -19825,38 +19825,37 @@ public class MainFrame extends JFrame {
             grooveMenuItem.setSelected(grooveOn);
             updateBgImg();
         });
-        blurOffMenuItem.addActionListener(e -> {
-            blurType = BlurConstants.OFF;
+        bgOffMenuItem.addActionListener(e -> {
+            backgroundEffect = BackgroundEffectConstants.OFF;
             updateBgImg();
-            blurButton.setIcon(ImageUtil.dye(blurOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            backgroundEffectButton.setIcon(ImageUtil.dye(bgOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        cvBlurMenuItem.addActionListener(e -> {
-            blurType = BlurConstants.CV;
+        cvBgMenuItem.addActionListener(e -> {
+            backgroundEffect = BackgroundEffectConstants.CV;
             updateBgImg();
-            blurButton.setIcon(ImageUtil.dye(cvBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            backgroundEffectButton.setIcon(ImageUtil.dye(cvBgIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        mcBlurMenuItem.addActionListener(e -> {
-            blurType = BlurConstants.MC;
+        mcBgMenuItem.addActionListener(e -> {
+            backgroundEffect = BackgroundEffectConstants.MC;
             updateBgImg();
-            blurButton.setIcon(ImageUtil.dye(mcBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            backgroundEffectButton.setIcon(ImageUtil.dye(mcBgIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        lgBlurMenuItem.addActionListener(e -> {
-            blurType = BlurConstants.LG;
+        lgBgMenuItem.addActionListener(e -> {
+            backgroundEffect = BackgroundEffectConstants.LG;
             updateBgImg();
-            blurButton.setIcon(ImageUtil.dye(lgBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            backgroundEffectButton.setIcon(ImageUtil.dye(lgBgIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        fbmBlurMenuItem.addActionListener(e -> {
-            blurType = BlurConstants.FBM;
+        fbmBgMenuItem.addActionListener(e -> {
+            backgroundEffect = BackgroundEffectConstants.FBM;
             updateBgImg();
-            blurButton.setIcon(ImageUtil.dye(fbmBlurIcon, UIStyleStorage.currUIStyle.getIconColor()));
+            backgroundEffectButton.setIcon(ImageUtil.dye(fbmBgIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
         // 模糊按钮
-        blurButton.setToolTipText(SWITCH_BLUR_TIP);
-        blurButton.addMouseListener(new MouseAdapter() {
+        backgroundEffectButton.setToolTipText(BACKGROUND_EFFECT_TIP);
+        backgroundEffectButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                int h = blurPopupMenu.getHeight();
-                blurPopupMenu.show(blurButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(348) : h));
+                backgroundEffectPopupMenu.showAbove(backgroundEffectButton, e.getX(), e.getY());
             }
         });
         // 均衡器按钮
@@ -19887,8 +19886,7 @@ public class MainFrame extends JFrame {
         switchLyricTypeButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                int h = lyricTypePopupMenu.getHeight();
-                lyricTypePopupMenu.show(switchLyricTypeButton, e.getX(), e.getY() - (h == 0 ? ScaleUtil.scale(134) : h));
+                lyricTypePopupMenu.showAbove(switchLyricTypeButton, e.getX(), e.getY());
             }
         });
         // 歌词类型弹出菜单
@@ -19935,7 +19933,7 @@ public class MainFrame extends JFrame {
         controlPanel.add(volumePanel);
         controlPanel.add(rateButton);
         controlPanel.add(switchSpectrumButton);
-        controlPanel.add(blurButton);
+        controlPanel.add(backgroundEffectButton);
         controlPanel.add(goToPlayQueueButton);
 
         fl = new HDFlowLayout();
@@ -20121,7 +20119,7 @@ public class MainFrame extends JFrame {
         changePaneButton.setIcon(new ImageIcon(ImageUtil.radius(ImageUtil.width(img, changePaneImageWidth), TINY_ARC)));
         if (miniDialog != null) miniDialog.infoLabel.setIcon(changePaneButton.getIcon());
         // 更新背景图片
-        if (blurType != BlurConstants.OFF) updateBgImg();
+        if (backgroundEffect != BackgroundEffectConstants.OFF) updateBgImg();
     }
 
     // 清空歌词
@@ -21021,11 +21019,11 @@ public class MainFrame extends JFrame {
         listCycleMenuItem.setIcon(ImageUtil.dye(listCycleIcon, iconColor));
         shuffleMenuItem.setIcon(ImageUtil.dye(shuffleIcon, iconColor));
 
-        blurOffMenuItem.setIcon(ImageUtil.dye(blurOffIcon, iconColor));
-        cvBlurMenuItem.setIcon(ImageUtil.dye(cvBlurIcon, iconColor));
-        mcBlurMenuItem.setIcon(ImageUtil.dye(mcBlurIcon, iconColor));
-        lgBlurMenuItem.setIcon(ImageUtil.dye(lgBlurIcon, iconColor));
-        fbmBlurMenuItem.setIcon(ImageUtil.dye(fbmBlurIcon, iconColor));
+        bgOffMenuItem.setIcon(ImageUtil.dye(bgOffIcon, iconColor));
+        cvBgMenuItem.setIcon(ImageUtil.dye(cvBgIcon, iconColor));
+        mcBgMenuItem.setIcon(ImageUtil.dye(mcBgIcon, iconColor));
+        lgBgMenuItem.setIcon(ImageUtil.dye(lgBgIcon, iconColor));
+        fbmBgMenuItem.setIcon(ImageUtil.dye(fbmBgIcon, iconColor));
 
         translationMenuItem.setIcon(ImageUtil.dye(translationIcon, iconColor));
         romaMenuItem.setIcon(ImageUtil.dye(romajiIcon, iconColor));
@@ -21243,7 +21241,7 @@ public class MainFrame extends JFrame {
         updateMenuItemStyle(lyricPopupMenu);
         updateMenuItemStyle(spectrumPopupMenu);
         updateMenuItemStyle(playModePopupMenu);
-        updateMenuItemStyle(blurPopupMenu);
+        updateMenuItemStyle(backgroundEffectPopupMenu);
         updateMenuItemStyle(lyricTypePopupMenu);
         updateMenuItemStyle(mainMenu);
         updateMenuItemStyle(musicPopupMenu);
@@ -21927,7 +21925,7 @@ public class MainFrame extends JFrame {
         muteButton.updateIconStyle();
         rateButton.updateIconStyle();
         switchSpectrumButton.updateIconStyle();
-        blurButton.updateIconStyle();
+        backgroundEffectButton.updateIconStyle();
         equalizerButton.updateIconStyle();
         goToPlayQueueButton.updateIconStyle();
         desktopLyricButton.updateIconStyle();
@@ -21939,7 +21937,7 @@ public class MainFrame extends JFrame {
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
         // 切换主题，包含背景图，模糊状态并载入了音乐就不换
-        if (blurType == BlurConstants.OFF || !player.loadedMusicResource()) updateBgImg();
+        if (backgroundEffect == BackgroundEffectConstants.OFF || !player.loadedMusicResource()) updateBgImg();
         // 标题图标
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
         setIconImage(titleImg);
@@ -22383,23 +22381,23 @@ public class MainFrame extends JFrame {
         // 获取原始图片
         BufferedImage img;
         boolean loadedMusicResource = player.loadedMusicResource();
-        if (blurType != BlurConstants.OFF && loadedMusicResource) {
+        if (backgroundEffect != BackgroundEffectConstants.OFF && loadedMusicResource) {
             img = player.getMetaMusicInfo().getAlbumImage();
             if (img == null) img = ImageConstants.DEFAULT_IMG;
-            if (blurType == BlurConstants.MC)
+            if (backgroundEffect == BackgroundEffectConstants.MC)
                 img = ImageUtil.dyeRect(1, 1, ImageUtil.getDominantColorLuminanceSuitable(img));
         } else img = UIStyleStorage.currUIStyle.getImg();
 
         // 截取正方形(有的图片是长方形)
-        if (loadedMusicResource && (blurType == BlurConstants.CV || blurType == BlurConstants.LG))
+        if (loadedMusicResource && (backgroundEffect == BackgroundEffectConstants.CV || backgroundEffect == BackgroundEffectConstants.LG))
             img = ImageUtil.cropCenterSquare(img);
         // 移除透明通道
         img = ImageUtil.removeAlphaChannel(img);
         if (loadedMusicResource) {
             // 线性渐变
-            if (blurType == BlurConstants.LG) img = ImageUtil.gradient(img, cw, ch);
+            if (backgroundEffect == BackgroundEffectConstants.LG) img = ImageUtil.gradient(img, cw, ch);
                 // 迷幻纹理
-            else if (blurType == BlurConstants.FBM) img = ImageUtil.fbm(img, cw, ch);
+            else if (backgroundEffect == BackgroundEffectConstants.FBM) img = ImageUtil.fbm(img, cw, ch);
         }
         // 流体图
         if (fluidOn) img = ImageUtil.fluid(img, cw, ch);
@@ -22408,7 +22406,7 @@ public class MainFrame extends JFrame {
         if (ch > img.getHeight())
             img = ImageUtil.height(img, ch);
         // 裁剪中间的一部分
-        if (!loadedMusicResource || blurType == BlurConstants.CV || blurType == BlurConstants.OFF) {
+        if (!loadedMusicResource || backgroundEffect == BackgroundEffectConstants.CV || backgroundEffect == BackgroundEffectConstants.OFF) {
             int iw = img.getWidth(), ih = img.getHeight();
             img = ImageUtil.cut(img, iw > cw ? (iw - cw) / 2 : 0, iw > ch ? 0 : (ih - ch) / 2, cw, ch);
         } else {

@@ -9,7 +9,7 @@ import java.awt.*;
 import java.util.Objects;
 
 /**
- * 为 Windows、macOS 或 X11 上的 AWT 或 Swing 窗口提供鼠标穿透功能。
+ * 为 Windows、MacOS 或 X11 上的 AWT 或 Swing 窗口提供鼠标穿透功能。
  */
 public final class WindowClickThroughHelper {
     /**
@@ -19,30 +19,28 @@ public final class WindowClickThroughHelper {
      */
     public static void setEnabled(Window window, boolean enabled) {
         Objects.requireNonNull(window, "window");
-        if (!EventQueue.isDispatchThread()) {
-            throw new IllegalStateException("Change window click-through on the AWT event dispatch thread");
-        }
         if (enabled && !window.isDisplayable()) {
             throw new IllegalStateException("Call pack() or setVisible(true) before enabling click-through");
         }
 
+        // Windows
         if (Platform.isWindows()) {
             WindowsClickThroughHelper.setEnabled(window, enabled);
-            return;
         }
-        if (Platform.isMac()) {
+        // MacOS
+        else if (Platform.isMac()) {
             MacWindowClickThroughHelper.setEnabled(window, enabled);
-            return;
         }
-
-        String toolkit = Toolkit.getDefaultToolkit().getClass().getName();
-        if ("sun.awt.X11.XToolkit".equals(toolkit)) {
-            X11WindowClickThroughHelper.setEnabled(window, enabled);
-            return;
+        // X11
+        else {
+            String toolkit = Toolkit.getDefaultToolkit().getClass().getName();
+            if ("sun.awt.X11.XToolkit".equals(toolkit)) {
+                X11WindowClickThroughHelper.setEnabled(window, enabled);
+            } else if (toolkit.endsWith(".WLToolkit")) {
+                throw new UnsupportedOperationException("Run AWT with XToolkit through XWayland to use click-through");
+            } else {
+                throw new UnsupportedOperationException("Window click-through is unavailable for " + toolkit);
+            }
         }
-        if (toolkit.endsWith(".WLToolkit")) {
-            throw new UnsupportedOperationException("Run AWT with XToolkit through XWayland to use click-through");
-        }
-        throw new UnsupportedOperationException("Window click-through is unavailable for " + toolkit);
     }
 }

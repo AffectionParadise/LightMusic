@@ -10,7 +10,7 @@ import net.doge.constant.core.media.AudioQuality;
 import net.doge.constant.core.media.VideoQuality;
 import net.doge.constant.core.os.SimplePath;
 import net.doge.constant.core.ui.Fonts;
-import net.doge.constant.core.ui.image.BlurConstants;
+import net.doge.constant.core.ui.image.BackgroundEffectConstants;
 import net.doge.constant.core.ui.lyric.LyricAlignment;
 import net.doge.constant.core.ui.spectrum.SpectrumConstants;
 import net.doge.constant.core.ui.style.UIStyleStorage;
@@ -707,11 +707,11 @@ public class SettingDialog extends AbstractTitledDialog {
         specMaxHeightPanel.add(specMaxHeightLabel);
         specMaxHeightPanel.add(specMaxHeightTextField);
 
-        for (String name : BlurConstants.GAUSSIAN_FACTOR_NAME) gsFactorComboBox.addItem(name);
+        for (String name : BackgroundEffectConstants.GAUSSIAN_FACTOR_NAME) gsFactorComboBox.addItem(name);
         gsFactorPanel.add(gsFactorLabel);
         gsFactorPanel.add(gsFactorComboBox);
 
-        for (String name : BlurConstants.DARKER_FACTOR_NAME) darkerFactorComboBox.addItem(name);
+        for (String name : BackgroundEffectConstants.DARKER_FACTOR_NAME) darkerFactorComboBox.addItem(name);
         darkerFactorPanel.add(darkerFactorLabel);
         darkerFactorPanel.add(darkerFactorComboBox);
 
@@ -921,8 +921,8 @@ public class SettingDialog extends AbstractTitledDialog {
         lockDesktopLyricCheckBox.setSelected(f.desktopLyricLocked);
         lyricAlignmentComboBox.setSelectedIndex(LyricAlignment.lyricAlignmentIndex);
         specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.maxBarHeight));
-        gsFactorComboBox.setSelectedIndex(BlurConstants.gsFactorIndex);
-        darkerFactorComboBox.setSelectedIndex(BlurConstants.darkerFactorIndex);
+        gsFactorComboBox.setSelectedIndex(BackgroundEffectConstants.gsFactorIndex);
+        darkerFactorComboBox.setSelectedIndex(BackgroundEffectConstants.darkerFactorIndex);
         autoDownloadLyricCheckBox.setSelected(f.autoDownloadLyric);
         verbatimTimelineCheckBox.setSelected(f.verbatimTimeline);
         audioDownQualityComboBox.setSelectedIndex(AudioQuality.downQuality);
@@ -993,13 +993,13 @@ public class SettingDialog extends AbstractTitledDialog {
 
         LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
 
-        int gsFactorIndex = BlurConstants.gsFactorIndex;
-        BlurConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
+        int gsFactorIndex = BackgroundEffectConstants.gsFactorIndex;
+        BackgroundEffectConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
 
-        int darkerFactorIndex = BlurConstants.darkerFactorIndex;
-        BlurConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
+        int darkerFactorIndex = BackgroundEffectConstants.darkerFactorIndex;
+        BackgroundEffectConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
 
-        if (gsFactorIndex != BlurConstants.gsFactorIndex || darkerFactorIndex != BlurConstants.darkerFactorIndex)
+        if (gsFactorIndex != BackgroundEffectConstants.gsFactorIndex || darkerFactorIndex != BackgroundEffectConstants.darkerFactorIndex)
             f.updateBgImg();
 
         f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();

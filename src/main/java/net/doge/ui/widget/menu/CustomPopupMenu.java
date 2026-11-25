@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.doge.constant.core.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
+import net.doge.ui.widget.menu.ui.CustomPopupMenuUI;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
@@ -38,7 +39,6 @@ public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySuppor
 
     private void init() {
         setOpaque(false);
-        setLightWeightPopupEnabled(false);
         // 阴影边框
         setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
 
@@ -73,23 +73,19 @@ public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySuppor
     }
 
     @Override
-    public void show(Component invoker, int x, int y) {
-        fadeIn();
-        super.show(invoker, x, y);
+    public void updateUI() {
+        setUI(new CustomPopupMenuUI());
+    }
+
+    // 向上弹出
+    public void showAbove(Component invoker, int x, int y) {
+        show(invoker, x, y - getPreferredSize().height);
     }
 
     @Override
     public void setVisible(boolean b) {
+        if (b && !isVisible()) fadeIn();
         super.setVisible(b);
-        if (b) {
-            // 使 JPopupMenu 对应的 Window 透明！
-            Window w = SwingUtilities.getWindowAncestor(this);
-            w.setVisible(false);
-            w.setBackground(Colors.BLACK);
-            w.setBackground(Colors.TRANSPARENT);
-            fadeIn();
-            w.setVisible(true);
-        }
         f.currPopup = b ? this : null;
     }
 

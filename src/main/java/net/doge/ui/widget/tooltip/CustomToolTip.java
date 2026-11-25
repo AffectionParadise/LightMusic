@@ -17,7 +17,9 @@ public class CustomToolTip extends JToolTip {
     private final int pixels = ScaleUtil.scale(5);
 
     static {
-        ToolTipManager.sharedInstance().setLightWeightPopupEnabled(false);
+        ToolTipManager toolTips = ToolTipManager.sharedInstance();
+        toolTips.setInitialDelay(500);
+        toolTips.setReshowDelay(250);
     }
 
     public CustomToolTip() {
@@ -27,21 +29,9 @@ public class CustomToolTip extends JToolTip {
     private void init() {
         setOpaque(false);
         setFont(Fonts.NORMAL_TINY);
+        setForeground(Colors.DARK_GRAY);
         // 阴影边框
         setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
-    }
-
-    // 使 JToolTip 背景透明
-    @Override
-    public void addNotify() {
-//        super.addNotify();
-        Component parent = getParent();
-        if (parent instanceof JComponent) {
-            JComponent jParent = (JComponent) parent;
-            jParent.setOpaque(false);
-        }
-        Window w = SwingUtilities.getWindowAncestor(this);
-        w.setBackground(Colors.TRANSPARENT);
     }
 
     @Override
@@ -49,6 +39,7 @@ public class CustomToolTip extends JToolTip {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
         g2d.setColor(Colors.LIGHT_GRAY);
+        GraphicsUtil.srcOver(g2d, 0.8f);
         int arc = ScaleUtil.scale(4);
         g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);
         // 画边框阴影
@@ -57,6 +48,7 @@ public class CustomToolTip extends JToolTip {
             g2d.setColor(ColorUtil.deriveAlpha(Colors.BLACK, step * i));
             g2d.drawRoundRect(i, i, w - i * 2, h - i * 2, arc, arc);
         }
+        GraphicsUtil.srcOver(g2d);
         super.paintComponent(g);
     }
 }

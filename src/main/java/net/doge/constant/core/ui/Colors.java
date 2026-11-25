@@ -13,6 +13,7 @@ public class Colors {
     public static final Color WHITE = new Color(255, 255, 255);
     public static final Color LIGHT_GRAY = new Color(230, 230, 230);
     public static final Color GRAY = new Color(210, 210, 210);
+    public static final Color DARK_GRAY = new Color(100, 100, 100);
     public static final Color THEME = new Color(18, 150, 219);
 
     public static final Color SPRING_GREEN = new Color(60, 179, 113);

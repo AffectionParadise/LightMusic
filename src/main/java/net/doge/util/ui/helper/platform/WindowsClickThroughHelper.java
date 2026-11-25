@@ -49,13 +49,15 @@ public class WindowsClickThroughHelper {
     private static void enable(Window window, Pointer handle, StyleChange previous) {
         User32 user = User32.INSTANCE;
         int style = user.GetWindowLongW(handle, GWL_EXSTYLE);
-        int addedStyles = CLICK_THROUGH_STYLES & ~style;
+        // 逐像素透明窗口由 AWT 在显示时初始化分层样式
+        int requestedStyles = window.isOpaque() ? CLICK_THROUGH_STYLES : WS_EX_TRANSPARENT;
+        int addedStyles = requestedStyles & ~style;
         if (addedStyles == 0) return;
 
         int ownedStyles = previous == null ? addedStyles : previous.addedStyles | addedStyles;
         StyleChange change = new StyleChange(handle, ownedStyles);
         user.SetWindowLongW(handle, GWL_EXSTYLE, style | addedStyles);
-        // 已由 Swing 管理的分层窗口沿用其不透明度设置。
+        // 已由 Swing 管理的分层窗口沿用其不透明度设置
         if ((addedStyles & WS_EX_LAYERED) != 0 && !user.SetLayeredWindowAttributes(handle, 0, (byte) 255, LWA_ALPHA)) {
             LastErrorException failure = new LastErrorException(Native.getLastError());
             try {

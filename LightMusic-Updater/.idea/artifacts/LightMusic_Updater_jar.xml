@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="LightMusic-Updater:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/LightMusic_Updater_jar</output-path>
+    <root id="archive" name="LightMusic-Updater.jar">
+      <element id="module-output" name="LightMusic-Updater" />
+    </root>
+  </artifact>
+</component>

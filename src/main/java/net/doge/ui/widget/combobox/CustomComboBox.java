@@ -31,7 +31,6 @@ public class CustomComboBox<T> extends JComboBox<T> implements ExtendedOpacitySu
     private void init() {
         setOpaque(false);
         setFocusable(false);
-        setLightWeightPopupEnabled(false);
         setMaximumRowCount(15);
         setFont(Fonts.NORMAL);
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
