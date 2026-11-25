@@ -2,6 +2,7 @@ package net.doge.util.core.text.helper;
 
 import com.atilika.kuromoji.ipadic.Token;
 import com.atilika.kuromoji.ipadic.Tokenizer;
+import com.github.houbb.opencc4j.util.ZhJpConverterUtil;
 import com.ibm.icu.text.Transliterator;
 
 import java.text.Normalizer;
@@ -32,6 +33,10 @@ public final class JapaneseRomanizerHelper {
     private static final Pattern LRC_LYRIC_SEPARATOR = Pattern.compile(
             LRC_TIMESTAMP + "|" + LRC_METADATA + "|" + SENTENCE_END
                     + "|[/／|｜,\\t\u3000]+|\\h{2,}|[（(](?=[^()（）]*[）)]\\h*$)");
+    private static final Pattern LRC_TITLE_WITH_ARTIST = Pattern.compile(
+            "^([\\p{IsHan}\\h、。・，．！？!?]+)[-－–—]\\h*(.+)$");
+    private static final Pattern TITLE_SEPARATOR = Pattern.compile("[\\h、。・，．！？!?]+");
+    private static final Pattern BARE_TITLE = Pattern.compile("[^\\p{L}\\p{Nd}]*(\\p{IsHan}+)[^\\p{L}\\p{Nd}]*");
     private static final Pattern HORIZONTAL_SPACE = Pattern.compile("\\h+");
     private static final Pattern REPEATED_LONG_VOWEL = Pattern.compile("ー{2,}");
     private static final Pattern READING_UNIT = Pattern.compile(
@@ -51,31 +56,54 @@ public final class JapaneseRomanizerHelper {
 
         StringBuilder result = new StringBuilder(text.length());
         Matcher timedLines = LRC_LINE.matcher(text);
+        LyricTitle title = null;
         int cursor = 0;
         while (timedLines.find()) {
             int start = timedLines.start(), end = timedLines.end();
             appendSentences(result, text.substring(cursor, start), SENTENCE_SEPARATOR, true);
             result.append(text, start, timedLines.start(1));
-            appendLrcLyrics(result, timedLines.group(1));
+            String lyrics = timedLines.group(1);
+            if (title == null) title = readLrcTitle(lyrics);
+            if (title != null && title.heading.equals(lyrics)) result.append(title.romanizedHeading);
+            else appendLrcLyrics(result, lyrics, title);
             cursor = end;
         }
         appendSentences(result, text.substring(cursor), SENTENCE_SEPARATOR, true);
         return result.toString();
     }
 
-    private static void appendLrcLyrics(StringBuilder result, String lyrics) {
+    private static LyricTitle readLrcTitle(String lyrics) {
+        Matcher heading = LRC_TITLE_WITH_ARTIST.matcher(lyrics);
+        if (!heading.matches() || !KANA.matcher(heading.group(2)).find()) return null;
+
+        String title = heading.group(1);
+        String kanji = TITLE_SEPARATOR.matcher(title).replaceAll("");
+        if (kanji.isEmpty()) return null;
+
+        StringBuilder romaji = new StringBuilder(title.length());
+        appendRomanizedSentence(romaji, title);
+        if (HAN.matcher(romaji).find()) return null;
+        // 保留标题标点引出的断词读音，供正文中去掉标点的同名句使用
+        String reading = TITLE_SEPARATOR.matcher(romaji).replaceAll(" ").trim();
+        romaji.append(lyrics, heading.end(1), heading.start(2));
+        appendLrcLyrics(romaji, heading.group(2), null);
+        return new LyricTitle(lyrics, romaji.toString(), kanji, reading);
+    }
+
+    private static void appendLrcLyrics(StringBuilder result, String lyrics, LyricTitle title) {
         Matcher separators = LRC_LYRIC_SEPARATOR.matcher(lyrics);
         int start = 0;
         while (separators.find()) {
             int s = separators.start(), e = separators.end();
-            appendLrcPart(result, lyrics.substring(start, s));
+            appendLrcPart(result, lyrics.substring(start, s), title);
             result.append(lyrics, s, e);
             start = e;
         }
-        appendLrcPart(result, lyrics.substring(start));
+        appendLrcPart(result, lyrics.substring(start), title);
     }
 
-    private static void appendLrcPart(StringBuilder result, String part) {
+    private static void appendLrcPart(StringBuilder result, String part, LyricTitle title) {
+        if (title != null && appendTitlePart(result, part, title)) return;
         if (isJapaneseText(part, true)) {
             appendRomanizedSentence(result, part);
             return;
@@ -88,6 +116,17 @@ public final class JapaneseRomanizerHelper {
         } else {
             result.append(part);
         }
+    }
+
+    private static boolean appendTitlePart(StringBuilder result, String part, LyricTitle title) {
+        Matcher bare = BARE_TITLE.matcher(part);
+        if (bare.matches() && title.kanji.equals(bare.group(1))) {
+            result.append(part, 0, bare.start(1)).append(title.reading).append(part, bare.end(1), part.length());
+            return true;
+        }
+        if (!TITLE_SEPARATOR.matcher(part).replaceAll("").equals(title.kanji)) return false;
+        appendRomanizedSentence(result, part);
+        return true;
     }
 
     private static int findUnmarkedTranslation(String part) {
@@ -135,12 +174,12 @@ public final class JapaneseRomanizerHelper {
         Token last = null;
         Token previous = null;
         boolean hasTopic = false;
-        for (Token token : Resources.TOKENIZER.tokenize(normalized)) {
+        for (Token token : tokenizeJapanese(normalized)) {
             String surface = token.getSurface();
             String partOfSpeech = token.getPartOfSpeechLevel1();
             if ("記号".equals(partOfSpeech) || !JAPANESE_TEXT.matcher(surface).find()) continue;
             // 没有日语读音的汉字词可能属于中文，不能仅凭末尾的假名判断
-            if (!token.isKnown() && HAN.matcher(surface).find()) return false;
+            if (isUnknownKanji(token)) return false;
             hasTopic |= last != null && "助詞".equals(partOfSpeech) && "は".equals(surface);
             previous = last;
             last = token;
@@ -201,7 +240,7 @@ public final class JapaneseRomanizerHelper {
 
     private static void appendJapanese(StringBuilder result, String japanese) {
         StringBuilder reading = new StringBuilder(japanese.length());
-        for (Token token : Resources.TOKENIZER.tokenize(japanese)) {
+        for (Token token : tokenizeJapanese(japanese)) {
             reading.append(readingOf(token));
         }
 
@@ -216,6 +255,22 @@ public final class JapaneseRomanizerHelper {
             spaced.append(reading, units.start(), units.end());
         }
         result.append(toLatin(spaced.toString()));
+    }
+
+    private static List<Token> tokenizeJapanese(String text) {
+        List<Token> tokens = Resources.TOKENIZER.tokenize(text);
+        for (Token token : tokens) {
+            if (isUnknownKanji(token)) {
+                // 歌词源可能把日语汉字换成了简体字，例如「一绪」和「笑颜」
+                String normalized = ZhJpConverterUtil.toTraditional(text);
+                return normalized.equals(text) ? tokens : Resources.TOKENIZER.tokenize(normalized);
+            }
+        }
+        return tokens;
+    }
+
+    private static boolean isUnknownKanji(Token token) {
+        return !token.isKnown() && HAN.matcher(token.getSurface()).find();
     }
 
     private static String readingOf(Token token) {
@@ -245,6 +300,20 @@ public final class JapaneseRomanizerHelper {
                 .replace('ヂ', 'ジ').replace('ヅ', 'ズ');
         synchronized (Resources.KANA_TO_LATIN) {
             return Resources.KANA_TO_LATIN.transliterate(kana).replace("~tsu", "'");
+        }
+    }
+
+    private static final class LyricTitle {
+        private final String heading;
+        private final String romanizedHeading;
+        private final String kanji;
+        private final String reading;
+
+        private LyricTitle(String heading, String romanizedHeading, String kanji, String reading) {
+            this.heading = heading;
+            this.romanizedHeading = romanizedHeading;
+            this.kanji = kanji;
+            this.reading = reading;
         }
     }
 
