@@ -67,11 +67,11 @@ public class NcMvSearchReq {
                 mvInfo.setPlayCount(playCount);
                 mvInfo.setDuration(duration);
                 mvInfo.setCoverImgUrl(coverImgUrl);
-
                 GlobalExecutors.imageExecutor.execute(() -> {
                     BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
                     mvInfo.setCoverImgThumb(coverImgThumb);
                 });
+
                 r.add(mvInfo);
             }
         }

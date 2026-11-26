@@ -65,6 +65,8 @@ public class QqMvSearchReq {
                 BufferedImage coverImgThumb = SdkUtil.extractMvCover(coverImgUrl);
                 mvInfo.setCoverImgThumb(coverImgThumb);
             });
+
+            r.add(mvInfo);
         }
 
 //        String mvInfoBody = SdkCommon.qqSearchRequest(QqSearchDevice.MOBILE, QqSearchType.MV, keyword, page, limit)
