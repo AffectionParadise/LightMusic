@@ -109,7 +109,7 @@ public class X11WindowClickThroughHelper {
         Shape.INSTANCE.XShapeCombineRectangles(display, handle, SHAPE_INPUT, 0, 0, rectangles, count, SHAPE_SET, UNSORTED);
     }
 
-    private static final class ShapeChange {
+    private static class ShapeChange {
         private final NativeLong handle;
         private final byte[] rectangles;
 

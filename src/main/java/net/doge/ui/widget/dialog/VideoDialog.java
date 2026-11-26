@@ -63,8 +63,8 @@ public class VideoDialog extends AbstractTitledDialog {
     private final int TIME_BAR_MIN = 0;
     private final int TIME_BAR_MAX = 0x3f3f3f3f;
     private final int MAX_VOLUME = 100;
-    private int mediaWidth;
-    private int mediaHeight;
+    private int mediaCanvasWidth;
+    private int mediaCanvasHeight;
 
     private final String FORWARD_TIP = I18n.getText("forwTip");
     private final String BACKWARD_TIP = I18n.getText("backwTip");
@@ -172,8 +172,8 @@ public class VideoDialog extends AbstractTitledDialog {
         this.mvInfo = mvInfo;
         this.uri = isLocal ? dest : mvInfo.getPlayUrl();
 
-        mediaWidth = WindowSize.VIDEO_DIMENSIONS[f.windowSize][0];
-        mediaHeight = WindowSize.VIDEO_DIMENSIONS[f.windowSize][1];
+        mediaCanvasWidth = WindowSize.VIDEO_DIMENSIONS[f.windowSize][0];
+        mediaCanvasHeight = WindowSize.VIDEO_DIMENSIONS[f.windowSize][1];
 
         initUI();
     }
@@ -191,11 +191,11 @@ public class VideoDialog extends AbstractTitledDialog {
                 else setLocation(x, y);
                 currTimeLabel.revalidate();
                 timeBar.setPreferredSize(new Dimension(getWidth() - 2 * pixels - currTimeLabel.getPreferredSize().width - durationLabel.getPreferredSize().width - ScaleUtil.scale(20 * 2), ScaleUtil.scale(30)));
-                setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - ScaleUtil.scale(2) + 2 * pixels);
+                setSize(mediaCanvasWidth + 2 * pixels, mediaCanvasHeight + topPanel.getHeight() + bottomBox.getHeight() - ScaleUtil.scale(2) + 2 * pixels);
             }
         });
 
-        setSize(mediaWidth + 2 * pixels, mediaHeight + 2 * pixels);
+        setSize(mediaCanvasWidth + 2 * pixels, mediaCanvasHeight + 2 * pixels);
 
         initTitleBar();
         initCloseResponse();
@@ -227,20 +227,13 @@ public class VideoDialog extends AbstractTitledDialog {
 
     private void fitMediaView() {
         // 视频实际尺寸
-        int width = media.getWidth(), height = media.getHeight();
-        if (width == 0 || height == 0) return;
+        int mediaWidth = media.getWidth(), mediaHeight = media.getHeight();
+        if (mediaWidth == 0 || mediaHeight == 0) return;
         Dimension ss = Toolkit.getDefaultToolkit().getScreenSize();
-        int dw = fullScreen ? ss.width : mediaWidth, dh = fullScreen ? ss.height : mediaHeight;
+        int dw = fullScreen ? ss.width : mediaCanvasWidth, dh = fullScreen ? ss.height : mediaCanvasHeight;
+        double scale = Math.min((double) dw / mediaWidth, (double) dh / mediaHeight);
         // 调整为合适的尺寸
-        int fw, fh;
-        // 优先适应宽度
-        fw = dw;
-        fh = height * fw / width;
-        // 调整好后，如果高度还超出范围，再去适应高度
-        if (fh > dh) {
-            fh = dh;
-            fw = width * fh / height;
-        }
+        int fw = (int) Math.round(mediaWidth * scale), fh = (int) Math.round(mediaHeight * scale);
         mediaView.setFitWidth(fw);
         mediaView.setFitHeight(fh);
     }
@@ -561,7 +554,7 @@ public class VideoDialog extends AbstractTitledDialog {
     }
 
     private void restoreWindow() {
-        setSize(mediaWidth + 2 * pixels, mediaHeight + topPanel.getHeight() + bottomBox.getHeight() - ScaleUtil.scale(2) + 2 * pixels);
+        setSize(mediaCanvasWidth + 2 * pixels, mediaCanvasHeight + topPanel.getHeight() + bottomBox.getHeight() - ScaleUtil.scale(2) + 2 * pixels);
         fullScreen = false;
         topPanel.setVisible(true);
         bottomBox.setVisible(true);

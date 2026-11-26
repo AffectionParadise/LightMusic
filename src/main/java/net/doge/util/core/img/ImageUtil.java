@@ -23,6 +23,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.MemoryCacheImageInputStream;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.InputStream;
@@ -291,11 +292,11 @@ public class ImageUtil {
         // 没有透明通道直接返回
         if (!img.getColorModel().hasAlpha()) return img;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createOpaqueImage(w, h);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
+        BufferedImage result = createOpaqueImage(w, h);
+        Graphics2D g2d = GraphicsUtil.setup(result.createGraphics());
         g2d.drawImage(img, 0, 0, null);
         g2d.dispose();
-        return outputImg;
+        return result;
     }
 
     /**
@@ -318,14 +319,14 @@ public class ImageUtil {
      */
     public static BufferedImage dye(Image img, Color color) {
         int w = img.getWidth(null), h = img.getHeight(null);
-        BufferedImage outputImg = createTransparentImage(w, h);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
+        BufferedImage result = createTransparentImage(w, h);
+        Graphics2D g2d = GraphicsUtil.setup(result.createGraphics());
         g2d.drawImage(img, 0, 0, null);
         g2d.setComposite(AlphaComposite.SrcAtop);
         g2d.setColor(color);
         g2d.fillRect(0, 0, w, h);
         g2d.dispose();
-        return outputImg;
+        return result;
     }
 
     /**
@@ -401,13 +402,13 @@ public class ImageUtil {
     public static BufferedImage radius(BufferedImage img, int radius) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(w, h);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
+        BufferedImage result = createTransparentImage(w, h);
+        Graphics2D g2d = GraphicsUtil.setup(result.createGraphics());
         g2d.fillRoundRect(0, 0, w, h, radius, radius);
         g2d.setComposite(AlphaComposite.SrcIn);
         g2d.drawImage(img, 0, 0, null);
         g2d.dispose();
-        return outputImg;
+        return result;
     }
 
     /**
@@ -488,6 +489,34 @@ public class ImageUtil {
         if (w < h) return cut(img, 0, (h - w) / 2, w, w);
         else if (w > h) return cut(img, (w - h) / 2, 0, h, h);
         return img;
+    }
+
+    /**
+     * 等比例缩放图片以覆盖目标画框，再按画框大小裁剪图片的中心区域
+     *
+     * @param img
+     * @param canvasWidth
+     * @param canvasHeight
+     * @return
+     */
+    public static BufferedImage coverCenter(BufferedImage img, int canvasWidth, int canvasHeight) {
+        if (img == null) return null;
+        int imageWidth = img.getWidth(), imageHeight = img.getHeight();
+        if (imageWidth == canvasWidth && imageHeight == canvasHeight) return img;
+
+        double scale = Math.max((double) canvasWidth / imageWidth, (double) canvasHeight / imageHeight);
+        double x = (canvasWidth - imageWidth * scale) / 2;
+        double y = (canvasHeight - imageHeight * scale) / 2;
+        AffineTransform transform = AffineTransform.getTranslateInstance(x, y);
+        transform.scale(scale, scale);
+
+        BufferedImage result = img.getColorModel().hasAlpha()
+                ? createTransparentImage(canvasWidth, canvasHeight) : createOpaqueImage(canvasWidth, canvasHeight);
+        Graphics2D g2d = GraphicsUtil.setup(result.createGraphics());
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.drawImage(img, transform, null);
+        g2d.dispose();
+        return result;
     }
 
     /**
@@ -587,12 +616,12 @@ public class ImageUtil {
     public static BufferedImage borderShadow(BufferedImage img, int radius) {
         if (img == null) return null;
         int w = img.getWidth(), h = img.getHeight();
-        BufferedImage outputImg = createTransparentImage(w, h);
-        Graphics2D g2d = GraphicsUtil.setup(outputImg.createGraphics());
+        BufferedImage result = createTransparentImage(w, h);
+        Graphics2D g2d = GraphicsUtil.setup(result.createGraphics());
         g2d.drawImage(img, radius, radius, w - 2 * radius, h - 2 * radius, null);
         g2d.dispose();
         borderShadowFilter.setRadius(radius);
-        return borderShadowFilter.filter(outputImg, null);
+        return borderShadowFilter.filter(result, null);
     }
 
     /**

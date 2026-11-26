@@ -828,7 +828,7 @@ public class MainFrame extends JFrame {
     public boolean darkerOn;
     // 是否律动
     public boolean grooveOn;
-    // 模糊类型
+    // 背景效果
     public int backgroundEffect;
     // 是否显示频谱
     public boolean showSpectrum;
@@ -2551,9 +2551,7 @@ public class MainFrame extends JFrame {
                     // 歌曲信息面板
                     int hi = (int) Math.round(w * 0.0625), vi = (int) Math.round(h * 0.0625);
                     leftInfoBox.setBorder(new EmptyBorder(vi, hi, vi, hi));
-                    if (player.loadedMusicResource()) {
-                        showAlbumImage();
-                    }
+                    if (player.loadedMusicResource()) showAlbumImage();
                     if (backgroundEffect == BackgroundEffectConstants.OFF || !player.loadedMusicResource())
                         updateBgImg();
                 });
@@ -3942,7 +3940,7 @@ public class MainFrame extends JFrame {
         // 存入最大搜索历史数量
         config.put(ConfigConstants.MAX_SEARCH_HISTORY_COUNT, maxSearchHistoryCount);
         // 存入同时下载的最大任务数
-        config.put(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, ((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize());
+        config.put(ConfigConstants.MAX_CONCURRENT_TASK_COUNT, GlobalExecutors.downloadExecutor.getCorePoolSize());
         // 存入当前播放模式
         config.put(ConfigConstants.PLAY_MODE, currPlayMode.getCode());
         // 存入是否显示频谱
@@ -3957,7 +3955,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.VIBRANT_ON, vibrantOn);
         // 存入是否律动
         config.put(ConfigConstants.GROOVE_ON, grooveOn);
-        // 存入模糊类型
+        // 存入背景效果
         config.put(ConfigConstants.BACKGROUND_EFFECT, backgroundEffect);
         // 存入是否自动下载歌词
         config.put(ConfigConstants.AUTO_DOWNLOAD_LYRIC, autoDownloadLyric);
@@ -19792,7 +19790,7 @@ public class MainFrame extends JFrame {
             else closeSpectrum();
             switchSpectrumButton.setIcon(ImageUtil.dye(showSpectrum ? spectrumOnIcon : spectrumOffIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        // 模糊菜单
+        // 背景效果菜单
         backgroundEffectPopupMenu.add(fluidMenuItem);
         backgroundEffectPopupMenu.add(gsMenuItem);
         backgroundEffectPopupMenu.add(darkerMenuItem);
@@ -19850,7 +19848,7 @@ public class MainFrame extends JFrame {
             updateBgImg();
             backgroundEffectButton.setIcon(ImageUtil.dye(fbmBgIcon, UIStyleStorage.currUIStyle.getIconColor()));
         });
-        // 模糊按钮
+        // 背景效果按钮
         backgroundEffectButton.setToolTipText(BACKGROUND_EFFECT_TIP);
         backgroundEffectButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -21936,7 +21934,7 @@ public class MainFrame extends JFrame {
         songNameLabel.setForeground(textColor);
         artistLabel.setForeground(textColor);
         albumLabel.setForeground(textColor);
-        // 切换主题，包含背景图，模糊状态并载入了音乐就不换
+        // 更新背景图以适应主题
         if (backgroundEffect == BackgroundEffectConstants.OFF || !player.loadedMusicResource()) updateBgImg();
         // 标题图标
         Image titleImg = ImageUtil.dye(titleIcon, iconColor).getImage();
@@ -22381,16 +22379,16 @@ public class MainFrame extends JFrame {
         // 获取原始图片
         BufferedImage img;
         boolean loadedMusicResource = player.loadedMusicResource();
-        if (backgroundEffect != BackgroundEffectConstants.OFF && loadedMusicResource) {
+        boolean useAlbumImg = backgroundEffect != BackgroundEffectConstants.OFF && loadedMusicResource;
+        if (useAlbumImg) {
             img = player.getMetaMusicInfo().getAlbumImage();
             if (img == null) img = ImageConstants.DEFAULT_IMG;
             if (backgroundEffect == BackgroundEffectConstants.MC)
                 img = ImageUtil.dyeRect(1, 1, ImageUtil.getDominantColorLuminanceSuitable(img));
         } else img = UIStyleStorage.currUIStyle.getImg();
 
-        // 截取正方形(有的图片是长方形)
-        if (loadedMusicResource && (backgroundEffect == BackgroundEffectConstants.CV || backgroundEffect == BackgroundEffectConstants.LG))
-            img = ImageUtil.cropCenterSquare(img);
+        // 歌曲封面仅保留中心区域，与 albumImageLabel 统一
+        if (useAlbumImg) img = ImageUtil.cropCenterSquare(img);
         // 移除透明通道
         img = ImageUtil.removeAlphaChannel(img);
         if (loadedMusicResource) {
@@ -22401,17 +22399,8 @@ public class MainFrame extends JFrame {
         }
         // 流体图
         if (fluidOn) img = ImageUtil.fluid(img, cw, ch);
-        // 缩放至画布大小
-        img = ImageUtil.width(img, cw);
-        if (ch > img.getHeight())
-            img = ImageUtil.height(img, ch);
-        // 裁剪中间的一部分
-        if (!loadedMusicResource || backgroundEffect == BackgroundEffectConstants.CV || backgroundEffect == BackgroundEffectConstants.OFF) {
-            int iw = img.getWidth(), ih = img.getHeight();
-            img = ImageUtil.cut(img, iw > cw ? (iw - cw) / 2 : 0, iw > ch ? 0 : (ih - ch) / 2, cw, ch);
-        } else {
-            img = ImageUtil.forceSize(img, cw, ch);
-        }
+        // 等比例缩放至完全覆盖画布大小，并裁剪中心区域
+        img = ImageUtil.coverCenter(img, cw, ch);
         // 活力色彩
         if (vibrantOn) img = ImageUtil.vibrant(img);
         // 高斯模糊

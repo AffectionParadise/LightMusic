@@ -99,7 +99,7 @@ public class MacWindowClickThroughHelper {
         }
     }
 
-    private static final class AppKit {
+    private static class AppKit {
         private static final NativeLibrary SYSTEM = NativeLibrary.getInstance("System");
         private static final NativeLibrary OBJC = NativeLibrary.getInstance("objc");
         private static final Function SEND_MESSAGE = OBJC.getFunction("objc_msgSend");

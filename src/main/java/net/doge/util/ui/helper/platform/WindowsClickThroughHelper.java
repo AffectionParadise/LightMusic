@@ -73,7 +73,7 @@ public class WindowsClickThroughHelper {
         window.repaint();
     }
 
-    private static final class StyleChange {
+    private static class StyleChange {
         private final Pointer handle;
         private final int addedStyles;
 

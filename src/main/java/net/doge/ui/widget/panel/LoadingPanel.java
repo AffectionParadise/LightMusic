@@ -5,7 +5,6 @@ import net.doge.ui.MainFrame;
 import net.doge.ui.widget.label.CustomLabel;
 import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.ui.widget.panel.listener.LoadingPanelMouseListener;
-import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
 
@@ -109,7 +108,7 @@ public class LoadingPanel extends BasePanel {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int pw = getWidth(), ph = getHeight();
         // 画背景
-        g2d.setColor(ImageUtil.getDominantColor(f.globalPanel.getBgImg()));
+        g2d.setColor(f.globalPanel.getBgDominantColor());
         GraphicsUtil.srcOver(g2d, bgAlpha);
         g2d.fillRect(0, 0, pw, ph);
     }

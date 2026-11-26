@@ -1,6 +1,7 @@
 package net.doge.ui.widget.panel;
 
 import lombok.Data;
+import net.doge.constant.core.ui.Colors;
 import net.doge.ui.widget.panel.base.BasePanel;
 import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.GraphicsUtil;
@@ -24,6 +25,8 @@ public class GlobalPanel extends BasePanel {
 
     private BufferedImage lImg;
     private BufferedImage bgImg;
+    // 菜单与加载面板共用背景主色，避免在 EDT 重复提取调色板
+    private Color bgDominantColor = Colors.DARK_GRAY;
     // 放大后的背景图，用于旋转
     private BufferedImage lImgScaled;
     private BufferedImage bgImgScaled;
@@ -48,6 +51,7 @@ public class GlobalPanel extends BasePanel {
         lImg = this.bgImg;
         lImgScaled = this.bgImgScaled;
         this.bgImg = bgImg;
+        bgDominantColor = ImageUtil.getDominantColor(bgImg);
         // 确保旋转后完全覆盖区域的最小放大 k 值
         SwingUtilities.invokeLater(() -> {
             int w = bgImg.getWidth(), h = bgImg.getHeight();

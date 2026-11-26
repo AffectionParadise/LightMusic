@@ -5,7 +5,6 @@ import net.doge.constant.core.ui.Colors;
 import net.doge.ui.MainFrame;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.menu.ui.CustomPopupMenuUI;
-import net.doge.util.core.img.ImageUtil;
 import net.doge.util.ui.ColorUtil;
 import net.doge.util.ui.GraphicsUtil;
 import net.doge.util.ui.ScaleUtil;
@@ -39,6 +38,8 @@ public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySuppor
 
     private void init() {
         setOpaque(false);
+        // 重量级弹出，刷新时不会带动主界面重绘
+        setLightWeightPopupEnabled(false);
         // 阴影边框
         setBorder(new EmptyBorder(pixels, pixels, pixels, pixels));
 
@@ -93,7 +94,7 @@ public class CustomPopupMenu extends JPopupMenu implements ExtendedOpacitySuppor
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = GraphicsUtil.setup(g);
         int w = getWidth(), h = getHeight();
-        g2d.setColor(ImageUtil.getDominantColor(f.globalPanel.getBgImg()));
+        g2d.setColor(f.globalPanel.getBgDominantColor());
         GraphicsUtil.srcOver(g2d, extendedOpacity);
         int arc = ScaleUtil.scale(10);
         g2d.fillRoundRect(pixels, pixels, w - 2 * pixels, h - 2 * pixels, arc, arc);

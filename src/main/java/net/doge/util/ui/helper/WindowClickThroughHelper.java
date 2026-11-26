@@ -11,7 +11,7 @@ import java.util.Objects;
 /**
  * 为 Windows、MacOS 或 X11 上的 AWT 或 Swing 窗口提供鼠标穿透功能。
  */
-public final class WindowClickThroughHelper {
+public class WindowClickThroughHelper {
     /**
      * 根据当前平台选择实现，开启或关闭鼠标穿透。
      * 通过 {@code pack()} 或 {@code setVisible(true)} 创建原生窗口后，在事件分发线程上调用。
