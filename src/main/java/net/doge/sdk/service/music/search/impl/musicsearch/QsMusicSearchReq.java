@@ -30,8 +30,8 @@ public class QsMusicSearchReq {
 
     // 搜索歌曲 API (汽水)
     private final String SEARCH_MUSIC_QS_API = "https://api.qishui.com/luna/search/track";
-    // 搜索歌曲下游 API (汽水)
-    private final String SEARCH_MUSIC_DOWNSTREAM_QS_API = "https://api-vehicle.volcengine.com/v2/search/type";
+    // 搜索歌曲兜底 API (汽水)
+    private final String SEARCH_MUSIC_FALLBACK_QS_API = "https://api-vehicle.volcengine.com/v2/search/type";
 
     /**
      * 根据关键词获取歌曲
@@ -49,7 +49,7 @@ public class QsMusicSearchReq {
         String musicInfoBody = SdkCommon.qsRequest(SEARCH_MUSIC_QS_API, params)
                 .executeAsStr();
         // 由于汽水搜索 API 鉴权问题，返回空 Body 用下游代替
-        if (StringUtil.isEmpty(musicInfoBody)) return searchMusicDownstream(keyword, page, limit);
+        if (StringUtil.isEmpty(musicInfoBody)) return searchMusicFallback(keyword, page, limit);
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);
         if (JsonUtil.notEmpty(musicInfoJson)) {
             JSONArray resultGroups = musicInfoJson.getJSONArray("result_groups");
@@ -98,9 +98,9 @@ public class QsMusicSearchReq {
     }
 
     /**
-     * 根据关键词获取歌曲(下游)
+     * 根据关键词获取歌曲(兜底)
      */
-    public CommonResult<NetMusicInfo> searchMusicDownstream(String keyword, int page, int limit) {
+    public CommonResult<NetMusicInfo> searchMusicFallback(String keyword, int page, int limit) {
         List<NetMusicInfo> r = new LinkedList<>();
         int t;
 
@@ -112,7 +112,7 @@ public class QsMusicSearchReq {
         params.put("real_offset", 0);
         params.put("limit", lim);
         params.put("search_source", "qishui");
-        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_DOWNSTREAM_QS_API)
+        String musicInfoBody = HttpRequest.get(SEARCH_MUSIC_FALLBACK_QS_API)
                 .queryParams(params)
                 .executeAsStr();
         JSONObject musicInfoJson = JSONObject.parseObject(musicInfoBody);

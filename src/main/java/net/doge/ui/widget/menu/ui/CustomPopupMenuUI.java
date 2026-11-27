@@ -12,7 +12,10 @@ public class CustomPopupMenuUI extends BasicPopupMenuUI {
         Popup popup = super.getPopup(menu, x, y);
         // PopupFactory 已挂载菜单，此时弹出窗口还未显示
         Window window = SwingUtilities.getWindowAncestor(menu);
-        if (window instanceof JWindow && !window.isVisible()) window.setBackground(Colors.TRANSPARENT);
+        if (!(window instanceof JWindow) || window.isVisible()) return popup;
+        // 若弹窗继承了父窗口的透明背景，AWT 需要一次从不透明到透明的切换才会同步内容层
+        if (!window.isBackgroundSet() && !window.isOpaque()) window.setBackground(Colors.BLACK);
+        window.setBackground(Colors.TRANSPARENT);
         return popup;
     }
 }
