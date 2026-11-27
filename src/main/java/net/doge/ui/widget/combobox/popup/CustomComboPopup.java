@@ -17,6 +17,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicComboPopup;
 import java.awt.*;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseEvent;
 
 public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacitySupported {
     @Getter
@@ -64,7 +66,21 @@ public class CustomComboPopup extends BasicComboPopup implements ExtendedOpacity
 
     @Override
     protected JList createList() {
-        return new CustomList(comboBox.getModel());
+        return new CustomList<Object>(comboBox.getModel()) {
+            @Override
+            protected void processMouseEvent(MouseEvent e) {
+                // 下拉列表里的快捷键加单击按普通单击处理，避免清空已选项
+                int shortcutMask = getToolkit().getMenuShortcutKeyMask() == InputEvent.META_MASK
+                        ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK;
+                int modifiers = e.getModifiersEx();
+                if (SwingUtilities.isLeftMouseButton(e) && (modifiers & shortcutMask) != 0) {
+                    e = new MouseEvent(this, e.getID(), e.getWhen(), modifiers & ~shortcutMask,
+                            e.getX(), e.getY(), e.getXOnScreen(), e.getYOnScreen(),
+                            e.getClickCount(), e.isPopupTrigger(), e.getButton());
+                }
+                super.processMouseEvent(e);
+            }
+        };
     }
 
     @Override
