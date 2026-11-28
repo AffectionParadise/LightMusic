@@ -1,5 +1,6 @@
 package net.doge.util.ui;
 
+import net.doge.constant.core.ui.Colors;
 import net.doge.ui.widget.base.ExtendedOpacitySupported;
 import net.doge.ui.widget.combobox.CustomComboBox;
 import net.doge.ui.widget.combobox.popup.CustomComboPopup;
@@ -89,6 +90,19 @@ public class SwingUtil {
             // 此处很重要，如果空间有余，会放大到 MaximumSize
             component.setMaximumSize(d);
         }
+    }
+
+    /**
+     * 在重量级弹层显示前同步窗口及内容层的透明状态
+     *
+     * @param component
+     */
+    public static void makePopupWindowTransparent(Component component) {
+        Window window = SwingUtilities.getWindowAncestor(component);
+        if (!(window instanceof JWindow) || window.isVisible()) return;
+        // 若弹窗继承了父窗口的透明背景，AWT 需要一次从不透明到透明的切换才会同步内容层
+        if (!window.isBackgroundSet() && !window.isOpaque()) window.setBackground(Colors.BLACK);
+        window.setBackground(Colors.TRANSPARENT);
     }
 
     /**

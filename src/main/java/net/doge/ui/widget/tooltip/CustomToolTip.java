@@ -16,12 +16,6 @@ public class CustomToolTip extends JToolTip {
     // 阴影大小像素
     private final int pixels = ScaleUtil.scale(5);
 
-    static {
-        ToolTipManager toolTips = ToolTipManager.sharedInstance();
-        toolTips.setInitialDelay(500);
-        toolTips.setReshowDelay(250);
-    }
-
     public CustomToolTip() {
         init();
     }

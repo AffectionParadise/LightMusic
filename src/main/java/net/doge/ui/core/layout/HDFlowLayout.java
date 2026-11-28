@@ -9,7 +9,7 @@ import java.awt.*;
  */
 public class HDFlowLayout extends FlowLayout {
     public HDFlowLayout() {
-        this(CENTER, 5, 5);
+        this(CENTER);
     }
 
     public HDFlowLayout(int align) {

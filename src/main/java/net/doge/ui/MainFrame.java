@@ -100,6 +100,7 @@ import net.doge.ui.widget.panel.CustomPanel;
 import net.doge.ui.widget.panel.GlobalPanel;
 import net.doge.ui.widget.panel.LoadingPanel;
 import net.doge.ui.widget.panel.SpectrumPanel;
+import net.doge.ui.widget.popupfactory.CustomPopupFactory;
 import net.doge.ui.widget.scrollpane.CustomScrollPane;
 import net.doge.ui.widget.scrollpane.listener.ScrollPaneBarActiveAdapter;
 import net.doge.ui.widget.scrollpane.scrollbar.CustomScrollBar;
@@ -2482,6 +2483,15 @@ public class MainFrame extends JFrame {
         add(jfxPanel);
     }
 
+    // 初始化 Popup
+    private void initPopup() {
+        ToolTipManager toolTips = ToolTipManager.sharedInstance();
+        toolTips.setInitialDelay(250);
+        toolTips.setReshowDelay(250);
+
+        PopupFactory.setSharedInstance(new CustomPopupFactory());
+    }
+
     private void initUI() {
         // 主界面
         setTitle(TITLE);
@@ -2602,6 +2612,9 @@ public class MainFrame extends JFrame {
 
         // 初始化 JavaFX 组件
         initJavaFX();
+
+        // 初始化 Popup
+        initPopup();
 
         // 初始化标题栏
         initTitleBar();
