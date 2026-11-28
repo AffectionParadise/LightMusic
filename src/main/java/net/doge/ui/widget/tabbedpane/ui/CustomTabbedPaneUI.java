@@ -10,6 +10,24 @@ import java.awt.*;
  * @date 2020/12/13
  */
 public class CustomTabbedPaneUI extends BasicTabbedPaneUI {
+    private boolean isHiddenVerticalTab(int tabPlacement, int index) {
+        if ((tabPlacement != LEFT && tabPlacement != RIGHT) || index < 0) return false;
+        Component header = tabPane.getTabComponentAt(index);
+        return header != null && !header.isVisible();
+    }
+
+    @Override
+    protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
+        if (isHiddenVerticalTab(tabPlacement, tabIndex)) return 0;
+        return super.calculateTabHeight(tabPlacement, tabIndex, fontHeight);
+    }
+
+    @Override
+    protected Insets getSelectedTabPadInsets(int tabPlacement) {
+        if (isHiddenVerticalTab(tabPlacement, tabPane.getSelectedIndex())) return new Insets(0, 0, 0, 0);
+        return super.getSelectedTabPadInsets(tabPlacement);
+    }
+
     @Override
     public void paint(Graphics g, JComponent c) {
         try {

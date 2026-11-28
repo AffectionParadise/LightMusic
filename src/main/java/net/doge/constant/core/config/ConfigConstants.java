@@ -53,6 +53,15 @@ public class ConfigConstants {
     public static final String VIDEO_TIME_ELAPSED_MODE = "videoTimeElapsedMode";
     // 播放视频是否关闭主界面
     public static final String VIDEO_ONLY = "videoOnly";
+    // 是否启用标签
+    public static final String RECOMMEND_TAB_ENABLED = "recommendTabEnabled";
+    public static final String RANK_TAB_ENABLED = "rankTabEnabled";
+    public static final String PLAYLIST_TAB_ENABLED = "playlistTabEnabled";
+    public static final String ALBUM_TAB_ENABLED = "albumTabEnabled";
+    public static final String ARTIST_TAB_ENABLED = "artistTabEnabled";
+    public static final String RADIO_TAB_ENABLED = "radioTabEnabled";
+    public static final String MV_TAB_ENABLED = "mvTabEnabled";
+    public static final String USER_TAB_ENABLED = "userTabEnabled";
     // 是否显示侧边栏文字
     public static final String SHOW_TAB_TEXT = "showTabText";
     // 是否显示乐谱按钮

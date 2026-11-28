@@ -581,6 +581,7 @@ public class I18n {
         LANG_MAP.put("font", new String[]{"界面字体（重启程序后生效）：", "UI font(Take effect after restart app): "});
         LANG_MAP.put("closeOption", new String[]{"关闭主界面时：", "Closing option: "});
         LANG_MAP.put("windowSize", new String[]{"窗口大小：", "Window size: "});
+        LANG_MAP.put("tabEnabled", new String[]{"启用的标签页：", "Enabled tabs: "});
         LANG_MAP.put("showTabText", new String[]{"显示侧边栏文字", "Show sidebar text"});
         LANG_MAP.put("showSheetButton", new String[]{"显示乐谱按钮", "Show sheet button"});
         LANG_MAP.put("showFobButton", new String[]{"显示快进/快退按钮", "Show fast-forward / rewind buttons"});

@@ -88,9 +88,9 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel hotKeyPanel = new CustomPanel();
     private CustomLabel hotKeyLabel = new CustomLabel(I18n.getText("hotkey"));
     private CustomBox hotKeyContentBox = new CustomBox(BoxLayout.Y_AXIS);
-    private CustomScrollPane hoyKeyScrollPane = new CustomScrollPane(hotKeyContentBox);
+    private CustomScrollPane hotKeyScrollPane = new CustomScrollPane(hotKeyContentBox);
 
-    // 设置项
+    // 常规
     private CustomPanel autoUpdatePanel = new CustomPanel();
     private CustomCheckBox autoUpdateCheckBox = new CustomCheckBox(I18n.getText("autoUpdate"));
     private CustomPanel videoOnlyPanel = new CustomPanel();
@@ -107,7 +107,19 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel windowSizePanel = new CustomPanel();
     private CustomLabel windowSizeLabel = new CustomLabel(I18n.getText("windowSize"));
     private CustomComboBox<String> windowSizeComboBox = new CustomComboBox<>();
+    private CustomPanel tabEnabledPanel = new CustomPanel();
+    private CustomLabel tabEnabledLabel = new CustomLabel(I18n.getText("tabEnabled"));
+    private CustomPanel tabEnabledGroupPanel = new CustomPanel();
+    private CustomCheckBox recommendTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netRecommend"));
+    private CustomCheckBox rankTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netRank"));
+    private CustomCheckBox playlistTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netPlaylist"));
+    private CustomCheckBox albumTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netAlbum"));
+    private CustomCheckBox artistTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netArtist"));
+    private CustomCheckBox radioTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netRadio"));
+    private CustomCheckBox mvTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netMv"));
+    private CustomCheckBox userTabEnabledCheckBox = new CustomCheckBox(I18n.getText("netUser"));
 
+    // 外观
     private CustomPanel showTabTextPanel = new CustomPanel();
     private CustomCheckBox showTabTextCheckBox = new CustomCheckBox(I18n.getText("showTabText"));
     private CustomPanel showSheetButtonPanel = new CustomPanel();
@@ -130,6 +142,7 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomLabel darkerFactorLabel = new CustomLabel(I18n.getText("darkerFactor"));
     private CustomComboBox<String> darkerFactorComboBox = new CustomComboBox<>();
 
+    // 下载与缓存
     private CustomPanel autoDownloadLyricPanel = new CustomPanel();
     private CustomCheckBox autoDownloadLyricCheckBox = new CustomCheckBox(I18n.getText("autoDownloadLyric"));
     private CustomPanel verbatimTimelinePanel = new CustomPanel();
@@ -143,23 +156,22 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel musicDownPanel = new CustomPanel();
     private CustomLabel musicDownLabel = new CustomLabel(I18n.getText("musicDown"));
     private CustomTextField musicDownPathTextField = new CustomTextField(20);
-    private DialogButton changeMusicDownPathButton;
-    private DialogButton openMusicDownPathButton;
     private CustomPanel mvDownPanel = new CustomPanel();
     private CustomLabel mvDownLabel = new CustomLabel(I18n.getText("mvDown"));
     private CustomTextField mvDownPathTextField = new CustomTextField(20);
-    private DialogButton changeMvDownPathButton;
-    private DialogButton openMvDownPathButton;
     private CustomPanel cachePanel = new CustomPanel();
     private CustomLabel cacheLabel = new CustomLabel(I18n.getText("cache"));
     private CustomTextField cachePathTextField = new CustomTextField(20);
-    private DialogButton changeCachePathButton;
-    private DialogButton openCachePathButton;
     private final int maxCacheSizeLimit = 4096;
     private CustomPanel maxCacheSizePanel = new CustomPanel();
     private CustomLabel maxCacheSizeLabel = new CustomLabel(String.format(I18n.getText("maxCacheSize"), maxCacheSizeLimit));
     private CustomTextField maxCacheSizeTextField = new CustomTextField(10);
+    private final int maxConcurrentTaskCountLimit = 3;
+    private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
+    private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel(String.format(I18n.getText("maxConcurrentTaskCount"), maxConcurrentTaskCountLimit));
+    private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
 
+    // 播放与历史
     private CustomPanel audioPlayQualityPanel = new CustomPanel();
     private CustomLabel audioPlayQualityLabel = new CustomLabel(I18n.getText("audioPlayQuality"));
     private CustomComboBox<String> audioPlayQualityComboBox = new CustomComboBox<>();
@@ -180,15 +192,10 @@ public class SettingDialog extends AbstractTitledDialog {
     private CustomPanel maxSearchHistoryCountPanel = new CustomPanel();
     private CustomLabel maxSearchHistoryCountLabel = new CustomLabel(String.format(I18n.getText("maxSearchHistoryCount"), maxSearchHistoryLimit));
     private CustomTextField maxSearchHistoryCountTextField = new CustomTextField(10);
-    private final int maxConcurrentTaskCountLimit = 3;
-    private CustomPanel maxConcurrentTaskCountPanel = new CustomPanel();
-    private CustomLabel maxConcurrentTaskCountLabel = new CustomLabel(String.format(I18n.getText("maxConcurrentTaskCount"), maxConcurrentTaskCountLimit));
-    private CustomTextField maxConcurrentTaskCountTextField = new CustomTextField(10);
     private CustomPanel backupPanel = new CustomPanel();
     private CustomLabel backupLabel = new CustomLabel(I18n.getText("backupAndRestore"));
-    private DialogButton backupListButton;
-    private DialogButton restoreListButton;
 
+    // 快捷键
     public List<Integer> playOrPauseKeys = new LinkedList<>();
     public List<Integer> playLastKeys = new LinkedList<>();
     public List<Integer> playNextKeys = new LinkedList<>();
@@ -246,222 +253,156 @@ public class SettingDialog extends AbstractTitledDialog {
     }
 
     private void initView() {
-        // 标签页
-        generalPanel.setLayout(new BorderLayout());
-        appearancePanel.setLayout(new BorderLayout());
-        downloadAndCachePanel.setLayout(new BorderLayout());
-        playbackPanel.setLayout(new BorderLayout());
-        hotKeyPanel.setLayout(new BorderLayout());
-
-        generalLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        appearanceLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        downloadAndCacheLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        playbackLabel.setHorizontalAlignment(SwingConstants.LEFT);
-        hotKeyLabel.setHorizontalAlignment(SwingConstants.LEFT);
-
-        HDEmptyBorder eb = new HDEmptyBorder(0, 10, 0, 0);
-        generalPanel.setBorder(eb);
-        appearancePanel.setBorder(eb);
-        downloadAndCachePanel.setBorder(eb);
-        playbackPanel.setBorder(eb);
-        hotKeyPanel.setBorder(eb);
-
-        generalPanel.add(generalLabel, BorderLayout.CENTER);
-        appearancePanel.add(appearanceLabel, BorderLayout.CENTER);
-        downloadAndCachePanel.add(downloadAndCacheLabel, BorderLayout.CENTER);
-        playbackPanel.add(playbackLabel, BorderLayout.CENTER);
-        hotKeyPanel.add(hotKeyLabel, BorderLayout.CENTER);
-
-        tabbedPane.add(generalScrollPane);
-        tabbedPane.add(appearanceScrollPane);
-        tabbedPane.add(downloadAndCacheScrollPane);
-        tabbedPane.add(playbackScrollPane);
-        tabbedPane.add(hoyKeyScrollPane);
-
-        tabbedPane.setTabComponentAt(0, generalPanel);
-        tabbedPane.setTabComponentAt(1, appearancePanel);
-        tabbedPane.setTabComponentAt(2, downloadAndCachePanel);
-        tabbedPane.setTabComponentAt(3, playbackPanel);
-        tabbedPane.setTabComponentAt(4, hotKeyPanel);
-
+        addSettingsTab(generalPanel, generalLabel, generalScrollPane);
+        addSettingsTab(appearancePanel, appearanceLabel, appearanceScrollPane);
+        addSettingsTab(downloadAndCachePanel, downloadAndCacheLabel, downloadAndCacheScrollPane);
+        addSettingsTab(playbackPanel, playbackLabel, playbackScrollPane);
+        addSettingsTab(hotKeyPanel, hotKeyLabel, hotKeyScrollPane);
         tabbedPane.setUI(new CustomTabbedPaneUI());
         tabbedPane.addChangeListener(e -> f.updateTabUI(tabbedPane, UIStyleStorage.currUIStyle));
 
-        // 标签大小
-        HDDimension d = new HDDimension(120, 40);
-        generalPanel.setPreferredSize(d);
-        appearancePanel.setPreferredSize(d);
-        downloadAndCachePanel.setPreferredSize(d);
-        playbackPanel.setPreferredSize(d);
-        hotKeyPanel.setPreferredSize(d);
+        initGeneralView();
+        initAppearanceView();
+        initDownloadAndCacheView();
+        initPlaybackView();
+        initHotKeyView();
 
-        // 对齐
-        HDFlowLayout fl = new HDFlowLayout(HDFlowLayout.LEFT);
-        autoUpdatePanel.setLayout(fl);
-        videoOnlyPanel.setLayout(fl);
-        langPanel.setLayout(fl);
-        fontPanel.setLayout(fl);
-        closeOptionPanel.setLayout(fl);
-        windowSizePanel.setLayout(fl);
-        showTabTextPanel.setLayout(fl);
-        showSheetButtonPanel.setLayout(fl);
-        showFobButtonPanel.setLayout(fl);
-        lockDesktopLyricPanel.setLayout(fl);
-        lyricAlignmentPanel.setLayout(fl);
-        specMaxHeightPanel.setLayout(fl);
-        gsFactorPanel.setLayout(fl);
-        darkerFactorPanel.setLayout(fl);
-        autoDownloadLyricPanel.setLayout(fl);
-        verbatimTimelinePanel.setLayout(fl);
-        audioDownQualityPanel.setLayout(fl);
-        videoDownQualityPanel.setLayout(fl);
-        musicDownPanel.setLayout(fl);
-        mvDownPanel.setLayout(fl);
-        cachePanel.setLayout(fl);
-        maxCacheSizePanel.setLayout(fl);
-        maxHistoryCountPanel.setLayout(fl);
-        maxSearchHistoryCountPanel.setLayout(fl);
-        maxConcurrentTaskCountPanel.setLayout(fl);
-        audioPlayQualityPanel.setLayout(fl);
-        videoPlayQualityPanel.setLayout(fl);
-        fobPanel.setLayout(fl);
-        balancePanel.setLayout(fl);
-        backupPanel.setLayout(fl);
-        keyPanel.setLayout(fl);
-        playOrPausePanel.setLayout(fl);
-        playLastPanel.setLayout(fl);
-        playNextPanel.setLayout(fl);
-        backwardPanel.setLayout(fl);
-        forwardPanel.setLayout(fl);
-        videoFullScreenPanel.setLayout(fl);
+        CustomBox[] contentBoxes = {generalContentBox, appearanceContentBox, downloadAndCacheContentBox,
+                playbackContentBox, hotKeyContentBox};
+        for (CustomBox box : contentBoxes) box.add(CustomBox.createVerticalGlue());
 
-        // 最大尺寸
-        d = new HDDimension(Integer.MAX_VALUE, 30);
-        autoUpdatePanel.setMaximumSize(d);
-        videoOnlyPanel.setMaximumSize(d);
-        langPanel.setMaximumSize(d);
-        fontPanel.setMaximumSize(d);
-        closeOptionPanel.setMaximumSize(d);
-        windowSizePanel.setMaximumSize(d);
-        showTabTextPanel.setMaximumSize(d);
-        showSheetButtonPanel.setMaximumSize(d);
-        showFobButtonPanel.setMaximumSize(d);
-        lockDesktopLyricPanel.setMaximumSize(d);
-        lyricAlignmentPanel.setMaximumSize(d);
-        specMaxHeightPanel.setMaximumSize(d);
-        gsFactorPanel.setMaximumSize(d);
-        darkerFactorPanel.setMaximumSize(d);
-        autoDownloadLyricPanel.setMaximumSize(d);
-        verbatimTimelinePanel.setMaximumSize(d);
-        audioDownQualityPanel.setMaximumSize(d);
-        videoDownQualityPanel.setMaximumSize(d);
-        musicDownPanel.setMaximumSize(d);
-        mvDownPanel.setMaximumSize(d);
-        cachePanel.setMaximumSize(d);
-        maxCacheSizePanel.setMaximumSize(d);
-        maxHistoryCountPanel.setMaximumSize(d);
-        maxSearchHistoryCountPanel.setMaximumSize(d);
-        maxConcurrentTaskCountPanel.setMaximumSize(d);
-        audioPlayQualityPanel.setMaximumSize(d);
-        videoPlayQualityPanel.setMaximumSize(d);
-        fobPanel.setMaximumSize(d);
-        balancePanel.setMaximumSize(d);
-        backupPanel.setMaximumSize(d);
-        keyPanel.setMaximumSize(d);
-        playOrPausePanel.setMaximumSize(d);
-        playLastPanel.setMaximumSize(d);
-        playNextPanel.setMaximumSize(d);
-        backwardPanel.setMaximumSize(d);
-        forwardPanel.setMaximumSize(d);
-        videoFullScreenPanel.setMaximumSize(d);
+        centerPanel.setLayout(new BorderLayout());
+        centerPanel.add(tabbedPane, BorderLayout.CENTER);
+        globalPanel.add(centerPanel, BorderLayout.CENTER);
 
-        // 字体颜色
-        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
-        generalLabel.setForeground(textColor);
-        appearanceLabel.setForeground(textColor);
-        downloadAndCacheLabel.setForeground(textColor);
-        playbackLabel.setForeground(textColor);
-        hotKeyLabel.setForeground(textColor);
+        okButton.addActionListener(e -> {
+            if (!applySettings()) return;
+            close();
+        });
+        applyButton.addActionListener(e -> {
+            if (!applySettings()) return;
+            new TipDialog(f, I18n.getText("applySuccess"), true).showDialog();
+        });
+        cancelButton.addActionListener(e -> close());
+        buttonPanel.add(okButton);
+        buttonPanel.add(applyButton);
+        buttonPanel.add(cancelButton);
+        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
+        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
+    }
 
-        autoUpdateCheckBox.setForeground(textColor);
-        videoOnlyCheckBox.setForeground(textColor);
-        showTabTextCheckBox.setForeground(textColor);
-        showSheetButtonCheckBox.setForeground(textColor);
-        showFobButtonCheckBox.setForeground(textColor);
-        lockDesktopLyricCheckBox.setForeground(textColor);
-        lyricAlignmentLabel.setForeground(textColor);
-        specMaxHeightLabel.setForeground(textColor);
-        gsFactorLabel.setForeground(textColor);
-        darkerFactorLabel.setForeground(textColor);
-        autoDownloadLyricCheckBox.setForeground(textColor);
-        verbatimTimelineCheckBox.setForeground(textColor);
-        audioDownQualityLabel.setForeground(textColor);
-        videoDownQualityLabel.setForeground(textColor);
-        musicDownLabel.setForeground(textColor);
-        mvDownLabel.setForeground(textColor);
-        cacheLabel.setForeground(textColor);
-        maxCacheSizeLabel.setForeground(textColor);
-        maxHistoryCountLabel.setForeground(textColor);
-        maxSearchHistoryCountLabel.setForeground(textColor);
-        maxConcurrentTaskCountLabel.setForeground(textColor);
-        langLabel.setForeground(textColor);
-        fontLabel.setForeground(textColor);
-        closeOptionLabel.setForeground(textColor);
-        windowSizeLabel.setForeground(textColor);
-        audioPlayQualityLabel.setForeground(textColor);
-        videoPlayQualityLabel.setForeground(textColor);
-        fobLabel.setForeground(textColor);
-        balanceLabel.setForeground(textColor);
-        backupLabel.setForeground(textColor);
-        keyLabel.setForeground(textColor);
-        enableKeyCheckBox.setForeground(textColor);
-        playOrPauseLabel.setForeground(textColor);
-        playLastLabel.setForeground(textColor);
-        playNextLabel.setForeground(textColor);
-        backwardLabel.setForeground(textColor);
-        forwardLabel.setForeground(textColor);
-        videoFullScreenLabel.setForeground(textColor);
+    // 常规
+    private void initGeneralView() {
+        addSettingRow(generalContentBox, autoUpdatePanel, autoUpdateCheckBox);
+        addSettingRow(generalContentBox, videoOnlyPanel, videoOnlyCheckBox);
+        addComboRow(generalContentBox, langPanel, langLabel, langComboBox, I18n.NAMES);
+        addComboRow(generalContentBox, fontPanel, fontLabel, fontComboBox, Fonts.NAMES);
+        addComboRow(generalContentBox, closeOptionPanel, closeOptionLabel, closeOptionComboBox, CloseWindowOptions.NAMES);
+        addComboRow(generalContentBox, windowSizePanel, windowSizeLabel, windowSizeComboBox, WindowSize.NAMES);
 
-        // 文本框
-        Color darkerTextAlphaColor = ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f);
-        specMaxHeightTextField.setForeground(textColor);
-        specMaxHeightTextField.setCaretColor(textColor);
-        specMaxHeightTextField.setSelectedTextColor(textColor);
-        specMaxHeightTextField.setSelectionColor(darkerTextAlphaColor);
+        addSettingRow(generalContentBox, tabEnabledPanel, tabEnabledLabel);
+        HDFlowLayout flow = new HDFlowLayout(HDFlowLayout.LEFT, 15, 5);
+        tabEnabledGroupPanel.setLayout(flow);
+        addSettingComponents(tabEnabledGroupPanel, recommendTabEnabledCheckBox, rankTabEnabledCheckBox,
+                playlistTabEnabledCheckBox, albumTabEnabledCheckBox, artistTabEnabledCheckBox,
+                radioTabEnabledCheckBox, mvTabEnabledCheckBox, userTabEnabledCheckBox);
+
+        // 预留侧栏、边距和滚动条空间，再按流式布局测量换行后的高度
+        int availableWidth = WIDTH - 2 * pixels - generalPanel.getPreferredSize().width
+                - generalScrollPane.getVBar().getPreferredSize().width - ScaleUtil.scale(15);
+        Dimension groupSize = tabEnabledGroupPanel.getPreferredSize();
+        groupSize.width = Math.min(groupSize.width, availableWidth);
+        tabEnabledGroupPanel.setSize(groupSize);
+        tabEnabledGroupPanel.doLayout();
+        for (Component checkBox : tabEnabledGroupPanel.getComponents())
+            groupSize.height = Math.max(groupSize.height, checkBox.getY() + checkBox.getHeight() + flow.getVgap());
+        tabEnabledGroupPanel.setPreferredSize(groupSize);
+        tabEnabledGroupPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, groupSize.height));
+        generalContentBox.add(tabEnabledGroupPanel);
+    }
+
+    // 外观
+    private void initAppearanceView() {
+        addSettingRow(appearanceContentBox, showTabTextPanel, showTabTextCheckBox);
+        addSettingRow(appearanceContentBox, showSheetButtonPanel, showSheetButtonCheckBox);
+        addSettingRow(appearanceContentBox, showFobButtonPanel, showFobButtonCheckBox);
+        addSettingRow(appearanceContentBox, lockDesktopLyricPanel, lockDesktopLyricCheckBox);
+        addComboRow(appearanceContentBox, lyricAlignmentPanel, lyricAlignmentLabel, lyricAlignmentComboBox, LyricAlignment.NAMES);
         specMaxHeightTextField.setDocumentFilter(new LimitedDocumentFilter(0, specMaxHeightLimit));
-        musicDownPathTextField.setForeground(textColor);
-        musicDownPathTextField.setCaretColor(textColor);
-        musicDownPathTextField.setSelectedTextColor(textColor);
-        musicDownPathTextField.setSelectionColor(darkerTextAlphaColor);
-        mvDownPathTextField.setForeground(textColor);
-        mvDownPathTextField.setCaretColor(textColor);
-        mvDownPathTextField.setSelectedTextColor(textColor);
-        mvDownPathTextField.setSelectionColor(darkerTextAlphaColor);
-        cachePathTextField.setForeground(textColor);
-        cachePathTextField.setCaretColor(textColor);
-        cachePathTextField.setSelectedTextColor(textColor);
-        cachePathTextField.setSelectionColor(darkerTextAlphaColor);
-        maxCacheSizeTextField.setForeground(textColor);
-        maxCacheSizeTextField.setCaretColor(textColor);
-        maxCacheSizeTextField.setSelectedTextColor(textColor);
-        maxCacheSizeTextField.setSelectionColor(darkerTextAlphaColor);
-        maxCacheSizeTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxCacheSizeLimit));
-        maxHistoryCountTextField.setForeground(textColor);
-        maxHistoryCountTextField.setCaretColor(textColor);
-        maxHistoryCountTextField.setSelectedTextColor(textColor);
-        maxHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
-        maxHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxHistoryCountLimit));
-        maxSearchHistoryCountTextField.setForeground(textColor);
-        maxSearchHistoryCountTextField.setCaretColor(textColor);
-        maxSearchHistoryCountTextField.setSelectedTextColor(textColor);
-        maxSearchHistoryCountTextField.setSelectionColor(darkerTextAlphaColor);
-        maxSearchHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxSearchHistoryLimit));
-        maxConcurrentTaskCountTextField.setForeground(textColor);
-        maxConcurrentTaskCountTextField.setCaretColor(textColor);
-        maxConcurrentTaskCountTextField.setSelectedTextColor(textColor);
-        maxConcurrentTaskCountTextField.setSelectionColor(darkerTextAlphaColor);
-        maxConcurrentTaskCountTextField.setDocumentFilter(new LimitedDocumentFilter(1, maxConcurrentTaskCountLimit));
+        addSettingRow(appearanceContentBox, specMaxHeightPanel, specMaxHeightLabel, specMaxHeightTextField);
+        addComboRow(appearanceContentBox, gsFactorPanel, gsFactorLabel, gsFactorComboBox, BackgroundEffectConstants.GAUSSIAN_FACTOR_NAME);
+        addComboRow(appearanceContentBox, darkerFactorPanel, darkerFactorLabel, darkerFactorComboBox, BackgroundEffectConstants.DARKER_FACTOR_NAME);
+    }
 
+    // 下载与缓存
+    private void initDownloadAndCacheView() {
+        addSettingRow(downloadAndCacheContentBox, autoDownloadLyricPanel, autoDownloadLyricCheckBox);
+        addSettingRow(downloadAndCacheContentBox, verbatimTimelinePanel, verbatimTimelineCheckBox);
+        addComboRow(downloadAndCacheContentBox, audioDownQualityPanel, audioDownQualityLabel, audioDownQualityComboBox, AudioQuality.NAMES);
+        addComboRow(downloadAndCacheContentBox, videoDownQualityPanel, videoDownQualityLabel, videoDownQualityComboBox, VideoQuality.NAMES);
+
+        DirectoryChooser dirChooser = new DirectoryChooser();
+        dirChooser.setTitle(I18n.getText("chooseFolder"));
+        addDirectoryRow(musicDownPanel, musicDownLabel, musicDownPathTextField, dirChooser);
+        addDirectoryRow(mvDownPanel, mvDownLabel, mvDownPathTextField, dirChooser);
+        addDirectoryRow(cachePanel, cacheLabel, cachePathTextField, dirChooser);
+
+        maxCacheSizeTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxCacheSizeLimit));
+        addSettingRow(downloadAndCacheContentBox, maxCacheSizePanel, maxCacheSizeLabel, maxCacheSizeTextField);
+        maxConcurrentTaskCountTextField.setDocumentFilter(new LimitedDocumentFilter(1, maxConcurrentTaskCountLimit));
+        addSettingRow(downloadAndCacheContentBox, maxConcurrentTaskCountPanel, maxConcurrentTaskCountLabel, maxConcurrentTaskCountTextField);
+    }
+
+    // 播放与历史
+    private void initPlaybackView() {
+        addComboRow(playbackContentBox, audioPlayQualityPanel, audioPlayQualityLabel, audioPlayQualityComboBox, AudioQuality.NAMES);
+        addComboRow(playbackContentBox, videoPlayQualityPanel, videoPlayQualityLabel, videoPlayQualityComboBox, VideoQuality.NAMES);
+
+        fobComboBox.setUI(new StringComboBoxUI(fobComboBox, f));
+        for (int i = 5; i <= 60; i += 5) fobComboBox.addItem(i + I18n.getText("seconds"));
+        addSettingRow(playbackContentBox, fobPanel, fobLabel, fobComboBox);
+        addComboRow(playbackContentBox, balancePanel, balanceLabel, balanceComboBox,
+                I18n.getText("leftChannel"), I18n.getText("stereo"), I18n.getText("rightChannel"));
+
+        maxHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxHistoryCountLimit));
+        addSettingRow(playbackContentBox, maxHistoryCountPanel, maxHistoryCountLabel, maxHistoryCountTextField);
+        maxSearchHistoryCountTextField.setDocumentFilter(new LimitedDocumentFilter(0, maxSearchHistoryLimit));
+        addSettingRow(playbackContentBox, maxSearchHistoryCountPanel, maxSearchHistoryCountLabel, maxSearchHistoryCountTextField);
+
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(I18n.getText("jsonFile"), "*.json");
+        fileChooser.getExtensionFilters().add(filter);
+        DialogButton backupListButton = new DialogButton(I18n.getText("backup"), textColor);
+        backupListButton.addActionListener(e -> {
+            Platform.runLater(() -> {
+                fileChooser.setTitle(I18n.getText("saveFile"));
+                File output = fileChooser.showSaveDialog(null);
+                if (output == null) return;
+                JSONObject config = new JSONObject();
+                f.putLocalMusicList(config);
+                f.putCollectedItemList(config);
+                new TipDialog(f, JsonUtil.toFile(config, output) ? I18n.getText("backupSuccess") : I18n.getText("backupFailed"), true).showDialog();
+            });
+        });
+        DialogButton restoreListButton = new DialogButton(I18n.getText("restore"), textColor);
+        restoreListButton.addActionListener(e -> {
+            Platform.runLater(() -> {
+                fileChooser.setTitle(I18n.getText("chooseFile"));
+                File input = fileChooser.showOpenDialog(null);
+                if (input == null) return;
+                JSONObject config = JsonUtil.readOrCreate(input);
+                f.loadLocalMusicList(config);
+                f.loadCollectedMusicList(config);
+                new TipDialog(f, I18n.getText("restoreSuccess"), true).showDialog();
+            });
+        });
+        addSettingRow(playbackContentBox, backupPanel, backupLabel, backupListButton, restoreListButton);
+    }
+
+    // 热键
+    private void initHotKeyView() {
+        addSettingRow(hotKeyContentBox, keyPanel, keyLabel, enableKeyCheckBox);
         KeyAdapter keyAdapter = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -533,388 +474,105 @@ public class SettingDialog extends AbstractTitledDialog {
                 return null;
             }
         };
-        playOrPauseTextField.setForeground(textColor);
-        playOrPauseTextField.setCaretColor(textColor);
-        playOrPauseTextField.setSelectedTextColor(textColor);
-        playOrPauseTextField.setSelectionColor(darkerTextAlphaColor);
-        playOrPauseTextField.setEditable(false);
-        playOrPauseTextField.addKeyListener(keyAdapter);
-        playLastTextField.setForeground(textColor);
-        playLastTextField.setCaretColor(textColor);
-        playLastTextField.setSelectedTextColor(textColor);
-        playLastTextField.setSelectionColor(darkerTextAlphaColor);
-        playLastTextField.setEditable(false);
-        playLastTextField.addKeyListener(keyAdapter);
-        playNextTextField.setForeground(textColor);
-        playNextTextField.setCaretColor(textColor);
-        playNextTextField.setSelectedTextColor(textColor);
-        playNextTextField.setSelectionColor(darkerTextAlphaColor);
-        playNextTextField.setEditable(false);
-        playNextTextField.addKeyListener(keyAdapter);
-        backwardTextField.setForeground(textColor);
-        backwardTextField.setCaretColor(textColor);
-        backwardTextField.setSelectedTextColor(textColor);
-        backwardTextField.setSelectionColor(darkerTextAlphaColor);
-        backwardTextField.setEditable(false);
-        backwardTextField.addKeyListener(keyAdapter);
-        forwardTextField.setForeground(textColor);
-        forwardTextField.setCaretColor(textColor);
-        forwardTextField.setSelectedTextColor(textColor);
-        forwardTextField.setSelectionColor(darkerTextAlphaColor);
-        forwardTextField.setEditable(false);
-        forwardTextField.addKeyListener(keyAdapter);
-        videoFullScreenTextField.setForeground(textColor);
-        videoFullScreenTextField.setCaretColor(textColor);
-        videoFullScreenTextField.setSelectedTextColor(textColor);
-        videoFullScreenTextField.setSelectionColor(darkerTextAlphaColor);
-        videoFullScreenTextField.setEditable(false);
-        videoFullScreenTextField.addKeyListener(keyAdapter);
-
-        // 下拉框 UI
-        lyricAlignmentComboBox.setUI(new StringComboBoxUI(lyricAlignmentComboBox, f));
-        gsFactorComboBox.setUI(new StringComboBoxUI(gsFactorComboBox, f));
-        darkerFactorComboBox.setUI(new StringComboBoxUI(darkerFactorComboBox, f));
-        audioDownQualityComboBox.setUI(new StringComboBoxUI(audioDownQualityComboBox, f));
-        videoDownQualityComboBox.setUI(new StringComboBoxUI(videoDownQualityComboBox, f));
-        langComboBox.setUI(new StringComboBoxUI(langComboBox, f));
-        fontComboBox.setUI(new StringComboBoxUI(fontComboBox, f));
-        closeOptionComboBox.setUI(new StringComboBoxUI(closeOptionComboBox, f));
-        windowSizeComboBox.setUI(new StringComboBoxUI(windowSizeComboBox, f));
-        audioPlayQualityComboBox.setUI(new StringComboBoxUI(audioPlayQualityComboBox, f));
-        videoPlayQualityComboBox.setUI(new StringComboBoxUI(videoPlayQualityComboBox, f));
-        fobComboBox.setUI(new StringComboBoxUI(fobComboBox, f));
-        balanceComboBox.setUI(new StringComboBoxUI(balanceComboBox, f));
-
-        DirectoryChooser dirChooser = new DirectoryChooser();
-        dirChooser.setTitle(I18n.getText("chooseFolder"));
-
-        // 按钮
-        changeMusicDownPathButton = new DialogButton(I18n.getText("change"), textColor);
-        changeMusicDownPathButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                File dir = dirChooser.showDialog(null);
-                if (dir == null) return;
-                // 文件夹不存在直接跳出
-                if (!dir.exists()) return;
-                musicDownPathTextField.setText(dir.getAbsolutePath());
-            });
-        });
-        openMusicDownPathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
-        openMusicDownPathButton.addActionListener(e -> {
-            File dir = new File(musicDownPathTextField.getText());
-            if (!dir.exists()) {
-                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                return;
-            }
-            DesktopUtil.open(dir);
-        });
-
-        changeMvDownPathButton = new DialogButton(I18n.getText("change"), textColor);
-        changeMvDownPathButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                File dir = dirChooser.showDialog(null);
-                if (dir == null) return;
-                // 文件夹不存在直接跳出
-                if (!dir.exists()) return;
-                mvDownPathTextField.setText(dir.getAbsolutePath());
-            });
-        });
-        openMvDownPathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
-        openMvDownPathButton.addActionListener(e -> {
-            File dir = new File(mvDownPathTextField.getText());
-            if (!dir.exists()) {
-                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                return;
-            }
-            DesktopUtil.open(dir);
-        });
-
-        changeCachePathButton = new DialogButton(I18n.getText("change"), textColor);
-        changeCachePathButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                File dir = dirChooser.showDialog(null);
-                if (dir == null) return;
-                // 文件夹不存在直接跳出
-                if (!dir.exists()) return;
-                cachePathTextField.setText(dir.getAbsolutePath());
-            });
-        });
-        openCachePathButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
-        openCachePathButton.addActionListener(e -> {
-            File dir = new File(cachePathTextField.getText());
-            if (!dir.exists()) {
-                new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
-                return;
-            }
-            DesktopUtil.open(dir);
-        });
-
-        FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter(I18n.getText("jsonFile"), "*.json");
-        fileChooser.getExtensionFilters().add(filter);
-        backupListButton = new DialogButton(I18n.getText("backup"), textColor);
-        backupListButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                fileChooser.setTitle(I18n.getText("saveFile"));
-                File output = fileChooser.showSaveDialog(null);
-                if (output == null) return;
-                JSONObject config = new JSONObject();
-                f.putLocalMusicList(config);
-                f.putCollectedItemList(config);
-                new TipDialog(f, JsonUtil.toFile(config, output) ? I18n.getText("backupSuccess") : I18n.getText("backupFailed"), true).showDialog();
-            });
-        });
-        restoreListButton = new DialogButton(I18n.getText("restore"), textColor);
-        restoreListButton.addActionListener(e -> {
-            Platform.runLater(() -> {
-                fileChooser.setTitle(I18n.getText("chooseFile"));
-                File input = fileChooser.showOpenDialog(null);
-                if (input == null) return;
-                JSONObject config = JsonUtil.readOrCreate(input);
-                f.loadLocalMusicList(config);
-                f.loadCollectedMusicList(config);
-                new TipDialog(f, I18n.getText("restoreSuccess"), true).showDialog();
-            });
-        });
-
-        // 复选框图标
-        autoUpdateCheckBox.updateIconStyle();
-        videoOnlyCheckBox.updateIconStyle();
-        showTabTextCheckBox.updateIconStyle();
-        showSheetButtonCheckBox.updateIconStyle();
-        showFobButtonCheckBox.updateIconStyle();
-        lockDesktopLyricCheckBox.updateIconStyle();
-        autoDownloadLyricCheckBox.updateIconStyle();
-        verbatimTimelineCheckBox.updateIconStyle();
-        enableKeyCheckBox.updateIconStyle();
-
-        autoUpdatePanel.add(autoUpdateCheckBox);
-
-        videoOnlyPanel.add(videoOnlyCheckBox);
-
-        showTabTextPanel.add(showTabTextCheckBox);
-
-        showSheetButtonPanel.add(showSheetButtonCheckBox);
-
-        showFobButtonPanel.add(showFobButtonCheckBox);
-
-        lockDesktopLyricPanel.add(lockDesktopLyricCheckBox);
-
-        for (String name : LyricAlignment.NAMES) lyricAlignmentComboBox.addItem(name);
-        lyricAlignmentPanel.add(lyricAlignmentLabel);
-        lyricAlignmentPanel.add(lyricAlignmentComboBox);
-
-        specMaxHeightPanel.add(specMaxHeightLabel);
-        specMaxHeightPanel.add(specMaxHeightTextField);
-
-        for (String name : BackgroundEffectConstants.GAUSSIAN_FACTOR_NAME) gsFactorComboBox.addItem(name);
-        gsFactorPanel.add(gsFactorLabel);
-        gsFactorPanel.add(gsFactorComboBox);
-
-        for (String name : BackgroundEffectConstants.DARKER_FACTOR_NAME) darkerFactorComboBox.addItem(name);
-        darkerFactorPanel.add(darkerFactorLabel);
-        darkerFactorPanel.add(darkerFactorComboBox);
-
-        autoDownloadLyricPanel.add(autoDownloadLyricCheckBox);
-
-        verbatimTimelinePanel.add(verbatimTimelineCheckBox);
-
-        for (String name : AudioQuality.NAMES) audioDownQualityComboBox.addItem(name);
-        audioDownQualityPanel.add(audioDownQualityLabel);
-        audioDownQualityPanel.add(audioDownQualityComboBox);
-
-        for (String name : VideoQuality.NAMES) videoDownQualityComboBox.addItem(name);
-        videoDownQualityPanel.add(videoDownQualityLabel);
-        videoDownQualityPanel.add(videoDownQualityComboBox);
-
-        musicDownPanel.add(musicDownLabel);
-        musicDownPanel.add(musicDownPathTextField);
-        musicDownPanel.add(changeMusicDownPathButton);
-        musicDownPanel.add(openMusicDownPathButton);
-
-        mvDownPanel.add(mvDownLabel);
-        mvDownPanel.add(mvDownPathTextField);
-        mvDownPanel.add(changeMvDownPathButton);
-        mvDownPanel.add(openMvDownPathButton);
-
-        cachePanel.add(cacheLabel);
-        cachePanel.add(cachePathTextField);
-        cachePanel.add(changeCachePathButton);
-        cachePanel.add(openCachePathButton);
-
-        maxCacheSizePanel.add(maxCacheSizeLabel);
-        maxCacheSizePanel.add(maxCacheSizeTextField);
-
-        maxHistoryCountPanel.add(maxHistoryCountLabel);
-        maxHistoryCountPanel.add(maxHistoryCountTextField);
-
-        maxSearchHistoryCountPanel.add(maxSearchHistoryCountLabel);
-        maxSearchHistoryCountPanel.add(maxSearchHistoryCountTextField);
-
-        maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountLabel);
-        maxConcurrentTaskCountPanel.add(maxConcurrentTaskCountTextField);
-
-        for (String name : I18n.NAMES) langComboBox.addItem(name);
-        langPanel.add(langLabel);
-        langPanel.add(langComboBox);
-
-        for (String name : Fonts.NAMES) fontComboBox.addItem(name);
-        fontPanel.add(fontLabel);
-        fontPanel.add(fontComboBox);
-
-        for (String name : CloseWindowOptions.NAMES) closeOptionComboBox.addItem(name);
-        closeOptionPanel.add(closeOptionLabel);
-        closeOptionPanel.add(closeOptionComboBox);
-
-        for (String name : WindowSize.NAMES) windowSizeComboBox.addItem(name);
-        windowSizePanel.add(windowSizeLabel);
-        windowSizePanel.add(windowSizeComboBox);
-
-        for (String name : AudioQuality.NAMES) audioPlayQualityComboBox.addItem(name);
-        audioPlayQualityPanel.add(audioPlayQualityLabel);
-        audioPlayQualityPanel.add(audioPlayQualityComboBox);
-
-        for (String name : VideoQuality.NAMES) videoPlayQualityComboBox.addItem(name);
-        videoPlayQualityPanel.add(videoPlayQualityLabel);
-        videoPlayQualityPanel.add(videoPlayQualityComboBox);
-
-        for (int i = 5; i <= 60; i += 5) {
-            String item = i + I18n.getText("seconds");
-            fobComboBox.addItem(item);
-            if (f.forwardOrBackwardTime == i) fobComboBox.setSelectedItem(item);
-        }
-        fobPanel.add(fobLabel);
-        fobPanel.add(fobComboBox);
-
-        balanceComboBox.addItem(I18n.getText("leftChannel"));
-        balanceComboBox.addItem(I18n.getText("stereo"));
-        balanceComboBox.addItem(I18n.getText("rightChannel"));
-        balancePanel.add(balanceLabel);
-        balancePanel.add(balanceComboBox);
-
-        backupPanel.add(backupLabel);
-        backupPanel.add(backupListButton);
-        backupPanel.add(restoreListButton);
-
-        keyPanel.add(keyLabel);
-        keyPanel.add(enableKeyCheckBox);
-        playOrPausePanel.add(playOrPauseLabel);
-        playOrPausePanel.add(playOrPauseTextField);
-        playLastPanel.add(playLastLabel);
-        playLastPanel.add(playLastTextField);
-        playNextPanel.add(playNextLabel);
-        playNextPanel.add(playNextTextField);
-        backwardPanel.add(backwardLabel);
-        backwardPanel.add(backwardTextField);
-        forwardPanel.add(forwardLabel);
-        forwardPanel.add(forwardTextField);
-        videoFullScreenPanel.add(videoFullScreenLabel);
-        videoFullScreenPanel.add(videoFullScreenTextField);
-
-        int vGap = ScaleUtil.scale(10);
-        generalContentBox.add(autoUpdatePanel);
-        generalContentBox.add(CustomBox.createVerticalStrut(vGap));
-        generalContentBox.add(videoOnlyPanel);
-        generalContentBox.add(CustomBox.createVerticalStrut(vGap));
-        generalContentBox.add(langPanel);
-        generalContentBox.add(CustomBox.createVerticalStrut(vGap));
-        generalContentBox.add(fontPanel);
-        generalContentBox.add(CustomBox.createVerticalStrut(vGap));
-        generalContentBox.add(closeOptionPanel);
-        generalContentBox.add(CustomBox.createVerticalStrut(vGap));
-        generalContentBox.add(windowSizePanel);
-        generalContentBox.add(CustomBox.createVerticalGlue());
-
-        appearanceContentBox.add(showTabTextPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(showSheetButtonPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(showFobButtonPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(lockDesktopLyricPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(lyricAlignmentPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(specMaxHeightPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(gsFactorPanel);
-        appearanceContentBox.add(CustomBox.createVerticalStrut(vGap));
-        appearanceContentBox.add(darkerFactorPanel);
-        appearanceContentBox.add(CustomBox.createVerticalGlue());
-
-        downloadAndCacheContentBox.add(autoDownloadLyricPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(verbatimTimelinePanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(audioDownQualityPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(videoDownQualityPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(musicDownPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(mvDownPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(cachePanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(maxCacheSizePanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalStrut(vGap));
-        downloadAndCacheContentBox.add(maxConcurrentTaskCountPanel);
-        downloadAndCacheContentBox.add(CustomBox.createVerticalGlue());
-
-        playbackContentBox.add(audioPlayQualityPanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(videoPlayQualityPanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(fobPanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(balancePanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(maxHistoryCountPanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(maxSearchHistoryCountPanel);
-        playbackContentBox.add(CustomBox.createVerticalStrut(vGap));
-        playbackContentBox.add(backupPanel);
-        playbackContentBox.add(CustomBox.createVerticalGlue());
-
-        hotKeyContentBox.add(keyPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(playOrPausePanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(playLastPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(playNextPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(backwardPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(forwardPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalStrut(vGap));
-        hotKeyContentBox.add(videoFullScreenPanel);
-        hotKeyContentBox.add(CustomBox.createVerticalGlue());
-
-        centerPanel.setLayout(new BorderLayout());
-        centerPanel.add(tabbedPane, BorderLayout.CENTER);
-        globalPanel.add(centerPanel, BorderLayout.CENTER);
-
-        okButton.addActionListener(e -> {
-            if (!applySettings()) return;
-            close();
-        });
-        applyButton.addActionListener(e -> {
-            if (!applySettings()) return;
-            new TipDialog(f, I18n.getText("applySuccess"), true).showDialog();
-        });
-        cancelButton.addActionListener(e -> close());
-        buttonPanel.add(okButton);
-        buttonPanel.add(applyButton);
-        buttonPanel.add(cancelButton);
-        buttonPanel.setBorder(new HDEmptyBorder(10, 0, 10, 0));
-        globalPanel.add(buttonPanel, BorderLayout.SOUTH);
+        addHotKeyRow(playOrPausePanel, playOrPauseLabel, playOrPauseTextField, keyAdapter);
+        addHotKeyRow(playLastPanel, playLastLabel, playLastTextField, keyAdapter);
+        addHotKeyRow(playNextPanel, playNextLabel, playNextTextField, keyAdapter);
+        addHotKeyRow(backwardPanel, backwardLabel, backwardTextField, keyAdapter);
+        addHotKeyRow(forwardPanel, forwardLabel, forwardTextField, keyAdapter);
+        addHotKeyRow(videoFullScreenPanel, videoFullScreenLabel, videoFullScreenTextField, keyAdapter);
     }
 
-    // 加载设置
+    // 添加设置标签页
+    private void addSettingsTab(CustomPanel panel, CustomLabel label, CustomScrollPane scrollPane) {
+        panel.setLayout(new BorderLayout());
+        panel.setBorder(new HDEmptyBorder(0, 10, 0, 0));
+        panel.setPreferredSize(new HDDimension(120, 40));
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        label.setForeground(UIStyleStorage.currUIStyle.getTextColor());
+        panel.add(label, BorderLayout.CENTER);
+        tabbedPane.add(scrollPane);
+        tabbedPane.setTabComponentAt(tabbedPane.getTabCount() - 1, panel);
+    }
+
+    // 添加一行设置项
+    private void addSettingRow(CustomBox contentBox, CustomPanel panel, JComponent... components) {
+        panel.setLayout(new HDFlowLayout(HDFlowLayout.LEFT));
+        panel.setMaximumSize(new HDDimension(Integer.MAX_VALUE, 30));
+        addSettingComponents(panel, components);
+        if (contentBox.getComponentCount() > 0) contentBox.add(CustomBox.createVerticalStrut(ScaleUtil.scale(10)));
+        contentBox.add(panel);
+    }
+
+    // 在设置项 Panel 中添加组件
+    private void addSettingComponents(CustomPanel panel, JComponent... components) {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        for (JComponent component : components) {
+            component.setForeground(textColor);
+            if (component instanceof CustomCheckBox) {
+                ((CustomCheckBox) component).updateIconStyle();
+            } else if (component instanceof CustomTextField) {
+                CustomTextField field = (CustomTextField) component;
+                field.setCaretColor(textColor);
+                field.setSelectedTextColor(textColor);
+                field.setSelectionColor(ColorUtil.deriveAlpha(ColorUtil.darker(textColor), 0.5f));
+            }
+            panel.add(component);
+        }
+    }
+
+    // 添加一行下拉框设置项
+    private void addComboRow(CustomBox contentBox, CustomPanel panel, CustomLabel label,
+                             CustomComboBox<String> comboBox, String... choices) {
+        comboBox.setUI(new StringComboBoxUI(comboBox, f));
+        for (String choice : choices) comboBox.addItem(choice);
+        addSettingRow(contentBox, panel, label, comboBox);
+    }
+
+    // 添加一行文件夹设置项
+    private void addDirectoryRow(CustomPanel panel, CustomLabel label, CustomTextField field, DirectoryChooser chooser) {
+        Color textColor = UIStyleStorage.currUIStyle.getTextColor();
+        DialogButton changeButton = new DialogButton(I18n.getText("change"), textColor);
+        changeButton.addActionListener(e -> Platform.runLater(() -> {
+            File dir = chooser.showDialog(null);
+            if (dir != null && dir.exists()) field.setText(dir.getAbsolutePath());
+        }));
+
+        DialogButton openButton = new DialogButton(I18n.getText("dialogOpen"), textColor);
+        openButton.addActionListener(e -> {
+            File dir = new File(field.getText());
+            if (dir.exists()) DesktopUtil.open(dir);
+            else new TipDialog(f, CATALOG_NOT_FOUND_MSG, true).showDialog();
+        });
+
+        addSettingRow(downloadAndCacheContentBox, panel, label, field, changeButton, openButton);
+    }
+
+    // 添加一行热键设置项
+    private void addHotKeyRow(CustomPanel panel, CustomLabel label, CustomTextField field, KeyAdapter listener) {
+        field.setEditable(false);
+        field.addKeyListener(listener);
+        addSettingRow(hotKeyContentBox, panel, label, field);
+    }
+
+    // 按标签页的显示顺序加载设置
     private void initSettings() {
+        // 常规
         autoUpdateCheckBox.setSelected(f.autoUpdate);
         videoOnlyCheckBox.setSelected(f.videoOnly);
+        langComboBox.setSelectedIndex(I18n.currLang);
+        fontComboBox.setSelectedIndex(Fonts.currFont);
+        closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
+        windowSizeComboBox.setSelectedIndex(f.windowSize);
+        recommendTabEnabledCheckBox.setSelected(f.recommendTabEnabled);
+        rankTabEnabledCheckBox.setSelected(f.rankTabEnabled);
+        playlistTabEnabledCheckBox.setSelected(f.playlistTabEnabled);
+        albumTabEnabledCheckBox.setSelected(f.albumTabEnabled);
+        artistTabEnabledCheckBox.setSelected(f.artistTabEnabled);
+        radioTabEnabledCheckBox.setSelected(f.radioTabEnabled);
+        mvTabEnabledCheckBox.setSelected(f.mvTabEnabled);
+        userTabEnabledCheckBox.setSelected(f.userTabEnabled);
+
+        // 外观
         showTabTextCheckBox.setSelected(f.showTabText);
         showSheetButtonCheckBox.setSelected(f.showSheetButton);
         showFobButtonCheckBox.setSelected(f.showFobButton);
@@ -923,6 +581,8 @@ public class SettingDialog extends AbstractTitledDialog {
         specMaxHeightTextField.setText(String.valueOf(SpectrumConstants.maxBarHeight));
         gsFactorComboBox.setSelectedIndex(BackgroundEffectConstants.gsFactorIndex);
         darkerFactorComboBox.setSelectedIndex(BackgroundEffectConstants.darkerFactorIndex);
+
+        // 下载与缓存
         autoDownloadLyricCheckBox.setSelected(f.autoDownloadLyric);
         verbatimTimelineCheckBox.setSelected(f.verbatimTimeline);
         audioDownQualityComboBox.setSelectedIndex(AudioQuality.downQuality);
@@ -931,17 +591,17 @@ public class SettingDialog extends AbstractTitledDialog {
         mvDownPathTextField.setText(new File(SimplePath.DOWNLOAD_MV_PATH).getAbsolutePath());
         cachePathTextField.setText(new File(SimplePath.CACHE_PATH).getAbsolutePath());
         maxCacheSizeTextField.setText(String.valueOf(f.maxCacheSize));
-        maxHistoryCountTextField.setText(String.valueOf(f.maxHistoryCount));
-        maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
-        maxConcurrentTaskCountTextField.setText(String.valueOf(((ThreadPoolExecutor) GlobalExecutors.downloadExecutor).getCorePoolSize()));
-        langComboBox.setSelectedIndex(I18n.currLang);
-        fontComboBox.setSelectedIndex(Fonts.currFont);
-        closeOptionComboBox.setSelectedIndex(f.currCloseWindowOption);
-        windowSizeComboBox.setSelectedIndex(f.windowSize);
+        maxConcurrentTaskCountTextField.setText(String.valueOf(GlobalExecutors.downloadExecutor.getCorePoolSize()));
+
+        // 播放与历史
         audioPlayQualityComboBox.setSelectedIndex(AudioQuality.playQuality);
         videoPlayQualityComboBox.setSelectedIndex(VideoQuality.playQuality);
-        balanceComboBox.setSelectedIndex(Double.valueOf(f.currBalance).intValue() + 1);
+        fobComboBox.setSelectedItem(f.forwardOrBackwardTime + I18n.getText("seconds"));
+        balanceComboBox.setSelectedIndex((int) Math.round(f.currBalance) + 1);
+        maxHistoryCountTextField.setText(String.valueOf(f.maxHistoryCount));
+        maxSearchHistoryCountTextField.setText(String.valueOf(f.maxSearchHistoryCount));
 
+        // 快捷键
         enableKeyCheckBox.setSelected(f.keyEnabled);
         playOrPauseKeys.addAll(f.playOrPauseKeys);
         playOrPauseTextField.setText(KeyUtil.toStr(f.playOrPauseKeys));
@@ -957,120 +617,31 @@ public class SettingDialog extends AbstractTitledDialog {
         videoFullScreenTextField.setText(KeyUtil.toStr(f.videoFullScreenKeys));
     }
 
-    // 应用设置
     private boolean applySettings() {
-        // 验证
-        File musicDir = new File(musicDownPathTextField.getText());
-        if (!musicDir.exists()) {
-            new TipDialog(f, I18n.getText("invalidMusicDown"), true).showDialog();
-            return false;
-        }
-        File mvDir = new File(mvDownPathTextField.getText());
-        if (!mvDir.exists()) {
-            new TipDialog(f, I18n.getText("invalidMvDown"), true).showDialog();
-            return false;
-        }
-        File cacheDir = new File(cachePathTextField.getText());
-        if (!cacheDir.exists()) {
-            new TipDialog(f, I18n.getText("invalidCache"), true).showDialog();
-            return false;
-        }
+        // 按显示顺序验证输入，全部通过后再更新设置
+        String specMaxHeight = specMaxHeightTextField.getText();
+        if (StringUtil.isEmpty(specMaxHeight)) return showInvalidSetting("invalidSpecMaxHeight");
 
+        File musicDir = new File(musicDownPathTextField.getText());
+        if (!musicDir.exists()) return showInvalidSetting("invalidMusicDown");
+        File mvDir = new File(mvDownPathTextField.getText());
+        if (!mvDir.exists()) return showInvalidSetting("invalidMvDown");
+        File cacheDir = new File(cachePathTextField.getText());
+        if (!cacheDir.exists()) return showInvalidSetting("invalidCache");
+
+        String maxCacheSize = maxCacheSizeTextField.getText();
+        if (StringUtil.isEmpty(maxCacheSize)) return showInvalidSetting("invalidMaxCacheSize");
+        String maxConcurrentTaskCount = maxConcurrentTaskCountTextField.getText();
+        if (StringUtil.isEmpty(maxConcurrentTaskCount)) return showInvalidSetting("invalidConcurrentTaskCount");
+
+        String maxHistoryCount = maxHistoryCountTextField.getText();
+        if (StringUtil.isEmpty(maxHistoryCount)) return showInvalidSetting("invalidHistoryCount");
+        String maxSearchHistoryCount = maxSearchHistoryCountTextField.getText();
+        if (StringUtil.isEmpty(maxSearchHistoryCount)) return showInvalidSetting("invalidSearchHistoryCount");
+
+        // 常规
         f.autoUpdate = autoUpdateCheckBox.isSelected();
         f.videoOnly = videoOnlyCheckBox.isSelected();
-
-        f.showTabText = showTabTextCheckBox.isSelected();
-        f.updateTabSize();
-
-        f.showSheetButton = showSheetButtonCheckBox.isSelected();
-        f.updateSheetButtonShowing();
-
-        f.showFobButton = showFobButtonCheckBox.isSelected();
-        f.updateFobButtonShowing();
-
-        f.desktopLyricLocked = lockDesktopLyricCheckBox.isSelected();
-        f.updateDesktopLyricLocking();
-
-        LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
-
-        int gsFactorIndex = BackgroundEffectConstants.gsFactorIndex;
-        BackgroundEffectConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
-
-        int darkerFactorIndex = BackgroundEffectConstants.darkerFactorIndex;
-        BackgroundEffectConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
-
-        if (gsFactorIndex != BackgroundEffectConstants.gsFactorIndex || darkerFactorIndex != BackgroundEffectConstants.darkerFactorIndex)
-            f.updateBgImg();
-
-        f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();
-
-        f.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
-
-        AudioQuality.downQuality = audioDownQualityComboBox.getSelectedIndex();
-        VideoQuality.downQuality = videoDownQualityComboBox.getSelectedIndex();
-
-        SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
-        SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;
-        SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + File.separator;
-        SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator;
-        // 更改缓存图像路径并创建
-        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
-
-        String text = specMaxHeightTextField.getText();
-        if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, I18n.getText("invalidSpecMaxHeight"), true).showDialog();
-            return false;
-        }
-        SpectrumConstants.maxBarHeight = Integer.parseInt(text);
-        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, ScaleUtil.scale(SpectrumConstants.maxBarHeight)));
-        f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.maxBarHeight));
-        f.spectrumPanel.revalidate();
-
-        text = maxCacheSizeTextField.getText();
-        if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, I18n.getText("invalidMaxCacheSize"), true).showDialog();
-            return false;
-        }
-        f.maxCacheSize = Long.parseLong(text);
-
-        text = maxHistoryCountTextField.getText();
-        if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, I18n.getText("invalidHistoryCount"), true).showDialog();
-            return false;
-        }
-        f.maxHistoryCount = Integer.parseInt(text);
-
-        text = maxSearchHistoryCountTextField.getText();
-        if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, I18n.getText("invalidSearchHistoryCount"), true).showDialog();
-            return false;
-        }
-        f.maxSearchHistoryCount = Integer.parseInt(text);
-
-        text = maxConcurrentTaskCountTextField.getText();
-        if (StringUtil.isEmpty(text)) {
-            new TipDialog(f, I18n.getText("invalidConcurrentTaskCount"), true).showDialog();
-            return false;
-        }
-        GlobalExecutors.downloadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(text));
-
-        // 删除多余的播放历史记录
-        for (int i = f.maxHistoryCount, s = f.historyModel.size(); i < s; i++)
-            f.historyModel.remove(f.maxHistoryCount);
-
-        // 删除多余的搜索历史记录
-        CustomPanel[] ips = new CustomPanel[]{f.netMusicHistorySearchInnerPanel2,
-                f.netPlaylistHistorySearchInnerPanel2,
-                f.netAlbumHistorySearchInnerPanel2,
-                f.netArtistHistorySearchInnerPanel2,
-                f.netRadioHistorySearchInnerPanel2,
-                f.netMvHistorySearchInnerPanel2,
-                f.netUserHistorySearchInnerPanel2};
-        for (CustomPanel ip : ips) {
-            for (int i = f.maxSearchHistoryCount, c = ip.getComponentCount(); i < c; i++)
-                ip.remove(f.maxSearchHistoryCount);
-        }
-
         I18n.currLang = langComboBox.getSelectedIndex();
         Fonts.currFont = fontComboBox.getSelectedIndex();
         f.currCloseWindowOption = closeOptionComboBox.getSelectedIndex();
@@ -1080,12 +651,73 @@ public class SettingDialog extends AbstractTitledDialog {
         f.x = f.y = 0x3f3f3f3f;
         if (f.windowState != WindowState.MAXIMIZED) f.setSize(f.windowWidth, f.windowHeight);
 
+        f.recommendTabEnabled = recommendTabEnabledCheckBox.isSelected();
+        f.rankTabEnabled = rankTabEnabledCheckBox.isSelected();
+        f.playlistTabEnabled = playlistTabEnabledCheckBox.isSelected();
+        f.albumTabEnabled = albumTabEnabledCheckBox.isSelected();
+        f.artistTabEnabled = artistTabEnabledCheckBox.isSelected();
+        f.radioTabEnabled = radioTabEnabledCheckBox.isSelected();
+        f.mvTabEnabled = mvTabEnabledCheckBox.isSelected();
+        f.userTabEnabled = userTabEnabledCheckBox.isSelected();
+        f.updateTabVisibility();
+
+        // 外观
+        f.showTabText = showTabTextCheckBox.isSelected();
+        f.updateTabSize();
+        f.showSheetButton = showSheetButtonCheckBox.isSelected();
+        f.updateSheetButtonShowing();
+        f.showFobButton = showFobButtonCheckBox.isSelected();
+        f.updateFobButtonShowing();
+        f.desktopLyricLocked = lockDesktopLyricCheckBox.isSelected();
+        f.updateDesktopLyricLocking();
+        LyricAlignment.lyricAlignmentIndex = lyricAlignmentComboBox.getSelectedIndex();
+
+        SpectrumConstants.maxBarHeight = Integer.parseInt(specMaxHeight);
+        f.spectrumPanel.setPreferredSize(new Dimension(f.spectrumPanel.getPreferredSize().width, ScaleUtil.scale(SpectrumConstants.maxBarHeight)));
+        f.spectrumPanel.setMinimumSize(new HDDimension(1, SpectrumConstants.maxBarHeight));
+        f.spectrumPanel.revalidate();
+
+        int gsFactorIndex = BackgroundEffectConstants.gsFactorIndex;
+        int darkerFactorIndex = BackgroundEffectConstants.darkerFactorIndex;
+        BackgroundEffectConstants.gsFactorIndex = gsFactorComboBox.getSelectedIndex();
+        BackgroundEffectConstants.darkerFactorIndex = darkerFactorComboBox.getSelectedIndex();
+        if (gsFactorIndex != BackgroundEffectConstants.gsFactorIndex || darkerFactorIndex != BackgroundEffectConstants.darkerFactorIndex)
+            f.updateBgImg();
+
+        // 下载与缓存
+        f.autoDownloadLyric = autoDownloadLyricCheckBox.isSelected();
+        f.verbatimTimeline = verbatimTimelineCheckBox.isSelected();
+        AudioQuality.downQuality = audioDownQualityComboBox.getSelectedIndex();
+        VideoQuality.downQuality = videoDownQualityComboBox.getSelectedIndex();
+        SimplePath.DOWNLOAD_MUSIC_PATH = musicDir.getAbsolutePath() + File.separator;
+        SimplePath.DOWNLOAD_MV_PATH = mvDir.getAbsolutePath() + File.separator;
+        SimplePath.CACHE_PATH = cacheDir.getAbsolutePath() + File.separator;
+        SimplePath.IMG_CACHE_PATH = SimplePath.CACHE_PATH + File.separator + "img" + File.separator;
+        FileUtil.mkDir(SimplePath.IMG_CACHE_PATH);
+        f.maxCacheSize = Long.parseLong(maxCacheSize);
+        GlobalExecutors.downloadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Integer.parseInt(maxConcurrentTaskCount));
+
+        // 播放与历史
         AudioQuality.playQuality = audioPlayQualityComboBox.getSelectedIndex();
         VideoQuality.playQuality = videoPlayQualityComboBox.getSelectedIndex();
         f.forwardOrBackwardTime = Integer.parseInt(((String) fobComboBox.getSelectedItem()).replace(I18n.getText("seconds"), ""));
         f.currBalance = balanceComboBox.getSelectedIndex() - 1;
         f.player.setBalance(f.currBalance);
 
+        f.maxHistoryCount = Integer.parseInt(maxHistoryCount);
+        for (int i = f.maxHistoryCount, s = f.historyModel.size(); i < s; i++)
+            f.historyModel.remove(f.maxHistoryCount);
+
+        f.maxSearchHistoryCount = Integer.parseInt(maxSearchHistoryCount);
+        CustomPanel[] searchHistoryPanels = {f.netMusicHistorySearchInnerPanel2, f.netPlaylistHistorySearchInnerPanel2,
+                f.netAlbumHistorySearchInnerPanel2, f.netArtistHistorySearchInnerPanel2, f.netRadioHistorySearchInnerPanel2,
+                f.netMvHistorySearchInnerPanel2, f.netUserHistorySearchInnerPanel2};
+        for (CustomPanel panel : searchHistoryPanels) {
+            for (int i = f.maxSearchHistoryCount, count = panel.getComponentCount(); i < count; i++)
+                panel.remove(f.maxSearchHistoryCount);
+        }
+
+        // 快捷键
         f.keyEnabled = enableKeyCheckBox.isSelected();
         f.playOrPauseKeys.clear();
         f.playOrPauseKeys.addAll(playOrPauseKeys);
@@ -1101,5 +733,10 @@ public class SettingDialog extends AbstractTitledDialog {
         f.videoFullScreenKeys.addAll(videoFullScreenKeys);
 
         return true;
+    }
+
+    private boolean showInvalidSetting(String textKey) {
+        new TipDialog(f, I18n.getText(textKey), true).showDialog();
+        return false;
     }
 }

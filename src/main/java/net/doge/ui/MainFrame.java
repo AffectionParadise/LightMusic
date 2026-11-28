@@ -728,6 +728,15 @@ public class MainFrame extends JFrame {
     public boolean videoTimeElapsedMode;
     // 播放视频时是否关闭主界面
     public boolean videoOnly;
+    // 是否启用标签页
+    public boolean recommendTabEnabled;
+    public boolean rankTabEnabled;
+    public boolean playlistTabEnabled;
+    public boolean albumTabEnabled;
+    public boolean artistTabEnabled;
+    public boolean radioTabEnabled;
+    public boolean mvTabEnabled;
+    public boolean userTabEnabled;
     // 显示侧边栏文字
     public boolean showTabText;
     // 显示乐谱按钮
@@ -3074,6 +3083,7 @@ public class MainFrame extends JFrame {
         videoTimeElapsedMode = config.getBooleanValue(ConfigConstants.VIDEO_TIME_ELAPSED_MODE, true);
         // 载入播放视频是否关闭主界面
         videoOnly = config.getBooleanValue(ConfigConstants.VIDEO_ONLY, true);
+        loadTabEnabledConfig(config);
         // 是否显示侧边栏文字
         showTabText = config.getBooleanValue(ConfigConstants.SHOW_TAB_TEXT, true);
         updateTabSize();
@@ -3411,7 +3421,11 @@ public class MainFrame extends JFrame {
         // 载入推荐选项卡
         preRecommendTab = config.getIntValue(ConfigConstants.RECOMMEND_TAB_INDEX, RecommendTabIndex.PLAYLIST_RECOMMEND);
         // 载入选项卡
-        tabbedPane.setSelectedIndex(config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL));
+        updateTabVisibility();
+        int savedTab = config.getIntValue(ConfigConstants.TAB_INDEX, TabIndex.PERSONAL);
+        if (savedTab >= 0 && savedTab < tabbedPane.getTabCount() && isSidebarTabEnabled(savedTab))
+            tabbedPane.setSelectedIndex(savedTab);
+        else tabbedPane.setSelectedIndex(TabIndex.PERSONAL);
 
         Color textColor = UIStyleStorage.currUIStyle.getTextColor();
         // 载入在线音乐搜索历史关键词
@@ -3926,6 +3940,7 @@ public class MainFrame extends JFrame {
         config.put(ConfigConstants.VIDEO_TIME_ELAPSED_MODE, videoTimeElapsedMode);
         // 存入播放视频是否隐藏主界面
         config.put(ConfigConstants.VIDEO_ONLY, videoOnly);
+        putTabEnabledConfig(config);
         // 存入是否显示侧边栏文字
         config.put(ConfigConstants.SHOW_TAB_TEXT, showTabText);
         // 存入是否显示乐谱按钮
@@ -4649,6 +4664,70 @@ public class MainFrame extends JFrame {
             ManageCustomStyleDialog dialog = new ManageCustomStyleDialog(THIS);
             dialog.showDialog();
         });
+    }
+
+    // 加载标签是否启用
+    private void loadTabEnabledConfig(JSONObject config) {
+        recommendTabEnabled = config.getBooleanValue(ConfigConstants.RECOMMEND_TAB_ENABLED, true);
+        rankTabEnabled = config.getBooleanValue(ConfigConstants.RANK_TAB_ENABLED, true);
+        playlistTabEnabled = config.getBooleanValue(ConfigConstants.PLAYLIST_TAB_ENABLED, true);
+        albumTabEnabled = config.getBooleanValue(ConfigConstants.ALBUM_TAB_ENABLED, true);
+        artistTabEnabled = config.getBooleanValue(ConfigConstants.ARTIST_TAB_ENABLED, true);
+        radioTabEnabled = config.getBooleanValue(ConfigConstants.RADIO_TAB_ENABLED, true);
+        mvTabEnabled = config.getBooleanValue(ConfigConstants.MV_TAB_ENABLED, true);
+        userTabEnabled = config.getBooleanValue(ConfigConstants.USER_TAB_ENABLED, true);
+    }
+
+    // 存入标签是否启用
+    private void putTabEnabledConfig(JSONObject config) {
+        config.put(ConfigConstants.RECOMMEND_TAB_ENABLED, recommendTabEnabled);
+        config.put(ConfigConstants.RANK_TAB_ENABLED, rankTabEnabled);
+        config.put(ConfigConstants.PLAYLIST_TAB_ENABLED, playlistTabEnabled);
+        config.put(ConfigConstants.ALBUM_TAB_ENABLED, albumTabEnabled);
+        config.put(ConfigConstants.ARTIST_TAB_ENABLED, artistTabEnabled);
+        config.put(ConfigConstants.RADIO_TAB_ENABLED, radioTabEnabled);
+        config.put(ConfigConstants.MV_TAB_ENABLED, mvTabEnabled);
+        config.put(ConfigConstants.USER_TAB_ENABLED, userTabEnabled);
+    }
+
+    // 侧边栏某标签是否启用
+    private boolean isSidebarTabEnabled(int index) {
+        switch (index) {
+            case TabIndex.RECOMMEND:
+                return recommendTabEnabled;
+            case TabIndex.NET_RANK:
+                return rankTabEnabled;
+            case TabIndex.NET_PLAYLIST:
+                return playlistTabEnabled;
+            case TabIndex.NET_ALBUM:
+                return albumTabEnabled;
+            case TabIndex.NET_ARTIST:
+                return artistTabEnabled;
+            case TabIndex.NET_RADIO:
+                return radioTabEnabled;
+            case TabIndex.NET_MV:
+                return mvTabEnabled;
+            case TabIndex.NET_USER:
+                return userTabEnabled;
+            default:
+                return true;
+        }
+    }
+
+    // 收起侧边栏入口，保留标签索引供搜索和页面跳转使用
+    public void updateTabVisibility() {
+        int selected = tabbedPane.getSelectedIndex();
+        boolean hideSelected = false;
+        for (int i = 0, c = tabbedPane.getTabCount(); i < c; i++) {
+            boolean enabled = isSidebarTabEnabled(i);
+            Component header = tabbedPane.getTabComponentAt(i);
+            if (i == selected && header.isVisible() && !enabled) hideSelected = true;
+            header.setVisible(enabled);
+            tabbedPane.setEnabledAt(i, enabled);
+        }
+        if (hideSelected) tabbedPane.setSelectedIndex(TabIndex.PERSONAL);
+        tabbedPane.revalidate();
+        tabbedPane.repaint();
     }
 
     // 初始化侧边栏大小
